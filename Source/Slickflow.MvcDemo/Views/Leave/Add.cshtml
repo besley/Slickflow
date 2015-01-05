@@ -1,0 +1,101 @@
+﻿@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_LayoutSlickflow.cshtml";
+}
+@section style
+    {
+    <link href="~/FlatLab/assets/bootstrap-datepicker/css/datepicker.css" rel="stylesheet" />
+}
+@using Slickflow.MvcDemo.Models
+@model LeaveViewModel
+<pre>该MvcDemo 仅与WebDemo一致</pre>
+<div class="container" style="margin-top:40px">
+    <div class="row">
+        <div class="col-md-6">
+            @using (Html.BeginForm("Add", "Leave", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+                @Html.AntiForgeryToken()
+                <h4>请假单</h4>
+                <hr />
+                <div class="form-group"> 
+                    <div class="col-md-7">
+                        @Html.TextBoxFor(m => m.ProcessGUID, new { Value = "2acffb20-6bd1-4891-98c9-c76d022d1445", @style = "display:none" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.LeaveType, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(m => m.LeaveType, ViewBag.LeaveType as SelectList, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Days, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-7">
+                        @Html.TextBoxFor(m => m.Days, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Days, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">请假时间范围</label>
+                    <div class="col-md-7">
+                        <div class="input-group input-large" data-date="13/07/3013" data-date-format="yyyy/mm/dd/ hh:mm:ss">
+                            @Html.TextBoxFor(m => m.BeginTime, new { @class = "form-control", @name = "from" })
+
+                            <span class="input-group-addon">To</span>
+                            @Html.TextBoxFor(m => m.EndTime, new { @class = "form-control", @name = "to" })
+
+                        </div>
+                        @Html.ValidationMessageFor(m => m.BeginTime, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(m => m.EndTime, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-10">
+                        <input type="submit" value="提交申请" class="btn btn-primary" />
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-md-6">
+            <pre>这里是一些说明</pre>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/FlatLab/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script>
+        $.validator.setDefaults({ ignore: null });
+        $(function () {
+            var nowTemp = new Date();
+            var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+            var checkin = $('#BeginTime').datepicker({
+                onRender: function (date) {
+                    return date.valueOf() < now.valueOf() ? 'disabled' : '';
+                }
+            }).on('changeDate', function (ev) {
+                if (ev.date.valueOf() > checkout.date.valueOf()) {
+                    var newDate = new Date(ev.date)
+                    newDate.setDate(newDate.getDate() + 1);
+                    checkout.setValue(newDate);
+                }
+                checkin.hide();
+                $('#EndTime')[0].focus();
+            }).data('datepicker');
+
+            var checkout = $('#EndTime').datepicker({
+                onRender: function (date) {
+                    return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+                }
+            }).on('changeDate', function (ev) {
+                checkout.hide();
+            }).data('datepicker');
+
+        });
+
+    </script>
+}

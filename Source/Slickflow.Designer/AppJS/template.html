@@ -1,0 +1,178 @@
+﻿<svg 
+      class="draggable-container"
+      xmlns="http://www.w3.org/2000/svg"
+      ng-mousedown="mouseDown($event)"
+      ng-mousemove="mouseMove($event)"  
+      ng-mouseup="mouseUp($event)"
+      ng-mouseenter="mouseEnter($event)"
+  >
+    <defs>
+        <marker id='markerHead' orient='auto' markerWidth='2' markerHeight='4'
+                refX='0.1' refY='2'>
+            <path d='M0,0 V4 L2,2 Z' fill="black"/>
+        </marker>
+        </defs>
+    <g  ng-repeat="node in graph.nodes"
+  	    ng-mousedown="nodeMouseDown($event, node)"
+  	    ng-attr-transform="translate({{node.x()}}, {{node.y()}})"
+    >
+        <rect ng-if="node.type() == 'TaskNode'"
+            ng-attr-class="{{node.selected() && 'selected-node-rect'
+		  	|| (node == mouseOverNode && 'mouseover-node-rect' || 'node-rect')}}"
+            rx="10"
+            ry="10"
+            x="0"
+            y="0"
+            ng-attr-width="{{node.width()}}"
+            ng-attr-height="{{node.height()}}"
+            fill="url(#nodeBackgroundGradient)"
+            ng-dblclick="nodeClick($event, node)">
+        </rect>
+        <path ng-if="node.type() == 'GatewayNode'"
+              ng-attr-class="{{node.selected() && 'selected-node-diamond'
+              || (node == mouseOverNode && 'mouseover-node-diamond' || 'node-diamond')}}"
+              d="M0,0 l30,30 l-30,30 l-30,-30 l30,-30"
+              fill="url(#nodeBackgroundGradient)"
+              ng-dblclick="nodeClick($event, node)">
+        </path>
+        <circle 
+                ng-if="node.type() == 'StartNode'"
+                ng-attr-class="{{node.selected() && 'selected-node-rect'
+		  	    || (node == mouseOverNode && 'mouseover-node-rect' || 'node-rect')}}"
+                ng-attr-r=" {{20}}"
+                cx="0"
+                cy="0"
+                stroke="black"
+                stroke-width="3"
+                fill="green">
+        </circle>
+        <circle ng-if="node.type() =='EndNode'"
+                ng-attr-class="{{node.selected() && 'selected-node-rect'
+		    	|| (node == mouseOverNode && 'mouseover-node-rect' || 'node-rect')}}"
+                ng-attr-r=" {{20}}"
+                cx="0"
+                cy="0"
+                stroke="black"
+                stroke-width="3"
+                fill="red">
+        </circle>
+        <text ng-if="node.type() == 'StartNode' || node.type() =='EndNode'"
+            x="0"
+            y="0"
+            text-anchor="middle"
+            alignment-baseline="middle"
+            font-size="12px">
+            {{node.name()}}
+        </text>
+        <text ng-if="node.type() == 'TaskNode' || node.type() == 'GatewayNode'"
+              ng-attr-x="{{node.width()/2}}"
+              ng-attr-y="{{node.height()/1.8}}"
+              text-anchor="middle"
+              alignment-baseline="middle"
+              font-size="12px"
+              ng-dblclick="nodeClick($event, node)">
+            {{node.name()}}
+        </text>
+
+        <g ng-repeat="connector in node.inputConnectors"
+            ng-mousedown="connectorMouseDown($event, node, connector, $index, true)"
+            class="connector input-connector">
+            <circle 
+                    ng-attr-class="{{connector == mouseOverConnector && 'mouseover-connector-circle' 
+                    || 'connector-circle'}}"
+                    ng-attr-r="{{5}}"
+                    ng-attr-cx="{{connector.x()}}"
+                    ng-attr-cy="{{connector.y()}}"
+                    stroke="black"
+                    stroke-width="3"
+                    fill="green" />
+            <text ng-attr-x="{{connector.x()}}"
+                ng-attr-y="{{connector.y()}}"
+                text-anchor="left"
+                alignment-baseline="middle"
+                font-size="12px">
+            </text>
+        </g>
+
+        <g ng-repeat="connector in node.outputConnectors"
+            ng-mousedown="connectorMouseDown($event, node, connector, $index, false)"
+            class="connector output-connector">
+            <circle 
+                    ng-attr-class="{{connector == mouseOverConnector && 'mouseover-connector-circle' 
+                    || 'connector-circle'}}"
+                    ng-attr-r="{{5}}"
+                    ng-attr-cx="{{connector.x()}}"
+                    ng-attr-cy="{{connector.y()}}"
+                    stroke="black"
+                    stroke-width="3"
+                    fill="green" />
+            <text ng-attr-x="{{connector.x() + 5}}"
+                ng-attr-y="{{connector.y()}}"
+                text-anchor="left"
+                alignment-baseline="middle">
+            </text>
+        </g>
+
+    </g>
+
+    <g>
+        <g ng-repeat="line in graph.lines"
+           ng-mousedown="lineMouseDown($event, line)"
+           ng-dblclick="lineClick($event, line)"
+           class="line">
+            <path ng-if="line.source && line.dest" ng-attr-class="{{line.selected() && 'selected-line-line'
+                || (line==mouseOverLine && 'mouseover-line-line'
+                || 'line-line')}}"
+                  ng-attr-d="M {{line.sourceCoordX()}}, {{line.sourceCoordY()}}
+  					    C {{line.sourceTangentX()}}, {{line.sourceTangentY()}}
+  					        {{line.destTangentX()}}, {{line.destTangentY()}}
+  					        {{line.destCoordX()-6}}, {{line.destCoordY()}}"
+                  style="marker-end: url(#markerHead);">
+            </path>
+            <circle ng-if="line.source && line.dest" ng-attr-class="{{line.selected() && 'selected-line-endpoint'
+                    || (line == mouseOverLine && 'mouseover-line-endpoint'
+                    || 'line-endpoint')}}"
+                    r="0.2"
+                    ng-attr-cx="{{line.sourceCoordX()}}"
+                    ng-attr-cy="{{line.sourceCoordY()}}">
+            </circle>
+            <circle ng-if="line.source && line.dest" ng-attr-class="{{line.selected() && 'selected-line-endpoint'
+                    || (line == mouseOverLine && 'mouseover-line-endpoint'
+                    || 'line-endpoint')}}"
+                    r="0.2"
+                    ng-attr-cx="{{line.destCoordX()}}"
+                    ng-attr-cy="{{line.destCoordY()}}">
+            </circle>
+        </g>
+    </g>
+
+    <g ng-if="draggingLine">
+        <path class="dragging-line dragging-line-line"
+              ng-attr-d="M {{dragPoint1.x}}, {{dragPoint1.y}}
+                        C {{dragTangent1.x}}, {{dragTangent1.y}}
+                        {{dragTangent2.x}}, {{dragTangent2.y}}
+                        {{dragPoint2.x}}, {{dragPoint2.y}}"
+              style="marker-end: url(#markerHead);">
+        </path>
+        <circle class="dragging-line dragging-line-endpoint"
+                r="4" 
+                ng-attr-cx="{{dragPoint1.x}}"
+                ng-attr-cy="{{dragPoint1.y}}">
+        </circle>
+        <circle class="dragging-line dragging-line-endpoint"
+                r="4"
+                ng-attr-cx="{{dragPoint2.x}}"
+                ng-attr-cy="{{dragPoint2.y}}">
+        </circle>
+    </g>
+
+    <rect 
+            ng-if="dragSelecting"
+            class="drag-selection-rect"
+            ng-attr-x="{{dragSelectionRect.x}}"
+            ng-attr-y="{{dragSelectionRect.y}}"
+            ng-attr-width="{{drageSelectionRect.width}}"
+            ng-attr-height="{{dragSelectionRect.height}}">
+    </rect>    
+   
+</svg>

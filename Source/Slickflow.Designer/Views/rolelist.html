@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>角色数据列表</title>
+    <script type="text/javascript" src="AppJS/rolelist.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            roleManager.getRoleList();
+        });
+    </script>
+</head>
+<body>
+    <div id="role-list-controller">
+        <div id="myGridRole" class="grid-container" style="width:100%;height:300px;"></div>
+        <span class="spanright">
+            <input type="button" value="确定" class="btn" onclick="window.parent.$('#divRoleDialog').dialog('close');" />
+        </span>
+    </div>
+</body>
+</html>

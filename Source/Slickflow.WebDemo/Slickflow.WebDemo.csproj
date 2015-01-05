@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{16804F0F-CA9D-4103-8E59-F386C7F88D1A}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Slickflow.WebDemoV2._0</RootNamespace>
+    <AssemblyName>Slickflow.WebDemoV2.0</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\excanvas.js" />
+    <Content Include="js\flow.canvas.js" />
+    <Content Include="js\jquery-1.10.2.min.js" />
+    <Content Include="js\jquery-1.8.3.js" />
+    <Content Include="js\jquery.nicescroll.js" />
+    <Content Include="js\layer\layer.js" />
+    <Content Include="js\layer\skin\default\xubox_ico0.png" />
+    <Content Include="js\layer\skin\default\xubox_loading0.gif" />
+    <Content Include="js\layer\skin\default\xubox_loading1.gif" />
+    <Content Include="js\layer\skin\default\xubox_loading2.gif" />
+    <Content Include="js\layer\skin\default\xubox_loading3.gif" />
+    <Content Include="js\layer\skin\default\xubox_title0.png" />
+    <Content Include="js\layer\skin\layer.css" />
+    <Content Include="js\layout.js" />
+    <Content Include="js\My97DatePicker\calendar.js" />
+    <Content Include="js\My97DatePicker\config.js" />
+    <Content Include="js\My97DatePicker\lang\en.js" />
+    <Content Include="js\My97DatePicker\lang\zh-cn.js" />
+    <Content Include="js\My97DatePicker\lang\zh-tw.js" />
+    <Content Include="js\My97DatePicker\My97DatePicker.htm" />
+    <Content Include="js\My97DatePicker\skin\datePicker.gif" />
+    <Content Include="js\My97DatePicker\skin\default\datepicker.css" />
+    <Content Include="js\My97DatePicker\skin\default\down.jpg" />
+    <Content Include="js\My97DatePicker\skin\default\img.gif" />
+    <Content Include="js\My97DatePicker\skin\default\left.gif" />
+    <Content Include="js\My97DatePicker\skin\default\navLeft.gif" />
+    <Content Include="js\My97DatePicker\skin\default\navRight.gif" />
+    <Content Include="js\My97DatePicker\skin\default\right.gif" />
+    <Content Include="js\My97DatePicker\skin\default\up.jpg" />
+    <Content Include="js\My97DatePicker\skin\ext\datepicker.css" />
+    <Content Include="js\My97DatePicker\skin\ext\dateselect.gif" />
+    <Content Include="js\My97DatePicker\skin\ext\glass-bg.gif" />
+    <Content Include="js\My97DatePicker\skin\ext\hd-sprite.gif" />
+    <Content Include="js\My97DatePicker\skin\ext\img.gif" />
+    <Content Include="js\My97DatePicker\skin\ext\left-btn.gif" />
+    <Content Include="js\My97DatePicker\skin\ext\left-btn2.gif" />
+    <Content Include="js\My97DatePicker\skin\ext\right-btn.gif" />
+    <Content Include="js\My97DatePicker\skin\ext\right-btn2.gif" />
+    <Content Include="js\My97DatePicker\skin\WdatePicker.css" />
+    <Content Include="js\My97DatePicker\skin\whyGreen\bg.jpg" />
+    <Content Include="js\My97DatePicker\skin\whyGreen\datepicker.css" />
+    <Content Include="js\My97DatePicker\skin\whyGreen\down.jpg" />
+    <Content Include="js\My97DatePicker\skin\whyGreen\img.gif" />
+    <Content Include="js\My97DatePicker\skin\whyGreen\left.gif" />
+    <Content Include="js\My97DatePicker\skin\whyGreen\navLeft.gif" />
+    <Content Include="js\My97DatePicker\skin\whyGreen\navRight.gif" />
+    <Content Include="js\My97DatePicker\skin\whyGreen\other\bg2.jpg" />
+    <Content Include="js\My97DatePicker\skin\whyGreen\other\interface.jpg" />
+    <Content Include="js\My97DatePicker\skin\whyGreen\right.gif" />
+    <Content Include="js\My97DatePicker\skin\whyGreen\up.jpg" />
+    <Content Include="js\My97DatePicker\skin\whyGreen\ymbg.jpg" />
+    <Content Include="js\My97DatePicker\WdatePicker.js" />
+    <Content Include="Login.aspx" />
+    <Content Include="Skin\base.css" />
+    <Content Include="Skin\default.css" />
+    <Content Include="Skin\images\login_tit.png" />
+    <Content Include="Skin\images\skin_icons.png" />
+    <Content Include="Skin\layout.css" />
+    <Content Include="Slickflows\FlowCanvas.aspx" />
+    <Content Include="Slickflows\FlowList.aspx" />
+    <Content Include="Slickflows\FlowOpinion.aspx" />
+    <Content Include="Slickflows\FlowStepSelect.aspx" />
+    <Content Include="Slickflows\HrsLeaveApply.aspx" />
+    <Content Include="Slickflows\HrsLeaveApproval.aspx" />
+    <Content Include="Slickflows\HrsLeaveInfo.aspx" />
+    <Content Include="Slickflows\Index.aspx" />
+    <Content Include="Slickflows\Main.aspx" />
+    <Content Include="Slickflows\Tool.aspx" />
+    <Content Include="Web.config" />
+    <Content Include="XML\process\HrsLeave1.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Code\BasePage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Business\WorkFlows.cs" />
+    <Compile Include="Common\EnumHelper.cs" />
+    <Compile Include="Common\Helper.cs" />
+    <Compile Include="Common\SQLHelper.cs" />
+    <Compile Include="Data\WorkFlowManager.cs" />
+    <Compile Include="Entity\BizAppFlowEntity.cs" />
+    <Compile Include="Entity\HrsLeaveEntity.cs" />
+    <Compile Include="Entity\SysRoleEntity.cs" />
+    <Compile Include="Entity\SysRoleUserEntity.cs" />
+    <Compile Include="Entity\SysUserEntity.cs" />
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Slickflows\FlowCanvas.aspx.cs">
+      <DependentUpon>FlowCanvas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Slickflows\FlowCanvas.aspx.designer.cs">
+      <DependentUpon>FlowCanvas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Slickflows\FlowList.aspx.cs">
+      <DependentUpon>FlowList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Slickflows\FlowList.aspx.designer.cs">
+      <DependentUpon>FlowList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Slickflows\FlowOpinion.aspx.cs">
+      <DependentUpon>FlowOpinion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Slickflows\FlowOpinion.aspx.designer.cs">
+      <DependentUpon>FlowOpinion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Slickflows\FlowStepSelect.aspx.cs">
+      <DependentUpon>FlowStepSelect.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Slickflows\FlowStepSelect.aspx.designer.cs">
+      <DependentUpon>FlowStepSelect.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Slickflows\HrsLeaveApply.aspx.cs">
+      <DependentUpon>HrsLeaveApply.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Slickflows\HrsLeaveApply.aspx.designer.cs">
+      <DependentUpon>HrsLeaveApply.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Slickflows\HrsLeaveApproval.aspx.cs">
+      <DependentUpon>HrsLeaveApproval.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Slickflows\HrsLeaveApproval.aspx.designer.cs">
+      <DependentUpon>HrsLeaveApproval.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Slickflows\HrsLeaveInfo.aspx.cs">
+      <DependentUpon>HrsLeaveInfo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Slickflows\HrsLeaveInfo.aspx.designer.cs">
+      <DependentUpon>HrsLeaveInfo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Slickflows\Index.aspx.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Slickflows\Index.aspx.designer.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Slickflows\Main.aspx.cs">
+      <DependentUpon>Main.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Slickflows\Main.aspx.designer.cs">
+      <DependentUpon>Main.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Slickflows\Tool.aspx.cs">
+      <DependentUpon>Tool.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Slickflows\Tool.aspx.designer.cs">
+      <DependentUpon>Tool.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Slickflow.Engine\Slickflow.Engine.csproj">
+      <Project>{f2aa5cc3-4212-4c6c-9336-a5c10f46affe}</Project>
+      <Name>Slickflow.Engine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:31125</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
