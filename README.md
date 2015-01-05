@@ -10,7 +10,7 @@ Slickflow used BPMN graphic elements to build its workflow natation.
 
 Slickflow designer is a HTML5, JQuery, SVG based web designer.
 
-There are demo programs that you can find in WebDemo, WinformDeom project.
+There are demo programs that you can find in WebDemo, WinformDemo project.
 
-The project is under LGPL license, if you have any further inquery, please feel free to contact us:
+The project is under LGPL license, we also provide customers commercial license. if you have any further inquery, please feel free to contact us:
 william.ligong@yahoo.com
