@@ -17,7 +17,6 @@ william.ligong@yahoo.com
 
 
 [Paypal Donation]:
------------------
 
 
 https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=william%2eligong%40yahoo%2ecom&lc=US&item_name=Slickflow&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest
