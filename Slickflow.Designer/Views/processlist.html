@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>流程定义数据</title>
+    <script type="text/javascript" src="AppJS/processlist.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#process-list-controller").scope().getProcessInfo();
+        });
+
+        function onCreateProcess() {
+            processManager.createProcess();
+        }
+
+        function onUpdateProcess() {
+            processManager.updateProcess();
+        }
+
+        function onDeleteProcess() {
+            processManager.deleteProcess();
+        }
+    </script>
+</head>
+<body>
+    <div id="process-list-controller">
+        <div>
+            <p>
+                <span class="a_tit">App类型:</span>
+                <span><input type="text" id="txtAppType" style="width:340px;" /></span>
+            </p>
+            <p>
+                <span class="a_tit">流程名称:</span>
+                <span><input type="text" id="txtProcessName" style="width:340px;" /></span>
+            </p>
+            <p>
+                <span class="a_tit">文件名称:</span>
+                <span><input type="text" id="txtProcessFileName" style="width:340px;" /></span>
+            </p>
+            <p>
+                <span class="a_tit">描述:</span>
+                <span><input type="text" id="txtDescription" style="width:340px;" /></span>
+            </p>
+        </div>
+        <div>
+            <b class="icoBtn btnNew" title="新增" onclick="onCreateProcess();"></b>
+            <b class="icoBtn btnSave" title="保存" onclick="onUpdateProcess();"></b>
+            <b class="icoBtn btnDel" title="删除" onclick="onDeleteProcess();"></b>
+        </div>
+        <div id="myGridProcess" class="grid-container" style="width:100%;height:300px;"></div>
+        <span class="spanright">
+            <input type="button" value="确定" class="btn" onclick="window.parent.$('#divProcessDialog').dialog('close');" />
+        </span>
+    </div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>流程数据测试页面</title>
+    <link href="content/cupertino/jquery-ui.css" rel="stylesheet" />
+    <!--<link href="content/layout-default-latest.css" rel="stylesheet" />-->
+    <link href="content/slick.grid.css" rel="stylesheet" />
+    <!--<link href="content/complex.css" type="text/css" rel="stylesheet" />-->
+
+
+    <!--[if lte IE 7]>
+        <style type="text/css"> body { font-size: 85%; } </style>
+    <![endif]-->
+    <script type="text/javascript" src="scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery-ui-1.9.2.custom.js"></script>
+    <script type="text/javascript" src="scripts/jquery.layout-latest.js"></script>
+    <script type="text/javascript" src="scripts/complex.js"></script>
+    <script type="text/javascript" src="scripts/jquery.mdi.js"></script>
+    <script type="text/javascript" src="scripts/dialog.js"></script>
+    <script type="text/javascript" src="scripts/jquery.ztree.all-3.5.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery.event.drag-2.2.js"></script>
+    <script type="text/javascript" src="scripts/slickgrid/slick.grid.all.js"></script>
+    <script type="text/javascript" src="scripts/slickgrid/slick.dataview.js"></script>
+    <script type="text/javascript" src="scripts/jquery.editable.select.js"></script>
+    <script type="text/javascript" src="scripts/jquery.datePicker.js"></script>
+
+    <script type="text/javascript">
+        var columnProcess = [
+        { id: "ID", name: "ID", field: "ID", width: 40, cssClass: "bg-gray", visible: false },
+        { id: "ProcessGUID", name: "流程GUID", field: "ProcessGUID", width: 40, cssClass: "bg-gray" },
+        { id: "ProcessName", name: "流程名称", field: "ProcessName", width: 40, cssClass: "bg-gray" },
+        { id: "XmlFileName", name: "文件名称", field: "XmlFileName", width: 40, cssClass: "bg-gray" },
+        { id: "XmlFilePath", name: "文件路径", field: "XmlFilePath", width: 40, cssClass: "bg-gray" },
+        { id: "CreatedDateTime", name: "创建时间", field: "CreatedDateTime", width: 40, cssClass: "bg-gray" }
+        ];
+
+        var optionsProcess = {
+            rowHeight: 20,
+            editable: false,
+            enableAddRow: false,
+            enableCellNavigation: false,
+            enableColumnReorder: false
+        };
+
+        $(function () {
+            loadprocess();
+        });
+
+        function loadprocess() {
+            //获取流程定义数据
+            ajaxGet('/SfApi/api/Wf2Xml/GetProcess', null, function (result) {
+                if (result.Status == 1) {
+                    var dsProcess = result.Entity;
+
+                    var dvProcess = new Slick.Data.DataView({ inlineFilters: true });
+                    var gridProcess = new Slick.Grid("#myGridProcess", dvProcess, columnProcess, optionsProcess);
+
+                    dvProcess.onRowsChanged.subscribe(function (e, args) {
+                        gridProcess.invalidateRows(args.rows);
+                        gridProcess.render();
+                    });
+
+                    dvProcess.onRowCountChanged.subscribe(function (e, args) {
+                        gridProcess.updateRowCount();
+                        gridProcess.render();
+                    });
+
+
+                    dvProcess.beginUpdate();
+                    dvProcess.setItems(dsProcess, "ID");
+                    gridProcess.setSelectionModel(new Slick.RowSelectionModel());
+                    dvProcess.endUpdate();
+
+                    //dataView.beginUpdate();
+                    //dataView.setItems(data);
+                    //dataView.setFilter(myFilter);
+                    //dataView.setFilterArgs(0);
+                    //dataView.endUpdate();
+                }
+            });
+        }
+    </script>
+
+</head>
+<body>
+    <div>
+        <div id="myGridProcess" class="grid-container" style="width:100%;height:500px;"></div>
+    </div>
+</body>
+</html>

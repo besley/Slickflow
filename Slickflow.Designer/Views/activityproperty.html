@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>活动属性定义</title>
+    <script type="text/javascript" src="AppJS/activityproperty.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var node = $("#activity-property-controller").scope().$$childHead.currentSelectedNode;
+
+            if (node) {
+                //fill activity basic information
+                $("#txtActivityName").val(node.data.name);
+                $("#txtActivityCode").val(node.data.code);
+                $("#txtDescription").val(node.data.description);
+                
+                //load performer list of current activity
+                activityManager.getActivityPerformer(node);
+            }
+        });
+
+        function onSureClick() {
+            activityManager.saveActivityInformation();
+        };
+
+        function onAddClick() {
+            activityManager.addPerformer();
+        }
+
+        function onDelClick() {
+            activityManager.delPerformer();
+        }
+    </script>
+</head>
+<body>
+    <div id="activity-property-controller">
+        <div>
+            <p>
+                <span class="a_tit">名称:</span>
+                <span><input type="text" id="txtActivityName" style="width:340px;" /></span>
+            </p>
+            <p>
+                <span class="a_tit">代码:</span>
+                <span><input type="text" id="txtActivityCode" style="width:340px;" /></span>
+            </p>
+            <p>
+                <span class="a_tit">描述:</span>
+                <span><input type="text" id="txtDescription" style="width:340px;" /></span>
+            </p>
+        </div>
+        <div>
+            <b class="icoBtn btnNew" onclick="onAddClick();"></b>
+            <b class="icoBtn btnDel" onclick="onDelClick();"></b>
+        </div>
+        <div id="myGridPerformer" class="grid-container" style="width:100%;height:260px;"></div>
+        <span class="spanright">
+            <input type="button" class="btn" value="确定" onclick="onSureClick()" />
+        </span>
+        <div id="divRoleDialog"></div>
+    </div>
+</body>
+</html>
