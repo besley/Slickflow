@@ -14,3 +14,10 @@ There are demo programs that you can find in WebDemo, WinformDemo project.
 
 The source project is under LGPL license, we also provide customers commercial license. if you have any further inquery, please feel free to contact us:
 william.ligong@yahoo.com
+
+
+[Donation on Paypal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=william%2eligong%40yahoo%2ecom&lc=US&item_name=Slickflow&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest).
+
+
+
+
