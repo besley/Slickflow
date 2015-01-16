@@ -143,7 +143,10 @@ if (!activityManager) activityManager = {};
     function syncActivityPerformers(participantType, participantItem) {
         var node = $("#activity-property-controller").scope().$$childHead.currentSelectedNode;      //kgraph directive
         var performers = node.data.performers;
-
+		if (!performers) {
+            performers = node.data.performers = [];
+        }
+		
         //check participants exists the newly added role item
         var packageData = $("#activity-property-controller").scope().graphView.packageData;
         var participants = packageData.participants;
