@@ -430,7 +430,7 @@ namespace Slickflow.WebDemoV2._0.Data
                 }
                 if (dt.Rows[0]["ChangedUserID"].ToString() != "")
                 {
-                    model.ChangedUserID = int.Parse(dt.Rows[0]["ChangedUserID"].ToString());
+                    model.ChangedUserID = dt.Rows[0]["ChangedUserID"].ToString();
                 }
                 model.ChangedUserName = dt.Rows[0]["ChangedUserName"].ToString();
 

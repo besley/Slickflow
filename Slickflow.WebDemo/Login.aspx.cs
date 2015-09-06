@@ -49,7 +49,7 @@ namespace Slickflow.WebDemoV2._0
                     }
                     catch (Exception ex)
                     { }
-                    HttpContext.Current.Response.Redirect("Slickflows/Index.aspx");
+                    HttpContext.Current.Response.Redirect("Index.aspx");
                 }
                 else
                 {

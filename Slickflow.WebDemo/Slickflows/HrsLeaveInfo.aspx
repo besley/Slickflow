@@ -8,7 +8,7 @@
 <head id="Head1" runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>请假流程办理</title>
-    <link href="../Skin/default.css" rel="stylesheet" />
+    <link href="../Skin/default.css?v=1.1" rel="stylesheet" />
     <script src="../js/jquery-1.10.2.min.js" type="text/javascript"></script>
     <script src="../js/layout.js" type="text/javascript"></script>
 </head>
@@ -68,12 +68,12 @@
                 <dd>
                     <input runat="server" type="text" value="" id="txtDepmanagerRemark" class="input normal" disabled="disabled" /></dd>
             </dl>
-            <dl>
+            <dl class="none">
                 <dt>主管总监意见</dt>
                 <dd>
                     <input runat="server" type="text" value="" id="txtDirectorRemark" class="input normal" disabled="disabled" /></dd>
             </dl>
-            <dl>
+            <dl  class="none">
                 <dt>副总经理意见</dt>
                 <dd>
                     <input runat="server" type="text" value="" id="txtDeputyGeneralRemark" class="input normal" disabled="disabled" /></dd>
