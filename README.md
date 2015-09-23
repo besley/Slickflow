@@ -12,6 +12,7 @@ There are demo programs that you can find in WebDemo, WinformDemo project.
 The source project is under LGPL license, we also provide customers commercial license. if you have any further inquery, please feel free to contact us: 
 
 EMail: william.ligong@yahoo.com
+QQ(Author): 47743901
 
 Slickflow website:
 http://www.slickflow.com
