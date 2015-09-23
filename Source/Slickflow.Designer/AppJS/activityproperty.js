@@ -1,7 +1,62 @@
-﻿var activityManager;
+﻿/*
+* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
+* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
+
+The Slickflow Designer project.
+Copyright (C) 2014  .NET Workflow Engine Library
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, you can access the official
+web page about lgpl: https://www.gnu.org/licenses/lgpl.html
+*/
+
+var activityManager;
 if (!activityManager) activityManager = {};
 
 (function () {
+    //load activity property
+    activityManager.loadActivity = function () {
+        $("#ddlComplexType").prop("selectedIndex", -1);
+        $("#ddlMergeType").prop("selectedIndex", -1);
+        $("#ddlCompareType").prop("selectedIndex", -1);
+
+        var node = kmain.currentSelectedDomElement.node;
+
+        if (node) {
+            //fill activity basic information
+            $("#txtActivityName").val(node.sdata.name);
+            $("#txtActivityCode").val(node.sdata.code);
+            $("#txtDescription").val(node.sdata.description);
+
+            //load performer list of current activity
+            activityManager.getActivityPerformer(node);
+
+            var nodeType = node.type();
+
+            if (nodeType == kgraph.Config.NODE_TYPE_MULTIPLEINSTANCE) {
+                $("#divMultipleInstanceContent").show();
+                //render multiple instance node property
+
+                $("#ddlComplexType").val(node.sdata.complexType);
+                $("#ddlMergeType").val(node.sdata.mergeType);
+                $("#ddlCompareType").val(node.sdata.compareType);
+                $("#txtCompleteOrder").val(node.sdata.completeOrder);
+            } else {
+                $("#divMultipleInstanceContent").hide();
+            }
+        }
+    }
+
     //load performer datagrid
     activityManager.getActivityPerformer = function(node) {
         var columnActivityPerformer = [
@@ -47,7 +102,7 @@ if (!activityManager) activityManager = {};
             var selectedRowIndex = args.rows[0];
             var row = dvActivityPerformer.getItemByIdx(selectedRowIndex);
             if (row) {
-                $("#activity-property-controller").scope().selectedActivityPerformerGUID = row.id;
+                kmain.selectedActivityPerformerGUID = row.id;
             }
         });
     }
@@ -56,9 +111,9 @@ if (!activityManager) activityManager = {};
         var performer = null;
         var activityPerformers = [];
 
-        if (node.data.performers && node.data.performers.length > 0) {
-            for (var i = 0; i < node.data.performers.length; i++) {
-                performer = getPerformerByGUID(node.data.performers[i].id);
+        if (node.sdata.performers && node.sdata.performers.length > 0) {
+            for (var i = 0; i < node.sdata.performers.length; i++) {
+                performer = getPerformerByGUID(node.sdata.performers[i].id);
                 if (performer) activityPerformers.push(performer);
             }
         }
@@ -70,7 +125,7 @@ if (!activityManager) activityManager = {};
         var participants = null;
         var packageData = null;
 
-        var packageData = $("#activity-property-controller").scope().currentPackageData;
+        var packageData = kmain.mcurrentPackageData;
         if (packageData && packageData.participants) {
             for (var i = 0; i < packageData.participants.length; i++) {
                 var p = packageData.participants[i];
@@ -89,25 +144,37 @@ if (!activityManager) activityManager = {};
     }
 
     //save activity basic information
-    activityManager.saveActivityInformation = function () {
+    activityManager.saveActivity = function () {
         var activityName = $("#txtActivityName").val();
         var activityCode = $("#txtActivityCode").val();
         var description = $("#txtDescription").val();
         var node = window.parent.$("#divActivityDialog").data("node");
 
         if (node) {
-            node.data.name = activityName;
-            node.data.code = activityCode;
-            node.data.description = description;
+            node.sdata.name = activityName;
+            node.sdata.code = activityCode;
+            node.sdata.description = description;
+
+            //set mulitiple instance node property
+            var nodeType = node.type();
+            if (nodeType == kgraph.Config.NODE_TYPE_MULTIPLEINSTANCE) {
+                node.sdata.complexType = $("#ddlComplexType").val();
+                node.sdata.mergeType = $("#ddlMergeType").val();
+                node.sdata.compareType = $("#ddlCompareType").val();
+                node.sdata.completeOrder = $("#txtCompleteOrder").val();
+            }
+            //update jsplumb node name
+            node.setNodeName(activityName);
         }
 
         window.parent.$('#divActivityDialog').dialog('close');
     };
 
+    //#region performers add / delete
     //add performer to activity performers list
     activityManager.addPerformer = function () {
-        $("#activity-property-controller").scope().selectedParticipantType = null;
-        $("#activity-property-controller").scope().selectedParticipantItem = null;
+        kmain.selectedParticipantType = null;
+        kmain.selectedParticipantItem = null;
 
         var roleDialog = $("#divRoleDialog")
             .load("/sfd/views/rolelist.html",
@@ -119,8 +186,8 @@ if (!activityManager) activityManager = {};
                     modal: true,
                     autoOpen: false,
                     beforeClose: function (evt, ui) {
-                        var participantType = $("#activity-property-controller").scope().selectedParticipantType;
-                        var participantItem = $("#activity-property-controller").scope().selectedParticipantItem;
+                        var participantType = kmain.selectedParticipantType;
+                        var participantItem = kmain.selectedParticipantItem;
                         //sync activity perfromer datasource
                         if (participantType && participantItem) {
                             syncActivityPerformers(participantType, participantItem);
@@ -135,17 +202,23 @@ if (!activityManager) activityManager = {};
                 roleDialog
                     .dialog(dialogOptions)
                     .dialog('open');
+                roleDialog
+                    .parent('.ui-dialog').css('zIndex', 9999);
             }
         );
     }
 
     //sync activity perfromer datasource
     function syncActivityPerformers(participantType, participantItem) {
-        var node = $("#activity-property-controller").scope().$$childHead.currentSelectedNode;      //kgraph directive
-        var performers = node.data.performers;
+        var node = kmain.currentSelectedDomElement.node;      //kgraph directive
+        var performers = node.sdata.performers;
+        if (!performers) {
+            performers = node.sdata.performers = [];
+        }
+
 
         //check participants exists the newly added role item
-        var packageData = $("#activity-property-controller").scope().graphView.packageData;
+        var packageData = kmain.mcurrentPackageData;
         var participants = packageData.participants;
 
         var participantAdded = null;
@@ -158,8 +231,6 @@ if (!activityManager) activityManager = {};
             }
         }
 
-        window.console.log("check participantitem in the participants");
-
         if (participantAdded) {
             //check this participant wether exists in the activity performers gridview
             var isExisted = false;
@@ -171,7 +242,11 @@ if (!activityManager) activityManager = {};
             }
 
             if (isExisted) {
-                alert("要添加的角色或用户数据已经存在！");
+                $.msgBox({
+                    title: "Desinger / ActivityProperty",
+                    content: "要添加的角色或用户数据已经存在！",
+                    type: "info"
+                });
             } else {
                 var performer = {
                     "id": participantAdded.id,
@@ -179,7 +254,7 @@ if (!activityManager) activityManager = {};
                     "code": participantAdded.code,
                     "outerId": participantAdded.outerId
                 }
-                node.data.performers.push(performer);
+                node.sdata.performers.push(performer);
                 //refresh the activity performer gridview
                 activityManager.getActivityPerformer(node);
             }
@@ -193,7 +268,7 @@ if (!activityManager) activityManager = {};
                     "code": participantItem.RoleCode,
                     "outerId": participantItem.ID
                 };
-                $("#activity-property-controller").scope().graphView.packageData.participants.push(participant);
+                kmain.mgraphView.packageData.participants.push(participant);
 
                 //add new performer to node activity performers gridview
                 var performer = {
@@ -202,7 +277,7 @@ if (!activityManager) activityManager = {};
                     "code": participant.code,
                     "outerId": participant.outerId
                 }
-                node.data.performers.push(performer);
+                node.sdata.performers.push(performer);
                 //refresh the activity performer gridview
                 activityManager.getActivityPerformer(node);
             }
@@ -211,16 +286,17 @@ if (!activityManager) activityManager = {};
 
     //del performer from activity performers list
     activityManager.delPerformer = function () {
-        var performerGUID = $("#activity-property-controller").scope().selectedActivityPerformerGUID;
-        var node = $("#activity-property-controller").scope().$$childHead.currentSelectedNode;
-        var performers = node.data.performers;
+        var performerGUID = kmain.selectedActivityPerformerGUID;
+        var node = kmain.currentSelectedDomElement.node;
+        var performers = node.sdata.performers;
 
         //remove the selected performer record 
-        node.data.performers = jQuery.grep(performers, function (item) {
+        node.sdata.performers = jQuery.grep(performers, function (item) {
             return item.id != performerGUID;
         });
 
         //refresh the gridview
         activityManager.getActivityPerformer(node);
     }
+    //#endregion
 })()

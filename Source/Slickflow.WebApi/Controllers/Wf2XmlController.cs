@@ -1,4 +1,7 @@
 ﻿/*
+* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
+* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
+*  
 The Slickflow project.
 Copyright (C) 2014  .NET Workflow Engine Library
 
@@ -45,20 +48,27 @@ namespace Slickflow.WebApi.Controllers
     public class Wf2XmlController : ApiController
     {
         #region 流程定义数据
+        /// <summary>
+        /// 创建流程定义
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         [HttpPost]
-        public ResponseResult CreateProcess(ProcessEntity entity)
+        public ResponseResult<ProcessEntity> CreateProcess(ProcessEntity entity)
         {
-            var result = ResponseResult.Default();
+            var result = ResponseResult<ProcessEntity>.Default();
             try
             {
                 var wfService = new WorkflowService();
-                wfService.CreateProcess(entity);
+                var processID = wfService.CreateProcess(entity);
 
-                result = ResponseResult.Success();
+                entity.ID = processID;
+
+                result = ResponseResult<ProcessEntity>.Success(entity);
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult.Error(string.Format("创建流程记录失败,错误:{0}", ex.Message));
+                result = ResponseResult<ProcessEntity>.Error(string.Format("创建流程记录失败,错误:{0}", ex.Message));
             }
             return result;
         }
@@ -70,7 +80,7 @@ namespace Slickflow.WebApi.Controllers
             try
             {
                 var wfService = new WorkflowService();
-                var processEntity = wfService.GetProcessById(entity.ProcessGUID);
+                var processEntity = wfService.GetProcessByVersion(entity.ProcessGUID, entity.Version);
                 processEntity.ProcessName = entity.ProcessName;
                 processEntity.XmlFileName = entity.XmlFileName;
                 processEntity.AppType = entity.AppType;
@@ -94,7 +104,7 @@ namespace Slickflow.WebApi.Controllers
             try
             {
                 var wfService = new WorkflowService();
-                wfService.DeleteProcess(entity.ProcessGUID);
+                wfService.DeleteProcess(entity.ProcessGUID, entity.Version);
 
                 result = ResponseResult.Success();
             }
@@ -112,14 +122,14 @@ namespace Slickflow.WebApi.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet]
-        public ResponseResult<ProcessFileEntity> GetProcessFile(string id)
+        [HttpPost]
+        public ResponseResult<ProcessFileEntity> QueryProcessFile(ProcessFileQuery query)
         {
             var result = ResponseResult<ProcessFileEntity>.Default();
             try
             {
                 var wfService = new WorkflowService();
-                var entity = wfService.GetProcessFile(id);
+                var entity = wfService.GetProcessFile(query.ProcessGUID, query.Version);
 
                 result = ResponseResult<ProcessFileEntity>.Success(entity);
             }
@@ -132,14 +142,19 @@ namespace Slickflow.WebApi.Controllers
             return result;
         }
 
-        [HttpGet]
-        public ResponseResult<ProcessEntity> GetProcessById(string id)
+        /// <summary>
+        /// 根据版本获取流程记录
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult<ProcessEntity> GetProcessByVersion(ProcessEntity obj)
         {
             var result = ResponseResult<ProcessEntity>.Default();
             try
             {
                 var wfService = new WorkflowService();
-                var entity = wfService.GetProcessById(id);
+                var entity = wfService.GetProcessByVersion(obj.ProcessGUID, obj.Version);
 
                 result = ResponseResult<ProcessEntity>.Success(entity);
             }
@@ -152,20 +167,49 @@ namespace Slickflow.WebApi.Controllers
             return result;
         } 
 
+        /// <summary>
+        /// 获取流程记录列表
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public ResponseResult<List<ProcessEntity>> GetProcess()
+        public ResponseResult<List<ProcessEntity>> GetProcessList()
         {
             var result = ResponseResult<List<ProcessEntity>>.Default();
             try
             {
                 var wfService = new WorkflowService();
-                var entity = wfService.GetProcess();
+                var entity = wfService.GetProcessList().ToList();
 
                 result = ResponseResult<List<ProcessEntity>>.Success(entity);
             }
             catch (System.Exception ex)
             {
                 result = ResponseResult<List<ProcessEntity>>.Error(
+                    string.Format("获取流程基本信息失败！{0}", ex.Message)
+                );
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 获取当前使用版本的流程记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public ResponseResult<ProcessEntity> GetProcess(string id)
+        {
+            var result = ResponseResult<ProcessEntity>.Default();
+            try
+            {
+                var wfService = new WorkflowService();
+                var entity = wfService.GetProcess(id);
+
+                result = ResponseResult<ProcessEntity>.Success(entity);
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<ProcessEntity>.Error(
                     string.Format("获取流程基本信息失败！{0}", ex.Message)
                 );
             }
@@ -196,23 +240,29 @@ namespace Slickflow.WebApi.Controllers
             }
             return result;
         }
+
+
         #endregion
 
         #region 角色资源数据获取
+        /// <summary>
+        /// 获取所有角色数据集
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public ResponseResult<List<RoleEntity>> GetRoleAll()
+        public ResponseResult<List<Role>> GetRoleAll()
         {
-            var result = ResponseResult<List<RoleEntity>>.Default();
+            var result = ResponseResult<List<Role>>.Default();
             try
             {
-                var roleService = new RoleService();
-                var entity = roleService.GetRoleAll();
+                var wfService = new WorkflowService();
+                var entity = wfService.GetRoleAll().ToList();
 
-                result = ResponseResult<List<RoleEntity>>.Success(entity);
+                result = ResponseResult<List<Role>>.Success(entity);
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<List<RoleEntity>>.Error(
+                result = ResponseResult<List<Role>>.Error(
                     string.Format("获取角色数据失败！{0}", ex.Message)
                 );
             }

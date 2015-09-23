@@ -1,0 +1,241 @@
+.tree {
+    padding-left: 14px;
+    overflow:auto;
+    position:relative;
+}
+
+.tree-solid-line {
+    padding-left: 12px;
+}
+
+.tree.tree-no-line {
+    padding-left: 0;
+}
+
+.tree:before{
+    width: 1px;
+    z-index:1;
+    display:block;
+    content:"";
+    position:absolute;
+    top:-21px;
+    bottom:16px;
+    left:0;
+    border-left:1px dotted #666;
+}
+
+.tree.tree-solid-line:before {
+    border-left:1px solid #999;
+}
+
+.tree.tree-no-line:before {
+    display: none;
+}
+
+.tree .tree-folder{
+    width:auto;
+    min-height:20px;
+    cursor:pointer;
+}
+
+.tree .tree-folder .tree-folder-header{
+    position:relative;
+    min-height:20px;
+    line-height:20px;
+    min-width: 100px;
+}
+
+.tree .tree-folder .tree-folder-header:hover{
+    background-color:#F1F2F7;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+.tree .tree-folder .tree-folder-header .tree-folder-name,
+.tree .tree-item .tree-item-name {
+    display:inline;
+    z-index:2;
+}
+
+.tree .tree-folder img {
+    margin-left: 4px;
+}
+
+.tree .tree-folder .tree-folder-header .tree-folder-name{
+    margin-left:2px;
+}
+
+.tree .tree-folder .tree-folder-content{
+    margin-left:23px;
+    position:relative
+}
+
+.tree .tree-folder .tree-folder-content:before{
+    display:inline-block;
+    content:"";
+    position:absolute;
+    width: 1px;
+    z-index:1;
+    top:-9px;
+    bottom:16px;
+    left:-12px;
+    border-left:1px dotted #666;
+}
+
+.tree.tree-solid-line .tree-folder .tree-folder-content:before {
+    border-left:1px solid #999;
+}
+
+.tree.tree-no-line .tree-folder .tree-folder-content:before {
+    display: none;
+}
+
+.tree .tree-item{
+    position:relative;
+    min-height:20px;
+    line-height:20px;
+    min-width: 100px;
+    cursor:pointer
+}
+
+.tree .tree-item:hover{
+    background-color:#F1F2F7;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+.tree .tree-item .tree-item-name{
+    margin-left:2px;
+}
+
+
+.tree .tree-folder,
+.tree .tree-item {
+    position:relative;
+}
+
+.tree .tree-folder:before,
+.tree .tree-item:before {
+    display:inline-block;
+    content:"";
+    position:absolute;
+    top:14px;
+    left:-13px;
+    width:18px;
+    height:0;
+    border-top:1px dotted #666;
+    z-index:1;
+}
+
+.tree.tree-solid-line .tree-folder:before,
+.tree.tree-solid-line .tree-item:before {
+    border-top:1px solid #999;
+}
+
+.tree.tree-no-line .tree-folder:before,
+.tree.tree-no-line .tree-item:before {
+    display: none;
+}
+
+.tree .tree-selected{
+    background-color: #F1F2F7;
+    color:#6398b0;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+.tree .tree-selected:hover{
+    background-color:#e1e1e1;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+.tree .tree-item,
+.tree .tree-folder{
+    border:1px solid #FFF
+}
+
+.tree .tree-item,
+.tree .tree-folder .tree-folder-header{
+    margin:0;
+    padding:4px 5px 6px 5px;
+    color:#333;
+    -webkit-box-sizing:content-box;
+    -moz-box-sizing:content-box;
+    box-sizing:content-box;
+}
+
+.tree .tree-item .tree-item-name > i,
+.tree .tree-folder .tree-folder-header > i {
+    color: #666;
+}
+
+
+.tree .tree-item.tree-selected > i,
+.tree .tree-item .tree-item-name > i{
+    margin-left: -2px;
+    width: 14px;
+    display: inline-block;
+    text-align: center;
+    margin-right: 1px;
+    color: #666;
+}
+
+
+.tree.tree-plus-minus .tree-folder-header .fa-folder-open:before {
+    height: 16px;
+    width: 16px;
+    line-height: 16px;
+    vertical-align: middle;
+    display: inline-block;
+    background: url("../img/tree-icons.png") no-repeat;
+    background-position: 0 -23px;
+    content: "";
+}
+
+.tree.tree-plus-minus .tree-folder-header .fa-folder:before {
+    height: 16px;
+    width: 16px;
+    line-height: 16px;
+    vertical-align: middle;
+    display: inline-block;
+    background: url("../img/tree-icons.png") no-repeat;
+    background-position: 0 0px;
+    content: "";
+}
+
+.ie .tree.tree-plus-minus .tree-folder-header .fa-folder:before,
+.ie .tree.tree-plus-minus .tree-folder-header .fa-folder-open:before {
+    margin-top: -5px;
+}
+
+.tree.tree-plus-minus .tree-folder-name {
+    margin-left: 0px !important;
+}
+
+.tree .tree-actions {
+    display: none;
+    position: absolute;
+    margin-top: 1px;
+    right: 4px;
+}
+
+.tree .tree-item:hover .tree-actions,
+.tree .tree-folder-header:hover .tree-actions {
+    display: inline-block;
+}
+
+.tree .tree-actions > i {
+    font-weight: 300;
+    padding: 1px 3px;
+    text-align: center;
+    font-size: 14px;
+    color: #999;
+    margin-right: 6px;
+    margin-top: 0px;
+    display: inline-block;
+}
+
+.tree .tree-actions > i:hover {
+    color: #666;
+}

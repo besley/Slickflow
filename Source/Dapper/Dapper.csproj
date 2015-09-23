@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultParameterCharacter.cs" />
     <Compile Include="Extensions\DapperExtensions.cs" />
     <Compile Include="Extensions\DapperExtensionsConfiguration.cs" />
     <Compile Include="Extensions\DapperImplementor.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Extensions\Mapper\PluralizedAutoClassMapper.cs" />
     <Compile Include="Extensions\Mapper\PropertyMap.cs" />
     <Compile Include="Extensions\Sql\MySqlDialect.cs" />
+    <Compile Include="Extensions\Sql\OracleSqlDialect.cs" />
     <Compile Include="Extensions\Sql\PostgreSqlDialect.cs" />
     <Compile Include="Extensions\Sql\SqlCeDialect.cs" />
     <Compile Include="Extensions\Sql\SqlDialectBase.cs" />

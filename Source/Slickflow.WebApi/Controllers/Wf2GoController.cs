@@ -1,4 +1,7 @@
 ﻿/*
+* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
+* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
+* 
 The Slickflow project.
 Copyright (C) 2014  .NET Workflow Engine Library
 
@@ -58,7 +61,7 @@ namespace Slickflow.WebApi.Controllers
         public object Get()
         {
             ProcessManager pm = new ProcessManager();
-            var process = pm.GetByGUID("072AF8C3-482A-4B1C-890B-685CE2FCC75D");
+            var process = pm.GetByVersion("072AF8C3-482A-4B1C-890B-685CE2FCC75D", "1");
 
             return process;
         }
@@ -81,10 +84,10 @@ namespace Slickflow.WebApi.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public void RemoveProcess(String processGUID)
+        public void RemoveProcess(ProcessEntity entity)
         {
             ProcessManager pm = new ProcessManager();
-            pm.Delete(processGUID);
+            pm.Delete(entity.ProcessGUID, entity.Version);
         }
 
         [HttpGet]
@@ -114,8 +117,7 @@ namespace Slickflow.WebApi.Controllers
         public ResponseResult StartProcess(WfAppRunner starter)
         {
             IWorkflowService wfService = new WorkflowService();
-            IDbConnection conn = new SqlConnection(DBConfig.ConnectionString);
-            conn.Open();
+            IDbConnection conn = SessionFactory.CreateConnection();
 
             IDbTransaction trans = null;
             try
@@ -129,10 +131,12 @@ namespace Slickflow.WebApi.Controllers
 
                 if (result.Status == WfExecutedStatus.Success)
                 {
+                    trans.Commit();
                     return ResponseResult.Success();
                 }
                 else
                 {
+                    trans.Rollback();
                     return ResponseResult.Error(result.Message);
                 }
             }
@@ -154,8 +158,7 @@ namespace Slickflow.WebApi.Controllers
         public ResponseResult RunProcessApp(WfAppRunner runner)
         {
             IWorkflowService wfService = new WorkflowService();
-            IDbConnection conn = new SqlConnection(DBConfig.ConnectionString);
-            conn.Open();
+            IDbConnection conn = SessionFactory.CreateConnection();
 
             IDbTransaction trans = null;
             try
@@ -165,9 +168,15 @@ namespace Slickflow.WebApi.Controllers
                 trans.Commit();
 
                 if (result.Status == WfExecutedStatus.Success)
+                {
+                    trans.Commit();
                     return ResponseResult.Success();
+                }
                 else
+                {
+                    trans.Rollback();
                     return ResponseResult.Error(result.Message);
+                }
             }
             catch (WorkflowException w)
             {
@@ -187,20 +196,24 @@ namespace Slickflow.WebApi.Controllers
         public ResponseResult WithdrawProcess(WfAppRunner runner)
         {
             IWorkflowService wfService = new WorkflowService();
-            IDbConnection conn = new SqlConnection(DBConfig.ConnectionString);
-            conn.Open();
+            IDbConnection conn = SessionFactory.CreateConnection();
 
             IDbTransaction trans = null;
             try
             {
                 trans = conn.BeginTransaction();
                 var result = wfService.WithdrawProcess(conn, runner, trans);
-                trans.Commit();
 
                 if (result.Status == WfExecutedStatus.Success)
+                {
+                    trans.Commit();
                     return ResponseResult.Success();
+                }
                 else
+                {
+                    trans.Rollback();
                     return ResponseResult.Error(result.Message);
+                }
             }
             catch (WorkflowException w)
             {
@@ -220,20 +233,24 @@ namespace Slickflow.WebApi.Controllers
         public ResponseResult SendBackProcess(WfAppRunner runner)
         {
             IWorkflowService wfService = new WorkflowService();
-            IDbConnection conn = new SqlConnection(DBConfig.ConnectionString);
-            conn.Open();
+            IDbConnection conn = SessionFactory.CreateConnection();
 
             IDbTransaction trans = null;
             try
             {
                 trans = conn.BeginTransaction();
                 var result = wfService.SendBackProcess(conn, runner, trans);
-                trans.Commit();
 
                 if (result.Status == WfExecutedStatus.Success)
+                {
+                    trans.Commit();
                     return ResponseResult.Success();
+                }
                 else
+                {
+                    trans.Rollback();
                     return ResponseResult.Error(result.Message);
+                }
             }
             catch (WorkflowException w)
             {
@@ -253,20 +270,24 @@ namespace Slickflow.WebApi.Controllers
         public ResponseResult ReverseProcess(WfAppRunner runner)
         {
             IWorkflowService wfService = new WorkflowService();
-            IDbConnection conn = new SqlConnection(DBConfig.ConnectionString);
-            conn.Open();
+            IDbConnection conn = SessionFactory.CreateConnection();
 
             IDbTransaction trans = null;
             try
             {
                 trans = conn.BeginTransaction();
                 var result = wfService.ReverseProcess(conn, runner, trans);
-                trans.Commit();
 
                 if (result.Status == WfExecutedStatus.Success)
+                {
+                    trans.Commit();
                     return ResponseResult.Success();
+                }
                 else
+                {
+                    trans.Rollback();
                     return ResponseResult.Error(result.Message);
+                }
             }
             catch (WorkflowException w)
             {
@@ -315,6 +336,15 @@ namespace Slickflow.WebApi.Controllers
         #endregion
 
         #region 流程运行数据读取
+        [HttpGet]
+        [AllowAnonymous]
+        public ResponseResult IsLastTask(int id)
+        {
+            IWorkflowService wfService = new WorkflowService();
+            var isLast = wfService.IsLastTask(id);
+            return ResponseResult.Success(string.Format("the return result is:{0}", isLast));
+        }
+
         /// <summary>
         /// 获取下一步办理的节点
         /// </summary>
@@ -345,8 +375,7 @@ namespace Slickflow.WebApi.Controllers
         public ResponseResult<IList<NodeView>> GetNextStepsContainer(WfAppRunner runner)
         {
             IWorkflowService wfService = new WorkflowService();
-            IUserRoleService roleService = new Slickflow.BizApp.UserRoleService();
-            var nodeList = wfService.GetNextActivityTree(runner, null, roleService);
+            var nodeList = wfService.GetNextActivityTree(runner, null);
 
             return ResponseResult<IList<NodeView>>.Success(nodeList);
         }

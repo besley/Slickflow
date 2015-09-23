@@ -14,6 +14,7 @@ namespace Dapper
         {
             public string Sql { get; set; }
             public object Parameters { get; set; }
+            public bool IsInclusive { get; set; }
         }
 
         class Clauses : List<Clause>
@@ -35,7 +36,18 @@ namespace Dapper
                 {
                     p.AddDynamicParams(item.Parameters);
                 }
-                return prefix + string.Join(joiner, this.Select(c => c.Sql)) + postfix;
+                return this.Any(a => a.IsInclusive)
+                    ? prefix +
+                      string.Join(joiner,
+                          this.Where(a => !a.IsInclusive)
+                              .Select(c => c.Sql)
+                              .Union(new[]
+                              {
+                                  " ( " +
+                                  string.Join(" OR ", this.Where(a => a.IsInclusive).Select(c => c.Sql).ToArray()) +
+                                  " ) "
+                              })) + postfix
+                    : prefix + string.Join(joiner, this.Select(c => c.Sql)) + postfix;
             }
         }
 
@@ -94,7 +106,7 @@ namespace Dapper
             return new Template(this, sql, parameters);
         }
 
-        void AddClause(string name, string sql, object parameters, string joiner, string prefix = "", string postfix = "")
+        void AddClause(string name, string sql, object parameters, string joiner, string prefix = "", string postfix = "", bool IsInclusive = false)
         {
             Clauses clauses;
             if (!data.TryGetValue(name, out clauses))
@@ -102,8 +114,14 @@ namespace Dapper
                 clauses = new Clauses(joiner, prefix, postfix);
                 data[name] = clauses;
             }
-            clauses.Add(new Clause { Sql = sql, Parameters = parameters });
+            clauses.Add(new Clause { Sql = sql, Parameters = parameters, IsInclusive = IsInclusive });
             seq++;
+        }
+
+        public SqlBuilder Intersect(string sql, dynamic parameters = null)
+        {
+            AddClause("intersect", sql, parameters, joiner: "\nINTERSECT\n ", prefix: "\n ", postfix: "\n");
+            return this;
         }
 
         public SqlBuilder InnerJoin(string sql, dynamic parameters = null)
@@ -127,6 +145,12 @@ namespace Dapper
         public SqlBuilder Where(string sql, dynamic parameters = null)
         {
             AddClause("where", sql, parameters, " AND ", prefix: "WHERE ", postfix: "\n");
+            return this;
+        }
+
+        public SqlBuilder OrWhere(string sql, dynamic parameters = null)
+        {
+            AddClause("where", sql, parameters, " AND ", prefix: "WHERE ", postfix: "\n", IsInclusive: true);
             return this;
         }
 

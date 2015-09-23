@@ -7,7 +7,7 @@
 <head id="Head1" runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>请假流程办理</title>
-    <link href="../Skin/default.css" rel="stylesheet" />
+    <link href="../Skin/default.css?v=1.1" rel="stylesheet" />
     <script src="../js/jquery-1.10.2.min.js" type="text/javascript"></script>
     <script src="../js/layer/layer.js" type="text/javascript"></script>
     <script src="../js/layout.js" type="text/javascript"></script>
@@ -75,12 +75,12 @@
                 <dd>
                     <input runat="server" type="text" value="" id="txtDepmanagerRemark" class="input normal" disabled="disabled" /></dd>
             </dl>
-            <dl>
+            <dl class="none">
                 <dt>主管总监意见</dt>
                 <dd>
                     <input runat="server" type="text" value="" id="txtDirectorRemark" class="input normal" disabled="disabled" /></dd>
             </dl>
-            <dl>
+            <dl class="none">
                 <dt>副总经理意见</dt>
                 <dd>
                     <input runat="server" type="text" value="" id="txtDeputyGeneralRemark" class="input normal" disabled="disabled" /></dd>
@@ -96,8 +96,7 @@
         <!--工具栏-->
         <div class="page-footer">
             <div class="btn-list">
-                <input type="hidden" id="hiddenStepGuid" value="" runat="server" />
-                <input type="hidden" id="hiddenStepUser" value="" runat="server" />
+                <input type="hidden" id="hiddenNextActivityPerformers" value="" runat="server" />
                 <input type="hidden" id="hiddenInstanceId" value="" runat="server" />
                 <input type="hidden" id="hiddenNextFlowIsOK" value="" runat="server" />
                 <input type="hidden" id="hiddenPerformField" value="" runat="server" />
@@ -143,22 +142,17 @@
                 beforeClose: function (index) {
                     var selectOK = layer.getChildFrame('#hiddenOK', index).val();
                     if (selectOK == "OK") {
-                        var _stepGuid = layer.getChildFrame('#hiddenStepGuid', index).val();//选中的步骤ID
-                        var _stepMember = layer.getChildFrame('#hiddenStepUser', index).val();//步骤办理人员ID
-
-                        if (_stepGuid != undefined && _stepGuid != null && _stepGuid != "") {
-                            $("#hiddenStepGuid").val(_stepGuid);
-                            $("#hiddenStepUser").val(_stepMember);
+                        var _hiddenNextActivityPerformers = layer.getChildFrame('#hiddenNextActivityPerformers', index).val();//选中的步骤人员
+                        if (_hiddenNextActivityPerformers != undefined && _hiddenNextActivityPerformers != null && _hiddenNextActivityPerformers != "") {
+                            $("#hiddenNextActivityPerformers").val(_hiddenNextActivityPerformers);
                         }
-                        var nextActivityGuid = $("#hiddenStepGuid").val();
-                        var nextActivityMemberId = $("#hiddenStepUser").val();
-                        if (nextActivityGuid != undefined && nextActivityGuid != null && nextActivityGuid != "") {
+                        var hiddenNextActivityPerformers = $("#hiddenNextActivityPerformers").val();
+                        if (hiddenNextActivityPerformers != undefined && hiddenNextActivityPerformers != null && hiddenNextActivityPerformers != "") {
                             $("#hiddenNextFlowIsOK").val("OK");
                             $("#btnSendNext").click();
                         } else {
                             $("#hiddenNextFlowIsOK").val("");
-                            $("#hiddenStepGuid").val("");
-                            $("#hiddenStepUser").val("");
+                            $("#hiddenNextActivityPerformers").val("");
                         }
                     }
                 },

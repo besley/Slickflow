@@ -30,19 +30,15 @@ namespace Slickflow.WebDemoV2._0.Slickflows
             try
             {
                 string processGUID = this.txtProcessGUID.Value.ToString();
-                string stepGuid = this.hiddenStepGuid.Value.ToString();
-                int stepUserID = Helper.ConverToInt32(this.hiddenStepUser.Value.ToString().Trim());
                 decimal days = Helper.ConverToDecimal(this.txtDays.Value);
                 int leaveType = Helper.ConverToInt32(selectLeaveType.Value);
+                string strNextActivityPerformers = hiddenNextActivityPerformers.Value.ToString().Trim();
 
-                int nextUserID = 0;
-                string nextUserName = string.Empty;
-
-                SysUserEntity userEntity = WorkFlows.GetSysUserModel(stepUserID);
-                if (userEntity != null && userEntity.ID > 0)
+                IDictionary<string, PerformerList> nextActivityPerformers = NextActivityPerformers(strNextActivityPerformers);
+                if (nextActivityPerformers == null)
                 {
-                    nextUserID = userEntity.ID;
-                    nextUserName = userEntity.UserName;
+                    base.RegisterStartupScript("", "<script>alert('请选择办理步骤或办理人员');</script>");
+                    return;
                 }
 
                 DateTime now = DateTime.Now;
@@ -94,19 +90,20 @@ namespace Slickflow.WebDemoV2._0.Slickflows
                     }
 
                     //送往下一步
+                    /*
                     PerformerList pList = new PerformerList();
                     pList.Add(new Performer(nextUserID.ToString(), nextUserName));
 
                     initiator.NextActivityPerformers = new Dictionary<String, PerformerList>();
                     initiator.NextActivityPerformers.Add(stepGuid, pList);
-
+                    */
+                    initiator.NextActivityPerformers = nextActivityPerformers;
                     WfExecutedResult runAppResult = service.RunProcessApp(initiator);
                     if (runAppResult.Status != WfExecutedStatus.Success)
                     {
                         base.RegisterStartupScript("", "<script>alert('" + runAppResult.Message + "');</script>");
                         return;
                     }
-
                     //保存业务数据
                     BizAppFlowEntity AppFlowEntity = new Entity.BizAppFlowEntity();
                     AppFlowEntity.AppName = "流程发起";
@@ -114,7 +111,7 @@ namespace Slickflow.WebDemoV2._0.Slickflows
                     AppFlowEntity.ActivityName = "流程发起";
                     AppFlowEntity.Remark = string.Format("申请人:{0}-{1}", LoginUserID, LoginUserName);
                     AppFlowEntity.ChangedTime = now;
-                    AppFlowEntity.ChangedUserID = LoginUserID;
+                    AppFlowEntity.ChangedUserID = LoginUserID.ToString();
                     AppFlowEntity.ChangedUserName = LoginUserName;
 
                     WorkFlows.AddBizAppFlow(AppFlowEntity);

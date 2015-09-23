@@ -44,6 +44,14 @@
     <Reference Include="ServiceStack.Text">
       <HintPath>..\DLL\ServiceStack.Text.dll</HintPath>
     </Reference>
+    <Reference Include="Slickflow.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\EngineLib\Slickflow.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Slickflow.Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\EngineLib\Slickflow.Engine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -72,12 +80,6 @@
     </Compile>
     <Compile Include="Made\PerformerResource.cs" />
     <Compile Include="Made\UserModel.cs" />
-    <Compile Include="QueryForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="QueryForm.Designer.cs">
-      <DependentUpon>QueryForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Utility\HttpClientHelper.cs" />
     <Compile Include="RunForm.cs">
       <SubType>Form</SubType>
@@ -104,9 +106,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="QueryForm.resx">
-      <DependentUpon>QueryForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="RunForm.resx">
       <DependentUpon>RunForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -122,20 +121,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Slickflow.BizApp\Slickflow.BizApp.csproj">
-      <Project>{a39cb11b-0664-4619-8028-07de35c3405a}</Project>
-      <Name>Slickflow.BizApp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj">
-      <Project>{e0a4fc43-54af-49b3-a227-0ce9db503903}</Project>
-      <Name>Slickflow.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Slickflow.Engine\Slickflow.Engine.csproj">
-      <Project>{f2aa5cc3-4212-4c6c-9336-a5c10f46affe}</Project>
-      <Name>Slickflow.Engine</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Xml\Made\MOrderFlow.xml" />
     <Content Include="Xml\Sample\price.normal.tmp.xml" />
     <Content Include="Xml\Sample\price.subprocess.multipleinstance.tmp.xml" />
@@ -148,7 +133,6 @@
     <Content Include="Xml\Stk\officeIn.xml" />
     <Content Include="Xml\Stk\officeIn.xorSplitxorJoin.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

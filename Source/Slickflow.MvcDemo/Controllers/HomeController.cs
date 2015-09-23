@@ -3,24 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using PlatOne.WebUtility;
 
 namespace Slickflow.MvcDemo.Controllers
 {
-    public class HomeController : Controller
+    /// <summary>
+    /// 主页控制器
+    /// </summary>
+    public class HomeController : MvcControllerBase
     {
+        //
+        // GET: /Home/
+        [AllowAnonymous]
         public ActionResult Index()
         {
-            return RedirectToAction("MySlickflow", "Slickflow");
-        }
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
             return View();
         }
     }

@@ -20,7 +20,7 @@
           </Performers>
         </Activity>
         <Activity name="入库会签子流程" id="fc8c71c5-8786-450e-af27-9f6a9de8560f">
-          <ActivityType type="SubProcessNode" subid="68696ea3-00ab-4b40-8fcf-9859dbbde378" complextype="MultipleInstance" mergetype="Sequence"/>
+          <ActivityType type="SubProcessNode" subid="68696ea3-00ab-4b40-8fcf-9859dbbde378" complextype="SignTogether" mergetype="Sequence"/>
           <Location Left="90" Top="205" Width="120" Height="50" />
           <Performers>
             <Performer id="6398503c-25da-4c49-9530-41d3573c860c" />

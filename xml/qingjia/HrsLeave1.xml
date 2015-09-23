@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package>
+  <Participants>
+    <Participant type="Role" id="782fd0e2-cdb5-4483-9daa-9b993bdfa7bc" name="普通员工" code="employees" outerId="1" />
+    <Participant type="Role" id="739fb839-f4f2-45f1-be14-29a844f2eb0c" name="人事经理" code="hrmanager" outerId="3" />
+    <Participant type="Role" id="65215949-35f9-4041-dfff-71c365837519" name="主管总监" code="director" outerId="4" />
+    <Participant type="Role" id="417d5599-6e36-4bbe-aaa7-7898387d4b3b" name="部门经理" code="depmanager" outerId="2" />
+    <Participant type="Role" id="68b50316-cb61-4936-9c0f-064b4f249d06" name="副总经理" code="deputygeneralmanager" outerId="7" />
+    <Participant type="Role" id="2d1f8122-3078-4fc7-97b0-6fd270d0446d" name="总经理" code="generalmanager" outerId="8" />
+  </Participants>
+  <WorkflowProcesses>
+    <Process name="请假流程(NEW)" id="2acffb20-6bd1-4891-98c9-c76d022d1445">
+      <Activities>
+        <Activity name="" id="19c8fc45-9869-495f-aa91-3f2d737831b3" code="">
+          <ActivityType type="StartNode" />
+          <Geography>
+            <Widget left="35" top="81" width="40" height="40">
+              <Connectors>
+                <Connector type="input" index="1" name="A" />
+                <Connector type="output" index="1" name="X" />
+              </Connectors>
+            </Widget>
+          </Geography>
+        </Activity>
+        <Activity name="人事经理审批" id="28f086ba-efad-42dc-83d4-e0d16dbee9ad" code="">
+          <ActivityType type="TaskNode" />
+          <Performers>
+            <Performer id="739fb839-f4f2-45f1-be14-29a844f2eb0c" />
+          </Performers>
+          <Geography>
+            <Widget left="926" top="306" width="80.2" height="30.2">
+              <Connectors>
+                <Connector type="input" index="1" name="A" />
+                <Connector type="output" index="1" name="X" />
+              </Connectors>
+            </Widget>
+          </Geography>
+        </Activity>
+        <Activity name="总经理审批" id="2d0ba456-171f-4570-91ac-7bbb32a682ef" code="">
+          <ActivityType type="TaskNode" />
+          <Performers>
+            <Performer id="2d1f8122-3078-4fc7-97b0-6fd270d0446d" />
+          </Performers>
+          <Geography>
+            <Widget left="904" top="189" width="80.2" height="30.2">
+              <Connectors>
+                <Connector type="input" index="1" name="A" />
+                <Connector type="output" index="1" name="X" />
+              </Connectors>
+            </Widget>
+          </Geography>
+        </Activity>
+        <Activity name="副总经理审批" id="2575a8fc-c707-4632-d01b-e819dfd548ab" code="">
+          <ActivityType type="TaskNode" />
+          <Performers>
+            <Performer id="68b50316-cb61-4936-9c0f-064b4f249d06" />
+          </Performers>
+          <Geography>
+            <Widget left="724" top="189" width="80.2" height="30.2">
+              <Connectors>
+                <Connector type="input" index="1" name="A" />
+                <Connector type="output" index="1" name="X" />
+              </Connectors>
+            </Widget>
+          </Geography>
+        </Activity>
+        <Activity name="" id="68912fca-6c56-475f-a9e7-888afed23654" code="">
+          <ActivityType type="EndNode" />
+          <Geography>
+            <Widget left="1101" top="306" width="40" height="40">
+              <Connectors>
+                <Connector type="input" index="1" name="A" />
+                <Connector type="output" index="1" name="X" />
+              </Connectors>
+            </Widget>
+          </Geography>
+        </Activity>
+        <Activity name="部门经理审批" id="472a9bd4-7acb-4c1a-cb78-89ee7c5575ac" code="">
+          <ActivityType type="TaskNode" />
+          <Performers>
+            <Performer id="417d5599-6e36-4bbe-aaa7-7898387d4b3b" />
+          </Performers>
+          <Geography>
+            <Widget left="405" top="306" width="80.2" height="30.2">
+              <Connectors>
+                <Connector type="input" index="1" name="A" />
+                <Connector type="output" index="1" name="X" />
+              </Connectors>
+            </Widget>
+          </Geography>
+        </Activity>
+        <Activity name="主管总监审批" id="063f80e7-2558-4d33-f279-d8ea4faeb0ab" code="">
+          <ActivityType type="TaskNode" />
+          <Performers>
+            <Performer id="65215949-35f9-4041-dfff-71c365837519" />
+          </Performers>
+          <Geography>
+            <Widget left="566" top="189" width="80.2" height="30.2">
+              <Connectors>
+                <Connector type="input" index="1" name="A" />
+                <Connector type="output" index="1" name="X" />
+              </Connectors>
+            </Widget>
+          </Geography>
+        </Activity>
+        <Activity name="" id="9f186059-37b9-4a4e-d12f-c0d608edd322" code="">
+          <Description>Or分支节点</Description>
+          <ActivityType type="GatewayNode" gatewaySplitJoinType="Split" gatewayDirection="OrSplit" />
+          <Geography>
+            <Widget left="354" top="85" width="30" height="30">
+              <Connectors>
+                <Connector type="input" index="1" name="A" />
+                <Connector type="output" index="1" name="X" />
+              </Connectors>
+            </Widget>
+          </Geography>
+        </Activity>
+        <Activity name="员工提交" id="45b49d66-761f-4ed5-aa48-e48d1530d0cf" code="">
+          <Description>总监和副经理请假-&gt;总经理审批</Description>
+          <ActivityType type="TaskNode" />
+          <Performers>
+            <Performer id="782fd0e2-cdb5-4483-9daa-9b993bdfa7bc" />
+            <Performer id="739fb839-f4f2-45f1-be14-29a844f2eb0c" />
+            <Performer id="65215949-35f9-4041-dfff-71c365837519" />
+            <Performer id="417d5599-6e36-4bbe-aaa7-7898387d4b3b" />
+          </Performers>
+          <Geography>
+            <Widget left="157" top="80" width="80.2" height="30.2">
+              <Connectors>
+                <Connector type="input" index="1" name="A" />
+                <Connector type="output" index="1" name="X" />
+              </Connectors>
+            </Widget>
+          </Geography>
+        </Activity>
+      </Activities>
+      <Transitions>
+        <Transition id="3718864e-8c79-4b5d-ba7f-75eb410134bc" from="19c8fc45-9869-495f-aa91-3f2d737831b3" to="45b49d66-761f-4ed5-aa48-e48d1530d0cf">
+          <Description>-&gt;员工提交</Description>
+          <Condition />
+          <Geography>
+            <Line fromConnector="1" toConnector="1" />
+          </Geography>
+        </Transition>
+        <Transition id="4765f68f-197e-427c-9dce-fbd436c1b9b1" from="45b49d66-761f-4ed5-aa48-e48d1530d0cf" to="9f186059-37b9-4a4e-d12f-c0d608edd322">
+          <Description>员工提交-&gt;</Description>
+          <Condition />
+          <Geography>
+            <Line fromConnector="1" toConnector="1" />
+          </Geography>
+        </Transition>
+        <Transition id="45b076ba-fcdf-42c7-8cd1-9e33e94ef6e5" from="9f186059-37b9-4a4e-d12f-c0d608edd322" to="472a9bd4-7acb-4c1a-cb78-89ee7c5575ac">
+          <Description>-&gt;部门经理审批</Description>
+          <Condition />
+          <Geography>
+            <Line fromConnector="1" toConnector="1" />
+          </Geography>
+        </Transition>
+        <Transition id="4caebe31-24dc-4567-ad9b-caaaa21a4091" from="9f186059-37b9-4a4e-d12f-c0d608edd322" to="2d0ba456-171f-4570-91ac-7bbb32a682ef">
+          <Description>总监和副经理请假-&gt;总经理审批</Description>
+          <Condition />
+          <Geography>
+            <Line fromConnector="1" toConnector="1" />
+          </Geography>
+        </Transition>
+        <Transition id="43363436-3772-4bd3-d0b2-3c146eeb0602" from="472a9bd4-7acb-4c1a-cb78-89ee7c5575ac" to="28f086ba-efad-42dc-83d4-e0d16dbee9ad">
+          <Description>部门经理审批-&gt;人事经理审批</Description>
+          <Condition />
+          <Geography>
+            <Line fromConnector="1" toConnector="1" />
+          </Geography>
+        </Transition>
+        <Transition id="c79519b5-33f6-4be8-d08c-cb284b61b269" from="28f086ba-efad-42dc-83d4-e0d16dbee9ad" to="68912fca-6c56-475f-a9e7-888afed23654">
+          <Description>人事经理审批-&gt;</Description>
+          <Condition />
+          <Geography>
+            <Line fromConnector="1" toConnector="1" />
+          </Geography>
+        </Transition>
+        <Transition id="7af16fda-7255-4eeb-cc3f-fd2e2e6752d2" from="9f186059-37b9-4a4e-d12f-c0d608edd322" to="063f80e7-2558-4d33-f279-d8ea4faeb0ab">
+          <Description>-&gt;主管总监审批</Description>
+          <Condition />
+          <Geography>
+            <Line fromConnector="1" toConnector="1" />
+          </Geography>
+        </Transition>
+        <Transition id="309fbb92-b4d6-4749-9bcb-fb3ac3c80c04" from="063f80e7-2558-4d33-f279-d8ea4faeb0ab" to="2575a8fc-c707-4632-d01b-e819dfd548ab">
+          <Description>主管总监审批-&gt;副总经理审批</Description>
+          <Condition />
+          <Geography>
+            <Line fromConnector="1" toConnector="1" />
+          </Geography>
+        </Transition>
+        <Transition id="1be2890e-c5e6-45dc-b358-62f8fdf8af5f" from="2575a8fc-c707-4632-d01b-e819dfd548ab" to="2d0ba456-171f-4570-91ac-7bbb32a682ef">
+          <Description>副总经理审批-&gt;总经理审批</Description>
+          <Condition />
+          <Geography>
+            <Line fromConnector="1" toConnector="1" />
+          </Geography>
+        </Transition>
+        <Transition id="6f30074c-ccdf-4b26-d113-89f268f2035e" from="2d0ba456-171f-4570-91ac-7bbb32a682ef" to="28f086ba-efad-42dc-83d4-e0d16dbee9ad">
+          <Description>总经理审批-&gt;人事经理审批</Description>
+          <Condition />
+          <Geography>
+            <Line fromConnector="1" toConnector="1" />
+          </Geography>
+        </Transition>
+        <Transition id="e7231025-2de5-4c23-fae7-4d7a9d94931b" from="472a9bd4-7acb-4c1a-cb78-89ee7c5575ac" to="063f80e7-2558-4d33-f279-d8ea4faeb0ab">
+          <Description>部门经理审批-&gt;主管总监审批</Description>
+          <Condition />
+          <Geography>
+            <Line fromConnector="1" toConnector="1" />
+          </Geography>
+        </Transition>
+      </Transitions>
+    </Process>
+  </WorkflowProcesses>
+</Package>

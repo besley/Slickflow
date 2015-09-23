@@ -10,22 +10,24 @@ using Slickflow.Engine.Service;
 using Slickflow.Engine.Xpdl;
 
 using Slickflow.WebDemoV2._0.Business;
+using Slickflow.WebDemoV2._0.Entity;
+using Slickflow.WebDemoV2._0.Common;
 
 
 namespace Slickflow.WebDemoV2._0.Slickflows
 {
     public partial class FlowStepSelect : BasePage
     {
-        public string stepList = string.Empty;
-        public string userList = string.Empty;
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
             {
                 if (LoginUserID > 0)
                 {
-                    InitStepMember();
+                    if (Request.QueryString["Action"] != null && Request.QueryString["Action"].ToString() == "InitStep")
+                    {
+                        InitStepMember();
+                    }
                 }
                 else
                 {
@@ -39,6 +41,8 @@ namespace Slickflow.WebDemoV2._0.Slickflows
         /// </summary>
         protected void InitStepMember()
         {
+            string strNodes = string.Empty;
+
             //流程定义的GUID
             string flowGuid = Request.QueryString["ProcessGUID"] == null ? "" : Request.QueryString["ProcessGUID"].ToString();
             string Step = Request.QueryString["Step"] == null ? "" : Request.QueryString["Step"].ToString();
@@ -48,21 +52,45 @@ namespace Slickflow.WebDemoV2._0.Slickflows
             }
             else
             {
+                List<ZTreeEntity> zTreeEntityList = new List<ZTreeEntity>();
+
                 String processGUID = flowGuid;
                 IWorkflowService service = new WorkflowService();
                 switch (Step)
                 {
                     case "start"://流程第一步选择
-                        ActivityEntity firstActivity = service.GetFirstActivity(processGUID);
+                        ActivityEntity firstActivity = service.GetFirstActivity(processGUID, string.Empty);
                         String firstActivityGUID = firstActivity.ActivityGUID;
-
                         string conditions = Request.QueryString["condition"] == null ? "" : Request.QueryString["condition"].ToString();
-                        
-                        IList<NodeView> nextNodes = service.GetNextActivity(processGUID, firstActivityGUID, GetCondition(conditions));
+                        IList<NodeView> nextNodes = service.GetNextActivity(processGUID, string.Empty, firstActivityGUID, GetCondition(conditions));
                         if (nextNodes != null)
                         {
-                            Repeater1.DataSource = nextNodes;
-                            Repeater1.DataBind();
+                            if (nextNodes != null)
+                            {
+                                ZTreeEntity zTreeEntity = null;
+                                foreach (NodeView item in nextNodes)
+                                {
+                                    zTreeEntity = new ZTreeEntity();
+                                    zTreeEntity.id = string.Format("step[{0}]", item.ActivityGUID);
+                                    zTreeEntity.pId = "0";
+                                    zTreeEntity.name = item.ActivityName;
+                                    zTreeEntity.nocheck = false;
+                                    zTreeEntityList.Add(zTreeEntity);
+
+
+                                    DataTable dt = GetUsers(item.Roles);
+                                    foreach (DataRow dr in dt.Rows)
+                                    {
+                                        zTreeEntity = new ZTreeEntity();
+                                        zTreeEntity.id = string.Format("step[{0}]member[{1}]", item.ActivityGUID, dr["ID"].ToString());
+                                        zTreeEntity.pId = string.Format("step[{0}]", item.ActivityGUID);
+                                        zTreeEntity.name = dr["UserName"].ToString();
+                                        zTreeEntity.nocheck = false;
+                                        zTreeEntityList.Add(zTreeEntity);
+                                    }
+
+                                }
+                            }
                         }
                         else
                         {
@@ -82,19 +110,29 @@ namespace Slickflow.WebDemoV2._0.Slickflows
                                 runner.UserID = this.LoginUserID.ToString();
                                 hiddenIsSelectMember.Value = "true";
                                 IList<NodeView> NodeViewList = service.GetNextActivityTree(runner, GetCondition(condition));
+
+
                                 if (NodeViewList != null)
                                 {
-                                    Repeater1.DataSource = NodeViewList;
-                                    Repeater1.DataBind();
-                                    if (NodeViewList.Count == 1)
+                                    ZTreeEntity zTreeEntity = null;
+                                    foreach (NodeView item in NodeViewList)
                                     {
-                                        string nextActivityGuid = NodeViewList[0].ActivityGUID;
-                                        /*
-                                        ActivityEntity activityEntity = service.GetActivityInstance(processGUID, nextActivityGuid);
-                                        if (activityEntity.ActivityType == ActivityTypeEnum.EndNode)
+                                        zTreeEntity = new ZTreeEntity();
+                                        zTreeEntity.id = string.Format("step[{0}]", item.ActivityGUID);
+                                        zTreeEntity.pId = "0";
+                                        zTreeEntity.name = item.ActivityName;
+                                        zTreeEntityList.Add(zTreeEntity);
+
+                                        DataTable dt = GetUsers(item.Roles);
+                                        foreach (DataRow dr in dt.Rows)
                                         {
-                                            hiddenIsSelectMember.Value = "false";
-                                        }*/
+                                            zTreeEntity = new ZTreeEntity();
+                                            zTreeEntity.id = string.Format("step[{0}]member[{1}]", item.ActivityGUID, dr["ID"].ToString());
+                                            zTreeEntity.pId = string.Format("step[{0}]", item.ActivityGUID);
+                                            zTreeEntity.name = dr["UserName"].ToString();
+                                            zTreeEntity.nocheck = false;
+                                            zTreeEntityList.Add(zTreeEntity);
+                                        }
                                     }
                                 }
                                 else
@@ -107,7 +145,11 @@ namespace Slickflow.WebDemoV2._0.Slickflows
                         { }
                         break;
                 }
+                strNodes = JsonHelper.ObjectToJson(zTreeEntityList);
             }
+
+            Response.Write(strNodes);
+            Response.End();
         }
 
 
@@ -137,23 +179,6 @@ namespace Slickflow.WebDemoV2._0.Slickflows
         }
 
 
-        protected void Repeater1_ItemDataBound(object sender, RepeaterItemEventArgs e)
-        {
-            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-            {
-                Repeater rep = e.Item.FindControl("Repeater2") as Repeater;//找到里层的repeater对象
-                NodeView rowv = (NodeView)e.Item.DataItem;//找到分类Repeater关联的数据项 
-                if (rowv.Roles != null)
-                {
-                    DataTable dt = GetUsers(rowv.Roles);
-                    if (dt != null)
-                    {
-                        rep.DataSource = dt;
-                        rep.DataBind();
-                    }
-                }
-            }
-        }
 
     }
 }

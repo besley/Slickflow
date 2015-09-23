@@ -70,8 +70,8 @@ namespace Slickflow.WebDemoV2._0.Entity
         /// <summary>
         /// ChangedUserID
         /// </summary>		
-        private int _changeduserid;
-        public int ChangedUserID
+        private string _changeduserid;
+        public string ChangedUserID
         {
             get { return _changeduserid; }
             set { _changeduserid = value; }

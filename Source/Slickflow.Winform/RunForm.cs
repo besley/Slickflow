@@ -16,6 +16,7 @@ using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Service;
+using Slickflow.Data;
 
 namespace Slickflow.Winform
 {
@@ -31,6 +32,7 @@ namespace Slickflow.Winform
             StartupRunEnd();
         }
 
+        #region workflow test whole case
         public void StartupRunEnd()
         {
             IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["WfDBConnectionString"].ToString());
@@ -146,5 +148,14 @@ namespace Slickflow.Winform
             if (conn.State == ConnectionState.Open)
                 conn.Close();
         }
+
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var wfService = new WorkflowService();
+            var count = wfService.GetProcessInstanceCount("5c5041fc-ab7f-46c0-85a5-6250c3aea375", "1");
+            MessageBox.Show(count.ToString());
+        }
+        #endregion
     }
 }

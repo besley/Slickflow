@@ -15,8 +15,8 @@ namespace Slickflow.Winform
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MOrderUserCaseForm());
-            //Application.Run(new QueryForm());
+            //Application.Run(new MOrderUserCaseForm());
+            Application.Run(new RunForm());
         }
     }
 }

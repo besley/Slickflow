@@ -6,7 +6,7 @@
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>请假流程发起</title>
-    <link href="../Skin/default.css" rel="stylesheet" />
+    <link href="../Skin/default.css?v=1.1" rel="stylesheet" />
     <script src="../js/jquery-1.10.2.min.js" type="text/javascript"></script>
     <script src="../js/layer/layer.js" type="text/javascript"></script>
     <script src="../js/layout.js" type="text/javascript"></script>
@@ -88,12 +88,12 @@
                 <dd>
                     <input runat="server" type="text" value="" id="txtDepmanagerRemark" class="input normal disabled" disabled="disabled" /></dd>
             </dl>
-            <dl>
+            <dl class="none">
                 <dt>主管总监意见</dt>
                 <dd>
                     <input runat="server" type="text" value="" id="txtDirectorRemark" class="input normal disabled" disabled="disabled" /></dd>
             </dl>
-            <dl>
+            <dl class="none">
                 <dt>副总经理意见</dt>
                 <dd>
                     <input runat="server" type="text" value="" id="txtDeputyGeneralRemark" class="input normal disabled" disabled="disabled" /></dd>
@@ -106,11 +106,9 @@
             <dl>
                 <dd>
                     <span>流程说明：</span><br />
-                    <span>1、普通员工请假二天以内的（含二天），请假单由部门负责人批准,人事备档；&nbsp;</span><br />
-                    <span>2、二天以上，五天以内的（含五天），经部门负责人同意后，再由主管总监批准后人事备档；</span><br />
-                    <span>3、五天以上的，经部门负责人、主管总监确认后，再由副总经理和总经理批准后人事备档；</span><br />
-                    <span>4、部门负责人请事假三天以内的，请假单由主管总监批准；三天以上的，经主管副总确认后，由总经理批准后人事备档；</span><br />
-                    <span>5、总监和副总请假，由总经理审批后，交由人事备档；</span>
+                    <span>1、普通员工请假三天以内的（含三天），请假单由部门负责人批准,人事备档；</span><br />
+                    <span>2、三天以上的经总经理同意后，再由人事备档；</span><br />
+                    <span>备注：其他角色及条件的请自行定义流程；</span><br />
                 </dd>
             </dl>
 
@@ -120,10 +118,8 @@
         <!--工具栏-->
         <div class="page-footer">
             <div class="btn-list">
-                <input type="hidden" id="hiddenStepGuid" value="" runat="server" />
-                <input type="hidden" id="hiddenStepUser" value="" runat="server" />
+                <input type="hidden" id="hiddenNextActivityPerformers" value="" runat="server" />
                 <input type="hidden" id="hiddenNextFlowIsOK" value="" runat="server" />
-
                 <input name="btnSelectFlowStep" type="button" value="选择送下一步信息" class="btn" onclick="SeleteFlowInfo()" />
                 <asp:Button ID="btnSave" runat="server" Text="提交保存" CssClass="btn yellow" OnClick="btnSave_Click" Style="display: none" />
                 <input name="btnReturn" type="button" value="返回上一页" class="btn yellow" onclick="javascript: history.back(-1);" />
@@ -186,30 +182,17 @@
                     $("#hiddenNextFlowIsOK").val("");
                     var selectOK = layer.getChildFrame('#hiddenOK', index).val();
                     if (selectOK == "OK") {
-                        var _stepGuid = layer.getChildFrame('#hiddenStepGuid', index).val();//选中的步骤ID
-                        var _stepMember = layer.getChildFrame('#hiddenStepUser', index).val();//步骤办理人员ID
-
-                        //alert("_stepGuid=" + _stepGuid);
-                        //alert("_stepMember=" + _stepMember);
-
-                        if (_stepGuid != undefined && _stepGuid != null && _stepGuid != "" && _stepMember != undefined && _stepMember != null && _stepMember != "") {
-                            $("#hiddenStepGuid").val(_stepGuid);
-                            $("#hiddenStepUser").val(_stepMember);
+                        var _hiddenNextActivityPerformers = layer.getChildFrame('#hiddenNextActivityPerformers', index).val();//选中的步骤人员
+                        if (_hiddenNextActivityPerformers != undefined && _hiddenNextActivityPerformers != null && _hiddenNextActivityPerformers != "") {
+                            $("#hiddenNextActivityPerformers").val(_hiddenNextActivityPerformers);
                         }
-
-                        var nextActivityGuid = $("#hiddenStepGuid").val();
-                        var nextActivityMemberId = $("#hiddenStepUser").val();
-
-                        //alert("nextActivityGuid=" + nextActivityGuid);
-                        // alert("nextActivityMemberId=" + nextActivityMemberId);
-
-                        if (nextActivityGuid != undefined && nextActivityGuid != null && nextActivityGuid != "" && nextActivityMemberId != undefined && nextActivityMemberId != null && nextActivityMemberId != "") {
+                        var hiddenNextActivityPerformers = $("#hiddenNextActivityPerformers").val();
+                        if (hiddenNextActivityPerformers != undefined && hiddenNextActivityPerformers != null && hiddenNextActivityPerformers != "") {
                             $("#hiddenNextFlowIsOK").val("OK");
                             $("#btnSave").click();
                         } else {
                             $("#hiddenNextFlowIsOK").val("");
-                            $("#hiddenStepGuid").val("");
-                            $("#hiddenStepUser").val("");
+                            $("#hiddenNextActivityPerformers").val("");
                         }
                     }
                 },

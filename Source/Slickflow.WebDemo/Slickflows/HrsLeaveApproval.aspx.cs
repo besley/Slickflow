@@ -53,48 +53,53 @@ namespace Slickflow.WebDemoV2._0.Slickflows
 
                     //权限设置
                     IWorkflowService service = new WorkflowService();
-                    ProcessEntity processEntity = service.GetProcessById(ProcessGUID);
-                    if (processEntity != null)
+                    ActivityInstanceEntity activityInstanceEntity = service.GetActivityInstance(ActivityInstanceID);
+                    ProcessInstanceEntity processInstanceEntity = service.GetProcessInstance(activityInstanceEntity.ProcessInstanceID);
+
+                    this.txtProcessGUID.Value = activityInstanceEntity.ProcessGUID;
+                    if (activityInstanceEntity != null)
                     {
-                        this.txtProcessGUID.Value = processEntity.ProcessGUID.ToString();
+                        ActivityEntity activityEntity = service.GetActivityEntity(processInstanceEntity.ProcessGUID,
+                            processInstanceEntity.Version,
+                            activityInstanceEntity.ActivityGUID);
 
-                        ActivityInstanceEntity activityInstanceEntity = service.GetActivityInstance(ActivityInstanceID);
-                        if (activityInstanceEntity != null)
+                        var roles = service.GetActivityRoles(processInstanceEntity.ProcessGUID,
+                            processInstanceEntity.Version,
+                            activityInstanceEntity.ActivityGUID);
+
+                        if (activityEntity != null && roles != null && roles.Count > 0)
                         {
-                            ActivityEntity activityEntity = service.GetActivityEntity(ProcessGUID, activityInstanceEntity.ActivityGUID);
-                            if (activityEntity != null && activityEntity.Roles != null && activityEntity.Roles.Count > 0)
+                            foreach (var role in roles)
                             {
-                                foreach (var role in activityEntity.Roles)
+                                if (role.ID == LoginRoleID.ToString())
                                 {
-                                    if (role.ID == LoginRoleID)
+                                    switch (role.ID)
                                     {
-                                        switch (role.ID)
-                                        {
-                                            case 2://部门经理
-                                                this.txtDepmanagerRemark.Disabled = false;
-                                                hiddenPerformField.Value = "DepManager";
-                                                break;
+                                        case "2"://部门经理
+                                            this.txtDepmanagerRemark.Disabled = false;
+                                            hiddenPerformField.Value = "DepManager";
+                                            break;
 
-                                            case 4://主管总监
-                                                this.txtDirectorRemark.Disabled = false;
-                                                hiddenPerformField.Value = "Director";
-                                                break;
+                                        case "4"://主管总监
+                                            this.txtDirectorRemark.Disabled = false;
+                                            hiddenPerformField.Value = "Director";
+                                            break;
 
-                                            case 7://副总经理
-                                                this.txtDeputyGeneralRemark.Disabled = false;
-                                                hiddenPerformField.Value = "Deputy";
-                                                break;
+                                        case "7"://副总经理
+                                            this.txtDeputyGeneralRemark.Disabled = false;
+                                            hiddenPerformField.Value = "Deputy";
+                                            break;
 
-                                            case 8://总经理
-                                                this.txtGeneralManagerRemark.Disabled = false;
-                                                hiddenPerformField.Value = "General";
-                                                break;
-                                        }
+                                        case "8"://总经理
+                                            this.txtGeneralManagerRemark.Disabled = false;
+                                            hiddenPerformField.Value = "General";
+                                            break;
                                     }
                                 }
                             }
                         }
                     }
+
                 }
             }
         }
@@ -105,9 +110,10 @@ namespace Slickflow.WebDemoV2._0.Slickflows
         {
             try
             {
+                DateTime now = DateTime.Now;
+                string CurrentActivityText = string.Empty;
+                string currentOpinionRemark = string.Empty;
                 string processGUID = this.txtProcessGUID.Value.ToString();
-                string stepGuid = this.hiddenStepGuid.Value.ToString();
-                int stepUserID = Helper.ConverToInt32(this.hiddenStepUser.Value.ToString().Trim());
                 decimal days = Helper.ConverToDecimal(this.txtDays.Value);
                 string instanceId = this.hiddenInstanceId.Value;
                 string DepManagerRemark = this.txtDepmanagerRemark.Value;
@@ -115,21 +121,30 @@ namespace Slickflow.WebDemoV2._0.Slickflows
                 string DeputyGeneralRemark = this.txtDeputyGeneralRemark.Value;
                 string GeneralManagerRemark = this.txtGeneralManagerRemark.Value;
                 int activityInstanceID = Helper.ConverToInt32(hiddenActivityInstanceID.Value);
-
-                string CurrentActivityText = string.Empty; ;
-
-                int nextUserID = 0;
-                string nextUserName = string.Empty;
-
-                SysUserEntity userEntity = WorkFlows.GetSysUserModel(stepUserID);
-                if (userEntity != null && userEntity.ID > 0)
+                string strNextActivityPerformers = hiddenNextActivityPerformers.Value.ToString().Trim();
+                IDictionary<string, PerformerList> nextActivityPerformers = NextActivityPerformers(strNextActivityPerformers);
+                if (nextActivityPerformers == null)
                 {
-                    nextUserID = userEntity.ID;
-                    nextUserName = userEntity.UserName;
+                    base.RegisterStartupScript("", "<script>alert('请选择办理步骤或办理人员');</script>");
+                    return;
                 }
+                switch (hiddenPerformField.Value.ToString())
+                {
+                    case "DepManager"://部门经理
+                        currentOpinionRemark = this.txtDepmanagerRemark.Value;
+                        break;
 
-                DateTime now = DateTime.Now;
-
+                    case "Director"://主管总监
+                        currentOpinionRemark = this.txtDirectorRemark.Value;
+                        break;
+                    case "Deputy"://副总经理
+                        currentOpinionRemark = this.txtDeputyGeneralRemark.Value;
+                        break;
+                    case "General"://总经理
+                        currentOpinionRemark = this.txtGeneralManagerRemark.Value;
+                        break;
+                }
+                
                 if (!string.IsNullOrEmpty(instanceId))
                 {
                     //调用流程
@@ -142,14 +157,7 @@ namespace Slickflow.WebDemoV2._0.Slickflows
                     initiator.UserID = LoginUserID.ToString();
                     initiator.UserName = LoginUserName;
                     initiator.Conditions = GetCondition(string.Format("days-{0}", days));
-
-                    //送往下一步
-                    PerformerList pList = new PerformerList();
-                    pList.Add(new Performer(nextUserID.ToString(), nextUserName));
-
-                    initiator.NextActivityPerformers = new Dictionary<String, PerformerList>();
-                    initiator.NextActivityPerformers.Add(stepGuid, pList);
-
+                    initiator.NextActivityPerformers = nextActivityPerformers;
                     WfExecutedResult runAppResult = service.RunProcessApp(initiator);
                     if (runAppResult.Status != WfExecutedStatus.Success)
                     {
@@ -157,17 +165,11 @@ namespace Slickflow.WebDemoV2._0.Slickflows
                         return;
                     }
 
-
-                    ProcessEntity processEntity = service.GetProcessById(processGUID);
-                    if (processEntity != null)
+                    ActivityInstanceEntity activityInstanceEntity = service.GetActivityInstance(activityInstanceID);
+                    if (activityInstanceEntity != null)
                     {
-                        ActivityInstanceEntity activityInstanceEntity = service.GetActivityInstance(activityInstanceID);
-                        if (activityInstanceEntity != null)
-                        {
-                            CurrentActivityText = activityInstanceEntity.ActivityName;
-                        }
+                        CurrentActivityText = activityInstanceEntity.ActivityName;
                     }
-
                     try
                     {
                         //保存业务数据
@@ -175,9 +177,9 @@ namespace Slickflow.WebDemoV2._0.Slickflows
                         AppFlowEntity.AppName = "请假流程";
                         AppFlowEntity.AppInstanceID = instanceId.ToString();
                         AppFlowEntity.ActivityName = CurrentActivityText;
-                        AppFlowEntity.Remark = string.Format("申请人:{0}-{1}", LoginUserID, LoginUserName) + CurrentActivityText;
+                        AppFlowEntity.Remark = string.Format("{0}(ID:{1}) {2}", LoginUserName, LoginUserID, currentOpinionRemark);
                         AppFlowEntity.ChangedTime = now;
-                        AppFlowEntity.ChangedUserID = LoginUserID;
+                        AppFlowEntity.ChangedUserID = LoginUserID.ToString();
                         AppFlowEntity.ChangedUserName = LoginUserName;
                         WorkFlows.AddBizAppFlow(AppFlowEntity);
                     }

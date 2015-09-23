@@ -4,21 +4,25 @@
     <title>转移属性定义</title>
     <script type="text/javascript">
         $(function () {
-            var line = $("#transition-property-controller").scope().$$childHead.currentSelectedLine;
+            var line = kmain.currentSelectedDomElement.line;
             
             if (line) {
-                $("#txtDescription").val(line.data.description);
-                $("#txtCondition").val(line.data.condition);
+                $("#txtDescription").val(line.sdata.description);
+                if (line.sdata.condition)
+                    $("#txtCondition").val(line.sdata.condition.text);
             }
         });
 
         function onSureClick() {
             var description = $("#txtDescription").val();
-            var condition = $("#txtCondition").val();
+            var condition = {};
+            condition.type = "Expression";
+            condition.text = $("#txtCondition").val();
+
             var line = window.parent.$("#divTransitionDialog").data("line");
 
-            line.data.description = description;
-            line.data.condition = condition;
+            line.sdata.description = description;
+            line.sdata.condition = condition;
 
             window.parent.$('#divTransitionDialog').dialog('close');
         };

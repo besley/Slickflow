@@ -1,73 +1,84 @@
-﻿@using Slickflow.MvcDemo.Models
-@model LoginViewModel
-@{
-    ViewBag.Title = "Slicflow MvcDemo 用户登录";
-}
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Mosaddek">
+    <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <link rel="shortcut icon" href="/MvcDemo/Scripts/flatlab/img/favicon.png">
 
-<h2>@ViewBag.Title.</h2>
-<div class="row">
-    <div class="col-md-8">
-        <ul class="page-header">
-            测试数据，用户名:XiaoFeng（管理员）
-            employees，
-            depmanager，
-            hrmanager，
-            director，
-            deputygeneralmanager，
-            generalmanager，
-            默认密码均为111111
-        </ul>
-        <section id="loginForm">
-            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-                @Html.AntiForgeryToken()
-                <h4>Use a local account to log in.</h4>
-                <hr />
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group">
-                    @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <div class="checkbox">
-                            @Html.CheckBoxFor(m => m.RememberMe)
-                            @Html.LabelFor(m => m.RememberMe)
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Log in" class="btn btn-default" />
-                    </div>
-                </div>
-                <p>
-                    @Html.ActionLink("Register as a new user", "Register")
-                </p>
-                @* Enable this once you have account confirmation enabled for password reset functionality
-                    <p>
-                        @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                    </p>*@
-            }
-        </section>
-    </div>
-    <div class="col-md-4">
-        <section id="socialLoginForm">
-            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-        </section>
-    </div>
-</div>
+    <title>Slickflow 用户登录</title>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+    <!-- Bootstrap core CSS -->
+    <link href="/MvcDemo/Scripts/flatlab/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/MvcDemo/Scripts/flatlab/css/bootstrap-reset.css" rel="stylesheet">
+    <!--external css-->
+    <link href="/MvcDemo/Scripts/flatlab/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="/MvcDemo/Scripts/flatlab/css/style.css" rel="stylesheet">
+    <link href="/MvcDemo/scripts/flatlab/css/style-responsive.css" rel="stylesheet" />
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="login-body">
+
+    <div class="container">
+
+        <form class="form-signin" action="/MvcDemo/Home/Index" id="loginForm">
+            <h2 class="form-signin-heading">Slickflow</h2>
+            <div class="login-wrap">
+                <div class="panel-body">
+                    <div class="row">
+                        <label>请选择系统角色: </label>
+                        <select class="form-control input-lg m-bot15" id="ddlRoles">
+                            <option value="0">--角色列表--</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <label>请选择角色人员: </label>
+                        <select class="form-control input-lg m-bot15" id="ddlUsers">
+                            <option value="0">--人员列表--</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-lg btn-login btn-block" id="btnLogin" onclick="accountManager.login();">登    录</button>
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="/MvcDemo/Scripts/flatlab/js/jquery.js"></script>
+    <script src="/MvcDemo/Scripts/flatlab/js/bootstrap.min.js"></script>
+    <script src="/MvcDemo/Scripts/jshelper.js"></script>
+    <script src="/MvcDemo/Scripts/localhelper.js"></script>
+    <script src="/MvcDemo/AppJS/define.js"></script>
+    <script src="/MvcDemo/AppJS/Account/accountmanager.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            accountManager.loadRoles();
+
+            $('#ddlRoles').on('change', function (e) {
+                var optionSelected = $("option:selected", this);
+                var valueSelected = this.value;     //roleId
+                accountManager.fillUsers(valueSelected);
+            });
+
+            $("#loginForm").submit(function (e) {
+                if (accountManager.isValidated == undefined
+                    || accountManager.isValidated == false)
+                    e.preventDefault();
+            });
+        })
+    </script>
+
+</body>
+</html>

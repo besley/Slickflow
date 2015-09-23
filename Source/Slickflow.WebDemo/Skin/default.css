@@ -453,3 +453,8 @@ textarea.input{ width:300px; height:65px; }
 #Validform_msg a.Validform_close:hover{color:#ccc;}
 #Validform_msg .Validform_info{padding:10px;border:1px solid #bbb; border-top:none; text-align:left;}
 /*=====================以上部分是Validform必须的====================*/
+
+
+.none {
+display:none !important;
+}

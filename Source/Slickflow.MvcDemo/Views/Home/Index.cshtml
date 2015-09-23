@@ -1,3 +1,104 @@
 ﻿@{
-    ViewBag.Title = "Slickflow MvcDemo";
+    Layout = "~/Views/Shared/mainlayout.cshtml";
 }
+<link rel="stylesheet" type="text/css" href="/MvcDemo/Content/slick.grid.css" />
+<style type="text/css">
+    .ui-state-default {
+        background-color: #bec3c7 !important;
+        border: 1px solid #22bacf !important;
+        border-radius: 0% !important;
+    }
+
+    .percent-complete-bar {
+        display: inline-block;
+        height: 6px;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+    }
+
+    .slick-header *, *:before, *.after {
+        -moz-box-sizing: content-box;
+        box-sizing: content-box;
+    }
+</style>
+
+<section id="main-content">
+    <section class="wrapper">
+        <div class="row">
+            <div class="col-lg-6">
+                <!--tab nav start-->
+
+                <section class="panel">
+                    <header class="panel-heading tab-bg-dark-navy-blue">
+                        <div style="height:10px;"> 
+                            <span class="tools pull-right">
+                                @*<a class="fa fa-chevron-down" href="javascript:;"></a>*@
+                                <a class="fa fa-times" href="javascript:;"></a>
+                            </span>
+                        </div>
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#todotask" data-toggle="tab" onclick="loadReadyTasks();">
+                                    待办任务
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#donetask" data-toggle="tab" onclick="loadCompletedTasks();">
+                                    已办任务
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#subtask" data-toggle="tab">
+                                    消息通知
+                                </a>
+                            </li>
+                        </ul>
+                    </header>
+                    <div class="panel-body">
+                        <div class="tab-content  tasi-tab">
+                            <div id="todotask" class="tab-pane active">
+                                <div class="panel-body">
+                                    <div id="myGridReadyTaskView" style="width:100%;height:100px;"></div>
+                                </div>
+                            </div>
+                            <div id="donetask" class="tab-pane">
+                                <div class="panel-body">
+                                    <div id="myGridCompletedTaskView" style="width:100%;height:100px;"></div>
+                                </div>
+                            </div>
+                            <div id="subtask" class="tab-pane">notification and message</div>
+                        </div>
+                    </div>
+                </section>
+           </div>
+        </div>
+    </section>
+</section>
+
+<script type="text/javascript" src="/MvcDemo/Scripts/jquery-2.0.2.js"></script>
+<script type="text/javascript" src="/MvcDemo/Scripts/jquery.event.drag-2.2.js"></script>
+<script type="text/javascript" src="/MvcDemo/Scripts/slickgrid/slick.grid.all.js"></script>
+<script type="text/javascript" src="/MvcDemo/Scripts/slickgrid/slick.dataview.js"></script>
+<script type="text/javascript" src="/MvcDemo/AppJS/Home/mainpage.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        //加载待办数据
+        loadReadyTasks();
+
+        //加载已办数据
+        //mainPage.loadCompletedTasks(user);
+
+    })
+
+    function loadReadyTasks() {
+        var user = lsm.getUserIdentity();
+        mainPage.loadReadyTasks(user);
+    }
+
+    function loadCompletedTasks() {
+        var user = lsm.getUserIdentity();
+        mainPage.loadCompletedTasks(user);
+    }
+     
+</script>

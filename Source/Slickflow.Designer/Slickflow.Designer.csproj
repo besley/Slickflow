@@ -7,19 +7,18 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5FFCE46E-9D05-4533-826B-82E226290861}</ProjectGuid>
+    <ProjectGuid>{7BF0F27F-8985-4B8D-9DAA-E51D0BB7CF3D}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SlickflowDesigner</RootNamespace>
-    <AssemblyName>SlickflowDesigner</AssemblyName>
+    <RootNamespace>Slickflow.Editor</RootNamespace>
+    <AssemblyName>Slickflow.Editor</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <TargetFrameworkProfile />
-    <UseIISExpress>false</UseIISExpress>
-    <IISExpressSSLPort />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,7 +28,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,46 +36,54 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\SlickflowDesigner.pubxml" />
+    <Content Include="AppJS\kgraphview2.min.js" />
+    <Content Include="Content\flowchart.css" />
+    <Content Include="Content\images\alert.png" />
+    <Content Include="Content\images\confirm.png" />
+    <Content Include="Content\images\error.png" />
+    <Content Include="Content\images\info.png" />
+    <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\msgBoxBackGround.png" />
+    <Content Include="Content\msgBoxLight.css" />
+    <Content Include="Content\superfish.css" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="AppJS\activityproperty.js" />
     <Content Include="AppJS\gatewayproperty.js" />
-    <Content Include="AppJS\rolelist.js" />
-    <Content Include="AppJS\transitionproperty.js" />
-    <Content Include="Content\images\ajax-loader.gif" />
-    <Content Include="Views\activityproperty.html" />
-    <Content Include="AppJS\app.js" />
-    <Content Include="AppJS\dragging_service.js" />
-    <Content Include="AppJS\kgraphdirective.js" />
-    <Content Include="AppJS\krender.js" />
-    <Content Include="AppJS\kgraphview.js" />
-    <Content Include="AppJS\mouse_capture_service.js" />
-    <Content Include="AppJS\processservice.js" />
+    <Content Include="AppJS\processfile.js" />
     <Content Include="AppJS\processlist.js" />
-    <Content Include="AppJS\svg_class.js" />
-    <Content Include="AppJS\template.html" />
-    <Content Include="Content\angular-ui-layout.css" />
-    <Content Include="Content\app.css" />
+    <Content Include="AppJS\rolelist.js" />
+    <Content Include="AppJS\subprocessmanager.js" />
     <Content Include="Content\images\2.png" />
+    <Content Include="Content\images\ajax-loader.gif" />
     <Content Include="Content\images\arrow.png" />
     <Content Include="Content\images\arrowex.png" />
     <Content Include="Content\images\Batch-1_01.png" />
@@ -185,7 +191,6 @@
     <Content Include="Content\images\web_ui_lanrensc_01_03.png" />
     <Content Include="Content\images\web_ui_lanrensc_03.png" />
     <Content Include="Content\jquery-ui.css" />
-    <Content Include="Content\main.css" />
     <Content Include="Content\slick.grid.css" />
     <Content Include="Content\splitter.css" />
     <Content Include="Content\style.css" />
@@ -297,32 +302,44 @@
     <Content Include="Content\ui\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\ui\minified\jquery.ui.theme.min.css" />
     <Content Include="Content\ui\minified\jquery.ui.tooltip.min.css" />
-    <Content Include="index.html" />
-    <Content Include="Views\gatewayproperty.html" />
-    <Content Include="Views\processlist.html" />
-    <Content Include="Scripts\angular-checklist-model.js" />
-    <Content Include="Scripts\angular-mocks.js" />
-    <Content Include="Scripts\angular-sanitize.js" />
-    <Content Include="Scripts\angular-ui-layout.min.js" />
-    <Content Include="Scripts\angular-1.2.14.js" />
+    <Content Include="demo.html" />
+    <Content Include="Scripts\html2canvas\canvg.js" />
+    <Content Include="Scripts\html2canvas\filesaver.min.js" />
+    <Content Include="Scripts\html2canvas\html2canvas.js" />
+    <Content Include="Scripts\html2canvas\html2canvas.svg.js" />
+    <Content Include="Scripts\html2canvas\rgbcolor.js" />
+    <Content Include="Scripts\html2canvas\StackBlur.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
-    <Content Include="Scripts\jquery-1.11.0.min.js" />
-    <Content Include="Scripts\jquery-2.0.2.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.min.js" />
-    <Content Include="Scripts\jquery.datePicker.js" />
     <Content Include="Scripts\jquery.dialogextend.1_0_1.js" />
-    <Content Include="Scripts\jquery.editable.select.js" />
     <Content Include="Scripts\jquery.event.drag-2.0.min.js" />
     <Content Include="Scripts\jquery.event.drag-2.2.js" />
     <Content Include="Scripts\jquery.layout-latest.min.js" />
-    <Content Include="Scripts\jquery.splitter.js" />
-    <Content Include="Scripts\jquery.ztree.all-3.5.min.js" />
-    <Content Include="Scripts\jquery.ztree.core-3.5.js" />
-    <Content Include="Scripts\jquery.ztree.excheck-3.5.js" />
-    <Content Include="Scripts\jquery.ztree.exedit-3.5.js" />
-    <Content Include="Scripts\jquery.ztree.min.js" />
+    <Content Include="Scripts\jquery.msgBox.js" />
     <Content Include="Scripts\jshelper.js" />
+    <Content Include="Scripts\jsplumb\anchors.js" />
+    <Content Include="Scripts\jsplumb\base-library-adapter.js" />
+    <Content Include="Scripts\jsplumb\biltong-0.2.js" />
+    <Content Include="Scripts\jsplumb\browser-util.js" />
+    <Content Include="Scripts\jsplumb\connection.js" />
+    <Content Include="Scripts\jsplumb\connector-editors.js" />
+    <Content Include="Scripts\jsplumb\connectors-bezier.js" />
+    <Content Include="Scripts\jsplumb\connectors-flowchart.js" />
+    <Content Include="Scripts\jsplumb\connectors-statemachine.js" />
+    <Content Include="Scripts\jsplumb\defaults.js" />
+    <Content Include="Scripts\jsplumb\dom-adapter.js" />
+    <Content Include="Scripts\jsplumb\dom.jsPlumb.js" />
+    <Content Include="Scripts\jsplumb\endpoint.js" />
+    <Content Include="Scripts\jsplumb\jquery.jsPlumb.js" />
+    <Content Include="Scripts\jsplumb\jsBezier-0.7.js" />
+    <Content Include="Scripts\jsplumb\jsPlumb.js" />
+    <Content Include="Scripts\jsplumb\katavorio-0.6.js" />
+    <Content Include="Scripts\jsplumb\mottle-0.6.js" />
+    <Content Include="Scripts\jsplumb\overlay-component.js" />
+    <Content Include="Scripts\jsplumb\renderers-svg.js" />
+    <Content Include="Scripts\jsplumb\renderers-vml.js" />
+    <Content Include="Scripts\jsplumb\util.js" />
     <Content Include="Scripts\slickgrid\control\slick.cellselector.js" />
     <Content Include="Scripts\slickgrid\control\slick.columnplug.js" />
     <Content Include="Scripts\slickgrid\control\slick.controlextension.js" />
@@ -391,27 +408,22 @@
     <Content Include="Scripts\slickgrid\slick.grid.all.js" />
     <Content Include="Scripts\slickgrid\slick.grid.all.min.js" />
     <Content Include="Scripts\slickgrid\slick.grid.js" />
+    <Content Include="Scripts\superfish.js" />
     <Content Include="Scripts\xmlhelper.js" />
     <Content Include="Scripts\XMLWriter-1.0.0-min.js" />
     <Content Include="Scripts\XMLWriter-1.0.0.js" />
-    <Content Include="test.html" />
+    <Content Include="index.html" />
+    <Content Include="Views\activityproperty.html" />
+    <Content Include="Views\gatewayproperty.html" />
+    <Content Include="Views\multipleinstanceproperty.html" />
+    <Content Include="Views\processlist.html" />
     <Content Include="Views\rolelist.html" />
+    <Content Include="Views\subprocessproperty.html" />
     <Content Include="Views\transitionproperty.html" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Views\xmlcontent.html" />
+    <Content Include="Web.config" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -425,7 +437,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>1369</DevelopmentServerPort>
+          <DevelopmentServerPort>37392</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost/sfd</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

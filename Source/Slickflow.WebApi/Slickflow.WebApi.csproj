@@ -7,7 +7,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0E393FDB-A3CB-4798-9764-9D94046D3A3E}</ProjectGuid>
+    <ProjectGuid>{2AF30CE4-62EC-4011-8F73-DB00BB62812E}</ProjectGuid>
     <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -57,9 +57,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\DLL\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceStack.Text, Version=3.9.28.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL\ServiceStack.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="Slickflow.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\EngineLib\Slickflow.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Slickflow.Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\EngineLib\Slickflow.Engine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -95,9 +106,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Mvc.FixedDisplayModes.1.0.0\lib\net40\Microsoft.Web.Mvc.FixedDisplayModes.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http">
     </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -119,22 +127,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20715.0\lib\net40\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WebActivator">
       <HintPath>..\DLL\WebActivator.dll</HintPath>
@@ -143,10 +135,12 @@
   <ItemGroup>
     <Compile Include="Controllers\Wf2GoController.cs" />
     <Compile Include="Controllers\Wf2XmlController.cs" />
-    <Compile Include="Controllers\WorkflowController.cs" />
-    <Compile Include="Controllers\WorkflowSubMIController.cs" />
-    <Compile Include="Controllers\WorkflowTaskMIController.cs" />
-    <Compile Include="Controllers\WorkflowPLController.cs" />
+    <Compile Include="Controllers\WfSubProcessController.cs" />
+    <Compile Include="Controllers\WfTaskMISignForwardController.cs" />
+    <Compile Include="Controllers\WfSequenceController.cs" />
+    <Compile Include="Controllers\WfTaskMISubProcessController.cs" />
+    <Compile Include="Controllers\WfTaskMISignTogetherController.cs" />
+    <Compile Include="Controllers\WfSplitJoinController.cs" />
     <Compile Include="DBConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -169,30 +163,19 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config" />
     <Content Include="Xml\Sample\price.xml" />
     <Content Include="Xml\Stk\officeIn.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Slickflow.BizApp\Slickflow.BizApp.csproj">
-      <Project>{a39cb11b-0664-4619-8028-07de35c3405a}</Project>
-      <Name>Slickflow.BizApp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj">
-      <Project>{e0a4fc43-54af-49b3-a227-0ce9db503903}</Project>
-      <Name>Slickflow.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Slickflow.Engine\Slickflow.Engine.csproj">
-      <Project>{f2aa5cc3-4212-4c6c-9336-a5c10f46affe}</Project>
-      <Name>Slickflow.Engine</Name>
-    </ProjectReference>
+    <None Include="Properties\PublishProfiles\sfwebapi.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

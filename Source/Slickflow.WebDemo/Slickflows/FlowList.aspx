@@ -40,48 +40,52 @@
             <div id="floatHead" class="content-tab">
                 <div class="content-tab-ul-wrap">
                     <ul>
-                        <li><a href="javascript:;" onclick="tabs(this);" class="selected">所有流程</a></li>
+                        <li><a href="javascript:;" onclick="tabs(this);" class="selected">待办流程</a></li>
                         <li><a href="javascript:;" onclick="tabs(this);">我发起的流程</a></li>
-                        <li><a href="javascript:;" onclick="tabs(this);">待办流程</a></li>
+                        <li><a href="javascript:;" onclick="tabs(this);">所有流程</a></li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <div class="tab-content">
+        
+        <!--代办流程-->
+        <div class="tab-content" >
             <table width="100%" border="1" cellspacing="0" cellpadding="0" class="ltable">
                 <tr>
-                    <th align="center">流程名称</th>
+                    <th align="center">实例名称</th>
+                    <th align="center">活动名称</th>
+                    <th align="center">活动状态</th>
+                    <th align="center">任务状态</th>
                     <th align="center">创建时间</th>
-                    <th align="center">运行状态</th>
-                    <th align="center">当前步骤</th>
                     <th align="center">操作</th>
                 </tr>
-                <asp:Repeater ID="RepeaterALL" runat="server">
+                <asp:Repeater ID="Repeater2" runat="server">
                     <ItemTemplate>
                         <tr>
                             <td align="left"><%#Eval("AppName") %></td>
+                            <td align="left"><%#Eval("ActivityName") %></td>
+                            <td align="left"><%#Slickflow.WebDemoV2._0.Common.EnumHelper.GetDescription(typeof(Slickflow.WebDemoV2._0.Common.ActivityStateEnum),Convert.ToInt32(Eval("ActivityState"))) %></td>
+                            <td align="left"><%#Slickflow.WebDemoV2._0.Common.EnumHelper.GetDescription(typeof(Slickflow.WebDemoV2._0.Common.TaskStateEnum),Convert.ToInt32(Eval("TaskState"))) %></td>
                             <td align="left"><%#Eval("CreatedDateTime") %></td>
-                            <td align="left"><%#Slickflow.WebDemoV2._0.Common.EnumHelper.GetDescription(typeof(Slickflow.Engine.Common.ProcessStateEnum),Convert.ToInt32(Eval("ProcessState"))) %></td>
-                            <td align="left"><%#Eval("CurrentActivityText") %></td>
                             <td align="center">
                                 <a href="javascript:ShowFlowOpinion(<%#Eval("AppInstanceID") %>)">流程信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="FlowCanvas.aspx?ProcessGUID=<%#Eval("ProcessGUID") %>" target="_blank">流程步骤</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="HrsLeaveInfo.aspx?AppInstanceID=<%#Eval("AppInstanceID") %>">申请信息</a>
+                                <a href="FlowCanvas.html?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>" target="_blank">流程步骤</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="HrsLeaveApproval.aspx?ProcessGUID=<%#Eval("ProcessGUID") %>&AppInstanceID=<%#Eval("AppInstanceID") %>&ActivityInstanceID=<%#Eval("ActivityInstanceID") %>">办理</a>
                             </td>
                         </tr>
                     </ItemTemplate>
                 </asp:Repeater>
             </table>
         </div>
-        <!--/列表-->
+        <!--/代办流程-->
 
-
-        <!--列表-->
+        <!--我发起的流程列表-->
         <div class="tab-content" style="display: none;">
             <table width="100%" border="1" cellspacing="0" cellpadding="0" class="ltable">
                 <tr>
                     <th align="center">流程名称</th>
+                    <th align="center">发起人</th>
                     <th align="center">创建时间</th>
                     <th align="center">运行状态</th>
                     <th align="center">当前步骤</th>
@@ -91,12 +95,13 @@
                     <ItemTemplate>
                         <tr>
                             <td align="left"><%#Eval("AppName") %></td>
+                            <td align="left"><%#Eval("CreatedByUserName") %></td>
                             <td align="left"><%#Eval("CreatedDateTime") %></td>
-                            <td align="left"><%#Slickflow.WebDemoV2._0.Common.EnumHelper.GetDescription(typeof(Slickflow.Engine.Common.ProcessStateEnum),Convert.ToInt32(Eval("ProcessState"))) %></td>
+                            <td align="left"><%#Slickflow.WebDemoV2._0.Common.EnumHelper.GetDescription(typeof(Slickflow.WebDemoV2._0.Common.ProcessStateEnum),Convert.ToInt32(Eval("ProcessState"))) %></td>
                             <td align="left"><%#Eval("CurrentActivityText") %></td>
                             <td align="center">
                                 <a href="javascript:ShowFlowOpinion(<%#Eval("AppInstanceID") %>)">流程信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="FlowCanvas.aspx?ProcessGUID=<%#Eval("ProcessGUID") %>" target="_blank">流程步骤</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="FlowCanvas.html?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>" target="_blank">流程步骤</a>&nbsp;&nbsp;|&nbsp;&nbsp;
                                 <a href="HrsLeaveInfo.aspx?AppInstanceID=<%#Eval("AppInstanceID") %>">申请信息</a>
                             </td>
                         </tr>
@@ -104,34 +109,38 @@
                 </asp:Repeater>
             </table>
         </div>
+        <!--/我发起的流程列表-->
 
-
+        <!--所有流程-->
         <div class="tab-content" style="display: none;">
             <table width="100%" border="1" cellspacing="0" cellpadding="0" class="ltable">
                 <tr>
-                    <th align="center">实例名称</th>
-                    <th align="center">活动名称</th>
-                    <th align="center">活动状态</th>
-                    <th align="center">任务状态</th>
+                    <th align="center">流程名称</th>
+                    <th align="center">发起人</th>
+                    <th align="center">创建时间</th>
+                    <th align="center">运行状态</th>
+                    <th align="center">当前步骤</th>
                     <th align="center">操作</th>
                 </tr>
-                <asp:Repeater ID="Repeater2" runat="server">
+                <asp:Repeater ID="RepeaterALL" runat="server">
                     <ItemTemplate>
                         <tr>
                             <td align="left"><%#Eval("AppName") %></td>
-                            <td align="left"><%#Eval("ActivityName") %></td>
-                            <td align="left"><%#Slickflow.WebDemoV2._0.Common.EnumHelper.GetDescription(typeof(Slickflow.Engine.Common.ActivityStateEnum),Convert.ToInt32(Eval("ActivityState"))) %></td>
-                            <td align="left"><%#Slickflow.WebDemoV2._0.Common.EnumHelper.GetDescription(typeof(Slickflow.Engine.Common.TaskStateEnum),Convert.ToInt32(Eval("TaskState"))) %></td>
+                            <td align="left"><%#Eval("CreatedByUserName") %></td>
+                            <td align="left"><%#Eval("CreatedDateTime") %></td>
+                            <td align="left"><%#Slickflow.WebDemoV2._0.Common.EnumHelper.GetDescription(typeof(Slickflow.WebDemoV2._0.Common.ProcessStateEnum),Convert.ToInt32(Eval("ProcessState"))) %></td>
+                            <td align="left"><%#Eval("CurrentActivityText") %></td>
                             <td align="center">
                                 <a href="javascript:ShowFlowOpinion(<%#Eval("AppInstanceID") %>)">流程信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="FlowCanvas.aspx?ProcessGUID=<%#Eval("ProcessGUID") %>" target="_blank">流程步骤</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="HrsLeaveApproval.aspx?ProcessGUID=<%#Eval("ProcessGUID") %>&AppInstanceID=<%#Eval("AppInstanceID") %>&ActivityInstanceID=<%#Eval("ActivityInstanceID") %>">办理</a>
+                                <a href="FlowCanvas.html?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>" target="_blank">流程步骤</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="HrsLeaveInfo.aspx?AppInstanceID=<%#Eval("AppInstanceID") %>">申请信息</a>
                             </td>
                         </tr>
                     </ItemTemplate>
                 </asp:Repeater>
             </table>
         </div>
+        <!--/列表-->
 
     </form>
 </body>

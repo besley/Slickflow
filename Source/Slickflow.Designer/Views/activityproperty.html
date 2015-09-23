@@ -2,32 +2,38 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>活动属性定义</title>
+    <style type="text/css">
+        .parentRow {
+            width: 500px;
+            height: 16px;
+            margin-right: 10px;
+        }
+
+        .childColumn {
+            float: left;
+            margin-right: 5px;
+        }
+    </style>
     <script type="text/javascript" src="AppJS/activityproperty.js"></script>
     <script type="text/javascript">
         $(function () {
-            var node = $("#activity-property-controller").scope().$$childHead.currentSelectedNode;
-
-            if (node) {
-                //fill activity basic information
-                $("#txtActivityName").val(node.data.name);
-                $("#txtActivityCode").val(node.data.code);
-                $("#txtDescription").val(node.data.description);
-                
-                //load performer list of current activity
-                activityManager.getActivityPerformer(node);
-            }
+            activityManager.loadActivity();
         });
 
-        function onSureClick() {
-            activityManager.saveActivityInformation();
-        };
-
-        function onAddClick() {
+        function onAddPerformerClick() {
             activityManager.addPerformer();
         }
 
-        function onDelClick() {
+        function onDelPerformerClick() {
             activityManager.delPerformer();
+        }
+
+        function onSureClick() {
+            activityManager.saveActivity();
+        };
+
+        function onCancelClick() {
+            window.parent.$('#divActivityDialog').dialog('close');
         }
     </script>
 </head>
@@ -46,16 +52,61 @@
                 <span class="a_tit">描述:</span>
                 <span><input type="text" id="txtDescription" style="width:340px;" /></span>
             </p>
+            <div id="divMultipleInstanceContent">
+                <p>
+                    <div class="parentRow">
+                        <div class="childColumn">
+                            <span class="a_tit">会加签类型:</span>
+
+                            <select id="ddlComplexType" style="width:80px;">
+                                <option value="default" disabled selected>--请选择--</option>
+                                <option value="SignTogether">会签</option>
+                                <option value="SignForward">加签</option>
+                            </select>
+                        </div>
+                        <div class="childColumn">
+                            <span class="a_tit">串并行选择:</span>
+
+                            <select id="ddlMergeType" style="width:80px;">
+                                <option value="default" disabled selected>--请选择--</option>
+                                <option value="Sequence">串行</option>
+                                <option value="Parallel">并行</option>
+                            </select>
+                        </div>
+                    </div>
+                </p>
+                <p>
+                    <div class="parentRow">
+                        <div class="childColumn">
+                            <span class="a_tit">通过率类型:</span>
+
+                            <select id="ddlCompareType" style="width:80px;">
+                                <option value="default" disabled selected>--请选择--</option>
+                                <option value="Count">个数</option>
+                                <option value="Percentage">百分比</option>
+                            </select>
+                        </div>
+
+                        <div class="childColumn">
+                            <span class="a_tit">通过率:</span>
+                            <input type="text" id="txtCompleteOrder" style="width: 90px;" />
+                        </div>
+                    </div>
+                </p>
+            </div>
         </div>
         <div>
-            <b class="icoBtn btnNew" onclick="onAddClick();"></b>
-            <b class="icoBtn btnDel" onclick="onDelClick();"></b>
+            <b class="icoBtn btnNew" onclick="onAddPerformerClick();"></b>
+            <b class="icoBtn btnDel" onclick="onDelPerformerClick();"></b>
         </div>
         <div id="myGridPerformer" class="grid-container" style="width:100%;height:260px;"></div>
-        <span class="spanright">
-            <input type="button" class="btn" value="确定" onclick="onSureClick()" />
-        </span>
         <div id="divRoleDialog"></div>
+    </div>
+    <div>
+        <span class="spanright btnBottom">
+            <input type="button" class="btn" value="确定" onclick="onSureClick()" />
+            <input type="button" class="btn" value="取消" onclick="onCancelClick()" />
+        </span>
     </div>
 </body>
 </html>

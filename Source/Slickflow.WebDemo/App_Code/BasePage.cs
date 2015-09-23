@@ -4,6 +4,10 @@ using System.Linq;
 using System.Web;
 
 using Slickflow.WebDemoV2._0.Common;
+using Slickflow.Engine.Common;
+using Slickflow.WebDemoV2._0.Business;
+using Slickflow.WebDemoV2._0.Entity;
+using System.Text.RegularExpressions;
 
 namespace Slickflow.WebDemoV2._0
 {
@@ -157,6 +161,65 @@ namespace Slickflow.WebDemoV2._0
             }
             return condition;
         }
+
+
+        private string regText = @"{0}\[(?<val>.*?)\]";
+        /// <summary>
+        /// 从集合中获取出值
+        /// </summary>
+        /// <param name="idList"></param>
+        /// <returns></returns>
+        private string GetValueOfNodeIdList(string idList, string prefix)
+        {
+            if (!string.IsNullOrEmpty(idList))
+            {
+                string reg = string.Format(regText, prefix);
+                Match match = Regex.Match(idList, reg, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+                return match.Groups["val"].Value.Trim();
+            }
+            return string.Empty;
+        }
+
+
+
+        public IDictionary<string, PerformerList> NextActivityPerformers(string nextActivityPerformers)
+        {
+            IDictionary<string, PerformerList> nextActivityPerformersDictionary = new Dictionary<string, PerformerList>();
+            string[] array = nextActivityPerformers.Split(',');
+            foreach (string items in array)
+            {
+                string stepId = GetValueOfNodeIdList(items, "step");
+                if (!string.IsNullOrWhiteSpace(stepId) && stepId != "0")
+                {
+                    string userId = GetValueOfNodeIdList(items, "member");
+
+                    Performer performer = null;
+                    if (!string.IsNullOrWhiteSpace(userId) && userId != "0" && userId.Length > 0)
+                    {
+                        SysUserEntity userEntity = WorkFlows.GetSysUserModel(Convert.ToInt32(userId));
+                        if (userEntity != null && userEntity.ID > 0)
+                        {
+                            performer = new Performer(userId, userEntity.UserName);
+                        }
+                    }
+                    if (performer == null)
+                        performer = new Performer("0", string.Empty);
+
+                    if (nextActivityPerformersDictionary.ContainsKey(stepId))
+                    {
+                        (nextActivityPerformersDictionary[stepId]).Add(performer);
+                    }
+                    else
+                    {
+                        PerformerList pList = new PerformerList();
+                        pList.Add(performer);
+                        nextActivityPerformersDictionary.Add(stepId, pList);
+                    }
+                }
+            }
+            return nextActivityPerformersDictionary;
+        }
+
 
     }
 }
