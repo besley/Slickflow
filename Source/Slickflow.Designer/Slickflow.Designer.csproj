@@ -57,17 +57,18 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\PublishProfiles\SlickflowDesigner.pubxml" />
     <Content Include="AppJS\kgraphview2.min.js" />
     <Content Include="Content\flowchart.css" />
     <Content Include="Content\images\alert.png" />
     <Content Include="Content\images\confirm.png" />
     <Content Include="Content\images\error.png" />
     <Content Include="Content\images\info.png" />
+    <Content Include="Content\images\jsplumb-grid.png" />
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\images\msgBoxBackGround.png" />
     <Content Include="Content\msgBoxLight.css" />
     <Content Include="Content\superfish.css" />
+    <None Include="Properties\PublishProfiles\SfDesignerPublish.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

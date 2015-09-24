@@ -177,6 +177,12 @@
   <ItemGroup>
     <None Include="Properties\PublishProfiles\sfwebapi.pubxml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dapper\Dapper.csproj">
+      <Project>{4da6306b-b9f0-4e06-aca0-2a1400dd9bd0}</Project>
+      <Name>Dapper</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
