@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4B6846F6-8891-49E7-AC50-921DF7E5342E}</ProjectGuid>
+    <ProjectGuid>{E0A4FC43-54AF-49B3-A227-0CE9DB503903}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SfDemo.ServiceImp</RootNamespace>
-    <AssemblyName>SfDemo.ServiceImp</AssemblyName>
+    <RootNamespace>Slickflow.Data</RootNamespace>
+    <AssemblyName>Slickflow.Data</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,13 +30,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Slickflow.Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DLL\EngineLib\Slickflow.Engine.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,35 +43,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppFlowService.cs">
+    <Compile Include="IRepository.cs" />
+    <Compile Include="IWfDataProvider.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IWfServiceRegister.cs" />
-    <Compile Include="ProductOrderService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ProductOrderStatusEnum.cs" />
+    <Compile Include="Pager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WfAppInteropService.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Repository.cs" />
+    <Compile Include="ManagerBase.cs" />
+    <Compile Include="ServiceBase.cs" />
+    <Compile Include="Session.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dapper\Dapper.csproj">
       <Project>{4da6306b-b9f0-4e06-aca0-2a1400dd9bd0}</Project>
       <Name>Dapper</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SfDemo.BizEntity\SfDemo.BizEntity.csproj">
-      <Project>{660acd43-ee45-4027-ad71-93e5d54a3146}</Project>
-      <Name>SfDemo.BizEntity</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SfDemo.Interface\SfDemo.Interface.csproj">
-      <Project>{be901fe9-e9fb-4e8d-96fc-f919f9ea0b26}</Project>
-      <Name>SfDemo.Interface</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj">
-      <Project>{e0a4fc43-54af-49b3-a227-0ce9db503903}</Project>
-      <Name>Slickflow.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

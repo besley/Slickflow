@@ -100,9 +100,7 @@
         <Transition id="f2388ddb-d3be-4085-b161-2cac489fff6e" from="890d4971-3d5d-4800-bdf3-a355fd4a6317" to="fc8c71c5-8786-450e-af27-9f6a9de8560f">
           <Description>派单到打样</Description>
           <Condition type="Expression">
-            <ConditionText><![CDATA[
-                  CanUseStock == "false" && IsHavingWeight == "false"
-                  ]]></ConditionText>
+            <ConditionText><![CDATA[(CanUseStock == "false")]]></ConditionText>
           </Condition>
           <Geography>
             <Line fromConnector="1" toConnector="1" />
@@ -111,8 +109,8 @@
         <Transition id="52276c99-5644-420d-afc5-2d0d73651d84" from="890d4971-3d5d-4800-bdf3-a355fd4a6317" to="422e5354-14f7-4a0a-ae69-c169fee96e50">
           <Condition type="Expression">
             <ConditionText><![CDATA[
-                  CanUseStock == "true" && IsHavingWeight == "false"
-                  ]]></ConditionText>
+(CanUseStock == "true"
+)]]></ConditionText>
           </Condition>
           <Geography>
             <Line fromConnector="1" toConnector="1" />
@@ -120,9 +118,8 @@
         </Transition>
         <Transition id="e8a4c600-04ab-471a-99d3-e50365a99ed2" from="890d4971-3d5d-4800-bdf3-a355fd4a6317" to="7c1aa9f9-7f0f-46bf-a219-0b80fdfbbe3d">
           <Condition type="Expression">
-            <ConditionText><![CDATA[
-                  CanUseStock == "true" && IsHavingWeight == "true"
-                  ]]></ConditionText>
+            <ConditionText><![CDATA[(IsHavingWeight == "true"
+)]]></ConditionText>
           </Condition>
           <Geography>
             <Line fromConnector="1" toConnector="1" />

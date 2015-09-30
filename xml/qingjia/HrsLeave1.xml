@@ -151,14 +151,14 @@
         </Transition>
         <Transition id="45b076ba-fcdf-42c7-8cd1-9e33e94ef6e5" from="9f186059-37b9-4a4e-d12f-c0d608edd322" to="472a9bd4-7acb-4c1a-cb78-89ee7c5575ac">
           <Description>-&gt;部门经理审批</Description>
-          <Condition />
+          <Condition><![CDATA[RoleID=1]]></Condition>
           <Geography>
             <Line fromConnector="1" toConnector="1" />
           </Geography>
         </Transition>
         <Transition id="4caebe31-24dc-4567-ad9b-caaaa21a4091" from="9f186059-37b9-4a4e-d12f-c0d608edd322" to="2d0ba456-171f-4570-91ac-7bbb32a682ef">
           <Description>总监和副经理请假-&gt;总经理审批</Description>
-          <Condition />
+          <Condition><![CDATA[RoleID=4]]></Condition>
           <Geography>
             <Line fromConnector="1" toConnector="1" />
           </Geography>

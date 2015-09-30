@@ -44,10 +44,6 @@
     <Reference Include="ServiceStack.Text">
       <HintPath>..\DLL\ServiceStack.Text.dll</HintPath>
     </Reference>
-    <Reference Include="Slickflow.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DLL\EngineLib\Slickflow.Data.dll</HintPath>
-    </Reference>
     <Reference Include="Slickflow.Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL\EngineLib\Slickflow.Engine.dll</HintPath>
@@ -132,6 +128,12 @@
     <Content Include="Xml\Stk\officeIn.orSplitorJoin.xml" />
     <Content Include="Xml\Stk\officeIn.xml" />
     <Content Include="Xml\Stk\officeIn.xorSplitxorJoin.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj">
+      <Project>{e0a4fc43-54af-49b3-a227-0ce9db503903}</Project>
+      <Name>Slickflow.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

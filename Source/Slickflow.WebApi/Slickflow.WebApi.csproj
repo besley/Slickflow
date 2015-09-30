@@ -64,10 +64,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL\ServiceStack.Text.dll</HintPath>
     </Reference>
-    <Reference Include="Slickflow.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DLL\EngineLib\Slickflow.Data.dll</HintPath>
-    </Reference>
     <Reference Include="Slickflow.Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL\EngineLib\Slickflow.Engine.dll</HintPath>
@@ -181,6 +177,10 @@
     <ProjectReference Include="..\Dapper\Dapper.csproj">
       <Project>{4da6306b-b9f0-4e06-aca0-2a1400dd9bd0}</Project>
       <Name>Dapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj">
+      <Project>{e0a4fc43-54af-49b3-a227-0ce9db503903}</Project>
+      <Name>Slickflow.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
