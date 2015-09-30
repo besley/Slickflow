@@ -28,7 +28,7 @@ http://www.slickflow.com/wiki/index
 
 
 
-### Slickflow(1.5.0) Demo版本功能说明：
+### Slickflow(1.5.1) Demo版本功能说明：
 
 **1. 流程引擎**
 
@@ -48,3 +48,10 @@ http://www.slickflow.com/wiki/index
 **4. 会签加签事件交互说明文档**
 
   - Slickflow会签加签事件程序调用说明文档.docx
+
+**5. 增加Slickflow.Data项目，开放源代码**
+  
+**6. 修正1.5.0版本对Demo中的SQL语句报错问题**
+
+
+
