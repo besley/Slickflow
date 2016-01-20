@@ -27,9 +27,15 @@ http://www.slickflow.com/wiki/index
 
 
 ### Slickflow(1.5.2) Demo版本功能说明：
-**1. 重新改版MvcDemo项目(电商生产订单流程)，采用Bootstrap框架，增加人员弹框功能演示；
-**2. 重新改版设计器项目，使用Bootstrap框架，优化界面及性能；
-**3. 引擎增加辅助查询步骤角色用户关系接口；
+**1. DEMO示例**
+重新改版MvcDemo项目(电商生产订单流程)，采用Bootstrap框架，增加人员弹框功能演示；
+
+**2. 设计器**
+重新改版设计器项目，使用Bootstrap框架，优化界面及性能；
+
+**3. 引擎
+
+-1）引擎增加辅助查询步骤角色用户关系接口；
 GetNextActivityRoleUserTree();  	//下一步选人弹框控件使用
 GetRoleUserListByProcess();
 GetUserListByRole();
