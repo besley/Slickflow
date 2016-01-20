@@ -13,7 +13,6 @@ There are demo programs that you can find in WebDemo, WinformDemo project.
 
 The source project is under LGPL license, we also provide customers commercial license. if you have any further inquery, please feel free to contact us: 
 
-EMail: william.ligong@yahoo.com
 
 QQ(Author): 47743901
 
@@ -64,4 +63,22 @@ GetRoleUserByRoleIDs();
 **6. 修正1.5.0版本对Demo中的SQL语句报错问题**
 
 
+EMail: william.ligong@yahoo.com
 
+QQ(Author): 47743901
+
+Slickflow 网站:
+
+http://www.slickflow.com
+
+DEMO:
+
+http://www.slickflow.com/demo/index
+
+文档:
+
+http://www.slickflow.com/wiki/index
+
+捐赠:
+
+http://www.slickflow.com/donate/index
