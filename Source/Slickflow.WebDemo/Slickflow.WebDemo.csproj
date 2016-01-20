@@ -42,9 +42,13 @@
     <Reference Include="ServiceStack.Text">
       <HintPath>..\DLL\ServiceStack.Text.dll</HintPath>
     </Reference>
+    <Reference Include="Slickflow.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Slickflow.Engine\bin\Debug\Slickflow.Data.dll</HintPath>
+    </Reference>
     <Reference Include="Slickflow.Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DLL\EngineLib\Slickflow.Engine.dll</HintPath>
+      <HintPath>..\Slickflow.Engine\bin\Debug\Slickflow.Engine.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -536,12 +540,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj">
-      <Project>{e0a4fc43-54af-49b3-a227-0ce9db503903}</Project>
-      <Name>Slickflow.Data</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

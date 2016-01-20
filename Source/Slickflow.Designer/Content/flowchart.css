@@ -6,21 +6,19 @@
 }
 
 #leftPane {
-	background: #fafafa;
-    height: 800px;
+	/*background: #fafafa;*/
+    height: 600px;
     overflow:hidden;
-    width: 17%;
     float:left;
 	/* No margin or border allowed */
 }
 
 #rightPane {
-	background: #fafafa;
-    height: 100%;
-    overflow:hidden;
+	/*background: #fafafa;*/
+    height: 600px;
     float:left;
-    margin-left: 17.8%;
-    width: 82%;
+    margin-left: 10px;
+    width: 100%;
 	/* No margin or border allowed */
 }
 
@@ -76,7 +74,7 @@ body {
     margin:0;
     background-color:white;    
     font-family:'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;    
-    background-color:#eaedef;
+    /*background-color:#eaedef;*/
 }
 
 .node, .label { 

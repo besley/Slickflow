@@ -36,16 +36,16 @@ namespace Slickflow.Data
         /// <summary>
         /// Repository 属性
         /// </summary>
-        private IRepository _repository;
-        public IRepository DBHelper
+        private IRepository _quickRepository;
+        public IRepository QuickRepository
         {
             get
             {
-                if (_repository == null)
+                if (_quickRepository == null)
                 {
-                    _repository = new Repository();
+                    _quickRepository = new Repository();
                 }
-                return _repository;
+                return _quickRepository;
             }
         }
     }

@@ -171,17 +171,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\PublishProfiles\sfwebapi.pubxml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Dapper\Dapper.csproj">
-      <Project>{4da6306b-b9f0-4e06-aca0-2a1400dd9bd0}</Project>
-      <Name>Dapper</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj">
       <Project>{e0a4fc43-54af-49b3-a227-0ce9db503903}</Project>
       <Name>Slickflow.Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\sfwebapi.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

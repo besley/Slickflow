@@ -1,0 +1,108 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/jquery-ui/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/msgBoxLight.css" rel="stylesheet" />
+    <link href="~/Content/flowchart.css" rel="stylesheet" />
+    @*<link href="~/Content/style.css" rel="stylesheet" />*@
+
+    <title>流程图形</title>
+    <style type="text/css">
+        
+    </style>
+</head>
+<body>
+    <!-- Modal -->
+    <img src="~/Content/images/ajax-loader.gif" id="loading-indicator2" style="position: fixed; left: 40%; top: 40%; display:none;" />
+    <div id="kgraphContainer" class="chart-design-graph">
+    </div>
+
+    <script type="text/javascript" src="~/Scripts/jquery/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery/jquery-ui-1.10.3.min.js"></script>
+
+    <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap/bootbox.min.js"></script>
+
+    <script type="text/javascript" src="~/Scripts/jquery/jquery.event.drag-2.2.js"></script>
+
+    <script type="text/javascript" src="~/Scripts/jsplumb/jsBezier-0.7.js"></script>
+    <!-- event adapter -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/mottle-0.6.js"></script>
+    <!-- geom functions -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/biltong-0.2.js"></script>
+    <!-- jsplumb util -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/util.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsplumb/browser-util.js"></script>
+    <!-- main jsplumb engine -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/jsPlumb.js"></script>
+    <!-- base DOM adapter -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/dom-adapter.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsplumb/overlay-component.js"></script>
+    <!-- endpoint -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/endpoint.js"></script>
+    <!-- connection -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/connection.js"></script>
+    <!-- anchors -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/anchors.js"></script>
+    <!-- connectors, endpoint and overlays  -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/defaults.js"></script>
+    <!-- bezier connectors -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/connectors-bezier.js"></script>
+    <!-- state machine connectors -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/connectors-statemachine.js"></script>
+    <!-- flowchart connectors -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/connectors-flowchart.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsplumb/connector-editors.js"></script>
+    <!-- SVG renderer -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/renderers-svg.js"></script>
+    <!-- vml renderer -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/renderers-vml.js"></script>
+    <!-- common adapter -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/base-library-adapter.js"></script>
+    <!-- jquery jsPlumb adapter -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/jquery.jsPlumb.js"></script>
+    <script type="text/javascript" src="~/Scripts/jshelper.js"></script>
+    <script type="text/javascript" src="~/Scripts/XMLWriter-1.0.0-min.js"></script>
+
+    <!-- jquery message box-->
+    <script type="text/javascript" src="~/Scripts/jquery/jquery.msgBox.js"></script>
+
+    <!-- jquery kgraph main files -->
+    <script type="text/javascript" src="~/ViewJS/kgraphview2.min.js"></script>
+
+    <script type="text/javascript">
+        jsPlumb.ready(function () {
+            var query = {
+                ProcessGUID: '@ViewBag.ProcessGUID',
+                ProcessVersion: "1"
+            };
+
+            $('#loading-indicator2').show();
+
+            //load process xml file
+            jshelper.ajaxPost('/sfmvc/api/Wf/QueryProcessFile',
+                JSON.stringify(query),
+                    function (result) {
+                        if (result.Status == 1) {
+                            var processFileEntity = result.Entity;
+                            kmain.mgraphView = kloader.initialize(processFileEntity);
+                            kmain.mcurrentPackageData = kmain.mgraphView.packageData;
+
+                            $('#loading-indicator2').hide();
+                        } else {
+                            $.msgBox({
+                                title: "DynamicFlow / KGraph",
+                                content: "流程图形读取失败！错误信息:" + result.Message,
+                                type: "error"
+                            });
+                        }
+                    }
+            );
+        })
+    </script>
+</body>
+</html>

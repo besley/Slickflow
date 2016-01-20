@@ -78,6 +78,8 @@ namespace Slickflow.Data
         //execute
         Int32 Execute(IDbConnection conn, string sql, dynamic param = null, IDbTransaction transaction = null);
         Int32 ExecuteCommand(IDbCommand cmd);
+        Int32 ExecuteProc(IDbConnection conn, string procName, DynamicParameters param = null);
+        IList<T> ExecProcQuery<T>(IDbConnection conn, string procName, DynamicParameters param) where T : class;
 
         //insert, update, delete
         dynamic Insert<T>(T entity) where T : class;
@@ -89,6 +91,6 @@ namespace Slickflow.Data
         bool Delete<T>(dynamic primaryId) where T : class;
         bool Delete<T>(IDbConnection conn, dynamic primaryId, IDbTransaction transaction = null) where T : class;
         bool Delete<T>(IDbConnection conn, IPredicate predicate, IDbTransaction transaction = null) where T : class;
-        bool DeleteBatch<T>(IDbConnection conn, IEnumerable<dynamic> ids, IDbTransaction transaction = null) where T : class;
+        int DeleteBatch<T>(IDbConnection conn, IEnumerable<dynamic> ids, IDbTransaction transaction = null) where T : class;
     }
 }

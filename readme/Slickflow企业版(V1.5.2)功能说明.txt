@@ -1,0 +1,20 @@
+Slickflow(1.5.2) 版本功能说明：
+
+2016-01-13 更新日志
+1. 重新改版MvcDemo项目(电商生产订单流程)，采用Bootstrap框架，增加人员弹框功能演示；
+
+
+2015-12-08更新日志：
+1. 重新改版设计器项目，使用Bootstrap框架，优化界面及性能；
+2. 引擎增加辅助查询步骤角色用户关系接口；
+GetNextActivityRoleUserTree();  	//下一步选人弹框控件使用
+GetRoleUserListByProcess();
+GetUserListByRole();
+GetRoleUserByRoleIDs();
+
+
+说明：
+1）发布的版本仅作Demo用，功能有限制，请勿用作生产环境；
+2) 企业版是客户在取得Slickflow商业授权后，可获取到完整源代码及后续技术服务支持;
+3) 商业授权限于客户进行项目使用，不能对Slickflow二次分发，不能进行任何二次封装销售；Slickflow受著作权保护，请务必遵守版权制约。
+

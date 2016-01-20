@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Slickflow.Engine.Resource;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
-using Slickflow.Engine.Resource;
 
 namespace Slickflow.Winform
 {
@@ -16,8 +16,8 @@ namespace Slickflow.Winform
         /// <param name="entity"></param>
         public List<UserEntity> GetUsersByRoleCode(string roldCode)
         {
-            var rum = new RoleUserManager();
-            return rum.GetByRoleCode(roldCode);
+            var rm = new RoleUserManager();
+            return rm.GetByRoleCode(roldCode);
         }
     }
 }

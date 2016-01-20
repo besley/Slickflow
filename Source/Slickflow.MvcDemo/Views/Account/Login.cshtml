@@ -1,39 +1,28 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="Mosaddek">
-    <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
-    <link rel="shortcut icon" href="/MvcDemo/Scripts/flatlab/img/favicon.png">
-
-    <title>Slickflow 用户登录</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="/MvcDemo/Scripts/flatlab/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/MvcDemo/Scripts/flatlab/css/bootstrap-reset.css" rel="stylesheet">
-    <!--external css-->
-    <link href="/MvcDemo/Scripts/flatlab/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-    <!-- Custom styles for this template -->
-    <link href="/MvcDemo/Scripts/flatlab/css/style.css" rel="stylesheet">
-    <link href="/MvcDemo/scripts/flatlab/css/style-responsive.css" rel="stylesheet" />
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
-    <!--[if lt IE 9]>
-    <script src="js/html5shiv.js"></script>
-    <script src="js/respond.min.js"></script>
-    <![endif]-->
+    <meta http-equiv="Content-Type" name="viewport"
+          content="text/html; charset=UTF-8; width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style rel="stylesheet" type="text/css">
+    </style>
 </head>
-
-<body class="login-body">
-
-    <div class="container">
-
-        <form class="form-signin" action="/MvcDemo/Home/Index" id="loginForm">
-            <h2 class="form-signin-heading">Slickflow</h2>
+<body>
+    <!-- Modal -->
+    <div class="modal-body">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">SlickMaster</h3>
+        </div>
+        <div class="modal-body">
+            <img src="~/Content/images/ajax-loader.gif" id="loading-indicator" style="position: fixed; left: 40%; top: 40%; display:none;" />
             <div class="login-wrap">
-                <div class="panel-body">
+                <div class="panel-body" style="margin-left:20px;">
                     <div class="row">
                         <label>请选择系统角色: </label>
                         <select class="form-control input-lg m-bot15" id="ddlRoles">
@@ -47,34 +36,21 @@
                         </select>
                     </div>
                 </div>
-                <button class="btn btn-lg btn-login btn-block" id="btnLogin" onclick="accountManager.login();">登    录</button>
             </div>
-
-        </form>
-
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="accountmanager.login();">登 录</button>
+        </div>
     </div>
-
-    <!-- js placed at the end of the document so the pages load faster -->
-    <script src="/MvcDemo/Scripts/flatlab/js/jquery.js"></script>
-    <script src="/MvcDemo/Scripts/flatlab/js/bootstrap.min.js"></script>
-    <script src="/MvcDemo/Scripts/jshelper.js"></script>
-    <script src="/MvcDemo/Scripts/localhelper.js"></script>
-    <script src="/MvcDemo/AppJS/define.js"></script>
-    <script src="/MvcDemo/AppJS/Account/accountmanager.js"></script>
+    <script type="text/javascript" src="~/ViewJS/accountmanager.js"></script>
 
     <script type="text/javascript">
         $(function () {
-            accountManager.loadRoles();
-
-            $('#ddlRoles').on('change', function (e) {
-                var optionSelected = $("option:selected", this);
-                var valueSelected = this.value;     //roleId
-                accountManager.fillUsers(valueSelected);
-            });
+            accountmanager.loadRoles();
 
             $("#loginForm").submit(function (e) {
-                if (accountManager.isValidated == undefined
-                    || accountManager.isValidated == false)
+                if (accountmanager.isValidated == undefined
+                    || accountmanager.isValidated == false)
                     e.preventDefault();
             });
         })
@@ -82,3 +58,4 @@
 
 </body>
 </html>
+

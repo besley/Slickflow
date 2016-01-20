@@ -1,0 +1,58 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>流程属性编辑</title>
+</head>
+<body>
+    <!-- Modal -->
+    <div>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">流程属性编辑</h3>
+        </div>
+        <div class="modal-body">
+            <div>
+                <p>
+                    <span class="a_tit">流程GUID:</span>
+                    <span><input type="text" id="txtProcessGUID" style="width:340px;" readonly/></span>
+                </p>
+                <p>
+                    <span class="a_tit">流程名称:</span>
+                    <span><input type="text" id="txtProcessName" style="width:340px;" /></span>
+                </p>
+                <p>
+                    <span class="a_tit">版本标识:</span>
+                    <span><input type="text" id="txtVersion" style="width:340px;" value="1"/></span>
+                </p>
+                <p>
+                    <span class="a_tit">使用状态:</span>
+                    <select id="ddlIsUsing" name="isusing" style="width:180px;" class="ctrl-combobox">
+                        <option value="1" selected>使用</option>
+                        <option value="0">未使用</option>
+                    </select>
+                </p>
+                <p>
+                    <span class="a_tit">描述:</span>
+                    <span><input type="text" id="txtDescription" style="width:340px;" /></span>
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="processlist.saveProcess();">保存</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            processlist.initEditForm();
+
+            processlist.loadProcess();
+        })
+    </script>
+</body>
+</html>

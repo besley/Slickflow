@@ -10,8 +10,9 @@ input{ outline:none;}
 .middle_panel{float: left;margin-left:40px;	margin-top: 14px;}
 .chart-design{bottom: 22px;top: 52px;left:240px;width: auto;}
 .chart-design-graph{bottom: 22px;top: 0px;width: auto;position:relative;background-image: url("images/jsplumb-grid.png");background-repeat:repeat;}
-.chart-left-panel { border-right: 2px solid #ccc; bottom: 0; float: left; left: 0; position: absolute;top: 59px; width: 228px;}
-.chart-right-panel{float: left;width: 228px;border-right: 2px solid #ccc; position: absolute; top: 52px; bottom: 0px; left: 0px;overflow:hidden;}
+.chart-left-panel { border: 2px solid #ccc; bottom: 0; float: left; left: 26px; top: 45px; width: 228px;height: 600px;}
+.chart-left-row { margin-left: 10px;}
+.chart-right-panel{border: 1px solid #ccc; float: left;width: 100%;border-right: 2px solid #ccc; margin-left:30px; overflow:hidden;height:600px;}
 /* tabs*/
 #tabs {width:208px;height:35px; padding:10px 0 0 20px; margin:0px; display:inline; float:left; border-bottom:#999 solid 1px;overflow: hidden;}
 #tabs li {float: left;}
@@ -82,3 +83,8 @@ input{ outline:none;}
 .btnEdit{background-position:-120px -60px;}
 .btnSave{background-position:-0px -60px;}
 .spinner{position: fixed;top: 50%;left: 50%;margin-left: -50px; /* half width of the spinner gif */margin-top: -50px; /* half height of the spinner gif */text-align:center;z-index:1234;overflow: auto;width: 100px; /* width of the spinner gif */height: 102px; /*hight of the spinner gif +2px to fix IE8 issue */}
+.modal-body2 {
+    overflow-y: auto;
+    padding: 15px;
+    position: relative;
+}

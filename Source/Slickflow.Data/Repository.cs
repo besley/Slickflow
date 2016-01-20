@@ -31,6 +31,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using DapperExtensions;
+using System.Data.SqlClient;
+using DapperExtensions.Sql;
 
 namespace Slickflow.Data
 {
@@ -141,14 +143,14 @@ namespace Slickflow.Data
         /// <returns></returns>
         public IEnumerable<T> GetByIds<T>(IList<dynamic> ids) where T : class
         {
-            var tblName = string.Format("dbo.{0}", GetTableName<T>());
+            var tblName = GetTableName<T>();
             var idsin = string.Join(",", ids.ToArray<dynamic>());
-            var sql = "SELECT * FROM @table WHERE Id in (@ids)";
+            var sql = string.Format("SELECT * FROM dbo.{0} WHERE Id in (@ids)", tblName);
 
             IDbConnection conn = SessionFactory.CreateConnection();
             try
             {
-                IEnumerable<T> dataList = SqlMapper.Query<T>(conn, sql, new { table = tblName, ids = idsin });
+                IEnumerable<T> dataList = SqlMapper.Query<T>(conn, sql, new { ids = idsin });
                 return dataList;
             }
             catch
@@ -306,22 +308,39 @@ namespace Slickflow.Data
         }
 
         /// <summary>
-        /// 分页
+        /// 分页方法调用示例：
+        /// 1. 单一条件
         //  using (SqlConnection cn = new SqlConnection(_connectionString))
         //  {
         //    cn.Open();
+        //
+        //    //排序字段
+        //    var sortList = new List<DapperExtensions.ISort>();
+        //    sortList.Add(new DapperExtensions.Sort { PropertyName = "ID", Ascending = false });
+        //
         //    var predicate = Predicates.Field<Person>(f => f.Active, Operator.Eq, true);
-        //    IEnumerable<Person> list = cn.GetList<Person>(predicate);
+        //    List<Person> list = cn.GetPaged<Person>(cn, query.PageIndex, query.PageSize, 
+        //            predicate, sortList, false).ToList();
+        //
         //    cn.Close();
         //  }
         //
+        //  2. 组合条件
         //  using (SqlConnection cn = new SqlConnection(_connectionString))
         //  {
         //    cn.Open();
+        //
+        //    //排序字段
+        //    var sortList = new List<DapperExtensions.ISort>();
+        //    sortList.Add(new DapperExtensions.Sort { PropertyName = "ID", Ascending = false });
+        //
         //    var pg = new PredicateGroup { Operator = GroupOperator.And, Predicates = new List<IPredicate>() };
         //    pg.Predicates.Add(Predicates.Field<Person>(f => f.Active, Operator.Eq, true));
         //    pg.Predicates.Add(Predicates.Field<Person>(f => f.LastName, Operator.Like, "Br%"));
-        //    IEnumerable<Person> list = cn.GetList<Person>(pg);
+        //
+        //    List<Person> list = cn.GetPaged<Person>(cn, query.PageIndex, query.PageSize, 
+        //            pg, sortList, false).ToList();
+        //
         //    cn.Close();
         //  }
         /// </summary>
@@ -454,6 +473,33 @@ namespace Slickflow.Data
         public int ExecuteCommand(IDbCommand cmd)
         {
             return cmd.ExecuteNonQuery();
+        }
+
+        /// <summary>
+        /// 执行存储过程
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <param name="procName"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public int ExecuteProc(IDbConnection conn, string procName, DynamicParameters param = null)
+        {
+            return conn.Execute(procName, param, null, null, CommandType.StoredProcedure);
+        }
+
+        /// <summary>
+        /// 存储过程执行方法
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="conn"></param>
+        /// <param name="procName"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public IList<T> ExecProcQuery<T>(IDbConnection conn, string procName, DynamicParameters param)
+            where T : class
+        {
+            IList<T> list = conn.Query<T>(procName, param, null, false, null, CommandType.StoredProcedure).ToList<T>();
+            return list;
         }
 
         /// <summary>
@@ -644,34 +690,32 @@ namespace Slickflow.Data
         /// <param name="entityList"></param>
         public void InsertBatch<T>(IDbConnection conn, IEnumerable<T> entityList, IDbTransaction transaction = null) where T : class
         {
-            //var tblName = string.Format("dbo.{0}", typeof(T).Name);
-            //var conn = (SqlConnection)_session.Connection;
-            //var tran = (SqlTransaction)transaction;
-            //using (var bulkCopy = new SqlBulkCopy(conn, SqlBulkCopyOptions.TableLock, tran))
-            //{
-            //    bulkCopy.BatchSize = entityList.Count();
-            //    bulkCopy.DestinationTableName = tblName;
-            //    var table = new DataTable();
-            //    var props = TypeDescriptor.GetProperties(typeof(T))
-            //                                .Cast<PropertyDescriptor>()
-            //                                .Where(propertyInfo => propertyInfo.PropertyType.Namespace.Equals("System"))
-            //                                .ToArray();
-            //    foreach (var propertyInfo in props)
-            //    {
-            //        bulkCopy.ColumnMappings.Add(propertyInfo.Name, propertyInfo.Name);
-            //        table.Columns.Add(propertyInfo.Name, Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType);
-            //    }
-            //    var values = new object[props.Length];
-            //    foreach (var itemm in entityList)
-            //    {
-            //        for (var i = 0; i < values.Length; i++)
-            //        {
-            //            values[i] = props[i].GetValue(itemm);
-            //        }
-            //        table.Rows.Add(values);
-            //    }
-            //    bulkCopy.WriteToServer(table);
-            //}
+			var tblName = string.Format("dbo.{0}", typeof(T).Name);
+            var tran = (SqlTransaction)transaction;
+            using (var bulkCopy = new SqlBulkCopy(conn as SqlConnection, SqlBulkCopyOptions.TableLock, tran))
+            {
+                bulkCopy.BatchSize = entityList.Count();
+                bulkCopy.DestinationTableName = tblName;
+                var table = new DataTable();
+                DapperExtensions.Sql.ISqlGenerator sqlGenerator = new SqlGeneratorImpl(new DapperExtensionsConfiguration());
+                var classMap = sqlGenerator.Configuration.GetMap<T>();
+                var props = classMap.Properties.Where(x=>x.Ignored == false).ToArray();
+                foreach (var propertyInfo in props)
+                {
+                    bulkCopy.ColumnMappings.Add(propertyInfo.Name, propertyInfo.Name);
+                    table.Columns.Add(propertyInfo.Name, Nullable.GetUnderlyingType(propertyInfo.PropertyInfo.PropertyType) ?? propertyInfo.PropertyInfo.PropertyType);
+                }
+                var values = new object[props.Count()];
+                foreach (var itemm in entityList)
+                {
+                    for (var i = 0; i < values.Length; i++)
+                    {
+                        values[i] = props[i].PropertyInfo.GetValue(itemm, null);
+                    }
+                    table.Rows.Add(values);
+                }
+                bulkCopy.WriteToServer(table);
+            }
         }
 
         /// <summary>
@@ -697,15 +741,14 @@ namespace Slickflow.Data
         /// <typeparam name="T"></typeparam>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public bool DeleteBatch<T>(IDbConnection conn, IEnumerable<dynamic> ids, IDbTransaction transaction = null) where T : class
+        public int DeleteBatch<T>(IDbConnection conn, IEnumerable<dynamic> ids, IDbTransaction transaction = null) where T : class
         {
-            bool isOk = false;
-            foreach (var id in ids)
-            {
-                Delete<T>(id, conn, transaction);
-            }
-            isOk = true;
-            return isOk;
+            var tblName = GetTableName<T>();
+            var idsin = string.Join(",", ids.ToArray<dynamic>());
+            var sql = string.Format("DELETE FROM dbo.{0} WHERE ID in (@ids)", tblName);
+            var result = SqlMapper.Execute(conn, sql, new { ids = idsin });
+
+            return result;
         }
     }
 }

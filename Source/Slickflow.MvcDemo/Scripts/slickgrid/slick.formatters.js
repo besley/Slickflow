@@ -8,9 +8,11 @@
     // register namespace
   $.extend(true, window, {
     "Slick": {
-      "Formatters": {
+        "Formatters": {
+        "EnmuabledText": EnumabledTextFormatter,
         "PercentComplete": PercentCompleteFormatter,
         "PercentCompleteBar": PercentCompleteBarFormatter,
+        "PercentStatusBar": PercentStatusBarFormatter,
         "YesNo": YesNoFormatter,
         "Checkmark": CheckmarkFormatter,
         "CheckBoxVisible": CheckBoxVisibleFormatter,
@@ -22,6 +24,19 @@
       }
     }
   });
+
+  function EnumabledTextFormatter(row, cell, value, columnDef, dataContext) {
+      if (value == null || value === "") {
+          return "";
+      }
+
+      var emuabledTextArray = columnDef.enumabledTextArray;
+      if (emuabledTextArray == null || emuabledTextArray.length == 0) {
+          return "";
+      }
+
+      return emuabledTextArray[value - 1];
+  }
 
   function PercentCompleteFormatter(row, cell, value, columnDef, dataContext) {
     if (value == null || value === "") {
@@ -49,6 +64,25 @@
     }
 
     return "<span class='percent-complete-bar' style='background:" + color + ";width:" + value + "%'></span>";
+  }
+
+  function PercentStatusBarFormatter(row, cell, value, columnDef, dataContext) {
+      if (value == null || value === "") {
+          return "";
+      }
+
+      var color;
+      var pValue = (100 * value) / columnDef.maxStatus;
+
+      if (pValue < 30) {
+          color = "silver";
+      } else if (pValue < 70) {
+          color = "green";
+      } else {
+          color = "red";
+      }
+
+      return "<span class='percent-complete-bar' style='background:" + color + ";width:" + pValue + "%'></span>";
   }
 
   function YesNoFormatter(row, cell, value, columnDef, dataContext) {

@@ -1,0 +1,266 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/bootstrap/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <link href="~/Content/bootstrap/bootstrap-progressbar-2.3.1.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery-ui/jquery-ui.css" rel="stylesheet" />
+
+    <link href="~/Content/slickgrid/slick.grid.css" rel="stylesheet" />
+    <link href="~/Content/slickgrid/slickgrid-bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/slickgrid/slickgrid-example.css" rel="stylesheet" />
+
+    <link href="~/Content/msgBoxLight.css" rel="stylesheet" />
+    <link href="~/Content/flowchart.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
+
+    <title>
+        Slickflow 流程设计器
+    </title>
+    <style id="content-styles">
+        /* Styles that are also copied for Preview */
+        body {
+            margin: 10px 0 0 10px;
+        }
+
+        .progress-bar.animate {
+            width: 100%;
+        }
+
+        .control-label {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div style="float:left;">
+                <a href="#" class="btn btn-info" onclick="processlist.createProcess();"><i class="icon-white icon-file"></i> 新建</a>
+                <a href="/sfd/process/list" data-toggle="modal" data-target="#modelProcessListForm" role="dialog" class="btn btn-info"><i class="icon-white icon-share"></i> 打开</a>
+                <a href="#" class="btn btn-info" onclick="kmain.saveProcessFile();"><i class="icon-white icon-ok"></i> 保存</a>
+                
+            </div>
+            <div class="dropdown" style="float:left;margin-left: 5px;">
+                <a class="btn btn-info dropdown-toggle" data-toggle="dropdown"><i class="icon-white icon-th"></i> 选项  <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="kmain.exportXML();">导出XML</a></li>
+                    @*<li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="kmain.exportPNG();">导出PNG</a></li>*@
+                </ul>
+            </div> 
+
+        </div>
+    </div>
+
+    <legend></legend>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <!-- begin of draggable control list -->
+                <div class="span2">
+                    <div class="row-fluid chart-left-panel">
+                        <h4>BPMN 图形组件</h4>
+                        <legend></legend>
+                        <div class="chart-left-row">
+                            <div id="StartNode" class="imagepart image-part-event draggable circle" style="background-color:palegreen"></div>
+                            <div id="EndNode" class="imagepart image-part-event draggable circle" style="background-color:rosybrown"></div>
+                            <div id="TaskNode" class="imagepart image-part-activity draggable roundedRect"></div>
+                            <div id="GatewayNode" class="imagepart image-part-activity  draggable rhombus"></div>
+                        </div>
+                        <div class="chart-left-row">
+                            <div id="SubProcessNode" class="imagepart image-part-activity draggable roundedRect" style="display: inline-block; vertical-align: bottom; ">Sub</div>
+                            <div id="MultipleInstanceNode" class="imagepart image-part-activity draggable roundedRect" style="display: inline-block; vertical-align: bottom; ">
+                                <span style="display: inline-block;">MI</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="span10">
+                    <div class="row-fluid chart-right-panel">
+                        <div id="kgraphContainer" tabindex="0" class="chart-design-graph">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- process list page-->
+    <div id="modelProcessListForm" class="modal hide" style="width:600px;height:540px;">
+        <div class="modal-dialog">
+            <!-- Modal -->
+            <div class="modal-body" style="max-height:500px;">
+                <!-- Content will be loaded here from "remote.php" file -->
+            </div>
+        </div>
+    </div>
+
+    <!-- process property page-->
+    <div id="modelProcessForm" class="modal hide" style="width:600px;height:500px;">
+        <div class="modal-dialog">
+            <!-- Modal -->
+            <div class="modal-body">
+                <!-- Content will be loaded here from "remote.php" file -->
+            </div>
+        </div>
+    </div>
+
+    <!-- activity property page-->
+    <div id="modelActivityForm" class="modal hide wfdModalDialog" style="width:600px;height:580px;">
+        <div class="modal-dialog">
+            <!-- Modal -->
+            <div class="modal-body" style="max-height:540px;">
+                <!-- Content will be loaded here from "remote.php" file -->
+            </div>
+        </div>
+    </div>
+
+    <!-- subprocess property-->
+    <div id="modelSubProcessForm" class="modal hide wfdModalDialog" style="width:600px;height:560px;">
+        <div class="modal-dialog">
+            <!-- Modal -->
+            <div class="modal-body" style="max-height:500px;">
+                <!-- Content will be loaded here from "remote.php" file -->
+            </div>
+        </div>
+    </div>
+
+    <!-- gateway property page-->
+    <div id="modelGatewayForm" class="modal hide wfdModalDialog" style="width:600px;height:380px;">
+        <div class="modal-dialog">
+            <!-- Modal -->
+            <div class="modal-body">
+                <!-- Content will be loaded here from "remote.php" file -->
+            </div>
+        </div>
+    </div>
+
+    <!-- transition property-->
+    <div id="modelTransitionForm" class="modal hide wfdModalDialog" style="width:600px;height:400px;">
+        <div class="modal-dialog">
+            <!-- Modal -->
+            <div class="modal-body">
+                <!-- Content will be loaded here from "remote.php" file -->
+            </div>
+        </div>
+    </div>
+
+    <!-- role list page-->
+    <div id="modelRoleListForm" class="modal hide wfdModalDialog" style="width:600px;height:400px;">
+        <div class="modal-dialog">
+            <!-- Modal -->
+            <div class="modal-body">
+                <!-- Content will be loaded here from "remote.php" file -->
+            </div>
+        </div>
+    </div>
+
+    <!-- export xml content-->
+    <div id="modalXMLContentForm" class="modal hide" style="width:600px;height:400px;">
+        <div class="modal-header">
+            <h3>XML文件内容</h3>
+        </div>
+        <!-- Modal -->
+        <div class="modal-body">
+            <textarea id="txtXmlContentArea" style="width:540px;min-height:280px;"></textarea>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
+    </div>
+
+    <!--Progress Bar-->
+    <div class="modal js-loading-bar">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="progress">
+                        <div class="bar" data-transitiongoal="75"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="~/Scripts/jquery/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery/jquery-ui-1.10.3.min.js"></script>
+
+    <script type="text/javascript" src="~/Scripts/jquery/jquery.event.drag-2.2.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery/jquery.msgBox.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap/bootbox.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap-progressbar.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript" src="~/Scripts/handlebars.js"></script>
+    <script type="text/javascript" src="~/Scripts/jshelper.js"></script>
+    <script type="text/javascript" src="~/Scripts/XMLWriter-1.0.0-min.js"></script>
+
+    <!-- slickgrid -->
+    <script src="~/Scripts/slickgrid/slickgrid.min.js"></script>
+
+    <!--Superfish Menu-->
+    @*<script type="text/javascript" src="Scripts/superfish.js"></script>*@
+
+    <!-- JsPlumb -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/jsBezier-0.7.js"></script>
+    <!-- event adapter -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/mottle-0.6.js"></script>
+    <!-- geom functions -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/biltong-0.2.js"></script>
+    <!-- jsplumb util -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/util.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsplumb/browser-util.js"></script>
+    <!-- main jsplumb engine -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/jsPlumb.js"></script>
+    <!-- base DOM adapter -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/dom-adapter.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsplumb/overlay-component.js"></script>
+    <!-- endpoint -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/endpoint.js"></script>
+    <!-- connection -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/connection.js"></script>
+    <!-- anchors -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/anchors.js"></script>
+    <!-- connectors, endpoint and overlays  -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/defaults.js"></script>
+    <!-- bezier connectors -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/connectors-bezier.js"></script>
+    <!-- state machine connectors -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/connectors-statemachine.js"></script>
+    <!-- flowchart connectors -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/connectors-flowchart.js"></script>
+    <script type="text/javascript" src="~/Scripts/jsplumb/connector-editors.js"></script>
+    <!-- SVG renderer -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/renderers-svg.js"></script>
+    <!-- vml renderer -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/renderers-vml.js"></script>
+    <!-- common adapter -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/base-library-adapter.js"></script>
+    <!-- jquery jsPlumb adapter -->
+    <script type="text/javascript" src="~/Scripts/jsplumb/jquery.jsPlumb.js"></script>
+
+    <!-- html2canvas -->
+    <script type="text/javascript" src="~/Scripts/html2canvas/html2canvas.js"></script>
+    <script type="text/javascript" src="~/Scripts/html2canvas/rgbcolor.js"></script>
+    <script type="text/javascript" src="~/Scripts/html2canvas/StackBlur.js"></script>
+    <script type="text/javascript" src="~/Scripts/html2canvas/canvg.js"></script>
+    <script type="text/javascript" src="~/Scripts/html2canvas/filesaver.min.js"></script> 
+
+    <!-- Slickflow kgraph main files -->
+    <script type="text/javascript" src="~/ViewJS/kgraph2.min.js"></script>
+    <script type="text/javascript" src="~/ViewJS/kproperty2.min.js"></script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            kmain.init();
+        })
+    </script>
+
+</body>
+</html>

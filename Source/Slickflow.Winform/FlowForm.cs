@@ -23,8 +23,9 @@ namespace Slickflow.Winform
     /// </summary>
     public partial class FlowForm : Form
     {
-        private string application_instance_id = "4560";
-        private string process_guid = "5C5041FC-AB7F-46C0-85A5-6250C3AEA375";
+        private string application_instance_id = "1";
+        //流程ID
+        private string process_guid = "68696ea3-00ab-4b40-8fcf-9859dbbde378";
 
         public FlowForm()
         {
@@ -41,10 +42,10 @@ namespace Slickflow.Winform
             WfAppRunner appRunner = new WfAppRunner();
             appRunner.ProcessGUID = process_guid;
             appRunner.AppInstanceID = application_instance_id;
-            appRunner.AppName = "WallwaOrder";
+            //指定第一步的处理人
+            appRunner.AppName = "officeIn";
             appRunner.UserID = "1";
-            appRunner.UserName = "admin";
-
+            appRunner.UserName = "user1";
             IWorkflowService wfService = new WorkflowService();
             var result = wfService.StartProcess(appRunner);
             var msg = string.Format("流程启动结果：{0}\r\n", result.Status);
@@ -61,21 +62,35 @@ namespace Slickflow.Winform
             WfAppRunner appRunner = new WfAppRunner();
             appRunner.ProcessGUID = process_guid;
             appRunner.AppInstanceID = application_instance_id;
-            appRunner.AppName = "WallwaOrder";
+            //第一步任务承担者，登录后要找到自己的任务
+            appRunner.AppName = "officeIn";
             appRunner.UserID = "1";
-            appRunner.UserName = "admin";
-
-            //下一步执行人
-            PerformerList list = new PerformerList();
-            Performer p = new Performer("13", "andun");//下一步人ID，Name
-            list.Add(p);
-            Dictionary<String, PerformerList> dict = new Dictionary<String,PerformerList>();
-            dict.Add("fc8c71c5-8786-450e-af27-9f6a9de8560f", list); //print activity:"fc8c71c5-8786-450e-af27-9f6a9de8560f"下一步节点的标识ID
-            appRunner.NextActivityPerformers = dict;
-
+            appRunner.UserName = "user1";
             IWorkflowService wfService = new WorkflowService();
-            var result = wfService.RunProcessApp(appRunner);
+            TaskQueryEntity en = new TaskQueryEntity
+            {
+                UserID = "1"
+            };
+            IList<TaskViewEntity> taskViewList = wfService.GetReadyTasks(en);
+            if (taskViewList != null)
+            {
+                dataGridView1.DataSource = taskViewList;
+            }
+            ////下一步执行人
+            //PerformerList list = new PerformerList();
+            //Performer p = new Performer("3", "user3");
+            //下一步人ID，Name 注意有角色区分
+            //list.Add(p);
+            //Dictionary<string, string> dictCondition = new Dictionary<string, string>();
+            //dictCondition.Add("IsHavingWeight", "true");
+            //dictCondition.Add("CanUseStock", "false");
+            //appRunner.Conditions = dictCondition;
+            //NodeView nv = wfService.GetNextActivity(appRunner);//, dictCondition
+            //Dictionary<String, PerformerList> dictPerformer = new Dictionary<String, PerformerList>();
+            //dictPerformer.Add(nv.ActivityGUID, list);
+            //appRunner.NextActivityPerformers = dictPerformer;
 
+            var result = wfService.RunProcessApp(appRunner);
             var msg = string.Format("流程运行结果：{0}\r\n", result.Status);
             textBox1.Text += msg;
         }

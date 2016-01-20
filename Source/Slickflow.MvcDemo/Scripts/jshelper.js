@@ -120,6 +120,31 @@ if (!jshelper) jshelper = {};
         return !isNaN(o - 0) && o !== null && o !== "" && o !== false;
     }
 
+    jshelper.formatDate = function (timestamp) {
+        var date = new Date(timestamp);
+        var curr_date = date.getDate();
+        var curr_month = date.getMonth();
+        curr_month++;
+        var curr_year = date.getFullYear();
+        result = curr_year + "/" + curr_month + "/" + curr_date;
+        return result;
+    }
+
+    jshelper.formatISODate = function (dateStringInRange) {
+        var isoExp = /^\s*(\d{4})-(\d\d)-(\d\d)\s*$/,
+        date = new Date(NaN), month,
+        parts = isoExp.exec(dateStringInRange);
+
+        if (parts) {
+            month = +parts[2];
+            date.setFullYear(parts[1], month - 1, parts[3]);
+            if (month != date.getMonth() + 1) {
+                date.setTime(NaN);
+            }
+        }
+        return date;
+    }
+
     //字符串转换为Integer
     Number.tryParseInt = function (str, defaultValue) {
         if (isNumber(str) == true) {
@@ -471,6 +496,11 @@ if (!jshelper) jshelper = {};
             return entityMap[s];
         });
     }
+
+    jshelper.unescapeHTML = function(string) {
+        return $("<div/>").html(string).text();
+    }
+
 
     jshelper.replaceHTMLTags = function (data) {
         data = data.replace('&lt;', '<', 'gm')

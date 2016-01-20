@@ -432,6 +432,23 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
+        /// 获取流程实例下所有活动节点的测试示例： 
+        ///http://localhost/sfapi/api/Wf2Go/GetNextActivityInstanceList/16137
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public ResponseResult<List<ActivityInstanceEntity>> GetNextActivityInstanceList(int id)
+        {
+            //id -- processInstanceID
+            IWorkflowService service = new WorkflowService();
+            var instanceList = service.GetNextActivityInstanceList(id).ToList();
+
+            return ResponseResult<List<ActivityInstanceEntity>>.Success(instanceList);
+        }
+
+        /// <summary>
         /// http://localhost/sfapi/api/Workflow/EntrustTask
         /// { "TaskID":"18240","RunnerID":"10","RunnerName":"Long","EntrustToUserID":"20","EntrustToUserName":"Zhang" }
         /// </summary>

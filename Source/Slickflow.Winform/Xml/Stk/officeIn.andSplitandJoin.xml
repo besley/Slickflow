@@ -4,7 +4,7 @@
     <Participant type="Role" id="41b3619c-fe14-4eb4-bd70-7e37c94571ae" name="仓库" code="Role_QT" outerId="25"/>
     <Participant type="Role" id="c400a31a-9973-44a4-b0bb-6fe88e6b092a" name="综合部" code="Role_Finance_Manager" outerId="36"/>
   </Participants>
-  <WorkflowProcess>
+  <WorkflowProcesses>
     <Process name="办公用品入库流程" id="68696ea3-00ab-4b40-8fcf-9859dbbde378">
       <Description>办公用品入库流程！</Description>
       <Activities>
@@ -61,9 +61,7 @@
           <Description />
           <Condition type="Expression">
             <ConditionText>
-              <![CDATA[
-                  surplus != "正常"
-                  ]]>
+              <![CDATA[surplus != "正常"]]>
             </ConditionText>
           </Condition>
           <GroupBehaviour priority="1" parallelOption="Necessary"/>
@@ -71,11 +69,9 @@
         <!--And分支节点—综合部签字-->
         <Transition name="T4" id="df3ba298-3f28-4b30-983e-5a5c10bf19a6" from="a44d219c-c60e-468c-b5ab-3f5159ac24a4" to="e60084e4-517a-4892-a290-517159f1b7f4" direction="Forward">
           <Description />
-          <Condition type="Rule">
+          <Condition type="Expression">
             <ConditionText>
-              <![CDATA[
-                  surplus == "超量"
-                  ]]>
+              <![CDATA[surplus == "超量"]]>
             </ConditionText>
           </Condition>
           <GroupBehaviour priority="2" parallelOption="Necessary"/>
@@ -98,5 +94,5 @@
         </Transition>
       </Transitions>
     </Process>
-  </WorkflowProcess>
+  </WorkflowProcesses>
 </Package>

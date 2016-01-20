@@ -4,7 +4,7 @@ var lsm;
 if (!lsm) lsm = {};
 
 (function () {
-   
+
     lsm.getStorage = function (key) {
         localStorage.getItem(key);
     }
@@ -56,9 +56,29 @@ if (!lsm) lsm = {};
         localStorage.removeItem("slickflowauth");
     }
 
+    lsm.saveUserRole = function (role) {
+        var item = JSON.stringify(role);
+        if (item !== null && item !== '') {
+            localStorage.setItem("slickflowuserrole", item);
+        }
+    }
+
+    lsm.getUserRole = function () {
+        var roleStr = localStorage.getItem("slickflowuserrole");
+        if (roleStr !== null && roleStr !== '')
+            return JSON.parse(roleStr);
+        else
+            return null;
+    }
+
+    lsm.removeUserRole = function () {
+        localStorage.removeItem("slickflowuserrole");
+    }
+
     lsm.removeTempStorage = function () {
         lsm.removeUserIdentity();
         lsm.removeUserAuthData();
+        lsm.removeUserRole();
     }
 
     lsm.checkUserPermission = function (resourceCode) {

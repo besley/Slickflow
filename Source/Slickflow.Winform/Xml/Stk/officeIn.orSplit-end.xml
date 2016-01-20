@@ -4,7 +4,7 @@
     <Participant type="Role" id="41b3619c-fe14-4eb4-bd70-7e37c94571ae" name="仓库" code="Role_QT" outerId="25"/>
     <Participant type="Role" id="c400a31a-9973-44a4-b0bb-6fe88e6b092a" name="综合部" code="Role_Finance_Manager" outerId="36"/>
   </Participants>
-  <WorkflowProcess>
+  <WorkflowProcesses>
     <Process name="办公用品入库流程" id="68696ea3-00ab-4b40-8fcf-9859dbbde378">
       <Description>办公用品入库流程！</Description>
       <Activities>
@@ -70,5 +70,5 @@
         </Transition>
       </Transitions>
     </Process>
-  </WorkflowProcess>
+  </WorkflowProcesses>
 </Package>

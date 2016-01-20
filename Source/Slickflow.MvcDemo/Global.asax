@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="Slickflow.MvcDemo.Global" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="Slickflow.MvcDemo.MvcApplication" Language="C#" %>
