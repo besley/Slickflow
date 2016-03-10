@@ -5,6 +5,7 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Text;
 
+using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Service;
 using Slickflow.Engine.Xpdl;
@@ -41,6 +42,7 @@ namespace Slickflow.WebDemoV2._0.Slickflows
         /// </summary>
         protected void InitStepMember()
         {
+            WfAppRunner runner = new WfAppRunner();
             string strNodes = string.Empty;
 
             //流程定义的GUID
@@ -62,7 +64,16 @@ namespace Slickflow.WebDemoV2._0.Slickflows
                         ActivityEntity firstActivity = service.GetFirstActivity(processGUID, string.Empty);
                         String firstActivityGUID = firstActivity.ActivityGUID;
                         string conditions = Request.QueryString["condition"] == null ? "" : Request.QueryString["condition"].ToString();
-                        IList<NodeView> nextNodes = service.GetNextActivity(processGUID, string.Empty, firstActivityGUID, GetCondition(conditions));
+                        
+                        runner = new WfAppRunner
+                        {
+                            ProcessGUID = flowGuid,
+                            Version = "1",
+                            UserID = this.LoginUserID.ToString()
+                        };
+
+                        IList<NodeView> nextNodes = service.GetFirstActivityRoleUserTree(runner, GetCondition(conditions));
+
                         if (nextNodes != null)
                         {
                             if (nextNodes != null)
@@ -77,18 +88,15 @@ namespace Slickflow.WebDemoV2._0.Slickflows
                                     zTreeEntity.nocheck = false;
                                     zTreeEntityList.Add(zTreeEntity);
 
-
-                                    DataTable dt = GetUsers(item.Roles);
-                                    foreach (DataRow dr in dt.Rows)
+                                    foreach (var user in item.Users)
                                     {
                                         zTreeEntity = new ZTreeEntity();
-                                        zTreeEntity.id = string.Format("step[{0}]member[{1}]", item.ActivityGUID, dr["ID"].ToString());
+                                        zTreeEntity.id = string.Format("step[{0}]member[{1}]", item.ActivityGUID, user.UserID);
                                         zTreeEntity.pId = string.Format("step[{0}]", item.ActivityGUID);
-                                        zTreeEntity.name = dr["UserName"].ToString();
+                                        zTreeEntity.name = user.UserName;
                                         zTreeEntity.nocheck = false;
                                         zTreeEntityList.Add(zTreeEntity);
                                     }
-
                                 }
                             }
                         }
@@ -104,12 +112,13 @@ namespace Slickflow.WebDemoV2._0.Slickflows
                             {
                                 string condition = Request.QueryString["condition"] == null ? "" : Request.QueryString["condition"].ToString();
                                 string instanceId = Request.QueryString["instanceId"] == null ? string.Empty : Request.QueryString["instanceId"].ToString();
-                                WfAppRunner runner = new WfAppRunner();
+
                                 runner.AppInstanceID = instanceId;
                                 runner.ProcessGUID = processGUID;
                                 runner.UserID = this.LoginUserID.ToString();
                                 hiddenIsSelectMember.Value = "true";
-                                IList<NodeView> NodeViewList = service.GetNextActivityTree(runner, GetCondition(condition));
+                                //IList<NodeView> NodeViewList = service.GetNextActivityTree(runner, GetCondition(condition));
+                                IList<NodeView> NodeViewList = service.GetNextActivityRoleUserTree(runner, GetCondition(condition));
 
 
                                 if (NodeViewList != null)
@@ -123,13 +132,12 @@ namespace Slickflow.WebDemoV2._0.Slickflows
                                         zTreeEntity.name = item.ActivityName;
                                         zTreeEntityList.Add(zTreeEntity);
 
-                                        DataTable dt = GetUsers(item.Roles);
-                                        foreach (DataRow dr in dt.Rows)
+                                        foreach (var user in item.Users)
                                         {
                                             zTreeEntity = new ZTreeEntity();
-                                            zTreeEntity.id = string.Format("step[{0}]member[{1}]", item.ActivityGUID, dr["ID"].ToString());
+                                            zTreeEntity.id = string.Format("step[{0}]member[{1}]", item.ActivityGUID, user.UserID);
                                             zTreeEntity.pId = string.Format("step[{0}]", item.ActivityGUID);
-                                            zTreeEntity.name = dr["UserName"].ToString();
+                                            zTreeEntity.name = user.UserName;
                                             zTreeEntity.nocheck = false;
                                             zTreeEntityList.Add(zTreeEntity);
                                         }

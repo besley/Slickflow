@@ -145,6 +145,15 @@ if (!jshelper) jshelper = {};
         return date;
     }
 
+    jshelper.getSepeicalNum = function (n, base) {
+        n = Number(n);
+        if (n === 0 || !!(n && !(n % base))) {
+            return n;
+        } else {
+            return (Math.floor(n / base) + 1) * base;
+        }
+    }
+
     //字符串转换为Integer
     Number.tryParseInt = function (str, defaultValue) {
         if (isNumber(str) == true) {

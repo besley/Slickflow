@@ -163,16 +163,24 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Resources\无标题.png" />
-    <None Include="Resources\无标题1.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj">
       <Project>{e0a4fc43-54af-49b3-a227-0ce9db503903}</Project>
       <Name>Slickflow.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj">
+      <Project>{f555c21b-12a5-49e9-9792-4c2142ef481f}</Project>
+      <Name>Slickflow.Module.Resource</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Slickflow.Module\Slickflow.Module.csproj">
+      <Project>{79c5f280-2144-4373-9ef9-b77c1f3f426a}</Project>
+      <Name>Slickflow.Module</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\无标题.png" />
+    <None Include="Resources\无标题1.png" />
     <Content Include="Xml\Made\MOrderFlow.xml" />
     <Content Include="Xml\Sample\price.normal.tmp.xml" />
     <Content Include="Xml\Sample\price.subprocess.multipleinstance.tmp.xml" />

@@ -7,11 +7,12 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Slickflow.Data;
+using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Core;
 using Slickflow.Engine.Core.Result;
-using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Service;
@@ -322,9 +323,9 @@ namespace Slickflow.Winform
                 foreach (Role role in view.Roles)
                 {
                     var a = um.GetUsersByRoleCode(role.RoleCode);      //根据角色代码获取人员
-                    foreach (UserEntity u in a)
+                    foreach (var u in a)
                     {
-                        pl.Add(new Performer(u.ID.ToString(), u.UserName));
+                        pl.Add(new Performer(u.UserID, u.UserName));
                     }
                 }
                 nextDict[view.ActivityGUID] = pl;
@@ -347,9 +348,9 @@ namespace Slickflow.Winform
             foreach (Role role in view.Roles)
             {
                 var a = um.GetUsersByRoleCode(role.RoleCode);      //根据角色代码获取人员
-                foreach (UserEntity u in a)
+                foreach (var u in a)
                 {
-                    pl.Add(new Performer(u.ID.ToString(), u.UserName));
+                    pl.Add(new Performer(u.UserID, u.UserName));
                 }
             }
             nextDict[view.ActivityGUID] = pl;

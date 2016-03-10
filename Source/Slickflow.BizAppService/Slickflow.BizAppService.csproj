@@ -30,10 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Slickflow.Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DLL\EngineLib\Slickflow.Engine.dll</HintPath>
-    </Reference>
     <Reference Include="SlickOne.WebUtility">
       <HintPath>..\DLL\SlickOne.WebUtility.dll</HintPath>
     </Reference>
@@ -72,6 +68,10 @@
     <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj">
       <Project>{e0a4fc43-54af-49b3-a227-0ce9db503903}</Project>
       <Name>Slickflow.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Slickflow.Engine\Slickflow.Engine.csproj">
+      <Project>{f2aa5cc3-4212-4c6c-9336-a5c10f46affe}</Project>
+      <Name>Slickflow.Engine</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -196,15 +196,24 @@ namespace Slickflow.Data
         /// <returns></returns>
         public T GetFirst<T>(string sql, dynamic param = null, bool buffered = true) where T : class
         {
-            using (IDbConnection conn = SessionFactory.CreateConnection())
+            T entity = null;
+            IDbConnection conn = SessionFactory.CreateConnection();
+            try
             {
-                T entity = null;
                 var list = SqlMapper.Query<T>(conn, sql, param as object, null, buffered).ToList();
                 if (list != null && list.Count() > 0)
                 {
                     entity = list[0];
                 }
                 return entity;
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                conn.Close();
             }
         }
 
@@ -240,9 +249,18 @@ namespace Slickflow.Data
         /// <returns></returns>
         public IEnumerable<T> Query<T>(string sql, dynamic param = null, bool buffered = true) where T : class
         {
-            using (IDbConnection conn = SessionFactory.CreateConnection())
+            IDbConnection conn = SessionFactory.CreateConnection();
+            try
             {
                 return SqlMapper.Query<T>(conn, sql, param as object, null, buffered);
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                conn.Close();
             }
         }
 

@@ -87,13 +87,13 @@ namespace DapperExtensions
                 if (SqlGenerator.SupportsMultipleStatements())
                 {
                     sql += SqlGenerator.Configuration.Dialect.BatchSeperator + SqlGenerator.IdentitySql(classMap);
-                    result = connection.Query<long>(sql, entity, transaction, false, commandTimeout, CommandType.Text);
+                    result = connection.Query<long>(sql, entity, transaction, false, commandTimeout, CommandType.Text).ToList();
                 }
                 else
                 {
                     connection.Execute(sql, entity, transaction, commandTimeout, CommandType.Text);
                     sql = SqlGenerator.IdentitySql(classMap);
-                    result = connection.Query<long>(sql, entity, transaction, false, commandTimeout, CommandType.Text);
+                    result = connection.Query<long>(sql, entity, transaction, false, commandTimeout, CommandType.Text).ToList();
                 }
 
                 long identityValue = result.First();

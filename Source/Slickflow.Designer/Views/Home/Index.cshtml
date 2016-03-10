@@ -41,7 +41,7 @@
         <div class="row-fluid">
             <div style="float:left;">
                 <a href="#" class="btn btn-info" onclick="processlist.createProcess();"><i class="icon-white icon-file"></i> 新建</a>
-                <a href="/sfd/process/list" data-toggle="modal" data-target="#modelProcessListForm" role="dialog" class="btn btn-info"><i class="icon-white icon-share"></i> 打开</a>
+                <a href="process/list" data-toggle="modal" data-target="#modelProcessListForm" role="dialog" class="btn btn-info"><i class="icon-white icon-share"></i> 打开</a>
                 <a href="#" class="btn btn-info" onclick="kmain.saveProcessFile();"><i class="icon-white icon-ok"></i> 保存</a>
                 
             </div>
@@ -60,33 +60,48 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <!-- begin of draggable control list -->
-                <div class="span2">
-                    <div class="row-fluid chart-left-panel">
-                        <h4>BPMN 图形组件</h4>
-                        <legend></legend>
-                        <div class="chart-left-row">
-                            <div id="StartNode" class="imagepart image-part-event draggable circle" style="background-color:palegreen"></div>
-                            <div id="EndNode" class="imagepart image-part-event draggable circle" style="background-color:rosybrown"></div>
-                            <div id="TaskNode" class="imagepart image-part-activity draggable roundedRect"></div>
-                            <div id="GatewayNode" class="imagepart image-part-activity  draggable rhombus"></div>
-                        </div>
-                        <div class="chart-left-row">
-                            <div id="SubProcessNode" class="imagepart image-part-activity draggable roundedRect" style="display: inline-block; vertical-align: bottom; ">Sub</div>
-                            <div id="MultipleInstanceNode" class="imagepart image-part-activity draggable roundedRect" style="display: inline-block; vertical-align: bottom; ">
-                                <span style="display: inline-block;">MI</span>
-                            </div>
-                        </div>
+            <div class="span2">
+                <div class="row-fluid chart-left-panel">
+                    <h4>BPMN 图形组件</h4>
+                    <legend></legend>
+                    <div class="chart-left-row">
+                        <div id="StartNode" title="开始" class="imagepart image-part-event draggable circle" style="background-color:palegreen"></div>
+                        <div id="EndNode" title="结束" class="imagepart image-part-event draggable circle" style="background-color:rosybrown"></div>
+                        <div id="TaskNode" title="任务" class="imagepart image-part-activity draggable roundedRect"></div>
+                        <div id="GatewayNode" title="决策" class="imagepart image-part-activity  draggable rhombus"></div>
                     </div>
-                </div>
-                <div class="span10">
-                    <div class="row-fluid chart-right-panel">
-                        <div id="kgraphContainer" tabindex="0" class="chart-design-graph">
+                    <div class="chart-left-row">
+                        <div id="SubProcessNode" title="子流程" class="imagepart image-part-activity draggable roundedRect" style="display: inline-block; vertical-align: bottom; ">Sub</div>
+                        <div id="MultipleInstanceNode" title="会(加)签" class="imagepart image-part-activity draggable roundedRect" style="display: inline-block; vertical-align: bottom; ">
+                            <span style="display: inline-block;">MI</span>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="span10">
+                <div class="row-fluid chart-right-panel">
+                    <div id="kgraphContainer" tabindex="0" class="chart-design-graph">
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
 
-        </div>
+    <div style="position:absolute; background-color:lavender; border:1px solid #acacb1; display:none;z-index:1001;width:56px;height:120px;"
+         id="divPopMenu" class="popmenu brightness">
+        <b class="icoBtn btnSetting" onclick="kmain.showActivityProperty();"></b>
+        <b class="icoBtn btnDelete" onclick="kmain.removeGraphElement();"></b>
+        <b class="iconBPMN iconTask" onclick="kmain.addNewNodeWithConnection(event, 'TaskNode');"></b>
+        <b class="iconBPMN iconGateway" onclick="kmain.addNewNodeWithConnection(event, 'GatewayNode');"></b>
+        <b class="iconBPMN iconSub" onclick="kmain.addNewNodeWithConnection(event, 'SubProcessNode');"></b>
+        <b class="iconBPMN iconMI" onclick="kmain.addNewNodeWithConnection(event, 'MultipleInstanceNode');"></b>
+        <b class="iconBPMN iconEnd" onclick="kmain.addNewNodeWithConnection(event, 'EndNode');"></b>
+    </div>
+
+    <div style="position:absolute; background-color:lavender; border:1px solid #acacb1; display:none;z-index:1001;width:50px;height:50px;"
+         id="divPopMenuCommand" class="popmenu brightness">
+        <b class="icoBtn btnSetting" onclick="kmain.showActivityProperty();"></b>
+        <b class="icoBtn btnDelete" onclick="kmain.removeGraphElement();"></b>
     </div>
 
     <!-- process list page-->
@@ -140,7 +155,7 @@
     </div>
 
     <!-- transition property-->
-    <div id="modelTransitionForm" class="modal hide wfdModalDialog" style="width:600px;height:400px;">
+    <div id="modelTransitionForm" class="modal hide wfdModalDialog" style="width:600px;height:500px;">
         <div class="modal-dialog">
             <!-- Modal -->
             <div class="modal-body">

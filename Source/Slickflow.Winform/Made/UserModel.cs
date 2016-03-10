@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Slickflow.Engine.Resource;
-using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Business.Manager;
+using Slickflow.Module.Resource;
 
 namespace Slickflow.Winform
 {
@@ -14,10 +12,10 @@ namespace Slickflow.Winform
         /// 根据角色编码获取用户列表
         /// </summary>
         /// <param name="entity"></param>
-        public List<UserEntity> GetUsersByRoleCode(string roldCode)
+        public List<User> GetUsersByRoleCode(string roleCode)
         {
-            var rm = new RoleUserManager();
-            return rm.GetByRoleCode(roldCode);
+            IResourceService resService = new ResourceService();
+            return resService.GetUserListByRoleCode(roleCode).ToList();
         }
     }
 }

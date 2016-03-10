@@ -7,7 +7,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2AF30CE4-62EC-4011-8F73-DB00BB62812E}</ProjectGuid>
+    <ProjectGuid>{0E393FDB-A3CB-4798-9764-9D94046D3A3E}</ProjectGuid>
     <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -129,6 +129,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\Wf2GoController.cs" />
     <Compile Include="Controllers\Wf2XmlController.cs" />
     <Compile Include="Controllers\WfSubProcessController.cs" />
@@ -174,6 +175,14 @@
     <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj">
       <Project>{e0a4fc43-54af-49b3-a227-0ce9db503903}</Project>
       <Name>Slickflow.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj">
+      <Project>{f555c21b-12a5-49e9-9792-4c2142ef481f}</Project>
+      <Name>Slickflow.Module.Resource</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Slickflow.Module\Slickflow.Module.csproj">
+      <Project>{79c5f280-2144-4373-9ef9-b77c1f3f426a}</Project>
+      <Name>Slickflow.Module</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

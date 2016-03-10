@@ -24,21 +24,13 @@ var processFileManager;
 if (!processFileManager) processFileManager = {};
 
 (function () {
-    processFileManager.queryProcessFile = function (query, func) {
-        jshelper.ajaxPost(slick.WEB_ROOT_HOST + '/Ashx/Wf2Xml.ashx' + window.location.search + '&Action=QueryProcessFile',
+	processFileManager.queryProcessFile = function (query, func) {
+		jshelper.ajaxPost('../Ashx/Wf2Xml.ashx' + window.location.search + '&Action=QueryProcessFile',
             JSON.stringify(query),
             function (result) {
-                func(result);
+            	func(result);
             }
         );
-    }
-
-    processFileManager.saveProcessFile = function (entity) {
-        jshelper.ajaxPost('/SfApi/api/Wf2Xml/SaveProcessFile', JSON.stringify(entity), function (result) {
-            if (result.Status == "1") {
-                alert("保存成功！");
-            }
-        });
-    }
+	}
 })()
 

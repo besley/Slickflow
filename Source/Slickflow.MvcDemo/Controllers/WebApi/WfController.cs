@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Service;
 using Slickflow.Engine.Business.Entity;
@@ -168,14 +169,14 @@ namespace SfDemo.WebApi.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet]
-        public ResponseResult<List<Performer>> GetUserByRole(int id)
+        public ResponseResult<List<Performer>> GetUserByRole(string id)
         {
             var result = ResponseResult<List<Performer>>.Default();
             try
             {
                 var performList = new List<Performer>();
                 var wfService = new WorkflowService();
-                var itemList = wfService.GetUserByRole(id).ToList();
+                var itemList = wfService.GetUserListByRole(id).ToList();
                 foreach (var item in itemList)
                 {
                     Performer performer = new Performer(item.UserID.ToString(), item.UserName);
@@ -192,28 +193,28 @@ namespace SfDemo.WebApi.Controllers
             return result;
         }
 
-        /// <summary>
-        /// 根据角色IDs获取用户列表
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public ResponseResult<List<Role>> QueryRoleUserByRoleIDs(RoleIDsQuery query)
-        {
-            var result = ResponseResult<List<Role>>.Default();
-            try
-            {
-                var wfService = new WorkflowService();
-                var roleList = wfService.GetRoleUserByRoleIDs(query.RoleIDs).ToList();
-                result = ResponseResult<List<Role>>.Success(roleList, "成功获取角色用户数据！");
-            }
-            catch (System.Exception ex)
-            {
-                result = ResponseResult<List<Role>>.Error(string.Format(
-                    "获取角色用户数据失败, 异常信息:{0}",
-                    ex.Message));
-            }
-            return result;
-        }
+        ///// <summary>
+        ///// 根据角色IDs获取用户列表
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public ResponseResult<List<Role>> QueryRoleUserByRoleIDs(RoleIDsQuery query)
+        //{
+        //    var result = ResponseResult<List<Role>>.Default();
+        //    try
+        //    {
+        //        var wfService = new WorkflowService();
+        //        var roleList = wfService.GetRoleUserByRoleIDs(query.RoleIDs).ToList();
+        //        result = ResponseResult<List<Role>>.Success(roleList, "成功获取角色用户数据！");
+        //    }
+        //    catch (System.Exception ex)
+        //    {
+        //        result = ResponseResult<List<Role>>.Error(string.Format(
+        //            "获取角色用户数据失败, 异常信息:{0}",
+        //            ex.Message));
+        //    }
+        //    return result;
+        //}
 
         [HttpPost]
         public ResponseResult<List<TaskViewEntity>> QueryReadyTasks(TaskQueryEntity query)

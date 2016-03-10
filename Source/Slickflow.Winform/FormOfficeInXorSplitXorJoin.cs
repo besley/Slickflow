@@ -15,7 +15,7 @@ namespace Slickflow.Winform
 {
     public partial class FormOfficeInXorSplitXorJoin : Form
     {
-        private string application_instance_id = "4";
+        private string application_instance_id = "14";
         private string process_guid = "68696ea3-00ab-4b40-8fcf-9859dbbde378";
         public FormOfficeInXorSplitXorJoin()
         {

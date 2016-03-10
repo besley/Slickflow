@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Newtonsoft.Json;
-using Slickflow.MvcDemo.Models;
 
 namespace Slickflow.MvcDemo.Controllers.Mvc
 {

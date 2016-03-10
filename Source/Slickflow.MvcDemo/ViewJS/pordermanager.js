@@ -70,7 +70,7 @@
         //add role data limit
         if (isRoleKept === true && lsm.getUserRole() !== null) query.RoleCode = lsm.getUserRole().RoleCode;
 
-        jshelper.ajaxPost('/sfmvc/api/ProductOrder/QueryPaged', JSON.stringify(query), function (result) {
+        jshelper.ajaxPost('api/ProductOrder/QueryPaged', JSON.stringify(query), function (result) {
             if (result.Status === 1) {
                 fillOrderGrid(result.Entity);
             } else {
@@ -90,7 +90,7 @@
             "Status": $("#ddlStatus").val() 
         };
 
-        jshelper.ajaxPost('/sfmvc/api/ProductOrder/QueryPaged', JSON.stringify(query), function (result) {
+        jshelper.ajaxPost('api/ProductOrder/QueryPaged', JSON.stringify(query), function (result) {
             if (result.Status === 1) {
                 fillOrderGrid(result.Entity);
             } else {
@@ -206,7 +206,7 @@
     }
 
     pordermanager.syncorder = function () {
-        jshelper.ajaxPost('/sfmvc/api/productorder/syncorder',
+        jshelper.ajaxPost('api/productorder/syncorder',
             null,
             function (result) {
                 if (result.Status == 1) {
@@ -247,7 +247,7 @@
 
         if (step == "dispatch") {
             //判断是否是重复派单
-            jshelper.ajaxGet("/sfmvc/api/productorder/checkdispatched/" + pordermanager.selectedProductOrderID,
+            jshelper.ajaxGet("api/productorder/checkdispatched/" + pordermanager.selectedProductOrderID,
                         null,
                         function (result) {
                             if (result.Status == 1) {
@@ -296,7 +296,7 @@
         query.AppInstanceID = appInstanceID;
         query.ProcessGUID = processGUID;
 
-        jshelper.ajaxPost('/sfmvc/api/Wf/QueryReadyActivityInstance',
+        jshelper.ajaxPost('api/Wf/QueryReadyActivityInstance',
             JSON.stringify(query), function (result) {
             if (result.Status === 1) {
                 var columnReadyActivityInstance = [
@@ -353,7 +353,7 @@
             "AppInstanceID": appInstanceID
         };
 
-        jshelper.ajaxPost('/sfmvc/api/AppFlow/QueryPaged', JSON.stringify(query), function (result) {
+        jshelper.ajaxPost('api/AppFlow/QueryPaged', JSON.stringify(query), function (result) {
             if (result.Status === 1) {
                 var columnAppFlow = [
                     { id: "ID", name: "ID", field: "ID", width: 40, cssClass: "bg-gray" },

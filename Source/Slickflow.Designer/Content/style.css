@@ -26,7 +26,7 @@ input{ outline:none;}
 .drop-active{background: rgb(238,238,238);}
 .roundedRect{border-radius: 8px;}
 .circle{height: 30px;width: 30px;border-radius: 15px;padding: 0px;}
-.rhombus{padding: 0px;width: 24px;height: 24px;margin-top: 12px;margin-left: 18px;font-size: 12px;-webkit-transform-origin: 0 100%;-moz-transform-origin: 0 100%;-o-transform-origin: 0 100%;-ms-transform-origin: 0 100%;transform-origin: 0 100%;-webkit-transform:rotate(-45deg);-moz-transform:rotate(-45deg);-o-transform:rotate(-45deg);	-ms-transform:rotate(-45deg);transform:rotate(-45deg);}
+.rhombus{padding: 0px;width: 30px;height: 30px;margin-top: 12px;margin-left: 18px;font-size: 12px;-webkit-transform-origin: 0 100%;-moz-transform-origin: 0 100%;-o-transform-origin: 0 100%;-ms-transform-origin: 0 100%;transform-origin: 0 100%;-webkit-transform:rotate(-45deg);-moz-transform:rotate(-45deg);-o-transform:rotate(-45deg);	-ms-transform:rotate(-45deg);transform:rotate(-45deg);}
 .image-part-activity{border:1px solid #346789; }
 .image-part-event{border:1px solid yellowgreen;}
 .chart-ratio { border-top: 2px solid rgb(210, 209, 210); background:#fff; bottom: 0; height: 20px; position:fixed;  width: 100%;}
@@ -75,13 +75,21 @@ input{ outline:none;}
 .btn-small{width: 60px;margin-top: 10px}
 .spanright{float: right;}
 .btnBottom{margin-bottom: 10px;}
-.icoBtn{background-image:url(images/buttonicon.gif); background-repeat:no-repeat;}
-.icoBtn{float:left;margin:5px 0 0 5px;width:17px;height:20px;display:block;font-size:1px;}
 /*ui bttons*/
+.icoBtn{background-image:url(images/buttonicon.gif); background-repeat:no-repeat;float:left;margin:5px 0 0 5px;width:20px;height:20px;display:block;font-size:1px;}
 .btnNew{background-position:-60px -140px;}/*add*/
 .btnDel{background-position:-20px -140px;width:18px;}/*delete*/
 .btnEdit{background-position:-120px -60px;}
 .btnSave{background-position:-0px -60px;}
+.btnSetting{background-position:-60px -20px;}
+.btnDelete{background-position:-80px -120px;}
+/*bpmn icons*/
+.iconBPMN{background-image:url(images/bpmn-icons.gif);background-repeat:no-repeat;float:left;margin:5px 0 0 5px;width:20px;height:20px;display:block;font-size:1px;}
+.iconTask{background-position:-206px -6px;}
+.iconGateway{background-position:-166px -6px;}
+.iconSub{background-position:-244px -6px;}
+.iconMI{background-position:-284px -6px;}
+.iconEnd{background-position:-48px -6px;}
 .spinner{position: fixed;top: 50%;left: 50%;margin-left: -50px; /* half width of the spinner gif */margin-top: -50px; /* half height of the spinner gif */text-align:center;z-index:1234;overflow: auto;width: 100px; /* width of the spinner gif */height: 102px; /*hight of the spinner gif +2px to fix IE8 issue */}
 .modal-body2 {
     overflow-y: auto;

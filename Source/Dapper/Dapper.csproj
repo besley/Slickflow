@@ -54,6 +54,7 @@
     <Compile Include="Extensions\Mapper\ClassMapper.cs" />
     <Compile Include="Extensions\Mapper\PluralizedAutoClassMapper.cs" />
     <Compile Include="Extensions\Mapper\PropertyMap.cs" />
+    <Compile Include="Extensions\Sql\KingbaseSqlDialect.cs" />
     <Compile Include="Extensions\Sql\MySqlDialect.cs" />
     <Compile Include="Extensions\Sql\OracleSqlDialect.cs" />
     <Compile Include="Extensions\Sql\PostgreSqlDialect.cs" />

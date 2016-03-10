@@ -46,9 +46,9 @@
 
         var url = '';
         if (step == "dispatch")
-            url = '/sfmvc/api/wf/GetFirstStepRoleUserTree';
+            url = 'api/wf/GetFirstStepRoleUserTree';
         else
-            url = '/sfmvc/api/wf/GetNextStepRoleUserTree';
+            url = 'api/wf/GetNextStepRoleUserTree';
 
         //get next step information
         jshelper.ajaxPost(url,
@@ -138,7 +138,7 @@
             buttons: [{ value: "Yes" }, { value: "Cancel" }],
             success: function (result) {
                 if (result == "Yes") {
-                    jshelper.ajaxPost("/sfmvc/api/productorder/" + nextactivitytree.mstepName,
+                    jshelper.ajaxPost("api/productorder/" + nextactivitytree.mstepName,
                         JSON.stringify(nextactivitytree.mEntity),
                         function (result) {
                             if (result.Status == 1) {

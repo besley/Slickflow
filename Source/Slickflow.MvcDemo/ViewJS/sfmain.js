@@ -37,7 +37,7 @@
             });
             return false;
         } else {
-            window.open('/sfmvc/AppFlow/KGraph/' + pordermanager.mProductOrderProcessGUID)
+            window.open('AppFlow/KGraph/' + pordermanager.mProductOrderProcessGUID)
         }
     }
 

@@ -72,7 +72,7 @@
     <script type="text/javascript" src="~/Scripts/jquery/jquery.msgBox.js"></script>
 
     <!-- jquery kgraph main files -->
-    <script type="text/javascript" src="~/ViewJS/kgraphview2.min.js"></script>
+    <script type="text/javascript" src="~/ViewJS/kgraph2.min.js"></script>
 
     <script type="text/javascript">
         jsPlumb.ready(function () {
@@ -84,7 +84,7 @@
             $('#loading-indicator2').show();
 
             //load process xml file
-            jshelper.ajaxPost('/sfmvc/api/Wf/QueryProcessFile',
+            jshelper.ajaxPost('../../api/Wf/QueryProcessFile',
                 JSON.stringify(query),
                     function (result) {
                         if (result.Status == 1) {

@@ -42,14 +42,6 @@
     <Reference Include="ServiceStack.Text">
       <HintPath>..\DLL\ServiceStack.Text.dll</HintPath>
     </Reference>
-    <Reference Include="Slickflow.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Slickflow.Engine\bin\Debug\Slickflow.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="Slickflow.Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Slickflow.Engine\bin\Debug\Slickflow.Engine.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -72,15 +64,10 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AppJS\activityproperty.js" />
-    <Content Include="AppJS\gatewayproperty.js" />
-    <Content Include="AppJS\kgraphview.js" />
-    <Content Include="AppJS\kloader.js" />
-    <Content Include="AppJS\kmain.js" />
-    <Content Include="AppJS\processfile.js" />
-    <Content Include="AppJS\processlist.js" />
-    <Content Include="AppJS\rolelist.js" />
+    <Content Include="AppJS\kgraph2.min.js" />
+    <Content Include="AppJS\processFileManager.js" />
     <Content Include="Content\app.css" />
+    <Content Include="Content\flowchart.css" />
     <Content Include="Content\images\2.png" />
     <Content Include="Content\images\ajax-loader.gif" />
     <Content Include="Content\images\arrow.png" />
@@ -540,7 +527,24 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj">
+      <Project>{e0a4fc43-54af-49b3-a227-0ce9db503903}</Project>
+      <Name>Slickflow.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Slickflow.Engine\Slickflow.Engine.csproj">
+      <Project>{f2aa5cc3-4212-4c6c-9336-a5c10f46affe}</Project>
+      <Name>Slickflow.Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj">
+      <Project>{f555c21b-12a5-49e9-9792-4c2142ef481f}</Project>
+      <Name>Slickflow.Module.Resource</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Slickflow.Module\Slickflow.Module.csproj">
+      <Project>{79c5f280-2144-4373-9ef9-b77c1f3f426a}</Project>
+      <Name>Slickflow.Module</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -105,7 +105,7 @@
         };
 
         $(function () {
-            $.getJSON(slick.WEB_ROOT_HOST + '/Slickflows/FlowStepSelect.aspx' + window.location.search + '&Action=InitStep', function (data) {
+            $.getJSON('FlowStepSelect.aspx' + window.location.search + '&Action=InitStep', function (data) {
                 $.fn.zTree.init($("#ztree_container"), setting, data);
             }, 'JSON');
 

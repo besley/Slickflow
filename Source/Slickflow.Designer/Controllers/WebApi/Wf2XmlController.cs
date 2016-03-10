@@ -32,6 +32,7 @@ using System.Web.Http;
 using System.Net;
 using System.Net.Http;
 using System.Xml;
+using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Core;

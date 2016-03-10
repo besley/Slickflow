@@ -26,7 +26,6 @@ namespace Slickflow.WebDemoV2._0.Data
         }
         #endregion
 
-
         #region SysRoleUser
 
         /// <summary>
@@ -119,7 +118,6 @@ namespace Slickflow.WebDemoV2._0.Data
         }
 
         #endregion
-
 
         #region HrsLeave
         /// <summary>
@@ -318,7 +316,6 @@ namespace Slickflow.WebDemoV2._0.Data
             return SQLHelper.ExecuteDataset(strSql).Tables[0];
         }
         #endregion
-
 
         #region BizAppFlow
         /// <summary>
