@@ -27,13 +27,13 @@ http://www.slickflow.com/wiki/index
 
 
 ### Slickflow(1.5.5) Demo版本功能说明：
-**1. 引擎 **
+**1. 引擎**
 
--1). 引擎集成国产数据库人大金仓Kingbase；
+-1) 引擎集成国产数据库人大金仓Kingbase；
 
--2). 添加Slickflow.Module项目，实现组织机构的模块化构建；
+-2) 添加Slickflow.Module项目，实现组织机构的模块化构建；
 
--3). 引擎实现提交至发送人员的部门主管，下属或者同级同事流转功能，相应增加部门员工数据表和存储过程；
+-3) 引擎实现提交至发送人员的部门主管，下属或者同级同事流转功能，相应增加部门员工数据表和存储过程；
 
   <Transition>
     ...
@@ -41,15 +41,15 @@ http://www.slickflow.com/wiki/index
     ...
   </Transition>
   
-**2. 设计器 **
+**2. 设计器**
 
--1). 流程设计器增加节点元素添加的操作面板；
+-1) 流程设计器增加节点元素添加的操作面板；
 
--2). 流程设计器修正连线控制Gateway的显示Bug；
+-2) 流程设计器修正连线控制Gateway的显示Bug；
 
-**3. DEMO示例 **
+**3. DEMO示例**
 
--1). WebDemo/MvcDemo/Designer去除多项目引用，调试运行不依赖IIS Server。
+-1) WebDemo/MvcDemo/Designer去除多项目引用，调试运行不依赖IIS Server。
 
 
 ### Slickflow(1.5.2) Demo版本功能说明：
