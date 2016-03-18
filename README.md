@@ -27,17 +27,29 @@ http://www.slickflow.com/wiki/index
 
 
 ### Slickflow(1.5.5) Demo版本功能说明：
-**1. 引擎集成国产数据库人大金仓Kingbase；
-**2. 添加Slickflow.Module项目，实现组织机构的模块化构建；
-**3. 引擎实现提交至发送人员的部门主管，下属或者同级同事流转功能，相应增加部门员工数据表和存储过程；
-<Transition>
-...
-<Receiver type="Superior" />
-...
-</Transition>
-**4. 流程设计器增加节点元素添加的操作面板；
-**5. 流程设计器修正连线控制Gateway的显示Bug；
-**6. WebDemo/MvcDemo/Designer去除多项目引用，调试运行不依赖IIS Server。
+**1. 引擎**
+
+- 1) 引擎集成国产数据库人大金仓Kingbase；
+
+- 2) 添加Slickflow.Module项目，实现组织机构的模块化构建；
+
+- 3) 引擎实现提交至发送人员的部门主管，下属或者同级同事流转功能，相应增加部门员工数据表和存储过程；
+
+  <Transition>
+    ...
+    <Receiver type="Superior" />
+    ...
+  </Transition>
+  
+**2. 设计器**
+
+- 1) 流程设计器增加节点元素添加的操作面板；
+
+- 2) 流程设计器修正连线控制Gateway的显示Bug；
+
+**3. DEMO示例**
+
+- 1) WebDemo/MvcDemo/Designer去除多项目引用，调试运行不依赖IIS Server。
 
 
 ### Slickflow(1.5.2) Demo版本功能说明：
@@ -51,7 +63,7 @@ http://www.slickflow.com/wiki/index
 
 **3. 引擎**
 
--1）引擎增加辅助查询步骤角色用户关系接口；
+- 1）引擎增加辅助查询步骤角色用户关系接口；
 
 GetNextActivityRoleUserTree();  	//下一步选人弹框控件使用
 
