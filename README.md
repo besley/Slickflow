@@ -16,6 +16,8 @@ The source project is under LGPL license, we also provide customers commercial l
 
 QQ(Author): 47743901
 
+EMail: sales@ruochisoft.com
+
 Slickflow website:
 http://www.slickflow.com
 
