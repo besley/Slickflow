@@ -30,10 +30,15 @@ http://www.slickflow.com/wiki/index
 
 ### Slickflow(1.5.7) 企业版更新说明:
 1. Slickflow.Designer 设计器项目全面重构编写，更新如下：
-1). 升级到ASP.NET MVC5;
-2). 升级到BOOTSTRAP3.3.7；
-3). 图形库框架升级到JSPLUMB2.2.8，图形体验更流畅；
-4). AG-Grid取代SlickGrid，AG-Grid在开源社区方面的建设更加完善；
+
+  1). 升级到ASP.NET MVC5;
+  
+  2). 升级到BOOTSTRAP3.3.7；
+  
+  3). 图形库框架升级到JSPLUMB2.2.8，图形体验更流畅；
+  
+  4). AG-Grid取代SlickGrid，AG-Grid在开源社区方面的建设更加完善；
+  
 2. 项目解决方案VS2017版本建立。
 
 ### Slickflow(1.5.6) 企业版更新说明：
