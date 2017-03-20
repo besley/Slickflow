@@ -27,6 +27,23 @@ http://www.slickflow.com/demo/index
 Document:
 http://www.slickflow.com/wiki/index
 
+### Slickflow(1.5.8) 企业版更新说明:
+1. 增加加签通过率类型字段CompareType，用于加签办理页面动态指定（非设计器指定，是运行时决策指定）变量传入；
+
+示例如下：
+        //动态变量数据格式(包含在WfAppRunner属性中)
+        "DynamicVariables": {
+            "SignForwardType": "SignForwardBefore",
+            "SignForwardCompleteOrder": 2,
+            "CompareType":  "Count"
+        }
+
+2. 实现会签加签通过率两种类型(个数和百分比)的全覆盖功能；
+
+3. 修正Gateway节点之后Transition定义的ReceiverType类型未能获取的BUG；
+
+4. 实现跨Gateway节点退回的功能(OrSplit单一分支撤回)。
+
 
 ### Slickflow(1.5.7) 企业版更新说明:
 1. Slickflow.Designer 设计器项目全面重构编写，更新如下：
