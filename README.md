@@ -31,6 +31,7 @@ http://www.slickflow.com/wiki/index
 1. 增加加签通过率类型字段CompareType，用于加签办理页面动态指定（非设计器指定，是运行时决策指定）变量传入；
 
 示例如下：
+
         //动态变量数据格式(包含在WfAppRunner属性中)
         "DynamicVariables": {
             "SignForwardType": "SignForwardBefore",
