@@ -1,0 +1,849 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AI.ServerTelemetryChannel</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor">
+            <summary>
+            Telemetry processor for sampling telemetry at a dynamic rate before sending to Application Insights.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.samplingProcessor">
+            <summary>
+            Fixed-rate sampling telemetry processor.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.estimatorProcessor">
+            <summary>
+            Sampling percentage estimator telemetry processor.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.estimatorSettings">
+            <summary>
+            Sampling percentage estimator settings.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.evaluationCallback">
+            <summary>
+            Callback invoked every time sampling percentage is evaluated.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.#ctor(Microsoft.ApplicationInsights.Extensibility.ITelemetryProcessor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor"/> class.
+            <param name="next">Next TelemetryProcessor in call chain.</param>
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.#ctor(Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings,Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.AdaptiveSamplingPercentageEvaluatedCallback,Microsoft.ApplicationInsights.Extensibility.ITelemetryProcessor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor"/> class.
+            <param name="settings">Sampling percentage estimator settings.</param>
+            <param name="callback">Callback invoked every time sampling percentage is evaluated.</param>
+            <param name="next">Next TelemetryProcessor in call chain.</param>
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.InitialSamplingPercentage">
+            <summary>
+            Gets or sets initial sampling percentage applied at the start
+            of the process to dynamically vary the percentage.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.MaxTelemetryItemsPerSecond">
+            <summary>
+            Gets or sets maximum rate of telemetry items per second
+            dynamic sampling will try to adhere to.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.MinSamplingPercentage">
+            <summary>
+            Gets or sets minimum sampling percentage that can be set 
+            by the dynamic sampling percentage algorithm.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.MaxSamplingPercentage">
+            <summary>
+            Gets or sets maximum sampling percentage that can be set 
+            by the dynamic sampling percentage algorithm.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.EvaluationInterval">
+            <summary>
+            Gets or sets duration of the sampling percentage evaluation interval.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.SamplingPercentageDecreaseTimeout">
+            <summary>
+            Gets or sets a value indicating how long to not to decrease
+            sampling percentage after last change to prevent excessive fluctuation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.SamplingPercentageIncreaseTimeout">
+            <summary>
+            Gets or sets a value indicating how long to not to increase
+            sampling percentage after last change to prevent excessive fluctuation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.MovingAverageRatio">
+            <summary>
+            Gets or sets exponential moving average ratio (factor) applied
+            during calculation of rate of telemetry items produced by the application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.Process(Microsoft.ApplicationInsights.Channel.ITelemetry)">
+            <summary>
+            Processes telemetry item.
+            </summary>
+            <param name="item">Telemetry item to process.</param>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.Dispose">
+            <summary>
+            Disposes the object.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object.
+            </summary>
+            <param name="disposing">True if disposing.</param>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.ApplicationFolderProvider.CheckAccessPermissions(System.IO.DirectoryInfo)">
+            <summary>
+            Throws <see cref="T:System.UnauthorizedAccessException" /> if the process lacks the required permissions to access the <paramref name="telemetryDirectory"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.ApplicationStoppingEventArgs">
+            <summary>
+            Encapsulates arguments of the <see cref="E:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.IApplicationLifecycle.Stopping"/> event.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.ApplicationStoppingEventArgs.#ctor(System.Func{System.Func{System.Threading.Tasks.Task},System.Threading.Tasks.Task})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.ApplicationStoppingEventArgs"/> class with the specified runner of asynchronous methods.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.ApplicationStoppingEventArgs.Run(System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            Runs the specified asynchronous method while preventing the application from exiting.
+            </summary>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.CurrentThreadTaskScheduler">
+            <summary>
+            Runs tasks synchronously, on the current thread. 
+            From <a href="http://code.msdn.microsoft.com/Samples-for-Parallel-b4b76364/view/SourceCode"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.ExceptionHandler.Start(System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            Starts the <paramref name="asyncMethod"/>, catches and logs any exceptions it may throw.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.IApplicationFolderProvider.GetApplicationFolder">
+            <summary>
+            Returns a per-user/per-application folder.
+            </summary>
+            <returns>
+            An <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.IPlatformFolder"/> instance, or <c>null</c> if current application does not have access to file system.
+            </returns>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.IApplicationLifecycle">
+            <summary>
+            Encapsulates application lifecycle events.
+            </summary>
+        </member>
+        <member name="E:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.IApplicationLifecycle.Started">
+            <summary>
+            Occurs when a new instance of the application is started or an existing instance is activated.
+            </summary>
+        </member>
+        <member name="E:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.IApplicationLifecycle.Stopping">
+            <summary>
+            Occurs when the application is suspending or closing.
+            </summary>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.INetwork">
+            <summary>
+            Encapsulates platform-specific behavior of network information APIs.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.INetwork.AddAddressChangedEventHandler(System.Net.NetworkInformation.NetworkAddressChangedEventHandler)">
+            <summary>
+            Adds <see cref="E:System.Net.NetworkInformation.NetworkChange.NetworkAddressChanged"/> event handler.
+            </summary>
+            <remarks>
+            Defined as a method instead of an event in this interface because C# compiler 
+            changes signature of event in a Windows Runtime component, making it very hard 
+            to implement properly.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.INetwork.RemoveAddressChangeEventHandler(System.Net.NetworkInformation.NetworkAddressChangedEventHandler)">
+            <summary>
+            Removes <see cref="E:System.Net.NetworkInformation.NetworkChange.NetworkAddressChanged"/> event handler.
+            </summary>
+            <param name="handler">Address changed event handler.</param>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.Network">
+            <summary>
+            Encapsulates platform-specific behavior of network information APIs.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.NetworkAvailabilityTransmissionPolicy.Dispose">
+            <summary>
+            Releases resources used by this <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.NetworkAvailabilityTransmissionPolicy"/> instance.
+            </summary>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TelemetryBuffer">
+            <summary>
+            Accumulates <see cref="T:Microsoft.ApplicationInsights.Channel.ITelemetry"/> items for efficient transmission.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TelemetryBuffer.Capacity">
+            <summary>
+            Gets or sets the maximum number of telemetry items that can be buffered before transmission.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">The value is zero or less.</exception>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TelemetryBuffer.Dispose">
+            <summary>
+            Releases resources used by this <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TelemetryBuffer"/> instance.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TelemetryBuffer.Process(Microsoft.ApplicationInsights.Channel.ITelemetry)">
+            <summary>
+            Processes the specified <paramref name="item"/> item.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="item"/> is null.</exception>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TelemetryBuffer.FlushAsync">
+            <summary>
+            Passes all <see cref="T:Microsoft.ApplicationInsights.Channel.ITelemetry"/> items to the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TelemetrySerializer"/> and empties the queue.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TelemetrySerializer.EndpointAddress">
+            <summary>
+            Gets or sets the endpoint address.  
+            </summary>
+            <remarks>
+            If endpoint address is set to null, the default endpoint address will be used. 
+            </remarks>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TransmissionBuffer.Capacity">
+            <summary>
+            Gets or sets the maximum amount of memory in bytes for buffering <see cref="T:Microsoft.ApplicationInsights.Channel.Transmission"/> objects.
+            </summary>
+            <remarks>
+            Use this property to limit the amount of memory used to store telemetry in memory of the 
+            application before transmission. Once the maximum amount of memory is
+            reached, <see cref="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TransmissionBuffer.Enqueue(System.Func{Microsoft.ApplicationInsights.Channel.Transmission})"/> will reject new transmissions.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TransmissionBuffer.Size">
+            <summary>
+            Gets the combined length of <see cref="P:Microsoft.ApplicationInsights.Channel.Transmission.Content"/> stored in the buffer.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TransmissionExtensions.Load(System.IO.Stream)">
+            <summary>
+            Loads a new transmission from the specified <paramref name="stream"/>.
+            </summary>
+            <returns>Return transmission loaded from file; throws FormatException is file is corrupted.</returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TransmissionExtensions.Save(Microsoft.ApplicationInsights.Channel.Transmission,System.IO.Stream)">
+            <summary>
+            Saves the transmission to the specified <paramref name="stream"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TransmissionSender.Capacity">
+            <summary>
+            Gets or sets the the maximum number of <see cref="T:Microsoft.ApplicationInsights.Channel.Transmission"/> objects that can be sent simultaneously.
+            </summary>
+            <remarks>
+            Use this property to limit the number of concurrent HTTP connections. Once the maximum number of 
+            transmissions in progress is reached, <see cref="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TransmissionSender.Enqueue(System.Func{Microsoft.ApplicationInsights.Channel.Transmission})"/> will stop accepting new transmissions
+            until previous transmissions are sent.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TransmissionStorage.Capacity">
+            <summary>
+            Gets or sets the total amount of disk space, in bytes, allowed for storing transmission files.
+            </summary>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.Transmitter">
+            <summary>
+            Implements throttled and persisted transmission of telemetry to Application Insights. 
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.Transmitter.#ctor(Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TransmissionSender,Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TransmissionBuffer,Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TransmissionStorage,System.Collections.Generic.IEnumerable{Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.TransmissionPolicy})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.Transmitter" /> class. Used only for UTs.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.Transmitter.Dispose">
+            <summary>
+            Releases resources used by this <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.Transmitter"/> instance.
+            </summary>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.WebApplicationLifecycle">
+            <summary>
+            Implements the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.IApplicationLifecycle"/> events for web applications.
+            </summary>
+        </member>
+        <member name="E:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.WebApplicationLifecycle.Started">
+            <summary>
+            The <see cref="E:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.WebApplicationLifecycle.Started"/> event is raised when the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.WebApplicationLifecycle"/> instance is first created.
+            This event is not raised for web applications.
+            </summary>
+        </member>
+        <member name="E:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.WebApplicationLifecycle.Stopping">
+            <summary>
+            The <see cref="E:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.WebApplicationLifecycle.Stopping"/> event is raised when <see cref="T:System.Web.Hosting.HostingEnvironment"/> calls the <see cref="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.WebApplicationLifecycle.Stop(System.Boolean)"/> method.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.WebApplicationLifecycle.Dispose">
+            <summary>
+            Unregisters the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.WebApplicationLifecycle"/> from <see cref="T:System.Web.Hosting.HostingEnvironment"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.Implementation.WebApplicationLifecycle.Stop(System.Boolean)">
+            <summary>
+            Gets called by <see cref="T:System.Web.Hosting.HostingEnvironment"/> when the web application is stopping.
+            </summary>
+            <param name="immediate">
+            False when the method is invoked first time, allowing async shutdown operations.
+            True when the method is invoked second time, demanding to unregister immediately.
+            </param>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.SamplingTelemetryProcessor">
+            <summary>
+            Represents a telemetry processor for sampling telemetry at a fixed-rate before sending to Application Insights.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.SamplingTelemetryProcessor.#ctor(Microsoft.ApplicationInsights.Extensibility.ITelemetryProcessor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.SamplingTelemetryProcessor"/> class.
+            <param name="next">Next TelemetryProcessor in call chain.</param>
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.SamplingTelemetryProcessor.SamplingPercentage">
+            <summary>
+            Gets or sets data sampling percentage (between 0 and 100) for all <see cref="T:Microsoft.ApplicationInsights.Channel.ITelemetry"/>
+            objects logged in this <see cref="T:Microsoft.ApplicationInsights.TelemetryClient"/>.
+            </summary>
+            <remarks>
+            All sampling percentage must be in a ratio of 100/N where N is a whole number (2, 3, 4, …). E.g. 50 for 1/2 or 33.33 for 1/3.
+            Failure to follow this pattern can result in unexpected / incorrect computation of values in the portal.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.SamplingTelemetryProcessor.Next">
+            <summary>
+            Gets or sets the next TelemetryProcessor in call chain.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.SamplingTelemetryProcessor.Process(Microsoft.ApplicationInsights.Channel.ITelemetry)">
+            <summary>
+            Process a collected telemetry item.
+            </summary>
+            <param name="item">A collected Telemetry item.</param>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel">
+            <summary>
+            Represents a communication channel for sending telemetry to Application Insights via HTTP/S.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel"/> class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel.DeveloperMode">
+            <summary>
+            Gets or sets a value indicating whether developer mode of telemetry transmission is enabled.
+            When developer mode is True, <see cref="N:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel"/> sends telemetry to Application Insights immediately 
+            during the entire lifetime of the application. When developer mode is False, <see cref="N:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel"/>
+            respects production sending policies defined by other properties.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel.EndpointAddress">
+            <summary>
+            Gets or sets the HTTP address where the telemetry is sent.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel.MaxTelemetryBufferDelay">
+            <summary>
+            Gets or sets the maximum telemetry batching interval. Once the interval expires, <see cref="N:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel"/> 
+            serializes the accumulated telemetry items for transmission.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel.MaxTelemetryBufferCapacity">
+            <summary>
+            Gets or sets the maximum number of telemetry items will accumulate in a memory before 
+            the <see cref="N:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel"/> serializing them for transmission to Application Insights.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel.MaxTransmissionBufferCapacity">
+            <summary>
+            Gets or sets the maximum amount of memory, in bytes, that <see cref="N:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel"/> will use 
+            to buffer transmissions before sending them to Application Insights.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel.MaxTransmissionSenderCapacity">
+            <summary>
+            Gets or sets the maximum number of telemetry transmissions that <see cref="N:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel"/> will 
+            send to Application Insights at the same time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel.MaxTransmissionStorageCapacity">
+            <summary>
+            Gets or sets the maximum amount of disk space, in bytes, that <see cref="N:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel"/> will 
+            use to store unsent telemetry transmissions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel.StorageFolder">
+            <summary>
+            Gets or sets the folder to be used as a temporary storage for events that were not sent because of temporary connectivity issues. 
+            If folder was not provided or inaccessible. %LocalAppData% or %Temp% folder will be used.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel.TelemetryProcessor">
+            <summary>
+            Gets or sets first TelemetryProcessor in processor call chain.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel.Dispose">
+            <summary>
+            Releases unmanaged and - optionally - managed resources.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel.Send(Microsoft.ApplicationInsights.Channel.ITelemetry)">
+            <summary>
+            Sends an instance of ITelemetry through the channel.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel.Flush">
+            <summary>
+            Synchronously flushes the telemetry buffer. 
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel.Initialize(Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration)">
+            <summary>
+            Initialize method is called after all configuration properties have been loaded from the configuration.
+            </summary>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.ExponentialMovingAverageCounter">
+            <summary>
+            Exponential moving average counter.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.ExponentialMovingAverageCounter.average">
+            <summary>
+            Average value of the counter.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.ExponentialMovingAverageCounter.current">
+            <summary>
+            Value of the counter during current interval of time.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.ExponentialMovingAverageCounter.#ctor(System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.ExponentialMovingAverageCounter"/> class.
+            </summary>
+            <param name="coefficient">Exponential coefficient.</param>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.ExponentialMovingAverageCounter.Coefficient">
+            <summary>
+            Gets exponential coefficient (must be between 0 and 1).
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.ExponentialMovingAverageCounter.Average">
+            <summary>
+            Gets exponential moving average value of the counter.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.ExponentialMovingAverageCounter.Increment">
+            <summary>
+            Increments counter value.
+            </summary>
+            <returns>Incremented value.</returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.ExponentialMovingAverageCounter.StartNewInterval">
+            <summary>
+            Zeros out current value and starts new 'counter interval'.
+            </summary>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.IRandomNumberBatchGenerator">
+            <summary>
+            Interface for random number generator capable of producing 
+            a batch of unsigned 64 bit random numbers.
+            </summary>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings">
+            <summary>
+            Container for all the settings applicable to the process of dynamically estimating 
+            application telemetry sampling percentage.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.default">
+            <summary>
+            Set of default settings.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings"/> class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.MaxTelemetryItemsPerSecond">
+            <summary>
+            Gets or sets maximum rate of telemetry items per second
+            dynamic sampling will try to adhere to.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.InitialSamplingPercentage">
+            <summary>
+            Gets or sets initial sampling percentage applied at the start
+            of the process to dynamically vary the percentage.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.MinSamplingPercentage">
+            <summary>
+            Gets or sets minimum sampling percentage that can be set 
+            by the dynamic sampling percentage algorithm.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.MaxSamplingPercentage">
+            <summary>
+            Gets or sets maximum sampling percentage that can be set 
+            by the dynamic sampling percentage algorithm.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.EvaluationInterval">
+            <summary>
+            Gets or sets duration of the sampling percentage evaluation 
+            interval in seconds.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.SamplingPercentageDecreaseTimeout">
+            <summary>
+            Gets or sets a value indicating how long to not to decrease
+            sampling percentage after last change to prevent excessive fluctuation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.SamplingPercentageIncreaseTimeout">
+            <summary>
+            Gets or sets a value indicating how long to not to increase
+            sampling percentage after last change to prevent excessive fluctuation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.MovingAverageRatio">
+            <summary>
+            Gets or sets exponential moving average ratio (factor) applied
+            during calculation of rate of telemetry items produced by the application.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.EffectiveMaxTelemetryItemsPerSecond">
+            <summary>
+            Gets effective maximum telemetry items rate per second 
+            adjusted in case user makes an error while setting a value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.EffectiveInitialSamplingRate">
+            <summary>
+            Gets effective initial sampling rate
+            adjusted in case user makes an error while setting a value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.EffectiveMinSamplingRate">
+            <summary>
+            Gets effective minimum sampling rate
+            adjusted in case user makes an error while setting a value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.EffectiveMaxSamplingRate">
+            <summary>
+            Gets effective maximum sampling rate
+            adjusted in case user makes an error while setting a value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.EffectiveEvaluationInterval">
+            <summary>
+            Gets effective sampling percentage evaluation interval
+            adjusted in case user makes an error while setting a value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.EffectiveSamplingPercentageDecreaseTimeout">
+            <summary>
+            Gets effective sampling percentage decrease timeout
+            adjusted in case user makes an error while setting a value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.EffectiveSamplingPercentageIncreaseTimeout">
+            <summary>
+            Gets effective sampling percentage increase timeout
+            adjusted in case user makes an error while setting a value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.EffectiveMovingAverageRatio">
+            <summary>
+            Gets effective exponential moving average ratio
+            adjusted in case user makes an error while setting a value.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings.AdjustSamplingPercentage(System.Double)">
+            <summary>
+            Adjusts sampling percentage set by user to account for errors
+            such as setting it below zero or above 100%.
+            </summary>
+            <param name="samplingPercentage">Input sampling percentage.</param>
+            <returns>Adjusted sampling percentage in range &gt; 0 and &lt;= 100.</returns>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.AdaptiveSamplingPercentageEvaluatedCallback">
+            <summary>
+            Represents a method that is invoked every time sampling percentage is evaluated
+            by the dynamic sampling algorithm.
+            </summary>
+            <param name="afterSamplingTelemetryItemRatePerSecond">Rate of telemetry items generated by this instance of the application after current sampling percentage was applied.</param>
+            <param name="currentSamplingPercentage">Current sampling percentage that was used by the algorithm.</param>
+            <param name="newSamplingPercentage">Suggested new sampling percentage that will allow to keep desired telemetry item generation rate given the volume of items states the same.</param>
+            <param name="isSamplingPercentageChanged">A value indicating whether new sampling percentage will be applied by dynamic sampling algorithm. New sampling percentage may not be immediately applied in case it was recently changed.</param>
+            <param name="settings">Dynamic sampling algorithm settings.</param>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor">
+            <summary>
+            Telemetry processor to estimate ideal sampling percentage.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor.next">
+            <summary>
+            Next-in-chain processor.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor.settings">
+            <summary>
+            Dynamic sampling estimator settings.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor.itemCount">
+            <summary>
+            Average telemetry item counter.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor.evaluationTimer">
+            <summary>
+            Evaluation timer.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor.evaluationInterval">
+            <summary>
+            Current evaluation interval.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor.currenSamplingRate">
+            <summary>
+            Current sampling rate.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor.samplingPercentageLastChangeDateTime">
+            <summary>
+            Last date and time sampling percentage was changed.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor.evaluationCallback">
+            <summary>
+            Callback to invoke every time sampling percentage is evaluated.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor.#ctor(Microsoft.ApplicationInsights.Extensibility.ITelemetryProcessor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor"/> class.
+            <param name="next">Next TelemetryProcessor in call chain.</param>
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor.#ctor(Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings,Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.AdaptiveSamplingPercentageEvaluatedCallback,Microsoft.ApplicationInsights.Extensibility.ITelemetryProcessor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor"/> class.
+            <param name="settings">Dynamic sampling estimator settings.</param>
+            <param name="callback">Callback to invoke every time sampling percentage is evaluated.</param>
+            <param name="next">Next TelemetryProcessor in call chain.</param>
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor.Process(Microsoft.ApplicationInsights.Channel.ITelemetry)">
+            <summary>
+            Processes telemetry item.
+            </summary>
+            <param name="item">Telemetry item to process.</param>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor.Dispose">
+            <summary>
+            Disposes the object.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor.MovingAverageCoefficientChanged(System.Double,System.Double)">
+            <summary>
+            Checks to see if exponential moving average has changed.
+            </summary>
+            <param name="running">Currently running value of moving average.</param>
+            <param name="current">Value set in the algorithm parameters.</param>
+            <returns>True if moving average value changed.</returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorTelemetryProcessor.EstimateSamplingPercentage(System.Object)">
+            <summary>
+            Callback for sampling percentage evaluation timer.
+            </summary>
+            <param name="state">Timer state.</param>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingScoreGenerator">
+            <summary>
+            Utility class for sampling score generation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingScoreGenerator.GetSamplingScore(Microsoft.ApplicationInsights.Channel.ITelemetry)">
+            <summary>
+            Generates telemetry sampling score between 0 and 100.
+            </summary>
+            <param name="telemetry">Telemetry item to score.</param>
+            <returns>Item sampling score.</returns>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom.random">
+            <summary>
+            Generator singleton.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom.index">
+            <summary>
+            Index of the last used random number within pre-generated array.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom.segmentCount">
+            <summary>
+            Count of segments of random numbers.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom.segmentSize">
+            <summary>
+            Number of random numbers per segment.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom.bitsToStoreRandomIndexWithinSegment">
+            <summary>
+            Number of bits used to store index of the random number within segment.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom.segmentIndexMask">
+            <summary>
+            Bit mask to get segment index bits.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom.randomIndexWithinSegmentMask">
+            <summary>
+            Bit mask to get index of the random number within segment.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom.randomArrayIndexMask">
+            <summary>
+            Bit mask to get index of the random number in the pre-generated array.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom.randomGemerators">
+            <summary>
+            Array of random number batch generators (one per each segment).
+            </summary>
+        </member>
+        <member name="F:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom.randomNumbers">
+            <summary>
+            Array of pre-generated random numbers.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom.Initialize">
+            <summary>
+            Initializes generator with a set of random numbers.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom.Initialize(System.Func{System.UInt64,Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.IRandomNumberBatchGenerator},System.Int32,System.Int32)">
+            <summary>
+            Initializes generator with a set of random numbers.
+            </summary>
+            <param name="randomGeneratorFactory">Factory used to create random number batch generators.</param>
+            <param name="segmentIndexBits">Number of significant bits in segment index, i.e. value of 3 means 8 segments of random numbers - 0..7.</param>
+            <param name="segmentBits">Number of significant bits in random number index within segment, i.e. value of 10 means 1024 random numbers per segment.</param>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom.Next">
+            <summary>
+            Weakly thread safe next (random) operation id generator
+            where 'weakly' indicates that it is unlikely we'll get into 
+            collision state.
+            </summary>
+            <returns>Next operation id.</returns>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.WeakConcurrentRandom.RegenerateSegment(System.Int32)">
+            <summary>
+            Generates random number batch for segment which just exhausted
+            according to value of the new index.
+            </summary>
+            <param name="newIndex">Index in random number array of the random number we're about to return.</param>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.XorshiftRandomBatchGenerator">
+            <summary>
+            Generates batches of random number using Xorshift algorithm
+            Note: the base code is from http://www.codeproject.com/Articles/9187/A-fast-equivalent-for-System-Random.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.XorshiftRandomBatchGenerator.#ctor(System.UInt64)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.XorshiftRandomBatchGenerator"/> class.
+            </summary>
+            <param name="seed">Random generator seed value.</param>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.XorshiftRandomBatchGenerator.NextBatch(System.UInt64[],System.Int32,System.Int32)">
+            <summary>
+            Generates a batch of random numbers.
+            </summary>
+            <param name="buffer">Buffer to put numbers in.</param>
+            <param name="index">Start index in the buffer.</param>
+            <param name="count">Count of random numbers to generate.</param>
+        </member>
+        <member name="T:Microsoft.ApplicationInsights.Extensibility.TelemetryProcessorChainBuilderExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder"/>.
+            Adds shorthand for adding well-known processors.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.TelemetryProcessorChainBuilderExtensions.UseSampling(Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder,System.Double)">
+            <summary>
+            Adds <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.SamplingTelemetryProcessor"/> to the given<see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder" />
+            </summary>
+            <param name="builder">Instance of <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder"/></param>
+            <param name="samplingPercentage">Sampling Percentage to configure.</param>        
+            <return>Instance of <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder"/>.</return>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.TelemetryProcessorChainBuilderExtensions.UseAdaptiveSampling(Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder)">
+            <summary>
+            Adds <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor"/> to the <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder" />
+            </summary>
+            <param name="builder">Instance of <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder"/></param>
+            <return>Instance of <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder"/>.</return>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.TelemetryProcessorChainBuilderExtensions.UseAdaptiveSampling(Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder,System.Double)">
+            <summary>
+            Adds <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor"/> to the <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder" />
+            </summary>
+            <param name="builder">Instance of <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder"/></param>
+            <param name="maxTelemetryItemsPerSecond">Maximum number of telemetry items to be generated on this application instance.</param>
+            <return>Instance of <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder"/>.</return>
+        </member>
+        <member name="M:Microsoft.ApplicationInsights.Extensibility.TelemetryProcessorChainBuilderExtensions.UseAdaptiveSampling(Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder,Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.SamplingPercentageEstimatorSettings,Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation.AdaptiveSamplingPercentageEvaluatedCallback)">
+            <summary>
+            Adds <see cref="T:Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor"/> to the <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder" />
+            </summary>
+            <param name="builder">Instance of <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder"/></param>
+            <param name="settings">Set of settings applicable to dynamic sampling percentage algorithm.</param>
+            <param name="callback">Callback invoked every time sampling percentage evaluation occurs.</param>
+            <return>Instance of <see cref="T:Microsoft.ApplicationInsights.Extensibility.Implementation.TelemetryProcessorChainBuilder"/>.</return>
+        </member>
+    </members>
+</doc>

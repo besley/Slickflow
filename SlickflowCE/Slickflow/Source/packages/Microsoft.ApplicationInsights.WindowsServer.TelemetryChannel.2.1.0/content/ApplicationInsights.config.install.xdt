@@ -1,0 +1,19 @@
+<ApplicationInsights xmlns="http://schemas.microsoft.com/ApplicationInsights/2013/Settings" xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <TelemetryChannel xdt:Transform="Remove" />
+  <TelemetryChannel xdt:Transform="Insert" Type="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.ServerTelemetryChannel, Microsoft.AI.ServerTelemetryChannel" />
+  
+  <TelemetryProcessors>
+    <Add Type="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.SamplingTelemetryProcessor, Microsoft.AI.ServerTelemetryChannel"
+        xdt:Transform="Remove"
+        xdt:Locator="Match(Type)">
+    </Add> 
+  </TelemetryProcessors>
+
+  <TelemetryProcessors xdt:Transform="InsertIfMissing">
+    <Add Type="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.AdaptiveSamplingTelemetryProcessor, Microsoft.AI.ServerTelemetryChannel"
+        xdt:Transform="InsertIfMissing"
+        xdt:Locator="Match(Type)">
+      <MaxTelemetryItemsPerSecond>5</MaxTelemetryItemsPerSecond>
+    </Add>
+  </TelemetryProcessors>
+</ApplicationInsights>
