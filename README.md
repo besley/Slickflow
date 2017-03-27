@@ -13,10 +13,8 @@ There are demo programs that you can find in WebDemo, WinformDemo project.
 
 The source project is under LGPL license, we also provide customers commercial license. if you have any further inquery, please feel free to contact us: 
 
-
-QQ(Author): 47743901
-
-EMail: sales@ruochisoft.com
+Quick Start:
+https://github.com/besley/Slickflow/wiki
 
 Slickflow website:
 http://www.slickflow.com
@@ -26,6 +24,12 @@ http://www.slickflow.com/demo/index
 
 Document:
 http://www.slickflow.com/wiki/index
+
+QQ(Author): 47743901
+
+EMail: sales@ruochisoft.com
+
+
 
 ### Slickflow(1.5.8) 企业版更新说明:
 1. 增加加签通过率类型字段CompareType，用于加签办理页面动态指定（非设计器指定，是运行时决策指定）变量传入；
