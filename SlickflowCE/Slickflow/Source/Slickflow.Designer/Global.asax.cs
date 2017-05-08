@@ -7,7 +7,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 
-namespace MPDiagram
+namespace Slickflow.Designer
 {
     /// <summary>
     /// Web Application 
