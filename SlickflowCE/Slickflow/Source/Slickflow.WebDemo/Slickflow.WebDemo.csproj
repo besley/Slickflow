@@ -11,8 +11,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Slickflow.WebDemoV2._0</RootNamespace>
-    <AssemblyName>Slickflow.WebDemoV2.0</AssemblyName>
+    <RootNamespace>Slickflow.WebDemo</RootNamespace>
+    <AssemblyName>Slickflow.WebDemo</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
@@ -68,10 +68,20 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AppJS\kgraph2.min.js" />
-    <Content Include="AppJS\processFileManager.js" />
     <Content Include="Content\app.css" />
+    <Content Include="Content\bootstrap\bootstrap-3.3.7.min.css" />
+    <Content Include="Content\bootstrap\bootstrap-datetimepicker.css" />
+    <Content Include="Content\bootstrap\bootstrap-datetimepicker.min.css" />
+    <Content Include="Content\bootstrap\bootstrap-dialog.min.css" />
+    <Content Include="Content\bootstrap\bootstrap-progressbar-2.3.1.min.css" />
+    <Content Include="Content\bootstrap\bootstrap-progressbar-3.3.4.css" />
+    <Content Include="Content\bootstrap\bootstrap-progressbar-3.3.4.min.css" />
+    <Content Include="Content\bootstrap\bootstrap-theme-3.3.7.min.css" />
+    <Content Include="Content\bootstrap\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap\bootstrap.css" />
+    <Content Include="Content\bootstrap\bootstrap.min.css" />
     <Content Include="Content\flowchart.css" />
+    <Content Include="Content\graphCanvas.css" />
     <Content Include="Content\images\2.png" />
     <Content Include="Content\images\ajax-loader.gif" />
     <Content Include="Content\images\arrow.png" />
@@ -182,6 +192,7 @@
     <Content Include="Content\images\web_ui_lanrensc_03.png" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\main.css" />
+    <Content Include="Content\msgBoxLight.css" />
     <Content Include="Content\slick.grid.css" />
     <Content Include="Content\splitter.css" />
     <Content Include="Content\style.css" />
@@ -306,28 +317,6 @@
     <Content Include="js\jquery.layout-latest.min.js" />
     <Content Include="js\jquery.nicescroll.js" />
     <Content Include="js\jshelper.js" />
-    <Content Include="js\jsplumb\anchors.js" />
-    <Content Include="js\jsplumb\base-library-adapter.js" />
-    <Content Include="js\jsplumb\biltong-0.2.js" />
-    <Content Include="js\jsplumb\browser-util.js" />
-    <Content Include="js\jsplumb\connection.js" />
-    <Content Include="js\jsplumb\connector-editors.js" />
-    <Content Include="js\jsplumb\connectors-bezier.js" />
-    <Content Include="js\jsplumb\connectors-flowchart.js" />
-    <Content Include="js\jsplumb\connectors-statemachine.js" />
-    <Content Include="js\jsplumb\defaults.js" />
-    <Content Include="js\jsplumb\dom-adapter.js" />
-    <Content Include="js\jsplumb\dom.jsPlumb.js" />
-    <Content Include="js\jsplumb\endpoint.js" />
-    <Content Include="js\jsplumb\jquery.jsPlumb.js" />
-    <Content Include="js\jsplumb\jsBezier-0.7.js" />
-    <Content Include="js\jsplumb\jsPlumb.js" />
-    <Content Include="js\jsplumb\katavorio-0.6.js" />
-    <Content Include="js\jsplumb\mottle-0.6.js" />
-    <Content Include="js\jsplumb\overlay-component.js" />
-    <Content Include="js\jsplumb\renderers-svg.js" />
-    <Content Include="js\jsplumb\renderers-vml.js" />
-    <Content Include="js\jsplumb\util.js" />
     <Content Include="js\layer\layer.js" />
     <Content Include="js\layer\skin\default\xubox_ico0.png" />
     <Content Include="js\layer\skin\default\xubox_loading0.gif" />
@@ -375,7 +364,6 @@
     <Content Include="js\My97DatePicker\skin\whyGreen\up.jpg" />
     <Content Include="js\My97DatePicker\skin\whyGreen\ymbg.jpg" />
     <Content Include="js\My97DatePicker\WdatePicker.js" />
-    <Content Include="js\XMLWriter-1.0.0-min.js" />
     <Content Include="js\zTree\jquery.ztree.core-3.5.js" />
     <Content Include="js\zTree\jquery.ztree.core-3.5.min.js" />
     <Content Include="js\zTree\jquery.ztree.excheck-3.5.js" />
@@ -397,13 +385,43 @@
     <Content Include="js\zTree\zTreeStyle\img\zTreeStandard.gif" />
     <Content Include="js\zTree\zTreeStyle\img\zTreeStandard.png" />
     <Content Include="js\zTree\zTreeStyle\zTreeStyle.css" />
+    <Content Include="Ashx\Wf.ashx" />
     <Content Include="Login.aspx" />
+    <None Include="Scripts\jquery\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\bootstrap\bootbox.min.js" />
+    <Content Include="Scripts\bootstrap\bootstrap-datetimepicker.js" />
+    <Content Include="Scripts\bootstrap\bootstrap-datetimepicker.min.js" />
+    <Content Include="Scripts\bootstrap\bootstrap-datetimepicker.zh-CN.js" />
+    <Content Include="Scripts\bootstrap\bootstrap-progressbar.min.js" />
+    <Content Include="Scripts\bootstrap\bootstrap.js" />
+    <Content Include="Scripts\bootstrap\bootstrap.min.js" />
+    <Content Include="Scripts\jquery\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery\jquery-1.8.3.js" />
+    <Content Include="Scripts\jquery\jquery-ui-1.10.3.min.js" />
+    <Content Include="Scripts\jquery\jquery.event.drag-2.2.js" />
+    <Content Include="Scripts\jquery\jquery.msgBox.js" />
+    <None Include="Scripts\jquery\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery\jquery.validate.js" />
+    <Content Include="Scripts\jquery\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jquery\jquery.ztree.all-3.5.min.js" />
+    <Content Include="Scripts\jquery\jstree.js" />
+    <Content Include="Scripts\jquery\ui\jquery-ui-1.8.16.custom.min.js" />
+    <Content Include="Scripts\jquery\ui\jquery.ui.core.js" />
+    <Content Include="Scripts\jquery\ui\jquery.ui.mouse.js" />
+    <Content Include="Scripts\jquery\ui\jquery.ui.resizable.js" />
+    <Content Include="Scripts\jquery\ui\jquery.ui.sortable.js" />
+    <Content Include="Scripts\jquery\ui\jquery.ui.widget.js" />
+    <Content Include="Scripts\jshelper.js" />
+    <Content Include="Scripts\slick.event.js" />
+    <Content Include="Scripts\XMLWriter-1.0.0-min.js" />
     <Content Include="Skin\base.css" />
     <Content Include="Skin\default.css" />
     <Content Include="Skin\images\login_tit.png" />
     <Content Include="Skin\images\skin_icons.png" />
     <Content Include="Skin\layout.css" />
-    <Content Include="Slickflows\FlowCanvas.html" />
     <Content Include="Slickflows\FlowList.aspx" />
     <Content Include="Slickflows\FlowOpinion.aspx" />
     <Content Include="Slickflows\FlowStepSelect.aspx" />
@@ -413,6 +431,10 @@
     <Content Include="Slickflows\Main.aspx" />
     <Content Include="Slickflows\SwitchLoginUser.aspx" />
     <Content Include="Slickflows\Tool.aspx" />
+    <Content Include="ViewJS\accountManager.js" />
+    <Content Include="ViewJS\nextactivitytree.js" />
+    <Content Include="ViewJS\pordermanager.js" />
+    <Content Include="ViewJS\sfmain.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -423,8 +445,8 @@
     <Compile Include="App_Code\BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Ashx\Wf2Xml.ashx.cs">
-      <DependentUpon>Wf2Xml.ashx</DependentUpon>
+    <Compile Include="Ashx\Wf.ashx.cs">
+      <DependentUpon>Wf.ashx</DependentUpon>
     </Compile>
     <Compile Include="Business\WorkFlows.cs" />
     <Compile Include="Common\EnumHelper.cs" />
@@ -438,6 +460,7 @@
     <Compile Include="Data\WorkFlowManager.cs" />
     <Compile Include="Entity\BizAppFlowEntity.cs" />
     <Compile Include="Entity\HrsLeaveEntity.cs" />
+    <Compile Include="Entity\HrsLeaveOpinionEntity.cs" />
     <Compile Include="Entity\SysRoleEntity.cs" />
     <Compile Include="Entity\SysRoleUserEntity.cs" />
     <Compile Include="Entity\SysUserEntity.cs" />
@@ -522,8 +545,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Ashx\Wf2Xml.ashx" />
     <None Include="Properties\PublishProfiles\webformdemo.pubxml" />
+    <Content Include="Scripts\jquery\jquery-1.10.2.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -549,6 +572,7 @@
       <Name>Slickflow.Module</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

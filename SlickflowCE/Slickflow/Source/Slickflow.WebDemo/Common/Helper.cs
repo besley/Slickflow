@@ -13,7 +13,7 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Configuration;
 
-namespace Slickflow.WebDemoV2._0.Common
+namespace Slickflow.WebDemo.Common
 {
     public class Helper
     {

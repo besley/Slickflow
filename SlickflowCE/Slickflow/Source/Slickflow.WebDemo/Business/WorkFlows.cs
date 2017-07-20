@@ -5,12 +5,12 @@ using System.Data;
 using System.Collections;
 using System.Collections.Generic;
 
-using Slickflow.WebDemoV2._0.Data;
-using Slickflow.WebDemoV2._0.Common;
-using Slickflow.WebDemoV2._0.Entity;
+using Slickflow.WebDemo.Data;
+using Slickflow.WebDemo.Common;
+using Slickflow.WebDemo.Entity;
 
 
-namespace Slickflow.WebDemoV2._0.Business
+namespace Slickflow.WebDemo.Business
 {
     public class WorkFlows
     {
@@ -154,6 +154,53 @@ namespace Slickflow.WebDemoV2._0.Business
         }
         #endregion
 
+        #region HrsLeaveOpinion
+        /// <summary>
+        /// 新增一条业务流程数据
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int AddHrsLeaveOpinion(HrsLeaveOpinionEntity model)
+        {
+            model.ChangedTime = DateTime.Now;
+            return WorkFlowManager.AddHrsLeaveOpinion(model);
+        }
+
+
+        /// <summary>
+        /// 得到业务公共实体
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        public static HrsLeaveOpinionEntity GetHrsLeaveOpinionModel(int ID)
+        {
+            return WorkFlowManager.GetHrsLeaveOpinionModel(ID);
+        }
+
+        /// <summary>
+        /// 得到业务公共实体
+        /// </summary>
+        /// <param name="AppInstanceID"></param>
+        /// <returns></returns>
+        public static HrsLeaveOpinionEntity GetHrsLeaveOpinionByAppInstanceID(string AppInstanceID)
+        {
+            return WorkFlowManager.GetHrsLeaveOpinionByAppInstanceID(AppInstanceID);
+        }
+
+
+
+        /// <summary>
+        /// 查询业务流程
+        /// </summary>
+        /// <param name="sqlWhere">查询条件</param>
+        /// <returns></returns>
+        public static DataTable GetHrsLeaveOpinion(string sqlWhere)
+        {
+            return WorkFlowManager.GetHrsLeaveOpinion(sqlWhere);
+
+        }
+        #endregion
+
 
         #region BizAppFlow
         /// <summary>
@@ -202,6 +249,16 @@ namespace Slickflow.WebDemoV2._0.Business
         public static DataTable GetBizAppFlow(string sqlWhere)
         {
             return WorkFlowManager.GetBizAppFlow(sqlWhere);
+        }
+
+        /// <summary>
+        /// 查询业务流程
+        /// </summary>
+        /// <param name="AppInstanceID">应用实例ID</param>
+        /// <returns></returns>
+        public static DataTable GetBizAppFlowByAppInstanceID(string AppInstanceID)
+        {
+            return WorkFlowManager.GetBizAppFlowByAppInstanceID(AppInstanceID);
         }
         #endregion
 

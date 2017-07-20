@@ -59,11 +59,9 @@ var rolelist = (function () {
     rolelist.sure = function () {
         if (pselectedParticipantType != ""
             && pselectedParticipantItem != null) {
-            kmain.mselectedParticipantType = pselectedParticipantType;
-            kmain.mselectedParticipantItem = pselectedParticipantItem;
-
-            activityproperty.syncActivityPerformers(kmain.mselectedParticipantType,
-                kmain.mselectedParticipantItem);
+            //sync activity performers
+            activityproperty.syncActivityPerformers(pselectedParticipantType,
+                pselectedParticipantItem);
         } else {
             $.msgBox({
                 title: "Designer / Role",

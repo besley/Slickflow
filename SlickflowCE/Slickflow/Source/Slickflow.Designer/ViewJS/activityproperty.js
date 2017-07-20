@@ -24,25 +24,25 @@ var activityproperty = (function () {
 	function activityproperty() {
 	}
 
+    activityproperty.mselectedActivityPerformerGUID = "";
+
 	//load activity property
 	activityproperty.loadActivity = function () {
-		$("#ddlComplexType").prop("selectedIndex", -1);
-		$("#ddlMergeType").prop("selectedIndex", -1);
-		$("#ddlCompareType").prop("selectedIndex", -1);
+        var activity = kmain.mxSelectedDomElement.Element;
 
-		var node = kgraph.mcurrentSelectedDomElement.node;
-		if (node) {
+		if (activity) {
 			//fill activity basic information
-			$("#txtActivityName").val(node.sdata.name);
-			$("#txtActivityCode").val(node.sdata.code);
-			$("#txtDescription").val(node.sdata.description);
+			$("#txtActivityName").val(activity.name);
+			$("#txtActivityCode").val(activity.code);
+			$("#txtDescription").val(activity.description);
+
 			//load performer list of current activity
-			activityproperty.getActivityPerformer(node);
+            loadActivityPerformer(activity);
 		}
 	}
 
 	//load performer datagrid
-	activityproperty.getActivityPerformer = function (node) {
+	function loadActivityPerformer(activity) {
 		var divPerformerGrid = document.querySelector('#myPerformerGrid');
 		$(divPerformerGrid).empty();
 
@@ -57,25 +57,25 @@ var activityproperty = (function () {
 		};
 
 		new agGrid.Grid(divPerformerGrid, gridOptions);
-		var dsActivityPerformer = loadActivityPerformers(node);
+		var dsActivityPerformer = loadActivityPerformersDataSource(activity);
 
 		gridOptions.api.setRowData(dsActivityPerformer);
 
 		function onSelectionChanged() {
 			var selectedRows = gridOptions.api.getSelectedRows();
 			selectedRows.forEach(function (selectedRow, index) {
-				kmain.mselectedActivityPerformerGUID = selectedRow.id;
+				activityproperty.mselectedActivityPerformerGUID = selectedRow.id;
 			});
 		}
-	}
+    }
 
-	function loadActivityPerformers(node) {
+	function loadActivityPerformersDataSource(activity) {
 		var performer = null;
 		var activityPerformers = [];
 
-		if (node.sdata.performers && node.sdata.performers.length > 0) {
-			for (var i = 0; i < node.sdata.performers.length; i++) {
-				performer = getPerformerByGUID(node.sdata.performers[i].id);
+		if (activity.performers && activity.performers.length > 0) {
+			for (var i = 0; i < activity.performers.length; i++) {
+				performer = getPerformerByGUID(activity.performers[i].id);
 				if (performer) activityPerformers.push(performer);
 			}
 		}
@@ -84,13 +84,12 @@ var activityproperty = (function () {
 
 	function getPerformerByGUID(id) {
 		var performer = null;
-		var participants = null;
-		var packageData = null;
 
-		var packageData = kmain.mcurrentPackageData;
-		if (packageData && packageData.participants) {
-			for (var i = 0; i < packageData.participants.length; i++) {
-				var p = packageData.participants[i];
+        //it's better to get role information from database
+		var participants = kmain.mxSelectedParticipants
+		if (participants && participants.length > 0) {
+			for (var i = 0; i < participants.length; i++) {
+				var p = participants[i];
 				if (id === p.id) {
 					performer = {
 						"id": p.id,
@@ -101,62 +100,59 @@ var activityproperty = (function () {
 					break;
 				}
 			}
-		}
+        }
 		return performer;
-	}
+    }
 
 	//save activity basic information
 	activityproperty.saveActivity = function () {
 		var activityName = $("#txtActivityName").val();
 		var activityCode = $("#txtActivityCode").val();
 		var description = $("#txtDescription").val();
-		var node = kgraph.mcurrentSelectedDomElement.node;
+		var activity =  kmain.mxSelectedDomElement.Element;
 
 
-		if (node) {
-			node.sdata.name = activityName;
-			node.sdata.code = activityCode;
-			node.sdata.description = description;
+		if (activity) {
+			activity.name = activityName;
+			activity.code = activityCode;
+            activity.description = description;
 
-			//update jsplumb node name
-			node.setNodeName(activityName);
+            //update node user object
+            kmain.setVertexValue(activity);
 		}
 	};
 
 	//#region performers add / delete
 	//add performer to activity performers list
 	activityproperty.addPerformer = function () {
-		kmain.mselectedParticipantType = null;
-		kmain.mselectedParticipantItem = null;
-
 		BootstrapDialog.show({
 			title: '角色列表',
-			message: $('<div></div>').load('role/list')
+            message: $('<div></div>').load('role/list'),
+            draggable: true
 		});
 	}
 
 	//sync activity perfromer datasource
 	activityproperty.syncActivityPerformers = function (participantType, participantItem) {
-		var node = kgraph.mcurrentSelectedDomElement.node;      //kgraph directive
-		var performers = node.sdata.performers;
+		var activity =  kmain.mxSelectedDomElement.Element;
+		var performers = activity.performers;
 		if (!performers) {
-			performers = node.sdata.performers = [];
+			performers = activity.performers = [];
 		}
-
 
 		//check participants exists the newly added role item
-		var packageData = kmain.mcurrentPackageData;
-		var participants = packageData.participants;
-
-		var participantAdded = null;
-		for (var i = 0; i < participants.length; i++) {
-			if (participantType === "role"
-                && participants[i].type === "Role"
-                && participantItem.ID === participants[i].outerId) {
-				participantAdded = participants[i];
-				break;
-			}
-		}
+        var participantAdded = null;
+        if (kmain.mxSelectedPackageData != null) {
+            var participants = kmain.mxSelectedPackageData.participants;
+            for (var i = 0; i < participants.length; i++) {
+                if (participantType === "role"
+                    && participants[i].type === "Role"
+                    && participantItem.ID === participants[i].outerId) {
+                    participantAdded = participants[i];
+                    break;
+                }
+            }
+        }
 
 		if (participantAdded) {
 			//check this participant wether exists in the activity performers gridview
@@ -181,9 +177,11 @@ var activityproperty = (function () {
 					"code": participantAdded.code,
 					"outerId": participantAdded.outerId
 				}
-				node.sdata.performers.push(performer);
+				activity.performers.push(performer);
 				//refresh the activity performer gridview
-				activityproperty.getActivityPerformer(node);
+				loadActivityPerformer(activity);
+                //update vertex user object property
+                kmain.setVertexPerformers(activity.performers);
 			}
 		} else {
 			//added this new participant item to participants collection
@@ -195,7 +193,8 @@ var activityproperty = (function () {
 					"code": participantItem.RoleCode,
 					"outerId": participantItem.ID
 				};
-				kmain.mgraphView.packageData.participants.push(participant);
+
+				kmain.mxSelectedParticipants.push(participant);
 
 				//add new performer to node activity performers gridview
 				var performer = {
@@ -204,25 +203,29 @@ var activityproperty = (function () {
 					"code": participant.code,
 					"outerId": participant.outerId
 				}
-				node.sdata.performers.push(performer);
+				activity.performers.push(performer);
 				//refresh the activity performer gridview
-				activityproperty.getActivityPerformer(node);
+				loadActivityPerformer(activity);
+                //update vertex user object property
+                kmain.setVertexPerformers(activity.performers);
 			}
 		}
 	}
 
 	//del performer from activity performers list
 	activityproperty.delPerformer = function () {
-		var performerGUID = kmain.mselectedActivityPerformerGUID;
-		var node = kgraph.mcurrentSelectedDomElement.node;
-		var performers = node.sdata.performers;
+		var performerGUID = activityproperty.mselectedActivityPerformerGUID;
+        var activity =  kmain.mxSelectedDomElement.Element
+		var performers = activity.performers;
 
 		//remove the selected performer record 
-		node.sdata.performers = jQuery.grep(performers, function (item) {
+		activity.performers = jQuery.grep(performers, function (item) {
 			return item.id !== performerGUID;
 		});
 		//refresh the gridview
-		activityproperty.getActivityPerformer(node);
+		loadActivityPerformer(activity);
+        //update vertex user object property
+        kmain.setVertexPerformers(activity.performers);
 	}
 	//#endregion
 

@@ -1,5 +1,5 @@
-﻿using Slickflow.WebDemoV2._0.Business;
-using Slickflow.WebDemoV2._0.Common;
+﻿using Slickflow.WebDemo.Business;
+using Slickflow.WebDemo.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace Slickflow.WebDemoV2._0.Slickflows
+namespace Slickflow.WebDemo.Slickflows
 {
     public partial class SwitchLoginUser : BasePage
     {

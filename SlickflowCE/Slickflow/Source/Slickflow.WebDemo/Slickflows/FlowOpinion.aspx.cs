@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Web.UI;
 using System.Data;
-
-using Slickflow.WebDemoV2._0.Business;
-using Slickflow.WebDemoV2._0.Common;
-
+using Slickflow.WebDemo.Business;
+using Slickflow.WebDemo.Common;
 
 
-namespace Slickflow.WebDemoV2._0.Slickflows
+namespace Slickflow.WebDemo.Slickflows
 {
     public partial class FlowOpinion : BasePage
     {
@@ -24,7 +22,7 @@ namespace Slickflow.WebDemoV2._0.Slickflows
             string AppInstanceID = Request.QueryString["AppInstanceID"] == null ? string.Empty : Request.QueryString["AppInstanceID"].ToString();
             if (!string.IsNullOrEmpty(AppInstanceID))
             {
-                DataTable dt = WorkFlows.GetBizAppFlow(string.Format(" and AppInstanceID='{0}'", AppInstanceID));
+                DataTable dt = WorkFlows.GetBizAppFlowByAppInstanceID(AppInstanceID);
                 Repeater1.DataSource = dt;
                 Repeater1.DataBind();
             }
@@ -33,7 +31,6 @@ namespace Slickflow.WebDemoV2._0.Slickflows
                 Repeater1.DataSource = null;
                 Repeater1.DataBind();
             }
-
         }
 
     }

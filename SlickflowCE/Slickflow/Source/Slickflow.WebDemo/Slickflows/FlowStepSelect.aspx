@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="FlowStepSelect.aspx.cs" Inherits="Slickflow.WebDemoV2._0.Slickflows.FlowStepSelect" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="FlowStepSelect.aspx.cs" Inherits="Slickflow.WebDemo.Slickflows.FlowStepSelect" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">

@@ -28,10 +28,11 @@ if (!subprocessmanager) subprocessmanager = {};
     var msubprocessname = null;
 
     subprocessmanager.load = function () {
-        var node = kgraph.mcurrentSelectedDomElement.node;
-        if (node !== null && node.sdata.subId != undefined) {
-            $("#txtProcessGUID").val(node.sdata.subId);
-            subprocessmanager.getProcess(node.sdata.subId);
+        var activity = kmain.mxSelectedDomElement.Element;
+
+        if (activity !== null && activity.subId !== "") {
+            $("#txtProcessGUID").val(activity.subId);
+            subprocessmanager.getProcess(activity.subId);
         }
         subprocessmanager.getProcessList();
     }
@@ -87,7 +88,7 @@ if (!subprocessmanager) subprocessmanager = {};
 
     subprocessmanager.getProcess = function (processGUID) {
         if (processGUID !== null 
-            && processGUID !== "undefined") {
+            && processGUID !== undefined) {
             jshelper.ajaxGet('api/Wf2Xml/GetProcess/' + processGUID, null, function (result) {
                 if (result.Status == 1) {
                     var entity = result.Entity;
@@ -112,10 +113,13 @@ if (!subprocessmanager) subprocessmanager = {};
     			if (result == "Yes") {
     				$("#txtProcessGUID").val(msubprocessguid);
     				$("#txtProcessName").val(msubprocessname);
-
-    				var node = kgraph.mcurrentSelectedDomElement.node;
-    				node.sdata.subId = msubprocessguid;
-
+                   
+                    var activity = kmain.mxSelectedDomElement.Element;
+                    if (activity) {
+                        activity.subId = msubprocessguid;
+                        //update node user object
+                        kmain.setVertexValue(activity);
+                    } 
     				return;
     			}
     		}

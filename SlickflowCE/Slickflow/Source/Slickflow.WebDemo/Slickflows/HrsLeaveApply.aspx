@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="HrsLeaveApply.aspx.cs" Inherits="Slickflow.WebDemoV2._0.Slickflows.HrsLeaveApply" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="HrsLeaveApply.aspx.cs" Inherits="Slickflow.WebDemo.Slickflows.HrsLeaveApply" %>
 
 <!DOCTYPE html>
 

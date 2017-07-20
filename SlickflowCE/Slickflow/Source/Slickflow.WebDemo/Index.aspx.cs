@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace Slickflow.WebDemoV2._0
+namespace Slickflow.WebDemo
 {
     public partial class Index : System.Web.UI.Page
     {

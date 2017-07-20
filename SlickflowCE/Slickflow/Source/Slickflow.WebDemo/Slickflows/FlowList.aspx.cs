@@ -6,11 +6,11 @@ using System.Web.UI;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Service;
 
-using Slickflow.WebDemoV2._0.Business;
-using Slickflow.WebDemoV2._0.Common;
+using Slickflow.WebDemo.Business;
+using Slickflow.WebDemo.Common;
 
 
-namespace Slickflow.WebDemoV2._0.Slickflows
+namespace Slickflow.WebDemo.Slickflows
 {
     public partial class FlowList : BasePage
     {

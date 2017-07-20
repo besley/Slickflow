@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Web.UI;
 
 
-using Slickflow.WebDemoV2._0.Business;
-using Slickflow.WebDemoV2._0.Common;
-using Slickflow.WebDemoV2._0.Entity;
+using Slickflow.WebDemo.Business;
+using Slickflow.WebDemo.Common;
+using Slickflow.WebDemo.Entity;
 
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Core.Result;
@@ -14,7 +14,7 @@ using Slickflow.Engine.Service;
 using Slickflow.Engine.Xpdl;
 
 
-namespace Slickflow.WebDemoV2._0.Slickflows
+namespace Slickflow.WebDemo.Slickflows
 {
     public partial class HrsLeaveInfo : BasePage
     {

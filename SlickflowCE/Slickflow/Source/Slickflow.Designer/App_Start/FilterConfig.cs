@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace Slickflow.Designer
+namespace MPDiagram
 {
     public class FilterConfig
     {

@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 
 
-namespace Slickflow.WebDemoV2._0.Common
+namespace Slickflow.WebDemo.Common
 {
 
     /// <summary>

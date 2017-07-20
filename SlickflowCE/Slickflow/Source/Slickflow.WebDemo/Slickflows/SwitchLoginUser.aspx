@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SwitchLoginUser.aspx.cs" Inherits="Slickflow.WebDemoV2._0.Slickflows.SwitchLoginUser" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SwitchLoginUser.aspx.cs" Inherits="Slickflow.WebDemo.Slickflows.SwitchLoginUser" %>
 
 
 <!DOCTYPE html>

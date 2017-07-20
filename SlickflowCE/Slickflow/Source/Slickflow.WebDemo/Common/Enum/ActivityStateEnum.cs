@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
-namespace Slickflow.WebDemoV2._0.Common
+namespace Slickflow.WebDemo.Common
 {
     public enum ActivityStateEnum
     {

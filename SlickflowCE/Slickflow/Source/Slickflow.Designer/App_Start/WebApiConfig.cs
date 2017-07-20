@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Newtonsoft.Json.Serialization;
 
-namespace Slickflow.Designer
+namespace MPDiagram
 {
     public static class WebApiConfig
     {

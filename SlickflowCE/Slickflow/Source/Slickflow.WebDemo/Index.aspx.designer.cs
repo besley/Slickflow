@@ -7,7 +7,7 @@
 // </自动生成>
 //------------------------------------------------------------------------------
 
-namespace Slickflow.WebDemoV2._0 {
+namespace Slickflow.WebDemo {
     
     
     public partial class Index {

@@ -6,11 +6,11 @@ using System.Data;
 using System.Text;
 using System.Data.SqlClient;
 
-using Slickflow.WebDemoV2._0.Common;
-using Slickflow.WebDemoV2._0.Entity;
+using Slickflow.WebDemo.Common;
+using Slickflow.WebDemo.Entity;
 
 
-namespace Slickflow.WebDemoV2._0.Data
+namespace Slickflow.WebDemo.Data
 {
     public class WorkFlowManager
     {
@@ -317,6 +317,142 @@ namespace Slickflow.WebDemoV2._0.Data
         }
         #endregion
 
+        #region HrsLeaveOpinion
+        /// <summary>
+        /// 新增一条业务流程数据
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int AddHrsLeaveOpinion(HrsLeaveOpinionEntity model)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into HrsLeaveOpinion(");
+            strSql.Append("AppInstanceID,ActivityName,ActivityID,Remark,ChangedTime,ChangedUserID,ChangedUserName");
+            strSql.Append(") values (");
+            strSql.Append("@AppInstanceID,@ActivityName,@ActivityID,@Remark,@ChangedTime,@ChangedUserID,@ChangedUserName");
+            strSql.Append(") ");
+            strSql.Append(";select @@IDENTITY");
+            SqlParameter[] parameters = {
+			            new SqlParameter("@AppName", SqlDbType.NVarChar,50) ,            
+                        new SqlParameter("@AppInstanceID", SqlDbType.VarChar,50) ,            
+                        new SqlParameter("@ActivityName", SqlDbType.NVarChar,50) ,            
+                        new SqlParameter("@ActivityID", SqlDbType.VarChar,50) ,     
+                        new SqlParameter("@Remark", SqlDbType.NVarChar,1000) ,            
+                        new SqlParameter("@ChangedTime", SqlDbType.DateTime) ,            
+                        new SqlParameter("@ChangedUserID", SqlDbType.Int,4) ,            
+                        new SqlParameter("@ChangedUserName", SqlDbType.NVarChar,50)             
+            };
+            int idx = 0;
+            parameters[idx++].Value = model.AppInstanceID;
+            parameters[idx++].Value = model.ActivityName;
+            parameters[idx++].Value = model.ActivityID;
+            parameters[idx++].Value = model.Remark;
+            parameters[idx++].Value = model.ChangedTime;
+            parameters[idx++].Value = model.ChangedUserID;
+            parameters[idx++].Value = model.ChangedUserName;
+
+            object obj = SQLHelper.ExecuteScalar(strSql.ToString(), parameters);
+            if (obj == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return Convert.ToInt32(obj);
+            }
+
+        }
+
+
+        /// <summary>
+        /// 得到业务公共实体
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        public static HrsLeaveOpinionEntity GetHrsLeaveOpinionModel(int ID)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select ID, AppName, AppInstanceID, ActivityName, Remark, ChangedTime, ChangedUserID, ChangedUserName  ");
+            strSql.Append("  from HrsLeaveOpinion ");
+            strSql.Append(" where ID=@ID");
+            SqlParameter[] parameters = {
+					new SqlParameter("@ID", SqlDbType.Int,4)
+			};
+            parameters[0].Value = ID;
+
+            DataSet ds = SQLHelper.ExecuteDataset(strSql.ToString(), parameters);
+            return GetHrsLeaveOpinionModel(ds.Tables[0]);
+        }
+
+        /// <summary>
+        /// 得到业务公共实体
+        /// </summary>
+        /// <param name="AppInstanceID"></param>
+        /// <returns></returns>
+        public static HrsLeaveOpinionEntity GetHrsLeaveOpinionByAppInstanceID(string AppInstanceID)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select ID, AppName, AppInstanceID, ActivityName, Remark, ChangedTime, ChangedUserID, ChangedUserName  ");
+            strSql.Append("  from HrsLeaveOpinion ");
+            strSql.Append(" where AppInstanceID=@AppInstanceID");
+            SqlParameter[] parameters = {
+					new SqlParameter("@AppInstanceID", SqlDbType.VarChar, 50)
+			};
+            parameters[0].Value = AppInstanceID;
+
+            DataSet ds = SQLHelper.ExecuteDataset(strSql.ToString(), parameters);
+            return GetHrsLeaveOpinionModel(ds.Tables[0]);
+        }
+
+
+
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        private static HrsLeaveOpinionEntity GetHrsLeaveOpinionModel(DataTable dt)
+        {
+            if (dt != null && dt.Rows != null && dt.Rows.Count > 0)
+            {
+                HrsLeaveOpinionEntity model = new HrsLeaveOpinionEntity();
+                if (dt.Rows[0]["ID"].ToString() != "")
+                {
+                    model.ID = int.Parse(dt.Rows[0]["ID"].ToString());
+                }
+                
+                model.AppInstanceID = dt.Rows[0]["AppInstanceID"].ToString();
+                model.ActivityName = dt.Rows[0]["ActivityName"].ToString();
+                model.ActivityID = dt.Rows[0]["ActivityID"].ToString();
+                model.Remark = dt.Rows[0]["Remark"].ToString();
+                if (dt.Rows[0]["ChangedTime"].ToString() != "")
+                {
+                    model.ChangedTime = DateTime.Parse(dt.Rows[0]["ChangedTime"].ToString());
+                }
+                if (dt.Rows[0]["ChangedUserID"].ToString() != "")
+                {
+                    model.ChangedUserID = dt.Rows[0]["ChangedUserID"].ToString();
+                }
+                model.ChangedUserName = dt.Rows[0]["ChangedUserName"].ToString();
+
+                return model;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 查询业务流程
+        /// </summary>
+        /// <param name="sqlWhere">查询条件</param>
+        /// <returns></returns>
+        public static DataTable GetHrsLeaveOpinion(string sqlWhere)
+        {
+            string strSql = string.Format("select * from HrsLeaveOpinion where 1=1 {0}", sqlWhere);
+            return SQLHelper.ExecuteDataset(strSql).Tables[0];
+        }
+        #endregion
+
         #region BizAppFlow
         /// <summary>
         /// 新增一条业务流程数据
@@ -449,7 +585,21 @@ namespace Slickflow.WebDemoV2._0.Data
             string strSql = string.Format("select * from BizAppFlow where 1=1 {0}", sqlWhere);
             return SQLHelper.ExecuteDataset(strSql).Tables[0];
         }
+
+        /// <summary>
+        /// 查询业务流程
+        /// </summary>
+        /// <param name="AppInstanceID">应用实例ID</param>
+        /// <returns></returns>
+        public static DataTable GetBizAppFlowByAppInstanceID(string AppInstanceID)
+        {
+            string strSql = string.Format("select * from BizAppFlow where 1=1  and AppInstanceID='{0}'", AppInstanceID);
+            return SQLHelper.ExecuteDataset(strSql).Tables[0];
+        }
+
         #endregion
+
+
 
     }
 }

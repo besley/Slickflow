@@ -1,39 +1,57 @@
-﻿@{
+﻿
+@{
     Layout = null;
 }
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Slickflow Designer</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="~/Content/jquery-ui/jquery-ui.css" />
     <link rel="stylesheet" href="~/Content/bootstrap/bootstrap-3.3.7.min.css" />
     <link rel="stylesheet" href="~/Content/bootstrap/bootstrap-theme-3.3.7.min.css" />
     <link rel="stylesheet" href="~/Content/bootstrap/bootstrap-dialog.min.css" />
-    <link rel="stylesheet" href="~/Content/bootstrap/bootstrap-progressbar-3.3.4.min.css"/>
-    
-    <link rel="stylesheet" href="~/Content/jsplumb/jsPlumbToolkit-defaults.css" />
-    <link rel="stylesheet" href="~/Content/jsplumb/jsPlumb-main.css" />
-    <link rel="stylesheet" href="~/Content/jsplumb/jsPlumbToolkit-demo.css" />
-    <link rel="stylesheet" href="~/Content/jsplumb/jsPlumb-demo.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap/bootstrap-progressbar-3.3.4.min.css" />
 
-    <link rel="stylesheet" href="~/Content/bpmnjs/diagram-js.css" />
-    <link rel="stylesheet" href="~/Content/bpmnjs/bpmn-font/css/app.css" />
+    <link rel="stylesheet" href="~/Content/ag-grid/ag-grid.css" />
+    <link rel="stylesheet" href="~/Content/ag-grid/theme-bootstrap.css" />
 
-    <link href="~/Content/ag-grid/ag-grid.css" rel="stylesheet" />
-    <link href="~/Content/ag-grid/theme-bootstrap.css" rel="stylesheet" />
-
+    <link rel="stylesheet" href="~/Content/graphCanvas.css"/>
     <link rel="stylesheet" href="~/Content/msgBoxLight.css" />
-    <link rel="stylesheet" href="~/Content/graphCanvas.css" />
 
-    <title>
-        Slickflow Designer
-    </title>
+    <style type="text/css" media="screen">
+        div.base {
+            position: absolute;
+            overflow: hidden;
+            font-family: Arial;
+            font-size: 8pt;
+        }
+
+        div.base#kgraphContainer {
+            border-style: solid;
+            border-color: #F2F2F2;
+            border-width: 1px;
+            background: url('scripts/mxGraph/src/editor/images/grid.gif');
+        }
+
+        hr {
+            border-top: 1px solid #000000 !important;
+            margin-bottom: 5px !important;
+            margin-top: 5px !important;
+        }
+    </style>
+
+    <script type="text/javascript">
+		mxBasePath = "Scripts/mxGraph/src";
+    </script>
+
+    
 </head>
-<body data-demo-id="flowchart">
-    <div class="container">
-        <div class="row">
+<body>
+    <div class="container" id="barTopMenu">
+        <div class="row" style="margin-left:60px;">
             <div style="float:left;">
                 <a href="#" class="btn btn-info" onclick="kmain.createProcess();"><span class="glyphicon glyphicon-file"></span> 新建</a>
                 <a href="#" class="btn btn-info" onclick="kmain.openProcess();"><span class="glyphicon glyphicon-share"></span> 打开</a>
@@ -42,64 +60,18 @@
             <div class="dropdown" style="float:left;margin-left: 5px;">
                 <a class="btn btn-info dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th"></span> 选项  <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="kmain.exportXML();">导出XML</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="kmain.previewXml();">显示内容</a></li>
                 </ul>
-            </div> 
-        </div>
-    </div>
-
-    <legend></legend>
-
-    <div class="container">
-        <div class="row">
-            <!-- begin of draggable control list -->
-            <div class="chart-left-panel">
-                <div class="open two-column">
-                    <div class="djs-palette djs-palette-entries">
-                        <div class="group" data-group="tools" style="text-align:center">
-                            <h4><strong>BPMN</strong></h4>
-                            <legend></legend>
-                        </div>
-                        <div class="group" data-group="event">
-                            <div id="StartNode" title="Start" class="imagepart image-part-event draggable circle" style="background-color:palegreen"></div>
-                            <div id="EndNode" title="End" class="imagepart image-part-event draggable circle" style="background-color:rosybrown"></div>
-                            <hr class="separator">
-                        </div>
-                        <div class="group" data-group="activity">
-                            <div id="TaskNode" title="Task" class="imagepart image-part-activity draggable roundedRect"></div>
-                            <div id="SubProcessNode" title="Sub Process" class="imagepart image-part-activity draggable roundedRect" style="display: inline-block; vertical-align: bottom; ">Sub</div>
-                            <hr class="separator">
-                        </div>
-                        <div class="group" data-group="gateway">
-                            <div id="GatewayNode" title="Decision" class="imagepart image-part-gateway roundedDiamond draggable rhombus"></div>
-                        </div>
-                    </div>
-                    <div class="djs-palette-toggle"></div>
-                </div>
-            </div>
-            <div class="chart-right-panel">
-                <div  id="kgraphCanvas" class="chart-design-graph jtk-demo-canvas canvas-wide flowchart-demo jtk-surface jtk-surface-nopan">
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- node control panel -->
-    <div style="position:absolute; background-color:lavender; border:1px solid #acacb1; display:none;z-index:1001;width:56px;height:120px;"
-            id="divPopMenu" class="popmenu brightness">
-        <b class="icoBtn btnSetting" onclick="kmain.showActivityProperty();"></b>
-        <b class="icoBtn btnDelete" onclick="kmain.removeCanvasElement();"></b>
-        <b class="iconBPMN iconTask" onclick="kmain.addNewNodeWithConnection(event, 'TaskNode');"></b>
-        <b class="iconBPMN iconGateway" onclick="kmain.addNewNodeWithConnection(event, 'GatewayNode');"></b>
-        <b class="iconBPMN iconSub" onclick="kmain.addNewNodeWithConnection(event, 'SubProcessNode');"></b>
-        <b class="iconBPMN iconEnd" onclick="kmain.addNewNodeWithConnection(event, 'EndNode');"></b>
+    <div id="kgraphContainer" class="base">
+        <!-- Graph Here -->
     </div>
-
-    <div style="position:absolute; background-color:lavender; border:1px solid #acacb1; display:none;z-index:1001;width:50px;height:50px;"
-            id="divPopMenuCommand" class="popmenu brightness">
-        <b class="icoBtn btnSetting" onclick="kmain.showActivityProperty();"></b>
-        <b class="icoBtn btnDelete" onclick="kmain.removeCanvasElement();"></b>
-    </div>      
+    <div id="status" class="base" align="right" style="white-space:nowrap;">
+        <!-- Status Here -->
+    </div>
 
     <!--Progress Bar-->
     <div class="modal js-loading-bar">
@@ -124,37 +96,121 @@
     <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap-dialog.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap-progressbar.min.js"></script>
 
-    <!-- jsPlumb -->
-    <script type="text/javascript" src="~/Scripts/jsplumb/jsPlumb-2.2.8.js"></script>
-
-     <!-- ag-grid-->
+    <!-- ag-grid-->
     <script type="text/javascript" src="~/Scripts/ag-grid/ag-grid.min.js"></script>
 
     <!--helper-->
     <script type="text/javascript" src="~/Scripts/slick.event.js"></script>
     <script type="text/javascript" src="~/Scripts/jshelper.js"></script>
     <script type="text/javascript" src="~/Scripts/xmlhelper.js"></script>
+    <script type="text/javascript" src="~/Scripts/vkbeautify.js"></script>
     <script type="text/javascript" src="~/Scripts/XMLWriter-1.0.0-min.js"></script>
-    
+
+    <script type="text/javascript" src="~/Scripts/mxGraph/src/mxClient.js"></script>
 
     <!-- Slickflow kgraph main files -->
-    <script type="text/javascript" src="~/ViewJS/jsptoolkit.js"></script>
+    <script type="text/javascript" src="~/ViewJS/mxfile.js"></script>
     <script type="text/javascript" src="~/ViewJS/kloader.js"></script>
     <script type="text/javascript" src="~/ViewJS/kmain.js"></script>
-    <script type="text/javascript" src="~/ViewJS/kgraph.js"></script>
+    <script type="text/javascript" src="~/ViewJS/kmodel.js"></script>
+    <script type="text/javascript" src="~/ViewJS/mxtoolkit.js"></script>
+    <script type="text/javascript" src="~/ViewJS/mxconfig.js"></script>
     <script type="text/javascript" src="~/ViewJS/processlist.js"></script>
     <script type="text/javascript" src="~/ViewJS/activityproperty.js"></script>
     <script type="text/javascript" src="~/ViewJS/transitionproperty.js"></script>
     <script type="text/javascript" src="~/ViewJS/gatewayproperty.js"></script>
     <script type="text/javascript" src="~/ViewJS/subprocessmanager.js"></script>
     <script type="text/javascript" src="~/ViewJS/rolelist.js"></script>
-    @*<script type="text/javascript" src="~/ViewJS/kgraph.min.js"></script>*@
-
 
     <script type="text/javascript">
+        mxGraph.prototype.htmlLabels = true;
+        mxGraph.prototype.allowLoops = true;
+
+		mxGraph.prototype.isWrapping = function(cell)
+		{
+			return true;
+		};
+
+        mxConstants.DEFAULT_HOTSPOT = 1;
+
+		// Enables guides
+		mxGraphHandler.prototype.guidesEnabled = true;
+
+	    // Alt disables guides
+	    mxGuide.prototype.isEnabledForEvent = function(evt)
+	    {
+	    	return !mxEvent.isAltDown(evt);
+	    };
+
+		// Enables snapping waypoints to terminals
+		mxEdgeHandler.prototype.snapToTerminals = true;
+
+		window.onbeforeunload = function() { return mxResources.get('changesLost'); };
+    </script>
+    <script type="text/javascript">
         $(function () {
-            kmain.init();
-        })
+            var mode = '';
+            var appInstanceID = '@ViewBag.AppInstanceID';
+            
+            if (appInstanceID !== '') {
+                mode = "READONLY";
+            }
+
+            kmain.init(mode);
+
+            //load process graph from application page
+            if (appInstanceID !== '') {
+                loadProcessGraph();
+            }
+        });
+
+        //display application process graph
+        //it's readonly for business process veiwer.
+        function loadProcessGraph() {
+            var query = {
+                ProcessGUID: '@ViewBag.ProcessGUID',
+                ProcessVersion: "1"
+            };
+
+            $('#loading-indicator2').show();
+
+            //load process xml file
+            jshelper.ajaxPost('api/Wf2Xml/QueryProcessFile',
+                JSON.stringify(query),
+                function (result) {
+                    if (result.Status == 1) {
+                        var graphData = kloader.load(result.Entity);
+
+                        //render running nodes with red color
+                        var taskQuery = {
+                            "AppInstanceID": '@ViewBag.AppInstanceID',
+                            "ProcessGUID": '@ViewBag.ProcessGUID'
+                        };
+
+                        jshelper.ajaxPost('api/Wf2Xml/QueryReadyActivityInstance',
+                            JSON.stringify(taskQuery), function (result) {
+                                if (result.Status == 1) {
+                                    kmain.renderReadyTasks(result.Entity);
+
+                                    $('#loading-indicator2').hide();
+                                } else {
+                                    $.msgBox({
+                                        title: "Process / KGraph",
+                                        content: "流程图形读取失败！错误信息:" + result.Message,
+                                        type: "error"
+                                    });
+                                }
+                            })
+                    } else {
+                        $.msgBox({
+                            title: "Process / KGraph",
+                            content: "流程图形读取失败！错误信息:" + result.Message,
+                            type: "error"
+                        });
+                    }
+                }
+            );
+        }
     </script>
 </body>
 </html>

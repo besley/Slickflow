@@ -25,17 +25,17 @@ var transitionproperty = (function () {
     }
 
     transitionproperty.load = function () {
-        var line = kgraph.mcurrentSelectedDomElement.line;
+        var transition = kmain.mxSelectedDomElement.Element;
 
-        if (line) {
-            $("#txtDescription").val(line.sdata.description);
-            if (line.sdata.receiver) {
-                if (line.sdata.receiver.type)
-                    $("#ddlReceiverType").val(line.sdata.receiver.type);
+        if (transition) {
+            $("#txtDescription").val(transition.description);
+            if (transition.receiver) {
+                if (transition.receiver.type)
+                    $("#ddlReceiverType").val(transition.receiver.type);
             }
 
-            if (line.sdata.condition)
-                $("#txtCondition").val($.trim(line.sdata.condition.text));
+            if (transition.condition)
+                $("#txtCondition").val($.trim(transition.condition.text));
         }
     }
 
@@ -49,14 +49,15 @@ var transitionproperty = (function () {
         condition.type = "Expression";
         condition.text = $.trim($("#txtCondition").val());
 
-        var line = kgraph.mcurrentSelectedDomElement.line;
+        var transition = kmain.mxSelectedDomElement.Element;
+        if (transition !== null){
+            transition.description = description;
+            transition.receiver = receiver;
+            transition.condition = condition;
 
-        line.sdata.description = description;
-        line.sdata.receiver = receiver;
-        line.sdata.condition = condition;
-
-		//update line label text
-        jsptoolkit.setConnectionText(line.connection, line.sdata.description);
+		    //update line label text
+            kmain.setEdgeValue(transition);
+        }
     }
 
     return transitionproperty;

@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Slickflow.WebDemoV2._0.Slickflows {
+namespace Slickflow.WebDemo.Slickflows {
     
     
     public partial class FlowStepSelect {

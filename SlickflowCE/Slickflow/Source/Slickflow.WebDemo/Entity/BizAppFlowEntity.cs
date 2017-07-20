@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Slickflow.WebDemoV2._0.Entity
+namespace Slickflow.WebDemo.Entity
 {
     public class BizAppFlowEntity
     {

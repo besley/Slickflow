@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Main.aspx.cs" Inherits="Slickflow.WebDemoV2._0.Slickflows.Main" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Main.aspx.cs" Inherits="Slickflow.WebDemo.Slickflows.Main" %>
 
 <!DOCTYPE html>
 

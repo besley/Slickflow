@@ -24,9 +24,9 @@ var processlist = (function () {
 	function processlist() {
 	}
 
-	processlist.pselectedProcessGUID = "";
-	processlist.pselectedProcessDataRow = null;
-	processlist.beforeRender = new slick.Event();
+	processlist.pselectedProcessEntity = null;
+    processlist.afterCreated = new slick.Event();
+	processlist.afterOpened = new slick.Event();
 
 	//#region Process DataGrid
 	processlist.getProcessList = function () {
@@ -41,9 +41,9 @@ var processlist = (function () {
 					columnDefs: [
 						{ headerName: 'ID', field: 'ID', width: 50 },
 						{ headerName: '流程GUID', field: 'ProcessGUID', width: 120 },
-						{ headerName: '流程名称', field: 'ProcessName', width: 160 },
+						{ headerName: '流程名称', field: 'ProcessName', width: 200 },
 						{ headerName: '版本', field: 'Version', width: 40 },
-						{ headerName: '状态', field: 'IsUsing', width: 60 },
+						{ headerName: '状态', field: 'IsUsing', width: 40 },
 						{ headerName: '创建日期', field: 'CreatedDateTime', width: 120 }
 					],
 					rowSelection: 'single',
@@ -60,9 +60,7 @@ var processlist = (function () {
 					var selectedRows = gridOptions.api.getSelectedRows();
 					var selectedProcessID = 0;
 					selectedRows.forEach(function (selectedRow, index) {
-						selectedProcessID = selectedRow.ID;
-						processlist.pselectedProcessGUID = selectedRow.ProcessGUID;
-						processlist.pselectedProcessDataRow = selectedRow;
+						processlist.pselectedProcessEntity = selectedRow;
 					});
 				}
 
@@ -74,17 +72,18 @@ var processlist = (function () {
 	}
 
 	processlist.createProcess = function () {
-		processlist.pselectedProcessGUID = "";
+        processlist.pselectedProcessEntity = null;
 
 		BootstrapDialog.show({
 			title: '流程新建',
-			message: $('<div></div>').load('process/edit'),
+            message: $('<div></div>').load('process/edit'),
+            draggable: true
 		});
 	}
 
 	processlist.loadProcess = function () {
-		var entity = processlist.pselectedProcessDataRow;
-		if (processlist.pselectedProcessGUID != "") {
+		var entity = processlist.pselectedProcessEntity;
+		if (entity !== null) {
 			$("#txtProcessGUID").val(entity.ProcessGUID);
 			$("#txtProcessName").val(entity.ProcessName);
 			$("#txtVersion").val(entity.Version);
@@ -100,7 +99,7 @@ var processlist = (function () {
 	}
 
 	processlist.editProcess = function () {
-		var entity = processlist.pselectedProcessDataRow;
+		var entity = processlist.pselectedProcessEntity;
 		if (entity == null) {
 			$.msgBox({
 				title: "Designer / Process",
@@ -112,7 +111,8 @@ var processlist = (function () {
 
 		BootstrapDialog.show({
 			title: '流程编辑',
-			message: $('<div></div>').load('process/edit'),
+            message: $('<div></div>').load('process/edit'),
+            draggable: true
 		});
 	}
 
@@ -135,13 +135,15 @@ var processlist = (function () {
 			"Description": $("#txtDescription").val()
 		};
 
-		if (processlist.pselectedProcessGUID == "") {
+		if (processlist.pselectedProcessEntity === null) {
 			processapi.create(entity, function (result) {
 				if (result.Status == 1) {
-					//render process into graph canvas
-					processlist.pselectedProcessGUID = result.Entity.ProcessGUID;         //var processGUID = result.Entity.ProcessGUID;
-					if (processlist.beforeRender) {
-						slick.trigger(processlist.beforeRender, { "ProcessGUID": processlist.pselectedProcessGUID });
+                    processlist.pselectedProcessEntity = result.Entity;
+                    //render process into graph canvas
+					if (processlist.afterCreated) {
+						slick.trigger(processlist.afterCreated, {
+                            "ProcessEntity": result.Entity
+                        });
 					}
 				}
 			});
@@ -159,8 +161,8 @@ var processlist = (function () {
 			success: function (result) {
 				if (result == "Yes") {
 					var entity = {
-						"ProcessGUID": processlist.pselectedProcessGUID,
-						"Version": 1
+						"ProcessGUID": processlist.pselectedProcessEntity.ProcessGUID,
+						"Version": processlist.pselectedProcessEntity.Version
 					};
 					processapi.delete(entity);
 					return;
@@ -171,9 +173,11 @@ var processlist = (function () {
 
 	processlist.sure = function () {
 		//render process into graph canvas
-		if (processlist.pselectedProcessGUID != "") {
-			if (processlist.beforeRender) {
-				slick.trigger(processlist.beforeRender, { "ProcessGUID": processlist.pselectedProcessGUID });
+		if (processlist.pselectedProcessEntity !== null) {
+			if (processlist.afterOpened) {
+				slick.trigger(processlist.afterOpened, { 
+                    "ProcessEntity": processlist.pselectedProcessEntity
+                });
 			}
 		}
 	}
@@ -193,10 +197,9 @@ var processapi = (function () {
             	if (result.Status == 1) {
             		$.msgBox({
             			title: "Designer / Process",
-            			content: "流程记录已经成功创建，可以在主面板创建图形了！",
+            			content: "新创建流程记录成功保存！",
             			type: "info"
             		});
-
             	} else {
             		$.msgBox({
             			title: "Designer / Process",
@@ -218,7 +221,7 @@ var processapi = (function () {
             	if (result.Status == 1) {
             		$.msgBox({
             			title: "Designer / Process",
-            			content: "流程成功保存！",
+            			content: "流程记录成功保存！",
             			type: "info"
             		});
             	} else {

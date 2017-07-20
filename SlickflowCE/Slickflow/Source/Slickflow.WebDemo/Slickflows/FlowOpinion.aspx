@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="FlowOpinion.aspx.cs" Inherits="Slickflow.WebDemoV2._0.Slickflows.FlowOpinion" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="FlowOpinion.aspx.cs" Inherits="Slickflow.WebDemo.Slickflows.FlowOpinion" %>
 
 
 <!DOCTYPE html>
@@ -18,21 +18,21 @@
         <table width="100%" border="1" cellspacing="0" cellpadding="0" class="ltable">
             <tr>
                 <th align="center" width="12%">步骤</th>
-                <th align="center" width="10%">备注</th>
-                <th align="center" width="8%">操作人</th>
+                <th align="center" width="8%">办理人</th>
+                <th align="center" width="10%">办理意见</th>
                 <th align="center" width="10%">操作时间</th>
             </tr>
             <asp:Repeater ID="Repeater1" runat="server">
                 <ItemTemplate>
                     <tr>
                         <td align="left"><%#Eval("ActivityName") %></td>
-                        <td align="left"><%#Eval("Remark") %></td>
                         <td align="left"><%#Eval("ChangedUserName") %></td>
+                        <td align="left"><%#Eval("Remark") %></td>
                         <td align="left"><%#Eval("ChangedTime") %></td>
                     </tr>
                 </ItemTemplate>
             </asp:Repeater>
-        </table> 
+        </table>
 
 
     </form>

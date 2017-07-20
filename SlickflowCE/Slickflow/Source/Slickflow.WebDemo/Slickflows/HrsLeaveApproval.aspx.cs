@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Web.UI;
 
 
-using Slickflow.WebDemoV2._0.Business;
-using Slickflow.WebDemoV2._0.Common;
-using Slickflow.WebDemoV2._0.Entity;
+using Slickflow.WebDemo.Business;
+using Slickflow.WebDemo.Common;
+using Slickflow.WebDemo.Entity;
 
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Core.Result;
@@ -15,7 +15,7 @@ using Slickflow.Engine.Xpdl;
 
 
 
-namespace Slickflow.WebDemoV2._0.Slickflows
+namespace Slickflow.WebDemo.Slickflows
 {
     public partial class HrsLeaveApproval : BasePage
     {
@@ -145,7 +145,7 @@ namespace Slickflow.WebDemoV2._0.Slickflows
                         currentOpinionRemark = this.txtGeneralManagerRemark.Value;
                         break;
                 }
-                
+
                 if (!string.IsNullOrEmpty(instanceId))
                 {
                     //调用流程
@@ -183,6 +183,18 @@ namespace Slickflow.WebDemoV2._0.Slickflows
                         AppFlowEntity.ChangedUserID = LoginUserID.ToString();
                         AppFlowEntity.ChangedUserName = LoginUserName;
                         WorkFlows.AddBizAppFlow(AppFlowEntity);
+
+
+
+                        HrsLeaveOpinionEntity hrsleaveOpinionEntity = new HrsLeaveOpinionEntity();
+                        hrsleaveOpinionEntity.AppInstanceID = instanceId.ToString();
+                        hrsleaveOpinionEntity.ActivityName = CurrentActivityText;
+                        hrsleaveOpinionEntity.Remark = currentOpinionRemark;
+                        hrsleaveOpinionEntity.ChangedTime = now;
+                        hrsleaveOpinionEntity.ChangedUserID = LoginUserID.ToString();
+                        hrsleaveOpinionEntity.ChangedUserName = LoginUserName;
+                        WorkFlows.AddHrsLeaveOpinion(hrsleaveOpinionEntity);
+
                     }
                     catch (Exception ex)
                     { }

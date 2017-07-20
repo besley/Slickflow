@@ -37,8 +37,8 @@
             });
             return false;
         } else {
-        	window.open('KGraph/Index?AppInstanceID=' + pordermanager.selectedProductOrderID
-				+ '&ProcessGUID=' + pordermanager.mProductOrderProcessGUID);
+        	window.open('/sfd/Home?AppInstanceID=' + pordermanager.selectedProductOrderID
+				+ '&ProcessGUID=' + pordermanager.mProductOrderProcessGUID + '&Mode=' + 'READONLY');
         }
     }
 

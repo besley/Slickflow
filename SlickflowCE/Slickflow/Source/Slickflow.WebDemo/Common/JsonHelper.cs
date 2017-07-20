@@ -5,7 +5,7 @@ using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
 
-namespace Slickflow.WebDemoV2._0.Common
+namespace Slickflow.WebDemo.Common
 {
     public class JsonHelper
     {

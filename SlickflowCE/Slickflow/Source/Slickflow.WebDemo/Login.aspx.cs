@@ -2,10 +2,10 @@
 using System.Web;
 using System.Web.UI;
 
-using Slickflow.WebDemoV2._0.Business;
-using Slickflow.WebDemoV2._0.Common;
+using Slickflow.WebDemo.Business;
+using Slickflow.WebDemo.Common;
 
-namespace Slickflow.WebDemoV2._0
+namespace Slickflow.WebDemo
 {
     public partial class Login : System.Web.UI.Page
     {

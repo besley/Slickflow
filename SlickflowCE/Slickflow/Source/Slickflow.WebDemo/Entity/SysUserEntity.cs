@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Slickflow.WebDemoV2._0.Entity
+namespace Slickflow.WebDemo.Entity
 {
     //SysUser
     public class SysUserEntity

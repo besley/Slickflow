@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Slickflow.Designer.Controllers.Mvc
+namespace MPDiagram.Controllers.Mvc
 {
     public class TestController : Controller
     {

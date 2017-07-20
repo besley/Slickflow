@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="FlowList.aspx.cs" Inherits="Slickflow.WebDemoV2._0.Slickflows.FlowList" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="FlowList.aspx.cs" Inherits="Slickflow.WebDemo.Slickflows.FlowList" %>
 
 <!DOCTYPE html>
 
@@ -48,9 +48,9 @@
             </div>
         </div>
 
-        
+
         <!--代办流程-->
-        <div class="tab-content" >
+        <div class="tab-content">
             <table width="100%" border="1" cellspacing="0" cellpadding="0" class="ltable">
                 <tr>
                     <th align="center">实例名称</th>
@@ -65,12 +65,12 @@
                         <tr>
                             <td align="left"><%#Eval("AppName") %></td>
                             <td align="left"><%#Eval("ActivityName") %></td>
-                            <td align="left"><%#Slickflow.WebDemoV2._0.Common.EnumHelper.GetDescription(typeof(Slickflow.WebDemoV2._0.Common.ActivityStateEnum),Convert.ToInt32(Eval("ActivityState"))) %></td>
-                            <td align="left"><%#Slickflow.WebDemoV2._0.Common.EnumHelper.GetDescription(typeof(Slickflow.WebDemoV2._0.Common.TaskStateEnum),Convert.ToInt32(Eval("TaskState"))) %></td>
+                            <td align="left"><%#Slickflow.WebDemo.Common.EnumHelper.GetDescription(typeof(Slickflow.WebDemo.Common.ActivityStateEnum),Convert.ToInt32(Eval("ActivityState"))) %></td>
+                            <td align="left"><%#Slickflow.WebDemo.Common.EnumHelper.GetDescription(typeof(Slickflow.WebDemo.Common.TaskStateEnum),Convert.ToInt32(Eval("TaskState"))) %></td>
                             <td align="left"><%#Eval("CreatedDateTime") %></td>
                             <td align="center">
                                 <a href="javascript:ShowFlowOpinion(<%#Eval("AppInstanceID") %>)">流程信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="FlowCanvas.html?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>" target="_blank">流程步骤</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="/sfd/Home?ProcessGUID=<%#Eval("ProcessGUID") %>&Mode=<%#Eval("READONLY") %>&AppInstanceID=<%#Eval("AppInstanceID") %>" target="_blank">流程图信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
                                 <a href="HrsLeaveApproval.aspx?ProcessGUID=<%#Eval("ProcessGUID") %>&AppInstanceID=<%#Eval("AppInstanceID") %>&ActivityInstanceID=<%#Eval("ActivityInstanceID") %>">办理</a>
                             </td>
                         </tr>
@@ -97,11 +97,11 @@
                             <td align="left"><%#Eval("AppName") %></td>
                             <td align="left"><%#Eval("CreatedByUserName") %></td>
                             <td align="left"><%#Eval("CreatedDateTime") %></td>
-                            <td align="left"><%#Slickflow.WebDemoV2._0.Common.EnumHelper.GetDescription(typeof(Slickflow.WebDemoV2._0.Common.ProcessStateEnum),Convert.ToInt32(Eval("ProcessState"))) %></td>
+                            <td align="left"><%#Slickflow.WebDemo.Common.EnumHelper.GetDescription(typeof(Slickflow.WebDemo.Common.ProcessStateEnum),Convert.ToInt32(Eval("ProcessState"))) %></td>
                             <td align="left"><%#Eval("CurrentActivityText") %></td>
                             <td align="center">
                                 <a href="javascript:ShowFlowOpinion(<%#Eval("AppInstanceID") %>)">流程信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="FlowCanvas.html?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>" target="_blank">流程步骤</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="/sfd/Home?ProcessGUID=<%#Eval("ProcessGUID") %>&Mode=<%#Eval("READONLY") %>&AppInstanceID=<%#Eval("AppInstanceID") %>" target="_blank">流程图信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
                                 <a href="HrsLeaveInfo.aspx?AppInstanceID=<%#Eval("AppInstanceID") %>">申请信息</a>
                             </td>
                         </tr>
@@ -128,11 +128,11 @@
                             <td align="left"><%#Eval("AppName") %></td>
                             <td align="left"><%#Eval("CreatedByUserName") %></td>
                             <td align="left"><%#Eval("CreatedDateTime") %></td>
-                            <td align="left"><%#Slickflow.WebDemoV2._0.Common.EnumHelper.GetDescription(typeof(Slickflow.WebDemoV2._0.Common.ProcessStateEnum),Convert.ToInt32(Eval("ProcessState"))) %></td>
+                            <td align="left"><%#Slickflow.WebDemo.Common.EnumHelper.GetDescription(typeof(Slickflow.WebDemo.Common.ProcessStateEnum),Convert.ToInt32(Eval("ProcessState"))) %></td>
                             <td align="left"><%#Eval("CurrentActivityText") %></td>
                             <td align="center">
                                 <a href="javascript:ShowFlowOpinion(<%#Eval("AppInstanceID") %>)">流程信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="FlowCanvas.html?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>" target="_blank">流程步骤</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="/sfd/Home?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>&AppInstanceID=<%#Eval("AppInstanceID") %>" target="_blank">流程图信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
                                 <a href="HrsLeaveInfo.aspx?AppInstanceID=<%#Eval("AppInstanceID") %>">申请信息</a>
                             </td>
                         </tr>

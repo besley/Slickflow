@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-using Slickflow.WebDemoV2._0.Common;
+using Slickflow.WebDemo.Common;
 using Slickflow.Engine.Common;
-using Slickflow.WebDemoV2._0.Business;
-using Slickflow.WebDemoV2._0.Entity;
+using Slickflow.WebDemo.Business;
+using Slickflow.WebDemo.Entity;
 using System.Text.RegularExpressions;
 
-namespace Slickflow.WebDemoV2._0
+namespace Slickflow.WebDemo
 {
     public class BasePage : System.Web.UI.Page
     {

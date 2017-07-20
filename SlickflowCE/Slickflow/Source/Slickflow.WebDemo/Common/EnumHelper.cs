@@ -2,7 +2,8 @@
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
-namespace Slickflow.WebDemoV2._0.Common
+
+namespace Slickflow.WebDemo.Common
 {
     /// <summary>
     /// 枚举的帮助类

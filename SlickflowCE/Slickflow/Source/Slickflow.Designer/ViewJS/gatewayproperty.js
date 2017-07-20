@@ -34,6 +34,29 @@ var gatewayproperty = (function () {
         { "value": "OrJoin", "text": "或合并" }
     ];
 
+    gatewayproperty.loadGatewayInformation = function () {
+        var activity = kmain.mxSelectedDomElement.Element;
+        if (activity) {
+            //fill activity basic information
+            $("#txtDescription").val(activity.description);
+            if (activity.gatewaySplitJoinType) {
+                var splitJoinType = activity.gatewaySplitJoinType;
+                $("#ddlGatewayType").val(splitJoinType);
+                $("#ddlGatewayType").attr("disabled", true);
+                //fill direction type
+                gatewayproperty.appendDirectionType(splitJoinType);
+                if (activity.gatewayDirection){
+                    $("#ddlDirectionType").val(activity.gatewayDirection);
+                }
+            }
+        }
+
+        $("#ddlGatewayType").change(function () {
+            var splitJoinType = $("#ddlGatewayType").val();
+            gatewayproperty.appendDirectionType(splitJoinType);
+        });
+    }
+
     gatewayproperty.appendDirectionType = function (splitJoinType) {
         //initialize default options
         $("#ddlDirectionType")
@@ -61,28 +84,6 @@ var gatewayproperty = (function () {
         }
     }
 
-    gatewayproperty.loadGatewayInformation = function () {
-        var node = kgraph.mcurrentSelectedDomElement.node;
-
-        if (node) {
-            //fill activity basic information
-            $("#txtDescription").val(node.sdata.description);
-            if (node.sdata.gatewaySplitJoinType) {
-                var splitJoinType = node.sdata.gatewaySplitJoinType;
-                $("#ddlGatewayType").val(splitJoinType);
-                if (node.sdata.gatewayDirection) {
-                    gatewayproperty.appendDirectionType(splitJoinType);
-                    $("#ddlDirectionType").val(node.sdata.gatewayDirection);
-                }
-            }
-        }
-
-        $("#ddlGatewayType").change(function () {
-            var splitJoinType = $("#ddlGatewayType").val();
-            gatewayproperty.appendDirectionType(splitJoinType);
-        });
-    }
-
     gatewayproperty.saveGatewayInformation = function () {
         var description = $("#txtDescription").val();
         var splitJoinType = $("#ddlGatewayType").val();
@@ -104,14 +105,14 @@ var gatewayproperty = (function () {
             return;
         }
 
-        var node = kgraph.mcurrentSelectedDomElement.node;
+        var activity = kmain.mxSelectedDomElement.Element;
+        if (activity) {
+            activity.description = description;
+            activity.gatewaySplitJoinType = splitJoinType;
+            activity.gatewayDirection = directionType;
 
-        if (node) {
-            node.sdata.description = description;
-            node.sdata.gatewaySplitJoinType = splitJoinType;
-            node.sdata.gatewayDirection = directionType;
-        } else {
-            //window.console.log("node is null");
+            //update node user object
+            kmain.setVertexValue(activity);
         }
     }
 

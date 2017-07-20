@@ -26,6 +26,7 @@ using System.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.Http;
@@ -253,7 +254,61 @@ namespace Slickflow.Designer.Controllers.WebApi
             return result;
         }
 
+        /// <summary>
+        /// 获取待办状态的节点
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult<List<ActivityInstanceEntity>> QueryReadyActivityInstance(TaskQueryEntity query)
+        {
+            var result = ResponseResult<List<ActivityInstanceEntity>>.Default();
+            try
+            {
+                var wfService = new WorkflowService();
+                var itemList = wfService.GetRunningActivityInstance(query).ToList();
 
+
+                result = ResponseResult<List<ActivityInstanceEntity>>.Success(itemList);
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<List<ActivityInstanceEntity>>.Error(string.Format(
+                    "获取待办任务数据失败, 异常信息:{0}",
+                    ex.Message));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 获取完成状态的任务
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult<List<TaskViewEntity>> QueryCompletedTasks(TaskQueryEntity query)
+        {
+            var result = ResponseResult<List<TaskViewEntity>>.Default();
+            try
+            {
+                var taskList = new List<TaskViewEntity>();
+                var wfService = new WorkflowService();
+                var itemList = wfService.GetCompletedTasks(query);
+
+                if (itemList != null)
+                {
+                    taskList = itemList.ToList();
+                }
+                result = ResponseResult<List<TaskViewEntity>>.Success(taskList);
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<List<TaskViewEntity>>.Error(string.Format(
+                    "获取已办任务数据失败, 异常信息:{0}",
+                    ex.Message));
+            }
+            return result;
+        }
         #endregion
 
         #region 角色资源数据获取

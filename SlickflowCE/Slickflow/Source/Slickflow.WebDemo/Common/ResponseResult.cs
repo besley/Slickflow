@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ServiceStack.Text;
 
-namespace Slickflow.WebDemoV2._0.Common
+namespace Slickflow.WebDemo.Common
 {
     /// <summary>
     /// 响应结果类

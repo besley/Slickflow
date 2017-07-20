@@ -24,203 +24,129 @@ var kloader = (function () {
     function kloader() {
     }
 
-    //#region graph behavious
-    //create a new grpah with start and end node
-    kloader.createNew = function (processEntity) {
-        var packageData = {},
-            process = {};
+    //#region load xml to javascript object
+    kloader.load = function (processFileEntity) {
+        var package = {},
+            process = {},
+            participants = [];
 
-        var snodes = [{
-            id: jshelper.getUUID(),
-            name: "",
-            code: "start",
-            type: "StartNode",
-            left: 370,
-            top: 70,
-            width: 50,
-            height: 50,
-            inputConnectors: [{ type: "input", index: 1, name: "A" }],
-            outputConnectors: [{ type: "output", index: 1, name: "X" }]
-        },
-        {
-            id: jshelper.getUUID(),
-            name: "",
-            code: "end",
-            type: "EndNode",
-            left: 370,
-            top: 370,
-            width: 50,
-            height: 50,
-            inputConnectors: [{ type: "input", index: 1, name: "A" }],
-            outputConnectors: [{ type: "output", index: 1, name: "X" }]
-        }];
+        package.participants = participants;
+        package.process = process;
 
-        packageData.process = process;
-        process.id = processEntity.ProcessGUID;
-        process.name = processEntity.ProcessName;
-        process.description = processEntity.Description;
-
-        process.snodes = snodes;
-
-        var graph = new kgraph.GraphView(processEntity.ProcessGUID, packageData);
-        return graph;
-    }
-    //#endregion
-
-    //#region deserialize xml to javascript object
-    kloader.initialize = function (processFileEntity) {
-        var packageData = {},
-            process = {};
-        var participants = [];
-
-        //begin to parse xml document
-        var dom = $.parseXML(processFileEntity.XmlContent);
-        packageData.participants = participants;
-        packageData.process = process;
+        var xmlContent = processFileEntity.XmlContent;
+        var doc = mxUtils.parseXml(xmlContent);
 
         //participants
-        $(dom).find("Participant").each(function (i) {
-            var participant = {};
-
-            participant.type = $(this).attr("type");
-            participant.id = $(this).attr("id");
-            participant.name = $(this).attr("name");
-            participant.code = $(this).attr("code");
-            participant.outerId = $(this).attr("outerId");
+        Array.prototype.forEach.call(doc.getElementsByTagName("Participant"), function (participantElement) {
+            var participant = mxfile.getParticipantObject(participantElement);
 
             participants.push(participant);
         });
 
         //process
-        var processElement = $(dom).find("Process");
+        var processElement = doc.getElementsByTagName("Process")[0];
         if (processElement) {
-            var snodes = [],
-                slines = [];
-            
-            process.name = $(processElement).attr("name");
-            process.id = $(processElement).attr("id");
+            var activities = [],
+                transitions = [],
+                swimlanes = [];
 
-            var pdescElement = $(processElement).children("Description");
-            process.description =  jshelper.replaceHTMLTags($(pdescElement).text());
+            //basic information
+            process.name = processElement.getAttribute("name");
+            process.id = processElement.getAttribute("id");
 
-            process.snodes = snodes;
-            process.slines = slines;
+            var pdescElement = processElement.getElementsByTagName("Description")[0];
+            process.description = jshelper.replaceHTMLTags(pdescElement.textContent);
 
-            //activity nodes
-            $(processElement).find("Activity").each(function (i) {
-                var activityElement = this;
+            //swimlanes
+            var layoutElement = doc.documentElement.getElementsByTagName("Layout")[0];    //get from package element
+            if (layoutElement) {
+                var swimlanesElement = layoutElement.getElementsByTagName("Swimlanes")[0];
+                Array.prototype.forEach.call(swimlanesElement.getElementsByTagName("Swimlane"), function (swimlaneElement) {
+                    //swimlane
+                    var swimlane = mxfile.getSwimlaneObject(swimlaneElement);
+                    
+                    //geography
+                    var geographyElement = swimlaneElement.getElementsByTagName("Geography")[0];
+                    if (geographyElement) {
+                        swimlane.geography = mxfile.getGeographySwimlaneObject(geographyElement);
+                    }
+                    swimlanes.push(swimlane);
+                });
+            }
+            process.swimlanes = swimlanes;
+
+            //activities and transitions
+            process.activities = activities;
+            process.transitions = transitions;
+
+            //activities
+            Array.prototype.forEach.call(processElement.getElementsByTagName("Activity"), function (activityElement) {
                 var activity = {},
-                    activityType = {},
                     performers = [],
-                    geography = {},
-                    widget = {},
-                    connectors = {};
+                    actions = [],
+                    geographyElement = {};
 
-                activity.id = $(activityElement).attr("id");
-                activity.name = $(activityElement).attr("name");
-                activity.code = $(activityElement).attr("code");
-                activity.text = '';
+                //activity
+                activity = mxfile.getActivityObject(activityElement, "name");
 
-                var actdescElement = $(activityElement).find("Description");
-                activity.description = jshelper.replaceHTMLTags($(actdescElement).text());
+                var actdescElement = activityElement.getElementsByTagName("Description")[0];
+                activity.description = jshelper.replaceHTMLTags(actdescElement.textContent);
 
-                activityType = $(activityElement).find("ActivityType");
-                activity.type = $(activityType).attr("type");
-                if (activity.type == "GatewayNode") {
-                    activity.gatewaySplitJoinType = $(activityType).attr("gatewaySplitJoinType");
-                    activity.gatewayDirection = $(activityType).attr("gatewayDirection");
-                } else if (activity.type == "SubProcessNode") {
-                    activity.subId = $(activityType).attr("subId");
-                }
+                //set activity type info
+                var activityTypeElement = activityElement.getElementsByTagName("ActivityType")[0];
+                activity = mxfile.getActivityTypeObject(activity, activityTypeElement);
 
                 //performers list
-                $(activityElement).find("Performer").each(function (i) {
-                    var performerElement = this;
-                    var performer = {};
+                Array.prototype.forEach.call(activityElement.getElementsByTagName("Performer"), function (performerElement) {
+                    var performer = mxfile.getPerformerObject(performerElement);
 
-                    performer.id = $(performerElement).attr("id");
                     performers.push(performer);
                 });
                 activity.performers = performers;
 
-                geography = $(activityElement).find("Geography");
+                //actions list
+                Array.prototype.forEach.call(activityElement.getElementsByTagName("Action"), function (actionElement) {
+                    var action = mxfile.getActionObject(actionElement);
 
-                widget = $(geography).find("Widget");
-
-                var inputConnectors = [],
-                    outputConnectors = [];
-                activity.inputConnectors = inputConnectors;
-                activity.outputConnectors = outputConnectors;
-
-                activity.left = parseInt($(widget).attr("left"));
-                activity.top = parseInt($(widget).attr("top"));
-                activity.width = parseInt($(widget).attr("width"));
-                activity.height = parseInt($(widget).attr("height"));
-
-                connectors = $(widget).find("Connectors");
-
-                $(connectors).find("Connector").each(function (i) {
-                    var connectorElement = this;
-
-                    var connector = {};
-                    connector.type = $(connectorElement).attr("type");
-                    connector.index = $(connectorElement).attr("index");
-                    connector.name = $(connectorElement).attr("name");
-
-                    var type = $(connectorElement).attr("type");
-                    if (type == "input") {
-                        activity.inputConnectors.push(connector);
-                    } else if (type == "output") {
-                        activity.outputConnectors.push(connector);
-                    }
+                    actions.push(action);
                 });
-                snodes.push(activity);
+                activity.actions = actions;
+
+                //geography
+                geographyElement = activityElement.getElementsByTagName("Geography")[0];
+                if (geographyElement) {
+                    activity.geography = mxfile.getGeographyVertexObject(geographyElement);
+                }
+                activities.push(activity);
             });
 
+
             //transition
-            $(dom).find("Transition").each(function (i) {
-                var transition = {};
+            Array.prototype.forEach.call(doc.getElementsByTagName("Transition"), function (transitionElement) {
+                var transition = mxfile.getTransitionObject(transitionElement);
 
-                transition.id = $(this).attr("id");
-                transition.from = $(this).attr("from");
-                transition.to = $(this).attr("to");
+                //description
+                var transdescElement = transitionElement.getElementsByTagName("Description")[0];
+                transition.description = jshelper.replaceHTMLTags(transdescElement.textContent);
 
-                var transdescElement = $(this).find("Description");
-                transition.description = jshelper.replaceHTMLTags($(transdescElement).text());
-
-                var receiver = {};
-                var receiverElement = $(this).find("Receiver");
-                var receiverType = $(receiverElement).attr("type");
-                if (receiverType !== undefined){
-                    receiver.type = receiverType;
+                //receiver
+                var receiverElement = transitionElement.getElementsByTagName("Receiver")[0];
+                if (receiverElement) {
+                    transition.receiver = mxfile.getReceiverObject(receiverElement);
                 }
-                transition.receiver = receiver;
 
-                var condition = {};
-                var conditionElement = $(this).find("Condition");
-                var conditionType = $(conditionElement).attr("type");
-                if (conditionType !== undefined) {
-                    condition.type = conditionType;
-
-                    var conditionTextElement = $(this).find("ConditionText");
-                    condition.text = jshelper.replaceHTMLTags($(conditionElement).text());
+                //condition
+                var conditionElement = transitionElement.getElementsByTagName("Condition")[0];
+                if (conditionElement) {
+                    transition.condition = mxfile.getConditionObject(conditionElement);
                 }
-                transition.condition = condition;
-
-                var geographyElement = $(this).find("Geography");
-                var lineElement = $(geographyElement).find("Line");
-                var strAnchors = $(lineElement).attr("anchors");
                 
-                if (strAnchors !== undefined && strAnchors !== "undefined") {
-					
-                    transition.anchors = $.parseJSON(strAnchors);
+                //geography
+                var geographyElement = transitionElement.getElementsByTagName("Geography")[0];
+                if (geographyElement) {
+                    transition.geography = mxfile.getGeographyEdgeObject(geographyElement);
                 }
-                transition.sourceId = $(lineElement).attr("sourceId");
-                transition.targetId = $(lineElement).attr("targetId");
-                transition.fromConnector = $(lineElement).attr("fromConnector");
-                transition.toConnector = $(lineElement).attr("toConnector");
-
-                slines.push(transition);
+                transitions.push(transition);
             });
         } //end of processElement
 
@@ -228,223 +154,379 @@ var kloader = (function () {
         var graphData = {
             "processGUID": processFileEntity.ProcessGUID,
             "version": processFileEntity.Version,
-            "packageData": packageData
+            "package": package
         };
-        var graph = new kgraph.GraphView(graphData);
 
-        return graph;
+        var kGraphData = new kmodel.GraphData(graphData);
+
+        return kGraphData;
     }
     //#endregion
 
     //#region serialize Javscript object to xml
-    kloader.serialize2Xml = function (processGUID, packageData) {
-        var processFileEntity = {};
+    kloader.serialize2Xml = function (processEntity, package) {
+        if (!processEntity) return null;
 
         //xml document
-        var xw = new XMLWriter("utf-8", "1.0");
-        xw.formatting = 'indented';
-        xw.indentChar = ' ';
-        xw.indentation = 2;
-
-        xw.writeStartDocument(undefined);   //without standalone, otherwise will throw invalid xml error
-        xw.writeStartElement("Package");
+        var doc = mxUtils.parseXml('\uFEFF<?xml version="1.0" encoding="utf-8"?><Package></Package>');       
+        var packageElement = doc.documentElement;
+        
         //Participants
-        var participants = packageData.participants;
-        if (participants) {
-            var participantCount = participants.length;
-            if (participantCount > 0) {
-                xw.writeStartElement("Participants");
-                for (var i = 0; i < participantCount; i++) {
-                    var participant = participants[i];
-                    xw.writeStartElement("Participant");
-                    xw.writeAttributeString('type', participant.type);
-                    xw.writeAttributeString('id', participant.id);
-                    xw.writeAttributeString('name', participant.name);
-                    xw.writeAttributeString('code', participant.code);
-                    xw.writeAttributeString('outerId', participant.outerId);
-                    xw.writeEndElement();   //end of single Participant
+        writeParticipants(doc, packageElement, package);
+
+        //WorkflowProcess
+        var processElement = writeProcess(doc, packageElement, processEntity);
+
+        //layout
+        var model = kmain.mxGraphEditor.graph.getModel();
+        writeLayout(doc, packageElement, model);
+
+        //Activities
+        writeActivities(doc, processElement, model);
+
+        //Transtions
+        writeTransitions(doc, processElement, model);
+
+        //get pretty xml content
+        var xmlContent = vkbeautify.xml(mxUtils.getXml(doc, ' '));
+
+        return xmlContent;
+    }
+
+    //participants
+    function writeParticipants(doc, parent, package) {
+        var participantsElement = doc.createElement("Participants");
+        parent.appendChild(participantsElement);
+
+        if (package && package.participants) {
+            var participantsList = package.participants;
+            if (participantsList && participantsList.length > 0) {
+                for (var i = 0; i < participantsList.length; i++) {
+                    var participant = participantsList[i];
+                    var participantElement = mxfile.setParticipantElement(doc, participant);
+
+                    participantsElement.appendChild(participantElement);
                 }
-                xw.writeEndElement();   //end of Participants
             }
         }
+    }
+
+    //layout information
+    function writeLayout(doc, parent, model) {
+        var layoutElement = doc.createElement("Layout");
+        parent.appendChild(layoutElement);
+
+        var swimlanesElement = doc.createElement("Swimlanes");
+        layoutElement.appendChild(swimlanesElement);
+
+        var swimlaneNodeList = model.getChildVertices(kmain.mxGraphEditor.graph.getDefaultParent());
+        for (var i = 0; i < swimlaneNodeList.length; i++) {
+            var swimlaneNode = swimlaneNodeList[i];
+            var swimlaneNodeValue = model.getValue(swimlaneNode);
+
+            if (swimlaneNodeValue.nodeName === "Swimlane") {
+                var swimlaneElement = doc.createElement("Swimlane");
+                swimlanesElement.appendChild(swimlaneElement);
+
+                swimlaneElement.setAttribute("id", swimlaneNode.id);
+                swimlaneElement.setAttribute("name", swimlaneNodeValue.getAttribute("label"));
+
+                //swimlane geography
+                var geographyElement = doc.createElement("Geography");
+                swimlaneElement.appendChild(geographyElement);
+
+                geographyElement.setAttribute("parent", swimlaneNode.parent.id);
+                geographyElement.setAttribute("style", swimlaneNode.style);
+
+                var widgetElement = doc.createElement("Widget");
+                geographyElement.appendChild(widgetElement);
+
+                widgetElement.setAttribute("left", swimlaneNode.geometry.x);
+                widgetElement.setAttribute("top", swimlaneNode.geometry.y);
+                widgetElement.setAttribute("width", swimlaneNode.geometry.width);
+                widgetElement.setAttribute("height", swimlaneNode.geometry.height);
+            }
+        }
+    }
+
+    //process
+    function writeProcess(doc, parent, processEntity) {
+        var workflowElement = doc.createElement("WorkflowProcesses");
+        parent.appendChild(workflowElement);
+
+        var processElement = doc.createElement("Process");
+        workflowElement.appendChild(processElement);
+
+        processElement.setAttribute("name", processEntity.ProcessName);
+        processElement.setAttribute("id", processEntity.ProcessGUID);
         
-        //WorkflowProcess
-        var process = packageData.process;
-        xw.writeStartElement("WorkflowProcesses")
-        xw.writeStartElement("Process")
-        xw.writeAttributeString("name", process.name);
-        xw.writeAttributeString("id", process.id);
+        var descriptionElement = doc.createElement("Description");
+        processElement.appendChild(descriptionElement);
 
-        if (process.description)
-            xw.writeElementString("Description", jshelper.escapeHtml(process.description));
+        var description = doc.createTextNode(jshelper.escapeHtml(processEntity.Description));
+        descriptionElement.appendChild(description);
 
-    	//Activities
-		//queried activityies from the graph nodes in the graph view
-        var numNodes = $('.gnode').length;
-        if (numNodes > 0) {
-        	xw.writeStartElement("Activities")
-        	$(".gnode").each(function (idx, elem) {
-        		var $elem = $(elem);
-        		var nodeId = $elem.attr("id");
-        		
-        		//grep snode from process graph view
-        		var snode = $.grep(process.snodes, function (e) {
-        			return (("ACT" + e.id) == nodeId);
-        		})[0];
+        return processElement;
+    }
 
-        		xw.writeStartElement("Activity");
-        		xw.writeAttributeString("name", snode.name);
-        		xw.writeAttributeString("id", snode.id);
-        		xw.writeAttributeString("code", snode.code);
+    //activities
+    function writeActivities(doc, parent, model) {
+        //queried activityies from the graph activities in the graph view
+        var vertexNodeList = model.getChildVertices(kmain.mxGraphEditor.graph.getDefaultParent());
+        var vertex = null,
+            snode = null,
+            childNode = null,
+            childNodeValue = null;
 
-        		if (snode.description)
-        			xw.writeElementString("Description", jshelper.escapeHtml(snode.description));
+        if (vertexNodeList.length > 0) {
+            var activitiesElement = doc.createElement("Activities");
+            parent.appendChild(activitiesElement);
 
-        		xw.writeStartElement("ActivityType");
-        		xw.writeAttributeString("type", snode.type);
-        		if (snode.type == "GatewayNode") {
-        			xw.writeAttributeString("gatewaySplitJoinType", snode.gatewaySplitJoinType);
-        			xw.writeAttributeString("gatewayDirection", snode.gatewayDirection);
-        		} else if (snode.type == "SubProcessNode") {
-        			xw.writeAttributeString("subId", snode.subId);
-        		}
+            for (var i = 0; i < vertexNodeList.length; i++) {
+                vertex = vertexNodeList[i];
+                snode = model.getValue(vertex);
 
-        		xw.writeEndElement()    //end of ActivityType
+                if (snode.nodeName === "Activity") {
+                    //activities in the default parent
+                    writeActivity(doc, activitiesElement, vertex, snode)
+                } if (snode.nodeName === "Swimlane") {
+                    //activities in the swimlane
+                    var childNodeList = model.getChildVertices(model.getCell(vertex.id));
+                    for (var j = 0; j < childNodeList.length; j++) {
+                        childNode = childNodeList[j];
+                        childNodeValue = model.getValue(childNode);
+                        if (childNodeValue.nodeName === "Activity") {
+                            writeActivity(doc, activitiesElement, childNode, childNodeValue);
+                        } else {
+                            window.console.log("invalid node type:" + childNodeValue.nodeName);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-        		if (snode.performers) {
-        			var performersCount = snode.performers.length;
-        			if (performersCount > 0) {
-        				xw.writeStartElement("Performers");
-        				for (var p = 0; p < performersCount; p++) {
-        					var performer = snode.performers[p];
-        					xw.writeStartElement("Performer");
-        					xw.writeAttributeString("id", performer.id);
-        					xw.writeEndElement();   //end of single Performer
-        				}
-        				xw.writeEndElement();   //end of Activity Performers
-        			}
-        		}
+    //Activity
+    function writeActivity(doc, parent, vertex, snode) {
+        var activityTypeNode = null,
+            activityType = '',
+            descriptionNode = null,
+            performersNode = null,
+            actionsNode = null;
 
-        		//activity geograpy
-        		xw.writeStartElement("Geography");
-        		xw.writeStartElement("Widget");
-        		xw.writeAttributeString("left", snode.left);
-        		xw.writeAttributeString("top", snode.top);
-        		xw.writeAttributeString("width", snode.width);
-        		xw.writeAttributeString("height", snode.height);
+        //Activity
+        var activityElement = doc.createElement("Activity");
+        parent.appendChild(activityElement);
 
-        		//activity connectors
-        		var inputConnectorCount = snode.inputConnectors.length;
-        		var outputConnectorCount = snode.outputConnectors.length;
-        		if (inputConnectorCount > 0
-					|| outputConnectorCount > 0) {
-        			xw.writeStartElement("Connectors");
+        activityElement.setAttribute("id", vertex.id);
+        activityElement.setAttribute("name", snode.getAttribute("label"));
+        activityElement.setAttribute("code", snode.getAttribute("code"));
 
-        			if (inputConnectorCount > 0) {
-        				for (var m = 0; m < inputConnectorCount; m++) {
-        					var connector = snode.inputConnectors[m];
-        					xw.writeStartElement("Connector");
-        					xw.writeAttributeString("type", connector.type);
-        					xw.writeAttributeString("index", connector.index);
-        					xw.writeAttributeString("name", connector.name);
-        					xw.writeEndElement();   //end of single Connector
-        				}
-        			}
+        //Description
+        descriptionNode = snode.getElementsByTagName("Description")[0];
+        if (descriptionNode) {
+            var descriptionElement = doc.createElement("Description");
+            activityElement.appendChild(descriptionElement);
 
-        			if (outputConnectorCount > 0) {
-        				for (var n = 0; n < outputConnectorCount; n++) {
-        					var connector = snode.outputConnectors[n];
-        					xw.writeStartElement("Connector");
-        					xw.writeAttributeString("type", connector.type);
-        					xw.writeAttributeString("index", connector.index);
-        					xw.writeAttributeString("name", connector.name);
-        					xw.writeEndElement();   //end of single Connector
-        				}
-        			}
-        			xw.writeEndElement();   //end of Connectors
-        		}
+            var description = doc.createTextNode(jshelper.escapeHtml(descriptionNode.textContent));
+            descriptionElement.appendChild(description);
+        } 
 
-        		xw.writeEndElement();   //end of Widget
-        		xw.writeEndElement()    //end of Activity Geography
+        //Activity Type
+        activityTypeNode = snode.getElementsByTagName("ActivityType")[0];
+        activityType = activityTypeNode.getAttribute("type");
 
-        		xw.writeEndElement();   //end of single Activity
+        var activityTypeElement = doc.createElement("ActivityType");
+        activityElement.appendChild(activityTypeElement);
 
-        	});
-        	xw.writeEndElement()    //end of Activities
+        activityTypeElement.setAttribute("type", activityType);
+        if (activityType == "GatewayNode") {
+            activityTypeElement.setAttribute("gatewaySplitJoinType", activityTypeNode.getAttribute("gatewaySplitJoinType"));
+            activityTypeElement.setAttribute("gatewayDirection", activityTypeNode.getAttribute("gatewayDirection"));
+        } else if (activityType == "SubProcessNode") {
+            activityTypeElement.setAttribute("subId", activityTypeNode.getAttribute("subId"));
+        } else if (activityType == "MultipleInstanceNode") {
+            activityTypeElement.setAttribute("complexType", activityTypeNode.getAttribute("complexType"));
+            activityTypeElement.setAttribute("mergeType", activityTypeNode.getAttribute("mergeType"));
+            activityTypeElement.setAttribute("compareType", activityTypeNode.getAttribute("compareType"));
+            activityTypeElement.setAttribute("completeOrder", activityTypeNode.getAttribute("completeOrder"));
         }
 
-    	//Transtions
-        var connections = jsptoolkit.jspinstance.getConnections();
-        if (connections.length > 0) {
-        	xw.writeStartElement("Transitions");
-        	$.each(connections, function (idx, connection) {
-        		var sourceId = connection.sourceId;
-        		var targetId = connection.targetId;
-        		var anchors = jsptoolkit.getConnectionAnchors(connection);
+        //Performers
+        performersNode = snode.getElementsByTagName("Performers")[0];
+        if (performersNode) {
+            var performerList = performersNode.getElementsByTagName("Performer");
+            if (performerList.length > 0) {
+                var performersElement = doc.createElement("Performers");
+                activityElement.appendChild(performersElement);
 
-				//grep sline from graph view
-        		var sline = $.grep(process.slines, function (l) {
-        			return (l.sourceId == sourceId && l.targetId == targetId);
-        		})[0];
+                for (var p = 0; p < performerList.length; p++) {
+                    var performer = performerList[p];
+                    var performerElement = doc.createElement("Performer");
+                    performersElement.appendChild(performerElement);
 
-        		xw.writeStartElement("Transition");
-        		xw.writeAttributeString("id", sline.id);
-        		xw.writeAttributeString("from", sline.from);
-        		xw.writeAttributeString("to", sline.to);
-
-        		if (sline.description)
-        			xw.writeElementString("Description", jshelper.escapeHtml(sline.description));
-
-        		if (sline.receiver) {
-        			xw.writeStartElement("Receiver");
-        			if (sline.receiver.type) {
-        				xw.writeAttributeString("type", sline.receiver.type);
-        			}
-        			xw.writeEndElement();
-        		}
-
-        		if (sline.condition) {
-        			xw.writeStartElement("Condition");
-        			if (sline.condition.type) {
-        				xw.writeAttributeString("type", sline.condition.type);
-        				if (sline.condition.text) {
-        					xw.writeStartElement("ConditionText");
-        					xw.writeCDATA($.trim(sline.condition.text));
-        					xw.writeEndElement();
-        				}
-        			}
-        			xw.writeEndElement();
-        		}
-
-        		//Transtion Geography
-        		xw.writeStartElement("Geography");
-        		xw.writeStartElement("Line");
-        		xw.writeAttributeString("anchors", JSON.stringify(anchors));
-        		xw.writeAttributeString("sourceId", sline.sourceId);
-        		xw.writeAttributeString("targetId", sline.targetId);
-        		xw.writeAttributeString("fromConnector", sline.fromConnector);
-        		xw.writeAttributeString("toConnector", sline.fromConnector);
-        		xw.writeEndElement();   //end of Line
-        		xw.writeEndElement();   //end of Transition Geography
-
-        		xw.writeEndElement()    //end of Transition
-        	});
-        	xw.writeEndElement()    //end of Transitions
+                    performerElement.setAttribute("id", performer.getAttribute("id"));
+                }
+            }
         }
-        
-        xw.writeEndElement()    //end of Process
-        xw.writeEndElement();   //end of WorkflowProcesses
-        xw.writeEndElement();    //end of Package
 
-        xw.writeEndDocument();  //end of XmlDocument
+        //Actions
+        actionsNode = snode.getElementsByTagName("Actions")[0];
+        if (actionsNode) {
+            var actionList = actionsNode.getElementsByTagName("Action");
+            if (actionList.length > 0) {
+                var actionsElement = doc.createElement("Actions");
+                activityElement.appendChild(actionsElement);
+
+                for (var a = 0; a < actionList.length; a++) {
+                    var action = actionList[a];
+                    var actionElement = doc.createElement("Action");
+                    actionsElement.appendChild(actionElement);
+
+                    actionElement.setAttribute("type", action.getAttribute("type"));
+                    actionElement.setAttribute("name", action.getAttribute("name"));
+                    actionElement.setAttribute("assembly", action.getAttribute("assembly"));
+                    actionElement.setAttribute("interface", action.getAttribute("interface"));
+                    actionElement.setAttribute("method", action.getAttribute("method"));
+                }
+            }
+        }
+
+        //Activity Geograpy
+        var geographyElement = doc.createElement("Geography");
+        activityElement.appendChild(geographyElement);
+
+        geographyElement.setAttribute("parent", vertex.parent.id);
+        geographyElement.setAttribute("style", vertex.style);
+
+        var widgetElement = doc.createElement("Widget");
+        geographyElement.appendChild(widgetElement);
+
+        widgetElement.setAttribute("left", vertex.geometry.x);
+        widgetElement.setAttribute("top", vertex.geometry.y);
+        widgetElement.setAttribute("width", vertex.geometry.width);
+        widgetElement.setAttribute("height", vertex.geometry.height);
+    }
+
+    //transitions
+    function writeTransitions(doc, parent, model) {
+        var transitionsElement = doc.createElement("Transitions");
+        parent.appendChild(transitionsElement);
+
+        //transitions in default parent
+        var edgeList = model.getChildEdges(kmain.mxGraphEditor.graph.getDefaultParent());
+        lookupEdgeList(doc, transitionsElement, model, edgeList);
+
+        //transitions in swimlanes
+        var childList = null;
+        var swimlanes = getSwimlanes(model);
+        for (var i = 0; i < swimlanes.length; i++) {
+            childList = model.getChildEdges(model.getCell(swimlanes[i]));
+            lookupEdgeList(doc, transitionsElement, model, childList);
+        }
+    }
+
+    function lookupEdgeList(doc, parent, model, edgeList) {
+        var edge = null,
+            sline = null;
+
+        if (edgeList.length > 0) {
+            for (var j = 0; j < edgeList.length; j++) {
+                edge = edgeList[j];
+                sline = model.getValue(edge);
+
+                if (sline.nodeName === "Transition") {
+                    writeTransition(doc, parent, edge, sline);
+                }
+            }
+        }
+    }
 
 
-        processFileEntity.ProcessGUID = processGUID;
-        processFileEntity.XmlContent = xw.flush();  //output xml
+    //swimlanes in default parent
+    function getSwimlanes(model) {
+        var swimlanes = [];
+        var vertexNodeList = model.getChildVertices(kmain.mxGraphEditor.graph.getDefaultParent());
+        var vertex = null,
+            snode = null;
 
-        xw.close();
+        for (var i = 0; i < vertexNodeList.length; i++) {
+            vertex = vertexNodeList[i];
+            snode = model.getValue(vertex);
+            if (snode.nodeName === "Swimlane") {
+                swimlanes.push(vertex.id);
+            }
+        }
+        return swimlanes;
+    }
 
-        return processFileEntity;
+    //transition
+    function writeTransition(doc, parent, edge, sline) {
+        var receiverNode = null,
+            receiverType = '',
+            conditionNode = null,
+            conditionType = '',
+            conditionTextNode = null;
+
+        //transition
+        var transitionElement = doc.createElement("Transition");
+        parent.appendChild(transitionElement);
+
+        transitionElement.setAttribute("id", edge.id);
+        transitionElement.setAttribute("from", edge.source.id);
+        transitionElement.setAttribute("to", edge.target.id);
+
+        //description
+        descriptionNode = sline.getElementsByTagName("Description")[0];
+        if (descriptionNode) {
+            var descriptionElement = doc.createElement("Description");
+            transitionElement.appendChild(descriptionElement);
+
+            var description = doc.createTextNode(jshelper.escapeHtml(descriptionNode.textContent));
+            descriptionElement.appendChild(description);
+        } 
+
+        //receiver
+        receiverNode = sline.getElementsByTagName("Receiver")[0];
+        if (receiverNode) {
+            var receiverElement = doc.createElement("Receiver");
+            transitionElement.appendChild(receiverElement);
+            
+            receiverType = receiverNode.getAttribute('type');
+            if ($.isEmptyObject(receiverType) === false && receiverType !== "undefined" && receiverType !== "null") {
+                receiverElement.setAttribute("type", receiverType);
+            }
+        }
+
+        //condition
+        conditionNode = sline.getElementsByTagName("Condition")[0];
+        if (conditionNode) {
+            var conditionElement = doc.createElement("Condition");
+            transitionElement.appendChild(conditionElement);
+
+            conditionType = conditionNode.getAttribute('type');
+            if ($.isEmptyObject(conditionType) === false && conditionType !== "undefined") {
+                conditionElement.setAttribute("type", conditionType);
+                conditionTextNode = conditionNode.getElementsByTagName("ConditionText")[0];
+                if ($.isEmptyObject(conditionTextNode) === false) {
+                    var conditionTextElement = doc.createElement("ConditionText");
+                    conditionElement.appendChild(conditionTextElement);
+
+                    var conditionContent = $.trim(conditionTextNode.textContent);
+                    if (conditionContent !== "") {
+                        var expression = doc.createCDATASection(conditionContent);
+                        conditionTextElement.appendChild(expression); 
+                    }
+                }
+            }
+        }
+
+        //transition geograpy
+        var geographyElement = doc.createElement("Geography");
+        transitionElement.appendChild(geographyElement);
+
+        geographyElement.setAttribute("parent", edge.parent.id);
+        geographyElement.setAttribute("style", edge.style);
     }
     //#endregion
 

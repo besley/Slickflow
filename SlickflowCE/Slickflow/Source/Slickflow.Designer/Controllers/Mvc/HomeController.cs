@@ -12,11 +12,18 @@ namespace Slickflow.Designer.Controllers.Mvc
         [AllowAnonymous]
         public ActionResult Index()
         {
-            //ViewBag.RoleName = "admin";
+            ViewBag.AppInstanceID = Request.QueryString["AppInstanceID"];
+            ViewBag.ProcessGUID = Request.QueryString["ProcessGUID"];
+
             return View();
         }
 
         public ActionResult Dialog()
+        {
+            return View();
+        }
+
+        public ActionResult Demo()
         {
             return View();
         }
