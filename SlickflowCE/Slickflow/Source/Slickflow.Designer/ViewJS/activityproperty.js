@@ -203,7 +203,8 @@ var activityproperty = (function () {
 					"code": participant.code,
 					"outerId": participant.outerId
 				}
-				activity.performers.push(performer);
+                activity.performers.push(performer);
+
 				//refresh the activity performer gridview
 				loadActivityPerformer(activity);
                 //update vertex user object property

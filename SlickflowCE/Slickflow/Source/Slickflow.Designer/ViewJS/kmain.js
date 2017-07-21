@@ -402,22 +402,6 @@ var kmain = (function () {
         var activityTypeElement = snode.getElementsByTagName("ActivityType")[0];
         activityTypeElement = mxfile.setActivityTypeElement(activityTypeElement, activity);
 
-        //activity action
-        var actionsElement = snode.getElementsByTagName("Actions")[0];
-        if (!actionsElement) {
-            actionsElement = snode.appendChild(snode.ownerDocument.createElement("Actions"));
-        }
-
-        var actionElement = actionsElement.getElementsByTagName("Action")[0];
-        if (!actionElement) {
-            actionElement = actionsElement.appendChild(actionsElement.ownerDocument.createElement("Action"));
-        } 
-
-        if (activity.actions) {
-            var action = activity.actions[0];
-            actionElement = mxfile.setActionElement(actionElement, action);
-        }
-
         model.beginUpdate();
         try{
             model.setValue(kmain.mxSelectedDomElement.Cell, snode);
@@ -435,10 +419,7 @@ var kmain = (function () {
             if(!performersElement){
                 performersElement = snode.appendChild(snode.ownerDocument.createElement("Performers"));
             } else {
-                var performerList = performersElement.getElementsByTagName("Performer");
-                for (var i = 0; i < performerList.length; i++){
-                    performersElement.removeChild(performerList[i]);
-                }
+                removeChildren(performersElement);
             }
 
             var performer = null, 
@@ -451,12 +432,17 @@ var kmain = (function () {
         }
 
         model.beginUpdate();
-        try{
+        try {
             model.setValue(kmain.mxSelectedDomElement.Cell, snode);
         }finally{
             model.endUpdate();
         }
     }
+
+    var removeChildren = function (node) {
+        var last;
+        while (last = node.lastChild) node.removeChild(last);
+    };
 
     kmain.setEdgeValue = function(transition){
         var model = kmain.mxGraphEditor.graph.getModel();

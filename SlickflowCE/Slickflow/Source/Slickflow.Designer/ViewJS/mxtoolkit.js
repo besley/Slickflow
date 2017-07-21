@@ -85,11 +85,6 @@ var mxtoolkit = (function () {
             activityElement.appendChild(performersElement);
         }
 
-        //actions
-        if (activity.actions && activity.actions.length > 0) {
-            var actionsElement = mxfile.setActionsElement(doc, activity.actions);
-            activityElement.appendChild(actionsElement);
-        }
         return activityElement;
     }
 

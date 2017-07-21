@@ -104,14 +104,6 @@ var kloader = (function () {
                 });
                 activity.performers = performers;
 
-                //actions list
-                Array.prototype.forEach.call(activityElement.getElementsByTagName("Action"), function (actionElement) {
-                    var action = mxfile.getActionObject(actionElement);
-
-                    actions.push(action);
-                });
-                activity.actions = actions;
-
                 //geography
                 geographyElement = activityElement.getElementsByTagName("Geography")[0];
                 if (geographyElement) {
@@ -366,28 +358,6 @@ var kloader = (function () {
                     performersElement.appendChild(performerElement);
 
                     performerElement.setAttribute("id", performer.getAttribute("id"));
-                }
-            }
-        }
-
-        //Actions
-        actionsNode = snode.getElementsByTagName("Actions")[0];
-        if (actionsNode) {
-            var actionList = actionsNode.getElementsByTagName("Action");
-            if (actionList.length > 0) {
-                var actionsElement = doc.createElement("Actions");
-                activityElement.appendChild(actionsElement);
-
-                for (var a = 0; a < actionList.length; a++) {
-                    var action = actionList[a];
-                    var actionElement = doc.createElement("Action");
-                    actionsElement.appendChild(actionElement);
-
-                    actionElement.setAttribute("type", action.getAttribute("type"));
-                    actionElement.setAttribute("name", action.getAttribute("name"));
-                    actionElement.setAttribute("assembly", action.getAttribute("assembly"));
-                    actionElement.setAttribute("interface", action.getAttribute("interface"));
-                    actionElement.setAttribute("method", action.getAttribute("method"));
                 }
             }
         }
