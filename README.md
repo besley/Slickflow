@@ -30,6 +30,12 @@ QQ(Author): 47743901
 EMail: sales@ruochisoft.com
 
 
+### Slickflow(1.5.9) 企业版更新说明
+1. 基于MxGraph的新版设计器发布；
+2. 设计器实现泳道(Swimlanes)功能；
+3. 设计器增加Actions 外部事件列表方法；
+4. 集成HangFire任务定时作业组件，实现流程逾期结束；
+
 
 ### Slickflow(1.5.8) 企业版更新说明:
 1. 增加加签通过率类型字段CompareType，用于加签办理页面动态指定（非设计器指定，是运行时决策指定）变量传入；
