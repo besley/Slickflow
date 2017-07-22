@@ -26,10 +26,12 @@ namespace Slickflow.Engine.Business.Entity
         public string InvokedActivityGUID { get; set; }
         public string CreatedByUserID { get; set; }
         public string CreatedByUserName { get; set; }
-        public Nullable<System.DateTime> LastUpdatedDateTime { get; set; }
+        public Nullable<DateTime> OverdueDateTime { get; set; }
+        public Nullable<DateTime> OverdueTreatedDateTime { get; set; }
+        public Nullable<DateTime> LastUpdatedDateTime { get; set; }
         public string LastUpdatedByUserID { get; set; }
         public string LastUpdatedByUserName { get; set; }
-        public Nullable<System.DateTime> EndedDateTime { get; set; }
+        public Nullable<DateTime> EndedDateTime { get; set; }
         public string EndedByUserID { get; set; }
         public string EndedByUserName { get; set; }
         public byte RecordStatusInvalid { get; set; }
