@@ -22,7 +22,7 @@ namespace Slickflow.WebDemo.Slickflows
             string AppInstanceID = Request.QueryString["AppInstanceID"] == null ? string.Empty : Request.QueryString["AppInstanceID"].ToString();
             if (!string.IsNullOrEmpty(AppInstanceID))
             {
-                DataTable dt = WorkFlows.GetBizAppFlowByAppInstanceID(AppInstanceID);
+                DataTable dt = WorkFlows.GetHrsLeaveOpinionListByAppInstanceID(AppInstanceID);
                 Repeater1.DataSource = dt;
                 Repeater1.DataBind();
             }

@@ -174,22 +174,21 @@ namespace Slickflow.WebDemo.Slickflows
                     try
                     {
                         //保存业务数据
-                        BizAppFlowEntity AppFlowEntity = new Entity.BizAppFlowEntity();
-                        AppFlowEntity.AppName = "请假流程";
-                        AppFlowEntity.AppInstanceID = instanceId.ToString();
-                        AppFlowEntity.ActivityName = CurrentActivityText;
-                        AppFlowEntity.Remark = string.Format("{0}(ID:{1}) {2}", LoginUserName, LoginUserID, currentOpinionRemark);
-                        AppFlowEntity.ChangedTime = now;
-                        AppFlowEntity.ChangedUserID = LoginUserID.ToString();
-                        AppFlowEntity.ChangedUserName = LoginUserName;
-                        WorkFlows.AddBizAppFlow(AppFlowEntity);
-
+                        //BizAppFlowEntity AppFlowEntity = new Entity.BizAppFlowEntity();
+                        //AppFlowEntity.AppName = "请假流程";
+                        //AppFlowEntity.AppInstanceID = instanceId.ToString();
+                        //AppFlowEntity.ActivityName = CurrentActivityText;
+                        //AppFlowEntity.Remark = string.Format("{0}(ID:{1}) {2}", LoginUserName, LoginUserID, currentOpinionRemark);
+                        //AppFlowEntity.ChangedTime = now;
+                        //AppFlowEntity.ChangedUserID = LoginUserID.ToString();
+                        //AppFlowEntity.ChangedUserName = LoginUserName;
 
 
                         HrsLeaveOpinionEntity hrsleaveOpinionEntity = new HrsLeaveOpinionEntity();
                         hrsleaveOpinionEntity.AppInstanceID = instanceId.ToString();
+                        hrsleaveOpinionEntity.ActivityID = activityInstanceEntity.ActivityGUID.ToString();
                         hrsleaveOpinionEntity.ActivityName = CurrentActivityText;
-                        hrsleaveOpinionEntity.Remark = currentOpinionRemark;
+                        hrsleaveOpinionEntity.Remark = string.Format("{0}(ID:{1}) {2}", LoginUserName, LoginUserID, currentOpinionRemark);
                         hrsleaveOpinionEntity.ChangedTime = now;
                         hrsleaveOpinionEntity.ChangedUserID = LoginUserID.ToString();
                         hrsleaveOpinionEntity.ChangedUserName = LoginUserName;

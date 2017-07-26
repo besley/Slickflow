@@ -105,17 +105,26 @@ namespace Slickflow.WebDemo.Slickflows
                         return;
                     }
                     //保存业务数据
-                    BizAppFlowEntity AppFlowEntity = new Entity.BizAppFlowEntity();
-                    AppFlowEntity.AppName = "流程发起";
-                    AppFlowEntity.AppInstanceID = instanceId.ToString();
-                    AppFlowEntity.ActivityName = "流程发起";
-                    AppFlowEntity.Remark = string.Format("申请人:{0}-{1}", LoginUserID, LoginUserName);
-                    AppFlowEntity.ChangedTime = now;
-                    AppFlowEntity.ChangedUserID = LoginUserID.ToString();
-                    AppFlowEntity.ChangedUserName = LoginUserName;
+                    //BizAppFlowEntity AppFlowEntity = new Entity.BizAppFlowEntity();
+                    //AppFlowEntity.AppName = "流程发起";
+                    //AppFlowEntity.AppInstanceID = instanceId.ToString();
+                    //AppFlowEntity.ActivityName = "流程发起";
+                    //AppFlowEntity.Remark = string.Format("申请人:{0}-{1}", LoginUserID, LoginUserName);
+                    //AppFlowEntity.ChangedTime = now;
+                    //AppFlowEntity.ChangedUserID = LoginUserID.ToString();
+                    //AppFlowEntity.ChangedUserName = LoginUserName;
 
-                    WorkFlows.AddBizAppFlow(AppFlowEntity);
+                    //WorkFlows.AddBizAppFlow(AppFlowEntity);
 
+                    HrsLeaveOpinionEntity hrsleaveOpinionEntity = new HrsLeaveOpinionEntity();
+                    hrsleaveOpinionEntity.AppInstanceID = instanceId.ToString();
+                    hrsleaveOpinionEntity.ActivityID = System.Guid.Empty.ToString();
+                    hrsleaveOpinionEntity.ActivityName = "流程发起";
+                    hrsleaveOpinionEntity.Remark = string.Format("申请人:{0}-{1}", LoginUserID, LoginUserName);
+                    hrsleaveOpinionEntity.ChangedTime = now;
+                    hrsleaveOpinionEntity.ChangedUserID = LoginUserID.ToString();
+                    hrsleaveOpinionEntity.ChangedUserName = LoginUserName;
+                    WorkFlows.AddHrsLeaveOpinion(hrsleaveOpinionEntity);
 
 
                     base.RegisterStartupScript("", "<script>alert('流程发起成功');window.location.href='FlowList.aspx';</script>");

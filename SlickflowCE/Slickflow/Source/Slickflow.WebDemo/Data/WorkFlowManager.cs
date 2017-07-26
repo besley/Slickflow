@@ -333,13 +333,12 @@ namespace Slickflow.WebDemo.Data
             strSql.Append(") ");
             strSql.Append(";select @@IDENTITY");
             SqlParameter[] parameters = {
-			            new SqlParameter("@AppName", SqlDbType.NVarChar,50) ,            
                         new SqlParameter("@AppInstanceID", SqlDbType.VarChar,50) ,            
                         new SqlParameter("@ActivityName", SqlDbType.NVarChar,50) ,            
                         new SqlParameter("@ActivityID", SqlDbType.VarChar,50) ,     
                         new SqlParameter("@Remark", SqlDbType.NVarChar,1000) ,            
                         new SqlParameter("@ChangedTime", SqlDbType.DateTime) ,            
-                        new SqlParameter("@ChangedUserID", SqlDbType.Int,4) ,            
+                        new SqlParameter("@ChangedUserID", SqlDbType.VarChar,50) ,  
                         new SqlParameter("@ChangedUserName", SqlDbType.NVarChar,50)             
             };
             int idx = 0;
@@ -418,7 +417,7 @@ namespace Slickflow.WebDemo.Data
                 {
                     model.ID = int.Parse(dt.Rows[0]["ID"].ToString());
                 }
-                
+
                 model.AppInstanceID = dt.Rows[0]["AppInstanceID"].ToString();
                 model.ActivityName = dt.Rows[0]["ActivityName"].ToString();
                 model.ActivityID = dt.Rows[0]["ActivityID"].ToString();
@@ -451,6 +450,18 @@ namespace Slickflow.WebDemo.Data
             string strSql = string.Format("select * from HrsLeaveOpinion where 1=1 {0}", sqlWhere);
             return SQLHelper.ExecuteDataset(strSql).Tables[0];
         }
+
+        /// <summary>
+        /// 查询请假处理过程
+        /// </summary>
+        /// <param name="AppInstanceID">应用实例ID</param>
+        /// <returns></returns>
+        public static DataTable GetHrsLeaveOpinionListByAppInstanceID(string AppInstanceID)
+        {
+            string strSql = string.Format("select * from HrsLeaveOpinion where 1=1  and AppInstanceID='{0}'", AppInstanceID);
+            return SQLHelper.ExecuteDataset(strSql).Tables[0];
+        }
+
         #endregion
 
         #region BizAppFlow

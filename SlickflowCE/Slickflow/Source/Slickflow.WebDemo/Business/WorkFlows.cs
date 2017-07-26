@@ -197,8 +197,18 @@ namespace Slickflow.WebDemo.Business
         public static DataTable GetHrsLeaveOpinion(string sqlWhere)
         {
             return WorkFlowManager.GetHrsLeaveOpinion(sqlWhere);
-
         }
+
+         /// <summary>
+        /// 查询请假处理过程
+        /// </summary>
+        /// <param name="AppInstanceID">应用实例ID</param>
+        /// <returns></returns>
+        public static DataTable GetHrsLeaveOpinionListByAppInstanceID(string AppInstanceID)
+        {
+            return WorkFlowManager.GetHrsLeaveOpinionListByAppInstanceID(AppInstanceID);
+        }
+
         #endregion
 
 

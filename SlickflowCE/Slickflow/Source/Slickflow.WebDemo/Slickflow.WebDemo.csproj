@@ -387,6 +387,7 @@
     <Content Include="js\zTree\zTreeStyle\zTreeStyle.css" />
     <Content Include="Ashx\Wf.ashx" />
     <Content Include="Login.aspx" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap\bootbox.min.js" />
     <Content Include="Scripts\bootstrap\bootstrap-datetimepicker.js" />
