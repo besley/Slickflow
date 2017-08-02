@@ -209,7 +209,7 @@ var kmain = (function () {
         if (descriptionElement) transition.description = descriptionElement.textContent;
 
         var conditionElement = sline.getElementsByTagName("Condition")[0];
-        transition.condition = mxfile.getConditionObject(conditionElement);
+        if (conditionElement) transition.condition = mxfile.getConditionObject(conditionElement);
         
         var receiverElement = sline.getElementsByTagName("Receiver")[0];
         transition.receiver = mxfile.getReceiverObject(receiverElement);

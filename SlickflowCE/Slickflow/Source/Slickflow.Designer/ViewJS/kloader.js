@@ -55,7 +55,7 @@ var kloader = (function () {
             process.id = processElement.getAttribute("id");
 
             var pdescElement = processElement.getElementsByTagName("Description")[0];
-            process.description = jshelper.replaceHTMLTags(pdescElement.textContent);
+            if (pdescElement) process.description = jshelper.replaceHTMLTags(pdescElement.textContent);
 
             //swimlanes
             var layoutElement = doc.documentElement.getElementsByTagName("Layout")[0];    //get from package element
@@ -90,7 +90,7 @@ var kloader = (function () {
                 activity = mxfile.getActivityObject(activityElement, "name");
 
                 var actdescElement = activityElement.getElementsByTagName("Description")[0];
-                activity.description = jshelper.replaceHTMLTags(actdescElement.textContent);
+                if (actdescElement) activity.description = jshelper.replaceHTMLTags(actdescElement.textContent);
 
                 //set activity type info
                 var activityTypeElement = activityElement.getElementsByTagName("ActivityType")[0];
@@ -119,7 +119,7 @@ var kloader = (function () {
 
                 //description
                 var transdescElement = transitionElement.getElementsByTagName("Description")[0];
-                transition.description = jshelper.replaceHTMLTags(transdescElement.textContent);
+                if (transdescElement) transition.description = jshelper.replaceHTMLTags(transdescElement.textContent);
 
                 //receiver
                 var receiverElement = transitionElement.getElementsByTagName("Receiver")[0];
