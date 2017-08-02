@@ -160,7 +160,7 @@ var kloader = (function () {
         if (!processEntity) return null;
 
         //xml document
-        var doc = mxUtils.parseXml('\uFEFF<?xml version="1.0" encoding="utf-8"?><Package></Package>');       
+        var doc = mxUtils.parseXml('<?xml version="1.0" encoding="utf-8"?><Package></Package>');       
         var packageElement = doc.documentElement;
         
         //Participants
