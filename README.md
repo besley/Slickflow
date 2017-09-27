@@ -30,6 +30,25 @@ QQ(Author): 47743901
 EMail: sales@ruochisoft.com
 
 
+
+
+### Slickflow(1.5.9.4) 企业版更新说明
+2017-09-26
+
+自动定时任务模块：
+1. 设计器增加任务定时CRON表达式编辑器；
+2. 集成HangFire 任务定时作业组件，实现如下两个功能：
+1). 实现流程逾期自动结束任务作业；
+2). 实现流程定时启动任务作业；
+3. 新增WfJobs表，用于记录自动定时作业日志；
+4. 引擎接口读取所有任务类型节点列表GetAllTaskActivityList()方法改进：
+   按照流程图转移顺序返回活动节点列表数据；
+
+DEMO项目：
+5. 业务项目的流程图查看功能更新：
+WebDEMO, MvcDEMO 流程图查看功能整合到SFD设计器项目，不再重复构建；
+6. WebDEMO请假流程增减意见表(HrsLeaveOpinion)；
+
 ### Slickflow(1.5.9) 企业版更新说明
 1. 基于MxGraph的新版设计器发布；
 2. 设计器实现泳道(Swimlanes)功能；
