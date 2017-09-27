@@ -45,8 +45,8 @@ EMail: sales@ruochisoft.com
    按照流程图转移顺序返回活动节点列表数据；
 
 DEMO项目：
-5. 业务项目的流程图查看功能更新：
-WebDEMO, MvcDEMO 流程图查看功能整合到SFD设计器项目，不再重复构建；
+5. 业务项目的流程图查看功能更新;
+   WebDEMO, MvcDEMO 流程图查看功能整合到SFD设计器项目，不再重复构建；
 6. WebDEMO请假流程增减意见表(HrsLeaveOpinion)；
 
 ### Slickflow(1.5.9) 企业版更新说明
