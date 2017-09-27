@@ -36,6 +36,7 @@ EMail: sales@ruochisoft.com
 2017-09-26
 
 自动定时任务模块：
+
 1. 设计器增加任务定时CRON表达式编辑器；
 2. 集成HangFire 任务定时作业组件，实现如下两个功能：
 1). 实现流程逾期自动结束任务作业；
@@ -45,6 +46,7 @@ EMail: sales@ruochisoft.com
    按照流程图转移顺序返回活动节点列表数据；
 
 DEMO项目流程图显示MxGraph更新：
+
 5. 业务项目的流程图查看功能更新；
    WebDEMO, MvcDEMO 流程图查看功能整合到SFD设计器项目，不再重复构建；
 6. WebDEMO请假流程增减意见表(HrsLeaveOpinion)；
