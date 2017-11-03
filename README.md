@@ -3,7 +3,7 @@
 
 Slickflow is an open source project based on .NET platfrom, the product focus on workflow pattern, supports sequence, split/merge, sub-process, multi-instance, withdraw, sendback and reverse patterns.
 
-Slickflow is using BPMN natation to descript process diagram, the Slickflow designer is B/S toolkit and user friendly to business process communicaiton and business analysis.
+Slickflow is using BPMN natation to descript process diagram, the Slickflow designer is HTML5 graph editor and user friendly to business process communicaiton and business analysis.
 
 Slickflow supports SQLSERVER, ORACLE, MySQL and other database, it implemented by Dapper.NET library.
 
