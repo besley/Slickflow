@@ -1,17 +1,17 @@
 ﻿# Slickflow
 .NET Workflow Engine
 
-Slickflow is implemented by activity and transition iterative algorithm. It supports sequence, split/merge, sub-process, multi-instance, withdraw, sendback and reverse pattern.
+Slickflow is an open source project based on .NET platfrom, the product focus on workflow pattern, supports sequence, split/merge, sub-process, multi-instance, withdraw, sendback and reverse patterns.
 
-Slickflow used BPMN graphic elements to build its workflow natation.
+Slickflow is using BPMN natation to descript process diagram, the Slickflow designer is B/S toolkit and user friendly to business process communicaiton and business analysis.
 
-Slickflow designer is a HTML5, JQuery, SVG based web designer.
+Slickflow supports SQLSERVER, ORACLE, MySQL and other database, it implemented by Dapper.NET library.
 
-Slickflow project support SQLSERVER, ORACLE, MySQL database, it implemented by dapper library.
+There are demo project that you can find in WebDemo, MvcDemo and WinformDemo project for different type enterprise information system.
 
-There are demo programs that you can find in WebDemo, WinformDemo project.
+Slickflow is suggusted to give programmers an flexible way to implement workflow system in their internal product or customer projects. The programmers can write their own code segemnts based on the kernel product. 
 
-The source project is under LGPL license, we also provide customers commercial license. if you have any further inquery, please feel free to contact us: 
+Slickflow is very suitable for software teams or companies who want to integrated workflow engine into their products. 
 
 Quick Start:
 https://github.com/besley/Slickflow/wiki
@@ -28,10 +28,11 @@ http://demo.slickflow.com/slickflowdesigner/
 Document:
 http://www.slickflow.com/wiki/index
 
+The source project is under LGPL license, we also provide customers commercial license. if you have any further inquery, please feel free to contact us: 
+
+### EMail: sales@ruochisoft.com
+
 QQ(Author): 47743901
-
-EMail: sales@ruochisoft.com
-
 
 
 
