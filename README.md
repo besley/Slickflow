@@ -1,5 +1,5 @@
 ﻿# Slickflow
-.NET Workflow Engine
+.NET Workflow Engine With Full Source Code 
 
 Slickflow is an open source project based on .NET platfrom, the product focus on workflow pattern, supports sequence, split/merge, sub-process, multi-instance, withdraw, sendback and reverse patterns.
 
@@ -7,9 +7,9 @@ Slickflow is using BPMN natation to descript process diagram, the Slickflow desi
 
 Slickflow supports SQLSERVER, ORACLE, MySQL and other database, it implemented by Dapper.NET library.
 
-There are demo project that you can find in WebDemo, MvcDemo and WinformDemo project for different type enterprise information system.
+WebDemo, MvcDemo and WinformDemo project are domonstated for different type enterprise information system.
 
-Slickflow is suggusted to give programmers an flexible way to implement workflow system in their internal product or customer projects. The programmers can write their own code segemnts based on the kernel product. 
+Slickflow is suggusted to give programmers an flexible way to integrate workflow engine component into their internal product or customer projects. The programmers can write their own code segemnts based on the kernel product. 
 
 Slickflow is very suitable for software teams or companies who want to integrated workflow engine into their products. 
 
