@@ -44,6 +44,12 @@ var kmain = (function () {
         //initilize a workflow editor
         initializeMxGraphEditor(mode);
     }
+    
+        kmain.showDiagramReadOnly = function () {
+        //the process graph is readonly for business process veiwer,
+        //when it needed from applicaiton page.
+        kmain.mxGraphEditor = createEditor('scripts/mxGraph/src/editor/config/workfloweditor-readonly.xml');
+    }
 
     function initializeGlobalVariables(){
         kmain.mxSelectedProcessEntity = null;
@@ -520,5 +526,30 @@ var kmain = (function () {
             model.endUpdate();
         }
     }
+
+    //render transition red color for completed transitons
+    kmain.renderCompletedTransitions = function (transitionList) {
+        var graph = kmain.mxGraphEditor.graph;
+        var model = kmain.mxGraphEditor.graph.getModel();
+        model.beginUpdate();
+        try {
+            $.each(transitionList, function (idx, transition) {
+                var edge = model.getCell(transition.TransitionGUID);
+                if (edge !== undefined) {
+                    var style = graph.getCellStyle(edge); //style is in object form
+                    var newStyle = graph.stylesheet.getCellStyle("edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;jettySize=auto;orthogonalLoop=1;strokeColor=red;strokeWidth=2;", style); //Method will merge styles into a new style object.  We must translate to string from here 
+                    var array = [];
+                    for (var prop in newStyle)
+                        array.push(prop + "=" + newStyle[prop]);
+                    edge.style = array.join(';');
+
+                    graph.refresh();
+                }
+            });
+        } finally {
+            model.endUpdate();
+        }
+    }
+    //#endregion
 	return kmain;
 })()

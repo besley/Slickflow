@@ -76,8 +76,7 @@ namespace Slickflow.Engine.Service
             try
             {
                 var pim = new ProcessInstanceManager();
-                var processInstance = pim.GetProcessInstanceLatest(runner.AppName, 
-                    runner.AppInstanceID, runner.ProcessGUID);
+                var processInstance = pim.GetProcessInstanceLatest(runner.AppInstanceID, runner.ProcessGUID);
                 return processInstance;
             }
             catch
@@ -268,7 +267,7 @@ namespace Slickflow.Engine.Service
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public IList<ActivityInstanceEntity> GetRunningActivityInstance(TaskQueryEntity query)
+        public IList<ActivityInstanceEntity> GetRunningActivityInstance(TaskQuery query)
         {
             var aim = new ActivityInstanceManager();
             var list = aim.GetRunningActivityInstanceList(query.AppInstanceID, query.ProcessGUID).ToList();

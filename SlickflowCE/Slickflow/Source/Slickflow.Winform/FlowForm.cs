@@ -67,7 +67,7 @@ namespace Slickflow.Winform
             appRunner.UserID = "1";
             appRunner.UserName = "user1";
             IWorkflowService wfService = new WorkflowService();
-            TaskQueryEntity en = new TaskQueryEntity
+            var en = new TaskQuery
             {
                 UserID = "1"
             };

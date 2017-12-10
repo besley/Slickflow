@@ -70,7 +70,7 @@
                             <td align="left"><%#Eval("CreatedDateTime") %></td>
                             <td align="center">
                                 <a href="javascript:ShowFlowOpinion(<%#Eval("AppInstanceID") %>)">流程信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="/sfd/Home?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>&AppInstanceID=<%#Eval("AppInstanceID") %>" target="_blank">流程图信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="/sfd/Diagram?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>&AppInstanceID=<%#Eval("AppInstanceID") %>" target="_blank">流程图信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
                                 <a href="HrsLeaveApproval.aspx?ProcessGUID=<%#Eval("ProcessGUID") %>&AppInstanceID=<%#Eval("AppInstanceID") %>&ActivityInstanceID=<%#Eval("ActivityInstanceID") %>">办理</a>
                             </td>
                         </tr>
@@ -101,7 +101,7 @@
                             <td align="left"><%#Eval("CurrentActivityText") %></td>
                             <td align="center">
                                 <a href="javascript:ShowFlowOpinion(<%#Eval("AppInstanceID") %>)">流程信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="/sfd/Home?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>&AppInstanceID=<%#Eval("AppInstanceID") %>" target="_blank">流程图信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="/sfd/Diagram?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>&AppInstanceID=<%#Eval("AppInstanceID") %>" target="_blank">流程图信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
                                 <a href="HrsLeaveInfo.aspx?AppInstanceID=<%#Eval("AppInstanceID") %>">申请信息</a>
                             </td>
                         </tr>
@@ -132,7 +132,7 @@
                             <td align="left"><%#Eval("CurrentActivityText") %></td>
                             <td align="center">
                                 <a href="javascript:ShowFlowOpinion(<%#Eval("AppInstanceID") %>)">流程信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="/sfd/Home?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>&AppInstanceID=<%#Eval("AppInstanceID") %>" target="_blank">流程图信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="/sfd/Diagram?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>&AppInstanceID=<%#Eval("AppInstanceID") %>" target="_blank">流程图信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
                                 <a href="HrsLeaveInfo.aspx?AppInstanceID=<%#Eval("AppInstanceID") %>">申请信息</a>
                             </td>
                         </tr>

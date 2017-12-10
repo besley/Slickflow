@@ -150,7 +150,6 @@ var kloader = (function () {
         };
 
         var kGraphData = new kmodel.GraphData(graphData);
-
         return kGraphData;
     }
     //#endregion

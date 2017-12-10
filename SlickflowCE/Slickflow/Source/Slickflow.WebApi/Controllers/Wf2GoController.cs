@@ -316,7 +316,7 @@ namespace Slickflow.WebApi.Controllers
         #region 任务数据读取操作
         [HttpPost]
         [AllowAnonymous]
-        public ResponseResult GetRunningTasks(TaskQueryEntity query)
+        public ResponseResult GetRunningTasks(TaskQuery query)
         {
             IWorkflowService service = new WorkflowService();
             var result = service.GetRunningTasks(query);
@@ -326,7 +326,7 @@ namespace Slickflow.WebApi.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public ResponseResult GetReadyTasks(TaskQueryEntity query)
+        public ResponseResult GetReadyTasks(TaskQuery query)
         {
             IWorkflowService service = new WorkflowService();
             var result = service.GetReadyTasks(query);

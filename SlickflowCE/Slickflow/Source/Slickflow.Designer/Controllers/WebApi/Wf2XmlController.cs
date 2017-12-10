@@ -260,7 +260,7 @@ namespace Slickflow.Designer.Controllers.WebApi
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpPost]
-        public ResponseResult<List<ActivityInstanceEntity>> QueryReadyActivityInstance(TaskQueryEntity query)
+        public ResponseResult<List<ActivityInstanceEntity>> QueryReadyActivityInstance(TaskQuery query)
         {
             var result = ResponseResult<List<ActivityInstanceEntity>>.Default();
             try
@@ -281,12 +281,37 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// 查询已完成转移数据
+        /// </summary>
+        /// <param name="query">查询实体</param>
+        /// <returns>转移实例列表</returns>
+        [HttpPost]
+        public ResponseResult<List<TransitionImage>> QueryCompletedTransitionInstance(TransitionInstanceQuery query)
+        {
+            var result = ResponseResult<List<TransitionImage>>.Default();
+            try
+            {
+                var wfService = new WorkflowService();
+                var itemList = wfService.GetTransitionInstanceList(query).ToList();
+
+                result = ResponseResult<List<TransitionImage>>.Success(itemList);
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<List<TransitionImage>>.Error(string.Format(
+                    "获取已完成转移数据失败, 异常信息:{0}",
+                    ex.Message));
+            }
+            return result;
+        }
+
+        /// <summary>
         /// 获取完成状态的任务
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpPost]
-        public ResponseResult<List<TaskViewEntity>> QueryCompletedTasks(TaskQueryEntity query)
+        public ResponseResult<List<TaskViewEntity>> QueryCompletedTasks(TaskQuery query)
         {
             var result = ResponseResult<List<TaskViewEntity>>.Default();
             try

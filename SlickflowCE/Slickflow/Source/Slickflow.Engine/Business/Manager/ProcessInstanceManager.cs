@@ -68,15 +68,30 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// 获取最近的流程运行实例
+        /// </summary>
+        /// <param name="appInstanceID">应用实例ID</param>
+        /// <param name="processGUID">流程GUID</param>
+        /// <returns>流程实例实体</returns>
+        internal ProcessInstanceEntity GetProcessInstanceCurrent(String appInstanceID,
+            String processGUID)
+        {
+            ProcessInstanceEntity entity = null;
+            var processInstanceList = GetProcessInstance(appInstanceID, processGUID).ToList();
+            if (processInstanceList != null && processInstanceList.Count > 0)
+            {
+                entity = processInstanceList[0];
+            }
+            return entity;
+        }
+
+        /// <summary>
         /// 根据流程完成状态获取流程实例数据
         /// </summary>
-        /// <param name="appName"></param>
         /// <param name="appInstanceID"></param>
         /// <param name="processGUID"></param>
-        /// <param name="state"></param>
         /// <returns></returns>
-        internal IEnumerable<ProcessInstanceEntity> GetProcessInstance(String appName,
-            String appInstanceID,
+        internal IEnumerable<ProcessInstanceEntity> GetProcessInstance(String appInstanceID,
             String processGUID)
         {
             var sql = @"SELECT 
@@ -114,12 +129,11 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="appInstanceID"></param>
         /// <param name="processGUID"></param>
         /// <returns></returns>
-        internal ProcessInstanceEntity GetProcessInstanceLatest(String appName,
-            String appInstanceID,
+        internal ProcessInstanceEntity GetProcessInstanceLatest(String appInstanceID,
             String processGUID)
         {
             ProcessInstanceEntity entity = null;
-            var processInstanceList = GetProcessInstance(appName, appInstanceID, processGUID).ToList();
+            var processInstanceList = GetProcessInstance(appInstanceID, processGUID).ToList();
             if (processInstanceList != null && processInstanceList.Count > 0)
             {
                 entity = processInstanceList[0];
@@ -448,8 +462,7 @@ namespace Slickflow.Engine.Business.Manager
             }
             try
             {
-                var entity = GetProcessInstanceLatest(runner.AppName,
-                    runner.AppInstanceID, 
+                var entity = GetProcessInstanceLatest(runner.AppInstanceID, 
                     runner.ProcessGUID);
 
                 if (entity == null || entity.ProcessState != (short)ProcessStateEnum.Running)

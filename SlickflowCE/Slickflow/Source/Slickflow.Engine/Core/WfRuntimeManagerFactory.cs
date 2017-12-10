@@ -74,15 +74,13 @@ namespace Slickflow.Engine.Core
             if (subProcessNode == null)
             {
                 //正常流程启动
-                processInstance = pim.GetProcessInstanceLatest(runner.AppName,
-                    runner.AppInstanceID,
+                processInstance = pim.GetProcessInstanceLatest(runner.AppInstanceID,
                     runner.ProcessGUID);
             }
             else
             {
                 //子流程启动
-                processInstance = pim.GetProcessInstanceLatest(runner.AppName,
-                    runner.AppInstanceID,
+                processInstance = pim.GetProcessInstanceLatest(runner.AppInstanceID,
                     subProcessNode.SubProcessGUID);
             }
 
@@ -674,7 +672,7 @@ namespace Slickflow.Engine.Core
             var rmins = new WfRuntimeManagerReverse();
             rmins.WfExecutedResult = result = new WfExecutedResult();
             var pim = new ProcessInstanceManager();
-            var processInstance = pim.GetProcessInstanceLatest(runner.AppName, runner.AppInstanceID, runner.ProcessGUID);
+            var processInstance = pim.GetProcessInstanceLatest(runner.AppInstanceID, runner.ProcessGUID);
             if (processInstance == null || processInstance.ProcessState != (short)ProcessStateEnum.Completed)
             {
                 result.Status = WfExecutedStatus.Exception;

@@ -45,7 +45,7 @@ using Slickflow.WebApi.Utility;
 
 namespace Slickflow.WebApi.Controllers
 {
-    #region 测试数据
+
     //webapi: http://localhost/sfapi/api/wfsequence/
     //数据库表: WfProcess
     //普通顺序流程基本测试(顺序,返签,退回,撤销等测试)
@@ -65,11 +65,13 @@ namespace Slickflow.WebApi.Controllers
     //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
 
     //runprocess app
+    //板房签字办理节点
     //下一步是业务员确认
     //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"cab57060-f433-422a-a66f-4a5ecfafd54e":[{"UserID":10,"UserName":"Long"}]}}
 
-    //结束节点
-    //财务审批办理节点：
+    //流程结束
+    //业务员确认办理节点
+    //下一步流程结束
     //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","NextActivityPerformers":{"b53eb9ab-3af6-41ad-d722-bed946d19792":[{"UserID":10,"UserName":"Long"}]}}
 
     //run sub process
@@ -77,7 +79,7 @@ namespace Slickflow.WebApi.Controllers
     //启动子流程
     //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"5fa796f6-2d5d-4ed6-84e2-a7c4e4e6aabc":[{"UserID":10,"UserName":"Long"}]}}
 
-    
+
     //reverse process:
     //返签
     //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
@@ -103,8 +105,11 @@ namespace Slickflow.WebApi.Controllers
     //返签流程：ReverseProcess
     //取消运行流程：CancelProcess
     //废弃所有流程实例：DiscardProcess
-    #endregion
 
+
+    /// <summary>
+    /// 序列控制流
+    /// </summary>
     public class WfSequenceController  : ApiController
     {
         #region Workflow 数据访问基本操作
@@ -373,7 +378,7 @@ namespace Slickflow.WebApi.Controllers
         #region 任务数据读取操作
         [HttpPost]
         [AllowAnonymous]
-        public ResponseResult GetRunningTasks(TaskQueryEntity query)
+        public ResponseResult GetRunningTasks(TaskQuery query)
         {
             IWorkflowService service = new WorkflowService();
             var result = service.GetRunningTasks(query);
@@ -383,7 +388,7 @@ namespace Slickflow.WebApi.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public ResponseResult GetReadyTasks(TaskQueryEntity query)
+        public ResponseResult GetReadyTasks(TaskQuery query)
         {
             IWorkflowService service = new WorkflowService();
             var result = service.GetReadyTasks(query);
@@ -497,3 +502,4 @@ namespace Slickflow.WebApi.Controllers
         #endregion
     }
 }
+

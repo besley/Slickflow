@@ -522,6 +522,29 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// 获取转移实例记录
+        /// </summary>
+        /// <param name="query">查询实体</param>
+        /// <returns>转移列表</returns>
+        public IList<TransitionImage> GetTransitionInstanceList(TransitionInstanceQuery query)
+        {
+            IList<TransitionImage> imageList = new List<TransitionImage>();
+            var tm = new TransitionInstanceManager();
+            var list = tm.GetTransitionInstanceList(query.AppInstanceID, query.ProcessGUID).ToList();
+
+            foreach (TransitionInstanceEntity t in list)
+            {
+                imageList.Add(new TransitionImage
+                {
+                    ID = t.ID,
+                    TransitionGUID = t.TransitionGUID
+                });
+            }
+
+            return imageList;
+        }
+
+        /// <summary>
         /// 获取当前活动实体
         /// </summary>
         /// <param name="processGUID">流程定义GUID</param>
@@ -1114,7 +1137,7 @@ namespace Slickflow.Engine.Service
         /// </summary>
         /// <param name="query">查询实体</param>
         /// <returns>任务列表</returns>
-        public IList<TaskViewEntity> GetRunningTasks(TaskQueryEntity query)
+        public IList<TaskViewEntity> GetRunningTasks(TaskQuery query)
         {
             int allRowsCount = 0;
             var taskManager = new TaskManager();
@@ -1130,7 +1153,7 @@ namespace Slickflow.Engine.Service
         /// </summary>
         /// <param name="query">查询对象</param>
         /// <returns>任务列表</returns>
-        public IList<TaskViewEntity> GetReadyTasks(TaskQueryEntity query)
+        public IList<TaskViewEntity> GetReadyTasks(TaskQuery query)
         {
             int allRowsCount = 0;
             var taskManager = new TaskManager();
@@ -1147,7 +1170,7 @@ namespace Slickflow.Engine.Service
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public IList<TaskViewEntity> GetCompletedTasks(TaskQueryEntity query)
+        public IList<TaskViewEntity> GetCompletedTasks(TaskQuery query)
         {
             int allRowsCount = 0;
             var taskManager = new TaskManager();

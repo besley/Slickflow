@@ -36,7 +36,7 @@ namespace Slickflow.WebDemo.Ashx
 
                     case "QueryReadyActivityInstance":
                         string AppInstanceID = GetRequestString(context, "AppInstanceID");
-                        TaskQueryEntity taskQuery = new TaskQueryEntity();
+                        var taskQuery = new TaskQuery();
                         taskQuery.ProcessGUID = ProcessGUID;
                         taskQuery.AppInstanceID = AppInstanceID;
 
@@ -74,7 +74,7 @@ namespace Slickflow.WebDemo.Ashx
         }
 
 
-        public ResponseResult<List<ActivityInstanceEntity>> QueryReadyActivityInstance(TaskQueryEntity query)
+        public ResponseResult<List<ActivityInstanceEntity>> QueryReadyActivityInstance(TaskQuery query)
         {
             var result = ResponseResult<List<ActivityInstanceEntity>>.Default();
             try
