@@ -76,15 +76,17 @@
     </Compile>
     <Compile Include="Business\Entity\ProcessInstanceQuery.cs" />
     <Compile Include="Business\Entity\QueryBase.cs" />
+    <Compile Include="Business\Entity\TransitionInstanceQuery.cs" />
     <Compile Include="Common\ActionParameterInternal.cs" />
     <Compile Include="Business\Manager\IXPDLStorage.cs" />
     <Compile Include="Common\BackwardOpertaionTypeEnum.cs" />
     <Compile Include="Common\Participant.cs" />
     <Compile Include="Business\Entity\TaskEntrustedEntity.cs" />
-    <Compile Include="Business\Entity\TaskQueryEntity.cs" />
+    <Compile Include="Business\Entity\TaskQuery.cs" />
     <Compile Include="Business\Manager\LogManager.cs" />
     <Compile Include="Common\NodeImage.cs" />
     <Compile Include="Common\ReceiverTypeEnum.cs" />
+    <Compile Include="Common\TransitionImage.cs" />
     <Compile Include="Common\WorkItemTypeEnum.cs" />
     <Compile Include="Core\Pattern\IExecuteActionList.cs" />
     <Compile Include="Core\Pattern\NodeMediatorGateway.cs" />

@@ -37,7 +37,7 @@
             });
             return false;
         } else {
-        	window.open('/sfd/Home?AppInstanceID=' + pordermanager.selectedProductOrderID
+        	window.open('/sfd/Diagram?AppInstanceID=' + pordermanager.selectedProductOrderID
 				+ '&ProcessGUID=' + pordermanager.mProductOrderProcessGUID + '&Mode=' + 'READONLY');
         }
     }

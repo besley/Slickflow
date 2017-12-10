@@ -23,6 +23,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -122,12 +123,19 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="Controllers\WfGatewayController.cs" />
+    <Compile Include="Controllers\WfAndSplitMIController.cs" />
+    <Compile Include="Controllers\WfSplitJoinMultiController.cs" />
+    <Compile Include="Controllers\WfUnitTestController.cs" />
     <Compile Include="Controllers\Wf2GoController.cs" />
     <Compile Include="Controllers\Wf2XmlController.cs" />
+    <Compile Include="Controllers\WfReceiverTypeController.cs" />
     <Compile Include="Controllers\WfSequenceController.cs" />
     <Compile Include="Controllers\WfSplitJoinController.cs" />
     <Compile Include="Controllers\WfSubProcessController.cs" />
+    <Compile Include="Controllers\WfTaskMISignForwardController.cs" />
+    <Compile Include="Controllers\WfTaskMISignTogetherController.cs" />
+    <Compile Include="Controllers\WfTaskMISubProcessController.cs" />
     <Compile Include="DBConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -146,6 +154,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Xml\Sample\price.xml" />
+    <Content Include="Xml\Sample\weihu.xml" />
     <Content Include="Xml\Stk\officeIn.xml" />
   </ItemGroup>
   <ItemGroup>

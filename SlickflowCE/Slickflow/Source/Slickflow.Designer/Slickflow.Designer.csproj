@@ -26,6 +26,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -139,6 +140,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Mvc\ActivityController.cs" />
     <Compile Include="Controllers\Mvc\BaseMvcController.cs" />
+    <Compile Include="Controllers\Mvc\DiagramController.cs" />
     <Compile Include="Controllers\Mvc\HomeController.cs" />
     <Compile Include="Controllers\Mvc\ProcessController.cs" />
     <Compile Include="Controllers\Mvc\RoleController.cs" />
@@ -444,6 +446,7 @@
     <Content Include="Scripts\jquery\ui\jquery.ui.sortable.js" />
     <Content Include="Scripts\jquery\ui\jquery.ui.widget.js" />
     <Content Include="Scripts\jshelper.js" />
+    <Content Include="Scripts\later.min.js" />
     <Content Include="Scripts\localhelper.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\mxGraph\src\editor\config\diagrameditor.xml" />
@@ -857,6 +860,7 @@
     <Content Include="Views\Transition\Edit.cshtml" />
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Diagram\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -217,7 +217,7 @@ namespace SfDemo.WebApi.Controllers
         //}
 
         [HttpPost]
-        public ResponseResult<List<TaskViewEntity>> QueryReadyTasks(TaskQueryEntity query)
+        public ResponseResult<List<TaskViewEntity>> QueryReadyTasks(TaskQuery query)
         {
             var result = ResponseResult<List<TaskViewEntity>>.Default();
             try
@@ -242,7 +242,7 @@ namespace SfDemo.WebApi.Controllers
         }
 
         [HttpPost]
-        public ResponseResult<List<ActivityInstanceEntity>> QueryReadyActivityInstance(TaskQueryEntity query)
+        public ResponseResult<List<ActivityInstanceEntity>> QueryReadyActivityInstance(TaskQuery query)
         {
             var result = ResponseResult<List<ActivityInstanceEntity>>.Default();
             try
@@ -263,7 +263,7 @@ namespace SfDemo.WebApi.Controllers
         }
 
         [HttpPost]
-        public ResponseResult<List<TaskViewEntity>> QueryCompletedTasks(TaskQueryEntity query)
+        public ResponseResult<List<TaskViewEntity>> QueryCompletedTasks(TaskQuery query)
         {
             var result = ResponseResult<List<TaskViewEntity>>.Default();
             try

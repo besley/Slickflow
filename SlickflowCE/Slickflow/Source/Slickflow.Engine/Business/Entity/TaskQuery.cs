@@ -8,7 +8,7 @@ namespace Slickflow.Engine.Business.Entity
     /// <summary>
     /// 任务查询实体对象
     /// </summary>
-    public class TaskQueryEntity : QueryBase
+    public class TaskQuery : QueryBase
     {
         public string AppName { get; set; }
         public string AppInstanceID { get; set; }

@@ -205,6 +205,25 @@ namespace Slickflow.Engine.Business.Manager
         /// </summary>
         /// <param name="appInstanceID">应用实例ID</param>
         /// <param name="processGUID">流程GUID</param>
+        /// <returns>转移实例列表</returns>
+        internal IEnumerable<TransitionInstanceEntity> GetTransitionInstanceList(string appInstanceID,
+            string processGUID)
+        {
+            IEnumerable<TransitionInstanceEntity> list = new List<TransitionInstanceEntity>();
+            var pim = new ProcessInstanceManager();
+            var pi = pim.GetProcessInstanceCurrent(appInstanceID, processGUID);
+            if (pi != null)
+            {
+                list = GetTransitionInstanceList(appInstanceID, processGUID, pi.ID);
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// 获取转移数据列表
+        /// </summary>
+        /// <param name="appInstanceID">应用实例ID</param>
+        /// <param name="processGUID">流程GUID</param>
         /// <param name="processInstanceID">流程实例ID</param>
         /// <returns>转移实例列表</returns>
         internal IEnumerable<TransitionInstanceEntity> GetTransitionInstanceList(string appInstanceID,

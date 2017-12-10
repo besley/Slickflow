@@ -53,6 +53,10 @@ namespace Slickflow.WebApi.Controllers
     ////分支1--行政部签字(xml 文件: officeIn.orSplit-end.xml)
     //{"AppName":"OfficeIn","AppInstanceID":"123","ProcessGUID":"3a8ce214-fd18-4fac-95c0-e7958bc1b2f8","UserID":"6","UserName":"XiaoMing","Conditions":{"surplus":"normal"}, "NextActivityPerformers":{"c3cbb3cc-fa60-42ad-9a10-4ec2638aff49":[{"UserID":4,"UserName":"MissLi"}]}}
 
+    //run process app:
+    //两个分支同时执行
+    //{"AppName":"OfficeIn","AppInstanceID":"123","ProcessGUID":"3a8ce214-fd18-4fac-95c0-e7958bc1b2f8","UserID":"6","UserName":"XiaoMing","Conditions":{"surplus":"normal"}, "NextActivityPerformers":{"c3cbb3cc-fa60-42ad-9a10-4ec2638aff49":[{"UserID":4,"UserName":"MissLi"}], "9414c43c-0c8c-4c0b-b65d-16203288c7ca":[{"UserID":24,"UserName":"MrsQiao"}]}}
+
     //withdraw process:
     //撤销回上一步节点，由仓库签字人员，从行政部签字节点撤销回来
     //{"UserID":"6","UserName":"XiaoMing","AppName":"OfficeIn","AppInstanceID":"123","ProcessGUID":"3a8ce214-fd18-4fac-95c0-e7958bc1b2f8"}
@@ -351,6 +355,16 @@ namespace Slickflow.WebApi.Controllers
             var result = service.DiscardProcess(discarder);
 
             return ResponseResult.Success();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ResponseResult GetNextActivityRoleUserTree(WfAppRunner nexter)
+        {
+            IWorkflowService service = new WorkflowService();
+            var nodeViewList = service.GetNextActivityRoleUserTree(nexter, nexter.Conditions);
+
+            return ResponseResult.Success(nodeViewList.Count().ToString());
         }
         #endregion
 

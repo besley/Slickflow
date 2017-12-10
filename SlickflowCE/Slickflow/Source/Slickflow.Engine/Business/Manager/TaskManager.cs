@@ -72,7 +72,7 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="query"></param>
         /// <param name="allRowsCount">任务记录数</param>
         /// <returns>任务视图列表</returns>
-        internal IEnumerable<TaskViewEntity> GetRunningTasks(TaskQueryEntity query, out int allRowsCount)
+        internal IEnumerable<TaskViewEntity> GetRunningTasks(TaskQuery query, out int allRowsCount)
         {
             return GetTasksPaged(query, 2, out allRowsCount);
         }
@@ -83,7 +83,7 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="query">查询实体</param>
         /// <param name="allRowsCount">任务记录数</param>
         /// <returns>任务列表</returns>
-        internal IEnumerable<TaskViewEntity> GetReadyTasks(TaskQueryEntity query, out int allRowsCount)
+        internal IEnumerable<TaskViewEntity> GetReadyTasks(TaskQuery query, out int allRowsCount)
         {
             return GetTasksPaged(query, 1, out allRowsCount);
         } 
@@ -94,7 +94,7 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="query">查询实体</param>
         /// <param name="allRowsCount">任务记录数</param>
         /// <returns>任务列表</returns>
-        internal IEnumerable<TaskViewEntity> GetCompletedTasks(TaskQueryEntity query, out int allRowsCount)
+        internal IEnumerable<TaskViewEntity> GetCompletedTasks(TaskQuery query, out int allRowsCount)
         {
             return GetTasksPaged(query, 4, out allRowsCount);
         }
@@ -106,7 +106,7 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="activityState">活动状态</param>
         /// <param name="allRowsCount">任务记录数</param>
         /// <returns>活动列表</returns>
-        private IEnumerable<TaskViewEntity> GetTasksPaged(TaskQueryEntity query, int activityState, out int allRowsCount)
+        private IEnumerable<TaskViewEntity> GetTasksPaged(TaskQuery query, int activityState, out int allRowsCount)
         {
             //processState:2 -running 流程处于运行状态
             //activityType:4 -表示“任务”类型的节点

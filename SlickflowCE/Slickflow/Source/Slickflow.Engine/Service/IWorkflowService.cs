@@ -77,12 +77,13 @@ namespace Slickflow.Engine.Service
 
         IList<NodeImage> GetActivityInstanceCompleted(int taskID);
         IList<NodeImage> GetActivityInstanceCompleted(WfAppRunner runner);
+        IList<TransitionImage> GetTransitionInstanceList(TransitionInstanceQuery query);
         User GetProcessInitiator(int processInstanceID);
 
-        IList<ActivityInstanceEntity> GetRunningActivityInstance(TaskQueryEntity query);
-        IList<TaskViewEntity> GetRunningTasks(TaskQueryEntity query);
-        IList<TaskViewEntity> GetReadyTasks(TaskQueryEntity query);
-        IList<TaskViewEntity> GetCompletedTasks(TaskQueryEntity query);
+        IList<ActivityInstanceEntity> GetRunningActivityInstance(TaskQuery query);
+        IList<TaskViewEntity> GetRunningTasks(TaskQuery query);
+        IList<TaskViewEntity> GetReadyTasks(TaskQuery query);
+        IList<TaskViewEntity> GetCompletedTasks(TaskQuery query);
         ActivityInstanceEntity GetRunningNode(WfAppRunner runner);
         IList<Performer> GetTaskPerformers(WfAppRunner runner);
 
