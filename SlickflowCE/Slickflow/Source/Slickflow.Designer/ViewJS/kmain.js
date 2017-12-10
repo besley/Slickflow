@@ -45,7 +45,7 @@ var kmain = (function () {
         initializeMxGraphEditor(mode);
     }
     
-        kmain.showDiagramReadOnly = function () {
+    kmain.showDiagramReadOnly = function () {
         //the process graph is readonly for business process veiwer,
         //when it needed from applicaiton page.
         kmain.mxGraphEditor = createEditor('scripts/mxGraph/src/editor/config/workfloweditor-readonly.xml');

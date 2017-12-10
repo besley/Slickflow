@@ -15,7 +15,11 @@
     <link rel="stylesheet" href="~/Content/bootstrap/bootstrap-dialog.min.css" />
     <link rel="stylesheet" href="~/Content/bootstrap/bootstrap-progressbar-3.3.4.min.css" />
 
-    <link rel="stylesheet" href="~/Content/graphCanvas.css" />
+    <link rel="stylesheet" href="~/Content/ag-grid/ag-grid.css" />
+    <link rel="stylesheet" href="~/Content/ag-grid/theme-bootstrap.css" />
+
+    <link rel="stylesheet" href="~/Content/graphCanvas.css"/>
+    <link rel="stylesheet" href="~/Content/msgBoxLight.css" />
 
     <style type="text/css" media="screen">
         div.base {
@@ -49,6 +53,9 @@
     <div id="kgraphContainer" class="base">
         <!-- Graph Here -->
     </div>
+    <div id="status" class="base" align="right" style="white-space:nowrap;">
+        <!-- Status Here -->
+    </div>
 
     <!--Progress Bar-->
     <div class="modal js-loading-bar">
@@ -73,6 +80,9 @@
     <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap-dialog.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap-progressbar.min.js"></script>
+
+    <!-- ag-grid-->
+    <script type="text/javascript" src="~/Scripts/ag-grid/ag-grid.min.js"></script>
 
     <!--helper-->
     <script type="text/javascript" src="~/Scripts/slick.event.js"></script>
@@ -118,11 +128,19 @@
     </script>
     <script type="text/javascript">
         $(function () {
-            kmain.init();
-            kmain.showDiagramReadOnly();
+            var mode = '';
+            var appInstanceID = '@ViewBag.AppInstanceID';
+            
+            if (appInstanceID !== '') {
+                mode = "READONLY";
+            }
+
+            kmain.init(mode);
 
             //load process graph from application page
-            loadProcessGraph();
+            if (appInstanceID !== '') {
+                loadProcessGraph();
+            }
         });
 
         //display application process graph
