@@ -45,6 +45,9 @@ QQ(Author): 47743901
 4. 增加流程图显示已完成路径的颜色显示（默认为红色）；
    具体方法参见：kmain.renderCompletedTransitions()；
 5. 改进子流程启动过程的人员自动获取；
+6. Slickflow 集团版、多组户和SAAS平台版实现；
+1) 演示地址：http://gc.slickflow.com/sfadmin/
+2) 用户名密码：admin/123456
 
 数据库更新：
 
