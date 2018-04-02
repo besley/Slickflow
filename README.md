@@ -36,7 +36,16 @@ QQ(Author): 47743901
 
 
 
-### Slickflow(1.6.0.0) 企业版更新说明
+### Slickflow(1.6.0.0) .NET CORE社区版更新说明
+2017-04-02
+
+1. 支持.NET CORE2.0,实现跨平台程序分发；
+2. 采用EFCore框架，支持多数据库(SQLServer/MySQL/Oracle等)；
+3. 实现CodeFirst数据库构建，附数据库生成项目；
+4. ASP.NET MVC CORE项目示例，完整订单流程实例；
+
+
+Slickflow(1.6.0.0) 企业版更新说明
 2017-12-10
 
 1. 引擎实现并行分支多实例（并行容器）的工作流模式；
