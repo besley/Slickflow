@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\Slickflow.Engine.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Business\EntityMySQL\**" />
+    <Compile Remove="Business\EntityOracle\**" />
+    <Compile Remove="Business\Entity\**" />
+    <EmbeddedResource Remove="Business\EntityMySQL\**" />
+    <EmbeddedResource Remove="Business\EntityOracle\**" />
+    <EmbeddedResource Remove="Business\Entity\**" />
+    <None Remove="Business\EntityMySQL\**" />
+    <None Remove="Business\EntityOracle\**" />
+    <None Remove="Business\Entity\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Devart.Data.Oracle.EFCore" Version="9.5.399" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.0.1" />
+    <PackageReference Include="ServiceStack" Version="5.0.2" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.1" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj" />
+    <ProjectReference Include="..\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj" />
+    <ProjectReference Include="..\Slickflow.Module\Slickflow.Module.csproj" />
+  </ItemGroup>
+
+</Project>
