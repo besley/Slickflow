@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\**" />
+    <Content Remove="wwwroot\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
+    <None Remove="wwwroot\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\Wf2GoController.cs" />
+    <Compile Remove="Controllers\Wf2XmlController.cs" />
+    <Compile Remove="Controllers\WfAndSplitMIController.cs" />
+    <Compile Remove="Controllers\WfGatewayController.cs" />
+    <Compile Remove="Controllers\WfReceiverTypeController.cs" />
+    <Compile Remove="Controllers\WfSequenceController.cs" />
+    <Compile Remove="Controllers\WfSplitJoinController.cs" />
+    <Compile Remove="Controllers\WfSplitJoinMultiController.cs" />
+    <Compile Remove="Controllers\WfSubProcessController.cs" />
+    <Compile Remove="Controllers\WfTaskMISignForwardController.cs" />
+    <Compile Remove="Controllers\WfTaskMISignTogetherController.cs" />
+    <Compile Remove="Controllers\WfTaskMISubProcessController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Slickflow.Engine\Slickflow.Engine.csproj" />
+    <ProjectReference Include="..\SlickOne.WebUtility\SlickOne.WebUtility.csproj" />
+  </ItemGroup>
+
+</Project>
