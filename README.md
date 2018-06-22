@@ -34,9 +34,6 @@ The source project is under LGPL license, we also provide customers commercial l
 
 QQ(Author): 47743901
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SCVB4T82ZUNQE)
-
-
 
 ### Slickflow(1.6.0.0) .NET CORE社区版更新说明
 2018-04-02
