@@ -748,7 +748,7 @@ namespace Slickflow.Engine.Business.Manager
             WfAppRunner runner,
             IDbSession session)
         {
-            ActivityInstanceEntity activityInstance = GetById(activityInstanceID);
+            ActivityInstanceEntity activityInstance = GetById(activityInstanceID, session);
             activityInstance.TokensHad += 1;
 
             Update(activityInstance, session);
