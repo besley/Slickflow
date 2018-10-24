@@ -35,7 +35,7 @@ The source project is under LGPL license, we also provide customers commercial l
 QQ(Author): 47743901
 
 
-### Slickflow(1.6.3.0) 版本功能说明：
+### Slickflow(1.6.3.0) 企业版版本功能说明：
 2018-10-10
 1. 新增返送节点ResendProcess(); 用于退回后的原路返送；
 2. SendBackProcess()接口中，增加TaskID属性，用于多并行节点退回处理；
