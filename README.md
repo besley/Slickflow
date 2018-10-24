@@ -35,6 +35,37 @@ The source project is under LGPL license, we also provide customers commercial l
 QQ(Author): 47743901
 
 
+### Slickflow(1.6.3.0) 版本功能说明：
+2018-10-10
+1. 新增返送节点ResendProcess(); 用于退回后的原路返送；
+2. SendBackProcess()接口中，增加TaskID属性，用于多并行节点退回处理；
+参考WebApi项目, WfResendController.cs的测试用例
+
+
+2018-06-22
+1. 数据库更新
+1) 活动实例表WfActivityInstance表中增加逾期时间和处理字段
+   OverdueDateTime      datetime             null,
+   OverdueTreatedDateTime datetime             null,
+
+2) 任务表WfTasks表中增加邮件是否发送的字段位
+   IsEMailSent          tinyint              not null default 0,
+3) 增加作业表WhJobSchedule和WhJobLog表，用于HangFire作业调度
+
+2. 待办任务的邮件发送功能完成；
+3. 任务逾期超时，自动完成功能完成。
+
+
+2018-06-10
+1. 修正图形设计器连线重叠功能，即增加连线控制点；
+2. 完成待办任务邮件发送功能，定时轮询异步邮件发送；
+
+
+2018-05-25
+1. 修正设计器项目角色冗余数据；
+2. 增加ResetCache()接口，用于引擎XML缓存文件更新；
+
+
 ### Slickflow(1.6.0.0) .NET CORE社区版更新说明
 2018-04-02
 
