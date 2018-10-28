@@ -35,7 +35,15 @@ The source project is under LGPL license, we also provide customers commercial l
 QQ(Author): 47743901
 
 
-### Slickflow(1.6.3.0) 企业版版本功能说明：
+### Slickflow(1.6.3)集团版版本发布
+2018-10-26
+1.集成表单项目（百度编辑器版本）
+2.集成引擎项目，表单流转统一界面按钮定制功能实现
+3.表单字段绑定流程节点的权限功能实现，权限有（可见和读写）
+4.数据库表扩展增加租户属性字段，用于集团或SAAS平台项目搭建；
+
+
+Slickflow(1.6.3.0) 企业版版本功能说明：
 2018-10-10
 1. 新增返送节点ResendProcess(); 用于退回后的原路返送；
 2. SendBackProcess()接口中，增加TaskID属性，用于多并行节点退回处理；
