@@ -46,7 +46,7 @@ namespace Slickflow.Engine.Core
         internal ActivityInstanceEntity BackwardFromActivityInstance { get; set; }
         internal ProcessInstanceEntity ProcessInstance { get; set; }
         internal String BackwardToTargetTransitionGUID { get; set; }
-        internal WfBackwardTaskReciever BackwardTaskReciever { get; set; }
+        internal WfBackwardTaskReceiver BackwardTaskReceiver { get; set; }
         internal ActivityResource ActivityResource { get; set; }
     }
 }

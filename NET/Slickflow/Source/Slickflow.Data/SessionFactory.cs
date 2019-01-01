@@ -20,30 +20,8 @@ namespace Slickflow.Data
         /// </summary>
         static SessionFactory()
         {
-            InitializeDBType(DBTypeEnum.SQLSERVER);     //多数据库枚举类型，ORACLE, MYSQL等
-        }
-
-        /// <summary>
-        /// 设置数据库类型相关的变量
-        /// </summary>
-        /// <param name="type">数据库类型</param>
-        private static void InitializeDBType(DBTypeEnum type)
-        {
-            //指定某个具体的数据库类型，仅第一次赋值，其后不用赋值。
-            if (type == DBTypeEnum.SQLSERVER)
-            {
-                DBTypeExtenstions.SetDBType(type, null);        //默认实现为SQLSERVER
-            }
-            else if (type == DBTypeEnum.ORACLE)
-            {
-                DapperExtensions.DapperExtensions.SqlDialect = new DapperExtensions.Sql.OracleSqlDialect();
-                //DBTypeExtenstions.SetDBType(type, new OracleWfDataProvider());
-            }
-            else if (type == DBTypeEnum.MYSQL)
-            {
-                DapperExtensions.DapperExtensions.SqlDialect = new DapperExtensions.Sql.MySqlDialect();
-                //DBTypeExtenstions.SetDBType(type, new MySqlWfDataProvider());
-            }
+            DBTypeExtenstions.SetDBType(DBTypeEnum.SQLSERVER);
+            //DBTypeExtenstions.SetDBType(DBTypeEnum.ORACLE);
         }
 
         /// <summary>
@@ -65,6 +43,10 @@ namespace Slickflow.Data
             else if (DBTypeExtenstions.DBType == DBTypeEnum.MYSQL)
             {
                 //conn = new MySqlConnection(connStringSetting.ConnectionString);
+            }
+            else if (DBTypeExtenstions.DBType == DBTypeEnum.KINGBASE)
+            {
+                //conn = new KingbaseConnection(connStringSetting.ConnectionString);
             }
             return conn;
         }

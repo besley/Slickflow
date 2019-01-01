@@ -33,7 +33,25 @@ namespace Slickflow.Engine.Core.Result
     /// </summary>
     public class WfNodeMediatedResult : WfExecutedResult
     {
+        /// <summary>
+        /// 异常类型
+        /// </summary>
         public WfNodeMediatedFeedback Feedback { get; set; }
+
+        /// <summary>
+        /// 创建NodeMediatedResult 对象
+        /// </summary>
+        /// <param name="feedback"></param>
+        /// <returns></returns>
+        public static WfNodeMediatedResult CreateNodeMediatedResultWithException(WfNodeMediatedFeedback feedback)
+        {
+            var mediatedResult = new WfNodeMediatedResult();
+            mediatedResult.Status = WfExecutedStatus.Exception;
+            mediatedResult.Feedback = feedback;
+
+            return mediatedResult;
+        }
+
     }
 
     /// <summary>

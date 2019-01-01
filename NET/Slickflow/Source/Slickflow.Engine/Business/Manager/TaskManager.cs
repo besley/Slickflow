@@ -187,6 +187,19 @@ namespace Slickflow.Engine.Business.Manager
         internal TaskViewEntity GetTaskOfMine(int activityInstanceID, 
             string userID)
         {
+            //processState:2 -running 流程处于运行状态
+            //activityType:4 -表示“任务”类型的节点
+            //activityState: 1-ready（准备）, 2-running（）运行；
+//            string whereSql = @"SELECT 
+//                                    TOP 1 *
+//                                FROM vwWfActivityInstanceTasks 
+//                                WHERE ActivityInstanceID=@activityInstanceID 
+//                                    AND AssignedToUserID=@userID 
+//                                    AND ProcessState=2 
+//                                    AND (ActivityType=4 OR ActivityType=5 OR ActivityType=6) 
+//                                    AND (ActivityState=1 OR ActivityState=2) 
+//                                ORDER BY TASKID DESC";
+
             //2015.09.10 besley
             //将ActivityType 修改为 WorkItemType，以处理多类型的任务节点，包括普通任务，多实例，子流程节点
             string sql = @"SELECT 
@@ -223,14 +236,37 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="appInstanceID">App实例ID</param>
         /// <param name="processGUID">流程定义GUID</param>
         /// <param name="userID">用户Id</param>
+        /// <param name="taskID">任务ID</param>
         /// <returns>任务实体</returns>
         internal TaskViewEntity GetTaskOfMine(string appInstanceID, 
             string processGUID, 
-            string userID)
+            string userID,
+            Nullable<int> taskID = null)
         {
-            //2015.09.10 besley
-            //将ActivityType 修改为 WorkItemType，以处理多类型的任务节点，包括普通任务，多实例，子流程节点
-            string sql = @"SELECT 
+            TaskViewEntity taskView = null;
+            if (taskID != null)
+            {
+                taskView = GetTaskView(taskID.Value);
+            }
+            else
+            {
+                //processState:2 -running 流程处于运行状态
+                //activityType:4 -表示“任务”类型的节点
+                //activityState: 1-ready（准备）, 2-running（）运行；
+                //            string sql = @"SELECT 
+                //                                TOP 1 * 
+                //                           FROM vwWfActivityInstanceTasks 
+                //                           WHERE AppInstanceID=@appInstanceID 
+                //                                AND ProcessGUID=@processGUID 
+                //                                AND AssignedToUserID=@userID 
+                //                                AND ProcessState=2 
+                //                                AND ActivityType=4 
+                //                                AND (ActivityState=1 OR ActivityState=2) 
+                //                           ORDER BY TASKID DESC";
+
+                //2015.09.10 besley
+                //将ActivityType 修改为 WorkItemType，以处理多类型的任务节点，包括普通任务，多实例，子流程节点
+                string sql = @"SELECT 
                                 TOP 1 * 
                            FROM vwWfActivityInstanceTasks 
                            WHERE AppInstanceID=@appInstanceID 
@@ -261,9 +297,9 @@ namespace Slickflow.Engine.Business.Manager
                 throw new WorkflowException(string.Format("当前办理任务的数目: {0} 大于1，无法确定下一步节点！", taskList.Count));
             }
 
-            var task = taskList[0];
-
-            return task;
+                taskView = taskList[0];
+            }
+            return taskView;
         }
 
          /// <summary>
@@ -292,6 +328,7 @@ namespace Slickflow.Engine.Business.Manager
             return isMine;
         }
 
+
         /// <summary>
         /// 获取待办任务(业务实例)
         /// </summary>
@@ -318,6 +355,28 @@ namespace Slickflow.Engine.Business.Manager
                     processGUID = runner.ProcessGUID
                 });
             return list;
+        }
+
+        /// <summary>
+        /// 获取未发送邮件通知的待办任务列表
+        /// </summary>
+        /// <returns></returns>
+        internal IList<TaskViewEntity> GetTaskListEMailUnSent()
+        {
+            //processState:2 -running 流程处于运行状态
+            //activityType:4 -表示“任务”类型的节点
+            //activityState: 1-ready（准备）, 2-running（运行）
+            //isEMailSent: 0-邮件未发送, 1-发送成功, -1-发送失败
+            string sql = @"SELECT * 
+                         FROM vwWfActivityInstanceTasks 
+                         WHERE ProcessState=2 
+                            AND (ActivityType=4 OR WorkItemType=1)
+                            AND ActivityState=1
+                            AND IsEMailSent=0
+							AND TaskState<>32
+                        ";
+            var taskList = Repository.Query<TaskViewEntity>(sql).ToList<TaskViewEntity>();
+            return taskList;
         }
         #endregion
 

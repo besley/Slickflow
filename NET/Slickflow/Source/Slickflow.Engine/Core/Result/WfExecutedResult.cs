@@ -38,11 +38,21 @@ namespace Slickflow.Engine.Core.Result
         public String Message { get; set; }
         public String ExceptionType { get; set; }
         public Int32 ProcessInstanceIDStarted { get; set; }     //流程启动返回的新实例ID
-        public WfBackwardTaskReciever BackwardTaskReciever { get; set; }    //流程做回退处理时，返回的任务接收人信息
+        public WfBackwardTaskReceiver BackwardTaskReceiver { get; set; }    //流程做回退处理时，返回的任务接收人信息
         public ReturnDataContext ReturnDataContext { get; set; }  //流程回退时返回参数
         public WfExecutedResult()
         {
             Status = WfExecutedStatus.Default;
+            Message = string.Empty;
+        }
+
+        /// <summary>
+        /// 缺省方法
+        /// </summary>
+        /// <returns></returns>
+        public static WfExecutedResult Default()
+        {
+            return new WfExecutedResult();
         }
     }
 
@@ -105,8 +115,10 @@ namespace Slickflow.Engine.Core.Result
         public const string Sendback_IsLoopNode = "Sendback_IsLoopNode";
         public const string Sendback_NotInRunning = "Sendback_NotInRunning";
         public const string Sendback_NotMineTask = "NotMineTask";
-        public const string Sendback_PreviousIsStartNode = "Sendback_PreviousIsStartNode";
-        public const string Sendback_NullOrHasTooMany = "Sendback_NullOrHasTooMany";
+        public const string Sendback_IsNull = "Sendback_IsNull";
+        public const string Sendback_IsTooManyPrevious = "Sendback_IsTooManyPrevious";
+        public const string Sendback_NotContainedInPreviousOrStartNode = "Sendback_NotContainedInPreviousOrStartNode";
+        public const string Sendback_IsStartNode = "Sendback_IsStartNode";
         public const string Sendback_HasTooManyRunningParallel = "Sendback_HasTooManyRunningParallel";
 
         //流程返签异常信息

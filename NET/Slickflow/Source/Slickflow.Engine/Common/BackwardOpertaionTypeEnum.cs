@@ -11,7 +11,7 @@ namespace Slickflow.Engine.Common
     /// MIS: Multiple Instance Sequence 多实例串行
     /// MIP: Multiple Instance Parallel 多实例并行
     /// </summary>
-    public enum WithdrawOpertaionTypeEnum
+    public enum WithdrawOperationTypeEnum
     {
         /// <summary>
         /// 缺省值
@@ -54,15 +54,20 @@ namespace Slickflow.Engine.Common
         MIPPreviousIsLastOne = 12,
 
         /// <summary>
-        /// 多个并行节点存在，但不是会签多实例节点
+        /// 前置网关引起的多个并行节点存在，不是会签多实例节点
         /// </summary>
-        ExistedManyParallelNodes = 20
+        GatewayFollowedByParalleledNodes = 20,
+
+        /// <summary>
+        /// 其它复杂模式的多个并行节点存在
+        /// </summary>
+        ExistedComplexParalleledNodes = 24
     }
 
     /// <summary>
     /// 退回操作处理类型
     /// </summary>
-    public enum SendbackOpertaionTypeEnum
+    public enum SendbackOperationTypeEnum
     {
         /// <summary>
         /// 缺省值
@@ -110,8 +115,18 @@ namespace Slickflow.Engine.Common
         MIPOneIsRunning = 13,
 
         /// <summary>
+        /// 多个并行节点存在，但不是会签等多实例节点
+        /// </summary>
+        NormalParalleledRunningNodesQuiredByTaskID = 19,
+
+        /// <summary>
         /// 多个并行节点存在，但不是会签多实例节点
         /// </summary>
-        ExistedManyParallelNodes = 20
+        GatewayFollowedByParalleledNodes = 20,
+
+        /// <summary>
+        /// 其它复杂模式的多个并行节点存在
+        /// </summary>
+        ExistedComplexParalleledNodes = 24
     }
 }

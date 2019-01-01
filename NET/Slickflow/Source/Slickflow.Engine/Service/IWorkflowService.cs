@@ -27,6 +27,7 @@ using System.Text;
 using System.Data;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
+using Slickflow.Engine.Delegate;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Core;
 using Slickflow.Engine.Core.Result;
@@ -42,8 +43,6 @@ namespace Slickflow.Engine.Service
     public interface IWorkflowService
     {
         ActivityEntity GetFirstActivity(string processGUID, string version);
-        List<ActivityEntity> GetTaskActivityList(string processGUID, string version);
-		List<ActivityEntity> GetAllTaskActivityList(string processGUID, string version);
         ActivityEntity GetNextActivity(string processGUID, string version, string activityGUID);
         IList<NodeView> GetNextActivity(string processGUID, string version, string activityGUID, IDictionary<string, string> condition);
         NodeView GetNextActivity(int taskID, IDictionary<string, string> condition = null);
@@ -58,9 +57,9 @@ namespace Slickflow.Engine.Service
         WfExecutedResult StartProcess(WfAppRunner runner);
         WfExecutedResult StartProcess(IDbConnection conn, WfAppRunner starter, IDbTransaction trans);
         WfExecutedResult RunProcessApp(WfAppRunner runner);
-        WfExecutedResult RunProcessApp(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
-        WfExecutedResult JumpProcess(WfAppRunner runner);
-        WfExecutedResult JumpProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+        WfExecutedResult RunProcessApp(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);        
+        WfExecutedResult JumpProcess(WfAppRunner runner, JumpOptionEnum jumpOption = JumpOptionEnum.Default);
+        WfExecutedResult JumpProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans, JumpOptionEnum jumpOption = JumpOptionEnum.Default);        
         WfExecutedResult WithdrawProcess(WfAppRunner runner);
         WfExecutedResult WithdrawProcess(IDbConnection conn, WfAppRunner withdrawer, IDbTransaction trans);
         WfExecutedResult SendBackProcess(WfAppRunner runner);
@@ -116,7 +115,34 @@ namespace Slickflow.Engine.Service
         IList<Role> GetRoleByProcess(string processGUID, string version);
         IList<Role> GetRoleUserListByProcess(string processGUId, string version);
         IList<User> GetUserListByRole(string roleID);
-        //IList<Role> GetRoleUserByRoleIDs(int[] roleIDs);
         PerformerList GetPerformerList(NodeView nextNode);
+
+
+        #region 链式服务接口
+        IWorkflowService CreateRunner(WfAppRunner runner);
+        IWorkflowService CreateRunner(string userID, string UserName);
+        IWorkflowService UseApp(string appInstanceID, string appName, string appCode = null);
+        IWorkflowService UseProcess(string processGUID, string version);
+        IWorkflowService IfCondition(IDictionary<string, string> conditions);
+        IWorkflowService IfCondition(string name, string value);
+        IWorkflowService Subscribe(EventFireTypeEnum eventType, Func<int, string, IDelegateService, Boolean> func);
+        IWorkflowService NextStep(IDictionary<string, PerformerList> nextActivityPerformers);
+        IWorkflowService NextStep(string activityGUID, PerformerList performerList);
+
+        WfExecutedResult Start();
+        WfExecutedResult Start(IDbConnection conn, IDbTransaction trans);
+        WfExecutedResult Run();
+        WfExecutedResult Run(IDbConnection conn, IDbTransaction trans);
+        WfExecutedResult Withdraw();
+        WfExecutedResult Withdraw(IDbConnection conn, IDbTransaction trans);
+        WfExecutedResult SendBack();
+        WfExecutedResult SendBack(IDbConnection conn, IDbTransaction trans);
+
+        WfExecutedResult Jump(JumpOptionEnum jumpOption = JumpOptionEnum.Default);
+        WfExecutedResult Jump(IDbConnection conn, IDbTransaction trans, JumpOptionEnum jumpOption = JumpOptionEnum.Default);
+        WfExecutedResult Reverse();
+        WfExecutedResult Reverse(IDbConnection conn, IDbTransaction trans);
+        
+        #endregion
     }
 }

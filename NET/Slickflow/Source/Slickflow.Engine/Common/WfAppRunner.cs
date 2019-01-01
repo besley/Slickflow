@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Slickflow.Engine.Delegate;
 
 namespace Slickflow.Engine.Common
 {
@@ -32,43 +33,46 @@ namespace Slickflow.Engine.Common
     /// </summary>
     public class WfAppRunner
     {
+        #region 属性
         public string AppName { get; set; }
         public string AppInstanceID { get; set; }
         public string AppInstanceCode { get; set; }
         public string ProcessGUID { get; set; }
+        public string ProcessCode { get; set; }
         public string Version { get; set; }
-        public string FlowStatus { get; set; }
         public string UserID { get; set; }
         public string UserName { get; set; }
-        public IDictionary<string, PerformerList> NextActivityPerformers { get; set; }
-        public IDictionary<string, string> Conditions { get; set; }
+
         public Nullable<int> TaskID { get; set; }        //任务ID，区分当前用户ActivityInstance列表的唯一任务
-        public string JumpbackActivityGUID { get; set; }     //回跳的节点GUID
+        public IDictionary<string, string> Conditions = new Dictionary<string, string>();
         public IDictionary<string, string> DynamicVariables { get; set; }
-        public IDictionary<string, ActionParameterInternal> ActionMethodParameters { get; set; }
+        public IDictionary<string, PerformerList> NextActivityPerformers { get; set; }
+
+        internal DelegateEventList DelegateEventList = new DelegateEventList();
+        #endregion
     }
 
     /// <summary>
     /// 流程返签、撤销和退回接收人的实体对象
     /// </summary>
-    public class WfBackwardTaskReciever
+    public class WfBackwardTaskReceiver
     {
         public string UserID { get; set; }
         public string UserName { get; set; }
         public string ActivityName { get; set; }
 
         /// <summary>
-        /// 构造WfBackwardReciever实例
+        /// 构造WfBackwardReceiver实例
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="userName"></param>
         /// <param name="backwardToActivityName"></param>
         /// <returns></returns>
-        public static WfBackwardTaskReciever Instance(string backwardToActivityName,
+        public static WfBackwardTaskReceiver Instance(string backwardToActivityName,
             string userID,
             string userName)
         {
-            var instance = new WfBackwardTaskReciever();
+            var instance = new WfBackwardTaskReceiver();
             instance.ActivityName = backwardToActivityName;
             instance.UserID = userID;
             instance.UserName = userName;

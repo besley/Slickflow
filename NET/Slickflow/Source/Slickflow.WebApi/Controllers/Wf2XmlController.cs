@@ -271,32 +271,5 @@ namespace Slickflow.WebApi.Controllers
             return result;
         }
         #endregion
-
-        #region 节点转移数据查询接口
-        /// <summary>
-        /// 获取流程定义的所以任务节点序列数据列表
-        /// </summary>
-        /// <param name="obj">流程定义实体对象</param>
-        /// <returns>任务活动列表</returns>
-        [HttpPost]
-        public ResponseResult<List<ActivityEntity>>  GetAllTaskActivityListSequence(ProcessEntity obj)
-        {
-            var result = ResponseResult<List<ActivityEntity>>.Default();
-            try
-            {
-                var wfService = new WorkflowService();
-                var entity = wfService.GetAllTaskActivityList(obj.ProcessGUID, obj.Version).ToList();
-                result = ResponseResult<List<ActivityEntity>>.Success(entity);
-            }
-            catch(System.Exception ex)
-            {
-                result = ResponseResult<List<ActivityEntity>>.Error(
-                    string.Format("获取序列任务节点失败！{0}", ex.Message)
-                );
-            }
-            return result;
-        }
-        #endregion
-
     }
 }

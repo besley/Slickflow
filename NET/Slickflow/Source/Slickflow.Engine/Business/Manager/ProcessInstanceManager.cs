@@ -56,6 +56,18 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// 根据ID获取流程实例数据
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="processInstanceID">流程实例ID</param>
+        /// <param name="trans">事务</param>
+        /// <returns>流程实例实体</returns>
+        internal ProcessInstanceEntity GetById(IDbConnection conn, int processInstanceID, IDbTransaction trans)
+        {
+            return Repository.GetById<ProcessInstanceEntity>(conn, processInstanceID, trans);
+        }
+
+        /// <summary>
         /// 根据活动实例查询流程实例
         /// </summary>
         /// <param name="activityInstanceID">活动实例ID</param>
@@ -557,8 +569,39 @@ namespace Slickflow.Engine.Business.Manager
         /// <summary>
         /// 流程终止操作
         /// </summary>
-        /// <returns></returns>
-        internal bool Terminate(int processInstanceID)
+        /// <param name="runner">执行者</param>
+        /// <returns>设置成功标识</returns>
+        internal bool Terminate(WfAppRunner runner)
+        {
+            var entity = GetProcessInstanceLatest(runner.AppInstanceID, runner.ProcessGUID);
+
+            if (entity.ProcessState == (int)ProcessStateEnum.Running
+                || entity.ProcessState == (int)ProcessStateEnum.Ready
+                || entity.ProcessState == (int)ProcessStateEnum.Suspended)
+            {
+                entity.ProcessState = (short)ProcessStateEnum.Terminated;
+                entity.EndedByUserID = runner.UserID;
+                entity.EndedByUserName = runner.UserName;
+                entity.EndedDateTime = DateTime.Now;
+
+                Repository.Update<ProcessInstanceEntity>(entity);
+
+                return true;
+            }
+            else
+            {
+                throw new ProcessInstanceException("流程已经结束，或者已经被取消！");
+            }
+        }
+
+        /// <summary>
+        /// 设置流程过期时间
+        /// </summary>
+        /// <param name="processInstanceID">流程实例ID</param>
+        /// <param name="overdueDateTime">过期时间</param>
+        /// <param name="runner">当前运行用户</param>
+        /// <returns>设置成功标识</returns>
+        internal bool SetOverdue(int processInstanceID, DateTime overdueDateTime, WfAppRunner runner)
         {
             ProcessInstanceEntity entity = Repository.GetById<ProcessInstanceEntity>(processInstanceID);
 

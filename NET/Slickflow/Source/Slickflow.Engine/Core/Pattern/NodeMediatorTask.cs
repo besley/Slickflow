@@ -62,10 +62,6 @@ namespace Slickflow.Engine.Core.Pattern
         {
             try
             {
-                //执行Action列表
-                ExecteActionList(ActivityForwardContext.Activity.ActionList,
-                    ActivityForwardContext.ActivityResource.AppRunner.ActionMethodParameters);
-
                 //完成当前的任务节点
                 bool canContinueForwardCurrentNode = CompleteWorkItem(ActivityForwardContext.TaskView,
                     ActivityForwardContext.ActivityResource,

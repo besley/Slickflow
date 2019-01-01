@@ -46,6 +46,11 @@ namespace Slickflow.Engine.Xpdl
     public enum ActionTypeEnum
     {
         /// <summary>
+        /// 空白
+        /// </summary>
+        None = 0,
+
+        /// <summary>
         /// 外部方法
         /// </summary>
         ExternalMethod = 1,

@@ -31,7 +31,6 @@ using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Business.Manager;
 
 namespace Slickflow.Engine.Business.Manager
 {
@@ -68,10 +67,10 @@ namespace Slickflow.Engine.Business.Manager
         /// <summary>
         /// 根据ID获取活动实例
         /// </summary>
-        /// <param name="conn"></param>
-        /// <param name="activityInstanceID"></param>
-        /// <param name="trans"></param>
-        /// <returns></returns>
+        /// <param name="conn">连接</param>
+        /// <param name="activityInstanceID">活动实例ID</param>
+        /// <param name="trans">事务</param>
+        /// <returns>活动实例</returns>
         internal ActivityInstanceEntity GetById(IDbConnection conn, int activityInstanceID, IDbTransaction trans)
         {
             return Repository.GetById<ActivityInstanceEntity>(conn, activityInstanceID, trans);
@@ -85,13 +84,8 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns></returns>
         internal ActivityInstanceEntity GetRunningNode(WfAppRunner runner)
         {
-            var appInstanceID = runner.AppInstanceID;
-            var processGUID = runner.ProcessGUID;
-            var taskID = runner.TaskID;
-
             //如果流程在运行状态，则返回运行时信息
             TaskViewEntity task = null;
-            var aim = new ActivityInstanceManager();
             var entity = GetRunningNode(runner, out task);
 
             return entity;
@@ -219,7 +213,7 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="processGUID"></param>
         /// <param name="activityGUID"></param>
         /// <returns></returns>
-        internal IList<ActivityInstanceEntity> GetActivityInstance(int appInstanceID,
+        internal ActivityInstanceEntity GetActivityInstanceLatest(string appInstanceID,
             string processGUID,
             string activityGUID)
         {
@@ -229,6 +223,7 @@ namespace Slickflow.Engine.Business.Manager
                             AND ActivityGUID = @activityGUID
                             ORDER BY ID DESC";
 
+            ActivityInstanceEntity activityInstance = null;
             var conn = SessionFactory.CreateConnection();
             try
             {
@@ -240,19 +235,22 @@ namespace Slickflow.Engine.Business.Manager
                         processGUID = processGUID.ToString(),
                         activityGUID = activityGUID.ToString()
                     }).ToList();
-
-                return instanceList;
+                if (instanceList.Count > 0) activityInstance = instanceList[0];
             }
             finally
             {
                 if (conn != null) conn.Close();
             }
+
+            return activityInstance;
         }
 
         /// <summary>
         /// 获取运行状态的活动实例
         /// </summary>
-        /// <param name="activityGUID"></param>
+        /// <param name="activityGUID">活动GUID</param>
+        /// <param name="processInstanceID">流程实例ID</param>
+        /// <param name="session">会话</param>
         /// <returns></returns>
         internal ActivityInstanceEntity GetActivityRunning(int processInstanceID,
             string activityGUID,
@@ -344,7 +342,9 @@ namespace Slickflow.Engine.Business.Manager
         internal ActivityInstanceEntity GetByTask(int taskID,
             IDbSession session)
         {
-            var sql = @"SELECT AI.* FROM WfActivityInstance AI
+            var sql = @"SELECT 
+                            AI.* 
+                        FROM WfActivityInstance AI
                         INNER JOIN WfTasks T ON AI.ID = T.ActivityInstanceID
                         WHERE T.ID = @taskID";
 
@@ -367,9 +367,72 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// 由任务ID获取活动实例信息
+        /// </summary>
+        /// <param name="taskID">任务ID</param>
+        /// <returns>活动实例实体</returns>
+        internal ActivityInstanceEntity GetByTask(int taskID)
+        {
+            var sql = @"SELECT 
+                            AI.* 
+                        FROM WfActivityInstance AI
+                        INNER JOIN WfTasks T ON AI.ID = T.ActivityInstanceID
+                        WHERE T.ID = @taskID";
+
+            var instanceList = Repository.Query<ActivityInstanceEntity>(sql,
+                new
+                {
+                    taskID = taskID
+                }).ToList();
+
+            if (instanceList != null && instanceList.Count == 1)
+            {
+                return instanceList[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 由任务ID获取活动实例信息
+        /// </summary>
+        /// <param name="taskID">任务ID</param>
+        /// <param name="userID">用户ID</param>
+        /// <returns>活动实例实体</returns>
+        internal ActivityInstanceEntity GetByTaskOfMine(int taskID, string userID)
+        {
+            var sql = @"SELECT 
+                            AI.* 
+                        FROM WfActivityInstance AI
+                        INNER JOIN WfTasks T ON AI.ID = T.ActivityInstanceID
+                        WHERE T.ID = @taskID 
+                            AND T.AssignedToUserID = @userID";
+
+            var instanceList = Repository.Query<ActivityInstanceEntity>(sql,
+                new
+                {
+                    taskID = taskID,
+                    userID = userID
+                }).ToList();
+
+            if (instanceList != null && instanceList.Count == 1)
+            {
+                return instanceList[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// 获取流程实例中运行的活动节点
         /// </summary>
-        /// <param name="runner">执行者</param>
+
+        /// <param name="appInstanceID">应用实例ID</param>
+        /// <param name="processGUID">流程GUID</param>
         /// <returns>活动实例列表</returns>
         internal IEnumerable<ActivityInstanceEntity> GetRunningActivityInstanceList(string appInstanceID, string processGUID)
         {
@@ -497,7 +560,65 @@ namespace Slickflow.Engine.Business.Manager
 
             return entity;
         }
-		/// <summary>
+
+        /// <summary>
+        /// 后期当前运行接的的上一步节点列表
+        /// （包括多实例节点类型）
+        /// </summary>
+        /// <param name="runningNode">运行节点</param>
+        /// <param name="processModel">流程模型</param>
+        /// <param name="hasGatewayPassed">是否经过网关节点</param>
+        /// <returns>上一步活动列表</returns>
+        internal IList<ActivityEntity> GetPreviousActivityList(ActivityInstanceEntity runningNode,
+            IProcessModel processModel,
+            out Boolean hasGatewayPassed)
+        {
+            var isOfMultipleInstanceNode = false;
+
+            IList<ActivityEntity> activityList = new List<ActivityEntity>();
+            //判断当前节点是否是多实例节点
+            if (runningNode.MIHostActivityInstanceID != null)
+            {
+                if (runningNode.CompleteOrder > 1)
+                {
+                    //多实例串行节点的中间节点，其上一步就是completeorder-1的节点
+                    isOfMultipleInstanceNode = true;
+                }
+                else if (runningNode.CompleteOrder == 1
+                    || runningNode.CompleteOrder == -1)
+                {
+                    //第一种条件：只有串行模式下有CompleteOrder的值为 1
+                    //串行模式多实例的第一个执行节点，此时可退回的节点是主节点的上一步
+                    //第一种条件：只有并行模式下有CompleteOrder的值为 -1
+                    //并行节点，此时可退回的节点是主节点的上一步
+                    ;
+                }
+                else
+                {
+                    throw new ApplicationException("无效的节点CompleteOrder数值！");
+                }
+            }
+
+            //返回前置节点列表
+            hasGatewayPassed = false;
+            if (isOfMultipleInstanceNode == true)
+            {
+                //已经是中间节点，只能退回到上一步多实例子节点
+                var entity = GetPreviousOfMultipleInstanceNode(runningNode.MIHostActivityInstanceID.Value,
+                    runningNode.ID,
+                    runningNode.CompleteOrder.Value);
+                var activity = processModel.GetActivity(entity.ActivityGUID);
+
+                activityList.Add(activity);
+            }
+            else
+            {
+                activityList = processModel.GetPreviousActivityList(runningNode.ActivityGUID, out hasGatewayPassed);
+            }
+            return activityList;
+        }
+
+        /// <summary>
         /// 查询分支实例的个数
         /// </summary>
         /// <param name="splitActivityInstanceGUID"></param>
@@ -736,6 +857,13 @@ namespace Slickflow.Engine.Business.Manager
         internal int Insert(ActivityInstanceEntity entity,
             IDbSession session)
         {
+            //SET ActivityName When It Is NULL
+            if (entity.ActivityType == (short)ActivityTypeEnum.GatewayNode
+                && string.IsNullOrEmpty(entity.ActivityName))
+            {
+                entity.ActivityName = "GATEWAY";
+            }
+
             int newID = Repository.Insert(session.Connection, entity, session.Transaction);
             entity.ID = newID;
 

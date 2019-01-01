@@ -11,14 +11,19 @@ namespace Slickflow.Engine.Common
     public enum ActivityTypeEnum : int
     {
         /// <summary>
-        /// 开始节点
+        /// 开始事件节点
         /// </summary>
         StartNode = 1,
 
         /// <summary>
-        /// 结束节点
+        /// 结束事件节点
         /// </summary>
         EndNode = 2,
+
+        /// <summary>
+        /// 中间事件节点
+        /// </summary>
+        IntermediateNode = 3,
 
         /// <summary>
         /// 人工任务节点
