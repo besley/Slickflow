@@ -41,6 +41,11 @@ namespace Slickflow.Engine.Common
         public String ActivityName { get; set; }
 
         /// <summary>
+        /// 活动类型
+        /// </summary>
+        public ActivityTypeEnum ActivityType { get; set; }
+
+        /// <summary>
         /// 活动节点编码
         /// </summary>
         public String ActivityCode { get; set; }

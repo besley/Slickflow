@@ -52,10 +52,6 @@ namespace Slickflow.Engine.Core.Pattern
         /// </summary>
         internal override void ExecuteWorkItem()
         {
-            //执行Action列表
-            ExecteActionList(Linker.ToActivity.ActionList, 
-                ActivityForwardContext.ActivityResource.AppRunner.ActionMethodParameters);
-
             //设置流程完成
             ProcessInstanceManager pim = new ProcessInstanceManager();
             pim.Complete(ActivityForwardContext.ProcessInstance.ID, 

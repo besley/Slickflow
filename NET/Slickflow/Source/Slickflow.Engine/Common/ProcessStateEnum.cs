@@ -38,8 +38,13 @@ namespace Slickflow.Engine.Common
         Canceled = 6,
 
         /// <summary>
-        /// 终止
+        /// 废弃
         /// </summary>
-        Discarded = 7
+        Discarded = 7,
+
+        /// <summary>
+        /// 自然终止（比如超期）
+        /// </summary>
+        Terminated = 8
     }
 }

@@ -67,10 +67,6 @@ namespace Slickflow.Engine.Core.Pattern
 
                 //执行开始节点之后的节点集合
                 ContinueForwardCurrentNode(false);
-
-                //执行Action列表
-                ExecteActionList(ActivityForwardContext.Activity.ActionList,
-                    ActivityForwardContext.ActivityResource.AppRunner.ActionMethodParameters);
             }
             catch (System.Exception ex)
             {

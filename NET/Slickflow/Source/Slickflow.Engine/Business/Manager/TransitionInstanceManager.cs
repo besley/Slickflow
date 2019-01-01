@@ -254,7 +254,7 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="isSendback">是否退回</param>
         /// <param name="hasPassedGatewayNode">是否经由路由节点</param>
         /// <returns>活动实例列表</returns>
-        internal IList<ActivityInstanceEntity> GetPreviousActivityInstance(ActivityInstanceEntity runningNode,
+        internal IList<ActivityInstanceEntity> GetPreviousActivityInstanceList(ActivityInstanceEntity runningNode,
             bool isSendback,
             out bool hasPassedGatewayNode)
         {

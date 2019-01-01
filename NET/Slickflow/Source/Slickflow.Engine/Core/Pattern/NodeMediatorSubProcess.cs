@@ -34,6 +34,7 @@ using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Core.Event;
+using Slickflow.Engine.Core.Runtime;
 
 namespace Slickflow.Engine.Core.Pattern
 {
@@ -171,9 +172,11 @@ namespace Slickflow.Engine.Core.Pattern
                     activityResource.AppRunner.UserName),
                 subProcessNode);
 
-            var runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceStartup(subRunner,
+            var plist = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
+            var runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceStartupSub(subRunner,
                 processInstance,
                 subProcessNode,
+                plist,
                 ref startedResult);
 
             runtimeInstance.OnWfProcessExecuted += runtimeInstance_OnWfProcessStarted;

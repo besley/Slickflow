@@ -45,8 +45,8 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 获取流程实例数据
         /// </summary>
-        /// <param name="processInstanceID"></param>
-        /// <returns></returns>
+        /// <param name="processInstanceID">流程实例ID</param>
+        /// <returns>流程实例实体</returns>
         public ProcessInstanceEntity GetProcessInstance(int processInstanceID)
         {
             var pim = new ProcessInstanceManager();
@@ -54,6 +54,11 @@ namespace Slickflow.Engine.Service
             return instance;
         }
 
+        /// <summary>
+        /// 获取流程实例数据
+        /// </summary>
+        /// <param name="activityInstanceID">活动实例ID</param>
+        /// <returns>流程实例实体</returns>
         public ProcessInstanceEntity GetProcessInstanceByActivity(int activityInstanceID)
         {
             var pim = new ProcessInstanceManager();
@@ -92,8 +97,8 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 获取运行中的流程实例
         /// </summary>
-        /// <param name="runner"></param>
-        /// <returns></returns>
+        /// <param name="runner">运行者</param>
+        /// <returns>流程实例实体</returns>
         public ProcessInstanceEntity GetRunningProcessInstance(WfAppRunner runner)
         {
             ProcessInstanceEntity entity = null;
@@ -117,7 +122,7 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 判断流程实例是否存在
         /// </summary>
-        /// <param name="prcessGUID">流程定义ID</param>
+        /// <param name="processGUID">流程定义ID</param>
         /// <param name="version">流程定义版本</param>
         /// <returns>流程实例记录数</returns>
         public Int32 GetProcessInstanceCount(string processGUID, string version)
@@ -196,7 +201,7 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 获取当前节点的下一步已经发出的活动实例列表(transition实例表)
         /// </summary>
-        /// <param name="activityInstanceID"></param>
+        /// <param name="fromActivityInstanceID">活动实例ID</param>
         /// <returns></returns>
         public IList<ActivityInstanceEntity> GetNextActivityInstanceList(int fromActivityInstanceID)
         {
@@ -207,8 +212,8 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 获取当前等待办理节点的任务分配人列表
         /// </summary>
-        /// <param name="runner"></param>
-        /// <returns></returns>
+        /// <param name="runner">执行者</param>
+        /// <returns>执行者列表</returns>
         public IList<Performer> GetTaskPerformers(WfAppRunner runner)
         {
             var tm = new TaskManager();
@@ -288,9 +293,9 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 获取流程定义文件中的角色信息
         /// </summary>
-        /// <param name="processGUID"></param>
-        /// <param name="version"></param>
-        /// <returns></returns>
+        /// <param name="processGUID">流程定义GUID</param>
+        /// <param name="version">版本</param>
+        /// <returns>角色列表</returns>
         public IList<Role> GetRoleByProcess(string processGUID, string version)
         {
             var processModel = ProcessModelFactory.Create(processGUID, version);
@@ -302,9 +307,9 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 获取流程文件中角色用户的列表数据
         /// </summary>
-        /// <param name="processGUId"></param>
-        /// <param name="version"></param>
-        /// <returns></returns>
+        /// <param name="processGUID">流程定义GUID</param>
+        /// <param name="version">版本</param>
+        /// <returns>角色列表</returns>
         public IList<Role> GetRoleUserListByProcess(string processGUID, string version)
         {
             var processModel = ProcessModelFactory.Create(processGUID, version);
@@ -335,17 +340,7 @@ namespace Slickflow.Engine.Service
         /// <returns></returns>
         public PerformerList GetPerformerList(NodeView nextNode)
         {
-            var roleIDs = nextNode.Roles.Select(x => x.ID).ToArray();
-            var userList = ResourceService.GetUserListByRoles(roleIDs);
-            var performerList = new PerformerList();
-
-            foreach (var user in userList)
-            {
-                var performer = new Performer(user.UserID.ToString(), user.UserName);
-
-                performerList.Add(performer);
-            }
-
+            var performerList = PerformerBuilder.CreatePerformerList(nextNode.Roles);
             return performerList;
         }
 

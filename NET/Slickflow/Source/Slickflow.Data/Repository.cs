@@ -484,6 +484,21 @@ namespace Slickflow.Data
             return cmd.ExecuteNonQuery();
         }
 
+
+        /// <summary>
+        /// 执行存储过程
+        /// </summary>
+        /// <param name="procName"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public int ExecuteProc(string procName, DynamicParameters param = null)
+        {
+            using (IDbConnection conn = SessionFactory.CreateConnection())
+            {
+                return conn.Execute(procName, param, null, null, CommandType.StoredProcedure);
+            }
+        }
+
         /// <summary>
         /// 执行存储过程
         /// </summary>
@@ -509,6 +524,23 @@ namespace Slickflow.Data
         {
             IList<T> list = conn.Query<T>(procName, param, null, false, null, CommandType.StoredProcedure).ToList<T>();
             return list;
+        }
+
+        /// <summary>
+        /// 存储过程执行方法
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="procName"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public IList<T> ExecProcQuery<T>(string procName, DynamicParameters param)
+            where T : class
+        {
+            using (IDbConnection conn = SessionFactory.CreateConnection())
+            {
+                IList<T> list = conn.Query<T>(procName, param, null, false, null, CommandType.StoredProcedure).ToList<T>();
+                return list;
+            }
         }
 
         /// <summary>

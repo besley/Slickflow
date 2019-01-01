@@ -78,8 +78,10 @@ namespace Slickflow.Data
         //execute
         Int32 Execute(IDbConnection conn, string sql, dynamic param = null, IDbTransaction transaction = null);
         Int32 ExecuteCommand(IDbCommand cmd);
+        Int32 ExecuteProc(string procName, DynamicParameters param = null);
         Int32 ExecuteProc(IDbConnection conn, string procName, DynamicParameters param = null);
         IList<T> ExecProcQuery<T>(IDbConnection conn, string procName, DynamicParameters param) where T : class;
+        IList<T> ExecProcQuery<T>(string procName, DynamicParameters param) where T : class;
 
         //insert, update, delete
         dynamic Insert<T>(T entity) where T : class;

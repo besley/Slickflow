@@ -13,7 +13,7 @@ namespace Slickflow.Engine.Common
         /// <summary>
         /// 未指定
         /// </summary>
-        Unpecified = 0,
+        None = 0,
 
         /// <summary>
         /// 或分支
@@ -26,9 +26,19 @@ namespace Slickflow.Engine.Common
         XOrSplit = 2,
 
         /// <summary>
+        /// 多实例或分支
+        /// </summary>
+        OrSplitMI = 3,
+
+        /// <summary>
         /// 并行分支
         /// </summary>
         AndSplit = 4,
+
+        /// <summary>
+        /// 多实例并行分支
+        /// </summary>
+        AndSplitMI = 5,
 
         /// <summary>
         /// 复杂分支
@@ -46,6 +56,11 @@ namespace Slickflow.Engine.Common
         OrJoin = 16,
 
         /// <summary>
+        /// 或合并(多实例)
+        /// </summary>
+        OrJoinMI = 17,
+
+        /// <summary>
         /// 异或合并
         /// </summary>
         XOrJoin = 32,
@@ -54,6 +69,11 @@ namespace Slickflow.Engine.Common
         /// 并行合并
         /// </summary>
         AndJoin = 64,
+
+        /// <summary>
+        /// 与合并(多实例)
+        /// </summary>
+        AndJoinMI = 65,
 
         /// <summary>
         /// 复杂合并

@@ -10,7 +10,7 @@ using Slickflow.Module.Resource;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Business.Manager;
+using Slickflow.Engine.Xpdl.Schedule;
 
 namespace Slickflow.Engine.Xpdl
 {
@@ -28,9 +28,9 @@ namespace Slickflow.Engine.Xpdl
         ActivityEntity GetNextActivity(string activityGUID);
         IList<NodeView> GetNextActivityTree(string currentActivityGUID,
             IDictionary<string, string> condition = null);
-        IList<NodeView> GetNextActivityTree(int processInstanceID,
-            string currentActivityGUID,
-            IDictionary<string, string> condition);
+        IList<NodeView> GetPreviousActivityTree(string currentActivityGUID);
+        IList<ActivityEntity> GetPreviousActivityList(string currentActivityGUID);
+        IList<ActivityEntity> GetPreviousActivityList(string toActivityGUID, out bool hasGatewayPassed);
 
         ActivityEntity GetBackwardGatewayActivity(ActivityEntity gatewayActivity, 
             ref int joinCount, ref int splitCount);
@@ -45,11 +45,10 @@ namespace Slickflow.Engine.Xpdl
             IDictionary<string, string> conditionKeyValuePair,
             ActivityResource activityResource,
             Expression<Func<ActivityResource, ActivityEntity, bool>> expression);
-        List<ActivityEntity> GetTaskActivityList();
-        List<ActivityEntity> GetAllTaskActivityList();
 
         //资源
         IList<Role> GetRoles();
         IList<Role> GetActivityRoles(string activityGUID);
+        IDictionary<string, PerformerList> GetActivityPerformers(string activityGUID);
     }
 }
