@@ -4,7 +4,17 @@
 ### 1. .NET, .NET CORE version both supported
 Slickflow is an open source project based on .NET Framework 4.5, .NET CORE 2; It's easy to use engine product into cross platform applilcation.
 
-### 2. Workflow pattern supported
+### 2. BPMN graphic style process diagram 
+Slickflow is using BPMN natation to descript process diagram, the Slickflow designer is HTML5 graph editor and user friendly to business process communicaiton and business analysis.
+
+### 3. High performance with Dapper.NET library
+Dapper is a simple object mapper for .NET and own the title of King of Micro ORM in terms of speed and is virtually as fast as using a raw ADO.NET data reader. An ORM is an Object Relational Mapper, which is responsible for mapping between database and programming language.
+(Ref: https://dapper-tutorial.net/dapper)
+
+### 4. Multiple database supported
+Slickflow supports SQLSERVER, ORACLE, MySQL and other database, it implemented by Dapper.NET extension library. The .net core version using EF core to support different database products.
+
+### 5. Workflow patterns supported
 #### 1) sequence
 #### 2) split/merge
    support and/or gateway by condition variables on the transition
@@ -22,17 +32,6 @@ Slickflow is an open source project based on .NET Framework 4.5, .NET CORE 2; It
 #### 10) resend
 #### 11) reverse
 #### 12) jump
-
-
-### 3. BPMN graphic style process diagram 
-Slickflow is using BPMN natation to descript process diagram, the Slickflow designer is HTML5 graph editor and user friendly to business process communicaiton and business analysis.
-
-### 4. High performance with Dapper.NET library
-Dapper is a simple object mapper for .NET and own the title of King of Micro ORM in terms of speed and is virtually as fast as using a raw ADO.NET data reader. An ORM is an Object Relational Mapper, which is responsible for mapping between database and programming language.
-(Ref: https://dapper-tutorial.net/dapper)
-
-### 5. Multiple database supported
-Slickflow supports SQLSERVER, ORACLE, MySQL and other database, it implemented by Dapper.NET extension library. The .net core version using EF core to support different database products.
 
 ### 6. Rich demo projects
 WebDemo, MvcDemo and WinformDemo project are domonstated for different type enterprise information system. 
