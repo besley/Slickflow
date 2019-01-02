@@ -1,17 +1,48 @@
 ﻿# Slickflow
 .NET Workflow Engine With Full Source Code 
 
-Slickflow is an open source project based on .NET platfrom, the product focus on workflow pattern, supports sequence, split/merge, sub-process, multi-instance, withdraw, sendback and reverse patterns.
+### 1. .NET, .NET CORE version both supported
+Slickflow is an open source project based on .NET Framework 4.5, .NET CORE 2; It's easy to use engine product into cross platform applilcation.
 
+### 2. Workflow pattern supported
+#### 1) sequence
+#### 2) split/merge
+   support and/or gateway by condition variables on the transition
+#### 3) sub-process
+#### 4) multi-instance
+   muptile performers processing task together by sequence/parallel
+#### 5) event interoperation
+   process instance and activity instance event delegation service
+#### 6) timer(HangFire)
+   CRON expression supported
+#### 7) email
+   todo or overdue taks email notification
+#### 8) withdraw
+#### 9) sendback
+#### 10) resend
+#### 11) reverse
+#### 12) jump
+
+
+### 3. BPMN graphic style process diagram 
 Slickflow is using BPMN natation to descript process diagram, the Slickflow designer is HTML5 graph editor and user friendly to business process communicaiton and business analysis.
 
-Slickflow supports SQLSERVER, ORACLE, MySQL and other database, it implemented by Dapper.NET library.
+### 4. High performance with Dapper.NET library
+Dapper is a simple object mapper for .NET and own the title of King of Micro ORM in terms of speed and is virtually as fast as using a raw ADO.NET data reader. An ORM is an Object Relational Mapper, which is responsible for mapping between database and programming language.
+(Ref: https://dapper-tutorial.net/dapper)
 
-WebDemo, MvcDemo and WinformDemo project are domonstated for different type enterprise information system.
+### 5. Multiple database supported
+Slickflow supports SQLSERVER, ORACLE, MySQL and other database, it implemented by Dapper.NET extension library. The .net core version using EF core to support different database products.
 
-Slickflow is suggusted to give programmers an flexible way to integrate workflow engine component into their internal product or customer projects. The programmers can write their own code segemnts based on the kernel product. 
+### 6. Rich demo projects
+WebDemo, MvcDemo and WinformDemo project are domonstated for different type enterprise information system. 
 
-Slickflow is very suitable for software teams or companies who want to integrated workflow engine into their products. 
+### 7. Target
+Slickflow is very suitable for software teams or companies who want to  integrat workflow engine into their products.
+
+### 8. Suggestions
+Slickflow is suggusted to give programmers an flexible way to integrate workflow engine component into their products or customer projects. The programmers can write their own code segemnts based on the kernel product too. 
+
 
 Quick Start:
 https://github.com/besley/Slickflow/wiki
