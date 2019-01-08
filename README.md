@@ -20,31 +20,31 @@
 5. **Workflow patterns supported**  
     ![Wokflow Pattern](http://www.slickflow.com/content/img/sfterm-en.png)  
 
-**1) sequence**  
+ **1). sequence**  
     the most frequently process pattern   
-**2) split/merge**  
+ **2). split/merge**  
    support and/or gateway such as **and/or split**, **and/or join**, together with  condition variables on the transition  
-**3) sub-process**  
+ **3). sub-process**  
     in the main process, a sub process node can start a new process life cycle.  
-**4) multi-instance**  
+ **4). multi-instance**  
    muptile performers processing a task together by multiple task instances. All performer both compete their task, then the process can be continued on. There are **sequence** and **parallel** pattern, and the **percentage** or **count** parameters can be set on it to ensue when can go to next step.   
     ![Muliple Instance Pattern](http://www.slickflow.com/content/img/wfpattern-mi-en.png)  
 
-**5) event interoperation**  
+ **5). event interoperation**  
    process instance and activity instance event delegation service, such as process/activity start, execute and complete.  
-**6) timer**  
+ **6). timer**  
    integrated with **HangFire** library, and with **CRON** expression supported  
-**7) email**  
+ **7). email**  
    todo or overdue taks email notification  
-**8) withdraw**  
+ **8). withdraw**  
 	withdraw the task after just sent out to next step users.  
-**9) sendback**  
+ **9). sendback**  
     send back to previous step user, becuase some exceptions.  
-**10) resend**  
+ **10). resend**  
     combined after sendback and re-send the task to origianl sendback users.  
-**11) reverse**  
+ **11). reverse**  
     reverse the process instance alive when completed them.  
-**12) jump**  
+ **12). jump**  
     jump the process over by serveral steps forward or backward.  
  
 **6. Process Version**  
