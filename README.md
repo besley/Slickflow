@@ -48,10 +48,11 @@
     the process has version property to upgrade a new definiton.  
 **7. XML Cache**    
     the runtime instance use cache to keep xml process diagram in the memory.  
-**8. Code Style**    
-**0) model**  
-    
-    //create a simple sequence process diagram by hand code rather than a HTML designer
+**8. Code Style** 
+
+ **0) model**  
+	
+    //create a simple sequence process diagram by hand code rather than a HTML designer  
     var processGUID = Guid.NewGuid().ToString();
     IProcessModelBuilder pmb = new ProcessModelBuilder();
     var entity = pmb.Create(processGUID, "1")
@@ -65,7 +66,7 @@
    ![simple sequence diagram](http://www.slickflow.com/content/img/simple-sequence.png)  
     
                 
-**1) start**  
+ **1) start**  
     
     //start a new process instance
     IWorkflowService wfService = new WorkflowService();
@@ -80,7 +81,7 @@
              })
              .Start();
 
-   **2) run**  
+ **2) run**  
     
     //run a process instance to next step
     IWorkflowService wfService = new WorkflowService();
