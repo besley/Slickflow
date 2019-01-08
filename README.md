@@ -11,6 +11,8 @@
  4. **Multiple database supported**  
  Slickflow supports SQLSERVER, ORACLE, MySQL and other database, it implemented by Dapper.NET extension library. The .net core version using EF core to support different database products.  
 5. **Workflow patterns supported**  
+    ![Wokflow Pattern](http://www.slickflow.com/content/img/sfterm.png)  
+
 **1) sequence**  
     the most frequently process pattern   
 **2) split/merge**  
@@ -19,6 +21,8 @@
     in the main process, a sub process node can start a new process life cycle.  
 **4) multi-instance**  
    muptile performers processing a task together by multiple task instances. All performer both compete their task, then the process can be continued on. There are **sequence** and **parallel** pattern, and the **percentage** or **count** parameters can be set on it to ensue when can go to next step.  
+    ![Muliple Instance Pattern](http://www.slickflow.com/content/img/wfpattern-mi.png)  
+
 **5) event interoperation**  
    process instance and activity instance event delegation service, such as process/activity start, execute and complete.  
 **6) timer**  
@@ -35,8 +39,12 @@
     reverse the process instance alive when completed them.  
 **12) jump**  
     jump the process over by serveral steps forward or backward.  
-
-**6. Code Style**    
+ 
+**6. Process Version**  
+    the process has version property to upgrade a new definiton.  
+**7. XML Cache**    
+    the runtime instance use cache to keep xml process diagram in the memory.  
+**8. Code Style**    
 **0) model**  
     
     //create a simple sequence process diagram by hand code rather than a HTML designer
@@ -50,7 +58,7 @@
         .Sequence();
 	
 	
-   ![simple sequence diagram](http://www.slickflow.com/content/img/simple-sequence.png)
+   ![simple sequence diagram](http://www.slickflow.com/content/img/simple-sequence.png)  
     
                 
 **1) start**  
@@ -88,14 +96,19 @@
              .Run();
 
     
-**7. Rich demo projects**  
+**9. Rich demo projects**  
  WebDemo, MvcDemo and WinformDemo project are domonstated for different type enterprise information system.   
-**8. Target**  
+**10. Target**  
  Slickflow is very suitable for software teams or companies who want to  integrat workflow engine into their products.  
-**9. Suggestions**  
- Slickflow is suggusted to give programmers an flexible way to integrate workflow engine component into their products or customer projects. The programmers can write their own code segemnts based on the kernel product too.   
-**10. License**    
- The community version is under LGPL license, we also provide  **commercial license** and **technical support** for customers. if you have any further inquery, please feel free to contact us: 
+**11. Suggestions**  
+ Slickflow is suggusted to give programmers an flexible way to integrate workflow engine component into their products or customer projects. The programmers can write their own code segemnts based on the engine component.   
+**12. License**    
+ 1) Community version  
+ The community version is under LGPL license.    
+ 2) **commercial license**  
+ The commercial version provide technical support and version upgrade for customers.   
+ 
+ if you have any further inquery, please feel free to contact us:   
 
 **EMail: sales@ruochisoft.com**  
 **QQ(Author): 47743901**
