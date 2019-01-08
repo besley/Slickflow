@@ -46,12 +46,11 @@
     jump the process over by serveral steps forward or backward. 
     
 **6. Process Version**  
-    the process has version property to upgrade a new definiton.  
+     the process has version property to upgrade a new definiton.  
 **7. XML Cache**    
-    the runtime instance use cache to keep xml process diagram in the memory.  
+     the runtime instance use cache to keep xml process diagram in the memory.  
 **8. Code Style** 
-
- **0) model**  
+ **0). model**  
 	
     //create a simple sequence process diagram by hand code rather than a HTML designer  
     var processGUID = Guid.NewGuid().ToString();
@@ -67,7 +66,7 @@
    ![simple sequence diagram](http://www.slickflow.com/content/img/simple-sequence.png)  
     
                 
- **1) start**  
+ **1). start**  
     
     //start a new process instance
     IWorkflowService wfService = new WorkflowService();
@@ -82,7 +81,7 @@
              })
              .Start();
 
- **2) run**  
+ **2). run**  
     
     //run a process instance to next step
     IWorkflowService wfService = new WorkflowService();
@@ -103,11 +102,11 @@
 
     
 **9. Rich demo projects**  
- WebDemo, MvcDemo and WinformDemo project are domonstated for different type enterprise information system.   
+  WebDemo, MvcDemo and WinformDemo project are domonstated for different type enterprise information system.   
 **10. Target**  
- Slickflow is very suitable for software teams or companies who want to  integrat workflow engine into their products.  
+  Slickflow is very suitable for software teams or companies who want to  integrat workflow engine into their products.  
 **11. Suggestions**  
- Slickflow is suggusted to give programmers an flexible way to integrate workflow engine component into their products or customer projects. The programmers can write their own code segemnts based on the engine component.   
+  Slickflow is suggusted to give programmers an flexible way to integrate workflow engine component into their products or customer projects. The programmers can write their own code segemnts based on the engine component.   
 **12. License**    
  1) Community version  
  The community version is under LGPL license.    
