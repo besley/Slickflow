@@ -37,8 +37,8 @@
     jump the process over by serveral steps forward or backward.  
 
 **6. Code Style**    
-**0) model**
-
+**0) model**  
+    
     //create a simple sequence process diagram
     var processGUID = Guid.NewGuid().ToString();
     IProcessModelBuilder pmb = new ProcessModelBuilder();
@@ -49,8 +49,8 @@
         .CreateActivity(ActivityTypeEnum.EndNode, "End", "End")
         .Sequence();
                 
-**1) start**
-
+**1) start**  
+    
     //start a new process instance
     IWorkflowService wfService = new WorkflowService();
     var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
@@ -64,8 +64,8 @@
              })
              .Start();
 
-   **2) run**
-
+   **2) run**  
+    
     //run a process instance to next step
     IWorkflowService wfService = new WorkflowService();
     var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
