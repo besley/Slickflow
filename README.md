@@ -4,6 +4,7 @@
 ![](https://img.shields.io/github/forks/besley/slickflow.svg) 
 ![](https://img.shields.io/github/tag/besley/slickflow.svg) 
 ![](https://img.shields.io/github/release/besley/slickflow.svg) 
+![](https://img.shields.io/nuget/dt/Slickflow.Engine.svg) 
 ![](https://img.shields.io/github/issues/besley/slickflow.svg) 
 
 
