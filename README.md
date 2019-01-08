@@ -46,9 +46,9 @@
     jump the process over by serveral steps forward or backward. 
     
 **6. Process Version**  
-     the process has version property to upgrade a new definiton.  
+     the process has version property to upgrade a new definition due to business process changed.    
 **7. XML Cache**    
-     the runtime instance use cache to keep xml process diagram by an expired duration parameter.  
+     the runtime instance use cache to keep xml process diagram by an expired duration.  
 **8. Code Style**  
  **0). model**  
 	
@@ -107,10 +107,10 @@
 **11. Suggestions**  
   Slickflow is suggusted to give programmers an flexible way to integrate workflow engine component into their products or customer projects. The programmers can write their own code segemnts based on the engine component.   
 **12. License**    
- 1) Community version  
+ 1). Community version  
  The community version is under LGPL license.    
- 2) **commercial license**  
- The commercial version provide technical support and version upgrade for customers.   
+ 2). **Commercial license**  
+ The enterprise, ultimate and universe version has commercial license, technical support and upgrade for customers.
  
  if you have any further inquery, please feel free to contact us:   
 
