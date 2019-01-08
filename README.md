@@ -110,7 +110,7 @@
  1). Community version  
  The community version is under LGPL license.    
  2). **Commercial license**  
- The enterprise, ultimate and universe version has commercial license, technical support and upgrade for customers.
+ The enterprise, ultimate and universe version can be provided with commercial license, technical support and upgrade for customers.
  
  if you have any further inquery, please feel free to contact us:   
 
