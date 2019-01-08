@@ -1,5 +1,12 @@
 ## Slickflow
 
+![](https://img.shields.io/github/stars/besley/slickflow.svg) 
+![](https://img.shields.io/github/forks/besley/slickflow.svg) 
+![](https://img.shields.io/github/tag/besley/slickflow.svg) 
+![](https://img.shields.io/github/release/besley/slickflow.svg) 
+![](https://img.shields.io/github/issues/besley/slickflow.svg) 
+
+
 .NET Workflow Engine With Full Source Code 
 1. **.NET, .NET CORE version both supported**  
  Slickflow is an open source project based on .NET Framework 4.5, .NET CORE 2; It's easy to use engine product into cross platform applilcation.  
@@ -20,7 +27,7 @@
 **3) sub-process**  
     in the main process, a sub process node can start a new process life cycle.  
 **4) multi-instance**  
-   muptile performers processing a task together by multiple task instances. All performer both compete their task, then the process can be continued on. There are **sequence** and **parallel** pattern, and the **percentage** or **count** parameters can be set on it to ensue when can go to next step.  
+   muptile performers processing a task together by multiple task instances. All performer both compete their task, then the process can be continued on. There are **sequence** and **parallel** pattern, and the **percentage** or **count** parameters can be set on it to ensue when can go to next step.   
     ![Muliple Instance Pattern](http://www.slickflow.com/content/img/wfpattern-mi.png)  
 
 **5) event interoperation**  
