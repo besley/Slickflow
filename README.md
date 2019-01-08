@@ -39,7 +39,7 @@
 **6. Code Style**    
 **0) model**  
     
-    //create a simple sequence process diagram
+    //create a simple sequence process diagram by hand code rather than a HTML designer
     var processGUID = Guid.NewGuid().ToString();
     IProcessModelBuilder pmb = new ProcessModelBuilder();
     var entity = pmb.Create(processGUID, "1")
@@ -48,6 +48,10 @@
         .CreateActivity(ActivityTypeEnum.TaskNode, "Task2", "Task2")
         .CreateActivity(ActivityTypeEnum.EndNode, "End", "End")
         .Sequence();
+	
+	
+    ![simple sequence diagram](http://www.slickflow.com/content/img/simple-sequence.png)
+    
                 
 **1) start**  
     
