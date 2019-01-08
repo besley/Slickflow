@@ -49,7 +49,7 @@
      the process has version property to upgrade a new definiton.  
 **7. XML Cache**    
      the runtime instance use cache to keep xml process diagram in the memory.  
-**8. Code Style** 
+**8. Code Style**  
  **0). model**  
 	
     //create a simple sequence process diagram by hand code rather than a HTML designer  
@@ -100,7 +100,6 @@
              })
              .Run();
 
-    
 **9. Rich demo projects**  
   WebDemo, MvcDemo and WinformDemo project are domonstated for different type enterprise information system.   
 **10. Target**  
