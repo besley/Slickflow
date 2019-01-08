@@ -1,15 +1,15 @@
 ## Slickflow
 
 .NET Workflow Engine With Full Source Code 
-1. **.NET, .NET CORE version both supported**
- Slickflow is an open source project based on .NET Framework 4.5, .NET CORE 2; It's easy to use engine product into cross platform applilcation.
-2. **BPMN graphic style process diagram** 
- Slickflow is using BPMN natation to descript process diagram, the Slickflow designer is HTML5 graph editor and user friendly to business process communicaiton and business analysis.
-3. **High performance with Dapper.NET library**
+1. **.NET, .NET CORE version both supported**  
+ Slickflow is an open source project based on .NET Framework 4.5, .NET CORE 2; It's easy to use engine product into cross platform applilcation.  
+2. **BPMN graphic style process diagram**   
+ Slickflow is using BPMN natation to descript process diagram, the Slickflow designer is HTML5 graph editor and user friendly to business process communicaiton and business analysis.  
+3. **High performance with Dapper.NET library**  
  Dapper is a simple object mapper for .NET and own the title of King of Micro ORM in terms of speed and is virtually as fast as using a raw ADO.NET data reader. An ORM is an Object Relational Mapper, which is responsible for mapping between database and programming language.
-(Ref: https://dapper-tutorial.net/dapper)
- 4. **Multiple database supported**
- Slickflow supports SQLSERVER, ORACLE, MySQL and other database, it implemented by Dapper.NET extension library. The .net core version using EF core to support different database products.
+(Ref: https://dapper-tutorial.net/dapper)  
+ 4. **Multiple database supported**  
+ Slickflow supports SQLSERVER, ORACLE, MySQL and other database, it implemented by Dapper.NET extension library. The .net core version using EF core to support different database products.  
 5. **Workflow patterns supported**  
 **1) sequence**  
     the most frequently process pattern   
@@ -85,7 +85,7 @@
 
     
 **7. Rich demo projects**  
- WebDemo, MvcDemo and WinformDemo project are domonstated for different type enterprise information system. 
+ WebDemo, MvcDemo and WinformDemo project are domonstated for different type enterprise information system.   
 **8. Target**  
  Slickflow is very suitable for software teams or companies who want to  integrat workflow engine into their products.  
 **9. Suggestions**  
@@ -96,16 +96,16 @@
 **EMail: sales@ruochisoft.com**
 **QQ(Author): 47743901**
 
-**Quick Start:**
-https://github.com/besley/Slickflow/wiki
-**Slickflow website:**
-http://www.slickflow.com
-**Demo:**
-http://www.slickflow.com/demo/index
-**Designer Demo:**
-http://demo.slickflow.com/slickflowdesigner/
-**Document:**
-http://www.slickflow.com/wiki/index
+**Quick Start:**  
+https://github.com/besley/Slickflow/wiki  
+**Slickflow website:**  
+http://www.slickflow.com  
+**Demo:**  
+http://www.slickflow.com/demo/index  
+**Designer Demo:**  
+http://demo.slickflow.com/slickflowdesigner/  
+**Document:**  
+http://www.slickflow.com/wiki/index  
 
 **Slickflow(1.7.0.0) 企业版：**  
 2019-1-8  
@@ -127,19 +127,19 @@ http://www.slickflow.com/wiki/index
 参考WebApi项目, WfResendController.cs的测试用例  
 
 2018-06-22  
-1. 数据库更新
-1). 活动实例表WfActivityInstance表中增加逾期时间和处理字段
-   OverdueDateTime      datetime             null,
-   OverdueTreatedDateTime datetime             null,
-2). 任务表WfTasks表中增加邮件是否发送的字段位
-   IsEMailSent          tinyint              not null default 0,
-3). 增加作业表WhJobSchedule和WhJobLog表，用于HangFire作业调度
+1. 数据库更新  
+1). 活动实例表WfActivityInstance表中增加逾期时间和处理字段  
+   OverdueDateTime      datetime             null,  
+   OverdueTreatedDateTime datetime             null,  
+2). 任务表WfTasks表中增加邮件是否发送的字段位  
+   IsEMailSent          tinyint              not null default 0,  
+3). 增加作业表WhJobSchedule和WhJobLog表，用于HangFire作业调度  
 
-2. 待办任务的邮件发送功能完成；
-3. 任务逾期超时，自动完成功能完成。
+2. 待办任务的邮件发送功能完成；  
+3. 任务逾期超时，自动完成功能完成。  
 
-2018-06-10  
-1. 修正图形设计器连线重叠功能，即增加连线控制点；  
+2018-06-10   \
+1. 修正图形设计器连线重叠功能，即增加连线控制点；   \
 2. 完成待办任务邮件发送功能，定时轮询异步邮件发送；  
 
 
@@ -223,26 +223,26 @@ WfProcess表变化字段（用于定时开始和定时结束场景）：
 
 **Slickflow(1.5.5) Demo版本功能说明：**  
 **1. 引擎**  
-   1). 引擎集成国产数据库人大金仓Kingbase；
-   2). 添加Slickflow.Module项目，实现组织机构的模块化构建；
-   3). 引擎实现提交至发送人员的部门主管，下属或者同级同事流转功能，相应增加部门员工数据表和存储过程；
+   1). 引擎集成国产数据库人大金仓Kingbase；  
+   2). 添加Slickflow.Module项目，实现组织机构的模块化构建；  
+   3). 引擎实现提交至发送人员的部门主管，下属或者同级同事流转功能，相应增加部门员工数据表和存储过程；  
 **2. 设计器**  
-  1). 流程设计器增加节点元素添加的操作面板；
-  2). 流程设计器修正连线控制Gateway的显示Bug；
+  1). 流程设计器增加节点元素添加的操作面板；  
+  2). 流程设计器修正连线控制Gateway的显示Bug；  
 **3. DEMO示例**  
-  1). WebDemo/MvcDemo/Designer去除多项目引用，调试运行不依赖IIS Server。
+  1). WebDemo/MvcDemo/Designer去除多项目引用，调试运行不依赖IIS Server。  
 
 **Slickflow(1.5.2) Demo版本功能说明：**  
 **1. DEMO示例**  
-重新改版MvcDemo项目(电商生产订单流程)，采用Bootstrap框架，增加人员弹框功能演示；
+重新改版MvcDemo项目(电商生产订单流程)，采用Bootstrap框架，增加人员弹框功能演示；  
 **2. 设计器**  
-重新改版设计器项目，使用Bootstrap框架，优化界面及性能；
+重新改版设计器项目，使用Bootstrap框架，优化界面及性能；  
 **3. 引擎**  
-1). 引擎增加辅助查询步骤角色用户关系接口；
-GetNextActivityRoleUserTree();  	//下一步选人弹框控件使用
-GetRoleUserListByProcess();
-GetUserListByRole();
-GetRoleUserByRoleIDs();
+1). 引擎增加辅助查询步骤角色用户关系接口；  
+GetNextActivityRoleUserTree();  	//下一步选人弹框控件使用  
+GetRoleUserListByProcess();  
+GetUserListByRole();  
+GetRoleUserByRoleIDs();  
 
 **Slickflow(1.5.1) Demo版本功能说明：**  
 **1. 流程引擎**  
@@ -253,7 +253,7 @@ GetRoleUserByRoleIDs();
    2). 增加会签加签子流程等特性配置；  
    3). 增加显示网格功能。  
 **3. Slickflow多数据库支持**  
-   改造Dapper，使得Slickflow支持Oracle，MySQL等数据库。
+   改造Dapper，使得Slickflow支持Oracle，MySQL等数据库。  
 **4. 会签加签事件交互说明文档**  
    Slickflow会签加签事件程序调用说明文档.docx  
 **5. 增加Slickflow.Data项目，开放源代码**  
@@ -262,11 +262,11 @@ GetRoleUserByRoleIDs();
 **EMail: william.ligong@yahoo.com**
 **QQ(Author): 47743901**
 
-**Slickflow 网站:**
-http://www.slickflow.com
-**DEMO:**
-http://www.slickflow.com/demo/index
-**文档:**
-http://www.slickflow.com/wiki/index
-**捐赠:**
-http://www.slickflow.com/donate/index
+**Slickflow 网站:**  
+http://www.slickflow.com  
+**DEMO:**  
+http://www.slickflow.com/demo/index  
+**文档:**  
+http://www.slickflow.com/wiki/index  
+**捐赠:**  
+http://www.slickflow.com/donate/index  
