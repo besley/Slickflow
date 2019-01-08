@@ -93,7 +93,7 @@
 **10. License**    
  The community version is under LGPL license, we also provide  **commercial license** and **technical support** for customers. if you have any further inquery, please feel free to contact us: 
 
-**EMail: sales@ruochisoft.com**
+**EMail: sales@ruochisoft.com**  
 **QQ(Author): 47743901**
 
 **Quick Start:**  
