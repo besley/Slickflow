@@ -48,7 +48,7 @@
 **6. Process Version**  
      the process has version property to upgrade a new definiton.  
 **7. XML Cache**    
-     the runtime instance use cache to keep xml process diagram in the memory.  
+     the runtime instance use cache to keep xml process diagram by an expired duration parameter.  
 **8. Code Style**  
  **0). model**  
 	
