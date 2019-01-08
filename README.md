@@ -43,7 +43,8 @@
  **11). reverse**  
     reverse the process instance alive when completed them.  
  **12). jump**  
-    jump the process over by serveral steps forward or backward.       
+    jump the process over by serveral steps forward or backward. 
+    
 **6. Process Version**  
     the process has version property to upgrade a new definiton.  
 **7. XML Cache**    
