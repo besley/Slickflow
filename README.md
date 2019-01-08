@@ -18,8 +18,6 @@
  4. **Multiple database supported**  
  Slickflow supports SQLSERVER, ORACLE, MySQL and other database, it implemented by Dapper.NET extension library. The .net core version using EF core to support different database products.  
 5. **Workflow patterns supported**  
-    ![Wokflow Pattern](http://www.slickflow.com/content/img/sfterm-en.png)  
-
  **1). sequence**  
     the most frequently process pattern   
  **2). split/merge**  
@@ -47,6 +45,8 @@
  **12). jump**  
     jump the process over by serveral steps forward or backward.  
  
+   ![Wokflow Pattern](http://www.slickflow.com/content/img/sfterm-en.png)  
+     
 **6. Process Version**  
     the process has version property to upgrade a new definiton.  
 **7. XML Cache**    
