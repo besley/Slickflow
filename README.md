@@ -50,7 +50,7 @@
         .Sequence();
 	
 	
-    ![simple sequence diagram](http://www.slickflow.com/content/img/simple-sequence.png)
+   ![simple sequence diagram](http://www.slickflow.com/content/img/simple-sequence.png)
     
                 
 **1) start**  
