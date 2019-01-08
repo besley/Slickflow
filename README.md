@@ -107,26 +107,26 @@ http://demo.slickflow.com/slickflowdesigner/
 **Document:**
 http://www.slickflow.com/wiki/index
 
-**Slickflow(1.7.0.0) 企业版：**
-2019-1-8
+**Slickflow(1.7.0.0) 企业版：**  
+2019-1-8  
 1.增加中间事件(IntermediateEvent)节点，处理流程状态通知事件；  
 2.增加流程变量和活动变量，用于事件交互过程中的变量读取和设置；  
 3.完成返送(Resend)接口，用于流程退回后的原路返回。  
 
-**Slickflow(1.6.3.0)集团版**
-2018-10-26
+**Slickflow(1.6.3.0)集团版**  
+2018-10-26  
 1.集成表单项目（百度编辑器版本）  
 2.集成引擎项目，表单流转统一界面按钮定制功能实现  
 3.表单字段绑定流程节点的权限功能实现，权限有（可见和读写）  
 4.数据库表扩展增加租户属性字段，用于集团或SAAS平台项目搭建；  
 
 **Slickflow(1.6.3.0) 企业版：**
-2018-10-10
+2018-10-10  
 1. 新增返送节点ResendProcess(); 用于退回后的原路返送；  
 2. SendBackProcess()接口中，增加TaskID属性，用于多并行节点退回处理；  
 参考WebApi项目, WfResendController.cs的测试用例  
 
-2018-06-22
+2018-06-22  
 1. 数据库更新
 1). 活动实例表WfActivityInstance表中增加逾期时间和处理字段
    OverdueDateTime      datetime             null,
@@ -138,25 +138,25 @@ http://www.slickflow.com/wiki/index
 2. 待办任务的邮件发送功能完成；
 3. 任务逾期超时，自动完成功能完成。
 
-2018-06-10
+2018-06-10  
 1. 修正图形设计器连线重叠功能，即增加连线控制点；  
 2. 完成待办任务邮件发送功能，定时轮询异步邮件发送；  
 
 
-2018-05-25
+2018-05-25  
 1. 修正设计器项目角色冗余数据；  
 2. 增加ResetCache()接口，用于引擎XML缓存文件更新；  
 
 
-**Slickflow(1.6.0.0) .NET CORE社区版更新说明**
-2018-04-02
+**Slickflow(1.6.0.0) .NET CORE社区版更新说明**  
+2018-04-02  
 1. 支持.NET CORE2.0,实现跨平台程序分发；    
 2. 采用EFCore框架，支持多数据库(SQLServer/MySQL/Oracle等)；
 3. 实现CodeFirst数据库构建，附数据库生成项目；
 4. ASP.NET MVC CORE项目示例，完整订单流程实例；
 
-Slickflow(1.6.0.0) 企业版更新说明
-2017-12-10
+**Slickflow(1.6.0.0) 企业版更新说明**  
+2017-12-10  
 1. 引擎实现并行分支多实例（并行容器）的工作流模式；  
 2. 设计器增加组合（Group）框选功能；  
 3. 设计器增加定时结束类型节点，引擎实现流程定时结束功能；  
@@ -173,7 +173,7 @@ WfProcess表变化字段（用于定时开始和定时结束场景）：
 3). EndType--结束类型  
 4). EndExpression--结束表达式  
 
-2017-09-26
+2017-09-26  
 自动定时任务模块：  
 1. 设计器增加任务定时CRON表达式编辑器；  
 2. 集成HangFire 任务定时作业组件，实现如下两个功能：  
@@ -187,13 +187,13 @@ WfProcess表变化字段（用于定时开始和定时结束场景）：
    WebDEMO, MvcDEMO 流程图查看功能整合到SFD设计器项目，不再重复构建；  
 6. WebDEMO请假流程增减意见表(HrsLeaveOpinion)；  
 
-**Slickflow(1.5.9) 企业版更新说明**
+**Slickflow(1.5.9) 企业版更新说明**  
 1. 基于MxGraph的新版设计器发布；  
 2. 设计器实现泳道(Swimlanes)功能；  
 3. 设计器增加Actions 外部事件列表方法；  
 4. 集成HangFire任务定时作业组件，实现流程逾期结束；  
 
-**Slickflow(1.5.8) 企业版更新说明:**
+**Slickflow(1.5.8) 企业版更新说明:**  
 1. 增加加签通过率类型字段CompareType，用于加签办理页面动态指定（非设计器指定，是运行时决策指定）变量传入；  
 
 示例如下：
@@ -209,55 +209,55 @@ WfProcess表变化字段（用于定时开始和定时结束场景）：
 3. 修正Gateway节点之后Transition定义的ReceiverType类型未能获取的BUG；  
 4. 实现跨Gateway节点退回的功能(OrSplit单一分支撤回)。  
 
-**Slickflow(1.5.7) 企业版更新说明:**
+**Slickflow(1.5.7) 企业版更新说明:**  
 1. Slickflow.Designer 设计器项目全面重构编写，更新如下：
   1). 升级到ASP.NET MVC5;
   2). 升级到BOOTSTRAP3.3.7；
   3). 图形库框架升级到JSPLUMB2.2.8，图形体验更流畅；
   4). AG-Grid取代SlickGrid，AG-Grid在开源社区方面的建设更加完善；
-2. 项目解决方案VS2017版本建立。
+2. 项目解决方案VS2017版本建立。  
 
-**Slickflow(1.5.6) 企业版更新说明：**
+**Slickflow(1.5.6) 企业版更新说明：**  
 1. 提供获取流程发起人的流程图连线定义（Transition property page）
 2. 修正子流程节点变量名称改变后的条件判断处理；
 
-**Slickflow(1.5.5) Demo版本功能说明：**
-**1. 引擎**
+**Slickflow(1.5.5) Demo版本功能说明：**  
+**1. 引擎**  
    1). 引擎集成国产数据库人大金仓Kingbase；
    2). 添加Slickflow.Module项目，实现组织机构的模块化构建；
    3). 引擎实现提交至发送人员的部门主管，下属或者同级同事流转功能，相应增加部门员工数据表和存储过程；
-**2. 设计器**
+**2. 设计器**  
   1). 流程设计器增加节点元素添加的操作面板；
   2). 流程设计器修正连线控制Gateway的显示Bug；
-**3. DEMO示例**
+**3. DEMO示例**  
   1). WebDemo/MvcDemo/Designer去除多项目引用，调试运行不依赖IIS Server。
 
-**Slickflow(1.5.2) Demo版本功能说明：**
-**1. DEMO示例**
+**Slickflow(1.5.2) Demo版本功能说明：**  
+**1. DEMO示例**  
 重新改版MvcDemo项目(电商生产订单流程)，采用Bootstrap框架，增加人员弹框功能演示；
-**2. 设计器**
+**2. 设计器**  
 重新改版设计器项目，使用Bootstrap框架，优化界面及性能；
-**3. 引擎**
+**3. 引擎**  
 1). 引擎增加辅助查询步骤角色用户关系接口；
 GetNextActivityRoleUserTree();  	//下一步选人弹框控件使用
 GetRoleUserListByProcess();
 GetUserListByRole();
 GetRoleUserByRoleIDs();
 
-**Slickflow(1.5.1) Demo版本功能说明：**
-**1. 流程引擎**
-   1). 会签加签不同模式处理，串行并行及通过率设置；会签加签内部撤销退回处理；  
+**Slickflow(1.5.1) Demo版本功能说明：**  
+**1. 流程引擎**  
+   1). 会签加签不同模式处理，串行并行及通过率设置；会签加签内部撤销退回处理；   
    2). 引擎响应外部接口，并实现调用功能；  
-**2. 设计器**
+**2. 设计器**  
    1). IE8及以上, Firefox 和谷歌浏览器兼容版本实现。  
    2). 增加会签加签子流程等特性配置；  
    3). 增加显示网格功能。  
-**3. Slickflow多数据库支持**
+**3. Slickflow多数据库支持**  
    改造Dapper，使得Slickflow支持Oracle，MySQL等数据库。
-**4. 会签加签事件交互说明文档**
-   Slickflow会签加签事件程序调用说明文档.docx
-**5. 增加Slickflow.Data项目，开放源代码**
-**6. 修正1.5.0版本对Demo中的SQL语句报错问题**
+**4. 会签加签事件交互说明文档**  
+   Slickflow会签加签事件程序调用说明文档.docx  
+**5. 增加Slickflow.Data项目，开放源代码**  
+**6. 修正1.5.0版本对Demo中的SQL语句报错问题**  
 
 **EMail: william.ligong@yahoo.com**
 **QQ(Author): 47743901**
