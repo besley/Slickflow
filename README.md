@@ -20,30 +20,30 @@
  Slickflow supports SQLSERVER, ORACLE, MySQL and other database, it implemented by Dapper.NET extension library. The .net core version using EF core to support different database products.  
 5. **Workflow patterns supported**  
 ![Wokflow Pattern](http://www.slickflow.com/content/img/sfterm-en.png)  
- **1). sequence**  
+ **1). Sequence**  
     the most frequently process pattern   
- **2). split/merge**  
+ **2). Split/Merge**  
    support and/or gateway such as **and/or split**, **and/or join**, together with  condition variables on the transition  
- **3). sub-process**  
+ **3). Sub-process**  
     in the main process, a sub process node can start a new process life cycle.  
- **4). multi-instance**  
+ **4). Multi-instance**  
    muptile performers processing a task together by multiple task instances. All performer both compete their task, then the process can be continued on. There are **sequence** and **parallel** pattern, and the **percentage** or **count** parameters can be set on it to ensue when can go to next step.   
     ![Muliple Instance Pattern](http://www.slickflow.com/content/img/wfpattern-mi-en.png)  
- **5). event interoperation**  
+ **5). Event interoperation**  
    process instance and activity instance event delegation service, such as process/activity start, execute and complete.  
- **6). timer**  
+ **6). Timer**  
    integrated with **HangFire** library, and with **CRON** expression supported  
- **7). email**  
+ **7). Email**  
    todo or overdue taks email notification  
- **8). withdraw**  
+ **8). Withdraw**  
 	withdraw the task after just sent out to next step users.  
- **9). sendback**  
+ **9). Sendback**  
     send back to previous step user, becuase some exceptions.  
- **10). resend**  
+ **10). Resend**  
     combined after sendback and re-send the task to origianl sendback users.  
- **11). reverse**  
+ **11). Reverse**  
     reverse the process instance alive when completed them.  
- **12). jump**  
+ **12). Jump**  
     jump the process over by serveral steps forward or backward. 
     
 **6. Process Version**  
@@ -51,7 +51,7 @@
 **7. XML Cache**    
      the runtime instance use cache to keep xml process diagram by an expired duration.  
 **8. Code Style**  
- **0). model**  
+ **0). Model**  
 	
     //create a simple sequence process diagram by hand code rather than a HTML designer  
     var processGUID = Guid.NewGuid().ToString();
@@ -67,7 +67,7 @@
    ![simple sequence diagram](http://www.slickflow.com/content/img/simple-sequence.png)  
     
                 
- **1). start**  
+ **1). Start**  
     
     //start a new process instance
     IWorkflowService wfService = new WorkflowService();
@@ -82,7 +82,7 @@
              })
              .Start();
 
- **2). run**  
+ **2). Run**  
     
     //run a process instance to next step
     IWorkflowService wfService = new WorkflowService();
