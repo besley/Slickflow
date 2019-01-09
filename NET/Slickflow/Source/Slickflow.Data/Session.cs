@@ -1,6 +1,6 @@
 ﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
+* Slickflow 开源项目遵循LGPL协议，也可联系作者获取企业版商业授权和技术支持；
+* 除此之外的使用则视为不正当使用，请您务必避免由此带来的一切商业版权纠纷和损失。
 * 
 The Slickflow project.
 Copyright (C) 2014  .NET Workflow Engine Library
