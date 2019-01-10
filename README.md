@@ -107,11 +107,14 @@
   Slickflow is very suitable for software teams or companies who want to  integrat workflow engine into their products.  
 **11. Suggestions**  
   Slickflow is suggusted to give programmers an flexible way to integrate workflow engine component into their products or customer projects. The programmers can write their own code segemnts based on the engine component.   
-**12. License**    
- 1). Community version  
- The community version is under LGPL license.    
- 2). **Commercial license**  
- The enterprise, ultimate and universe version can be provided with commercial license, technical support and upgrade for customers.
+**12. Open Source Project License**    
+ The product is under **Slickflow Open Source Project license**.    
+ 1). Slickflow software must be legally used, and should not be used in violation of law, morality and other acts that endanger social interests;  
+ 2). Non-transferable, non-transferable and indivisible authorization of this software;  
+ 3). The source code can be modified to apply Slickflow components in their own projects or products, but Slickflow source code can not be separately encapsulated for sale or distributed to third-party users;  
+ 4). The intellectual property rights of Slickflow software shall be protected by law, and no documents such as technical data shall be made public or sold.  
+**13. Commercial license**  
+ The enterprise, ultimate and universe version can be provided with commercial license, technical support and upgrade service.
  
  if you have any further inquery, please feel free to contact us:   
 
