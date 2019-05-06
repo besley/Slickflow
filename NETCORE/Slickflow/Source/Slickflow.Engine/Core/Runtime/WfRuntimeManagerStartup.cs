@@ -19,29 +19,18 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, you can access the official
 web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 */
-
-using System;
-using System.Threading;
-using System.Transactions;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Data;
 using Slickflow.Data;
-using Slickflow.Engine.Common;
-using Slickflow.Engine.Utility;
 using Slickflow.Engine.Core.Result;
-using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
-using Slickflow.Engine.Xpdl;
-using Slickflow.Engine.Core.Event;
 using Slickflow.Engine.Core.Pattern;
 
-namespace Slickflow.Engine.Core
+namespace Slickflow.Engine.Core.Runtime
 {
     /// <summary>
     /// 流程启动运行时
     /// </summary>
-    internal class WfRuntimeManagerStartupSub : WfRuntimeManager
+    internal class WfRuntimeManagerStartup : WfRuntimeManager
     {
         /// <summary>
         /// 启动执行方法
@@ -51,9 +40,7 @@ namespace Slickflow.Engine.Core
         {
             //构造流程实例
             var processInstance = new ProcessInstanceManager()
-                .CreateNewProcessInstanceObject(base.AppRunner, base.ProcessModel.ProcessEntity,
-                base.ParentProcessInstance,
-                base.InvokedSubProcessNode.ActivityInstance);
+                .CreateNewProcessInstanceObject(base.AppRunner, base.ProcessModel.ProcessEntity);
 
             //构造活动实例
             //1. 获取开始节点活动

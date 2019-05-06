@@ -34,6 +34,7 @@ using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Core.Event;
+using Slickflow.Engine.Core.Runtime;
 
 namespace Slickflow.Engine.Core.Pattern
 {

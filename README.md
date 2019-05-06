@@ -132,7 +132,30 @@ http://demo.slickflow.com/slickflowdesigner/
 **Document:**  
 http://www.slickflow.com/wiki/index  
 
-**Slickflow(1.7.0.0) 企业版：**  
+**Slickflow(1.7.3.0) 企业版：**  
+2019-05-05
+1. 增加互斥(XOr)分支和合并模式；
+2. 增加增强或合并模式(EOrJoin)，用于解决强制分支或者合并数目限制的用户需求
+3. 合并节点之后紧跟分支的条件判断功能增加；
+4. 并行多实例分支内部的退回处理，多路并行需要找到对应的节点办理人员信息；
+5. 增加UpgradeProcess()接口，用于流程记录版本升级的基础接口；
+6. WebTest测试项目功能增加：
+   1). 条件变量重新加载；
+   2). 控制参数动态加入；
+       用于流程动态控制参数的绑定。比如增强合并模式的合并分支数目的限定参数传入。
+       EOrJoinTokenPassCount: 2
+
+2019-04-15
+1. 增加并行分支节点退回；
+2. 增加结束节点的事件绑定；
+3. 增加“驳回”和“办结”接口方法
+   详细说明请参考高级开发技术文档
+
+2019-03-25
+1. 整合Activity属性配置页面到Activity/Index；
+2. 增加节点自定义属性MyProperties的属性读取（Json）；
+3. 删除原ActivityInstance的ActivityUrl字段，统一从Activity的xml内容读取；
+
 2019-1-8  
 1.增加中间事件(IntermediateEvent)节点，处理流程状态通知事件；  
 2.增加流程变量和活动变量，用于事件交互过程中的变量读取和设置；  

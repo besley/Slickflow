@@ -35,7 +35,7 @@ using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Core.Pattern;
 
-namespace Slickflow.Engine.Core
+namespace Slickflow.Engine.Core.Runtime
 {
     /// <summary>
     /// 任务撤销运行时

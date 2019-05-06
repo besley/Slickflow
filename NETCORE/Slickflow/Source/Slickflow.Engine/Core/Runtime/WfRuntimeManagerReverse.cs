@@ -36,7 +36,7 @@ using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Core.Event;
 using Slickflow.Engine.Core.Pattern;
 
-namespace Slickflow.Engine.Core
+namespace Slickflow.Engine.Core.Runtime
 {
     /// <summary>
     /// 流程返签时的运行时

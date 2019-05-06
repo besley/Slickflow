@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Slickflow.Engine.Core
+namespace Slickflow.Engine.Core.Runtime
 {
     /// <summary>
     /// 流程运行时异常类

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Slickflow.Engine.Common;
 
-namespace Slickflow.Engine.Xpdl
+namespace Slickflow.Engine.Xpdl.Schedule
 {
     /// <summary>
     /// ActivitySchedule的工厂类

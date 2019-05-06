@@ -158,29 +158,8 @@ namespace Slickflow.Engine.Service
         /// <param name="entity">流程</param>
         public int CreateProcessVersion(ProcessEntity entity)
         {
-            var processManager = new ProcessManager();
-            entity.CreatedDateTime = DateTime.Now;
-            entity.IsUsing = 1;
-
-            var session = SessionFactory.CreateSession();
-            try
-            {
-                session.BeginTrans();
-                processManager.UpdateUsingState(session.Connection, entity.ProcessGUID, session.Transaction);
-                int processId = processManager.Insert(session.Connection, entity, session.Transaction);
-                session.Commit();
-
-                return processId;
-            }
-            catch (System.Exception ex)
-            {
-                session.Rollback();
-                throw;
-            }
-            finally
-            {
-                session.Dispose();
-            }
+            var pm = new ProcessManager();
+            return pm.CreateProcess(entity);
         }
         /// <summary>
         /// 更新流程定义记录
