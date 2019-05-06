@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Slickflow.Engine.Business;
 
-namespace Slickflow.Engine.Xpdl
+namespace Slickflow.Engine.Xpdl.Schedule
 {
     /// <summary>
     /// 下一步的活动结果类：

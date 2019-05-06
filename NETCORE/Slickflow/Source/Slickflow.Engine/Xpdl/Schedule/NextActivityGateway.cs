@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace Slickflow.Engine.Xpdl
+
+namespace Slickflow.Engine.Xpdl.Schedule
 {
     /// <summary>
     /// 网关类型的下一步节点（其下包含子节点)

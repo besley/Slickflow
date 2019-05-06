@@ -37,7 +37,7 @@ using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Core.Pattern;
 
-namespace Slickflow.Engine.Core
+namespace Slickflow.Engine.Core.Runtime
 {
     /// <summary>
     /// 流程运行时管理

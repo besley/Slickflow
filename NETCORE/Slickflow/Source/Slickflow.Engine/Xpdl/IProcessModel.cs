@@ -10,7 +10,7 @@ using Slickflow.Module.Resource;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Business.Manager;
+using Slickflow.Engine.Xpdl.Schedule;
 
 namespace Slickflow.Engine.Xpdl
 {

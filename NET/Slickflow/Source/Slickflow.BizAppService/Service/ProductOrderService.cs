@@ -414,13 +414,6 @@ namespace Slickflow.BizAppService.Service
             {
                 session.BeginTrans();
 
-                //流程运行
-                var actionParameterInternal = new ActionParameterInternal();
-                actionParameterInternal.MethodParameters = new object[] {"alexsenda"};
-               
-                WfAppRunner.ActionMethodParameters = new Dictionary<string, ActionParameterInternal>();
-                WfAppRunner.ActionMethodParameters.Add("CallHello", actionParameterInternal);
-
                 var result = wfas.RunProcess(session, WfAppRunner, WfAppRunner.Conditions);
                 if (result.Status == WfExecutedStatus.Success)
                 {

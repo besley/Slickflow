@@ -27,12 +27,12 @@ using System.Text;
 using System.Reflection;
 using Slickflow.Data;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Utility;
 using Slickflow.Engine.Xpdl;
-using Slickflow.Engine.Xpdl.Node;
+using Slickflow.Engine.Xpdl.Schedule;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Core.Result;
+using Slickflow.Engine.Core.Runtime;
 
 namespace Slickflow.Engine.Core.Pattern
 {

@@ -7,20 +7,17 @@
       "sslPort": 0
     },
     "iisExpress": {
-      "applicationUrl": "http://localhost:50598/",
+      "applicationUrl": "http://localhost/sfd/",
       "sslPort": 0
     }
   },
   "profiles": {
     "IIS Express": {
-      "commandName": "IISExpress",
+      "commandName": "IIS",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
-    },
-    "IIS-001": {
-      "commandName": "IIS"
     }
   }
 }

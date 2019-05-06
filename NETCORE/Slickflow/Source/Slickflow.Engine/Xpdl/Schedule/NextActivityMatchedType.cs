@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Slickflow.Engine.Xpdl
+namespace Slickflow.Engine.Xpdl.Schedule
 {
     /// <summary>
     /// 下一步活动的调度状态

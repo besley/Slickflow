@@ -21,17 +21,12 @@ web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 */
 
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Data;
-using System.Xml;
 using System.Threading;
 using Slickflow.Data;
 using Slickflow.Module.Resource;
 using Slickflow.Module.Resource.Service;
-using Slickflow.Engine.Core;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Business.Data;
@@ -39,6 +34,7 @@ using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Core.Event;
+using Slickflow.Engine.Core.Runtime;
 //using Slickflow.Data.OracleProvider;
 
 namespace Slickflow.Engine.Service

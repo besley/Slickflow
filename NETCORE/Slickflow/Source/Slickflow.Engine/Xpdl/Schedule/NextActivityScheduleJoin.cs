@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Slickflow.Engine.Common;
 
-namespace Slickflow.Engine.Xpdl
+namespace Slickflow.Engine.Xpdl.Schedule
 {
     /// <summary>
     /// 合并类型，获取下一步节点列表
