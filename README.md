@@ -118,7 +118,7 @@
  
  if you have any further inquery, please feel free to contact us:   
 
-**EMail: sales@ruochisoft.com**  
+**EMail: sales@slickflow.com**  
 **QQ(Author): 47743901**
 
 **Quick Start:**  
