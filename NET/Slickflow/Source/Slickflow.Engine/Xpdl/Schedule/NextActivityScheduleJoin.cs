@@ -35,7 +35,8 @@ namespace Slickflow.Engine.Xpdl.Schedule
             resultType = NextActivityMatchedType.Unknown;
 
             //直接取出下步列表，运行时再根据条件执行
-            List<TransitionEntity> transitionList = base.ProcessModel.GetForwardTransitionList(currentGatewayActivity.ActivityGUID).ToList();
+            List<TransitionEntity> transitionList = base.ProcessModel.GetForwardTransitionList(currentGatewayActivity.ActivityGUID,
+                conditionKeyValuePair).ToList();
             foreach (TransitionEntity transition in transitionList)
             {
                 child = GetNextActivityListFromGatewayCore(transition,
