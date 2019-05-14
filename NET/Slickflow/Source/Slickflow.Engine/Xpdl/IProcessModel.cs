@@ -36,6 +36,7 @@ namespace Slickflow.Engine.Xpdl
             ref int joinCount, ref int splitCount);
         Int32 GetBackwardTransitionListCount(string activityGUID);
         IList<TransitionEntity> GetForwardTransitionList(string activityGUID);
+		IList<TransitionEntity> GetForwardTransitionList(string activityGUID, IDictionary<string, string> conditionKeyValuePair);
         Boolean CheckAndSplitOccurrenceCondition(IList<TransitionEntity> transitionList, 
             IDictionary<string, string> conditionValuePair);
         Boolean IsValidTransition(TransitionEntity transition, IDictionary<string, string> conditionValuePair);

@@ -319,12 +319,8 @@ namespace Slickflow.Engine.Core.Pattern
                     else
                     {
                         //下一步的任务节点没有创建，需给出提示信息
-                        if ((fromActivity.GatewayDirectionType | GatewayDirectionEnum.AllJoinType)
-                            == GatewayDirectionEnum.AllJoinType)
-                        {
-                            WfRuntimeException e = new WfRuntimeException("等待其它需要合并的分支!");
-                            LogManager.RecordLog("递归执行节点方法异常", LogEventType.Exception, LogPriority.Normal, null, e);
-                        }
+                        WfRuntimeException e = new WfRuntimeException("等待其它需要合并的分支!");
+                        LogManager.RecordLog("递归执行节点方法异常", LogEventType.Exception, LogPriority.Normal, null, e);
                     }
                 }
                 else if (comp.Activity.ActivityType == ActivityTypeEnum.SubProcessNode)         //子流程节点

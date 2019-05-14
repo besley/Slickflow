@@ -34,28 +34,36 @@ namespace Slickflow.Engine.Xpdl.Schedule
             }
             else if (XPDLHelper.IsGatewayComponentNode(activity.ActivityType) == true)
             {
-                if (activity.GatewayDirectionType == GatewayDirectionEnum.AndSplit)
+                if (activity.GatewayDirectionType == GatewayDirectionEnum.AndSplit
+                    || activity.GatewayDirectionType == GatewayDirectionEnum.AndJoin)
                 {
-                    name = "必全选节点";
-                    component = new NextActivityGateway(name, transition, activity);
+                    name = "必全选节点";                 
                 }
-                else if (activity.GatewayDirectionType == GatewayDirectionEnum.AndSplitMI)
+                else if (activity.GatewayDirectionType == GatewayDirectionEnum.AndSplitMI
+                    || activity.GatewayDirectionType == GatewayDirectionEnum.AndJoinMI)
                 {
                     name = "并行多实例节点";
-                    component = new NextActivityGateway(name, transition, activity);
                 }
                 else if (activity.GatewayDirectionType == GatewayDirectionEnum.OrSplit
-                    || activity.GatewayDirectionType == GatewayDirectionEnum.OrSplitMI
-                    || activity.GatewayDirectionType == GatewayDirectionEnum.XOrSplit)
+                    || activity.GatewayDirectionType == GatewayDirectionEnum.OrJoin)
                 {
                     name = "或多选节点";
-                    component = new NextActivityGateway(name, transition, activity);
+                }
+                else if (activity.GatewayDirectionType == GatewayDirectionEnum.XOrSplit
+                    || activity.GatewayDirectionType == GatewayDirectionEnum.XOrJoin)
+                {
+                    name = "异或节点";
+                }
+                else if (activity.GatewayDirectionType == GatewayDirectionEnum.EOrJoin)
+                {
+                    name = "增强合并多选节点";
                 }
                 else
                 {
                     throw new WfXpdlException(string.Format("无法创建下一步节点列表，不明确的分支类型：{0}", 
                         activity.GatewayDirectionType.ToString()));
                 }
+                component = new NextActivityGateway(name, transition, activity);
             }
             else if (activity.ActivityType == ActivityTypeEnum.SubProcessNode)
             {
@@ -84,7 +92,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
             if (XPDLHelper.IsSimpleComponentNode(fromActivity.ActivityType) == true)       //可流转简单类型节点
             {
                 string name = "单一节点";
-                var transition = TransitionBuilder.CreateJumpforwardEmptyTransition(fromActivity, toActivity);
+                var transition = CreateJumpforwardEmptyTransition(fromActivity, toActivity);
 
                 component = new NextActivityItem(name, transition, toActivity);     //强制拉取跳转类型的transition 为空类型
             }
@@ -94,6 +102,26 @@ namespace Slickflow.Engine.Xpdl.Schedule
                     fromActivity.ActivityType));
             }
             return component;
+        }
+
+        /// <summary>
+        /// 创建跳转Transition实体对象
+        /// </summary>
+        /// <param name="fromActivity">来源节点</param>
+        /// <param name="toActivity">目标节点</param>
+        /// <returns>转移实体</returns>
+        internal static TransitionEntity CreateJumpforwardEmptyTransition(ActivityEntity fromActivity, 
+            ActivityEntity toActivity)
+        {
+            TransitionEntity transition = new TransitionEntity();
+            transition.TransitionGUID = "JUMP-TRANSITION";
+            transition.FromActivity = fromActivity;
+            transition.FromActivityGUID = fromActivity.ActivityGUID;
+            transition.ToActivity = toActivity;
+            transition.ToActivityGUID = toActivity.ActivityGUID;
+            transition.DirectionType = TransitionDirectionTypeEnum.Forward;
+
+            return transition;
         }
 
         /// <summary>

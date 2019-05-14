@@ -26,11 +26,6 @@ namespace Slickflow.Engine.Common
         XOrSplit = 2,
 
         /// <summary>
-        /// 多实例或分支
-        /// </summary>
-        OrSplitMI = 3,
-
-        /// <summary>
         /// 并行分支
         /// </summary>
         AndSplit = 4,
@@ -41,29 +36,19 @@ namespace Slickflow.Engine.Common
         AndSplitMI = 5,
 
         /// <summary>
-        /// 复杂分支
-        /// </summary>
-        ComplexSplit = 8,
-
-        /// <summary>
-        /// 所有分支类型
-        /// </summary>
-        AllSplitType = 15,
-
-        /// <summary>
         /// 或合并
         /// </summary>
         OrJoin = 16,
 
         /// <summary>
-        /// 或合并(多实例)
-        /// </summary>
-        OrJoinMI = 17,
-
-        /// <summary>
         /// 异或合并
         /// </summary>
-        XOrJoin = 32,
+        XOrJoin = 17,
+
+        /// <summary>
+        /// 增强或合并
+        /// </summary>
+        EOrJoin = 18,
 
         /// <summary>
         /// 并行合并
@@ -74,15 +59,26 @@ namespace Slickflow.Engine.Common
         /// 与合并(多实例)
         /// </summary>
         AndJoinMI = 65,
+    }
+
+    /// <summary>
+    /// 合并通过类型设置
+    /// </summary>
+    public enum GatewayJoinPassEnum : int
+    {
+        /// <summary>
+        /// 空白
+        /// </summary>
+        None = 0,
 
         /// <summary>
-        /// 复杂合并
+        /// 满足分支数目，才可以通过
         /// </summary>
-        ComplexJoin = 128,
+        TokenCountPass = 1,
 
         /// <summary>
-        /// 所有合并类型
+        /// 满足强制必须合并分支，才可以通过
         /// </summary>
-        AllJoinType = 240
+        ForcedBranchPass = 2
     }
 }

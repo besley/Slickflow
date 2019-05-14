@@ -37,19 +37,14 @@ namespace Slickflow.Engine.Xpdl.Schedule
             if (currentGatewayActivity.GatewayDirectionType == GatewayDirectionEnum.AndSplit
                 || currentGatewayActivity.GatewayDirectionType == GatewayDirectionEnum.AndSplitMI)
             {
-                //判读连线上的条件是否都满足，如果都满足才可以取出后续节点列表
-                bool isCheckedOk = base.ProcessModel.CheckAndSplitOccurrenceCondition(transitionList, conditionKeyValuePair);
-                if (isCheckedOk)
+                //获取AndSplit的每一条后续连线上的To节点
+                foreach (TransitionEntity transition in transitionList)
                 {
-                    //获取AndSplit的每一条后续连线上的To节点
-                    foreach (TransitionEntity transition in transitionList)
-                    {
-                        child = GetNextActivityListFromGatewayCore(transition,
-                            conditionKeyValuePair,
-                            out resultType);
+                    child = GetNextActivityListFromGatewayCore(transition,
+                        conditionKeyValuePair,
+                        out resultType);
 
-                        gatewayComponent = AddChildToGatewayComponent(fromTransition, currentGatewayActivity, gatewayComponent, child);
-                    }
+                    gatewayComponent = AddChildToGatewayComponent(fromTransition, currentGatewayActivity, gatewayComponent, child);
                 }
 
                 if (gatewayComponent == null)
@@ -103,11 +98,6 @@ namespace Slickflow.Engine.Xpdl.Schedule
                 {
                     resultType = NextActivityMatchedType.NoneTransitionMatchedToSplit;
                 }
-            }
-            else if (currentGatewayActivity.GatewayDirectionType == GatewayDirectionEnum.ComplexSplit)
-            {
-                resultType = NextActivityMatchedType.Failed; 
-                throw new Exception("ComplexSplit 没有具体实现！");
             }
             else
             {

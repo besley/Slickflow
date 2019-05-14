@@ -75,6 +75,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Business\Entity\ProcessInstanceQuery.cs" />
+    <Compile Include="Business\Entity\ProcessQuery.cs" />
     <Compile Include="Business\Entity\QueryBase.cs" />
     <Compile Include="Business\Entity\TransitionInstanceQuery.cs" />
     <Compile Include="Common\ActionParameterInternal.cs" />

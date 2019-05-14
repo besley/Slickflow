@@ -1090,7 +1090,7 @@ namespace Slickflow.Engine.Xpdl
         /// <param name="fromActivityGUID">起始节点ID</param>
         /// <param name="conditionKeyValuePair">条件</param>
         /// <returns>转移实体列表</returns>
-        internal IList<TransitionEntity> GetForwardTransitionList(string fromActivityGUID,
+        public IList<TransitionEntity> GetForwardTransitionList(string fromActivityGUID,
             IDictionary<string, string> conditionKeyValuePair)
         {
             IList<TransitionEntity> transitionList = new List<TransitionEntity>();
