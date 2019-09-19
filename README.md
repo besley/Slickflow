@@ -8,7 +8,7 @@
 ![](https://img.shields.io/github/issues/besley/slickflow.svg) 
 
 
-.NET Workflow Engine With Full Source Code 
+.NET/.NETCore Workflow Engine With Full Source Code 
 1. **.NET, .NET CORE version both supported**  
  Slickflow is an open source project based on .NET Framework 4.5, .NET CORE 2; It's easy to use engine product into cross platform applilcation.  
 2. **BPMN graphic style process diagram**   
@@ -56,10 +56,10 @@
     //create a simple sequence process diagram by hand code rather than a HTML designer  
     var pmb = ProcessModelBuilder.CreateProcess("simple-process-name", "simple-process-code");
 	var process = pmb.Start("Start")
-				.Task("Task1")
-				.Task("Task2")
-				.End("End")
-				.Store();       
+		.Task("Task1")
+		.Task("Task2")
+		.End("End")
+		.Store();       
 
    ![simple sequence diagram](http://www.slickflow.com/content/img/simple-sequence.png)  
     
