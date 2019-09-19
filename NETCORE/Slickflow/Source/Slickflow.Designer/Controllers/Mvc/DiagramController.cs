@@ -12,7 +12,8 @@ namespace Slickflow.Designer.Controllers.Mvc
     public class DiagramController : Controller
     {
         // GET: Diagram
-        public IActionResult Index()
+        
+        public ActionResult Index()
         {
             ViewBag.AppInstanceID = Request.Query["AppInstanceID"];
             ViewBag.ProcessGUID = Request.Query["ProcessGUID"];

@@ -42,30 +42,39 @@ namespace Slickflow.Engine.Common
         }
 
         /// <summary>
-        /// 动态变量
-        /// </summary>
-        public IDictionary<string, string> DynamicVariables
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="runner"></param>
-        /// <param name="nextActivityPerformers"></param>
-        /// <param name="conditionKeyValuePair"></param>
-        /// <param name="dynamicVariables"></param>
+        /// <param name="runner">运行者</param>
+        /// <param name="nextActivityPerformers">下一步步骤人员列表</param>
+        /// <param name="conditionKeyValuePair">条件参数</param>
         internal ActivityResource(WfAppRunner runner,
             IDictionary<string, PerformerList> nextActivityPerformers,
-            IDictionary<string, string> conditionKeyValuePair = null,
-            IDictionary<string, string> dynamicVariables = null)
+            IDictionary<string, string> conditionKeyValuePair = null)
         {
             AppRunner = runner;
             NextActivityPerformers = nextActivityPerformers;
             ConditionKeyValuePair = conditionKeyValuePair;
-            DynamicVariables = dynamicVariables;
+        }
+
+        /// <summary>
+        /// 获取特定步骤的办理人员列表
+        /// </summary>
+        /// <param name="previousActivityPerformers">上一步办理人员列表</param>
+        /// <param name="activityGUID">节点GUID</param>
+        /// <returns>办理人员列表</returns>
+        internal PerformerList GetPreviousPerformerList(IList<KeyValuePairWrapper> previousActivityPerformers,
+            string activityGUID)
+        {
+            PerformerList performerList = null;
+            foreach (var kvp in previousActivityPerformers)
+            {
+                if (kvp.ActivityGUID == activityGUID)
+                {
+                    performerList = kvp.PerformerList;
+                    break;
+                }
+            }
+            return performerList;
         }
         #endregion
 
@@ -121,6 +130,5 @@ namespace Slickflow.Engine.Common
             return nextActivityPerformers;
         }
         #endregion
-
     }
 }

@@ -23,16 +23,6 @@ namespace Slickflow.Engine.Common
         /// <summary>
         /// 返签
         /// </summary>
-        Reversed = 3,
-
-        /// <summary>
-        /// 多实例节点时的撤销
-        /// </summary>
-        WithdrawedOfMI = 4,
-
-        /// <summary>
-        /// 多实例节点时的退回
-        /// </summary>
-        SendbackOfMI = 5
+        Reversed = 3
     }
 }

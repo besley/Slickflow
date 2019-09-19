@@ -6,9 +6,9 @@ using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Service;
 using SlickOne.WebUtility;
-using Slickflow.ModelDemo.Entity;
-using Slickflow.ModelDemo.Interface;
-using Slickflow.ModelDemo.Service;
+using Slickflow.BizAppService.Entity;
+using Slickflow.BizAppService.Interface;
+using Slickflow.BizAppService.Service;
 
 namespace Slickflow.MvcDemo.Controllers.WebApi
 {

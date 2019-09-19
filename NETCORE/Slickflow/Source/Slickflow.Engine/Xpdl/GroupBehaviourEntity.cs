@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Slickflow.Engine.Common;
 
 namespace Slickflow.Engine.Xpdl
 {
@@ -12,21 +8,19 @@ namespace Slickflow.Engine.Xpdl
     public class GroupBehaviourEntity
     {
         /// <summary>
-        /// 优先级
+        /// 优先级(用于Split分支类型）
         /// </summary>
         public short Priority
         {
-            get;
-            set;
+            get;set;
         }
 
         /// <summary>
-        /// 并行选项
+        /// 强制必需选项（用于Join合并类型）
         /// </summary>
-        public  ParallelOptionEnum ParallelOption
+        public Boolean Forced
         {
-            get;
-            set;
+            get;set;
         }
     }
 }

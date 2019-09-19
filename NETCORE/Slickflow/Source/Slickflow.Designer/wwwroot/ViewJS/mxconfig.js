@@ -24,9 +24,16 @@ var mxconfig = (function () {
 	function mxconfig() {
 	}
 
+    //style configuration
     mxconfig.style = {};
     mxconfig.style["start"] = 'symbol;image=scripts/mxGraph/src/editor/images/symbols/event.png';
     mxconfig.style["end"] = 'symbol;image=scripts/mxGraph/src/editor/images/symbols/event_end.png';
+    mxconfig.style["start-timer"] = 'symbol;image=scripts/mxGraph/src/editor/images/symbols/start_event_timer.png';
+    mxconfig.style["end-timer"] = 'symbol;image=scripts/mxGraph/src/editor/images/symbols/end_event_timer.png';
+    mxconfig.style["start-message"] = 'symbol;image=scripts/mxGraph/src/editor/images/symbols/message.png';
+    mxconfig.style["end-message"] = 'symbol;image=scripts/mxGraph/src/editor/images/symbols/end_event_message.png';
+    mxconfig.style["intermediate"] = 'symbol;image=scripts/mxGraph/src/editor/images/symbols/intermediate.png';
+    mxconfig.style["intermediate-timer"] = 'symbol;image=scripts/mxGraph/src/editor/images/symbols/intermediate_event_timer.png';
     mxconfig.style["subprocess"] = 'rectangle';
     mxconfig.style["gateway-split"] = 'symbol;image=scripts/mxGraph/src/editor/images/symbols/fork.png';
     mxconfig.style["gateway-join"] = 'symbol;image=scripts/mxGraph/src/editor/images/symbols/merge.png';
@@ -36,13 +43,31 @@ var mxconfig = (function () {
     mxconfig.getVertexStyle = function(activity){
         var style = null;
         var nodeType = activity.type;
+        var trigger = activity.trigger;
 
 		//render different type node
-		if (nodeType === kmodel.Config.NODE_TYPE_START) {
-            style = mxconfig.style["start"];
-		}
-		else if (nodeType === kmodel.Config.NODE_TYPE_END) {
-			style = mxconfig.style["end"];
+        if (nodeType === kmodel.Config.NODE_TYPE_START) {
+            if (trigger === "Timer") {
+                style = mxconfig.style["start-timer"];
+            } else if (trigger === "Message") {
+                style = mxconfig.style["start-message"];
+            } else {
+                style = mxconfig.style["start"];
+            }
+        } else if (nodeType === kmodel.Config.NODE_TYPE_INTERMEDIATE) {
+            if (trigger === "Timer") {
+                style = mxconfig.style["intermediate-timer"];
+            } else {
+                style = mxconfig.style["intermediate"];
+            }
+        } else if (nodeType === kmodel.Config.NODE_TYPE_END) {
+            if (trigger === "Timer") {
+                style = mxconfig.style["end-timer"];
+            } else if (trigger === "Message") {
+                style = mxconfig.style["end-message"];
+            } else {
+                style = mxconfig.style["end"];
+            }
 		}else if (nodeType === kmodel.Config.NODE_TYPE_TASK) {
 			style = mxconfig.style["task"];
 		}
@@ -56,7 +81,7 @@ var mxconfig = (function () {
 			style = mxconfig.style["subprocess"];
 		}
 		else {
-			throw new Error("未知节点类型！");
+			throw new Error("Unknown Activity Type！");
 		}
         return style;
     }

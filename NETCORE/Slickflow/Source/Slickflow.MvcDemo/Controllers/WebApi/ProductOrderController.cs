@@ -7,11 +7,9 @@ using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Service;
 using SlickOne.WebUtility;
-using Slickflow.ModelDemo.Entity;
-using Slickflow.ModelDemo.Data;
-using Slickflow.ModelDemo.Common;
-using Slickflow.ModelDemo.Interface;
-using Slickflow.ModelDemo.Service;
+using Slickflow.BizAppService.Entity;
+using Slickflow.BizAppService.Interface;
+using Slickflow.BizAppService.Service;
 
 namespace Slickflow.MvcDemo.Controllers.WebApi
 {
@@ -52,7 +50,7 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         /// <param name="entity"></param>
         /// <returns></returns>
         [HttpPost]
-        public ResponseResult<ProductOrderEntity> Insert([FromBody] ProductOrderEntity entity)
+        public ResponseResult<dynamic> Insert([FromBody] ProductOrderEntity entity)
         {
             return Insert<ProductOrderEntity>(entity);
         }
@@ -138,19 +136,16 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         {
             //检查是否已经进入流程阶段
             var result = ResponseResult.Default();
-            using (var session = DbFactory.CreateSession())
+            var orderEntity = QuickRepository.GetById<ProductOrderEntity>(id);
+            if (orderEntity.Status == 1)
             {
-                var orderEntity = session.GetRepository<ProductOrderEntity>().GetByID(id);
-                if (orderEntity.Status == 1)
-                {
-                    result = ResponseResult.Success();
-                }
-                else
-                {
-                    result = ResponseResult.Error("订单已经进入流程状态，不能再次派单！");
-                }
-                return result;
+                result = ResponseResult.Success();
             }
+            else
+            {
+                result = ResponseResult.Error("订单已经进入流程状态，不能再次派单！");
+            }
+            return result;
         }
 
         /// <summary>

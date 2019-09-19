@@ -26,17 +26,38 @@ var kmodel = (function () {
 
 	kmodel.Config = {
 		NODE_PREFIX: "ACT",
-		NODE_TYPE_START: "StartNode",
+        NODE_TYPE_START: "StartNode",
+        NODE_TYPE_INTERMEDIATE: "IntermediateNode",
+        NODE_TYPE_END: "EndNode",
 		NODE_TYPE_TASK: "TaskNode",
-		NODE_TYPE_END: "EndNode",
 		NODE_TYPE_GATEWAY: "GatewayNode",
 		NODE_TYPE_SUBPROCESS: "SubProcessNode",
 		NODE_TYPE_MULTIPLEINSTANCE: "MultipleInstanceNode",
 		NODE_TYPE_COMPLEX_SIGNTOGETHER: "SignTogether",
 		NODE_TYPE_COMPLEX_SIGHFORWARD: "SignForward",
 		ELEMENT_TYPE_NODE: "NODE",
-		ELEMENT_TYPE_CONNECTION: "CONNECTION"
-	};
+        ELEMENT_TYPE_CONNECTION: "CONNECTION",
+        ACTION_TYPE_EVENT: "Event",
+        ACTION_METHOD_TYPE_LOCALMETHOD: "LocalMethod",
+        ACTION_METHOD_TYPE_WEBAPI: "WebApi",
+        ACTION_METHOD_TYPE_SQL: "SQL",
+        ACTION_METHOD_TYPE_STOREPROCEDURE: "StoreProcedure",
+        ACTION_METHOD_TYPE_PYTHON: "Python",
+        ACTION_FIRE_BEFORE: "Before",
+        ACTION_FIRE_AFTER: "After",
+        BOUNDARY_EVENT_TIMER: "Timer",
+        BOUNDARY_EVENT_METHOD: "Method",
+    };
+
+    kmodel.ActivityType = {
+        StartNode: "StartNode",
+        EndNode: "EndNode",
+        TaskNode: "TaskNode",
+        GatewayNode: "GatewayNode",
+        SubProcessNode: "SubProcessNode",
+        MultipleInstanceNode: "MultipleInstanceNode",
+        IntermediateNode: "IntermediateNode",
+    }
 
     kmodel.GraphData = function(graphData){
         this.package = graphData.package;

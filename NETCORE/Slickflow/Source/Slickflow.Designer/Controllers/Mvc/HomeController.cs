@@ -12,18 +12,18 @@ namespace Slickflow.Designer.Controllers.Mvc
     public class HomeController : Controller
     {
         // GET: Home
-        public IActionResult Index()
+        public ActionResult Index()
         {
-            //ViewBag.ProcessID = base.Request.QueryString["ID"];
+            ViewBag.ProcessID = Request.Query["ID"];
             return View();
         }
 
-        public IActionResult Dialog()
+        public ActionResult Dialog()
         {
             return View();
         }
 
-        public IActionResult Demo()
+        public ActionResult Demo()
         {
             return View();
         }

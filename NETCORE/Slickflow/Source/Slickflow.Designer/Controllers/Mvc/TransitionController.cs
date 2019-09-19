@@ -12,7 +12,7 @@ namespace Slickflow.Designer.Controllers.Mvc
     public class TransitionController : Controller
     {
         // GET: Transition
-        public IActionResult Edit()
+        public ActionResult Edit()
         {
             return View();
         }

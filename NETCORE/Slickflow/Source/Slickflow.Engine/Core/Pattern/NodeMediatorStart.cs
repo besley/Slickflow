@@ -26,9 +26,9 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Diagnostics;
-using Slickflow.Data;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
+using Slickflow.Data;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Node;
 using Slickflow.Engine.Business.Entity;
@@ -56,50 +56,37 @@ namespace Slickflow.Engine.Core.Pattern
             {
                 //写入流程实例
                 ProcessInstanceManager pim = new ProcessInstanceManager();
-                var newID = pim.Insert(ActivityForwardContext.ProcessInstance,
-                    this.Session);
-
+                var newID = pim.Insert(this.Session.Connection, ActivityForwardContext.ProcessInstance,
+                    this.Session.Transaction);
                 ActivityForwardContext.ProcessInstance.ID = newID;
-                
+
+                //执行前Action列表
+                OnBeforeExecuteWorkItem();
+
                 CompleteAutomaticlly(ActivityForwardContext.ProcessInstance,
                     ActivityForwardContext.ActivityResource,
                     this.Session);
 
-                //执行开始节点之后的节点集合
-                ContinueForwardCurrentNode(false);
+                //执行后Action列表
+                OnAfterExecuteWorkItem();
 
-                //执行Action列表
-                ExecteActionList(ActivityForwardContext.Activity.ActionList,
-                    ActivityForwardContext.ActivityResource.AppRunner.ActionMethodParameters);
+                //执行开始节点之后的节点集合
+                ContinueForwardCurrentNode(ActivityForwardContext.IsNotParsedByTransition);
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
                 throw;
             }
         }
 
         /// <summary>
-        /// 执行外部操作的方法
-        /// </summary>
-        /// <param name="actionList"></param>
-        /// <param name="actionMethodParameters"></param>
-        public new void ExecteActionList(IList<ActionEntity> actionList, IDictionary<string, ActionParameterInternal> actionMethodParameters)
-        {
-            if (actionList != null && actionList.Count > 0)
-            {
-                var actionExecutor = new ActionExecutor();
-                actionExecutor.ExecteActionList(actionList, actionMethodParameters);
-            }
-        }
-
-        /// <summary>
         /// 置开始节点为结束状态
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="activityResource">活动实例</param>
-        /// <param name="session">会话</param>
-        /// <returns>网关执行结果</returns>
-        private GatewayExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
+        /// <param name="processInstance"></param>
+        /// <param name="activityResource"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        private NodeAutoExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
             ActivityResource activityResource,
             IDbSession session)
         {
@@ -115,7 +102,7 @@ namespace Slickflow.Engine.Core.Pattern
             fromActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
             base.Linker.FromActivityInstance = fromActivityInstance;
 
-            GatewayExecutedResult result = GatewayExecutedResult.CreateGatewayExecutedResult(GatewayExecutedStatus.Successed);
+            NodeAutoExecutedResult result = NodeAutoExecutedResult.CreateGatewayExecutedResult(NodeAutoExecutedStatus.Successed);
             return result;
         }
     }

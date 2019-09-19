@@ -11,7 +11,7 @@ namespace Slickflow.Engine.Utility
     /// <summary>
     /// 序列化帮助类
     /// </summary>
-    public class SerializationHelper
+    public static class SerializationHelper
     {
         /// <summary>
         /// DataContractSerializer序列化一个对象
@@ -44,6 +44,22 @@ namespace Slickflow.Engine.Utility
 
                 return serializer.Deserialize(reader);
             }
+        }
+
+        /// <summary>
+        /// 添加分隔符
+        /// </summary>
+        /// <param name="list">列表</param>
+        /// <param name="seperator">分隔符</param>
+        /// <returns>字符串</returns>
+        public static string SplitStrings(this IEnumerable<string> list, string seperator = ", ")
+        {
+            var result = list.Aggregate(
+                new StringBuilder(),
+                (sb, s) => (sb.Length == 0 ? sb : sb.Append(seperator)).Append(s),
+                sb => sb.ToString());
+
+            return result;
         }
     }
 }

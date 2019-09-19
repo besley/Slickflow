@@ -24,8 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Slickflow.Data;
 using Slickflow.Engine.Common;
+using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Node;
@@ -37,9 +37,7 @@ namespace Slickflow.Engine.Core.Pattern
     /// </summary>
     internal class NodeMediatorOrSplit : NodeMediatorGateway, ICompleteAutomaticlly
     {
-        internal NodeMediatorOrSplit(ActivityEntity activity, 
-            IProcessModel processModel, 
-            IDbSession session)
+        internal NodeMediatorOrSplit(ActivityEntity activity, IProcessModel processModel, IDbSession session)
             : base(activity, processModel, session)
         {
 
@@ -51,24 +49,26 @@ namespace Slickflow.Engine.Core.Pattern
         /// </summary>
         /// <param name="processInstance">流程实例</param>
         /// <param name="transitionGUID">转移GUID</param>
+        /// <param name="fromActivity">起始活动</param>
         /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="activityResource">活动资源</param>
+        /// <param name="runner">运行者</param>
         /// <param name="session">会话</param>
         /// <returns>网关执行结果</returns>
-        public GatewayExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
+        public NodeAutoExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
             string transitionGUID,
+            ActivityEntity fromActivity,
             ActivityInstanceEntity fromActivityInstance,
-            ActivityResource activityResource,
+            WfAppRunner runner,
             IDbSession session)
         {
-            var gatewayActivityInstance = base.CreateActivityInstanceObject(base.GatewayActivity, processInstance, activityResource.AppRunner);
+            var gatewayActivityInstance = base.CreateActivityInstanceObject(base.GatewayActivity, processInstance, runner);
             gatewayActivityInstance.GatewayDirectionTypeID = (short)GatewayDirectionEnum.OrSplit;
 
             base.InsertActivityInstance(gatewayActivityInstance,
                 session);
 
             base.CompleteActivityInstance(gatewayActivityInstance.ID,
-                activityResource,
+                runner,
                 session);
 
             gatewayActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
@@ -81,10 +81,10 @@ namespace Slickflow.Engine.Core.Pattern
                 gatewayActivityInstance,
                 TransitionTypeEnum.Forward,
                 TransitionFlyingTypeEnum.NotFlying,
-                activityResource.AppRunner,
+                runner,
                 session);
 
-            GatewayExecutedResult result = GatewayExecutedResult.CreateGatewayExecutedResult(GatewayExecutedStatus.Successed);
+            NodeAutoExecutedResult result = NodeAutoExecutedResult.CreateGatewayExecutedResult(NodeAutoExecutedStatus.Successed);
             return result;
         }
         #endregion

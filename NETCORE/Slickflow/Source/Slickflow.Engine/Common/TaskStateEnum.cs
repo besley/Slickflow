@@ -18,7 +18,7 @@ namespace Slickflow.Engine.Common
         /// <summary>
         /// 办理状态
         /// </summary>
-        Handling = 2,
+        Reading = 2,
 
         /// <summary>
         /// 正常完成
@@ -33,7 +33,7 @@ namespace Slickflow.Engine.Common
         /// <summary>
         /// 退回
         /// </summary>
-        Rejected = 16,
+        SendBacked = 9,
 
         /// <summary>
         /// 多人可以办理，当别人办理完后，置关闭状态

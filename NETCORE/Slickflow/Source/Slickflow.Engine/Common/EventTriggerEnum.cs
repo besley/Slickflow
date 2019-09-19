@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Common
 {
     /// <summary>
-    /// Event Node Trigger Type
+    /// Event Trigger Type
     /// </summary>
     public enum EventTriggerEnum : int
     {

@@ -26,11 +26,14 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.Diagnostics;
-using Slickflow.Data;
+using Dapper;
+using DapperExtensions;
 using Slickflow.Engine.Common;
+using Slickflow.Data;
 using Slickflow.Engine.Xpdl;
-using Slickflow.Engine.Business.Data;
+using Slickflow.Engine.Xpdl.Node;
 using Slickflow.Engine.Business.Entity;
+using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Utility;
 
 namespace Slickflow.Engine.Business.Manager
@@ -38,7 +41,7 @@ namespace Slickflow.Engine.Business.Manager
     /// <summary>
     /// 节点转移管理类
     /// </summary>
-    internal class TransitionInstanceManager
+    internal class TransitionInstanceManager : ManagerBase
     {
         #region 实例创建方法
         /// <summary>
@@ -94,32 +97,33 @@ namespace Slickflow.Engine.Business.Manager
         /// <summary>
         /// 插入方法
         /// </summary>
+        /// <param name="conn">数据库连接</param>
         /// <param name="entity">实体</param>
-        /// <param name="session">会话</param>
-        /// <returns>新实例ID</returns>
-        internal int Insert(TransitionInstanceEntity entity,
-            IDbSession session)
+        /// <param name="trans">事务</param>
+        internal int Insert(IDbConnection conn,
+            TransitionInstanceEntity entity,
+            IDbTransaction trans)
         {
-            var repository = session.GetRepository<TransitionInstanceEntity>();
-            var newEntity = repository.Insert(entity);
-            session.SaveChanges();
+            int newID = Repository.Insert(conn, entity, trans);
+            entity.ID = newID;
 
-            return newEntity.ID;
+            return entity.ID;
         }
 
         /// <summary>
         /// 删除转移实例
         /// </summary>
+        /// <param name="conn">数据库连接</param>
         /// <param name="transitionInstanceID">转移实例ID</param>
-        /// <param name="session">数据上下文</param>
-        internal void Delete(int transitionInstanceID,
-            IDbSession session)
+        /// <param name="trans">事务</param>
+        internal void Delete(IDbConnection conn,
+            int transitionInstanceID,
+            IDbTransaction trans)
         {
-            var repository = session.GetRepository<TransitionInstanceEntity>();
-            repository.Delete(transitionInstanceID);
-            session.SaveChanges();
+            Repository.Delete<TransitionInstanceEntity>(conn, transitionInstanceID, trans);
         }
         #endregion
+
 
         #region 数据查询
         /// <summary>
@@ -129,11 +133,7 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns>转移实例</returns>
         internal TransitionInstanceEntity GetById(int transitionInstanceID)
         {
-            using (var session = DbFactory.CreateSession())
-            {
-                var entity = session.GetRepository<TransitionInstanceEntity>().GetByID(transitionInstanceID);
-                return entity;
-            }
+            return Repository.GetById<TransitionInstanceEntity>(transitionInstanceID);
         }
 
         /// <summary>
@@ -188,30 +188,24 @@ namespace Slickflow.Engine.Business.Manager
             //2015.09.11 besley
             //需考虑后期节点类型增加目前支持TaskNode, SubProcessNode, MultipleInstanceNode
             //以上都是WorkItemType为1类型，保留ToActivityType是为了版本兼容，后期版本去掉ToActivity类型的判断。
-            //var sql = @"SELECT 
-            //                T.* 
-            //            FROM WfTransitionInstance T
-            //            INNER JOIN WfActivityInstance A
-            //                ON T.ToActivityInstanceID = A.ID
-            //            WHERE T.AppInstanceID=@appInstanceID 
-            //                AND T.ProcessGUID=@processGUID 
-            //                AND (T.ToActivityType=4 OR T.ToActivityType=5 OR T.ToActivityType=6 OR A.WorkItemType=1)          
-            //            ORDER BY T.CreatedDateTime DESC";
-            using (var session = DbFactory.CreateSession())
-            {
-                var repositoryTI = session.GetRepository<TransitionInstanceEntity>();
-                var repositoryAI = session.GetRepository<ActivityInstanceEntity>();
-                var transitonList = (from t in repositoryTI.GetDbSet()
-                                     join a in repositoryAI.GetDbSet()
-                                        on t.ToActivityInstanceID equals a.ID
-                                     where t.AppInstanceID == appInstanceID
-                                        && t.ProcessGUID == processGUID
-                                        && (t.ToActivityType == 4 || t.ToActivityType == 5 || t.ToActivityType == 6 || a.WorkItemType == 1)
-                                     select t)
-                                     .OrderByDescending(e => e.CreatedDateTime)
-                                     .ToList();
-                return transitonList;
-            }
+            var sql = @"SELECT 
+                            T.* 
+                        FROM WfTransitionInstance T
+                        INNER JOIN WfActivityInstance A
+                            ON T.ToActivityInstanceID = A.ID
+                        WHERE T.AppInstanceID=@appInstanceID 
+                            AND T.ProcessGUID=@processGUID 
+                            AND (T.ToActivityType=4 OR T.ToActivityType=5 OR T.ToActivityType=6 OR A.WorkItemType=1)          
+                        ORDER BY T.CreatedDateTime DESC";
+
+            var transitionList = Repository.Query<TransitionInstanceEntity>(sql,
+                new
+                {
+                    appInstanceID = appInstanceID,
+                    processGUID = processGUID
+                });
+
+            return transitionList;
         }
 
         /// <summary>
@@ -225,20 +219,21 @@ namespace Slickflow.Engine.Business.Manager
             String processGUID,
             ActivityTypeEnum toActivityType)
         {
-            //var sql = @"SELECT * FROM WfTransitionInstance 
-            //            WHERE AppInstanceID=@appInstanceID 
-            //                AND ProcessGUID=@processGUID 
-            //                AND ToActivityType=@toActivityType 
-            //            ORDER BY CreatedDateTime DESC";
-            using (var session = DbFactory.CreateSession())
-            {
-                var instanceList = session.GetRepository<TransitionInstanceEntity>().Query(e => e.AppInstanceID == appInstanceID
-                    && e.ProcessGUID == processGUID
-                    && e.ToActivityType == (short)toActivityType)
-                    .OrderByDescending(e => e.CreatedDateTime)
-                    .ToList();
-                return instanceList;
-            }
+            var sql = @"SELECT * FROM WfTransitionInstance 
+                        WHERE AppInstanceID=@appInstanceID 
+                            AND ProcessGUID=@processGUID 
+                            AND ToActivityType=@toActivityType 
+                        ORDER BY CreatedDateTime DESC";
+
+            var transitionList = Repository.Query<TransitionInstanceEntity>(sql,
+                new
+                {
+                    appInstanceID = appInstanceID,
+                    processGUID = processGUID,
+                    toActivityType = toActivityType
+                });
+
+            return transitionList;
         }
 
         /// <summary>
@@ -271,113 +266,21 @@ namespace Slickflow.Engine.Business.Manager
             string processGUID,
             int processInstanceID)
         {
-            //var sql = @"SELECT 
-            //                    * 
-            //                FROM WfTransitionInstance 
-            //                WHERE AppInstanceID=@appInstanceID 
-            //                    AND ProcessGUID=@processGUID 
-            //                    AND ProcessInstanceID=@processInstanceID
-            //                ORDER BY CreatedDateTime DESC";
-            using (var session = DbFactory.CreateSession())
-            {
-                var instanceList = session.GetRepository<TransitionInstanceEntity>().Query(e => e.AppInstanceID == appInstanceID
-                    && e.ProcessGUID == processGUID
-                    && e.ProcessInstanceID == processInstanceID)
-                    .OrderByDescending(e => e.CreatedDateTime)
-                    .ToList();
-                return instanceList;
-            }
-        }
+            var whereSql = @"SELECT * FROM WfTransitionInstance 
+                        WHERE AppInstanceID=@appInstanceID 
+                            AND ProcessGUID=@processGUID 
+                            AND ProcessInstanceID=@processInstanceID
+                        ORDER BY CreatedDateTime DESC";
 
-        /// <summary>
-        /// 读取节点的上一步节点信息
-        /// </summary>
-        /// <param name="runningNode">当前节点</param>
-        /// <param name="isSendback">是否退回</param>
-        /// <param name="hasPassedGatewayNode">是否经由路由节点</param>
-        /// <returns>活动实例列表</returns>
-        internal IList<ActivityInstanceEntity> GetPreviousActivityInstance(ActivityInstanceEntity runningNode,
-            bool isSendback,
-            out bool hasPassedGatewayNode)
-        {
-            hasPassedGatewayNode = false;
-            var transitionList = GetTransitionInstanceList(runningNode.AppInstanceID, 
-                runningNode.ProcessGUID, 
-                runningNode.ProcessInstanceID).ToList();
+            var transitionList = Repository.Query<TransitionInstanceEntity>(whereSql,
+                new
+                {
+                    appInstanceID = appInstanceID,
+                    processGUID = processGUID.ToString(),
+                    processInstanceID = processInstanceID
+                });
 
-            var backSrcActivityInstanceId = 0;
-            if (isSendback == true)
-            {
-                //退回情况下的处理
-                if (runningNode.MIHostActivityInstanceID != null && runningNode.CompleteOrder.Value == 1)
-                {
-                    //多实例的第一个子节点，先找到主节点，再到transition记录表中找到上一步节点
-                    backSrcActivityInstanceId = runningNode.MIHostActivityInstanceID.Value;
-                }
-                else if (runningNode.BackSrcActivityInstanceID != null)
-                {
-                    //节点时曾经发生退回的节点
-                    backSrcActivityInstanceId = runningNode.BackSrcActivityInstanceID.Value;
-                }
-                else
-                {
-                    backSrcActivityInstanceId = runningNode.ID;
-                }
-            }
-            else
-            {
-                backSrcActivityInstanceId = runningNode.ID;
-            }
-
-            var aim = new ActivityInstanceManager();
-            var runningTransitionList = transitionList
-                .Where(o => o.ToActivityInstanceID == backSrcActivityInstanceId)
-                .ToList();
-
-            IList<ActivityInstanceEntity> previousActivityInstanceList = new List<ActivityInstanceEntity>();
-            foreach (var entity in runningTransitionList)
-            {
-                //如果是逻辑节点，则继续查找
-                if (entity.FromActivityType == (short)ActivityTypeEnum.GatewayNode)
-                {
-                    GetPreviousOfGatewayActivityInstance(transitionList, entity.FromActivityInstanceID, previousActivityInstanceList);
-                    hasPassedGatewayNode = true;
-                }
-                else
-                {
-                    previousActivityInstanceList.Add(aim.GetById(entity.FromActivityInstanceID));
-                }
-            }
-            return previousActivityInstanceList;
-        }
-
-        /// <summary>
-        /// 获取网关节点前的节点
-        /// </summary>
-        /// <param name="transitionList">转移列表</param>
-        /// <param name="toActivityInstanceID">流转到的活动实例ID</param>
-        /// <param name="previousActivityInstanceList">前节点实例列表</param>
-        private void GetPreviousOfGatewayActivityInstance(IList<TransitionInstanceEntity> transitionList,
-            int toActivityInstanceID,
-            IList<ActivityInstanceEntity> previousActivityInstanceList)
-        {
-            var previousTransitionList = transitionList
-                .Where(o => o.ToActivityInstanceID == toActivityInstanceID)
-                .ToList();
-
-            var aim = new ActivityInstanceManager();
-            foreach (var entity in previousTransitionList)
-            {
-                var activityType = EnumHelper.ParseEnum<ActivityTypeEnum>(entity.FromActivityType.ToString());
-                if (XPDLHelper.IsSimpleComponentNode(activityType) == true)
-                {
-                    previousActivityInstanceList.Add(aim.GetById(entity.FromActivityInstanceID));
-                }
-                else if (entity.FromActivityType == (short)ActivityTypeEnum.GatewayNode)
-                {
-                    GetPreviousOfGatewayActivityInstance(transitionList, entity.FromActivityInstanceID, previousActivityInstanceList);
-                }
-            }
+            return transitionList;
         }
 
         /// <summary>
@@ -385,47 +288,72 @@ namespace Slickflow.Engine.Business.Manager
         /// </summary>
         /// <param name="fromActivityInstanceID">起始活动实例ID</param>
         /// <returns>下一步活动实例列表</returns>
-        internal IList<ActivityInstanceEntity> GetNextActivityInstanceList(int fromActivityInstanceID)
+        internal IList<ActivityInstanceEntity> GetTargetActivityInstanceList(int fromActivityInstanceID)
         {
-            IList<int> nextIDs = GetNextActivityInstanceIDs(fromActivityInstanceID);
-            using (var session = DbFactory.CreateSession())
+            var session = SessionFactory.CreateSession();
+            try
             {
-                var nextList = session.GetRepository<ActivityInstanceEntity>().Query(x => nextIDs.Contains(x.ID)).ToList();
-                return nextList;
+                return GetTargetActivityInstanceList(fromActivityInstanceID, session);
             }
+            catch(System.Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                session.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// 获取当前节点的下一步已经发出的活动实例列表
+        /// </summary>
+        /// <param name="fromActivityInstanceID">起始活动实例ID</param>
+        /// <param name="session">数据会话</param>
+        /// <returns>下一步活动实例列表</returns>
+        internal IList<ActivityInstanceEntity> GetTargetActivityInstanceList(int fromActivityInstanceID, 
+            IDbSession session)
+        {
+            IList<dynamic> targetIDs = GetTargetActivityInstanceIDs(fromActivityInstanceID, session);
+            var nextActivityInstanceList = Repository.GetByIds<ActivityInstanceEntity>(session.Connection, targetIDs).ToList<ActivityInstanceEntity>();
+
+            return nextActivityInstanceList;
         }
 
         /// <summary>
         /// 遍历下一步活动实例的ID
         /// </summary>
         /// <param name="fromActivityInstanceID">起始活动实例ID</param>
+        /// <param name="session">数据会话</param>
         /// <returns>下一步活动实例ID列表</returns>
-        private IList<int> GetNextActivityInstanceIDs(int fromActivityInstanceID)
+        private IList<dynamic> GetTargetActivityInstanceIDs(int fromActivityInstanceID,
+            IDbSession session)
         {
-            //var sql = @"SELECT 
-            //                * 
-            //            FROM WfTransitionInstance 
-            //            WHERE FromActivityInstanceID=@fromActivityInstanceID";
+            var sql = @"SELECT * FROM WfTransitionInstance 
+                        WHERE FromActivityInstanceID=@fromActivityInstanceID";
 
-            using (var session = DbFactory.CreateSession())
-            {
-                var transitionList = session.GetRepository<TransitionInstanceEntity>().Query(e => e.FromActivityInstanceID == fromActivityInstanceID);
-                List<int> nextIDs = new List<int>();
-                foreach (var trans in transitionList)
+            var transitionList = Repository.Query<TransitionInstanceEntity>(session.Connection,
+                sql,
+                new
                 {
-                    if (trans.ToActivityType == (int)ActivityTypeEnum.GatewayNode)
-                    {
-                        nextIDs.AddRange(GetNextActivityInstanceIDs(trans.ToActivityInstanceID));       //遍历Gateway包含的子节点 
-                    }
-                    else
-                    {
-                        nextIDs.Add(trans.ToActivityInstanceID);
-                    }
+                    fromActivityInstanceID = fromActivityInstanceID,
+                });
+
+            List<dynamic> targetIDs = new List<dynamic>();
+            foreach (var trans in transitionList)
+            {
+                if (trans.ToActivityType == (int)ActivityTypeEnum.GatewayNode)
+                {
+                    targetIDs.AddRange(GetTargetActivityInstanceIDs(trans.ToActivityInstanceID, session));       //遍历Gateway包含的子节点 
                 }
-                return nextIDs;
+                else
+                {
+                    targetIDs.Add(trans.ToActivityInstanceID);
+                }
             }
+            return targetIDs;
         }
-            
+
         /// <summary>
         /// 判读定义的Transition是否已经被实例化执行
         /// </summary>
@@ -458,41 +386,39 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="processInstanceID">流程实例ID</param>
         /// <param name="fromActivityGUID">起始活动节点GUID</param>
         /// <returns></returns>
-        internal int GetTransitionListCountOfOut(string appInstanceID, 
-            int processInstanceID, 
-            string fromActivityGUID)
+        internal int GetTransitionListCountOfOut(string appInstanceID, int processInstanceID, string fromActivityGUID)
         {
-            using (var session = DbFactory.CreateSession())
-            {
-                //var sql = @"SELECT 
-                //                * 
-                //            FROM WfTransitionInstance 
-                //            WHERE AppInstanceID=@appInstanceID
-                //                AND ProcessInstanceID=@processInstanceID
-                //                AND FromActivityGUID=@fromActivityGUID
-                //                ORDER BY FromActivityInstanceID";
-                int outCount = 0;
-                var repository = session.GetRepository<TransitionInstanceEntity>();
-                var transitionList = repository.Query(e => e.AppInstanceID == appInstanceID
-                    && e.ProcessInstanceID == processInstanceID
-                    && e.FromActivityGUID == fromActivityGUID)
-                    .OrderByDescending(e => e.FromActivityInstanceID)
-                    .ToList();
-                if (transitionList.Count() > 0)
+            int outCount = 0;
+            var sql = @"SELECT * FROM WfTransitionInstance 
+                        WHERE AppInstanceID=@appInstanceID
+                            AND ProcessInstanceID=@processInstanceID
+                            AND FromActivityGUID=@fromActivityGUID
+                            ORDER BY FromActivityInstanceID";
+
+            var transitionList = Repository.Query<TransitionInstanceEntity>(sql,
+                new
                 {
-                    var fromActivityInstanceID = transitionList[0].FromActivityInstanceID;
-                    //var countSql = @"SELECT 
-                    //                COUNT(1) 
-                    //            FROM WfTransitionInstance 
-                    //            WHERE AppInstanceID=@appInstanceID
-                    //                AND ProcessInstanceID=@processInstanceID
-                    //                AND FromActivityInstanceID=@fromActivityInstanceID";
-                    outCount = repository.Count(e => e.AppInstanceID == appInstanceID
-                        && e.ProcessInstanceID == processInstanceID
-                        && e.FromActivityInstanceID == fromActivityInstanceID);
-                }
-                return outCount;
+                    appInstanceID = appInstanceID,
+                    processInstanceID = processInstanceID,
+                    fromActivityGUID = fromActivityGUID
+                }).ToList<TransitionInstanceEntity>();
+
+            if (transitionList.Count() > 0)
+            {
+                var fromActivityInstanceID = transitionList[0].FromActivityInstanceID;
+                var countSql = @"SELECT COUNT(1) FROM WfTransitionInstance 
+                         WHERE AppInstanceID=@appInstanceID
+                            AND ProcessInstanceID=@processInstanceID
+                            AND FromActivityInstanceID=@fromActivityInstanceID";
+
+                DynamicParameters parameters = new DynamicParameters();
+                parameters.Add("@appInstanceID", appInstanceID);
+                parameters.Add("@processInstanceID", processInstanceID);
+                parameters.Add("@fromActivityInstanceID", fromActivityInstanceID);
+
+                outCount = Repository.Count(countSql, parameters);
             }
+            return outCount;
         }
         #endregion
     }

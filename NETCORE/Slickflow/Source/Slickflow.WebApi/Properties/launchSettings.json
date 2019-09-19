@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "http://localhost/sfapi/",
+      "applicationUrl": "http://localhost/sfapi2c/",
       "sslPort": 0
     },
     "iisExpress": {
@@ -13,14 +13,12 @@
   },
   "profiles": {
     "IIS Express": {
-      "commandName": "IISExpress",
-      "launchUrl": "api/values",
+      "commandName": "IIS",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost/sfapi2c/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
-    },
-    "IIS-009": {
-      "commandName": "IIS"
     }
   }
 }

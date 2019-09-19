@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Slickflow.Engine.Config;
 
 namespace Slickflow.Engine.Utility
 {
@@ -12,6 +14,39 @@ namespace Slickflow.Engine.Utility
     /// </summary>
     public static class ReflectionHelper
     {
+        /// <summary>
+        /// 获取特别类型的实例
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="fullName">名称</param>
+        /// <returns>实例</returns>
+        public static T GetSpecialInstance<T>(string fullName) where T : class
+        {
+            var assembly = WfConfig.LoadExternalServiceFile();
+            var list = assembly.GetTypes().Where(x => typeof(T).IsAssignableFrom(x)
+                        && !x.IsInterface
+                        && !x.IsAbstract
+                        && x.FullName.ToLower() == fullName.Trim().ToLower()
+                        ).ToList();
+
+            if (list != null && list.Count() > 0)
+            {
+                var type = list[0];
+                var instance = Activator.CreateInstance(type, true);
+
+                return instance as T;
+            }
+            else
+            {
+                throw new ApplicationException(string.Format("未能加载外部服务类的程序集：类型名称：{0}", fullName));
+            }
+        }
+
+        /// <summary>
+        /// 获取属性
+        /// </summary>
+        /// <param name="lambda">表达式</param>
+        /// <returns>成员信息</returns>
         public static MemberInfo GetProperty(LambdaExpression lambda)
         {
             Expression expression = lambda;
@@ -34,16 +69,5 @@ namespace Slickflow.Engine.Utility
                 }
             }
         }
-
-        public static string AppendStrings(this IEnumerable<string> list, string seperator = ", ")
-        {
-            var result = list.Aggregate(
-                new StringBuilder(),
-                (sb, s) => (sb.Length == 0 ? sb : sb.Append(seperator)).Append(s),
-                sb => sb.ToString());
-
-            return result;
-        }
     }
 }
-

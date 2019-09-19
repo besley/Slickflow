@@ -190,6 +190,29 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             return result;
         }
 
+        ///// <summary>
+        ///// 根据角色IDs获取用户列表
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public ResponseResult<List<Role>> QueryRoleUserByRoleIDs([FromBody] RoleIDsQuery query)
+        //{
+        //    var result = ResponseResult<List<Role>>.Default();
+        //    try
+        //    {
+        //        var wfService = new WorkflowService();
+        //        var roleList = wfService.GetRoleUserByRoleIDs(query.RoleIDs).ToList();
+        //        result = ResponseResult<List<Role>>.Success(roleList, "成功获取角色用户数据！");
+        //    }
+        //    catch (System.Exception ex)
+        //    {
+        //        result = ResponseResult<List<Role>>.Error(string.Format(
+        //            "获取角色用户数据失败, 异常信息:{0}",
+        //            ex.Message));
+        //    }
+        //    return result;
+        //}
+
         [HttpPost]
         public ResponseResult<List<TaskViewEntity>> QueryReadyTasks([FromBody] TaskQuery query)
         {

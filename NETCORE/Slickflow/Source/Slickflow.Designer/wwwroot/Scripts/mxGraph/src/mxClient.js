@@ -82701,6 +82701,11 @@ mxEditor.prototype.addActions = function ()
 	{
 		editor.showProperties(cell);
 	});
+
+    this.addAction('showEvents', function (editor, cell)
+    {
+        editor.showEvents(cell);
+    });
 	
 	this.addAction('selectAll', function(editor)
 	{
@@ -84012,6 +84017,9 @@ mxEditor.prototype.showProperties = function (cell)
 		this.hideProperties();
 		var node = this.createProperties(cell);
 		
+        //window.console.log("after create properties...");
+        //window.console.log(node);
+
 		if (node != null)
 		{
 			// Displays the contents in a window and stores a reference to the
@@ -84021,6 +84029,53 @@ mxEditor.prototype.showProperties = function (cell)
 			this.properties.setVisible(true);
 		}
 	}
+};
+
+mxEditor.prototype.showEvents = function (cell) {
+    cell = cell || this.graph.getSelectionCell();
+
+    // Uses the root node for the properties dialog
+    // if not cell was passed in and no cell is
+    // selected
+    if (cell == null) {
+        cell = this.graph.getCurrentRoot();
+
+        if (cell == null) {
+            cell = this.graph.getModel().getRoot();
+        }
+    }
+
+    if (cell != null) {
+        // Makes sure there is no in-place editor in the
+        // graph and computes the location of the dialog
+        this.graph.stopEditing(true);
+
+        var offset = mxUtils.getOffset(this.graph.container);
+        var x = offset.x + 10;
+        var y = offset.y;
+
+        // Avoids moving the dialog if it is alredy open
+        if (this.properties != null && !this.movePropertiesDialog) {
+            x = this.properties.getX();
+            y = this.properties.getY();
+        }
+
+        // Places the dialog near the cell for which it
+        // displays the properties
+        else {
+            var bounds = this.graph.getCellBounds(cell);
+
+            if (bounds != null) {
+                x += bounds.x + Math.min(200, bounds.width);
+                y += bounds.y;
+            }
+        }
+
+        // Hides the existing properties dialog and creates a new one with the
+        // contents created in the hook method
+        this.hideProperties();
+        var node = this.createEvents(cell);
+    }
 };
 
 /**

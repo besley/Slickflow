@@ -25,11 +25,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using Slickflow.Data;
+using ServiceStack.Text;
 using Slickflow.Engine.Common;
+using Slickflow.Engine.Utility;
+using Slickflow.Data;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Node;
-using Slickflow.Engine.Business.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Core.Result;
@@ -65,9 +66,10 @@ namespace Slickflow.Engine.Core.Pattern
                 {
                     //检查子流程是否结束
                     var pim = new ProcessInstanceManager();
-                    bool isCompleted = pim.CheckSubProcessInstanceCompleted(base.Linker.FromActivityInstance.ID,
+                    bool isCompleted = pim.CheckSubProcessInstanceCompleted(Session.Connection,
+                        base.Linker.FromActivityInstance.ID,
                         base.Linker.FromActivityInstance.ActivityGUID,
-                        Session);
+                        Session.Transaction);
                     if (isCompleted == false)
                     {
                         throw new WfRuntimeException(string.Format("当前子流程:[{0}]并没有到达结束状态，主流程无法向下执行。",
@@ -76,17 +78,17 @@ namespace Slickflow.Engine.Core.Pattern
                 }
 
                 //完成当前的任务节点
-                bool canContinueForwardCurrentNode = CompleteWorkItem(ActivityForwardContext.TaskView.ID,
+                bool canContinueForwardCurrentNode = CompleteWorkItem(ActivityForwardContext.TaskID,
                     ActivityForwardContext.ActivityResource,
                     this.Session);
 
+                //获取下一步节点列表：并继续执行
                 if (canContinueForwardCurrentNode)
                 {
-                    //获取下一步节点列表：并继续执行
-                    ContinueForwardCurrentNode(false);
+                    ContinueForwardCurrentNode(ActivityForwardContext.IsNotParsedByTransition);
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
                 throw;
             }
@@ -98,14 +100,17 @@ namespace Slickflow.Engine.Core.Pattern
         /// <param name="taskID">任务ID</param>
         /// <param name="activityResource">活动资源</param>
         /// <param name="session">会话</param>
-        internal bool CompleteWorkItem(int taskID,
+        internal bool CompleteWorkItem(int? taskID,
             ActivityResource activityResource,
             IDbSession session)
         {
             bool canContinueForwardCurrentNode = true;
 
-            //完成本任务，返回任务已经转移到下一个会签任务，不继续执行其它节点
-            base.TaskManager.Complete(taskID, activityResource.AppRunner, session);
+            if (taskID != null)
+            {
+                //完成本任务，返回任务已经转移到下一个会签任务，不继续执行其它节点
+                base.TaskManager.Complete(taskID.Value, activityResource.AppRunner, session);
+            }
 
             //设置活动节点的状态为完成状态
             base.ActivityInstanceManager.Complete(base.Linker.FromActivityInstance.ID,
@@ -202,62 +207,136 @@ namespace Slickflow.Engine.Core.Pattern
            ActivityResource activityResource,
            IDbSession session)
         {
-            if (toActivity.ActivityTypeDetail.ComplexType == ComplexTypeEnum.SignTogether)
+            Boolean isParallel = false;
+            if (fromActivityInstance.ActivityType == (short)ActivityTypeEnum.GatewayNode)
             {
-                CreateMultipleInstance(toActivity, processInstance, fromActivityInstance,
-                    transitionGUID, transitionType, flyingType, activityResource, session);
+                var processModel = ProcessModelFactory.Create(processInstance.ProcessGUID, processInstance.Version);
+                var activityNode = processModel.GetActivity(fromActivityInstance.ActivityGUID);
+                isParallel = processModel.IsAndSplitMI(activityNode);
+            }
+
+            if (isParallel)
+            {
+                var entity = new ActivityInstanceEntity();
+                var plist = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
+                //创建并行多实例分支
+                for (var i = 0; i < plist.Count; i++)
+                {
+                    var performer = plist[i];
+                    CreateSubProcessNode(toActivity, processInstance, fromActivityInstance, transitionGUID, transitionType,
+                       flyingType, activityResource, performer, session);
+                }
             }
             else
             {
-                //实例化Activity
-                var toActivityInstance = CreateActivityInstanceObject(toActivity, processInstance, activityResource.AppRunner);
-
-                //进入运行状态
-                var performerList = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
-                toActivityInstance.ActivityState = (short)ActivityStateEnum.Ready;
-                toActivityInstance.AssignedToUserIDs = GenerateActivityAssignedUserIDs(performerList);
-                toActivityInstance.AssignedToUserNames = GenerateActivityAssignedUserNames(performerList);
-
-                //插入活动实例数据
-                base.ActivityInstanceManager.Insert(toActivityInstance, session);
-
-                //插入任务数据
-                base.CreateNewTask(toActivityInstance, activityResource, session);
-
-                //插入转移数据
-                InsertTransitionInstance(processInstance,
-                    transitionGUID,
-                    fromActivityInstance,
-                    toActivityInstance,
-                    transitionType,
-                    flyingType,
-                    activityResource.AppRunner,
-                    session);
-
-                //启动子流程
-                WfExecutedResult startedResult = null;
-                var subProcessNode = (SubProcessNode)toActivity.Node;
-                subProcessNode.ActivityInstance = toActivityInstance;
-                WfAppRunner subRunner = CopyActivityForwardRunner(activityResource.AppRunner, 
-                    new Performer(activityResource.AppRunner.UserID, 
-                        activityResource.AppRunner.UserName),
-                    subProcessNode);
-
-                var runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceStartupSub(subRunner,
-                    processInstance,
-                    subProcessNode,
-                    performerList,
-                    ref startedResult);
-
-                runtimeInstance.OnWfProcessExecuted += runtimeInstance_OnWfProcessStarted;
-                runtimeInstance.Execute(Session);
+                if (toActivity.ActivityTypeDetail.ComplexType == ComplexTypeEnum.SignTogether)
+                {
+                    CreateMultipleInstance(toActivity, processInstance, fromActivityInstance,
+                        transitionGUID, transitionType, flyingType, activityResource, session);
+                }
+                else
+                {
+                    CreateSubProcessNode(toActivity, processInstance, fromActivityInstance, transitionGUID, transitionType,
+                        flyingType, activityResource, null, session);
+                }
             }
         }
 
-        private WfExecutedResult _startedResult = null;
-        private void runtimeInstance_OnWfProcessStarted(object sender, WfEventArgs args)
+        /// <summary>
+        /// 创建子流程节点数据以及子流程记录
+        /// </summary>
+        /// <param name="toActivity">目的活动</param>
+        /// <param name="processInstance">流程实例</param>
+        /// <param name="fromActivityInstance">来源活动实例</param>
+        /// <param name="transitionGUID">转移GUID</param>
+        /// <param name="transitionType">转移类型</param>
+        /// <param name="flyingType">飞跃类型</param>
+        /// <param name="activityResource">活动资源</param>
+        /// <param name="performer">执行者</param>
+        /// <param name="session">会话</param>
+        private void CreateSubProcessNode(ActivityEntity toActivity,
+           ProcessInstanceEntity processInstance,
+           ActivityInstanceEntity fromActivityInstance,
+           string transitionGUID,
+           TransitionTypeEnum transitionType,
+           TransitionFlyingTypeEnum flyingType,
+           ActivityResource activityResource,
+           Performer performer,
+           IDbSession session)
         {
-            _startedResult = args.WfExecutedResult;
+            WfExecutedResult startedResult = WfExecutedResult.Default();
+
+            //实例化Activity
+            var toActivityInstance = CreateActivityInstanceObject(toActivity, processInstance, activityResource.AppRunner);
+
+            //进入运行状态
+            toActivityInstance.ActivityState = (short)ActivityStateEnum.Ready;
+            if (performer != null)
+            {
+                //并行容器中的子流程节点，每个人发起一个子流程
+                toActivityInstance.AssignedToUserIDs = performer.UserID;
+                toActivityInstance.AssignedToUserNames = performer.UserName;
+                //插入活动实例数据
+                base.ActivityInstanceManager.Insert(toActivityInstance, session);
+                //插入任务数据
+                this.TaskManager.Insert(toActivityInstance, performer, activityResource.AppRunner, session);
+            }
+            else
+            {
+                toActivityInstance = GenerateActivityAssignedUserInfo(toActivityInstance, activityResource);
+                //插入活动实例数据
+                base.ActivityInstanceManager.Insert(toActivityInstance, session);
+                //插入任务数据
+                base.CreateNewTask(toActivityInstance, activityResource, session);
+            }
+
+            //插入转移数据
+            var newTransitionInstanceID = InsertTransitionInstance(processInstance,
+                transitionGUID,
+                fromActivityInstance,
+                toActivityInstance,
+                transitionType,
+                flyingType,
+                activityResource.AppRunner,
+                session);
+
+            //启动子流程
+            var subProcessNode = (SubProcessNode)toActivity.Node;
+            subProcessNode.ActivityInstance = toActivityInstance;
+
+            WfAppRunner subRunner = null;
+            var performerList = new PerformerList();
+            if (performer != null)
+            {
+                subRunner = CopyActivityForwardRunner(activityResource.AppRunner,
+                    new Performer(performer.UserID,
+                        performer.UserName),
+                    subProcessNode);
+                performerList.Add(performer);
+            }
+            else
+            {
+                subRunner = CopyActivityForwardRunner(activityResource.AppRunner,
+                   new Performer(activityResource.AppRunner.UserID,
+                       activityResource.AppRunner.UserName),
+                   subProcessNode);
+                performerList = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
+            }
+
+            var runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceStartupSub(subRunner,
+                processInstance,
+                subProcessNode,
+                performerList,
+                session,
+                ref startedResult);
+
+            runtimeInstance.OnWfProcessExecuted += runtimeInstance_OnWfProcessStarted;
+            runtimeInstance.Execute(session);
+
+            void runtimeInstance_OnWfProcessStarted(object sender, WfEventArgs args)
+            {
+                startedResult = args.WfExecutedResult;
+            }
         }
 
         /// <summary>
@@ -270,7 +349,7 @@ namespace Slickflow.Engine.Core.Pattern
         /// <param name="transitionType">转移类型</param>
         /// <param name="flyingType">飞跃类型</param>
         /// <param name="activityResource">活动资源</param>
-        /// <param name="session">数据上下文</param>
+        /// <param name="session">会话</param>
         internal new void CreateMultipleInstance(ActivityEntity toActivity,
             ProcessInstanceEntity processInstance,
             ActivityInstanceEntity fromActivityInstance,
@@ -291,8 +370,7 @@ namespace Slickflow.Engine.Core.Pattern
             {
                 toActivityInstance.CompleteOrder = toActivity.ActivityTypeDetail.CompleteOrder;
             }
-            toActivityInstance.AssignedToUserIDs = GenerateActivityAssignedUserIDs(
-                activityResource.NextActivityPerformers[toActivity.ActivityGUID]);
+            toActivityInstance = GenerateActivityAssignedUserInfo(toActivityInstance, activityResource);
 
             //插入主节点实例数据
             base.ActivityInstanceManager.Insert(toActivityInstance, session);
@@ -331,32 +409,31 @@ namespace Slickflow.Engine.Core.Pattern
                 base.TaskManager.Insert(entity, plist[i], activityResource.AppRunner, session);
 
                 //启动子流程
-                using (var subSession = DbFactory.CreateSession())
+                IDbSession subSession = SessionFactory.CreateSession();
+                var subProcessNode = (SubProcessNode)toActivity.Node;
+                subProcessNode.ActivityInstance = entity;   //在流程实例表中记录激活子流程的活动节点ID
+                WfAppRunner subRunner = CopyActivityForwardRunner(activityResource.AppRunner, 
+                    plist[i],
+                    subProcessNode);
+
+                WfExecutedResult startedResult = WfExecutedResult.Default();
+                var runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceStartupSub(subRunner,
+                    processInstance,
+                    subProcessNode,
+                    plist,
+                    session,
+                    ref startedResult);
+
+                if (runtimeInstance.WfExecutedResult.Status == WfExecutedStatus.Exception)
                 {
-                    WfExecutedResult startedResult = null;
-                    var subProcessNode = (SubProcessNode)toActivity.Node;
-                    subProcessNode.ActivityInstance = entity;   //在流程实例表中记录激活子流程的活动节点ID
-                    WfAppRunner subRunner = CopyActivityForwardRunner(activityResource.AppRunner,
-                        plist[i],
-                        subProcessNode);
-                    var runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceStartupSub(subRunner,
-                        processInstance,
-                        subProcessNode,
-                        plist,
-                        ref startedResult);
+                    throw new WfRuntimeException(runtimeInstance.WfExecutedResult.Message);
+                }
+                runtimeInstance.Execute(subSession);
 
-                    if (runtimeInstance.WfExecutedResult.Status == WfExecutedStatus.Exception)
-                    {
-                        throw new WfRuntimeException(runtimeInstance.WfExecutedResult.Message);
-                    }
-                    runtimeInstance.Execute(subSession);
-
-                    //如果是串行会签，只有第一个子流程可以运行，其它子流程处于挂起状态
-                    if ((i > 0) && (toActivity.ActivityTypeDetail.MergeType == MergeTypeEnum.Sequence))
-                    {
-                        var startResult = (WfExecutedResult)runtimeInstance.WfExecutedResult;
-                        base.ProcessInstanceManager.Suspend(startedResult.ProcessInstanceIDStarted, subRunner, subSession);
-                    }
+                //如果是串行会签，只有第一个子流程可以运行，其它子流程处于挂起状态
+                if ((i > 0) && (toActivity.ActivityTypeDetail.MergeType == MergeTypeEnum.Sequence))
+                {
+                    base.ProcessInstanceManager.Suspend(startedResult.ProcessInstanceIDStarted, subRunner, subSession);
                 }
             }
         }

@@ -2044,7 +2044,6 @@ namespace System.Linq.Dynamic
         {
             AssemblyName name = new AssemblyName("DynamicClasses");
             AssemblyBuilder assembly = AssemblyBuilder.DefineDynamicAssembly(name, AssemblyBuilderAccess.Run);
-
 #if ENABLE_LINQ_PARTIAL_TRUST
             new ReflectionPermission(PermissionState.Unrestricted).Assert();
 #endif

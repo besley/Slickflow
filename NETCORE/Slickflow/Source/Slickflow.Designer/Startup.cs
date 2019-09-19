@@ -1,17 +1,9 @@
-﻿using System;
-using System.Configuration;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Serialization;
+﻿using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using Slickflow.Data;
 
 namespace Slickflow.Designer
 {
@@ -39,17 +31,12 @@ namespace Slickflow.Designer
 
             var dbType = ConfigurationExtensions.GetConnectionString(Configuration, "WfDBConnectionType");
             var sqlConnectionString = ConfigurationExtensions.GetConnectionString(Configuration, "WfDBConnectionString");
-
-            Slickflow.Data.ConnectionString.DbType = dbType;
-            Slickflow.Data.ConnectionString.Value = sqlConnectionString;
+            Slickflow.Data.DBTypeExtenstions.InitConnectionString(dbType, sqlConnectionString);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -23,16 +23,16 @@ web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Reflection;
-using System.Diagnostics;
-using Slickflow.Data;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Utility;
+using Slickflow.Data;
+using Slickflow.Module.Resource;
 using Slickflow.Engine.Xpdl;
-using Slickflow.Engine.Xpdl.Node;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
+using Slickflow.Engine.Delegate;
+using Slickflow.Engine.Core.Runtime;
+using Slickflow.Engine.Core.Result;
+using Slickflow.Engine.Core.Event;
 
 namespace Slickflow.Engine.Core.Pattern
 {
@@ -52,15 +52,123 @@ namespace Slickflow.Engine.Core.Pattern
         /// </summary>
         internal override void ExecuteWorkItem()
         {
-            //执行Action列表
-            ExecteActionList(Linker.ToActivity.ActionList, 
-                ActivityForwardContext.ActivityResource.AppRunner.ActionMethodParameters);
+            //执行前Action列表
+            OnBeforeExecuteWorkItem();
 
             //设置流程完成
             ProcessInstanceManager pim = new ProcessInstanceManager();
-            pim.Complete(ActivityForwardContext.ProcessInstance.ID, 
+            var processInstance = pim.Complete(ActivityForwardContext.ProcessInstance.ID, 
                 ActivityForwardContext.ActivityResource.AppRunner, 
                 Session);
+
+            //如果当前流程是子流程，则子流程完成，主流程流转到下一节点
+            if (pim.IsSubProcess(processInstance) == true)
+            {
+                ContinueMainProcessRunning(processInstance, this.Session);
+            }
+
+            //执行后Action列表
+            OnAfterExecuteWorkItem();
+
+            //调用流程结束事件
+            DelegateExecutor.InvokeExternalDelegate(Session,
+                        EventFireTypeEnum.OnProcessCompleted,
+                        ActivityForwardContext.ActivityResource.AppRunner.DelegateEventList,
+                        ActivityForwardContext.ProcessInstance.ID);
+        }
+
+        /// <summary>
+        /// 继续执行主流程
+        /// </summary>
+        /// <param name="processInstance">子流程实例</param>
+        /// <param name="session">数据库会话</param>
+        private void ContinueMainProcessRunning(ProcessInstanceEntity processInstance,
+            IDbSession session)
+        {
+            //读取流程下一步办理人员列表信息
+            var runner = FillNextActivityPerformersByRoleList(processInstance.InvokedActivityInstanceID, 
+                processInstance.InvokedActivityGUID, 
+                session);
+
+            //开始执行下一步
+            var runAppResult = WfExecutedResult.Default();
+            var runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceAppRunning(runner, session, ref runAppResult);
+            if (runAppResult.Status == WfExecutedStatus.Exception)
+            {
+                throw new WfRuntimeException(string.Format("子流程执行异常，详细错误:{0}", runAppResult.Message));
+            }
+
+            //注册事件并运行
+            WfRuntimeManagerFactory.RegisterEvent(runtimeInstance,
+                runtimeInstance_OnWfProcessRunning,
+                runtimeInstance_OnWfProcessContinued);
+            bool isRun = runtimeInstance.Execute(session);
+
+            void runtimeInstance_OnWfProcessRunning(object sender, WfEventArgs args)
+            {
+                Delegate.DelegateExecutor.InvokeExternalDelegate(session,
+                    Delegate.EventFireTypeEnum.OnProcessRunning,
+                    runner.DelegateEventList,
+                    runtimeInstance.ProcessInstanceID);
+            }
+
+            void runtimeInstance_OnWfProcessContinued(object sender, WfEventArgs args)
+            {
+                runAppResult = args.WfExecutedResult;
+                if (runAppResult.Status == WfExecutedStatus.Success)
+                {
+                    Delegate.DelegateExecutor.InvokeExternalDelegate(session,
+                        Delegate.EventFireTypeEnum.OnProcessContinued,
+                        runner.DelegateEventList,
+                        runtimeInstance.ProcessInstanceID);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 使用流程定义资源添加角色用户
+        /// </summary>
+        /// <param name="mainActivityInstanceID">主流程节点实例ID</param>
+        /// <param name="mainActivityGUID">主流程节点GUID</param>
+        /// <param name="session">数据库会话</param>
+        /// <returns>执行用户</returns>
+        private WfAppRunner FillNextActivityPerformersByRoleList(int mainActivityInstanceID,
+            string mainActivityGUID,
+            IDbSession session)
+        {
+            var pm = new ProcessInstanceManager();
+            var mainProcessInstance = pm.GetByActivity(session.Connection, mainActivityInstanceID, session.Transaction);
+            var processModel = ProcessModelFactory.Create(mainProcessInstance.ProcessGUID, mainProcessInstance.Version);
+            var nextSteps = processModel.GetNextActivityTree(mainActivityGUID);
+            //获取主流程的任务
+            var task = (new TaskManager()).GetTaskByActivity(session.Connection, mainProcessInstance.ID, mainActivityInstanceID, session.Transaction);
+            var runner = new WfAppRunner
+            {
+                AppName = mainProcessInstance.AppName,
+                AppInstanceID = mainProcessInstance.AppInstanceID,
+                AppInstanceCode = mainProcessInstance.AppInstanceCode,
+                ProcessGUID = mainProcessInstance.ProcessGUID,
+                Version = mainProcessInstance.Version,
+                UserID = task.AssignedToUserID,
+                UserName = task.AssignedToUserName
+            };
+
+            foreach (var node in nextSteps)
+            {
+                Dictionary<string, PerformerList> dict = new Dictionary<string, PerformerList>();
+                var performerList = PerformerBuilder.CreatePerformerList(node.Roles);      //根据节点角色定义，读取执行者列表
+                if (node.ActivityType != ActivityTypeEnum.EndNode
+                    && performerList.Count == 0)
+                {
+                    throw new WfRuntimeException(string.Format("当前节点上没有定义角色人员信息，请确认！节点名称：{0}", node.ActivityName));
+                }
+                else
+                {
+                    dict.Add(node.ActivityGUID, performerList);
+                }
+                runner.NextActivityPerformers = dict;
+            }
+            return runner;
         }
 
         /// <summary>
@@ -73,7 +181,7 @@ namespace Slickflow.Engine.Core.Pattern
         /// <param name="transitionType">转移类型</param>
         /// <param name="flyingType">跳跃类型</param>
         /// <param name="activityResource">活动资源</param>
-        /// <param name="session">会话</param>
+        /// <param name="session">Session</param>
         internal override void CreateActivityTaskTransitionInstance(ActivityEntity toActivity,
             ProcessInstanceEntity processInstance,
             ActivityInstanceEntity fromActivityInstance,

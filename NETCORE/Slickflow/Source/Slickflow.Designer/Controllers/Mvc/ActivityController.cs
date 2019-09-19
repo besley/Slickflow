@@ -12,27 +12,7 @@ namespace Slickflow.Designer.Controllers.Mvc
     public class ActivityController : Controller
     {
         // GET: Activity
-        public IActionResult Edit()
-        {
-            return View();
-        }
-
-        public IActionResult Gateway()
-        {
-            return View();
-        }
-
-        public IActionResult SubProcess()
-        {
-            return View();
-        }
-
-        public IActionResult Event()
-        {
-            return View();
-        }
-
-        public IActionResult EndEvent()
+        public ActionResult Index()
         {
             return View();
         }

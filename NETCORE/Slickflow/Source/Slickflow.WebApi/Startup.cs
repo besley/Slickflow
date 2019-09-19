@@ -37,9 +37,7 @@ namespace Slickflow.WebApi
 
             var dbType = ConfigurationExtensions.GetConnectionString(Configuration, "WfDBConnectionType");
             var sqlConnectionString = ConfigurationExtensions.GetConnectionString(Configuration, "WfDBConnectionString");
-
-            Slickflow.Data.ConnectionString.DbType = dbType;
-            Slickflow.Data.ConnectionString.Value = sqlConnectionString;
+            Slickflow.Data.DBTypeExtenstions.InitConnectionString(dbType, sqlConnectionString);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

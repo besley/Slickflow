@@ -51,9 +51,9 @@ namespace Slickflow.Engine.Xpdl.Schedule
         /// <summary>
         /// 创建方法
         /// </summary>
-        /// <param name="scheduleStatus"></param>
-        /// <param name="root"></param>
-        /// <returns></returns>
+        /// <param name="matchedType">匹配类型</param>
+        /// <param name="root">根节点</param>
+        /// <returns>下一步匹配结果</returns>
         internal static NextActivityMatchedResult CreateNextActivityMatchedResultObject(NextActivityMatchedType matchedType,
             NextActivityComponent root)
         {

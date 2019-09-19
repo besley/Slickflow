@@ -20,24 +20,13 @@ License along with this library; if not, you can access the official
 web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 */
 
-using System;
-using System.Threading;
-using System.Transactions;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Slickflow.Data;
-using Slickflow.Engine.Common;
-using Slickflow.Engine.Utility;
-using Slickflow.Engine.Core.Result;
-using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
-using Slickflow.Engine.Xpdl;
-using Slickflow.Engine.Core.Event;
+using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Core.Pattern;
 
 namespace Slickflow.Engine.Core.Runtime
-{
+{ 
     /// <summary>
     /// 流程启动运行时
     /// </summary>

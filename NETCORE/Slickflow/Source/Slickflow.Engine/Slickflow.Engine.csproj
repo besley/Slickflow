@@ -1,7 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Authors>Besley</Authors>
+    <Company>Hangzhou, Ligong</Company>
+    <Product>Slickflow.NET</Product>
+    <Copyright>@2014-2019</Copyright>
+    <AssemblyVersion>1.7.0.0</AssemblyVersion>
+    <FileVersion>1.7.0.0</FileVersion>
+    <Description>Open Source Workflow Engine in .NET Core2 Framework</Description>
+    <Version>1.7.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -9,24 +17,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Business\EntityMySQL\**" />
-    <Compile Remove="Business\EntityOracle\**" />
-    <Compile Remove="Business\Entity\**" />
-    <EmbeddedResource Remove="Business\EntityMySQL\**" />
-    <EmbeddedResource Remove="Business\EntityOracle\**" />
-    <EmbeddedResource Remove="Business\Entity\**" />
-    <None Remove="Business\EntityMySQL\**" />
-    <None Remove="Business\EntityOracle\**" />
-    <None Remove="Business\Entity\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Devart.Data.Oracle.EFCore" Version="9.5.399" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.0.1" />
-    <PackageReference Include="ServiceStack" Version="5.0.2" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.1" />
+    <PackageReference Include="Devart.Data.Oracle.EFCore" Version="9.6.675" />
+    <PackageReference Include="IronPython" Version="2.7.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.4" />
+    <PackageReference Include="ServiceStack" Version="5.4.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
   </ItemGroup>
 
@@ -34,6 +32,12 @@
     <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj" />
     <ProjectReference Include="..\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj" />
     <ProjectReference Include="..\Slickflow.Module\Slickflow.Module.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Dapper">
+      <HintPath>..\DLL\Dapper.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

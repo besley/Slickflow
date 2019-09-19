@@ -10,6 +10,7 @@ namespace Slickflow.Engine.Xpdl
     /// </summary>
     internal class XPDLDefinition
     {
+        internal static readonly string StrXmlProcessPath = "WorkflowProcesses/Process";
         internal static readonly string StrXmlTransitionPath = "WorkflowProcesses/Process/Transitions/Transition";
         internal static readonly string StrXmlActivityPath = "WorkflowProcesses/Process/Activities/Activity";
         internal static readonly string StrXmlParticipantsPath = "Participants";

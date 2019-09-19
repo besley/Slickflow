@@ -43,6 +43,16 @@ namespace Slickflow.Engine.Core.Result
         public WfExecutedResult()
         {
             Status = WfExecutedStatus.Default;
+            Message = string.Empty;
+        }
+
+        /// <summary>
+        /// 缺省方法
+        /// </summary>
+        /// <returns></returns>
+        public static WfExecutedResult Default()
+        {
+            return new WfExecutedResult();
         }
     }
 
@@ -93,6 +103,7 @@ namespace Slickflow.Engine.Core.Result
         public const string Jump_OtherError = "Jump_OtherError";
 
         //流程撤销异常信息
+        public const string Withdraw_ErrorArguments = "Withdraw_ErrorArguments";
         public const string Withdraw_NotInReady = "Withdraw_NotInReady";
         public const string Withdraw_NotCreatedByMine = "Withdraw_NotCreatedByMine";
         public const string Withdraw_HasTooMany = "Withdraw_HasTooMany";
@@ -105,12 +116,20 @@ namespace Slickflow.Engine.Core.Result
         public const string Sendback_IsLoopNode = "Sendback_IsLoopNode";
         public const string Sendback_NotInRunning = "Sendback_NotInRunning";
         public const string Sendback_NotMineTask = "NotMineTask";
-        public const string Sendback_PreviousIsStartNode = "Sendback_PreviousIsStartNode";
-        public const string Sendback_NullOrHasTooMany = "Sendback_NullOrHasTooMany";
+        public const string Sendback_IsNull = "Sendback_IsNull";
+        public const string Sendback_IsTooManyPrevious = "Sendback_IsTooManyPrevious";
+        public const string Sendback_NotContainedInPreviousOrStartNode = "Sendback_NotContainedInPreviousOrStartNode";
+        public const string Sendback_IsStartNode = "Sendback_IsStartNode";
         public const string Sendback_HasTooManyRunningParallel = "Sendback_HasTooManyRunningParallel";
+
+        //流程返送异常信息
+        public const string Resend_NotTaskNode = "Resend_NotTaskNode";
+        public const string Resend_WithoutBackSourceNode = "Resend_WithoutBackSourceNode";
 
         //流程返签异常信息
         public const string Reverse_NotInCompleted = "Reverse_NotInCompleted";
+
+
 
         //流程加签异常信息
         public const string SignForward_ErrorArguments = "SignForward_ErrorArguments";

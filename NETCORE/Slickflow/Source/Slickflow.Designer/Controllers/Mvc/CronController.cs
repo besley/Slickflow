@@ -12,7 +12,7 @@ namespace Slickflow.Designer.Controllers.Mvc
     public class CronController : Controller
     {
         // GET: Cron
-        public IActionResult Edit()
+        public ActionResult Edit()
         {
             return View();
         }

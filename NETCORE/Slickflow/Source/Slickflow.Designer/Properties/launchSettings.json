@@ -3,11 +3,11 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "http://localhost/sfd",
+      "applicationUrl": "http://localhost/sfd2c/",
       "sslPort": 0
     },
     "iisExpress": {
-      "applicationUrl": "http://localhost/sfd/",
+      "applicationUrl": "http://localhost:50598/",
       "sslPort": 0
     }
   },
@@ -15,6 +15,7 @@
     "IIS Express": {
       "commandName": "IIS",
       "launchBrowser": true,
+      "launchUrl": "http://localhost/sfd2c/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

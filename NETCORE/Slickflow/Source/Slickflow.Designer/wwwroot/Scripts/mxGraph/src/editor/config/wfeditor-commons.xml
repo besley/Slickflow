@@ -30,6 +30,7 @@
           <ConditionText></ConditionText>
         </Condition>
         <Receiver type="Default"></Receiver>
+        <GroupBehaviours priority="" forced=""/>
         <mxCell edge="1">
           <mxGeometry as="geometry" relative="1"/>
         </mxCell>
@@ -48,16 +49,29 @@
         <ActivityType type="TaskNode"/>
         <Performers></Performers>
         <Actions></Actions>
+        <Boundaries></Boundaries>
         <mxCell vertex="1">	
 					<mxGeometry as="geometry" width="72" height="32"/>
 				</mxCell>
 			</Activity>
 		</add>
+    <add as="multipleinstance">
+      <Activity label="MultipleInstance" name="" code="">
+        <Description></Description>
+        <ActivityType type="MultipleInstanceNode" complexType="" mergeType="" compareType="" completeOrder=""/>
+        <Performers></Performers>
+        <Actions></Actions>
+        <mxCell vertex="1" style="symbol;image=images/symbols/multiple_instance_task.png">
+          <mxGeometry as="geometry" width="72" height="32"/>
+        </mxCell>
+      </Activity>
+    </add>
     <add as="subprocess">
       <Activity label="Subprocess"  name="" code="">
         <Description></Description>
         <ActivityType type="SubProcessNode"  subId=""/>
         <Performers></Performers>
+        <Actions></Actions>
         <mxCell vertex="1" style="symbol;image=images/symbols/subprocess.png">
           <mxGeometry as="geometry" width="72" height="32"/>
         </mxCell>
@@ -68,8 +82,9 @@
         <Description></Description>
         <ActivityType type="StartNode" trigger="None"/>
         <Performers></Performers>
+        <Actions></Actions>
         <mxCell vertex="1" style="symbol;image=scripts/mxGraph/src/editor/images/symbols/event.png">
-          <mxGeometry as="geometry" width="38" height="38"/>
+          <mxGeometry as="geometry" width="32" height="32"/>
         </mxCell>
       </Activity>
     </add>
@@ -78,8 +93,75 @@
         <Description></Description>
         <ActivityType type="EndNode" trigger="None"/>
         <Performers></Performers>
+        <Actions></Actions>
         <mxCell vertex="1" style="symbol;image=scripts/mxGraph/src/editor/images/symbols/event_end.png">
-          <mxGeometry as="geometry" width="38" height="38"/>
+          <mxGeometry as="geometry" width="32" height="32"/>
+        </mxCell>
+      </Activity>
+    </add>
+    <add as="start-timer">
+      <Activity label="定时开始" name="" code="">
+        <Description></Description>
+        <ActivityType type="StartNode" trigger="Timer"/>
+        <Performers></Performers>
+        <Actions></Actions>
+        <mxCell vertex="1" style="symbol;image=scripts/mxGraph/src/editor/images/symbols/start_event_timer.png">
+          <mxGeometry as="geometry" width="32" height="32"/>
+        </mxCell>
+      </Activity>
+    </add>
+    <add as="intermediate-timer">
+      <Activity label="延时" name="" code="">
+        <Description></Description>
+        <ActivityType type="IntermediateNode" trigger="Timer"/>
+        <Performers></Performers>
+        <Actions></Actions>
+        <mxCell vertex="1" style="symbol;image=scripts/mxGraph/src/editor/images/symbols/intermediate_event_timer.png">
+          <mxGeometry as="geometry" width="32" height="32"/>
+        </mxCell>
+      </Activity>
+    </add>
+    <add as="end-timer">
+      <Activity label="定时结束" name="" code="">
+        <Description></Description>
+        <ActivityType type="EndNode" trigger="Timer"/>
+        <Performers></Performers>
+        <Actions></Actions>
+        <mxCell vertex="1" style="symbol;image=scripts/mxGraph/src/editor/images/symbols/end_event_timer.png">
+          <mxGeometry as="geometry" width="32" height="32"/>
+        </mxCell>
+      </Activity>
+    </add>
+    <add as="start-message">
+      <Activity label="消息开始" name="" code="">
+        <Description></Description>
+        <ActivityType type="StartNode" trigger="Message"/>
+        <Performers></Performers>
+        <Actions></Actions>
+        <mxCell vertex="1" style="symbol;image=scripts/mxGraph/src/editor/images/symbols/message.png">
+          <mxGeometry as="geometry" width="32" height="32"/>
+        </mxCell>
+      </Activity>
+    </add>
+    <add as="end-message">
+      <Activity label="消息结束" name="" code="">
+        <Description></Description>
+        <ActivityType type="EndNode" trigger="Message"/>
+        <Performers></Performers>
+        <Actions></Actions>
+        <mxCell vertex="1" style="symbol;image=scripts/mxGraph/src/editor/images/symbols/message_end.png">
+          <mxGeometry as="geometry" width="32" height="32"/>
+        </mxCell>
+      </Activity>
+    </add>
+    <add as="intermediate">
+      <Activity label="中间事件" name="" code="">
+        <Description></Description>
+        <ActivityType type="IntermediateNode" trigger="None"/>
+        <Performers></Performers>
+        <Actions></Actions>
+        <mxCell vertex="1" style="symbol;image=scripts/mxGraph/src/editor/images/symbols/event_intermediate.png">
+          <mxGeometry as="geometry" width="32" height="32"/>
         </mxCell>
       </Activity>
     </add>
@@ -88,6 +170,7 @@
         <Description></Description>
         <ActivityType type="GatewayNode" gatewaySplitJoinType="Split" gatewayDirection=""/>
         <Performers></Performers>
+        <Actions></Actions>
         <mxCell vertex="1" style="symbol;image=scripts/mxGraph/src/editor/images/symbols/fork.png">
           <mxGeometry as="geometry" width="72" height="32"/>
         </mxCell>
@@ -96,8 +179,9 @@
     <add as="gateway-join">
       <Activity label="gateway-join" name="" code="">
         <Description></Description>
-        <ActivityType type="GatewayNode" gatewaySplitJoinType="Join" gatewayDirection=""/>
+        <ActivityType type="GatewayNode" gatewaySplitJoinType="Join" gatewayDirection="" gatewayJoinPass=""/>
         <Performers></Performers>
+        <Actions></Actions>
         <mxCell vertex="1" style="symbol;image=scripts/mxGraph/src/editor/images/symbols/merge.png">
           <mxGeometry as="geometry" width="72" height="32"/>
         </mxCell>

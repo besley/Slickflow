@@ -94,6 +94,7 @@ var mxtoolkit = (function () {
 
         activityElement.setAttribute('label', activity.name);
         activityElement.setAttribute('code', activity.code);
+        activityElement.setAttribute('url', activity.url);
 
         var descElement = doc.createElement('Description');
         activityElement.appendChild(descElement);
@@ -113,23 +114,47 @@ var mxtoolkit = (function () {
             activityElement.appendChild(performersElement);
         }
 
+        //actions
+        if (activity.actions && activity.actions.length > 0) {
+            var actionsElement = mxfile.setActionsElement(doc, activity.actions);
+            activityElement.appendChild(actionsElement);
+        }
+
+        //boudaries
+        if (activity.boundaries && activity.boundaries.length > 0) {
+            var boundariesElement = mxfile.setBoundariesElement(doc, activity.boundaries);
+            activityElement.appendChild(boundariesElement);
+        }
+
+        //sections
+        if (activity.sections && activity.sections.length > 0) {
+            var sectionsElement = mxfile.setSectionsElement(doc, activity.sections);
+            activityElement.appendChild(sectionsElement);
+        }
+
         return activityElement;
     }
 
     mxtoolkit.insertEdge = function(graph, transition){       
         var doc = mxUtils.createXmlDocument();
-        var transitonElement = mxfile.setTransitionElement(doc, transition);
+        var transitionElement = mxfile.setTransitionElement(doc, transition);
         
         //condition
         if ($.isEmptyObject(transition.condition) === false) {
             var conditionElement = mxfile.setConditionElement(doc, transition.condition);
-            transitonElement.appendChild(conditionElement);                  
+            transitionElement.appendChild(conditionElement);                  
+        }
+
+        //group behaviours
+        if ($.isEmptyObject(transition.groupBehaviours) === false) {
+            var groupBehavioursElement = mxfile.setGroupBehavioursElement(doc, transition.groupBehaviours);
+            transitionElement.appendChild(groupBehavioursElement);
         }
         
         //receiver
         if ($.isEmptyObject(transition.receiver) === false){
             var receiverElement = mxfile.setReceiverElement(doc, transition.receiver);
-            transitonElement.appendChild(receiverElement);    
+            transitionElement.appendChild(receiverElement);    
         }
 
         //geography
@@ -138,10 +163,16 @@ var mxtoolkit = (function () {
         var parent = null;
         if (geography) parent = model.getCell(geography.parent);
         if (!parent) parent = graph.getDefaultParent();
-        
-        var edge = graph.insertEdge(parent, transition.id, transitonElement, 
-            graph.getModel().getCell(transition.from), graph.getModel().getCell(transition.to));
-        
+
+        var edge = graph.insertEdge(parent, transition.id, transitionElement,
+            graph.getModel().getCell(transition.from), graph.getModel().getCell(transition.to), geography.style);
+
+        //points
+        if (geography) {
+            if (geography.points) {
+                edge.geometry.points = geography.points;
+            }
+        }
         return edge;
     }
 

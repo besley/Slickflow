@@ -44,7 +44,9 @@
 	<add as="泳道" template="swimlane" icon="scripts/mxGraph/src/editor/images/swimlane.gif"/>
 	<add as="任务" template="task" icon="scripts/mxGraph/src/editor/images/rectangle.gif"/>
   <add as="子流程" template="subprocess" style="symbol;image=scripts/mxGraph/src/editor/images/symbols/subprocess.png" icon="scripts/mxGraph/src/editor/images/symbols/small_subprocess.gif"/>
-	<br/><hr/>
+   
+  -->
+  <br/><hr/>
 	<add as="fit" action="fit" icon="scripts/mxGraph/src/editor/images/zoom.gif"/>
 	<add as="zoomIn" action="zoomIn" icon="scripts/mxGraph/src/editor/images/zoomin.gif"/>
 	<add as="zoomOut" action="zoomOut" icon="scripts/mxGraph/src/editor/images/zoomout.gif"/>

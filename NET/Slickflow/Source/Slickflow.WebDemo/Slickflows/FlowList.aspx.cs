@@ -55,7 +55,7 @@ namespace Slickflow.WebDemo.Slickflows
         /// </summary>
         private void GetReadyTasks()
         {
-            IWorkflowService wfService = new WorkflowService();
+            var wfService = new WorkflowService();
             var en = new TaskQuery
             {
                 UserID = LoginUserID.ToString()

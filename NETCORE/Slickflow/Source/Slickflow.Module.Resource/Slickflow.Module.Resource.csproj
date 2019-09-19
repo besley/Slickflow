@@ -1,12 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Entity\Table.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Devart.Data.Oracle.EFCore" Version="9.5.399" />
@@ -18,6 +14,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj" />
     <ProjectReference Include="..\Slickflow.Module\Slickflow.Module.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Dapper">
+      <HintPath>..\DLL\Dapper.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

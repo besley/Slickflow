@@ -6,38 +6,51 @@
 
 <html>
 <head>
-    <title>转移属性编辑</title>
+    <title>Transition Property</title>
 </head>
 <body>
     <!-- Modal -->
     <div class="modal-body">
-        <div id="transition-property-controller" style="height:200px;">
+        <div id="divTransitionProperty" style="height:160px;">
             <p>
-                <span class="a_tit">描述:</span>
+                <span class="a_tit lang" as="description"></span>
                 <span><input type="text" id="txtDescription" class="form-control" style="width:340px;" /></span>
             </p>
             <p>
-                <span class="a_tit">接收者类型:</span>
-                <select id="ddlReceiverType" class="form-control" style="width:340px;" >
-                    <option value="default">--请选择--</option>
-                    <option value="Superior">上司</option>
-                    <option value="Compeer">同事</option>
-                    <option value="Subordinate">下属</option>
+                <span class="a_tit lang" as="recievertype"></span>
+                <select id="ddlReceiverType" class="form-control" style="width:340px;">
+                    <option value="default" class="lang" as="optiondefault"></option>
+                    <option value="Superior" class="lang" as="superior"></option>
+                    <option value="Compeer" class="lang" as="compeer"></option>
+                    <option value="Subordinate" class="lang" as="subordinate"></option>
                 </select>
             </p>
             <p>
-                <span class="a_tit">条件表达式:</span>
+                <span class="a_tit lang" as="conditionexpression"></span>
                 <span><textarea id="txtCondition" class="bcxj form-control" style="height:60px;"></textarea></span>
+            </p>
+        </div>
+        <div id="divSplitOptions" style="display:none;">
+            <p>
+                <span class="a_tit lang" as="priority"></span>
+                <span><input type="text" id="txtPriority" class="form-control" style="width:340px;" placeholder="请输入数字，-1-表示最高优先级，0,1,2,3 依次优先级降低..." /></span>
+            </p>
+        </div>
+        <div id="divJoinOptions" style="display:none;">
+            <p>
+                <span class="a_tit lang" as="mergeoptions"></span>
+                <span><input type="checkbox" id="chkForced" style="width:30px;" class="lang" as="forcedmergebranch"/></span>
             </p>
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" data-dismiss="modal" onclick="transitionproperty.save();">确定</button>
-        <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+        <button class="btn btn-primary lang" as="sure" data-dismiss="modal" onclick="transitionproperty.save();"></button>
+        <button class="btn lang" as="cancel" data-dismiss="modal" aria-hidden="true"></button>
     </div>
 
     <script type="text/javascript">
         $(function () {
+            kresource.localize();
             transitionproperty.load();
         });
     </script>

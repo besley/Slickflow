@@ -48,6 +48,31 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
+        /// 更新流程缓存
+        /// </summary>
+        /// <param name="processGUID">流程GUID</param>
+        /// <param name="version">版本</param>
+        /// <param name="xmlDoc">xml文本</param>
+        /// <returns>更新状态</returns>
+        internal static bool TryUpdate(string processGUID, string version, XmlDocument xmlDoc)
+        {
+            var str = processGUID + version;
+            var strMD5 = MD5Helper.GetMD5(str);
+
+            if (_xpdlCache.ContainsKey(strMD5))
+            {
+                XmlDocument outXmlDoc;
+                if (_xpdlCache.TryRemove(strMD5, out outXmlDoc))
+                {
+                    _xpdlCache.GetOrAdd(strMD5, xmlDoc);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        /// <summary>
         /// 设置实体Reader转换的动态映射方法缓存
         /// </summary>
         /// <param name="id"></param>

@@ -27,8 +27,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using Slickflow.Engine.Common;
+using Slickflow.Engine.Utility;
 using Slickflow.Data;
-using Slickflow.Engine.Business.Data;
 using Slickflow.Engine.Business.Entity;
 
 namespace Slickflow.Engine.Business.Manager
@@ -36,98 +37,232 @@ namespace Slickflow.Engine.Business.Manager
     /// <summary>
     /// 流程定义管理类
     /// </summary>
-    public class ProcessManager
+    public class ProcessManager : ManagerBase
     {
         #region 获取流程数据
+        /// <summary>
+        /// 根据ID获取流程实体
+        /// </summary>
+        /// <param name="id">主键ID</param>
+        /// <returns>流程实体</returns>
+        public ProcessEntity GetByID(int id)
+        {
+            var entity = Repository.GetById<ProcessEntity>(id);
+            return entity;
+        }
+
         /// <summary>
         /// 根据流程GUID和版本标识获取流程
         /// </summary>
         /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
+        /// <param name="version">流程版本</param>
         /// <returns>流程实体</returns>
-        public ProcessEntity GetByVersion(string processGUID, string version)
+        public ProcessEntity GetByVersion(string processGUID, string version = null)
+        {
+            String sql = string.Empty;
+            ProcessEntity entity = null;
+
+            if (!string.IsNullOrEmpty(version))
+            {
+                sql = @"SELECT 
+                            * 
+                        FROM WfProcess 
+                        WHERE ProcessGUID=@processGUID 
+                            AND VERSION=@version";
+            }
+            else
+            {
+                sql = @"SELECT 
+                            * 
+                        FROM WfProcess 
+                        WHERE ProcessGUID=@processGUID 
+                            AND IsUsing=1";             //当前使用的版本
+            }
+
+            var list = Repository.Query<ProcessEntity>(sql, new { processGUID=processGUID, version=version})
+                            .ToList<ProcessEntity>();
+
+            if (list != null && list.Count() == 1)
+            {
+                entity = list[0];
+            }
+            else
+            {
+                throw new ApplicationException(string.Format(
+                    "数据库没有对应的流程定义记录，ProcessGUID: {0}, Version: {1}", processGUID, version
+                ));
+            }
+            return entity;
+        }
+
+        /// <summary>
+        /// 根据版本选择流程
+        /// </summary>
+        /// <param name="conn">数据库链接</param>
+        /// <param name="processGUID">流程GUID</param>
+        /// <param name="version">版本</param>
+        /// <param name="trans">交易</param>
+        /// <returns>流程实体</returns>
+        internal ProcessEntity GetByVersion(IDbConnection conn, 
+            string processGUID, 
+            string version, 
+            IDbTransaction trans = null)
         {
             ProcessEntity entity = null;
-            using (var session = DbFactory.CreateSession())
-            {
-                var repository = session.GetRepository<ProcessEntity>();
-                if (!string.IsNullOrEmpty(version))
-                {
-                    //sql = @"SELECT 
-                    //        * 
-                    //    FROM WfProcess 
-                    //    WHERE ProcessGUID=@processGUID 
-                    //        AND VERSION=@version";
-                    entity = repository.Get(e => e.ProcessGUID == processGUID
-                        && e.Version == version);
-                }
-                else
-                {
-                    //sql = @"SELECT 
-                    //        * 
-                    //    FROM WfProcess 
-                    //    WHERE ProcessGUID=@processGUID 
-                    //        AND VERSION=@version";
-                    entity = repository.Get(e => e.ProcessGUID == processGUID
-                        && e.IsUsing == 1);
-                }
+            var sql = @"SELECT 
+                            * 
+                        FROM WfProcess 
+                        WHERE ProcessGUID=@processGUID 
+                            AND VERSION=@version";
+            var list = Repository.Query<ProcessEntity>(conn, sql, 
+                new {
+                    processGUID = processGUID,
+                    version = version
+                },
+                trans).ToList<ProcessEntity>();
 
-                if (entity == null)
-                {
-                    throw new ApplicationException(string.Format(
-                        "数据库没有对应的流程定义记录，ProcessGUID: {0}, Version: {1}", processGUID, version
-                    ));
-                }
-                return entity;
-            }           
+            if (list != null && list.Count() == 1)
+            {
+                entity = list[0];
+            }
+            else
+            {
+                throw new ApplicationException(string.Format(
+                    "数据库没有对应的流程定义记录，ProcessGUID: {0}, Version: {1}", processGUID, version
+                ));
+            }
+            return entity;
+        }
+
+        /// <summary>
+        /// 根据流程名称和版本标识获取流程
+        /// </summary>
+        /// <param name="processName">流程名称</param>
+        /// <param name="version">流程版本</param>
+        /// <returns>流程实体</returns>
+        public ProcessEntity GetByName(string processName, string version = null)
+        {
+            String sql = string.Empty;
+            ProcessEntity entity = null;
+
+            if (!string.IsNullOrEmpty(version))
+            {
+                sql = @"SELECT 
+                            * 
+                        FROM WfProcess 
+                        WHERE ProcessName=@processName 
+                            AND VERSION=@version";
+            }
+            else
+            {
+                sql = @"SELECT 
+                            * 
+                        FROM WfProcess 
+                        WHERE ProcessName=@processName  
+                            AND IsUsing=1";             //当前使用的版本
+            }
+
+            var list = Repository.Query<ProcessEntity>(sql, new { processName = processName, version = version })
+                            .ToList<ProcessEntity>();
+
+            if (list != null && list.Count() == 1)
+            {
+                entity = list[0];
+            }
+            else
+            {
+                throw new ApplicationException(string.Format(
+                    "数据库没有对应的流程定义记录，ProcessName: {0}, Version: {1}", processName, version
+                ));
+            }
+            return entity;
+        }
+
+        /// <summary>
+        /// 根据流程名称和版本标识获取流程
+        /// </summary>
+        /// <param name="processCode">流程代码</param>
+        /// <param name="version">流程版本</param>
+        /// <returns>流程实体</returns>
+        public ProcessEntity GetByCode(string processCode, string version = null)
+        {
+            String sql = string.Empty;
+            ProcessEntity entity = null;
+
+            if (!string.IsNullOrEmpty(version))
+            {
+                sql = @"SELECT 
+                            * 
+                        FROM WfProcess 
+                        WHERE ProcessCode=@processCode 
+                            AND VERSION=@version";
+            }
+            else
+            {
+                sql = @"SELECT 
+                            * 
+                        FROM WfProcess 
+                        WHERE ProcessCode=@processCode
+                            AND IsUsing=1";             //当前使用的版本
+            }
+
+            var list = Repository.Query<ProcessEntity>(sql, new { processCode = processCode, version = version })
+                            .ToList<ProcessEntity>();
+
+            if (list != null && list.Count() == 1)
+            {
+                entity = list[0];
+            }
+            else
+            {
+                throw new ApplicationException(string.Format(
+                    "数据库没有对应的流程定义记录，ProcessCode: {0}, Version: {1}", processCode, version
+                ));
+            }
+            return entity;
         }
 
         /// <summary>
         /// 按照版本获取流程记录
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <returns>流程实体</returns>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         internal ProcessEntity GetByVersionInternal(string processGUID, string version)
         {
-            //string sql = @"SELECT 
-            //                * 
-            //            FROM WfProcess 
-            //            WHERE ProcessGUID=@processGUID 
-            //                AND VERSION=@version";
             ProcessEntity entity = null;
-            using (var session = DbFactory.CreateSession())
+            string sql = @"SELECT 
+                            * 
+                        FROM WfProcess 
+                        WHERE ProcessGUID=@processGUID 
+                            AND VERSION=@version";
+
+            var list = Repository.Query<ProcessEntity>(sql, new { processGUID = processGUID, version = version })
+                            .ToList<ProcessEntity>();
+            if (list != null)
             {
-                var list = session.GetRepository<ProcessEntity>().Query(e => e.ProcessGUID == processGUID
-                    && e.Version == version).ToList();
-                if (list != null)
+                if (list.Count() > 1)
                 {
-                    if (list.Count() > 1)
-                    {
-                        throw new ApplicationException(string.Format(
-                            "数据库有多条重复的流程定义记录存在，ProcessGUID: {0}, Version: {1}", processGUID, version
-                        ));
-                    }
-                    else if (list.Count() == 1)
-                    {
-                        entity = list[0];
-                    }
+                    throw new ApplicationException(string.Format(
+                        "数据库有多条重复的流程定义记录存在，ProcessGUID: {0}, Version: {1}", processGUID, version
+                    ));
                 }
-                return entity;
+                else if(list.Count() == 1)
+                {
+                    entity = list[0];
+                }
             }
+            return entity;
         }
 
         /// <summary>
         /// 获取所有流程记录
         /// </summary>
-        /// <returns>流程列表</returns>
+        /// <returns></returns>
         public List<ProcessEntity> GetAll()
         {
-            using (var session = DbFactory.CreateSession())
-            {
-                var list = session.GetRepository<ProcessEntity>().GetAll().ToList();
-                return list;
-            }
+            var list = Repository.GetAll<ProcessEntity>().ToList<ProcessEntity>();
+            return list;
         }
 
         /// <summary>
@@ -136,31 +271,24 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns></returns>
         public List<ProcessEntity> GetListSimple()
         {
-            //var sql = @"SELECT 
-            //            ID, 
-            //            ProcessGUID, 
-            //            ProcessName,
-            //            Version,
-            //            IsUsing,
-            //            CreatedDateTime
-            //        FROM WfProcess
-            //        ORDER BY ID DESC";
-            using (var session = DbFactory.CreateSession())
-            {
-                var list = session.GetRepository<ProcessEntity>().GetDbSet()
-                    .Select(p => new ProcessEntity
-                    {
-                        ID = p.ID,
-                        ProcessGUID = p.ProcessGUID,
-                        ProcessName = p.ProcessName,
-                        Version = p.Version,
-                        IsUsing = p.IsUsing,
-                        CreatedDateTime = p.CreatedDateTime
-                    })
-                    .OrderByDescending(p=>p.ID)
-                    .ToList();
-                return list;
-            }
+            var sql = @"SELECT 
+                        ID, 
+                        ProcessGUID, 
+                        ProcessName,
+                        ProcessCode,
+                        Version,
+                        IsUsing,
+                        AppType,
+                        PageUrl,
+                        StartType,
+                        StartExpression,
+                        EndType,
+                        EndExpression,
+                        CreatedDateTime
+                    FROM WfProcess
+                    ORDER BY ID DESC";
+            var list = Repository.Query<ProcessEntity>(sql).ToList();
+            return list;
         }
         #endregion
 
@@ -171,71 +299,123 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="entity"></param>
         public int Insert(ProcessEntity entity)
         {
-            using (var session = DbFactory.CreateSession())
+            IDbSession session = SessionFactory.CreateSession();
+            try
             {
-                var newID = Insert(entity, session);
-                return newID;
+                session.BeginTrans();
+                int processID = Insert(session.Connection, entity, session.Transaction);
+                session.Commit();
+
+                return processID;
+            }
+            catch (System.Exception ex)
+            {
+                session.Rollback();
+                throw;
+            }
+            finally
+            {
+                session.Dispose();
             }
         }
 
         /// <summary>
         /// 新增流程记录
         /// </summary>
+        /// <param name="conn"></param>
         /// <param name="entity"></param>
-        /// <param name="session">数据上下文</param>
-        public int Insert(ProcessEntity entity, 
-            IDbSession session)
+        /// <param name="trans"></param>
+        public int Insert(IDbConnection conn, ProcessEntity entity, IDbTransaction trans)
         {
             var entityExisted = GetByVersionInternal(entity.ProcessGUID, entity.Version);
             if (entityExisted != null) throw new ApplicationException("相同版本的GUID标识的流程记录已经存在！");
 
-            var newEntity = session.GetRepository<ProcessEntity>().Insert(entity);
-            session.SaveChanges();
-
-            return newEntity.ID;
+            return Repository.Insert<ProcessEntity>(conn, entity, trans);
         }
 
         /// <summary>
         /// 更新流程记录
         /// </summary>
-        /// <param name="entity">流程实体</param>
+        /// <param name="entity">实体</param>
         public void Update(ProcessEntity entity)
         {
-            using (var session = DbFactory.CreateSession())
+            IDbSession session = SessionFactory.CreateSession();
+            try
             {
-                Update(entity, session);
+                session.BeginTrans();             
+                Repository.Update<ProcessEntity>(session.Connection, entity, session.Transaction);
+                session.Commit();
+            }
+            catch (System.Exception)
+            {
+                session.Rollback();
+                throw;
+            }
+            finally
+            {
+                session.Dispose();
             }
         }
 
         /// <summary>
         /// 流程定义记录更新
         /// </summary>
+        /// <param name="conn">链接</param>
         /// <param name="entity">实体</param>
-        /// <param name="session">数据上下文</param>
-        public void Update(ProcessEntity entity, 
-            IDbSession session)
+        /// <param name="trans">事务</param>
+        public void Update(IDbConnection conn, ProcessEntity entity, IDbTransaction trans)
         {
-            session.GetRepository<ProcessEntity>().Update(entity);
-            session.SaveChanges();
+            Repository.Update<ProcessEntity>(conn, entity, trans);
         }
 
         /// <summary>
         /// 更新流程版本IsUsing=0
         /// </summary>
+        /// <param name="conn">链接</param>
         /// <param name="processGUID">流程GUID</param>
-        /// <param name="session">会话</param>
-        public void RemoveUsingState(string processGUID, 
-            IDbSession session)
+        /// <param name="trans">事务</param>
+        public void UpdateUsingState(IDbConnection conn, string processGUID, IDbTransaction trans)
         {
-            //string strSql = @"UPDATE WfProcess 
-            //                  SET IsUsing=0 
-            //                  WHERE  ProcessGUID=@processGUID";
-            var repository = session.GetRepository<ProcessEntity>();
-            var list = repository.Query(e => e.ProcessGUID == processGUID
-                && e.IsUsing == 0);
-            session.GetRepository<ProcessEntity>().Update(list);
-            session.SaveChanges();
+            string strSql = @"UPDATE WfProcess 
+                              SET IsUsing=0 
+                              WHERE  ProcessGUID=@processGUID";
+
+            Repository.Execute(conn, strSql, new { processGUID = processGUID }, trans);
         }
+
+        /// <summary>
+        /// 升级流程记录
+        /// </summary>
+        /// <param name="processGUID">流程GUID</param>
+        /// <param name="version">流程版本</param>
+        /// <param name="newVersion">新版本编号</param>
+        public void Upgrade(string processGUID, string version, string newVersion)
+        {
+            if (string.IsNullOrEmpty(newVersion))
+            {
+                throw new WorkflowException("新的版本号不能为空！");
+            }
+
+            IDbSession session = SessionFactory.CreateSession();
+            try
+            {
+                session.BeginTrans();
+                var entity = GetByVersion(session.Connection, processGUID, version, session.Transaction);
+                entity.Version = newVersion;
+                Repository.Insert<ProcessEntity>(session.Connection, entity, session.Transaction);
+                session.Commit();
+            }
+            catch (System.Exception)
+            {
+                session.Rollback();
+                throw;
+            }
+            finally
+            {
+                session.Dispose();
+            }
+        }
+
         /// <summary>
         /// 删除流程记录
         /// </summary>
@@ -243,77 +423,129 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="version">版本</param>
         public void Delete(string processGUID, string version)
         {
-            //string strSql = @"DELETE FROM WfProcess  
-            //                WHERE  ProcessGUID=@processGUID
-            //                    AND Version=@version";
-            using (var session = DbFactory.CreateSession())
+            IDbSession session = SessionFactory.CreateSession();
+            try
             {
-                var repository = session.GetRepository<ProcessEntity>();
-                var list = repository.Query(e => e.ProcessGUID == processGUID
-                    && e.Version == version);
-                repository.Delete(list);
-                session.SaveChanges();
+                var entity = GetByVersion(processGUID, version);
+
+                session.BeginTrans();
+                Repository.Delete<ProcessEntity>(session.Connection, entity, session.Transaction);
+                session.Commit();
+            }
+            catch (System.Exception)
+            {
+                session.Rollback();
+                throw;
+            }
+            finally
+            {
+                session.Dispose();
             }
         }
 
 		/// <summary>
         /// 删除流程记录
         /// </summary>
+        /// <param name="conn">链接</param>
         /// <param name="processGUID">流程GUID</param>
-        public void Delete(string processGUID)
+        /// <param name="trans">事务</param>
+        public void Delete(IDbConnection conn, string processGUID, IDbTransaction trans)
         {
-            //string strSql = @"DELETE FROM WfProcess  
-            //                WHERE  ProcessGUID=@processGUID";
-            using (var session = DbFactory.CreateSession())
+            string strSql = "DELETE FROM WfProcess  WHERE  ProcessGUID=@processGUID";
+            Repository.Execute(conn, strSql, new { processGUID = processGUID }, trans);
+        }
+
+        /// <summary>
+        /// 删除流程记录
+        /// </summary>
+        /// <param name="processGUID">流程定义GUID</param>
+        /// <param name="version">版本</param>
+        /// <param name="localStorage">本地存储</param>
+        public void DeleteProcess(string processGUID, string version, IXPDLStorage localStorage)
+        {
+            IDbSession session = SessionFactory.CreateSession();
+            try
             {
-                var repository = session.GetRepository<ProcessEntity>();
-                var list = repository.Query(e => e.ProcessGUID == processGUID);
-                repository.Delete(list);
-                session.SaveChanges();
+                session.BeginTrans();
+                var entity = GetByVersion(processGUID, version);
+
+                string strSql = @"DELETE FROM WfProcess  
+                                WHERE  ProcessGUID=@processGUID
+                                    AND Version=@version";
+
+                Repository.Execute(session.Connection, strSql, 
+                    new { processGUID = processGUID, version = version },  
+                    session.Transaction);
+
+                if (localStorage != null)
+                {
+                    //delete the xml file
+                    var serverPath = ConfigHelper.GetAppSettingString("WorkflowFileServer");
+                    var physicalFileName = string.Format("{0}\\{1}", serverPath, entity.XmlFilePath);
+                    File.Delete(physicalFileName);
+                }
+
+                session.Commit();
+            }
+            catch (System.Exception ex)
+            {
+                session.Rollback();
+                throw;
+            }
+            finally
+            {
+                session.Dispose();
             }
         }
         #endregion
 
         #region 流程xml文件操作
+
+
         /// <summary>
         /// 流程定义的创建方法
         /// </summary>
         /// <param name="entity">实体</param>
         /// <param name="extStorage">存储</param>
         /// <returns></returns>
-        internal int CreateProcess(ProcessEntity entity)
+        internal int CreateProcess(ProcessEntity entity, IXPDLStorage extStorage = null)
         {
-            using (var session = DbFactory.CreateSession())
+            int processID = 0;
+            var session = SessionFactory.CreateSession();
+
+            try
             {
+                session.BeginTrans();
+
                 entity.ProcessGUID = Guid.NewGuid().ToString();
-                entity.Version = "1";     //default version value;
+                if (String.IsNullOrEmpty(entity.Version))
+                {
+                    entity.Version = "1";     //default version value;
+                }
                 entity.IsUsing = 1;
                 entity.CreatedDateTime = DateTime.Now;
                 entity.XmlFilePath = string.Format("{0}\\{1}", entity.AppType, entity.XmlFileName);
                 XmlDocument xmlDoc = GenerateXmlContent(entity);
                 entity.XmlContent = xmlDoc.OuterXml;    //流程定义文件
 
-                var newEntity = session.GetRepository<ProcessEntity>().Insert(entity);
-                session.SaveChanges();
+                processID = Insert(session.Connection, entity, session.Transaction);
 
-                return newEntity.ID;       //return the new inseted process id
+                if (extStorage != null)
+                {
+                    extStorage.Save(entity.XmlFilePath, xmlDoc);
+                }
+                session.Commit();
+
+                return processID;
             }
-        }
-
-        /// <summary>
-        /// 创建流程新版本
-        /// </summary>
-        /// <param name="entity">流程实体</param>
-        /// <returns>新实例ID</returns>
-        internal int CreateProcessVersion(ProcessEntity entity)
-        {
-            using (var session = DbFactory.CreateSession())
+            catch (System.Exception ex)
             {
-                RemoveUsingState(entity.ProcessGUID, session);
-                entity.CreatedDateTime = DateTime.Now;
-                entity.IsUsing = 1;
-                var newID = Insert(entity);
-                return newID;
+                session.Rollback();
+                throw;
+            }
+            finally
+            {
+                session.Dispose();
             }
         }
 
@@ -334,9 +566,11 @@ namespace Slickflow.Engine.Business.Manager
 
             XmlElement workflowNode = xmlDoc.CreateElement("WorkflowProcesses");
             XmlElement processNode = xmlDoc.CreateElement("Process");
-            processNode.SetAttribute("name", entity.ProcessName);
             processNode.SetAttribute("id", entity.ProcessGUID);
-
+            processNode.SetAttribute("name", entity.ProcessName);
+            processNode.SetAttribute("code", entity.ProcessCode);
+            processNode.SetAttribute("version", entity.Version);
+            
             XmlElement descriptionNode = xmlDoc.CreateElement("Description");
             descriptionNode.InnerText = entity.Description;
             processNode.AppendChild(descriptionNode);
@@ -352,18 +586,44 @@ namespace Slickflow.Engine.Business.Manager
         /// </summary>
         /// <param name="entity">实体</param>
         /// <param name="extStorage">存储</param>
-        internal void SaveProcessFile(ProcessFileEntity entity)
+        internal void SaveProcessFile(ProcessFileEntity entity, IXPDLStorage extStorage = null)
         {
-            using (var session = DbFactory.CreateSession())
+            //默认数据库存储
+            var session = SessionFactory.CreateSession();
+            try
             {
+                session.BeginTrans();
+
                 var processEntity = GetByVersion(entity.ProcessGUID, entity.Version);
                 processEntity.StartType = entity.StartType;
                 processEntity.StartExpression = entity.StartExpression;
+                processEntity.EndType = entity.EndType;
+                processEntity.EndExpression = entity.EndExpression;
                 processEntity.XmlContent = entity.XmlContent;
                 processEntity.LastUpdatedDateTime = DateTime.Now;
-                session.GetRepository<ProcessEntity>().Update(processEntity);
 
-                session.SaveChanges();
+                //本地存储
+                if (extStorage != null)
+                {
+                    var xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(entity.XmlContent);
+                    
+                    extStorage.Save(processEntity.XmlFilePath, xmlDoc);
+                }
+
+                //数据库存储
+                Repository.Update<ProcessEntity>(session.Connection, processEntity, session.Transaction);
+
+                session.Commit();
+            }
+            catch
+            {
+                session.Rollback();
+                throw;
+            }
+            finally
+            {
+                session.Dispose();
             }
         }
 
@@ -372,12 +632,12 @@ namespace Slickflow.Engine.Business.Manager
         /// </summary>
         /// <param name="processGUID">流程GUID</param>
         /// <param name="version">版本</param>
+        /// <param name="extStorage">存储</param>
         /// <returns>流程文件实体</returns>
-        internal ProcessFileEntity GetProcessFile(string processGUID, string version)
+        internal ProcessFileEntity GetProcessFile(string processGUID, string version, IXPDLStorage extStorage = null)
         {
             var processEntity = GetByVersion(processGUID, version);
             var processFileEntity = FillProcessFileEntity(processEntity);
-
             return processFileEntity;
         }
 
@@ -386,35 +646,42 @@ namespace Slickflow.Engine.Business.Manager
         /// </summary>
         /// <param name="id">流程ID</param>
         /// <param name="extStorage">外部存储</param>
-        /// <returns>流程文件实体</returns>
-        internal ProcessFileEntity GetProcessFileByID(int id)
+        /// <returns></returns>
+        internal ProcessFileEntity GetProcessFileByID(int id, IXPDLStorage extStorage = null)
         {
-            using (var session = DbFactory.CreateSession())
-            {
-                var processEntity = session.GetRepository<ProcessEntity>().GetByID(id);
-                var processFileEntity = FillProcessFileEntity(processEntity);
-                return processFileEntity;
-            }
+            var processEntity = Repository.GetById<ProcessEntity>(id);
+            var processFileEntity = FillProcessFileEntity(processEntity, extStorage);
+            return processFileEntity;
         }
 
         /// <summary>
         /// 转换流程文件实体
         /// </summary>
         /// <param name="processEntity">流程实体</param>
-        /// <returns>流程文件实体</returns>
-        private ProcessFileEntity FillProcessFileEntity(ProcessEntity processEntity)
+        /// <param name="extStorage">外部存储</param>
+        /// <returns></returns>
+        private ProcessFileEntity FillProcessFileEntity(ProcessEntity processEntity, IXPDLStorage extStorage = null)
         {
             //流程文件实体
             var processFileEntity = new ProcessFileEntity();
-
             processFileEntity.ProcessGUID = processEntity.ProcessGUID;
             processFileEntity.ProcessName = processEntity.ProcessName;
+            processFileEntity.ProcessCode = processEntity.ProcessCode;
             processFileEntity.Version = processEntity.Version;
             processFileEntity.StartType = processEntity.StartType;
             processFileEntity.StartExpression = processEntity.StartExpression;
             processFileEntity.Description = processEntity.Description;
-            processFileEntity.XmlContent = processEntity.XmlContent;
 
+            if (extStorage != null)
+            {
+                //扩展方式读取xml文件内容
+                var xmlDoc = extStorage.Read(processEntity);
+                processFileEntity.XmlContent = xmlDoc.OuterXml;
+            }
+            else
+            {
+                processFileEntity.XmlContent = processEntity.XmlContent;
+            }
             return processFileEntity;
         }
 
@@ -426,11 +693,19 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="version">版本</param>
         /// <param name="extStorage">存储</param>
         /// <returns>Xml文档</returns>
-        internal XmlDocument GetProcessXmlDocument(string processGUID, string version)
+        internal XmlDocument GetProcessXmlDocument(string processGUID, string version, IXPDLStorage extStorage = null)
         {
             var processEntity = GetByVersion(processGUID, version);
+
             var xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(processEntity.XmlContent);
+            if (extStorage != null)
+            {
+                xmlDoc = extStorage.Read(processEntity);
+            }
+            else
+            {
+                xmlDoc.LoadXml(processEntity.XmlContent);
+            }
 
             return xmlDoc;
         }

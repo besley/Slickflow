@@ -15,21 +15,42 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 是否简单组件节点
         /// </summary>
-        /// <param name="acitivytType">活动类型</param>
+        /// <param name="activityType">活动类型</param>
         /// <returns>判断结果</returns>
-        internal static Boolean IsSimpleComponentNode(ActivityTypeEnum acitivytType)
+        internal static Boolean IsSimpleComponentNode(ActivityTypeEnum activityType)
         {
-            if (acitivytType == ActivityTypeEnum.TaskNode
-                    || acitivytType == ActivityTypeEnum.MultipleInstanceNode
-                    || acitivytType == ActivityTypeEnum.ScriptNode
-                    || acitivytType == ActivityTypeEnum.PluginNode
-                    || acitivytType == ActivityTypeEnum.StartNode
-                    || acitivytType == ActivityTypeEnum.EndNode)
+            if (activityType == ActivityTypeEnum.TaskNode
+                    || activityType == ActivityTypeEnum.MultipleInstanceNode
+                    || activityType == ActivityTypeEnum.SubProcessNode
+                    || activityType == ActivityTypeEnum.ScriptNode
+                    || activityType == ActivityTypeEnum.PluginNode
+                    || activityType == ActivityTypeEnum.StartNode
+                    || activityType == ActivityTypeEnum.EndNode)
             {
                 return true;
             }
             else
                 return false;
+        }
+
+        /// <summary>
+        /// 是否复合逻辑处理节点
+        /// </summary>
+        /// <param name="activityType">活动类型</param>
+        /// <returns>判断结果</returns>
+        internal static Boolean IsGatewayComponentNode(ActivityTypeEnum activityType)
+        {
+            return activityType == ActivityTypeEnum.GatewayNode;
+        }
+
+        /// <summary>
+        /// 是否中间事件处理节点
+        /// </summary>
+        /// <param name="activityType">活动类型</param>
+        /// <returns>判断结果</returns>
+        internal static Boolean IsIntermediateEventComponentNode(ActivityTypeEnum activityType)
+        {
+            return activityType == ActivityTypeEnum.IntermediateNode;
         }
 
         /// <summary>

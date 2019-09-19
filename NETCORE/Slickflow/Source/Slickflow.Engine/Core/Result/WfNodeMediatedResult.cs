@@ -43,9 +43,10 @@ namespace Slickflow.Engine.Core.Result
         /// </summary>
         /// <param name="feedback"></param>
         /// <returns></returns>
-        public static WfNodeMediatedResult CreateNodeMediatedResult(WfNodeMediatedFeedback feedback)
+        public static WfNodeMediatedResult CreateNodeMediatedResultWithException(WfNodeMediatedFeedback feedback)
         {
             var mediatedResult = new WfNodeMediatedResult();
+            mediatedResult.Status = WfExecutedStatus.Exception;
             mediatedResult.Feedback = feedback;
 
             return mediatedResult;
@@ -74,18 +75,23 @@ namespace Slickflow.Engine.Core.Result
         NeedOtherGatewayBranchesToJoin = 3,
 
         /// <summary>
-        /// XOR场景，第一个满足条件的分支完成，其后的被阻止
+        /// OrJoin场景，第一个满足条件的分支完成，其后的被阻止
         /// </summary>
-        XOrFirstHasBeenFinishedOthersBlocked = 4,
+        OrJoinOneBranchHasBeenFinishedWaittingOthers = 4,
+
+        /// <summary>
+        /// 中间事件处理节点异常
+        /// </summary>
+        IntermediateEventFailed = 5,
 
         /// <summary>
         /// 其它未知因素需调试
         /// </summary>
-        OtherUnknownReasonToDebug = 5,
+        OtherUnknownReasonToDebug = 6,
 
         /// <summary>
         /// 未知类型的节点需监视
         /// </summary>
-        UnknownNodeTypeToWatch = 6
+        UnknownNodeTypeToWatch = 7
     }
 }

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Slickflow.Data;
 using Slickflow.Engine.Utility;
+using Slickflow.Data;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
 
@@ -18,12 +18,7 @@ namespace Slickflow.Engine.Xpdl.Node
         /// <summary>
         /// 节点定义属性
         /// </summary>
-        public ActivityEntity Activity
-        {
-            get;
-            set;
-        }
-
+        private ActivityEntity _activity;
         /// <summary>
         /// 节点实例
         /// </summary>
@@ -40,7 +35,7 @@ namespace Slickflow.Engine.Xpdl.Node
         /// <param name="currentActivity"></param>
         public NodeBase(ActivityEntity currentActivity)
         {
-            Activity = currentActivity;
+            _activity = currentActivity;
         }
         #endregion
     }

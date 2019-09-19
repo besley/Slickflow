@@ -10,6 +10,12 @@ namespace Slickflow.Engine.Xpdl.Schedule
     /// </summary>
     public class NextActivityItem : NextActivityComponent
     {
+        /// <summary>
+        /// 构造方法
+        /// </summary>
+        /// <param name="name">节点名称</param>
+        /// <param name="transition">转移</param>
+        /// <param name="activity">活动</param>
         public NextActivityItem(string name, 
             TransitionEntity transition,
             ActivityEntity activity)
@@ -19,6 +25,10 @@ namespace Slickflow.Engine.Xpdl.Schedule
             base.Activity = activity;
         }
 
+        /// <summary>
+        /// 获取迭代器
+        /// </summary>
+        /// <returns>迭代器</returns>
         public override IEnumerator<NextActivityComponent> GetEnumerator()
         {
             return null;

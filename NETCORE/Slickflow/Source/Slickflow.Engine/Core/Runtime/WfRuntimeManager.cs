@@ -21,21 +21,15 @@ web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 */
 
 using System;
-using System.Threading;
-using System.Transactions;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Slickflow.Data;
-using Slickflow.Engine.Common;
-using Slickflow.Engine.Utility;
-using Slickflow.Engine.Core.Result;
-using Slickflow.Engine.Core.Event;
-using Slickflow.Engine.Xpdl;
-using Slickflow.Engine.Xpdl.Node;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
-using Slickflow.Engine.Core.Pattern;
+using Slickflow.Engine.Common;
+using Slickflow.Engine.Core.Result;
+using Slickflow.Engine.Core.Event;
+using Slickflow.Engine.Core.SendBack;
+using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Node;
 
 namespace Slickflow.Engine.Core.Runtime
 {
@@ -56,39 +50,18 @@ namespace Slickflow.Engine.Core.Runtime
         internal ActivityResource ActivityResource { get; set; }
         internal TaskViewEntity TaskView { get; set; }
         internal ActivityInstanceEntity RunningActivityInstance { get; set; }
+        internal int ProcessInstanceID { get; set; }
+        internal ProcessInstanceEntity ProcessInstance { get; set; }
         
         //流程返签或退回时的属性
         internal BackwardContext BackwardContext { get; set; }
         internal Boolean IsBackward { get; set; }
+        internal SendBackOperation SendBackOperation { get; set; }
 
         /// <summary>
         /// 流程执行结果对象
         /// </summary>
         internal WfExecutedResult WfExecutedResult { get; set; }
-
-        /// <summary>
-        /// 获取退回时最早节点实例ID，支持连续退回
-        /// </summary>
-        /// <returns></returns>
-        protected int GetBackwardMostPreviouslyActivityInstanceID()
-        {
-            //获取退回节点实例ID
-            int backMostPreviouslyActivityInstanceID;
-            if (BackwardContext.BackwardToTaskActivityInstance.MIHostActivityInstanceID != null)
-            {
-                //多实例子节点模式，不考虑连续模式
-                backMostPreviouslyActivityInstanceID = BackwardContext.BackwardToTaskActivityInstance.ID;
-            }
-            else
-            {
-                if (BackwardContext.BackwardToTaskActivityInstance.BackSrcActivityInstanceID != null)
-                    backMostPreviouslyActivityInstanceID = BackwardContext.BackwardToTaskActivityInstance.BackSrcActivityInstanceID.Value;
-                else
-                    backMostPreviouslyActivityInstanceID = BackwardContext.BackwardToTaskActivityInstance.ID;
-            }
-
-            return backMostPreviouslyActivityInstanceID;
-        }
         #endregion
 
         #region 构造方法
@@ -103,7 +76,7 @@ namespace Slickflow.Engine.Core.Runtime
         /// <summary>
         /// 执行方法
         /// </summary>
-        /// <returns></returns>
+        /// <returns>执行状态</returns>
         internal bool Execute(IDbSession session)
         {
             try
@@ -112,11 +85,13 @@ namespace Slickflow.Engine.Core.Runtime
             }
             catch (WfRuntimeException rx)
             {
+                WfExecutedResult.Status = WfExecutedStatus.Exception;
                 LogManager.RecordLog(WfDefine.WF_PROCESS_RUN_ERROR, LogEventType.Error, LogPriority.High, AppRunner, rx);
                 throw;
             }
             catch (System.Exception e)
             {
+                WfExecutedResult.Status = WfExecutedStatus.Failed;
                 LogManager.RecordLog(WfDefine.WF_PROCESS_RUN_ERROR, LogEventType.Error, LogPriority.High, AppRunner, e);
                 throw;
             }
@@ -130,20 +105,28 @@ namespace Slickflow.Engine.Core.Runtime
 
         /// <summary>
         /// 事件回调
-        /// </summary>
-        /// <param name="runtimeType"></param>
-        /// <param name="result"></param>
+        /// <param name="result">执行结果</param>
         internal void Callback(WfExecutedResult result)
         {
             WfEventArgs args = new WfEventArgs(result);
-            if (_onWfProcessExecuted != null)
-            {
-                _onWfProcessExecuted(this, args);
-            }
+            _onWfProcessExecuted.Invoke(this, args);
         }
         #endregion
 
-        #region 流程事件定义
+        #region 流程事件定义及绑定
+        private event EventHandler<WfEventArgs> _onWfProcessExecuting;
+        internal event EventHandler<WfEventArgs> OnWfProcessExecuting
+        {
+            add
+            {
+                _onWfProcessExecuting += value;
+            }
+            remove
+            {
+                _onWfProcessExecuting -= value;
+            }
+        }
+
         private event EventHandler<WfEventArgs> _onWfProcessExecuted;
         internal event EventHandler<WfEventArgs> OnWfProcessExecuted
         {
@@ -155,6 +138,38 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 _onWfProcessExecuted -= value;
             }
+        }
+
+        /// <summary>
+        /// 绑定事件
+        /// </summary>
+        /// <param name="executing">执行事件</param>
+        /// <param name="executed">执行完成事件</param>
+        internal WfRuntimeManager RegisterEvent(EventHandler<WfEventArgs> executing, EventHandler<WfEventArgs> executed)
+        {
+            if (executing != null)
+                this.OnWfProcessExecuting += executing;
+
+            if (executed != null)
+                this._onWfProcessExecuted += executed;
+
+            return this;
+        }
+
+        /// <summary>
+        /// 解除绑定事件
+        /// </summary>
+        /// <param name="executing">执行事件</param>
+        /// <param name="executed">执行完成事件</param>
+        internal WfRuntimeManager UnRegiesterEvent(EventHandler<WfEventArgs> executing, EventHandler<WfEventArgs> executed)
+        {
+            if (executing != null)
+                this.OnWfProcessExecuting -= executing;
+
+            if (executed != null)
+                this._onWfProcessExecuted -= executed;
+
+            return this;
         }
         #endregion
     }

@@ -1,20 +1,23 @@
 ﻿/*
-* Slickflow 软件遵循自有项目开源协议，也可联系作者获取企业版商业授权和技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的一切商业版权纠纷和损失。
+* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
+* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
 * 
-The Slickflow Open License (SfPL 1.0)
+The Slickflow project.
 Copyright (C) 2014  .NET Workflow Engine Library
 
-1. Slickflow software must be legally used, and should not be used in violation of law, 
-   morality and other acts that endanger social interests;
-2. Non-transferable, non-transferable and indivisible authorization of this software;
-3. The source code can be modified to apply Slickflow components in their own projects 
-   or products, but Slickflow source code can not be separately encapsulated for sale or 
-   distributed to third-party users;
-4. The intellectual property rights of Slickflow software shall be protected by law, and
-   no documents such as technical data shall be made public or sold.
-5. The enterprise, ultimate and universe version can be provided with commercial license, 
-   technical support and upgrade service.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, you can access the official
+web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 */
 
 using System;
@@ -127,48 +130,78 @@ namespace Slickflow.Engine.Delegate
         OnProcessSignForwarded = 21,
 
         /// <summary>
+        /// 流程修订中
+        /// </summary>
+        OnProcessRevising = 22,
+
+        /// <summary>
+        /// 流程已经修订
+        /// </summary>
+        OnProcessRevised = 23,
+
+        /// <summary>
+        /// 流程驳回中
+        /// </summary>
+        OnProcessRejecting = 24,
+
+        /// <summary>
+        /// 流程已经驳回
+        /// </summary>
+        OnProcessRejected = 25,
+
+        /// <summary>
+        /// 流程关闭中
+        /// </summary>
+        OnProcessClosing = 26,
+
+        /// <summary>
+        /// 流程已经关闭
+        /// </summary>
+        OnProcessClosed = 27,
+
+        /// <summary>
         /// 下一步节点已经创建
         /// </summary>
-        OnActivityCreated = 30,
+        OnActivityCreated = 40,
 
         /// <summary>
         /// 节点正在运行
         /// </summary>
-        OnActivityExecuting = 31,
+        OnActivityExecuting = 41,
 
         /// <summary>
         /// 节点运行方法结束
         /// </summary>
-        OnActivityExecuted = 32,
+        OnActivityExecuted = 42,
 
         /// <summary>
         /// 节点完成(节点状态为[完成]状态)
         /// </summary>
-        OnActivityCompleted = 33,
+        OnActivityCompleted = 43,
 
         /// <summary>
         /// 任务记录已经创建(用于邮件消息通知)
         /// </summary>
-        OnTaskCreaed = 50,
+        OnTaskCreaed = 60,
 
         /// <summary>
         /// 任务已经完成(用于邮件消息通知)
         /// </summary>
-        OnTaskCompleted = 51,
+        OnTaskCompleted = 61,
 
         /// <summary>
         /// 成功执行
         /// </summary>
-        OnSuccess = 60,
+        OnSuccess = 100,
 
         /// <summary>
         /// 错误发生
         /// </summary>
-        OnError = 61,
+        OnError = 101,
 
         /// <summary>
         /// 有警告异常信息
         /// </summary>
-        OnWarning = 62
+        OnWarning = 102
     }
 }

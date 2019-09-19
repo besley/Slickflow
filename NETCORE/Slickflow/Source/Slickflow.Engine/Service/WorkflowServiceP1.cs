@@ -23,9 +23,10 @@ web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Business.Data;
+using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Xpdl;
@@ -41,8 +42,8 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 获取流程实例数据
         /// </summary>
-        /// <param name="processInstanceID"></param>
-        /// <returns></returns>
+        /// <param name="processInstanceID">流程实例ID</param>
+        /// <returns>流程实例实体</returns>
         public ProcessInstanceEntity GetProcessInstance(int processInstanceID)
         {
             var pim = new ProcessInstanceManager();
@@ -50,37 +51,96 @@ namespace Slickflow.Engine.Service
             return instance;
         }
 
-        public ProcessInstanceEntity GetProcessInstanceByActivity(int activityInstanceID)
+        /// <summary>
+        /// 获取流程实例数据
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="processInstanceID">流程实例ID</param>
+        /// <param name="trans">事务</param>
+        /// <returns>流程实例实体</returns>
+        public ProcessInstanceEntity GetProcessInstance(IDbConnection conn, 
+            int processInstanceID, 
+            IDbTransaction trans)
         {
             var pim = new ProcessInstanceManager();
-            var instance = pim.GetByActivity(activityInstanceID);
+            var instance = pim.GetById(conn, processInstanceID, trans);
             return instance;
+        }
+
+        /// <summary>
+        /// 获取流程实例数据
+        /// </summary>
+        /// <param name="appInstanceID">业务实例ID</param>
+        /// <returns>流程实例实体</returns>
+        public IList<ProcessInstanceEntity> GetProcessInstance(string appInstanceID)
+        {
+            var pim = new ProcessInstanceManager();
+            var list = pim.GetProcessInstance(appInstanceID).ToList();
+            return list;
+        }
+
+        /// <summary>
+        /// 获取流程实例数据
+        /// </summary>
+        /// <param name="activityInstanceID">活动实例ID</param>
+        /// <returns>流程实例实体</returns>
+        public ProcessInstanceEntity GetProcessInstanceByActivity(int activityInstanceID)
+        {
+            using (var session = SessionFactory.CreateSession())
+            {
+                var pim = new ProcessInstanceManager();
+                var instance = pim.GetByActivity(session.Connection, activityInstanceID, session.Transaction);
+                return instance;
+            }
         }
 
         /// <summary>
         /// 获取运行中的流程实例
         /// </summary>
-        /// <param name="runner"></param>
-        /// <returns></returns>
+        /// <param name="runner">运行者</param>
+        /// <returns>流程实例实体</returns>
         public ProcessInstanceEntity GetRunningProcessInstance(WfAppRunner runner)
         {
-            using (var session = DbFactory.CreateSession())
+            ProcessInstanceEntity entity = null;
+            IDbConnection conn = SessionFactory.CreateConnection();
+            try
             {
                 var pim = new ProcessInstanceManager();
-                return pim.GetRunningProcessInstance(runner.AppInstanceID, runner.ProcessGUID, session);
+                entity = pim.GetRunningProcessInstance(conn, runner.AppInstanceID, runner.ProcessGUID);
             }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return entity;
         }
 
         /// <summary>
         /// 判断流程实例是否存在
         /// </summary>
-        /// <param name="prcessGUID">流程定义ID</param>
+        /// <param name="processGUID">流程定义ID</param>
         /// <param name="version">流程定义版本</param>
         /// <returns>流程实例记录数</returns>
         public Int32 GetProcessInstanceCount(string processGUID, string version)
         {
+            IDbConnection conn = SessionFactory.CreateConnection();
+            try
+            {
                 var pim = new ProcessInstanceManager();
-                return pim.GetProcessInstanceCount(processGUID, version);
+                return pim.GetProcessInstanceCount(conn, processGUID, version);
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                conn.Close();
+            }
         }
 
         /// <summary>
@@ -104,10 +164,10 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
-        /// 获取活动实例
+        /// 获取活动实例数据
         /// </summary>
-        /// <param name="activityInstanceID">活动实例ID</param>
-        /// <returns>活动实例</returns>
+        /// <param name="activityInstanceID"></param>
+        /// <returns></returns>
         public ActivityInstanceEntity GetActivityInstance(int activityInstanceID)
         {
             var aim = new ActivityInstanceManager();
@@ -116,31 +176,46 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
-        /// 获取活动实例列表
+        /// 获取一个流程实例下的所有活动实例
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <returns>活动实例列表</returns>
+        /// <param name="processInstanceID"></param>
+        /// <returns></returns>
         public IList<ActivityInstanceEntity> GetActivityInstances(int processInstanceID)
         {
             var aim = new ActivityInstanceManager();
-            return aim.GetActivityInstances(processInstanceID);
+            var session = SessionFactory.CreateSession();
+            try
+            {
+                return aim.GetActivityInstances(processInstanceID, session);
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                session.Dispose();
+            }
         }
 
         /// <summary>
         /// 获取当前节点的下一步已经发出的活动实例列表(transition实例表)
+        /// 名称更改：GetNextActivityInstanceList --> GetTargetActivityInstanceList
+        /// 更改用户：Besley
+        /// 更改日期：20190326
         /// </summary>
-        /// <param name="activityInstanceID">活动实例ID</param>
-        /// <returns>活动实例列表</returns>
-        public IList<ActivityInstanceEntity> GetNextActivityInstanceList(int fromActivityInstanceID)
+        /// <param name="fromActivityInstanceID">活动实例ID</param>
+        /// <returns></returns>
+        public IList<ActivityInstanceEntity> GetTargetActivityInstanceList(int fromActivityInstanceID)
         {
             var tim = new TransitionInstanceManager();
-            return tim.GetNextActivityInstanceList(fromActivityInstanceID);
+            return tim.GetTargetActivityInstanceList(fromActivityInstanceID);
         }
 
         /// <summary>
         /// 获取当前等待办理节点的任务分配人列表
         /// </summary>
-        /// <param name="runner">运行者</param>
+        /// <param name="runner">执行者</param>
         /// <returns>执行者列表</returns>
         public IList<Performer> GetTaskPerformers(WfAppRunner runner)
         {
@@ -162,7 +237,7 @@ namespace Slickflow.Engine.Service
         /// (适应于简单节点或者多实例节点的场景)
         /// </summary>
         /// <param name="taskID">任务ID</param>
-        /// <returns>标识</returns>
+        /// <returns></returns>
         public Boolean IsLastTask(int taskID)
         {
             var tm = new TaskManager();
@@ -174,6 +249,7 @@ namespace Slickflow.Engine.Service
         /// </summary>
         /// <param name="entrusted">被委托任务信息</param>
         /// <param name="cancalOriginalTask">是否取消原委托任务办理</param>
+        /// <returns></returns>
         public Boolean EntrustTask(TaskEntrustedEntity entrusted, bool cancalOriginalTask = true)
         {
             var tm = new TaskManager();
@@ -186,7 +262,7 @@ namespace Slickflow.Engine.Service
         /// <param name="processInstanceID">流程实例ID</param>
         /// <param name="overdueDateTime">过期时间</param>
         /// <param name="runner">当前运行用户</param>
-        /// <returns>标识</returns>
+        /// <returns></returns>
         public Boolean SetProcessOverdue(int processInstanceID, DateTime overdueDateTime, WfAppRunner runner)
         {
             var pim = new ProcessInstanceManager();
@@ -196,8 +272,8 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 获取流程当前运行节点信息
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>活动实例</returns>
+        /// <param name="runner"></param>
+        /// <returns></returns>
         public ActivityInstanceEntity GetRunningNode(WfAppRunner runner)
         {
             var aim = new ActivityInstanceManager();
@@ -209,9 +285,9 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 判断是否是我的任务
         /// </summary>
-        /// <param name="entity">活动实例</param>
-        /// <param name="userID">用户ID</param>
-        /// <returns>标识</returns>
+        /// <param name="entity"></param>
+        /// <param name="userID"></param>
+        /// <returns></returns>
         public bool IsMineTask(ActivityInstanceEntity entity, string userID)
         {
             var aim = new ActivityInstanceManager();
@@ -232,11 +308,23 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
+        #region 流程实例数据更新
+        /// <summary>
+        /// 更新流程实例实体
+        /// </summary>
+        /// <param name="entity">流程实例实体</param>
+        public void UpdateProcessInstance(ProcessInstanceEntity entity)
+        {
+            var pim = new ProcessInstanceManager();
+            pim.Update(entity);
+        }
+        #endregion
+
         #region 角色资源数据获取
         /// <summary>
         /// 获取所有角色数据
         /// </summary>
-        /// <returns>角色列表</returns>
+        /// <returns></returns>
         public IList<Role> GetRoleAll()
         {
             return ResourceService.GetRoleAll();
@@ -245,7 +333,7 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 获取流程定义文件中的角色信息
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
+        /// <param name="processGUID">流程定义GUID</param>
         /// <param name="version">版本</param>
         /// <returns>角色列表</returns>
         public IList<Role> GetRoleByProcess(string processGUID, string version)
@@ -259,7 +347,7 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 获取流程文件中角色用户的列表数据
         /// </summary>
-        /// <param name="processGUId">流程GUID</param>
+        /// <param name="processGUID">流程定义GUID</param>
         /// <param name="version">版本</param>
         /// <returns>角色列表</returns>
         public IList<Role> GetRoleUserListByProcess(string processGUID, string version)
@@ -276,8 +364,8 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 根据角色获取用户列表
         /// </summary>
-        /// <param name="roleID">角色ID</param>
-        /// <returns>用户列表</returns>
+        /// <param name="roleID"></param>
+        /// <returns></returns>
         public IList<User> GetUserListByRole(string roleID)
         {
             return ResourceService.GetUserListByRole(roleID);
@@ -286,8 +374,8 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 获取节点上的执行者列表
         /// </summary>
-        /// <param name="nextNode">节点</param>
-        /// <returns>执行者列表</returns>
+        /// <param name="nextNode"></param>
+        /// <returns></returns>
         public PerformerList GetPerformerList(NodeView nextNode)
         {
             var performerList = PerformerBuilder.CreatePerformerList(nextNode.Roles);

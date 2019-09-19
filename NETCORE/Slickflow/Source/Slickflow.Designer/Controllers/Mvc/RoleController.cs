@@ -12,7 +12,7 @@ namespace Slickflow.Designer.Controllers.Mvc
     public class RoleController : Controller
     {
         // GET: Role
-        public IActionResult List()
+        public ActionResult List()
         {
             return View();
         }

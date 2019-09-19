@@ -24,6 +24,9 @@ var transitionproperty = (function () {
     function transitionproperty() {
     }
 
+    transitionproperty.mIsGroupBehaviousPriorityEnabled = false;
+    transitionproperty.mIsGroupBehaviousForcedBranchEnabled = false;
+
     transitionproperty.load = function () {
         var transition = kmain.mxSelectedDomElement.Element;
 
@@ -36,6 +39,64 @@ var transitionproperty = (function () {
 
             if (transition.condition)
                 $("#txtCondition").val($.trim(transition.condition.text));
+
+            showTranstionGroupBehaviours(transition);
+        }
+    }
+
+    function showTranstionGroupBehaviours(transition) {
+        $("#divSplitOptions").hide();
+        $("#divJoinOptions").hide();
+
+        var graph = kmain.mxGraphEditor.graph;
+        var cell = graph.getSelectionCell();
+
+        //source node connected with the transition
+        var sourceNode = graph.getModel().getValue(cell.source);         //source node
+        if (sourceNode) {
+            var activityTypeElement = sourceNode.getElementsByTagName("ActivityType")[0];
+            var activityType = activityTypeElement.getAttribute("type");
+            if (activityType === kmodel.ActivityType.GatewayNode) {
+                var splitJoinType = activityTypeElement.getAttribute("gatewaySplitJoinType");
+                var direction = activityTypeElement.getAttribute("gatewayDirection");
+                if (splitJoinType === gatewayproperty.Direction.Split) {
+                    if (direction === gatewayproperty.Direction.XOrSplit) {
+                        transitionproperty.mIsGroupBehaviousPriorityEnabled = true;
+                        $("#divSplitOptions").show();
+                        if (transition.groupBehaviours && transition.groupBehaviours.priority) {
+                            $("#txtPriority").val(transition.groupBehaviours.priority);
+                        }
+                    }
+                }
+            }
+        }
+
+        //target node connected with the transition
+        var targetNode = graph.getModel().getValue(cell.target);
+        if (targetNode) {
+            var activityTypeElement = targetNode.getElementsByTagName("ActivityType")[0];
+            var activityType = activityTypeElement.getAttribute("type");
+            if (activityType == kmodel.ActivityType.GatewayNode) {
+                var splitJoinType = activityTypeElement.getAttribute("gatewaySplitJoinType");
+                var direction = activityTypeElement.getAttribute("gatewayDirection");
+                var joinPass = activityTypeElement.getAttribute("gatewayJoinPass");
+                if (splitJoinType === gatewayproperty.Direction.Join) {
+                    if (direction === gatewayproperty.Direction.EOrJoin) {
+                        if (joinPass === gatewayproperty.JoinPass.ForcedBranchPass) {
+                            transitionproperty.mIsGroupBehaviousForcedBranchEnabled = true;
+                            $("#divJoinOptions").show();
+                            if (transition.groupBehaviours && transition.groupBehaviours.forced) {
+                                if (transition.groupBehaviours.forced === "true") {
+                                    $("#chkForced").prop("checked", true);
+                                }
+                                else {
+                                    $("#chkForced").prop("checked", false);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -49,11 +110,37 @@ var transitionproperty = (function () {
         condition.type = "Expression";
         condition.text = $.trim($("#txtCondition").val());
 
+        var groupBehaviours = {};
+        if (transitionproperty.mIsGroupBehaviousPriorityEnabled === true) {
+            var priority = $("#txtPriority").val();
+            if (priority) {
+                if (jshelper.isNumber(priority) === true) {
+                    groupBehaviours.priority = parseInt(priority);
+                } else {
+                    $.msgBox({
+                        title: "Transition / Property",
+                        content: kresource.getItem("transitionprioritysavewarnmsg"),
+                        type: "alert"
+                    });
+                }
+            }
+        }
+
+        if (transitionproperty.mIsGroupBehaviousForcedBranchEnabled === true) {
+            var forced = $("#chkForced").is(':checked');
+            if (forced === true) {
+                groupBehaviours.forced = "true";
+            } else {
+                groupBehaviours.forced = "false";
+            }
+        }
+
         var transition = kmain.mxSelectedDomElement.Element;
         if (transition !== null){
             transition.description = description;
             transition.receiver = receiver;
             transition.condition = condition;
+            transition.groupBehaviours = groupBehaviours;
 
 		    //update line label text
             kmain.setEdgeValue(transition);

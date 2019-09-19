@@ -20,14 +20,19 @@ License along with this library; if not, you can access the official
 web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 */
 
+using System;
+using System.IO;
+using System.Configuration;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Mvc;
+using SlickOne.WebUtility;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Service;
-using SlickOne.WebUtility;
+using Slickflow.Graph;
 
 
 namespace Slickflow.Designer.Controllers.WebApi
@@ -43,6 +48,59 @@ namespace Slickflow.Designer.Controllers.WebApi
         {
             return "Hello World!";
         }
+
+        /// <summary>
+        /// 节点属性HttpGet调用测试
+        /// </summary>
+        /// <param name="id">id参数</param>
+        /// <returns></returns>
+        [HttpGet] 
+        public string MultipleG(string id)
+        {
+            return id;
+        }
+
+        /// <summary>
+        /// 节点属性HttpPost调用测试
+        /// 两个变量是JSON格式：
+        /// {
+        ///     "runner": {"UserName": "Jack"}, 
+        ///     "role":{"RoleName": "Admin"}
+        /// }
+        /// 备注：可以在WfProcessVariable表中存入测试数据
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public string MultipleJ([FromBody] JObject data)
+        {
+            var runner = data["runner"].ToObject<WfAppRunner>().UserName;
+            var role = data["role"].ToObject<Role>().RoleName;
+            var result = string.Format("runner:{0}, role:{1}", runner, role);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 节点属性HttpPost调用测试
+        /// 两个变量是单纯格式：
+        /// {
+        ///     "runner": "jack",
+        ///     "role": "admin"
+        /// }
+        /// 备注：可以在WfProcessVariable表中存入测试数据
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public string MultipleR([FromBody] dynamic data)
+        {
+            var runner = data.runner.ToString();
+            var role = data.role.ToString();
+
+            var result = string.Format("runner:{0}, role:{1}", runner, role);
+            return result;
+        }
         #endregion
 
         #region 流程定义数据
@@ -52,16 +110,33 @@ namespace Slickflow.Designer.Controllers.WebApi
         /// <param name="entity"></param>
         /// <returns></returns>
         [HttpPost]
-        public ResponseResult<ProcessEntity> CreateProcess([FromBody] ProcessEntity entity)
+        public ResponseResult<ProcessEntity> CreateProcess([FromBody] ProcessFileEntity fileEntity)
         {
             var result = ResponseResult<ProcessEntity>.Default();
             try
             {
-                var wfService = new WorkflowService();
-                var processID = wfService.CreateProcess(entity);
-
-                entity.ID = processID;
-
+                ProcessEntity entity = null;
+                //根据模板类型来创建流程
+                if (fileEntity.TemplateType == ProcessTemplateType.Blank)
+                {
+                    entity = new ProcessEntity
+                    {
+                        ProcessGUID = fileEntity.ProcessGUID,
+                        ProcessName = fileEntity.ProcessName,
+                        ProcessCode = fileEntity.ProcessCode,
+                        Version = fileEntity.Version,
+                        IsUsing = fileEntity.IsUsing,
+                        Description = fileEntity.Description,
+                    };
+                    var wfService = new WorkflowService();
+                    var processID = wfService.CreateProcess(entity);
+                    entity.ID = processID;
+                }
+                else
+                {
+                    //模板默认生成XML内容
+                    entity = ProcessGraphFactory.CreateProcess(fileEntity);
+                }
                 result = ResponseResult<ProcessEntity>.Success(entity);
             }
             catch (System.Exception ex)
@@ -85,10 +160,14 @@ namespace Slickflow.Designer.Controllers.WebApi
                 var wfService = new WorkflowService();
                 var processEntity = wfService.GetProcessByVersion(entity.ProcessGUID, entity.Version);
                 processEntity.ProcessName = entity.ProcessName;
+                processEntity.ProcessCode = entity.ProcessCode;
                 processEntity.XmlFileName = entity.XmlFileName;
                 processEntity.AppType = entity.AppType;
                 processEntity.Description = entity.Description;
-
+                if (!string.IsNullOrEmpty(entity.XmlContent))
+                {
+                    processEntity.XmlContent = PaddingContentWithRightSpace(entity.XmlContent);
+                }
                 wfService.UpdateProcess(processEntity);
 
                 result = ResponseResult.Success();
@@ -252,8 +331,8 @@ namespace Slickflow.Designer.Controllers.WebApi
         /// <summary>
         /// 保存XML文件
         /// </summary>
-        /// <param name="package"></param>
-        /// <returns></returns>
+        /// <param name="entity">流程文件实体</param>
+        /// <returns>响应结果</returns>
         [HttpPost]
         public ResponseResult SaveProcessFile([FromBody] ProcessFileEntity entity)
         {
@@ -261,6 +340,7 @@ namespace Slickflow.Designer.Controllers.WebApi
             try
             {
                 var wfService = new WorkflowService();
+                entity.XmlContent = PaddingContentWithRightSpace(entity.XmlContent);
                 wfService.SaveProcessFile(entity);
 
                 result = ResponseResult.Success();
@@ -272,6 +352,23 @@ namespace Slickflow.Designer.Controllers.WebApi
                 );
             }
             return result;
+        }
+
+        /// <summary>
+        /// 补足XmlContent内容（Oracle-01483-error）
+        /// ORA-01483: invalid length for DATE or NUMBER
+        /// </summary>
+        /// <param name="content">原始文本内容</param>
+        /// <returns>处理后的文本内容</returns>
+        private string PaddingContentWithRightSpace(string content)
+        {
+            var newContent = content;
+            int len = content.Length;
+            if (4096 - len > 0)
+            {
+                newContent = content.PadRight(4096);
+            }
+            return newContent;
         }
 
         /// <summary>

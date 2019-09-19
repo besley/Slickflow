@@ -40,7 +40,7 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 会签主节点记录的通过率
         /// </summary>
-        public Nullable<double> CompleteOrder { get; set; }
+        public Nullable<float> CompleteOrder { get; set; }
 
         /// <summary>
         /// 加签类型
@@ -51,6 +51,11 @@ namespace Slickflow.Engine.Xpdl
         /// 跳转信息
         /// </summary>
         public SkipInfo SkipInfo { get; set; }
+
+        /// <summary>
+        /// 子流程信息
+        /// </summary>
+        public String SubProcessGUID { get; set; }
     }
 
     /// <summary>

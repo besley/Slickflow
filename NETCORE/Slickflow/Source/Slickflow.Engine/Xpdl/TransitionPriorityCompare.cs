@@ -11,17 +11,24 @@ namespace Slickflow.Engine.Xpdl
     public class TransitionPriorityCompare : IComparer<TransitionEntity>
     {
         #region IComparer<TransitionEntity> 成员
-
+        /// <summary>
+        /// 比较实现
+        /// </summary>
+        /// <param name="x">实体X</param>
+        /// <param name="y">实体Y</param>
+        /// <returns>比较结果</returns>
         public int Compare(TransitionEntity x, TransitionEntity y)
         {
-            if (x.GroupBehaviour.Priority > y.GroupBehaviour.Priority)
-                return 1;
-
-            if (x.GroupBehaviour.Priority < y.GroupBehaviour.Priority)
+            if (x.GroupBehaviours.Priority < y.GroupBehaviours.Priority)
                 return -1;
-            else
-                return 0;
+
+            if (x.GroupBehaviours.Priority > y.GroupBehaviours.Priority)
+                return 1;
             
+            if (x.GroupBehaviours.Priority == y.GroupBehaviours.Priority)
+                return 0;
+
+            return 0;
         }
 
         #endregion

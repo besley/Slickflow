@@ -46,8 +46,8 @@ namespace Slickflow.Engine.Common
         Cancelled=8,
 
         /// <summary>
-        /// 人工取消终止
+        /// 非正常结束（比如超时自动终结）
         /// </summary>
-        Aborted = 9
+        Terminated = 9
     }
 }

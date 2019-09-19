@@ -1,20 +1,23 @@
 ﻿/*
-* Slickflow 软件遵循自有项目开源协议，也可联系作者获取企业版商业授权和技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的一切商业版权纠纷和损失。
+* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
+* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
 * 
-The Slickflow Open License (SfPL 1.0)
+The Slickflow project.
 Copyright (C) 2014  .NET Workflow Engine Library
 
-1. Slickflow software must be legally used, and should not be used in violation of law, 
-   morality and other acts that endanger social interests;
-2. Non-transferable, non-transferable and indivisible authorization of this software;
-3. The source code can be modified to apply Slickflow components in their own projects 
-   or products, but Slickflow source code can not be separately encapsulated for sale or 
-   distributed to third-party users;
-4. The intellectual property rights of Slickflow software shall be protected by law, and
-   no documents such as technical data shall be made public or sold.
-5. The enterprise, ultimate and universe version can be provided with commercial license, 
-   technical support and upgrade service.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, you can access the official
+web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 */
 
 using System;
@@ -24,7 +27,8 @@ using System.Data;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Delegate;
 using Slickflow.Engine.Core.Result;
-
+using Slickflow.Engine.Business.Entity;
+using Slickflow.Engine.Business.Manager;
 
 namespace Slickflow.Engine.Service
 {
@@ -90,11 +94,75 @@ namespace Slickflow.Engine.Service
             return this;
         }
 
+        /// <summary>
+        /// 绑定流程定义
+        /// </summary>
+        /// <param name="processCode">流程代码</param>
+        /// <returns>流程服务类</returns>
+        public IWorkflowService UseProcess(string processCode)
+        {
+            var pm = new ProcessManager();
+            var entity = pm.GetByCode(processCode);
+
+            return UseProcess(entity.ProcessGUID, entity.Version);
+        }
+
+        /// <summary>
+        /// 下一步活动
+        /// 内部测试时用到此方法
+        /// 特别注意：正式生产环境，不要使用该方法
+        /// </summary>
+        /// <param name="performerList">执行用户列表</param>
+        /// <returns>服务类</returns>
+        public IWorkflowService NextStepInt(PerformerList performerList)
+        {
+            var nextStep = new Dictionary<string, PerformerList>();
+            var nodeList = GetNextActivityTree(_wfAppRunner.TaskID.Value);
+            foreach (var node in nodeList)
+            {
+                if (node.ActivityType == ActivityTypeEnum.TaskNode)
+                {
+                    nextStep.Add(node.ActivityGUID, performerList);
+                }
+            }
+            _wfAppRunner.NextActivityPerformers = nextStep;
+
+            return this;
+        }
+
+        /// <summary>
+        /// 下一步活动
+        /// 内部测试时用到此方法
+        /// 特别注意：正式生产环境，不要使用该方法
+        /// </summary>
+        /// <param name="userID">用户ID</param>
+        /// <param name="userName">用户名称</param>
+        /// <returns>服务类</returns>
+        public IWorkflowService NextStepInt(string userID, string userName)
+        {
+            var performerList = new PerformerList();
+            performerList.Add(new Performer(userID, userName));
+
+            var nextStep = new Dictionary<string, PerformerList>();
+            var nodeList = GetNextActivityTree(_wfAppRunner.TaskID.Value, _wfAppRunner.Conditions);
+            foreach (var node in nodeList)
+            {
+                if (node.ActivityType == ActivityTypeEnum.TaskNode)
+                {
+                    nextStep.Add(node.ActivityGUID, performerList);
+                }
+            }
+            _wfAppRunner.NextActivityPerformers = nextStep;
+
+            return this;
+        }
 
         /// <summary>
         /// 下一步活动
         /// </summary>
-        /// <param name="nextActivityPerformers">待办用户列表</param>
+        /// <param name="nextActivityPerformers">
+        /// activity->performerlist 字典类型待办用户列表
+        /// </param>
         /// <returns>服务类</returns>
         public IWorkflowService NextStep(IDictionary<string, PerformerList> nextActivityPerformers)
         {
@@ -129,6 +197,16 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// 指定上一步类型
+        /// </summary>
+        /// <returns>服务类</returns>
+        public IWorkflowService PrevStepInt()
+        {
+            _wfAppRunner.NextPerformerType = NextPerformerIntTypeEnum.Traced;
+            return this;
+        }
+
+        /// <summary>
         /// 设置变量条件
         /// </summary>
         /// <param name="variables">变量列表</param>
@@ -152,16 +230,50 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// 传递任务ID
+        /// </summary>
+        /// <param name="taskID">任务ID</param>
+        /// <returns>服务类</returns>
+        public IWorkflowService OnTask(int taskID)
+        {
+            _wfAppRunner.TaskID = taskID;
+            return this;
+        }
+
+        /// <summary>
+        /// 添加动态变量
+        /// </summary>
+        /// <param name="name">名称</param>
+        /// <param name="value">数值</param>
+        /// <returns>服务类</returns>
+        public IWorkflowService SetVariable(string name, string value)
+        {
+            _wfAppRunner.DynamicVariables.Add(name, value);
+            return this;
+        }
+
+        /// <summary>
+        /// 添加动态变量
+        /// </summary>
+        /// <param name="variables">变量列表</param>
+        /// <returns>服务类</returns>
+        public IWorkflowService SetVariable(IDictionary<string, string> variables)
+        {
+            _wfAppRunner.DynamicVariables = variables;
+            return this;
+        }
+
+        /// <summary>
         /// 活动事件订阅
         /// </summary>
         /// <param name="eventType">活动事件类型</param>
         /// <param name="func">回调方法</param>
         /// <returns>服务类</returns>
-        public IWorkflowService Subscribe(EventFireTypeEnum eventType, Func<int, string, IDelegateService, Boolean> func)
+        public IWorkflowService Subscribe(EventFireTypeEnum eventType, Func<DelegateContext, IDelegateService, Boolean> func)
         {
-            //_wfAppRunner.DelegateEventList.Add(
-            //    new KeyValuePair<EventFireTypeEnum, Func<int, string, IDelegateService, bool>>(eventType, func)
-            //);
+            _wfAppRunner.DelegateEventList.Add(
+                new KeyValuePair<EventFireTypeEnum, Func<DelegateContext, IDelegateService, bool>>(eventType, func)
+            );
             return this;
         }
         #endregion

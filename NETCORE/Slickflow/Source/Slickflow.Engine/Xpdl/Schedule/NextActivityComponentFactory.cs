@@ -14,40 +14,68 @@ namespace Slickflow.Engine.Xpdl.Schedule
         /// <summary>
         /// 创建下一步活动的节点
         /// </summary>
-        /// <param name="activity"></param>
-        /// <returns></returns>
+        /// <param name="transition">转移</param>
+        /// <param name="activity">活动</param>
+        /// <returns>下一步节点封装</returns>
         internal static NextActivityComponent CreateNextActivityComponent(TransitionEntity transition,
             ActivityEntity activity)
         {
+            string name = string.Empty;
             NextActivityComponent component = null;
             if (XPDLHelper.IsSimpleComponentNode(activity.ActivityType) == true)           //可流转简单类型节点
             {
-                string name = "单一节点";
+                name = "单一节点";
                 component = new NextActivityItem(name, transition, activity);
+            }
+            else if (XPDLHelper.IsIntermediateEventComponentNode(activity.ActivityType) == true)
+            {
+                name = "跨事件节点";
+                component = new NextActivityIntermediate(name, transition, activity);
+            }
+            else if (XPDLHelper.IsGatewayComponentNode(activity.ActivityType) == true)
+            {
+                if (activity.GatewayDirectionType == GatewayDirectionEnum.AndSplit
+                    || activity.GatewayDirectionType == GatewayDirectionEnum.AndJoin)
+                {
+                    name = "必全选节点";                 
+                }
+                else if (activity.GatewayDirectionType == GatewayDirectionEnum.AndSplitMI
+                    || activity.GatewayDirectionType == GatewayDirectionEnum.AndJoinMI)
+                {
+                    name = "并行多实例节点";
+                }
+                else if (activity.GatewayDirectionType == GatewayDirectionEnum.OrSplit
+                    || activity.GatewayDirectionType == GatewayDirectionEnum.OrJoin)
+                {
+                    name = "或多选节点";
+                }
+                else if (activity.GatewayDirectionType == GatewayDirectionEnum.XOrSplit
+                    || activity.GatewayDirectionType == GatewayDirectionEnum.XOrJoin)
+                {
+                    name = "异或节点";
+                }
+                else if (activity.GatewayDirectionType == GatewayDirectionEnum.EOrJoin)
+                {
+                    name = "增强合并多选节点";
+                }
+                else
+                {
+                    throw new WfXpdlException(string.Format("无法创建下一步节点列表，不明确的分支类型：{0}", 
+                        activity.GatewayDirectionType.ToString()));
+                }
+                component = new NextActivityGateway(name, transition, activity);
             }
             else if (activity.ActivityType == ActivityTypeEnum.SubProcessNode)
             {
-                string name = "子流程节点";
+                name = "子流程节点";
                 component = new NextActivityItem(name, transition, activity);
             }
             else
             {
-                string name = string.Empty;
-                if (activity.GatewayDirectionType == Slickflow.Engine.Common.GatewayDirectionEnum.AndSplit)
-                {
-                    name = "必全选节点";
-                }
-                else if (activity.GatewayDirectionType == GatewayDirectionEnum.AndSplitMI)
-                {
-                    name = "并行多实例节点";
-                }
-                else
-                {
-                    name = "或多选节点";
-                }
-
-                component = new NextActivityGateway(name, transition, activity);
+                throw new WfXpdlException(string.Format("无法创建下一步节点列表，不明确的节点类型：{0}",
+                    activity.ActivityType.ToString()));
             }
+
             return component;
         }
 
@@ -56,7 +84,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
         /// </summary>
         /// <param name="fromActivity">要拉取的节点</param>
         /// <param name="toActivity">拉取到节点</param>
-        /// <returns></returns>
+        /// <returns>下一步节点封装</returns>
         internal static NextActivityComponent CreateNextActivityComponent(ActivityEntity fromActivity,
             ActivityEntity toActivity)
         {
@@ -64,9 +92,9 @@ namespace Slickflow.Engine.Xpdl.Schedule
             if (XPDLHelper.IsSimpleComponentNode(fromActivity.ActivityType) == true)       //可流转简单类型节点
             {
                 string name = "单一节点";
-                var transition = TransitionBuilder.CreateJumpforwardEmptyTransition(fromActivity, toActivity);
+                var transition = CreateJumpforwardEmptyTransition(fromActivity, toActivity);
 
-                component = new NextActivityItem(name, transition, fromActivity);     //强制拉取跳转类型的transition 为空类型
+                component = new NextActivityItem(name, transition, toActivity);     //强制拉取跳转类型的transition 为空类型
             }
             else
             {
@@ -77,12 +105,42 @@ namespace Slickflow.Engine.Xpdl.Schedule
         }
 
         /// <summary>
-        /// 创建根显示节点
+        /// 创建跳转Transition实体对象
         /// </summary>
-        /// <returns></returns>
+        /// <param name="fromActivity">来源节点</param>
+        /// <param name="toActivity">目标节点</param>
+        /// <returns>转移实体</returns>
+        internal static TransitionEntity CreateJumpforwardEmptyTransition(ActivityEntity fromActivity, 
+            ActivityEntity toActivity)
+        {
+            TransitionEntity transition = new TransitionEntity();
+            transition.TransitionGUID = "JUMP-TRANSITION";
+            transition.FromActivity = fromActivity;
+            transition.FromActivityGUID = fromActivity.ActivityGUID;
+            transition.ToActivity = toActivity;
+            transition.ToActivityGUID = toActivity.ActivityGUID;
+            transition.DirectionType = TransitionDirectionTypeEnum.Forward;
+
+            return transition;
+        }
+
+        /// <summary>
+        /// 创建下一步根显示节点
+        /// </summary>
+        /// <returns>根节点</returns>
         internal static NextActivityComponent CreateNextActivityComponent()
         {
             NextActivityComponent root = new NextActivityGateway("下一步步骤列表", null,  null);
+            return root;
+        }
+
+        /// <summary>
+        /// 创建上一步根显示节点
+        /// </summary>
+        /// <returns>根节点</returns>
+        internal static NextActivityComponent CreatePreviousActivityComponent()
+        {
+            NextActivityComponent root = new NextActivityGateway("上一步步骤列表", null, null);
             return root;
         }
 

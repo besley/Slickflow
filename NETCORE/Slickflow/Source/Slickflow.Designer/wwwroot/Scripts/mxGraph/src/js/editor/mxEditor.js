@@ -2391,7 +2391,7 @@ mxEditor.prototype.swapStyles = function (first, second)
 mxEditor.prototype.showProperties = function (cell)
 {
 	cell = cell || this.graph.getSelectionCell();
-	
+
 	// Uses the root node for the properties dialog
 	// if not cell was passed in and no cell is
 	// selected
