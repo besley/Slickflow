@@ -66,9 +66,9 @@ namespace Slickflow.ModelDemo.Service
                 {
                     var status = GetStatusByRoleCode(query.RoleCode);
                     if (status < 6)
-                        sqlQuery = sqlQuery.Where(e => e.Status == status);
+                        sqlQuery = sqlQuery.Where(e => e.Status == query.Status);
                     else
-                        sqlQuery = sqlQuery.Where(e => e.Status > status);
+                        sqlQuery = sqlQuery.Where(e => e.Status > query.Status);
                 }
                 count = sqlQuery.Count();
                 list = sqlQuery.OrderByDescending(e=>e.ID)
@@ -134,7 +134,6 @@ namespace Slickflow.ModelDemo.Service
             entity.Mobile = rnd.Next(100000, 999999).ToString();
             entity.Remark = shoptype[rnd.Next(1, 6)-1];
             entity.CreatedTime = System.DateTime.Now;
-            entity.LastUpdatedTime = System.DateTime.Now;
 
             using (var session = DbFactory.CreateSession())
             {

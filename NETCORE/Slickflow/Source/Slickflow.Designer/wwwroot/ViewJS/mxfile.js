@@ -34,12 +34,21 @@ var mxfile = (function () {
             activity.name = activityElement.getAttribute("label");
         }
         activity.code = activityElement.getAttribute("code");
+        activity.url = activityElement.getAttribute("url");
 
         return activity;
     }
 
     mxfile.setActivityTypeElement = function (activityTypeElement, activity) {
-        if (activity.type === kmodel.Config.NODE_TYPE_MULTIPLEINSTANCE) {
+        if (activity.type === kmodel.Config.NODE_TYPE_START
+            || activity.type === kmodel.Config.NODE_TYPE_INTERMEDIATE
+            || activity.type === kmodel.Config.NODE_TYPE_END) {
+
+            activityTypeElement.setAttribute("trigger", activity.trigger);
+            if (activity.trigger === "Timer") {
+                activityTypeElement.setAttribute("expression", activity.expression);
+            }
+        } else if (activity.type === kmodel.Config.NODE_TYPE_MULTIPLEINSTANCE) {
             activityTypeElement.setAttribute("complexType", activity.complexType);
             activityTypeElement.setAttribute("mergeType", activity.mergeType);
             activityTypeElement.setAttribute("compareType", activity.compareType);
@@ -47,15 +56,25 @@ var mxfile = (function () {
         } else if (activity.type === kmodel.Config.NODE_TYPE_GATEWAY) {
             activityTypeElement.setAttribute("gatewaySplitJoinType", activity.gatewaySplitJoinType);
             activityTypeElement.setAttribute("gatewayDirection", activity.gatewayDirection);
+            if (activity.gatewayDirection === gatewayproperty.Direction.EOrJoin) {
+                activityTypeElement.setAttribute("gatewayJoinPass", activity.gatewayJoinPass);
+            }
         } else if (activity.type === kmodel.Config.NODE_TYPE_SUBPROCESS) {
             activityTypeElement.setAttribute("subId", activity.subId);
-        } 
+        }
         return activityTypeElement;
     }
 
     mxfile.getActivityTypeObject = function (activity, activityTypeElement) {
         activity.type = activityTypeElement.getAttribute("type");
-        if (activity.type === kmodel.Config.NODE_TYPE_MULTIPLEINSTANCE) {
+        if (activity.type === kmodel.Config.NODE_TYPE_START
+            || activity.type === kmodel.Config.NODE_TYPE_END
+            || activity.type === kmodel.Config.NODE_TYPE_INTERMEDIATE) {
+            activity.trigger = activityTypeElement.getAttribute("trigger");
+            if (activity.trigger === "Timer") {
+                activity.expression = activityTypeElement.getAttribute("expression");
+            }
+        } else if (activity.type === kmodel.Config.NODE_TYPE_MULTIPLEINSTANCE) {
             activity.complexType = activityTypeElement.getAttribute("complexType");
             activity.mergeType = activityTypeElement.getAttribute("mergeType");
             activity.compareType = activityTypeElement.getAttribute("compareType");
@@ -63,6 +82,9 @@ var mxfile = (function () {
         } else if (activity.type === kmodel.Config.NODE_TYPE_GATEWAY) {
             activity.gatewaySplitJoinType = activityTypeElement.getAttribute("gatewaySplitJoinType");
             activity.gatewayDirection = activityTypeElement.getAttribute("gatewayDirection");
+            if (activity.gatewayDirection === gatewayproperty.Direction.EOrJoin) {
+                activity.gatewayJoinPass = activityTypeElement.getAttribute("gatewayJoinPass");
+            }
         } else if (activity.type === kmodel.Config.NODE_TYPE_SUBPROCESS) {
             activity.subId = activityTypeElement.getAttribute("subId");
         } 
@@ -95,56 +117,161 @@ var mxfile = (function () {
         return performer;
     }
 
+    //actions
     mxfile.setActionsElement = function (doc, actions) {
         var actionsElement = doc.createElement("Actions");
         var actionElement = null;
 
         for (var i = 0; i < actions.length; i++) {
             //convert action to actionElement
-            var actionElement = doc.createElement("Action");
-            actionElement = mxfile.setActionElement(actionElement, actions[i]);
+            actionElement = mxfile.setActionElement(doc, actions[i]);
             actionsElement.appendChild(actionElement);
         }
         return actionsElement;
     }
 
-    mxfile.setActionElement = function (actionElement, action) {
+    mxfile.setActionElement = function (doc, action) {
+        var actionElement = doc.createElement("Action");
         actionElement.setAttribute("type", action.type);
-        actionElement.setAttribute("name", action.name);
-        actionElement.setAttribute("assembly", action.assembly);
-        actionElement.setAttribute("interface", action.interface);
-        actionElement.setAttribute("method", action.method);
+        actionElement.setAttribute("fire", action.fire);
 
+        var actionType = action.type;
+        if (actionType === kmodel.Config.ACTION_TYPE_EVENT) {
+            actionElement.setAttribute("fire", action.fire);
+            actionElement.setAttribute("method", action.method);
+            actionElement.setAttribute("arguments", action.arguments);
+            actionElement.setAttribute("expression", action.expression);
+
+            //sub method
+            var methodType = action.method;
+            if (methodType === kmodel.Config.ACTION_METHOD_TYPE_WEBAPI) {
+                actionElement.setAttribute("subMethod", action.subMethod);
+            }
+        }
+        else {
+            //window.console.log(action);
+            //throw "Unkown Action Type: " + actionType;
+        }
+        return actionElement;
+    }
+
+    mxfile.setActionElementByHTML = function (actionElement, action) {
+        actionElement.setAttribute("type", action.getAttribute("type"));
+        var actionType = action.getAttribute("type");
+        if (actionType === kmodel.Config.ACTION_TYPE_EVENT) {
+            actionElement.setAttribute("fire", action.getAttribute("fire"));
+            actionElement.setAttribute("method", action.getAttribute("method"));
+            actionElement.setAttribute("arguments", action.getAttribute("arguments"));
+            actionElement.setAttribute("expression", action.getAttribute("expression"));
+
+            //sub method
+            var methodType = action.getAttribute("method");
+            if (methodType === kmodel.Config.ACTION_METHOD_TYPE_WEBAPI) {
+                actionElement.setAttribute("subMethod", action.getAttribute("subMethod"));
+            }
+        }
+        else {
+             //throw "Unkown Action Type: " + actionType;
+        }
         return actionElement;
     }
 
     mxfile.getActionObject = function (actionElement) {
         var action = {};
         action.type = actionElement.getAttribute("type");
-        action.name = actionElement.getAttribute("name");
-        action.assembly = actionElement.getAttribute("assembly");
-        action.interface = actionElement.getAttribute("interface");
-        action.method = actionElement.getAttribute("method");
+        if (action.type === kmodel.Config.ACTION_TYPE_EVENT) {
+            var methodType = actionElement.getAttribute("method");
+            action.fire = actionElement.getAttribute("fire");
+            action.method = actionElement.getAttribute("method");
+            action.arguments = actionElement.getAttribute("arguments");
+            action.expression = actionElement.getAttribute("expression");
 
+            if (methodType === kmodel.Config.ACTION_METHOD_TYPE_WEBAPI) {
+                action.subMethod = actionElement.getAttribute("subMethod");
+            }
+        }
+        else {
+            //window.console.log(actionElement);
+             //throw "Unkown Action Type: " + actionType;
+        }
         return action;
     }
 
+    //boundaries
+    mxfile.setBoundariesElement = function (doc, boundaries) {
+        var boundariesElement = doc.createElement("Boundaries");
+
+        for (var i = 0; i < boundaries.length; i++) {
+            //convert boundary to boundaryElement
+            var boundaryElement = doc.createElement("Boundary");
+            boundaryElement = mxfile.setBoundaryElement(boundaryElement, boundaries[i]);
+            boundariesElement.appendChild(boundaryElement);
+        }
+        return boundariesElement;
+    }
+
+    mxfile.setBoundaryElement = function (boundaryElement, boundary) {
+        boundaryElement.setAttribute("event", boundary.event);
+        boundaryElement.setAttribute("expression", boundary.expression);
+
+        return boundaryElement;
+    }
+
+    mxfile.getBoundaryObject = function (boundaryElement) {
+        var boundary = {};
+        boundary.event = boundaryElement.getAttribute("event");
+        boundary.expression = boundaryElement.getAttribute("expression");
+
+        return boundary;
+    }
+
+    //sections
+    mxfile.setSectionsElement = function (doc, sections) {
+        var sectionsElement = doc.createElement("Sections");
+
+        for (var i = 0; i < sections.length; i++) {
+            //convert section to sectionElement
+            var sectionElement = doc.createElement("Section");
+            sectionElement = mxfile.setSectionElement(sectionElement, sections[i]);
+            sectionsElement.appendChild(sectionElement);
+        }
+        return sectionsElement;
+    }
+
+    mxfile.setSectionElement = function (sectionElement, section) {
+        sectionElement.setAttribute("name", section.name);
+
+        var sectionText = sectionElement.ownerDocument.createTextNode($.trim(section.text));
+        sectionElement.appendChild(sectionText);    
+
+        return sectionElement;
+    }
+
+    mxfile.getSectionObject = function (sectionElement) {
+        var section = {};
+        section.name = sectionElement.getAttribute("name");
+        section.text = jshelper.replaceHTMLTags(sectionElement.textContent);
+
+        return section;
+    }
+
+    //transitions
     mxfile.setTransitionElement = function (doc, transition) {
-        var transitonElement = doc.createElement('Transition');
-        transitonElement.setAttribute('from', transition.from);
-        transitonElement.setAttribute('to', transition.to);
+        var transitionElement = doc.createElement('Transition');
+        transitionElement.setAttribute('from', transition.from);
+        transitionElement.setAttribute('to', transition.to);
 
         //description
         var descElement = doc.createElement('Description');
-        transitonElement.appendChild(descElement);
+        transitionElement.appendChild(descElement);
 
         var description = doc.createTextNode(transition.description);
         descElement.appendChild(description);
 
         //set edge text
-        transitonElement.setAttribute("label", transition.description);
+        transitionElement.setAttribute("label", transition.description);
 
-        return transitonElement;
+        return transitionElement;
     }
 
     mxfile.getTransitionObject = function (transitionElement) {
@@ -181,6 +308,29 @@ var mxfile = (function () {
         return condition;
     }
 
+    mxfile.setGroupBehavioursElement = function (doc, groupBehaviours) {
+        var groupBehavioursElement = doc.createElement("GroupBehaviours");
+        groupBehavioursElement.setAttribute("priority", groupBehaviours.priority);
+        groupBehavioursElement.setAttribute("forced", groupBehaviours.forced);
+
+        return groupBehavioursElement;
+    }
+
+    mxfile.getGroupBehavioursObject = function (groupBehavioursElement) {
+        var groupBehaviours = {};
+        if (groupBehavioursElement) {
+            var priority = groupBehavioursElement.getAttribute("priority");
+            if (priority !== undefined) {
+                groupBehaviours.priority = priority;
+            }
+            var forced = groupBehavioursElement.getAttribute("forced");
+            if (forced !== undefined) {
+                groupBehaviours.forced = forced;
+            }
+        }
+        return groupBehaviours;
+    }
+
     mxfile.setReceiverElement = function (doc, receiver) {
         var receiverElement = doc.createElement("Receiver");
         receiverElement.setAttribute('type', receiver.type);
@@ -205,7 +355,23 @@ var mxfile = (function () {
         geography.parent = geographyElement.getAttribute("parent");
         geography.style = geographyElement.getAttribute("style");
 
+        var pointsElement = geographyElement.getElementsByTagName("Points")[0];
+        if (pointsElement) {
+            var points = [];
+            Array.prototype.forEach.call(pointsElement.getElementsByTagName("Point"), function (pointElement) {
+                var point = getPointObject(pointElement);
+                points.push(point);
+            });
+            geography.points = points;
+        }
         return geography;
+    }
+
+    function getPointObject(pointElement) {
+        var x = pointElement.getAttribute("x");
+        var y = pointElement.getAttribute("y");
+        var point = new mxPoint(parseInt(x), parseInt(y));
+        return point;
     }
 
     mxfile.getGeographyVertexObject = function (geographyElement) {

@@ -33,9 +33,9 @@ var rolelist = (function () {
         		var divRoleGrid = document.querySelector('#myRoleGrid');
         		var gridOptions = {
         			columnDefs: [
-						{ headerName: 'ID', field: 'ID', width: 60 },
-						{ headerName: '角色名称', field: 'RoleName', width: 200 },
-						{ headerName: '角色代码', field: 'RoleCode', width: 200 }
+                        { headerName: 'ID', field: 'ID', width: 60 },
+                        { headerName: kresource.getItem('rolename'), field: 'RoleName', width: 200 },
+                        { headerName: kresource.getItem('rolecode'), field: 'RoleCode', width: 200 }
         			],
         			rowSelection: 'single',
         			onSelectionChanged: onSelectionChanged
@@ -64,7 +64,7 @@ var rolelist = (function () {
         } else {
             $.msgBox({
                 title: "Designer / Role",
-                content: "请选择角色记录！",
+                content: kresource.getItem('rolelistselectwarnmsg'),
                 type: "alert"
             });
         }

@@ -106,6 +106,8 @@ var kloader = (function () {
                 var activity = {},
                     performers = [],
                     actions = [],
+                    boundaries = [],
+                    sections = [],
                     geographyElement = {};
 
                 //activity
@@ -125,6 +127,28 @@ var kloader = (function () {
                     performers.push(performer);
                 });
                 activity.performers = performers;
+
+                //actions list
+                Array.prototype.forEach.call(activityElement.getElementsByTagName("Action"), function (actionElement) {
+                    var action = mxfile.getActionObject(actionElement);
+
+                    actions.push(action);
+                });
+                activity.actions = actions;
+
+                //boudaries list
+                Array.prototype.forEach.call(activityElement.getElementsByTagName("Boundary"), function (boundaryElement) {
+                    var boundary = mxfile.getBoundaryObject(boundaryElement);
+                    boundaries.push(boundary);
+                });
+                activity.boundaries = boundaries;
+
+                //sections list
+                Array.prototype.forEach.call(activityElement.getElementsByTagName("Section"), function (sectionElement){
+                    var section = mxfile.getSectionObject(sectionElement);
+                    sections.push(section);
+                });
+                activity.sections = sections;
 
                 //geography
                 geographyElement = activityElement.getElementsByTagName("Geography")[0];
@@ -153,6 +177,12 @@ var kloader = (function () {
                 var conditionElement = transitionElement.getElementsByTagName("Condition")[0];
                 if (conditionElement) {
                     transition.condition = mxfile.getConditionObject(conditionElement);
+                }
+
+                //group behavious
+                var groupBehavioursElement = transitionElement.getElementsByTagName("GroupBehaviours")[0];
+                if (groupBehavioursElement) {
+                    transition.groupBehaviours = mxfile.getGroupBehavioursObject(groupBehavioursElement);
                 }
 
                 //geography
@@ -185,14 +215,17 @@ var kloader = (function () {
         var doc = mxUtils.parseXml('<?xml version="1.0" encoding="utf-8"?><Package></Package>');
         var packageElement = doc.documentElement;
 
+        //sync global perfromers into participants array
+        var model = kmain.mxGraphEditor.graph.getModel();
+        var newParticipants = syncGlobalParticipants(participants, model);
+
         //Participants
-        writeParticipants(doc, packageElement, participants);
+        writeParticipants(doc, packageElement, newParticipants);
 
         //WorkflowProcess
         var processElement = writeProcess(doc, packageElement, processEntity);
 
         //layout
-        var model = kmain.mxGraphEditor.graph.getModel();
         writeLayout(doc, packageElement, model);
 
         //Activities
@@ -207,6 +240,90 @@ var kloader = (function () {
         return xmlContent;
     }
 
+    //sync activity perfomers into new participants
+    function syncGlobalParticipants(oldParticipants, model) {
+        var newParticipants = [];
+        var vertexNodeList = model.getChildVertices(kmain.mxGraphEditor.graph.getDefaultParent());
+        syncEachVertexPerformers(newParticipants, oldParticipants, vertexNodeList, model);
+
+        return newParticipants;
+    }
+
+    //sync each vertex performers into new participants recurivly
+    function syncEachVertexPerformers(newParticipants, oldParticipants, vertexNodeList, model) {
+        var vertex = null,
+            snode = null,
+            newParticipant = null,
+            performersNode = null,
+            performerList = null,
+            performer = null,
+            performerGUID = "";
+
+        if (vertexNodeList.length > 0) {
+            for (var i = 0; i < vertexNodeList.length; i++) {
+                vertex = vertexNodeList[i];
+                var childNodeList = model.getChildVertices(vertex);     //group control contains child vertexs.
+                if (childNodeList.length > 0) {
+                    //recursivly sync performers
+                    syncEachVertexPerformers(newParticipants, oldParticipants, childNodeList, model);
+                }
+                else {
+                    snode = model.getValue(vertex);
+                    performersNode = snode.getElementsByTagName("Performers")[0];
+
+                    if (performersNode) {
+                        var performerList = performersNode.getElementsByTagName("Performer");
+
+                        if (performerList.length > 0) {
+                            for (var p = 0; p < performerList.length; p++) {
+                                performer = performerList[p];
+                                performerGUID = performer.getAttribute("id");
+
+                                if (isNotExistInNewParticipants(newParticipants, performerGUID) === true) {
+                                    newParticipant = getParticipantFromPerformer(oldParticipants, performerGUID);
+                                    newParticipants.push(newParticipant);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return newParticipants;
+    }
+
+    //check participant exist
+    function isNotExistInNewParticipants(newParticipants, performerGUID) {
+        var isNotExist = true;
+        for (var i = 0; i < newParticipants.length; i++) {
+            var p = newParticipants[i];
+            if (p !== null && p.id === performerGUID) {
+                isNotExist = false;
+                break;
+            }
+        }
+        return isNotExist;
+    }
+
+    //get participant from perfomer
+    function getParticipantFromPerformer(oldParticipants, performerGUID) {
+        var newParticipant = null;
+
+        for (var i = 0; i < oldParticipants.length; i++) {
+            var p = oldParticipants[i];
+            if (p !== null && p.id === performerGUID) {
+                newParticipant = {};
+                newParticipant.type = p.type;
+                newParticipant.id = p.id;
+                newParticipant.name = p.name;
+                newParticipant.code = p.code;
+                newParticipant.outerId = p.outerId;
+                break;
+            }
+        }
+        return newParticipant;
+    }
+
     //participants
     function writeParticipants(doc, parent, participants) {
         var participantsElement = doc.createElement("Participants");
@@ -215,9 +332,10 @@ var kloader = (function () {
         if (participants) {
             for (var i = 0; i < participants.length; i++) {
                 var participant = participants[i];
-                var participantElement = mxfile.setParticipantElement(doc, participant);
-
-                participantsElement.appendChild(participantElement);
+                if (participant !== null) {
+                    var participantElement = mxfile.setParticipantElement(doc, participant);
+                    participantsElement.appendChild(participantElement);
+                }
             }
         }
     }
@@ -356,7 +474,7 @@ var kloader = (function () {
                             window.console.log("invalid node type:" + childNodeValue.nodeName);
                         }
                     }
-                } if (snode.nodeName = "Group") {
+                } if (snode.nodeName === "Group") {
                     //activities in the group
                     var childNodeList = model.getChildVertices(model.getCell(vertex.id));
                     for (var j = 0; j < childNodeList.length; j++) {
@@ -379,7 +497,9 @@ var kloader = (function () {
             activityType = '',
             descriptionNode = null,
             performersNode = null,
-            actionsNode = null;
+            actionsNode = null,
+            boundariesNode = null,
+            sectionsNode = null;
 
         //Activity
         var activityElement = doc.createElement("Activity");
@@ -388,6 +508,7 @@ var kloader = (function () {
         activityElement.setAttribute("id", vertex.id);
         activityElement.setAttribute("name", snode.getAttribute("label"));
         activityElement.setAttribute("code", snode.getAttribute("code"));
+        activityElement.setAttribute("url", snode.getAttribute("url"));
 
         //Description
         descriptionNode = snode.getElementsByTagName("Description")[0];
@@ -409,9 +530,31 @@ var kloader = (function () {
         activityElement.appendChild(activityTypeElement);
 
         activityTypeElement.setAttribute("type", activityType);
-        if (activityType == "GatewayNode") {
+        if (activityType === kmodel.Config.NODE_TYPE_START      //"StartNode"
+            || activityType === kmodel.Config.NODE_TYPE_END     // "EndNode"
+            || activityType === kmodel.Config.NODE_TYPE_INTERMEDIATE) {         // "IntermediateNode"
+            var trigger = activityTypeNode.getAttribute("trigger");
+            activityTypeElement.setAttribute("trigger", trigger);
+            if (trigger === "Timer") {
+                var cronExpression = activityTypeNode.getAttribute("expression");
+                if (cronExpression === null) cronExpression = '';
+
+                activityTypeElement.setAttribute("expression", cronExpression);
+                if (activityType === kmodel.Config.NODE_TYPE_START) {
+                    kmain.mxSelectedProcessStartType = 1;
+                    kmain.mxSelectedProcessStartExpression = cronExpression;
+                } else if (activityType === kmodel.Config.NODE_TYPE_END) {
+                    kmain.mxSelectedProcessEndType = 1;
+                    kmain.mxSelectedProcessEndExpression = cronExpression;
+                }
+            } else {
+                kmain.mxSelectedProcessStartType = 0;
+                kmain.mxSelectedProcessStartExpression = '';
+            }
+        } else if (activityType == "GatewayNode") {
             activityTypeElement.setAttribute("gatewaySplitJoinType", activityTypeNode.getAttribute("gatewaySplitJoinType"));
             activityTypeElement.setAttribute("gatewayDirection", activityTypeNode.getAttribute("gatewayDirection"));
+            activityTypeElement.setAttribute("gatewayJoinPass", activityTypeNode.getAttribute("gatewayJoinPass"));
         } else if (activityType == "SubProcessNode") {
             activityTypeElement.setAttribute("subId", activityTypeNode.getAttribute("subId"));
         } else if (activityType == "MultipleInstanceNode") {
@@ -435,6 +578,68 @@ var kloader = (function () {
                     performersElement.appendChild(performerElement);
 
                     performerElement.setAttribute("id", performer.getAttribute("id"));
+                }
+            }
+        }
+
+        //Actions
+        actionsNode = snode.getElementsByTagName("Actions")[0];
+        if (actionsNode) {
+            var actionList = actionsNode.getElementsByTagName("Action");
+            if (actionList.length > 0) {
+                var actionsElement = doc.createElement("Actions");
+                activityElement.appendChild(actionsElement);
+
+                for (var a = 0; a < actionList.length; a++) {
+                    var action = actionList[a];
+                    if (action && action.hasAttribute("type")) {
+                        var actionElement = doc.createElement("Action");
+                        actionsElement.appendChild(actionElement);
+                        mxfile.setActionElementByHTML(actionElement, action);
+                    }
+                }
+            }
+        }
+
+        //Boundaries
+        boundariesNode = snode.getElementsByTagName("Boundaries")[0];
+        if (boundariesNode) {
+            var boundaryList = boundariesNode.getElementsByTagName("Boundary");
+            if (boundaryList.length > 0) {
+                var boundariesElement = doc.createElement("Boundaries");
+                activityElement.appendChild(boundariesElement);
+
+                for (var b = 0; b < boundaryList.length; b++) {
+                    var boundary = boundaryList[b];
+                    if (boundary) {
+                        var boundaryElement = doc.createElement("Boundary");
+                        boundariesElement.appendChild(boundaryElement);
+
+                        boundaryElement.setAttribute("event", boundary.getAttribute("event"));
+                        boundaryElement.setAttribute("expression", boundary.getAttribute("expression"));
+                    }
+                }
+            }
+        }
+
+        //Sections
+        sectionsNode = snode.getElementsByTagName("Sections")[0];
+        if (sectionsNode) {
+            var sectionList = sectionsNode.getElementsByTagName("Section");
+            if (sectionList.length > 0) {
+                var sectionsElement = doc.createElement("Sections");
+                activityElement.appendChild(sectionsElement);
+
+                for (var s = 0; s < sectionList.length; s++) {
+                    var section = sectionList[s];
+                    if (section) {
+                        var sectionElement = doc.createElement("Section");
+                        sectionsElement.appendChild(sectionElement);
+
+                        sectionElement.setAttribute("name", section.getAttribute("name"));
+                        var cDataSection = doc.createCDATASection(section.textContent);
+                        sectionElement.appendChild(cDataSection);
+                    }
                 }
             }
         }
@@ -538,7 +743,10 @@ var kloader = (function () {
             receiverType = '',
             conditionNode = null,
             conditionType = '',
-            conditionTextNode = null;
+            conditionTextNode = null,
+            groupBehavioursNode = null,
+            priority = '',
+            forced = '';
 
         //transition
         var transitionElement = doc.createElement("Transition");
@@ -559,18 +767,6 @@ var kloader = (function () {
                 descriptionElement.appendChild(description);
             }
         } 
-
-        //receiver
-        receiverNode = sline.getElementsByTagName("Receiver")[0];
-        if (receiverNode) {
-            var receiverElement = doc.createElement("Receiver");
-            transitionElement.appendChild(receiverElement);
-            
-            receiverType = receiverNode.getAttribute('type');
-            if ($.isEmptyObject(receiverType) === false && receiverType !== "undefined" && receiverType !== "null") {
-                receiverElement.setAttribute("type", receiverType);
-            }
-        }
 
         //condition
         conditionNode = sline.getElementsByTagName("Condition")[0];
@@ -595,12 +791,56 @@ var kloader = (function () {
             }
         }
 
+        //group behaviours 
+        groupBehavioursNode = sline.getElementsByTagName("GroupBehaviours")[0];
+        if (groupBehavioursNode) {
+            var groupBehavioursElement = doc.createElement("GroupBehaviours");
+            transitionElement.appendChild(groupBehavioursElement);
+
+            priority = groupBehavioursNode.getAttribute("priority");
+            if ($.isEmptyObject(priority) === false && priority !== "undefined" && priority !== "null") {
+                groupBehavioursElement.setAttribute("priority", priority);
+            }
+
+            forced = groupBehavioursNode.getAttribute("forced");
+            if ($.isEmptyObject(forced) === false && forced !== "undefined" && forced !== "null") {
+                groupBehavioursElement.setAttribute("forced", forced);
+            }
+        }
+
+        //receiver
+        receiverNode = sline.getElementsByTagName("Receiver")[0];
+        if (receiverNode) {
+            var receiverElement = doc.createElement("Receiver");
+            transitionElement.appendChild(receiverElement);
+
+            receiverType = receiverNode.getAttribute('type');
+            if ($.isEmptyObject(receiverType) === false && receiverType !== "undefined" && receiverType !== "null") {
+                receiverElement.setAttribute("type", receiverType);
+            }
+        }
+
         //transition geograpy
         var geographyElement = doc.createElement("Geography");
         transitionElement.appendChild(geographyElement);
 
         geographyElement.setAttribute("parent", edge.parent.id);
         geographyElement.setAttribute("style", edge.style);
+
+        //points array
+        var points = edge.geometry.points;
+        if (points) {
+            var pointsElement = doc.createElement("Points");
+            geographyElement.appendChild(pointsElement);
+
+            $.each(points, function (i, p) {
+                var pointElement = doc.createElement("Point");
+                pointsElement.appendChild(pointElement);
+
+                pointElement.setAttribute("x", p.x);
+                pointElement.setAttribute("y", p.y)
+            });
+        }        
     }
     //#endregion
 

@@ -24,9 +24,14 @@ var processlist = (function () {
 	function processlist() {
 	}
 
-	processlist.pselectedProcessEntity = null;
+    processlist.pselectedProcessEntity = null;
+    processlist.mprocessTemplateType = '';
     processlist.afterCreated = new slick.Event();
-	processlist.afterOpened = new slick.Event();
+    processlist.afterOpened = new slick.Event();
+
+    processlist.init = function () {
+        kresource.localize();
+    }
 
 	//#region Process DataGrid
 	processlist.getProcessList = function () {
@@ -39,17 +44,33 @@ var processlist = (function () {
 
 				var gridOptions = {
 					columnDefs: [
-						{ headerName: 'ID', field: 'ID', width: 50 },
-						{ headerName: '流程GUID', field: 'ProcessGUID', width: 120 },
-						{ headerName: '流程名称', field: 'ProcessName', width: 200 },
-						{ headerName: '版本', field: 'Version', width: 40 },
-						{ headerName: '状态', field: 'IsUsing', width: 40 },
-						{ headerName: '创建日期', field: 'CreatedDateTime', width: 120 }
+                        { headerName: 'ID', field: 'ID', width: 50 },
+                        { headerName: kresource.getItem('processguid'), field: 'ProcessGUID', width: 120 },
+                        { headerName: kresource.getItem('processname'), field: 'ProcessName', width: 200 },
+                        { headerName: kresource.getItem('version'), field: 'Version', width: 80 },
+                        { headerName: kresource.getItem('processcode'), field: 'ProcessCode', width: 200 },
+                        { headerName: kresource.getItem('status'), field: 'IsUsing', width: 80, cellRenderer: onIsUsingCellRenderer },
+                        { headerName: kresource.getItem('createddatetime'), field: 'CreatedDateTime', width: 220 },
+                        { headerName: kresource.getItem('starttype'), field: 'StartType', width: 80, cellRenderer: onStartTypeCellRenderer },
+                        { headerName: kresource.getItem('startexpression'), field: 'StartExpression', width: 140},
 					],
 					rowSelection: 'single',
 					onSelectionChanged: onSelectionChanged,
 					onRowDoubleClicked: onRowDoubleClicked
-				};
+                };
+
+                function onIsUsingCellRenderer(params) {
+                    return params.value == 1 ? kresource.getItem('active') : kresource.getItem('unactive');
+                }
+
+                function onStartTypeCellRenderer(params) {
+                    var startType = '';
+                    if (params.value == 1)
+                        startType = kresource.getItem('timer');
+                    else if (params.value == 2)
+                        startType = kresource.getItem('email');
+                    return startType;
+                }
 
 				new agGrid.Grid(divProcessGrid, gridOptions);
 				gridOptions.api.setRowData(result.Entity);
@@ -71,7 +92,7 @@ var processlist = (function () {
             else {
                 $.msgBox({
                     title: "Designer / Process",
-                    content: result.Message,
+                    content: kresource.getItem("processlisterrormsg"),
                     type: "error"
                 });
             }
@@ -80,9 +101,8 @@ var processlist = (function () {
 
 	processlist.createProcess = function () {
         processlist.pselectedProcessEntity = null;
-
-		BootstrapDialog.show({
-			title: '流程新建',
+        processlist.mProcessEditDialog = BootstrapDialog.show({
+            title: kresource.getItem('processcreate'),
             message: $('<div></div>').load('process/edit'),
             draggable: true
 		});
@@ -92,13 +112,15 @@ var processlist = (function () {
 		var entity = processlist.pselectedProcessEntity;
 		if (entity !== null) {
 			$("#txtProcessGUID").val(entity.ProcessGUID);
-			$("#txtProcessName").val(entity.ProcessName);
+            $("#txtProcessName").val(entity.ProcessName);
+            $("#txtProcessCode").val(entity.ProcessCode);
 			$("#txtVersion").val(entity.Version);
 			$("#ddlIsUsing").val(entity.IsUsing);
 			$("#txtDescription").val(entity.Description);
 		} else {
 			$("#txtProcessGUID").val("");
-			$("#txtProcessName").val("");
+            $("#txtProcessName").val("");
+            $("#txtProcessCode").val("");
 			$("#txtVersion").val("1");
 			$("#ddlIsUsing").val();
 			$("#txtDescription").val("");
@@ -109,26 +131,30 @@ var processlist = (function () {
 		var entity = processlist.pselectedProcessEntity;
 		if (entity == null) {
 			$.msgBox({
-				title: "Designer / Process",
-				content: "请先选择流程记录！",
+                title: "Designer / Process",
+                content: kresource.getItem('processselectedwarnmsg'),
 				type: "alert"
 			});
 			return false;
 		}
 
-		BootstrapDialog.show({
-			title: '流程编辑',
+        BootstrapDialog.show({
+            title: kresource.getItem('processedit'),
             message: $('<div></div>').load('process/edit'),
             draggable: true
 		});
+    }
+
+    processlist.refreshProcess = function () {
+        processlist.getProcessList();
     }
 
 	processlist.saveProcess = function () {
 		if ($("#txtProcessName").val() == ""
 			|| $("#txtVersion").val() == "") {
 					$.msgBox({
-						title: "Designer / Process",
-						content: "请输入流程基本信息！",
+                        title: "Designer / Process",
+                        content: kresource.getItem('processsavewarnmsg'),
 						type: "alert"
 					});
 					return false;
@@ -136,10 +162,12 @@ var processlist = (function () {
 
         var entity = {
 			"ProcessGUID": $("#txtProcessGUID").val(),
-			"ProcessName": $("#txtProcessName").val(),
+            "ProcessName": $("#txtProcessName").val(),
+            "ProcessCode": $("#txtProcessCode").val(),
 			"Version": $("#txtVersion").val(),
 			"IsUsing": $("#ddlIsUsing").val(),
-			"Description": $("#txtDescription").val()
+            "Description": $("#txtDescription").val(),
+            "TemplateType": processlist.mprocessTemplateType === '' ? "Blank" : processlist.mprocessTemplateType
 		};
 
 		if (processlist.pselectedProcessEntity === null) {
@@ -151,7 +179,8 @@ var processlist = (function () {
 						slick.trigger(processlist.afterCreated, {
                             "ProcessEntity": result.Entity
                         });
-					}
+                    }
+                    if (processlist.mProcessEditDialog !== null) processlist.mProcessEditDialog.close();
 				}
 			});
 		}
@@ -161,8 +190,8 @@ var processlist = (function () {
 
 	processlist.deleteProcess = function () {
 		$.msgBox({
-			title: "Are You Sure",
-			content: "确实要删除流程定义记录吗? ",
+            title: "Are You Sure",
+            content: kresource.getItem('processdeletemsg'),
 			type: "confirm",
 			buttons: [{ value: "Yes" }, { value: "Cancel" }],
 			success: function (result) {
@@ -210,12 +239,58 @@ var processlist = (function () {
             } else {
                 $.msgBox({
                     title: "Designer / Process",
-                    content: "流程定义记录读取失败！错误：" + result.Message,
+                    content: kresource.getItem('processopenerrormsg') + result.Message,
                     type: "error"
                 });
             }
         });
-	}
+    }
+
+    //import xml file
+    processlist.initXmlImport = function(){
+        var restrictedUploader = new qq.FineUploader({
+            element: document.getElementById("fine-uploader-validation"),
+            template: 'qq-template-validation',
+            request: {
+                endpoint: 'api/FineUpload/import',
+                params: {
+                    extraParam1: "1",
+                    extraParam2: "2"
+                }
+            },
+            thumbnails: {
+                placeholders: {
+                    waitingPath: 'Content/fineuploader/waiting-generic.png',
+                    notAvailablePath: 'Content/fineuploader/not_available-generic.png'
+                }
+            },
+            validation: {
+                allowedExtensions: ['xml', 'txt'],
+                itemLimit: 1,
+                sizeLimit: 51200 // 50 kB = 50 * 1024 bytes
+            },
+            callbacks: {
+                onComplete: function (id, fileName, result) {
+                    if (result.success === true) {
+                        $.msgBox({
+                            title: "Designer / Process",
+                            content: kresource.getItem("processxmlimportokmsg"),
+            			    type: "info",
+            			    buttons: [{ value: "Ok" }],
+            		    });
+                    }
+                    else {
+            		    $.msgBox({
+                            title: "Designer / Process",
+                            content: kresource.getItem("processxmlimporterrormsg") + result.ExceptionMessage,
+            			    type: "error",
+            			    buttons: [{ value: "Ok" }],
+            		    });
+                    }
+                }
+            }
+        });
+    }
 
 	return processlist;
 })()
@@ -231,14 +306,14 @@ var processapi = (function () {
             function (result) {
             	if (result.Status == 1) {
             		$.msgBox({
-            			title: "Designer / Process",
-            			content: "新创建流程记录成功保存！",
+                        title: "Designer / Process",
+                        content: kresource.getItem('processsaveokmsg'),
             			type: "info"
             		});
             	} else {
             		$.msgBox({
-            			title: "Designer / Process",
-            			content: result.Message,
+                        title: "Designer / Process",
+                        content: kresource.getItem('processsaveerrormsg') + result.Message,
             			type: "error",
             			buttons: [{ value: "Ok" }],
             		});
@@ -247,7 +322,31 @@ var processapi = (function () {
             	//execute render in processlist
             	callback(result);
             });
-	}
+    }
+
+    processapi.createProcessGraph = function (entity, callback) {
+        jshelper.ajaxPost('api/Wf2Xml/CreateProcessGraph',
+            JSON.stringify(entity),
+            function (result) {
+                if (result.Status == 1) {
+                    $.msgBox({
+                        title: "Designer / Process",
+                        content: kresource.getItem('processcreateokmsg'),
+                        type: "info"
+                    });
+                } else {
+                    $.msgBox({
+                        title: "Designer / Process",
+                        content: kresource.getItem('processcreateerrormsg') + result.Message,
+                        type: "error",
+                        buttons: [{ value: "Ok" }],
+                    });
+                }
+
+                //execute render in processlist
+                callback(result);
+            });
+    }
 
 	processapi.update = function (entity) {
 		jshelper.ajaxPost('api/Wf2Xml/UpdateProcess',
@@ -255,14 +354,14 @@ var processapi = (function () {
             function (result) {
             	if (result.Status == 1) {
             		$.msgBox({
-            			title: "Designer / Process",
-            			content: "流程记录成功保存！",
+                        title: "Designer / Process",
+                        content: kresource.getItem('processsaveokmsg'),
             			type: "info"
             		});
             	} else {
             		$.msgBox({
-            			title: "Ooops",
-            			content: result.Message,
+                        title: "Ooops",
+                        content: kresource.getItem('processsaveerrormsg') + result.Message,
             			type: "error",
             			buttons: [{ value: "Ok" }],
             		});
@@ -277,8 +376,8 @@ var processapi = (function () {
             function (result) {
             	if (result.Status == 1) {
             		$.msgBox({
-            			title: "Designer / Process",
-            			content: "流程记录已经删除！",
+                        title: "Designer / Process",
+                        content: kresource.getItem('processdeleteokmsg'),
             			type: "info"
             		});
 
@@ -286,8 +385,8 @@ var processapi = (function () {
             		processlist.getProcessList();
             	} else {
             		$.msgBox({
-            			title: "Ooops",
-            			content: result.Message,
+                        title: "Ooops",
+                        content: kresource.getItem('processdeleteerrormsg') + result.Message,
             			type: "error",
             			buttons: [{ value: "Ok" }],
             		});
@@ -317,18 +416,22 @@ var processapi = (function () {
 		jshelper.ajaxPost('api/Wf2Xml/SaveProcessFile', JSON.stringify(entity), function (result) {
 			if (result.Status == "1") {
 				$.msgBox({
-					title: "Designer / Index",
-					content: "流程XML内容保存成功！",
+                    title: "Designer / Index",
+                    content: kresource.getItem('processxmlsaveokmsg'),
 					type: "info"
 				});
 			} else {
 				$.msgBox({
-					title: "Designer / Index",
-					content: "流程XML内容保存失败！错误信息：" + result.Message,
+                    title: "Designer / Index",
+                    content: kresource.getItem('processxmlsaveerrormsg') + result.Message,
 					type: "info"
 				});
 			}
 		});
+    }
+
+    processapi.getSchedule = function () {
+
     }
 
 	return processapi;

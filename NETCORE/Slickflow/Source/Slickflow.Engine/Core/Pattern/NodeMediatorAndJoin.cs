@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ServiceStack.Text;
 using Slickflow.Engine.Common;
 using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
@@ -37,9 +38,7 @@ namespace Slickflow.Engine.Core.Pattern
     /// </summary>
     internal class NodeMediatorAndJoin : NodeMediatorGateway, ICompleteAutomaticlly
     {
-        internal NodeMediatorAndJoin(ActivityEntity activity, 
-            IProcessModel processModel, 
-            IDbSession session)
+        internal NodeMediatorAndJoin(ActivityEntity activity, IProcessModel processModel, IDbSession session)
             : base(activity, processModel, session)
         {
 
@@ -61,14 +60,16 @@ namespace Slickflow.Engine.Core.Pattern
         /// </summary>
         /// <param name="processInstance">流程实例</param>
         /// <param name="transitionGUID">转移GUID</param>
+        /// <param name="fromActivity">起始活动</param>
         /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="activityResource">活动资源</param>
+        /// <param name="runner">运行者</param>
         /// <param name="session">会话</param>
         /// <returns>网关执行结果</returns>
-        public GatewayExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
+        public NodeAutoExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
             string transitionGUID,
+            ActivityEntity fromActivity,
             ActivityInstanceEntity fromActivityInstance,
-            ActivityResource activityResource,
+            WfAppRunner runner,
             IDbSession session)
         {
             //检查是否有运行中的合并节点实例
@@ -77,18 +78,25 @@ namespace Slickflow.Engine.Core.Pattern
                 base.GatewayActivity.ActivityGUID,
                 session);
 
+            int tokensRequired = 0;
+            int tokensHad = 0;
+
             if (joinNode == null)
             {
                 var joinActivityInstance = base.CreateActivityInstanceObject(base.GatewayActivity, 
-                    processInstance, activityResource.AppRunner);
+                    processInstance, runner);
 
                 //计算总需要的Token数目
                 joinActivityInstance.TokensRequired = GetTokensRequired();
                 joinActivityInstance.TokensHad = 1;
+                tokensRequired = joinActivityInstance.TokensRequired;
 
                 //进入运行状态
                 joinActivityInstance.ActivityState = (short)ActivityStateEnum.Running;
                 joinActivityInstance.GatewayDirectionTypeID = (short)GatewayDirectionEnum.AndJoin;
+
+                //写入默认第一次的预选步骤用户列表
+                joinActivityInstance.NextStepPerformers = NextStepUtility.SerializeNextStepPerformers(runner.NextActivityPerformers);
 
                 base.InsertActivityInstance(joinActivityInstance,
                     session);
@@ -98,19 +106,18 @@ namespace Slickflow.Engine.Core.Pattern
                     joinActivityInstance,
                     TransitionTypeEnum.Forward,
                     TransitionFlyingTypeEnum.NotFlying,
-                    activityResource.AppRunner,
+                    runner,
                     session);
             }
             else
             {
                 //更新节点的活动实例属性
                 base.GatewayActivityInstance = joinNode;
-                int tokensRequired = base.GatewayActivityInstance.TokensRequired;
-                int tokensHad = base.GatewayActivityInstance.TokensHad;
-
+                tokensRequired = base.GatewayActivityInstance.TokensRequired;
+                tokensHad = base.GatewayActivityInstance.TokensHad;
                 //更新Token数目
                 base.ActivityInstanceManager.IncreaseTokensHad(base.GatewayActivityInstance.ID,
-                    activityResource.AppRunner,
+                    runner,
                     session);
                 base.InsertTransitionInstance(processInstance,
                     transitionGUID,
@@ -118,20 +125,20 @@ namespace Slickflow.Engine.Core.Pattern
                     joinNode,
                     TransitionTypeEnum.Forward,
                     TransitionFlyingTypeEnum.NotFlying,
-                    activityResource.AppRunner,
+                    runner,
                     session);
-                if ((tokensHad + 1) == tokensRequired)
-                {
-                    //如果达到完成节点的Token数，则设置该节点状态为完成
-                    base.CompleteActivityInstance(base.GatewayActivityInstance.ID,
-                        activityResource,
-                        session);
-                    base.GatewayActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
-                }
+            }
+            if ((tokensHad + 1) == tokensRequired)
+            {
+                //如果达到完成节点的Token数，则设置该节点状态为完成
+                base.CompleteActivityInstance(base.GatewayActivityInstance.ID,
+                    runner,
+                    session);
+                base.GatewayActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
             }
 
-            GatewayExecutedResult result = GatewayExecutedResult.CreateGatewayExecutedResult(
-                GatewayExecutedStatus.Successed);
+            NodeAutoExecutedResult result = NodeAutoExecutedResult.CreateGatewayExecutedResult(
+                NodeAutoExecutedStatus.Successed);
             return result;
         }
 

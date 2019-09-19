@@ -20,21 +20,11 @@ License along with this library; if not, you can access the official
 web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 */
 
-using System;
-using System.Threading;
-using System.Transactions;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Slickflow.Data;
-using Slickflow.Engine.Common;
-using Slickflow.Engine.Utility;
-using Slickflow.Engine.Core.Result;
-using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Business.Manager;
-using Slickflow.Engine.Xpdl;
-using Slickflow.Engine.Core.Event;
 using Slickflow.Engine.Core.Pattern;
+using Slickflow.Engine.Core.Result;
+using Slickflow.Engine.Delegate;
+
 
 namespace Slickflow.Engine.Core.Runtime
 {
@@ -49,25 +39,39 @@ namespace Slickflow.Engine.Core.Runtime
         /// <param name="session">会话</param>
         internal override void ExecuteInstanceImp(IDbSession session)
         {
+            var result = base.WfExecutedResult;
+            result.ProcessInstanceIDStarted = RunningActivityInstance.ProcessInstanceID;
+
             try
             {
+                //创建运行时上下文
                 var runningExecutionContext = ActivityForwardContext.CreateRunningContext(base.TaskView,
                     base.ProcessModel,
-                    base.ActivityResource);
+                    base.ActivityResource,
+                    false,
+                    session);
 
-                //执行节点
+                //----> 节点开始流转，调用活动开始执行的委托事件
+                DelegateExecutor.InvokeExternalDelegate(session,
+                    EventFireTypeEnum.OnActivityExecuting,
+                    runningExecutionContext);
+
+                //执行节点流转过程
                 NodeMediator mediator = NodeMediatorFactory.CreateNodeMediator(runningExecutionContext, session);
                 mediator.Linker.FromActivityInstance = RunningActivityInstance;
                 mediator.ExecuteWorkItem();
 
+                //----> 节点流转完成后，调用活动完成执行的委托事件
+                DelegateExecutor.InvokeExternalDelegate(session,
+                    EventFireTypeEnum.OnActivityExecuted,
+                    runningExecutionContext);
+
                 //构造回调函数需要的数据
-                var result = base.WfExecutedResult;
                 result.Status = WfExecutedStatus.Success;
                 result.Message = mediator.GetNodeMediatedMessage();
             }
             catch (WfRuntimeException rx)
             {
-                var result = base.WfExecutedResult;
                 result.Status = WfExecutedStatus.Failed;
                 result.ExceptionType = WfExceptionType.RunApp_RuntimeError;
                 result.Message = rx.Message;
@@ -75,12 +79,11 @@ namespace Slickflow.Engine.Core.Runtime
             }
             catch (System.Exception ex)
             {
-                var result = base.WfExecutedResult;
                 result.Status = WfExecutedStatus.Failed;
                 result.ExceptionType = WfExceptionType.RunApp_RuntimeError;
                 result.Message = ex.Message;
                 throw ex;
-            }
+            } 
         }
     }
 }

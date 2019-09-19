@@ -45,7 +45,7 @@
 		<separator/>
 		<add as="properties" action="showProperties" icon="scripts/mxGraph/src/editor/images/properties.gif"/>
 		<separator/>
-		<add as="openHref" action="openHref" icon="scripts/mxGraph/src/editor/images/link.gif"/>
+		<!--<add as="openHref" action="openHref" icon="scripts/mxGraph/src/editor/images/link.gif"/>-->
 	</mxDefaultPopupMenu>
 	<include name="scripts/mxGraph/src/editor/config/keyhandler-commons.xml"/>
 	<Array as="actions">

@@ -40,6 +40,15 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// 转移描述
+        /// </summary>
+        public String Description
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// 起始活动GUID
         /// </summary>
         public String FromActivityGUID
@@ -87,7 +96,7 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 群体行为类型
         /// </summary>
-        public GroupBehaviourEntity GroupBehaviour
+        public GroupBehaviourEntity GroupBehaviours
         {
             get;
             set;

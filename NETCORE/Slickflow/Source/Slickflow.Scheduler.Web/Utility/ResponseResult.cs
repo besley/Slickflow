@@ -144,6 +144,7 @@ namespace Slickflow.Scheduler.Web.Utility
         /// <summary>
         /// Http 响应消息封装类
         /// </summary>
+        /// <param name="Status">状态:1-成功; 0-缺省; -1失败</param>
         /// <param name="Message">消息内容</param>
         /// <returns></returns>
         public static ResponseResult<T> Error(string message = null)

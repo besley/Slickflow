@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Slickflow.Engine.Delegate;
 
 namespace Slickflow.Engine.Common
 {
@@ -32,20 +33,25 @@ namespace Slickflow.Engine.Common
     /// </summary>
     public class WfAppRunner
     {
+        #region 属性
         public string AppName { get; set; }
         public string AppInstanceID { get; set; }
         public string AppInstanceCode { get; set; }
         public string ProcessGUID { get; set; }
+        public string ProcessCode { get; set; }
         public string Version { get; set; }
-        public string FlowStatus { get; set; }
         public string UserID { get; set; }
         public string UserName { get; set; }
-        public IDictionary<string, PerformerList> NextActivityPerformers { get; set; }
-        public IDictionary<string, string> Conditions { get; set; }
+        public NextPerformerIntTypeEnum NextPerformerType { get; set; }
+
         public Nullable<int> TaskID { get; set; }        //任务ID，区分当前用户ActivityInstance列表的唯一任务
-        public string JumpbackActivityGUID { get; set; }     //回跳的节点GUID
+        public IDictionary<string, string> Conditions = new Dictionary<string, string>();
         public IDictionary<string, string> DynamicVariables { get; set; }
-        public IDictionary<string, ActionParameterInternal> ActionMethodParameters { get; set; }
+        public ControlParameterSheet ControlParameterSheet { get; set; }
+        public IDictionary<string, PerformerList> NextActivityPerformers { get; set; }
+
+        internal DelegateEventList DelegateEventList = new DelegateEventList();
+        #endregion
     }
 
     /// <summary>

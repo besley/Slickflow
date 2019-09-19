@@ -12,7 +12,7 @@ namespace Slickflow.Designer.Controllers.Mvc
     public class TestController : Controller
     {
         // GET: Test
-        public IActionResult Index()
+        public ActionResult Index()
         {
             return View();
         }

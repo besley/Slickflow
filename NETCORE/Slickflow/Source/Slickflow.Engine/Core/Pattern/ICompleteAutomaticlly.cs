@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Slickflow.Data;
 using Slickflow.Engine.Common;
+using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Xpdl;
 
@@ -14,10 +14,11 @@ namespace Slickflow.Engine.Core.Pattern
     /// </summary>
     internal interface ICompleteAutomaticlly
     {
-        GatewayExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
+        NodeAutoExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
             string transitionGUID,
+            ActivityEntity fromActivity,
             ActivityInstanceEntity fromActivityInstance,
-            ActivityResource activityResource,
+            WfAppRunner runner,
             IDbSession session);
     }
 }

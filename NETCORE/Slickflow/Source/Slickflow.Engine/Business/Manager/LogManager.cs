@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Data;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using ServiceStack.Text;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Business.Data;
+using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
-
 
 namespace Slickflow.Engine.Business.Manager
 {
     /// <summary>
     /// 日志处理记录类
     /// </summary>
-    public class LogManager
+    public class LogManager : ManagerBase
     {
         #region 获取日志数据
         ///// <summary>
@@ -49,7 +44,11 @@ namespace Slickflow.Engine.Business.Manager
         /// <summary>
         /// 记录流程异常日志
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="title">标题</param>
+        /// <param name="eventType">事件类型</param>
+        /// <param name="priority">优先级</param>
+        /// <param name="extraObject">处理对象</param>
+        /// <param name="e">异常</param>
         public void Record(string title, 
             LogEventType eventType, 
             LogPriority priority, 
@@ -65,7 +64,11 @@ namespace Slickflow.Engine.Business.Manager
                 log.Title = title;
                 log.Timestamp = DateTime.Now;
                 log.Message = e.Message;
-                log.StackTrace = e.StackTrace.Length > 4000 ? e.StackTrace.Substring(0, 4000): e.StackTrace;
+                if (e.StackTrace != null)
+                {
+                    log.StackTrace = e.StackTrace.Length > 4000 ? e.StackTrace.Substring(0, 4000) : e.StackTrace;
+                }
+
                 if (e.InnerException != null)
                 {
                     log.InnerStackTrace = e.InnerException.StackTrace.Length > 4000 ? 
@@ -91,19 +94,38 @@ namespace Slickflow.Engine.Business.Manager
         /// <summary>
         /// 插入流程日志数据
         /// </summary>
-        /// <param name="entity"></param>
-        public void Insert(object entity)
+        /// <param name="entity">实体</param>
+        private void Insert(object entity)
         {
-            using (var session = DbFactory.CreateSession())
+            IDbSession session = SessionFactory.CreateSession();
+            try
             {
                 var log = (LogEntity)entity;
-                session.GetRepository<LogEntity>().Insert(log);
-                session.SaveChanges();
+                session.BeginTrans();
+                Repository.Insert<LogEntity>(session.Connection, log, session.Transaction);
+                session.Commit();
+            }
+            catch (System.Exception)
+            {
+                session.Rollback();
+                throw;
+            }
+            finally
+            {
+                session.Dispose();
             }
         }
         #endregion
 
         #region 静态方法
+        /// <summary>
+        /// 记录流程异常日志
+        /// </summary>
+        /// <param name="title">标题</param>
+        /// <param name="eventType">事件类型</param>
+        /// <param name="priority">优先级</param>
+        /// <param name="extraObject">处理对象</param>
+        /// <param name="e">异常</param>
         public static void RecordLog(string title, 
             LogEventType eventType, 
             LogPriority priority, 

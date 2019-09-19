@@ -12,8 +12,23 @@ namespace Slickflow.Scheduler.Common
     public enum JobScheduleNameEnum
     {
         /// <summary>
+        /// trigger timing startup process
+        /// </summary>
+        TriggerTimingStartupProcess = 1,
+
+        /// <summary>
         /// process instance ovedue treatment
         /// </summary>
-        TerminateOverdueProcessInstance = 1
+        TerminateOverdueProcessInstance = 2,
+
+        /// <summary>
+        /// send task email
+        /// </summary>
+        SendTaskEMail = 3,
+
+        /// <summary>
+        /// activity instance overdue treatment
+        /// </summary>
+        TerminateOverdueActivityInstance = 4
     }
 }

@@ -30,15 +30,15 @@ namespace Slickflow.Engine.Xpdl.Schedule
         /// <summary>
         /// 根据网关类型获取下一步节点列表的抽象方法
         /// </summary>
-        /// <param name="transition">转移</param>
-        /// <param name="activity">活动</param>
+        /// <param name="fromTransition">转移</param>
+        /// <param name="currentGatewayActivity">活动</param>
         /// <param name="conditionKeyValuePair">条件kv对</param>
-        /// <param name="scheduleStatus">匹配类型</param>
+        /// <param name="resultType">匹配类型</param>
         /// <returns></returns>
-        internal abstract NextActivityComponent GetNextActivityListFromGateway(TransitionEntity transition,
-            ActivityEntity activity,
+        internal abstract NextActivityComponent GetNextActivityListFromGateway(TransitionEntity fromTransition,
+            ActivityEntity currentGatewayActivity,
             IDictionary<string, string> conditionKeyValuePair,
-            out NextActivityMatchedType scheduleStatus);
+            out NextActivityMatchedType resultType);
 
 
         /// <summary>

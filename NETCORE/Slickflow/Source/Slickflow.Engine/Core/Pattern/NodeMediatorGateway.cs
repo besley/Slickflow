@@ -24,8 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Slickflow.Data;
 using Slickflow.Engine.Common;
+using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Xpdl;
@@ -38,6 +38,7 @@ namespace Slickflow.Engine.Core.Pattern
     /// </summary>
     internal class NodeMediatorGateway
     {
+        #region 属性及构造方法
         private ActivityEntity _gatewayActivity;
         internal ActivityEntity GatewayActivity
         {
@@ -75,20 +76,13 @@ namespace Slickflow.Engine.Core.Pattern
             }
         }
         
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="gActivity">网关节点</param>
-        /// <param name="processModel">流程模型</param>
-        /// <param name="session">数据上下文</param>
-        internal NodeMediatorGateway(ActivityEntity gActivity, 
-            IProcessModel processModel, 
-            IDbSession session)
+        internal NodeMediatorGateway(ActivityEntity gActivity, IProcessModel processModel, IDbSession session)
         {
             _gatewayActivity = gActivity;
             _processModel = processModel;
             _session = session;
         }
+        #endregion
 
         /// <summary>
         /// 创建节点对象
@@ -132,8 +126,8 @@ namespace Slickflow.Engine.Core.Pattern
         /// <param name="flyingType">飞跃类型</param>
         /// <param name="runner">运行者</param>
         /// <param name="session">会话</param>
-        /// <returns></returns>
-        internal virtual void InsertTransitionInstance(ProcessInstanceEntity processInstance,
+        /// <returns>新转移实例ID</returns>
+        internal virtual int InsertTransitionInstance(ProcessInstanceEntity processInstance,
             string transitionGUID,
             ActivityInstanceEntity fromActivityInstance,
             ActivityInstanceEntity toActivityInstance,
@@ -151,36 +145,25 @@ namespace Slickflow.Engine.Core.Pattern
                 flyingType,
                 runner,
                 (byte)ConditionParseResultEnum.Passed);
+            var newID = tim.Insert(session.Connection, transitionInstanceObject, session.Transaction);
 
-            tim.Insert( transitionInstanceObject, session);
+            return newID;
         }
 
         /// <summary>
         /// 节点对象的完成方法
         /// </summary>
         /// <param name="ActivityInstanceID">活动实例ID</param>
-        /// <param name="activityResource">活动资源</param>
+        /// <param name="runner">运行者</param>
         /// <param name="session">会话</param>
         internal virtual void CompleteActivityInstance(int ActivityInstanceID,
-            ActivityResource activityResource,
+            WfAppRunner runner,
             IDbSession session)
         {
             //设置完成状态
             ActivityInstanceManager.Complete(ActivityInstanceID,
-                activityResource.AppRunner,
+                runner,
                 session);
-        }
-		/// <summary>
-        /// 获取分支实例的个数
-        /// </summary>
-        /// <param name="splitActivityGUID">活动GUID</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <returns>实例数目</returns>
-        protected int GetInstanceGatewayCount(string splitActivityGUID,
-            int processInstanceID)
-        {
-            ActivityInstanceManager aim = new ActivityInstanceManager();
-            return aim.GetInstanceGatewayCount(splitActivityGUID, processInstanceID);
         }
     }
 }

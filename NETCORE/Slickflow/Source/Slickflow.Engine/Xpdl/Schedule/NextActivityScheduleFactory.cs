@@ -14,8 +14,9 @@ namespace Slickflow.Engine.Xpdl.Schedule
         /// <summary>
         /// 创建ActivitySchedule
         /// </summary>
-        /// <param name="splitJoinType"></param>
-        /// <returns></returns>
+        /// <param name="processModel">流程模型</param>
+        /// <param name="splitJoinType">分支合并类型</param>
+        /// <returns>下一步调度类</returns>
         internal static NextActivityScheduleBase CreateActivitySchedule(IProcessModel processModel,
             GatewaySplitJoinTypeEnum splitJoinType)
         {
@@ -32,6 +33,17 @@ namespace Slickflow.Engine.Xpdl.Schedule
             {
                 throw new Exception("未知的splitJoinType!");
             }
+            return activitySchedule;
+        }
+
+        /// <summary>
+        /// 创建ActivitySchedule
+        /// </summary>
+        /// <param name="processModel">流程模型</param>
+        /// <returns>下一步调度类</returns>
+        internal static NextActivityScheduleBase CreateActivityScheduleIntermediate(IProcessModel processModel)
+        {
+            NextActivityScheduleBase activitySchedule = new NextActivityScheduleIntermediate(processModel);
             return activitySchedule;
         }
     }

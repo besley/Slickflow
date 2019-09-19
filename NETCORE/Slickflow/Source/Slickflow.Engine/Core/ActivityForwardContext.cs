@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Common;
@@ -43,7 +44,8 @@ namespace Slickflow.Engine.Core
         internal ActivityEntity Activity { get; set; }
         internal ActivityResource ActivityResource { get; set; }
         internal ActivityInstanceEntity FromActivityInstance { get; set; }
-        internal TaskViewEntity TaskView { get; set; }
+        internal Nullable<int> TaskID { get; set; }
+        internal Boolean IsNotParsedByTransition { get; set; }
 
         #endregion
 
@@ -51,39 +53,48 @@ namespace Slickflow.Engine.Core
         /// <summary>
         /// 开始节点的构造执行上下文对象
         /// </summary>
-        /// <param name="processModel"></param>
-        /// <param name="processInstance"></param>
-        /// <param name="activity"></param>
-        /// <param name="activityResource"></param>
+        /// <param name="processModel">流程模型</param>
+        /// <param name="processInstance">流程实例</param>
+        /// <param name="activity">活动</param>
+        /// <param name="activityResource">活动资源</param>
+        /// <param name="isNotParsedByTransition">非解析流转</param>
         private ActivityForwardContext(IProcessModel processModel,
             ProcessInstanceEntity processInstance,
             ActivityEntity activity,
-            ActivityResource activityResource)
+            ActivityResource activityResource,
+            Boolean isNotParsedByTransition = false)
         {
             ProcessModel = processModel;
             ProcessInstance = processInstance;
             Activity = activity;
             ActivityResource = activityResource;
+            IsNotParsedByTransition = isNotParsedByTransition;
         }
 
         /// <summary>
         /// 任务执行的上下文对象
         /// </summary>
-        /// <param name="task"></param>
-        /// <param name="processModel"></param>
-        /// <param name="activityResource"></param>
-        private ActivityForwardContext(TaskViewEntity task,
+        /// <param name="taskView"></param>
+        /// <param name="taskID">任务</param>
+        /// <param name="processModel">流程模型</param>
+        /// <param name="activityResource">活动资源</param>
+        /// <param name="isNotParsedByTransition">非解析流转</param>
+        /// <param name="session">数据会话</param>
+        private ActivityForwardContext(TaskViewEntity taskView,
             IProcessModel processModel,
-            ActivityResource activityResource)
+            ActivityResource activityResource,
+            Boolean isNotParsedByTransition,
+            IDbSession session)
         {
-            this.TaskView = task;
+            TaskID = taskView.TaskID;
 
             //check task condition has load activity instance
-            this.FromActivityInstance = (new ActivityInstanceManager()).GetById(task.ActivityInstanceID);
-            this.ProcessInstance = (new ProcessInstanceManager()).GetById(task.ProcessInstanceID);
-            this.Activity = processModel.GetActivity(task.ActivityGUID);
-            this.ProcessModel = processModel;
-            this.ActivityResource = activityResource;
+            FromActivityInstance = (new ActivityInstanceManager()).GetById(session.Connection, taskView.ActivityInstanceID, session.Transaction);
+            ProcessInstance = (new ProcessInstanceManager()).GetById(session.Connection, taskView.ProcessInstanceID, session.Transaction);
+            Activity = processModel.GetActivity(taskView.ActivityGUID);
+            ProcessModel = processModel;
+            ActivityResource = activityResource;
+            IsNotParsedByTransition = isNotParsedByTransition;  
         }
 
         /// <summary>
@@ -99,37 +110,41 @@ namespace Slickflow.Engine.Core
             ActivityEntity activity,
             ActivityResource activityResource)
         {
-            return new ActivityForwardContext(processModel, processInstance, activity, activityResource);
+            return new ActivityForwardContext(processModel, processInstance, activity, activityResource, false);
         }
 
         /// <summary>
         /// 创建任务执行上下文对象
         /// </summary>
-        /// <param name="task"></param>
-        /// <param name="processModel"></param>
-        /// <param name="activityResource"></param>
-        /// <returns></returns>
-        internal static ActivityForwardContext CreateRunningContext(TaskViewEntity task,
+        /// <param name="taskView">任务</param>
+        /// <param name="processModel">流程模型</param>
+        /// <param name="activityResource">活动资源</param>
+        /// <param name="isNotParsedForward">不需要解析的流转</param>
+        /// <param name="session">数据会话</param>
+        /// <returns>活动上下文</returns>
+        internal static ActivityForwardContext CreateRunningContext(TaskViewEntity taskView,
             IProcessModel processModel,
-            ActivityResource activityResource)
+            ActivityResource activityResource,
+            Boolean isNotParsedForward,
+            IDbSession session)
         {
-            return new ActivityForwardContext(task, processModel, activityResource);
+            return new ActivityForwardContext(taskView, processModel, activityResource, isNotParsedForward, session);
         }
 
         /// <summary>
         /// 创建流程跳转上下文对象
         /// </summary>
-        /// <param name="jumpforwardActivity"></param>
-        /// <param name="processModel"></param>
-        /// <param name="processInstance"></param>
-        /// <param name="activityResource"></param>
+        /// <param name="jumpforwardActivity">跳转节点</param>
+        /// <param name="processModel">流程模型</param>
+        /// <param name="processInstance">活动实例</param>
+        /// <param name="activityResource">活动资源</param>
         /// <returns></returns>
         internal static ActivityForwardContext CreateJumpforwardContext(ActivityEntity jumpforwardActivity,
             IProcessModel processModel,
             ProcessInstanceEntity processInstance,
             ActivityResource activityResource)
         {
-            return new ActivityForwardContext(processModel, processInstance, jumpforwardActivity, activityResource);
+            return new ActivityForwardContext(processModel, processInstance, jumpforwardActivity, activityResource, true);
         }
         
         #endregion

@@ -26,9 +26,9 @@ using System.Linq;
 using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using SlickOne.WebUtility;
+using Slickflow.Data;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Core.Result;
-using Slickflow.Engine.Business.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Service;
 
@@ -48,11 +48,11 @@ namespace Slickflow.WebApi.Controllers
         [HttpPost]
         public ResponseResult StartProcess([FromBody] WfAppRunner runner)
         {
-            using (var session = DbFactory.CreateSession())
+            using (var session = SessionFactory.CreateSession())
             {
-                var transaction = session.DbContext.Database.BeginTransaction();
+                var transaction = session.BeginTrans();
                 var wfService = new WorkflowService();
-                var result = wfService.StartProcess(runner, session);
+                var result = wfService.StartProcess(session.Connection, runner, session.Transaction);
 
                 if (result.Status == WfExecutedStatus.Success)
                 {
@@ -75,11 +75,11 @@ namespace Slickflow.WebApi.Controllers
         [HttpPost]
         public ResponseResult RunProcessApp([FromBody] WfAppRunner runner)
         {
-            using (var session = DbFactory.CreateSession())
+            using (var session = SessionFactory.CreateSession())
             {
-                var transaction = session.DbContext.Database.BeginTransaction();
+                var transaction = session.BeginTrans();
                 var wfService = new WorkflowService();
-                var result = wfService.RunProcessApp(runner, session);
+                var result = wfService.RunProcessApp(session.Connection, runner, session.Transaction);
 
                 if (result.Status == WfExecutedStatus.Success)
                 {
@@ -102,11 +102,11 @@ namespace Slickflow.WebApi.Controllers
         [HttpPost]
         public ResponseResult WithdrawProcess([FromBody] WfAppRunner runner)
         {
-            using (var session = DbFactory.CreateSession())
+            using (var session = SessionFactory.CreateSession())
             {
-                var transaction = session.DbContext.Database.BeginTransaction();
+                var transaction = session.BeginTrans();
                 var wfService = new WorkflowService();
-                var result = wfService.WithdrawProcess(runner, session);
+                var result = wfService.WithdrawProcess(session.Connection, runner, session.Transaction);
 
                 if (result.Status == WfExecutedStatus.Success)
                 {
@@ -129,11 +129,11 @@ namespace Slickflow.WebApi.Controllers
         [HttpPost]
         public ResponseResult SendBackProcess([FromBody] WfAppRunner runner)
         {
-            using (var session = DbFactory.CreateSession())
+            using (var session = SessionFactory.CreateSession())
             {
-                var transaction = session.DbContext.Database.BeginTransaction();
+                var transaction = session.BeginTrans();
                 var wfService = new WorkflowService();
-                var result = wfService.SendBackProcess(runner, session);
+                var result = wfService.SendBackProcess(session.Connection, runner, session.Transaction);
 
                 if (result.Status == WfExecutedStatus.Success)
                 {
@@ -156,11 +156,96 @@ namespace Slickflow.WebApi.Controllers
         [HttpPost]
         public ResponseResult ReverseProcess([FromBody] WfAppRunner runner)
         {
-            using (var session = DbFactory.CreateSession())
+            using (var session = SessionFactory.CreateSession())
             {
-                var transaction = session.DbContext.Database.BeginTransaction();
+                var transaction = session.BeginTrans();
                 var wfService = new WorkflowService();
-                var result = wfService.ReverseProcess(runner, session);
+                var result = wfService.ReverseProcess(session.Connection, runner, 
+                    session.Transaction);
+
+                if (result.Status == WfExecutedStatus.Success)
+                {
+                    transaction.Commit();
+                    return ResponseResult.Success();
+                }
+                else
+                {
+                    transaction.Rollback();
+                    return ResponseResult.Error(result.Message);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 跳转流程测试
+        /// </summary>
+        /// <param name="runner"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult JumpProcessStart([FromBody] WfAppRunner runner)
+        {
+            using (var session = SessionFactory.CreateSession())
+            {
+                var transaction = session.BeginTrans();
+                var wfService = new WorkflowService();
+                var result = wfService.JumpProcess(session.Connection, runner,
+                    session.Transaction, JumpOptionEnum.Startup);
+
+                if (result.Status == WfExecutedStatus.Success)
+                {
+                    transaction.Commit();
+                    return ResponseResult.Success();
+                }
+                else
+                {
+                    transaction.Rollback();
+                    return ResponseResult.Error(result.Message);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 跳转流程测试
+        /// </summary>
+        /// <param name="runner"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult JumpProcess([FromBody] WfAppRunner runner)
+        {
+            using (var session = SessionFactory.CreateSession())
+            {
+                var transaction = session.BeginTrans();
+                var wfService = new WorkflowService();
+                var result = wfService.JumpProcess(session.Connection, runner,
+                    session.Transaction, JumpOptionEnum.Default);
+
+                if (result.Status == WfExecutedStatus.Success)
+                {
+                    transaction.Commit();
+                    return ResponseResult.Success();
+                }
+                else
+                {
+                    transaction.Rollback();
+                    return ResponseResult.Error(result.Message);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 跳转流程测试
+        /// </summary>
+        /// <param name="runner"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult JumpProcessEnd([FromBody] WfAppRunner runner)
+        {
+            using (var session = SessionFactory.CreateSession())
+            {
+                var transaction = session.BeginTrans();
+                var wfService = new WorkflowService();
+                var result = wfService.JumpProcess(session.Connection, runner, 
+                    session.Transaction, JumpOptionEnum.End);
 
                 if (result.Status == WfExecutedStatus.Success)
                 {

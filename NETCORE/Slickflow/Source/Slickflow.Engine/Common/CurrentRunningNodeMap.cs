@@ -1,15 +1,5 @@
-﻿using System;
-using System.Threading;
-using System.Transactions;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Slickflow.Data;
-using Slickflow.Engine.Common;
-using Slickflow.Engine.Utility;
-using Slickflow.Engine.Xpdl;
+﻿using System.Collections.Generic;
 using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Business.Manager;
 
 namespace Slickflow.Engine.Common
 {

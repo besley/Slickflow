@@ -41,9 +41,26 @@ namespace Slickflow.Engine.Common
         public String ActivityName { get; set; }
 
         /// <summary>
+        /// 活动类型
+        /// </summary>
+        public ActivityTypeEnum ActivityType { get; set; }
+
+        /// <summary>
         /// 活动节点编码
         /// </summary>
         public String ActivityCode { get; set; }
+
+        /// <summary>
+        /// 页面地址
+        /// </summary>
+        public String ActivityUrl { get; set; }
+
+        /// <summary>
+        /// 活动关联的自定义属性
+        /// JSON数据格式
+        /// </summary>
+        public string MyProperties { get; set; }
+
         public IList<Role> Roles { get; set; }
         public IList<User> Users { get; set; }
         public IList<Participant> Participants { get; set; }

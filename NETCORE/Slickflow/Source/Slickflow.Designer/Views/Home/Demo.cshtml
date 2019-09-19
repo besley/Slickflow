@@ -1,0 +1,45 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/bootstrap/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <link href="~/Content/bootstrap/bootstrap-theme-3.3.7.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap/bootstrap-dialog.min.css" rel="stylesheet" />
+
+    <title>
+        SlickMaster 表单定制主页面
+    </title>
+</head>
+
+<body>
+    <script type="text/javascript" src="~/Scripts/jquery/jquery-1.10.2.min.js"></script>
+
+    <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap-dialog.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/later.min.js"></script>
+
+    <script type="text/javascript">
+        //function bbb() {
+        //    alert("hello world!");
+        //}
+
+        $(function () {
+            //var func = "function aaa(){" + "alert('hello I am aaa!');" + "}";
+            //var f = eval("(" + func + ")");
+            //$("#myButton").click(function () { f(); })
+            $("#myButton").click(function () {
+                BootstrapDialog.show({
+                    title: '数据来源',
+                    message: $('<div></div>').load('Home/Demo'),
+                    draggable: true
+                });
+            })
+        })
+    </script>
+    <button id="myButton" value="Demo">demo button</button>
+</body>
+</html>

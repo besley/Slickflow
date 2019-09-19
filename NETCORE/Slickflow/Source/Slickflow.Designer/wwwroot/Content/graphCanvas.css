@@ -94,7 +94,7 @@ input{ outline:none;}
 }
 
 .draggable {cursor: move}
-.a_tit{ width:100px; height:auto; text-align:right; float:left;}
+.a_tit{ width:100px; height:auto; text-align:right; float:left;margin-right:2px;}
 .bcxj{width:340px; height:70px; line-height:22px; font-size:14px; color:#666; float:left; border:#D3D3D3 solid 1px; font-family:"微软雅黑"; overflow:auto;}
 .coolbg {border:none; border-right:1px solid #ACACAC; border-bottom:1px solid #ACACAC; padding:2px; padding-right:5px; padding-left:5px; background:#CCC url(../images/allbtbg2.gif); cursor:pointer; background:#DDDDDD;}
 .np {border:none;}
@@ -105,10 +105,11 @@ input{ outline:none;}
 .icoBtn{background-image:url(images/buttonicon.gif); background-repeat:no-repeat;float:left;margin:5px 0 0 5px;width:20px;height:20px;display:block;font-size:1px;}
 .btnNew{background-position:-60px -140px;}/*add*/
 .btnDel{background-position:-20px -140px;width:18px;}/*delete*/
-.btnEdit{background-position:-120px -60px;}
+.btnEdit{background-position:-80px -140px;}
 .btnSave{background-position:-0px -60px;}
 .btnSetting{background-position:-60px -20px;}
 .btnDelete{background-position:-80px -120px;}
+.btnRefresh{background-position: -60px -60px;}
 /*bpmn icons*/
 .iconBPMN{background-image:url(images/bpmn-icons.gif);background-repeat:no-repeat;float:left;margin:5px 0 0 5px;width:20px;height:20px;display:block;font-size:1px;}
 .iconTask{background-position:-206px -6px;}

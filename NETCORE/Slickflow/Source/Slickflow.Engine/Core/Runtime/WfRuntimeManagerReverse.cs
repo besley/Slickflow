@@ -20,20 +20,10 @@ License along with this library; if not, you can access the official
 web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 */
 
-using System;
-using System.Threading;
-using System.Transactions;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Slickflow.Data;
-using Slickflow.Engine.Common;
-using Slickflow.Engine.Utility;
-using Slickflow.Engine.Core.Result;
-using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
-using Slickflow.Engine.Xpdl;
-using Slickflow.Engine.Core.Event;
+using Slickflow.Engine.Common;
+using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Core.Pattern;
 
 namespace Slickflow.Engine.Core.Runtime
@@ -52,16 +42,14 @@ namespace Slickflow.Engine.Core.Runtime
             //修改流程实例为返签状态
             var pim = new ProcessInstanceManager();
             pim.Reverse(base.BackwardContext.ProcessInstance.ID, 
-                base.ActivityResource.AppRunner, 
+                base.AppRunner, 
                 session);
 
             //创建新任务节点
-            var backMostPreviouslyActivityInstanceID = GetBackwardMostPreviouslyActivityInstanceID();
             var nodeMediatorBackward = new NodeMediatorBackward(base.BackwardContext, session);
             nodeMediatorBackward.CreateBackwardActivityTaskTransitionInstance(base.BackwardContext.ProcessInstance,
                 base.BackwardContext.BackwardFromActivityInstance,
                 BackwardTypeEnum.Reversed,
-                backMostPreviouslyActivityInstanceID,
                 base.BackwardContext.BackwardToTargetTransitionGUID,
                 TransitionTypeEnum.Backward,
                 TransitionFlyingTypeEnum.NotFlying,

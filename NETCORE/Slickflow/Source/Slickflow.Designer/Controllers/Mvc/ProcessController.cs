@@ -12,17 +12,17 @@ namespace Slickflow.Designer.Controllers.Mvc
     public class ProcessController : Controller
     {
         // GET: Process
-        public IActionResult List()
+        public ActionResult List()
         {
             return View();
         }
 
-        public IActionResult Edit()
+        public ActionResult Edit()
         {
             return View();
         }
 
-        public IActionResult Import()
+        public ActionResult Import()
         {
             return View();
         }

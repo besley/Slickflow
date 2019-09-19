@@ -22,7 +22,7 @@ web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 
 var kmain = (function () {
 	function kmain() {
-	}
+    }
 
     kmain.init = function (mode) {
 		//waiting...
@@ -53,10 +53,17 @@ var kmain = (function () {
         kmain.mxSelectedDomElement = {};
         kmain.mxSelectedPackageData = null;
         kmain.mxSelectedParticipants = [];
+        kmain.mxSelectedProcessStartType = 0;
+        kmain.mxSelectedProcessStartExpression = '';
+        kmain.mxSelectedProcessEndType = 0;
+        kmain.mxSelectedProcessEndExpression = '';
     }
 
     //intialize workflow editor
-    kmain.initializeMxGraphEditor = function() {
+    kmain.initializeMxGraphEditor = function () {
+        //set mxGraph lang
+        setMxGraphLang();
+
         var keditor = kmain.mxGraphEditor = createEditor('scripts/mxGraph/src/editor/config/workfloweditor.xml');
         var kgraph = kmain.mxGraphEditor.graph;
 
@@ -91,11 +98,21 @@ var kmain = (function () {
             //    array.push(prop + "=" + newStyle[prop]);
             //edge.style = array.join(';');
         });
-        keditor.createProperties = function(cell){
+        
+        keditor.createProperties = function (cell) {
+            if (kmain.mxSelectedDomElement === undefined) {
+                $.msgBox({
+                    title: "Designer / Property",
+                    content: kresource.getItem('activitypropertycreatemsg'),
+                    type: "alert"
+                });
+                return;
+            }
+
             var model = this.graph.getModel();
 	        var snode = model.getValue(cell);
 
-            if (mxUtils.isNode(snode)){
+            if (mxUtils.isNode(snode)) {
                 kmain.mxSelectedDomElement.Cell = cell;
 
                 if (model.isVertex(cell)) {
@@ -104,21 +121,93 @@ var kmain = (function () {
                         var activity = kmain.mxSelectedDomElement.Element = convert2ActivityObject(cell);
                         showActivityPropertyDialog(activity);
                     } else if(snode.nodeName === "Swimlane"){
-                        ;
+                        $.msgBox({
+                            title: "Designer / Property",
+                            content: kresource.getItem('swimlanepropertymsg'),
+                            type: "info"
+                        });
                     }
                 } else if (model.isEdge(cell)){ 
                     if (snode.nodeName === "Transition") {
 			            //transition page
                         kmain.mxSelectedDomElement.ElementType = 'Transition';
                         var transition = kmain.mxSelectedDomElement.Element = convert2TransitionObject(cell);
-			            BootstrapDialog.show({
-				            title: '转移属性',
+                        BootstrapDialog.show({
+                            title: kresource.getItem('transitionproperty'),
 				            message: $('<div></div>').load('transition/edit'),
                             data: { "node": transition },
                             draggable: true
 			            });
                     }
+                } else {
+                    $.msgBox({
+                        title: "Designer / Property",
+                        content: kresource.getItem('activitypropertyeditwarnmsg'),
+                        type: "alert"
+                    });
                 }
+            } else {
+                $.msgBox({
+                    title: "Designer / Property",
+                    content: kresource.getItem('activitypropertyeditwarnmsg'),
+                    type: "alert"
+                });
+            }
+        }
+
+        keditor.createEvents = function (cell) {
+            if (kmain.mxSelectedDomElement === undefined) {
+                $.msgBox({
+                    title: "Designer / Property",
+                    content: kresource.getItem('processselectedwarnmsg'),
+                    type: "alert"
+                });
+                return;
+            }
+
+            var model = this.graph.getModel();
+            var snode = model.getValue(cell);
+
+            if (mxUtils.isNode(snode)) {
+                kmain.mxSelectedDomElement.Cell = cell;
+
+                if (model.isVertex(cell)) {
+                    if (snode.nodeName === "Activity") {
+                        kmain.mxSelectedDomElement.ElementType = 'Activity';
+                        var activity = kmain.mxSelectedDomElement.Element = convert2ActivityObject(cell);
+                        showActivityEventDialog(activity);
+                    } else if (snode.nodeName === "Swimlane") {
+                        $.msgBox({
+                            title: "Designer / Property",
+                            content: kresource.getItem('swimlanepropertymsg'),
+                            type: "info"
+                        });
+                    }
+                } else if (model.isEdge(cell)) {
+                    if (snode.nodeName === "Transition") {
+                        //transition page
+                        kmain.mxSelectedDomElement.ElementType = 'Transition';
+                        var transition = kmain.mxSelectedDomElement.Element = convert2TransitionObject(cell);
+                        BootstrapDialog.show({
+                            title: kresource.getItem('transitionproperty'),
+                            message: $('<div></div>').load('transition/edit'),
+                            data: { "node": transition },
+                            draggable: true
+                        });
+                    }
+                } else {
+                    $.msgBox({
+                        title: "Designer / Property",
+                        content: kresource.getItem('activitypropertyeditwarnmsg'),
+                        type: "alert"
+                    });
+                }
+            } else {
+                $.msgBox({
+                    title: "Designer / Property",
+                    content: kresource.getItem('activitypropertyeditwarnmsg'),
+                    type: "alert"
+                });
             }
         }
 
@@ -127,41 +216,13 @@ var kmain = (function () {
         }
     }
 
-    function showActivityPropertyDialog(activity){
-        if (activity.type === kmodel.Config.NODE_TYPE_TASK
-	        || activity.type === kmodel.Config.NODE_TYPE_MULTIPLEINSTANCE) {
-	        BootstrapDialog.show({
-		        title: '活动属性',
-		        message: $('<div></div>').load('activity/edit'),
-                data: { "node": activity },
-                draggable: true
-	        });
-        } else if (activity.type === kmodel.Config.NODE_TYPE_GATEWAY) {
-	        BootstrapDialog.show({
-		        title: '网关决策属性',
-		        message: $('<div></div>').load('activity/gateway'),
-                data: { "node": activity },
-                draggable: true
-	        });
-        } else if (activity.type === kmodel.Config.NODE_TYPE_SUBPROCESS) {
-	        BootstrapDialog.show({
-		        title: '子流程属性',
-		        message: $('<div></div>').load('activity/subprocess'),
-                data: { "node": activity },
-                draggable: true
-	        });
-        } else if (activity.type === kmodel.Config.NODE_TYPE_START
-	        || activity.type === kmodel.Config.NODE_TYPE_END){
-		        ;
-        }
-        else {
-	        $.msgBox({
-		        title: "Designer / Property",
-		        content: "未知节点类型！" + activity.type,
-		        type: "alert"
-	        });
-	        return false;
-        }
+    function showActivityPropertyDialog(activity) {
+        BootstrapDialog.show({
+            title: kresource.getItem('activityproperty'),
+            message: $('<div></div>').load('activity/index'),
+            data: { "node": activity },
+            draggable: true
+        });
     }
 
     function convert2ActivityObject(cell){
@@ -200,6 +261,28 @@ var kmain = (function () {
             });
             activity.actions = actions;
         }
+
+        //boundaries
+        var boundariesElement = snode.getElementsByTagName("Boundaries")[0];
+        if (boundariesElement) {
+            var boundaries = [];
+            Array.prototype.forEach.call(boundariesElement.getElementsByTagName("Boundary"), function (boundaryElement) {
+                var boundary = mxfile.getBoundaryObject(boundaryElement);
+                boundaries.push(boundary);
+            });
+            activity.boundaries = boundaries;
+        }
+
+        //sections
+        var sectionsElement = snode.getElementsByTagName("Sections")[0];
+        if (sectionsElement) {
+            var sections = [];
+            Array.prototype.forEach.call(sectionsElement.getElementsByTagName("Section"), function (sectionElement) {
+                var section = mxfile.getSectionObject(sectionElement);
+                sections.push(section);
+            });
+            activity.sections = sections;
+        }
         return activity;
     }
 
@@ -214,7 +297,10 @@ var kmain = (function () {
 
         var conditionElement = sline.getElementsByTagName("Condition")[0];
         if (conditionElement) transition.condition = mxfile.getConditionObject(conditionElement);
-        
+
+        var groupBehavioursElement = sline.getElementsByTagName("GroupBehaviours")[0];
+        if (groupBehavioursElement) transition.groupBehaviours = mxfile.getGroupBehavioursObject(groupBehavioursElement);
+
         var receiverElement = sline.getElementsByTagName("Receiver")[0];
         transition.receiver = mxfile.getReceiverObject(receiverElement);
 
@@ -226,8 +312,8 @@ var kmain = (function () {
         try{
             if (!mxClient.isBrowserSupported()){
                 $.msgBox({
-				    title: "Designer / Index",
-				    content: "不支持当前版本的浏览器，请使用更新版本的浏览器！",
+                    title: "Designer / Index",
+                    content: kresource.getItem('explorernotsupportmsg'),
 				    type: "info"
 			    });
             } else {
@@ -246,7 +332,7 @@ var kmain = (function () {
 
                 var title = document.title;
                 var funct = function(sender){
-                    document.title = title + ' - ' + sender.getTitle();
+                    document.title = title;
                 };
                 editor.addListener(mxEvent.OPEN, funct);
                 editor.addListener(mxEvent.ROOT, funct);
@@ -255,8 +341,8 @@ var kmain = (function () {
             }
         }catch (e){
             $.msgBox({
-				title: "Designer / Index",
-				content: "图形设计器启动异常：" + e.message,
+                title: "Designer / Index",
+                content: kresource.getItem('workfloweditorstartuperrormsg') + e.message,
 				type: "info"
 			});
             throw e;
@@ -266,32 +352,17 @@ var kmain = (function () {
 	//#endregion
 
 	//#region toolbar action in home page
-	kmain.createProcess = function () {
+    kmain.createProcess = function () {
         //clear canvas
         kmain.mxGraphEditor.graph.getModel().clear();
-        //create process
-		processlist.createProcess();
+        processlist.createProcess();
 	}
 
 	kmain.openProcess = function () {
-		BootstrapDialog.show({
-			title: '流程列表',
+        BootstrapDialog.show({
+            title: kresource.getItem("processlist"),
             message: $('<div></div>').load('process/list'),
             draggable: true
-		});
-	}
-
-	kmain.setting = function () {
-		BootstrapDialog.show({
-			title: '系统参数设置',
-			message: $("<div>你可以在这个页面设置一些参数。。。</div>"),
-			buttons: [{
-				label: '确定',
-				cssClass: 'btn-primary',
-				action: function (dialogItself) {
-					dialogItself.close();
-				}
-			}]
 		});
 	}
 
@@ -303,11 +374,11 @@ var kmain = (function () {
 		    var div = $('<div></div>');
             var text = $('<textarea style="width:540px;min-height:280px;"/>').val(xmlContent).appendTo(div);
 
-		    BootstrapDialog.show({
-			    title: 'XML文件内容',
+            BootstrapDialog.show({
+                title: kresource.getItem('xmlcontent'),
 			    message: div,
-			    buttons: [{
-				    label: '关闭',
+                buttons: [{
+                    label: kresource.getItem('close'),
 				    cssClass: 'btn-primary',
 				    action: function (dialogItself) {
 					    dialogItself.close();
@@ -317,21 +388,30 @@ var kmain = (function () {
 		    });
         } else {
 			$.msgBox({
-				title: "Designer / Index",
-				content: "图形内容为空，请确认是否打开流程记录！",
-				type: "error"
+                title: "Designer / Index",
+                content: kresource.getItem('xmlpreviewwarnmsg'),
+				type: "warn"
 			});
             return;
         }
+	}
+
+	kmain.importDiagram = function () {
+        BootstrapDialog.show({
+            title: kresource.getItem('importxml'),
+            message: $('<div></div>').load('process/import'),
+            draggable: true
+		});
 	}
 
     function afterProcessCreated(e, data){
         //intialize process variables
         initializeGlobalVariables();
         //get mxEditor graph xml
+        var graphData = kloader.load(data.ProcessEntity);
+        kmain.mxSelectedPackageData = graphData.package;
+        kmain.mxSelectedParticipants = graphData.package.participants;
         kmain.mxSelectedProcessEntity = data.ProcessEntity;
-        //save process file
-        kmain.saveProcessFile();
     }
 
     kmain.saveProcessFile = function () {
@@ -341,6 +421,10 @@ var kmain = (function () {
             var entity = {
                 "ProcessGUID": kmain.mxSelectedProcessEntity.ProcessGUID,
                 "Version": kmain.mxSelectedProcessEntity.Version,
+                "StartType": kmain.mxSelectedProcessStartType,
+                "StartExpression": kmain.mxSelectedProcessStartExpression,
+                "EndType": kmain.mxSelectedProcessEndType,
+                "EndExpression": kmain.mxSelectedProcessEndExpression,
                 "XmlContent": xmlContent
             };
             processapi.saveProcessFile(entity);
@@ -362,29 +446,52 @@ var kmain = (function () {
 			if (result.Status === 1) {
                 //clear graph canvas
                 kmain.mxGraphEditor.graph.getModel().clear();
-				//inialize graph canvas
+                //inialize graph canvas
                 var graphData = kloader.load(result.Entity);
                 kmain.mxSelectedPackageData = graphData.package;
                 kmain.mxSelectedParticipants = graphData.package.participants;
                 kmain.mxSelectedProcessEntity = data.ProcessEntity;
 			} else {
 				$.msgBox({
-					title: "Designer / Process",
-					content: "流程定义记录读取失败！错误：" + result.Message,
+                    title: "Designer / Process",
+                    content: kresource.getItem('processopenerrormsg') + result.Message,
 					type: "error"
 				});
 			}
 		});
-	}
+    }
 
     //xml of mxGraphEditor
-    function previewMxGraphXMLContent(){
+    kmain.previewMxGraphXMLContent = function(){
         var model = kmain.mxGraphEditor.graph.getModel();
         var encoder = new mxCodec();
         var mxGraphModelData = encoder.encode(model);
-        var graphXmlContent = mxUtils.getPrettyXml(mxGraphModelData);
+        var xmlContent = mxUtils.getPrettyXml(mxGraphModelData);
 
-        return graphXmlContent;
+        if ($.isEmptyObject(xmlContent) === false) {
+            var div = $('<div></div>');
+            var text = $('<textarea style="width:540px;min-height:280px;"/>').val(xmlContent).appendTo(div);
+
+            BootstrapDialog.show({
+                title: kresource.getItem('xmlcontent'),
+                message: div,
+                buttons: [{
+                    label: kresource.getItem('close'),
+                    cssClass: 'btn-primary',
+                    action: function (dialogItself) {
+                        dialogItself.close();
+                    }
+                }],
+                draggable: true
+            });
+        } else {
+            $.msgBox({
+                title: "Designer / Index",
+                content: kresource.getItem('xmlpreviewwarnmsg'),
+                type: "warn"
+            });
+            return;
+        }
     }
     //#endregion
 
@@ -395,7 +502,8 @@ var kmain = (function () {
 
         snode.setAttribute('label', activity.name);   
         snode.setAttribute('code', activity.code);
-
+        snode.setAttribute('url', activity.url);
+        
         var descriptionElement = snode.getElementsByTagName("Description")[0]; 
         if (!descriptionElement){
             descriptionElement = snode.appendChild(snode.ownerDocument.createElement('Description'));
@@ -406,6 +514,42 @@ var kmain = (function () {
         var activityTypeElement = snode.getElementsByTagName("ActivityType")[0];
         activityTypeElement = mxfile.setActivityTypeElement(activityTypeElement, activity);
 
+        //activity boundaries
+        var boundariesElement = snode.getElementsByTagName("Boundaries")[0];
+        if (!boundariesElement) {
+            boundariesElement = snode.appendChild(snode.ownerDocument.createElement("Boundaries"));
+        } else {
+            removeChildren(boundariesElement);
+        }
+
+        if (activity.boundaries) {
+            for (var i = 0; i < activity.boundaries.length; i++) {
+                var boundary = activity.boundaries[i];
+                var boundaryElement = snode.ownerDocument.createElement("Boundary");
+
+                boundaryElement = mxfile.setBoundaryElement(boundaryElement, boundary);
+                boundariesElement.appendChild(boundaryElement);
+            }
+        }
+
+        //activity sections
+        var sectionsElement = snode.getElementsByTagName("Sections")[0];
+        if (!sectionsElement) {
+            sectionsElement = snode.appendChild(snode.ownerDocument.createElement("Sections"));
+        } else {
+            removeChildren(sectionsElement);
+        }
+
+        if (activity.sections) {
+            for (var i = 0; i < activity.sections.length; i++) {
+                var section = activity.sections[i];
+                var sectionElement = snode.ownerDocument.createElement("Section");
+                sectionElement = mxfile.setSectionElement(sectionElement, section);
+                sectionsElement.appendChild(sectionElement);
+            }
+        }
+
+        //model update
         model.beginUpdate();
         try{
             model.setValue(kmain.mxSelectedDomElement.Cell, snode);
@@ -414,6 +558,7 @@ var kmain = (function () {
         }
     }
 
+    //set vertext performers
     kmain.setVertexPerformers = function(performers){
         var model = kmain.mxGraphEditor.graph.getModel();
         var snode =  model.getValue(kmain.mxSelectedDomElement.Cell);
@@ -439,6 +584,36 @@ var kmain = (function () {
         try{
             model.setValue(kmain.mxSelectedDomElement.Cell, snode);
         }finally{
+            model.endUpdate();
+        }
+    }
+
+    //set vertext actions
+    kmain.setVertexActions = function (actions) {
+        var model = kmain.mxGraphEditor.graph.getModel();
+        var snode = model.getValue(kmain.mxSelectedDomElement.Cell);
+
+        if (actions) {
+            var actionsElement = snode.getElementsByTagName("Actions")[0];
+            if (!actionsElement) {
+                actionsElement = snode.appendChild(snode.ownerDocument.createElement("Actions"));
+            } else {
+                removeChildren(actionsElement);
+            }
+
+            var action = null,
+                actionElement = null;
+            for (var i = 0; i < actions.length; i++) {
+                action = actions[i];
+                actionElement = mxfile.setActionElement(actionsElement.ownerDocument, action);
+                actionsElement.appendChild(actionElement);
+            }
+        }
+
+        model.beginUpdate();
+        try {
+            model.setValue(kmain.mxSelectedDomElement.Cell, snode);
+        } finally {
             model.endUpdate();
         }
     }
@@ -475,11 +650,26 @@ var kmain = (function () {
             conditionTextElement.textContent = transition.condition.text;
         }
 
+        if (transition.groupBehaviours) {
+            var groupBehavioursElement = sline.getElementsByTagName("GroupBehaviours")[0];
+            if (!groupBehavioursElement) {
+                groupBehavioursElement = sline.appendChild(sline.ownerDocument.createElement("GroupBehaviours"));
+            }
+            if (jshelper.isNumber(transition.groupBehaviours.priority) === true) {
+                groupBehavioursElement.setAttribute('priority', transition.groupBehaviours.priority);
+            }
+
+            if (transition.groupBehaviours.forced) {
+                groupBehavioursElement.setAttribute('forced', transition.groupBehaviours.forced);
+            }
+        }
+
         var receiverElement = sline.getElementsByTagName("Receiver")[0];
         if (!receiverElement){
             receiverElement = sline.appendChild(sline.ownerDocument.createElement('Receiver'));
         }
         receiverElement.setAttribute("type", transition.receiver.type);
+
         
         model.beginUpdate();
         try{
@@ -534,7 +724,7 @@ var kmain = (function () {
                 var edge = model.getCell(transition.TransitionGUID);
                 if (edge !== undefined) {
                     var style = graph.getCellStyle(edge); //style is in object form
-                    var newStyle = graph.stylesheet.getCellStyle("edgeStyle=orthogonalEdgeStyle;html=1;rounded=1;jettySize=auto;orthogonalLoop=1;strokeColor=red;strokeWidth=2;", style); //Method will merge styles into a new style object.  We must translate to string from here 
+                    var newStyle = graph.stylesheet.getCellStyle("html=1;rounded=1;jettySize=auto;orthogonalLoop=1;strokeColor=red;strokeWidth=2;", style); //Method will merge styles into a new style object.  We must translate to string from here 
                     var array = [];
                     for (var prop in newStyle)
                         array.push(prop + "=" + newStyle[prop]);
@@ -546,6 +736,27 @@ var kmain = (function () {
         } finally {
             model.endUpdate();
         }
+    }
+    //#endregion
+
+    //#region step test
+    kmain.simuTest = function () {
+        var win = window.open("/sfw2/", '_blank');
+        win.focus();
+    }
+    //#endregion
+
+    //#region resource 
+    kmain.changeLang = function (lang) {
+        kresource.setLang(lang);
+        location.reload();
+    }
+
+    function setMxGraphLang(lang) {
+        if (lang === undefined || lang === null) lang = kresource.getLang();
+
+        mxLanguage = lang;
+        mxClient.language = lang;
     }
     //#endregion
 	return kmain;

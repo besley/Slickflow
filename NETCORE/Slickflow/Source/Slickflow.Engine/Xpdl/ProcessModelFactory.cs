@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Slickflow.Engine.Business.Entity;
+using Slickflow.Engine.Business.Manager;
 
 namespace Slickflow.Engine.Xpdl
 {
@@ -19,7 +21,9 @@ namespace Slickflow.Engine.Xpdl
         /// <returns>流程模型</returns>
         internal static IProcessModel Create(string processGUID, string version)
         {
-            IProcessModel processModel = new ProcessModel(processGUID, version);
+            var pm = new ProcessManager();
+            IProcessModel processModel = new ProcessModel(pm.GetByVersion(processGUID, version));
+
             return processModel;
         }
     }

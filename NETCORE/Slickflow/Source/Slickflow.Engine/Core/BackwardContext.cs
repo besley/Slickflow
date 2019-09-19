@@ -21,13 +21,7 @@ web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 */
 
 using System;
-using System.Threading;
-using System.Transactions;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Utility;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Xpdl;
 
@@ -47,5 +41,9 @@ namespace Slickflow.Engine.Core
         internal String BackwardToTargetTransitionGUID { get; set; }
         internal WfBackwardTaskReceiver BackwardTaskReceiver { get; set; }
         internal ActivityResource ActivityResource { get; set; }
+        internal ActivityInstanceEntity PreviousActivityInstance { get; set; }
+        internal CrossOverGatewayDetail CrossOverGatewayDetail { get; set; }
+        internal WithdrawOperationTypeEnum WithdrawOperationType { get; set; }
+        internal SendBackOperationTypeEnum SendbackOperationType { get; set; }
     }
 }

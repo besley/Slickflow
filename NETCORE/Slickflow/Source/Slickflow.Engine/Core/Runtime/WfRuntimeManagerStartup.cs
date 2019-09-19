@@ -19,10 +19,10 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, you can access the official
 web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 */
-using System.Data;
+
 using Slickflow.Data;
-using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Business.Manager;
+using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Core.Pattern;
 
 namespace Slickflow.Engine.Core.Runtime

@@ -26,7 +26,7 @@ namespace Slickflow.Engine.Utility
                 string value = ConfigurationManager.AppSettings[key];
                 return value;
             }
-            catch (System.NullReferenceException)
+            catch (System.NullReferenceException ex)
             {
                 throw new Exception(string.Format("GetAppSettingString 配置文件中没有相应的节点存在！节点名称:{0}", key));
             }
@@ -44,7 +44,7 @@ namespace Slickflow.Engine.Utility
                 string connectionString = ConfigurationManager.ConnectionStrings[key].ConnectionString;
                 return connectionString;
             }
-            catch (System.NullReferenceException)
+            catch (System.NullReferenceException ex)
             {
                 throw new Exception(string.Format("GetConnectionString 配置文件中没有相应的节点存在！节点名称:{0}", key));
             }

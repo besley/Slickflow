@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Slickflow.Engine.Common;
 using Slickflow.Module.Resource;
-using Slickflow.Module.Resource.Service;
 
 namespace Slickflow.Engine.Common
 {
@@ -36,18 +35,56 @@ namespace Slickflow.Engine.Common
         /// <returns></returns>
         internal static PerformerList CreatePerformerList(IList<Role> roleList)
         {
-            var roleIDs = roleList.Select(x => x.ID).ToArray();
-            var resourceService = ResourceServiceFactory.Create();
-            var userList = resourceService.GetUserListByRoles(roleIDs);
-            var performerList = new PerformerList();
-
-            foreach (var user in userList)
+            PerformerList performerList = null;
+            if (roleList.Count() > 0)
             {
-                var performer = new Performer(user.UserID.ToString(), user.UserName);
+                var roleIDs = roleList.Select(x => x.ID).ToArray();
+                var resourceService = ResourceServiceFactory.Create();
+                var userList = resourceService.GetUserListByRoles(roleIDs);
+                performerList = new PerformerList();
 
-                performerList.Add(performer);
+                foreach (var user in userList)
+                {
+                    var performer = new Performer(user.UserID.ToString(), user.UserName);
+
+                    performerList.Add(performer);
+                }
             }
             return performerList;
+        }
+
+        /// <summary>
+        /// 生成任务办理人ID字符串列表
+        /// </summary>
+        /// <param name="performerList">操作者列表</param>
+        /// <returns>ID字符串列表</returns>
+        internal static string GenerateActivityAssignedUserIDs(PerformerList performerList)
+        {
+            StringBuilder strBuilder = new StringBuilder(1024);
+            foreach (var performer in performerList)
+            {
+                if (strBuilder.ToString() != "")
+                    strBuilder.Append(",");
+                strBuilder.Append(performer.UserID);
+            }
+            return strBuilder.ToString();
+        }
+
+        /// <summary>
+        /// 生成办理人名称的字符串列表
+        /// </summary>
+        /// <param name="performerList">操作者列表</param>
+        /// <returns>ID字符串列表</returns>
+        internal static string GenerateActivityAssignedUserNames(PerformerList performerList)
+        {
+            StringBuilder strBuilder = new StringBuilder(1024);
+            foreach (var performer in performerList)
+            {
+                if (strBuilder.ToString() != "")
+                    strBuilder.Append(",");
+                strBuilder.Append(performer.UserName);
+            }
+            return strBuilder.ToString();
         }
     }
 }

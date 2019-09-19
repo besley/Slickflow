@@ -12,13 +12,28 @@ namespace Slickflow.Scheduler.Common
     public enum JobRefClassEnum
     {
         /// <summary>
-        /// WfProcessInstance
+        /// WfProcess
         /// </summary>
         Process = 1,
 
         /// <summary>
+        /// WfProcessInstance
+        /// </summary>
+        ProcessInstance = 2,
+
+        /// <summary>
+        /// Activity
+        /// </summary>
+        Activity = 3,
+
+        /// <summary>
         /// WfActivityInsance
         /// </summary>
-        Activity = 2
+        ActivityInstance = 4,
+
+        /// <summary>
+        /// WfTasks
+        /// </summary>
+        Task = 5
     }
 }

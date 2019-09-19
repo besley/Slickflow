@@ -20,6 +20,7 @@ namespace Slickflow.Engine.Delegate
     public abstract class ExternalServiceBase : IExternable
     {
         #region 属性及抽象方法
+        public IDictionary<string, string> DynamicVariables { get; set; }
         protected IDelegateService DelegateService { get; set; }
         public abstract void Execute();
         #endregion

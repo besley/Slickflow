@@ -27,6 +27,7 @@ font=字体
 group=组合
 ungroup=解除组合
 removeFromParent=脱离
+properties=属性
 align=对齐
 left=左
 right=右

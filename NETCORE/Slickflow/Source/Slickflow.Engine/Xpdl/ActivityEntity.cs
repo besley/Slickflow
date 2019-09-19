@@ -75,6 +75,11 @@ namespace Slickflow.Engine.Xpdl
         public GatewayDirectionEnum GatewayDirectionType { get; set; }
 
         /// <summary>
+        /// 合并节点通过类型
+        /// </summary>
+        public GatewayJoinPassEnum GatewayJoinPassType { get; set; }
+
+        /// <summary>
         /// 活动名称
         /// </summary>
         public string ActivityName { get; set; }
@@ -85,13 +90,46 @@ namespace Slickflow.Engine.Xpdl
         public string ActivityCode { get; set; }
 
         /// <summary>
+        /// 活动关联页面的URL
+        /// </summary>
+        public string ActivityUrl { get; set; }
+
+        /// <summary>
         /// 描述
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
+        /// 自定义章节
+        /// </summary>
+        public List<SectionEntity> SectionList { get; set; }
+
+        /// <summary>
+        /// 活动关联的自定义属性
+        /// JSON数据格式
+        /// </summary>
+        public string MyProperties
+        {
+            get
+            {
+                var myProperties = string.Empty;
+                if (SectionList != null && SectionList.Count() > 0)
+                {
+                    var section = SectionList.First(s => s.Name == "myProperties");
+                    myProperties = section.Value;
+                }
+                return myProperties;
+            }
+        }
+
+        /// <summary>
         /// 操作列表
         /// </summary>
         public List<ActionEntity> ActionList { get; set; }
+
+        /// <summary>
+        /// 边界列表
+        /// </summary>
+        public List<BoundaryEntity> BoundaryList { get; set; }
     }
 }

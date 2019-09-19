@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -130,14 +130,6 @@
     <None Include="wwwroot\Content\jquery-ui\images\web_ui_lanrensc_03.png" />
     <None Include="wwwroot\Content\jquery-ui\jquery-ui-1.8.16.custom.css" />
     <None Include="wwwroot\Content\jquery-ui\jquery-ui.css" />
-    <None Include="wwwroot\Content\jsplumb\ico-jsplumb.eot" />
-    <None Include="wwwroot\Content\jsplumb\ico-jsplumb.svg" />
-    <None Include="wwwroot\Content\jsplumb\ico-jsplumb.ttf" />
-    <None Include="wwwroot\Content\jsplumb\ico-jsplumb.woff" />
-    <None Include="wwwroot\Content\jsplumb\jsPlumb-demo.css" />
-    <None Include="wwwroot\Content\jsplumb\jsPlumb-main.css" />
-    <None Include="wwwroot\Content\jsplumb\jsPlumbToolkit-defaults.css" />
-    <None Include="wwwroot\Content\jsplumb\jsPlumbToolkit-demo.css" />
     <None Include="wwwroot\Content\msgBoxLight.css" />
     <None Include="wwwroot\Content\splitter.css" />
     <None Include="wwwroot\Content\superfish.css" />
@@ -301,8 +293,6 @@
     <None Include="wwwroot\Scripts\jquery\ui\jquery.ui.sortable.js" />
     <None Include="wwwroot\Scripts\jquery\ui\jquery.ui.widget.js" />
     <None Include="wwwroot\Scripts\jshelper.js" />
-    <None Include="wwwroot\Scripts\jsplumb\jsPlumb-2.2.8-min.js" />
-    <None Include="wwwroot\Scripts\jsplumb\jsPlumb-2.2.8.js" />
     <None Include="wwwroot\Scripts\later.min.js" />
     <None Include="wwwroot\Scripts\modernizr-2.6.2.js" />
     <None Include="wwwroot\Scripts\mxGraph\src\css\common.css" />
@@ -436,6 +426,7 @@
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\swimlane.gif" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\cancel_end.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\cancel_intermediate.png" />
+    <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\end_event_timer.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\error.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\event.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\event_end.png" />
@@ -448,6 +439,7 @@
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\message_end.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\message_intermediate.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\multiple.png" />
+    <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\multiple_instance_task.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\rule.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\samll_activity_looping.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\samll_intermediate_event_message.png" />
@@ -455,6 +447,7 @@
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_cancel_end.gif" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_cancel_intermediate.gif" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_end_event_message.png" />
+    <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_end_event_timer.gif" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_error.gif" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_event.gif" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_event_end.gif" />
@@ -465,6 +458,7 @@
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_gateway_xor.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_inclusive.gif" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_intermediate_event_timer.png" />
+    <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_intermediate_event_timer2222.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_link.gif" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_looping_subprocess.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_merge.gif" />
@@ -472,12 +466,15 @@
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_message_end.gif" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_message_intermediate.gif" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_multiple.gif" />
+    <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_multiple_instance_task.gif" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_rule.gif" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_start_event_message.png" />
+    <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_start_event_timer.gif" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_subprocess.gif" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_subprocess.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_terminate.gif" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\small_timer.gif" />
+    <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\start_event_timer.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\subprocess.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\terminate.png" />
     <None Include="wwwroot\Scripts\mxGraph\src\editor\images\symbols\timer.png" />
@@ -681,7 +678,7 @@
     <None Include="wwwroot\Scripts\XMLWriter-1.0.0-min.js" />
     <None Include="wwwroot\Scripts\_references.js" />
     <None Include="wwwroot\ViewJS\activityproperty.js" />
-    <None Include="wwwroot\ViewJS\gatewayproperty.js" />
+    <None Include="wwwroot\ViewJS\cronmanager.js" />
     <None Include="wwwroot\ViewJS\kloader.js" />
     <None Include="wwwroot\ViewJS\kmain.js" />
     <None Include="wwwroot\ViewJS\kmodel.js" />
@@ -691,23 +688,35 @@
     <None Include="wwwroot\ViewJS\mxtoolkit.js" />
     <None Include="wwwroot\ViewJS\processlist.js" />
     <None Include="wwwroot\ViewJS\rolelist.js" />
-    <None Include="wwwroot\ViewJS\subprocessmanager.js" />
     <None Include="wwwroot\ViewJS\transitionproperty.js" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.5.1" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.1.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.1.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.1.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.6.1" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.2.0" />
+    <PackageReference Include="Microsoft.NET.Sdk.Razor" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Slickflow.Engine\Slickflow.Engine.csproj" />
     <ProjectReference Include="..\SlickOne.WebUtility\SlickOne.WebUtility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\Mvc\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Slickflow.Graph">
+      <HintPath>..\DLL\Slickflow.Graph.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -312,7 +312,7 @@ namespace Slickflow.WebDemo.Data
         /// <returns></returns>
         public static DataTable GetHrsLeaveProcessInstance(string sqlWhere)
         {
-            string strSql = string.Format(" SELECT i.*,h.* FROM WfProcessInstance i LEFT JOIN HrsLeave h ON i.AppInstanceID = CONVERT(VARCHAR(50), h.ID) where 1=1 {0} order by i.ID DESC ", sqlWhere);
+            string strSql = string.Format(" SELECT TOP 20 i.*,h.* FROM WfProcessInstance i LEFT JOIN HrsLeave h ON i.AppInstanceID = CONVERT(VARCHAR(50), h.ID) where 1=1 {0} order by i.ID DESC ", sqlWhere);
             return SQLHelper.ExecuteDataset(strSql).Tables[0];
         }
         #endregion

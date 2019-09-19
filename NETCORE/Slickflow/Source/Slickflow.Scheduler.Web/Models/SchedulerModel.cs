@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Slickflow.Engine.Business.Entity;
+using Slickflow.Engine.Service;
 using Slickflow.Scheduler.Service;
 using Hangfire;
 
@@ -18,8 +18,9 @@ namespace Slickflow.Scheduler.Web.Models
         /// </summary>
         public void AddSchedulerJob()
         {
-            AddJobOfTerminateOverdueProcessInstance();
+            //AddJobOfTerminateOverdueProcessInstance();
             //AddJobOfTriggerTimingStartupProcess();
+            AddJobOfTaskEMailSending();
         }
 
         /// <summary>
@@ -46,9 +47,22 @@ namespace Slickflow.Scheduler.Web.Models
                         s => s.TriggerTimingStartupProcess(entity),
                         entity.StartExpression,
                         TimeZoneInfo.Local);
-                    
                 }
             }
+        }
+
+        /// <summary>
+        /// 邮件轮询发送
+        /// </summary>
+        private void AddJobOfTaskEMailSending()
+        {
+            var wfService = new WorkflowService();
+            var processList = wfService.GetProcessListSimple();
+            var msgService = new EMailService();
+            var userList = msgService.GetUserList();
+
+            RecurringJob.AddOrUpdate<EMailService>(s => s.SendTaskEMail(processList, userList),
+                Cron.Minutely);
         }
     }
 }

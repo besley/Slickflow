@@ -91,7 +91,7 @@
 			<add as="labelBackgroundColor" value="white"/>
 			<add as="rounded" value="1"/>
 			<add as="edgeStyle" value="elbowEdgeStyle"/>
-			<add as="endArrow" value="classic"/>
+      <add as="endArrow" value="classic"/>
 			<add as="fontSize" value="10"/>
 			<add as="align" value="center"/>
 			<add as="verticalAlign" value="middle"/>

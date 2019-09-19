@@ -34,7 +34,7 @@ namespace Slickflow.Engine.Utility
                 XmlNode xmlNode = xmlDoc.DocumentElement.SelectSingleNode(xpath);
                 return xmlNode;
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
                 throw;
             }
@@ -53,12 +53,18 @@ namespace Slickflow.Engine.Utility
                 var nodeList = xmlDoc.DocumentElement.SelectNodes(xpath);
                 return nodeList;
             }
-            catch(System.Exception)
+            catch(System.Exception ex)
             {
                 throw;
             }
         }
 
+        /// <summary>
+        /// 获取节点文本
+        /// </summary>
+        /// <param name="xmlNode">XML节点</param>
+        /// <param name="childNodeName">子节点名称</param>
+        /// <returns>文本</returns>
         public static string GetXmlNodeValue(XmlNode xmlNode, string childNodeName)
         {
             return xmlNode.SelectSingleNode(childNodeName).InnerText;
@@ -89,10 +95,32 @@ namespace Slickflow.Engine.Utility
                     return null;
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
                 throw;
             }
+        }
+
+        /// <summary>
+        /// 设置节点属性的文本
+        /// </summary>
+        /// <param name="xmlNode">节点</param>
+        /// <param name="name">属性名称</param>
+        /// <param name="value">文本</param>
+        public static void SetXmlAttribute(XmlElement xmlNode, string name, string value)
+        {
+            xmlNode.SetAttribute(name, value);
+        }
+
+        /// <summary>
+        /// 设置节点属性的文本
+        /// </summary>
+        /// <param name="xmlNode">节点</param>
+        /// <param name="name">属性名称</param>
+        /// <param name="value">文本</param>
+        public static void SetXmlAttribute(XmlNode xmlNode, string name, string value)
+        {
+            xmlNode.Attributes[name].Value = value;
         }
         #endregion
 

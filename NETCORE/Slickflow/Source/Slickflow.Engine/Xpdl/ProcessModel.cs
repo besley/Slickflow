@@ -31,6 +31,7 @@ using System.Diagnostics;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Common;
+using Slickflow.Engine.Storage;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Xpdl.Node;
@@ -56,25 +57,24 @@ namespace Slickflow.Engine.Xpdl
         {
             get
             {
-                if (CachedHelper.GetXpdlCache(ProcessEntity.ProcessGUID, ProcessEntity.Version) == null)
+                if (MemoryCachedHelper.GetXpdlCache(ProcessEntity.ProcessGUID, ProcessEntity.Version) == null)
                 {
-                    var pm = new ProcessManager();
-                    var xmlDoc = pm.GetProcessXmlDocument(ProcessEntity.ProcessGUID, ProcessEntity.Version);    //xml文件读取方式，数据库或外部文件
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(ProcessEntity.XmlContent);
 
-                    CachedHelper.SetXpdlCache(ProcessEntity.ProcessGUID, ProcessEntity.Version, xmlDoc);
+                    MemoryCachedHelper.SetXpdlCache(ProcessEntity.ProcessGUID, ProcessEntity.Version, xmlDoc);
                 }
-                return CachedHelper.GetXpdlCache(ProcessEntity.ProcessGUID, ProcessEntity.Version);
+                return MemoryCachedHelper.GetXpdlCache(ProcessEntity.ProcessGUID, ProcessEntity.Version);
             }
         }
 
         /// <summary>
         /// 构造方法
         /// </summary>
-        /// <param name="processGUID"></param>
-        /// <param name="version"></param>
-        public ProcessModel(string processGUID, string version)
+        /// <param name="entity">流程实体</param>
+        public ProcessModel(ProcessEntity entity)
         {
-            ProcessEntity = (new ProcessManager()).GetByVersion(processGUID, version);
+            ProcessEntity = entity;
         }
         #endregion
 
@@ -82,7 +82,7 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取角色列表
         /// </summary> 
-        /// <returns></returns>
+        /// <returns>角色列表</returns>
         public IList<Role> GetRoles()
         {
             IList<Role> roleList = new List<Role>();
@@ -110,7 +110,7 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取开始节点信息
         /// </summary>
-        /// <returns></returns>
+        /// <returns>节点实体</returns>
         public ActivityEntity GetStartActivity()
         {
             string nodeType = "StartNode";
@@ -124,7 +124,7 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取结束节点
         /// </summary>
-        /// <returns></returns>
+        /// <returns>节点实体</returns>
         public ActivityEntity GetEndActivity()
         {
             string nodeType = "EndNode";
@@ -135,7 +135,7 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取任务类型的节点
         /// </summary>
-        /// <returns></returns>
+        /// <returns>节点实体列表</returns>
         public IList<ActivityEntity> GetTaskActivityList()
         {
             string nodeType = "TaskNode";
@@ -154,36 +154,9 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 获取任务类型的节点(包含会签节点和子流程节点)
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete]
-        private  IList<ActivityEntity> GetAllTaskActivityListByType()
-        {
-            List<ActivityEntity> activityList = new List<ActivityEntity>();
-            var nodeTypes = new string[] { "TaskNode", "MultipleInstanceNode", "SubProcessNode" };
-            foreach (var item in nodeTypes)
-            {
-                XmlNodeList nodeList = GetXmlActivityListByTypeFromXmlFile(item);
-
-                ActivityEntity entity = null;
-
-                foreach (XmlNode node in nodeList)
-                {
-                    entity = ConvertXmlActivityNodeToActivityEntity(node.ParentNode);
-                    activityList.Add(entity);
-                } 
-            }
-
-            return activityList;
-        }
-
-
-
-        /// <summary>
         /// 获取任务类型的节点(包含会签节点和子流程节点)，按照Transition顺序组成序列
         /// </summary>
-        /// <returns></returns>
+        /// <returns>节点实体列表</returns>
         public IList<ActivityEntity> GetAllTaskActivityList()
         {
             List<ActivityEntity> activityList = new List<ActivityEntity>();
@@ -193,12 +166,13 @@ namespace Slickflow.Engine.Xpdl
             return TranverseTransitionList(activityList, startActivityGUID);
         }
 
+       
         /// <summary>
         /// 递归遍历转移上的前置节点
         /// </summary>
         /// <param name="activityList">活动列表</param>
         /// <param name="fromActivityGUID">起始活动GUID</param>
-        /// <returns></returns>
+        /// <returns>节点实体列表</returns>
         private IList<ActivityEntity> TranverseTransitionList(List<ActivityEntity> activityList, string fromActivityGUID)
         {
             ActivityEntity toActivity = null;
@@ -214,7 +188,7 @@ namespace Slickflow.Engine.Xpdl
                     || toActivity.ActivityType == ActivityTypeEnum.MultipleInstanceNode
                     || toActivity.ActivityType == ActivityTypeEnum.SubProcessNode)
                 {
-                    activityList.Add(toActivity);
+                    AppendActivity(activityList, toActivity);
                 }
                 //递归遍历转移数据
                 TranverseTransitionList(activityList, toActivity.ActivityGUID);
@@ -224,9 +198,76 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// 添加节点到节点列表中，去掉有重复的节点
+        /// </summary>
+        /// <param name="activityList">节点列表</param>
+        /// <param name="toActivity">节点</param>
+        private void AppendActivity(IList<ActivityEntity> activityList, ActivityEntity toActivity)
+        {
+            var isExist = false;
+            foreach (var a in activityList)
+            {
+                if (a.ActivityGUID == toActivity.ActivityGUID)
+                {
+                    isExist = true;
+                    break;
+                }
+            }
+
+            if (isExist == false) activityList.Add(toActivity);
+        }
+
+        /// <summary>
+        /// 获取分支和合并之间的任务节点列表
+        /// </summary>
+        /// <param name="splitActivity">分支节点</param>
+        /// <param name="joinActivity">合并节点</param>
+        /// <returns>节点列表</returns>
+        public IList<ActivityEntity> GetAllTaskActivityList(ActivityEntity splitActivity,
+            ActivityEntity joinActivity)
+        {
+            IList<ActivityEntity> taskActivityList = new List<ActivityEntity>();
+            return TranverseTransitionListBetweenSplitJoin(taskActivityList, splitActivity.ActivityGUID, joinActivity.ActivityGUID);
+        }
+
+        /// <summary>
+        /// 递归遍历转移上的前置节点
+        /// </summary>
+        /// <param name="activityList">活动列表</param>
+        /// <param name="fromActivityGUID">起始活动GUID</param>
+        /// <param name="finalActivityGUID">截止活动GUID</param>
+        /// <returns>节点实体列表</returns>
+        private IList<ActivityEntity> TranverseTransitionListBetweenSplitJoin(IList<ActivityEntity> activityList, 
+            string fromActivityGUID,
+            string finalActivityGUID)
+        {
+            ActivityEntity toActivity = null;
+            var transitionNodeList = GetForwardXmlTransitionNodeList(fromActivityGUID);
+            foreach (XmlNode transition in transitionNodeList)
+            {
+                toActivity = GetActivityFromTransitionTo(transition);
+                if (toActivity.ActivityType == ActivityTypeEnum.GatewayNode
+                    && toActivity.ActivityGUID == finalActivityGUID)
+                {
+                    break;
+                }
+                else if (toActivity.ActivityType == ActivityTypeEnum.TaskNode
+                    || toActivity.ActivityType == ActivityTypeEnum.MultipleInstanceNode
+                    || toActivity.ActivityType == ActivityTypeEnum.SubProcessNode)
+                {
+                    AppendActivity(activityList, toActivity);
+                }
+                //递归遍历转移数据
+                TranverseTransitionListBetweenSplitJoin(activityList, toActivity.ActivityGUID, finalActivityGUID);
+            }
+            return activityList;
+        }
+
+
+        /// <summary>
         /// 获取流程的第一个可办理节点
         /// </summary>
-        /// <returns></returns>
+        /// <returns>节点实体</returns>
         public ActivityEntity GetFirstActivity()
         {
             ActivityEntity startActivity = GetStartActivity();
@@ -237,8 +278,8 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取当前节点的下一个节点信息
         /// </summary>
-        /// <param name="activityGUID"></param>
-        /// <returns></returns>
+        /// <param name="activityGUID">活动GUID</param>
+        /// <returns>节点实体</returns>
         public ActivityEntity GetNextActivity(string activityGUID)
         {
             XmlNode transitionNode = GetForwardXmlTransitionNode(activityGUID);
@@ -263,52 +304,40 @@ namespace Slickflow.Engine.Xpdl
                 throw new WfXpdlException(string.Format("解析流程定义文件发生异常，异常描述：{0}", e.Message), e);
             }
         }
+
+
+        /// <summary>
+        /// 获取合并节点的前置分支连线上的属性的强制分支数目
+        /// </summary>
+        /// <param name="gatewayActivity">合并节点</param>
+        /// <param name="forcedTransitionList">强制合并分支</param>
+        /// <returns>强制分支数目</returns>
+        public int GetForcedBranchesCountBeforeEOrJoin(ActivityEntity gatewayActivity, out IList<TransitionEntity> forcedTransitionList)
+        {
+            var tokensCount = 0;
+            forcedTransitionList = new List<TransitionEntity>();
+            var transitionList = GetBackwardTransitionList(gatewayActivity.ActivityGUID);
+            foreach (var transition in transitionList)
+            {
+                if (transition.GroupBehaviours != null && transition.GroupBehaviours.Forced)
+                {
+                    tokensCount += 1;
+                    forcedTransitionList.Add(transition);
+                }
+            }
+            return tokensCount;
+        }
         #endregion
 
         #region 流程流转解析，处理流程下一步流转条件等规则
         /// <summary>
         /// 获取下一步活动节点树，供流转界面使用
         /// </summary>
-        /// <param name="currentActivityGUID"></param>
-        /// <param name="condition"></param>
-        /// <returns></returns>
+        /// <param name="currentActivityGUID">活动GUID</param>
+        /// <param name="condition">条件</param>
+        /// <returns>下一步列表</returns>
         public IList<NodeView> GetNextActivityTree(string currentActivityGUID, 
             IDictionary<string, string> condition = null)
-        {
-            var nextSteps = GetNextActivityList(currentActivityGUID, condition);
-            var treeNodeList = new List<NodeView>();
-
-            foreach (var child in nextSteps.Root)
-            {
-                if (child.HasChildren)
-                {
-                    Tranverse(child, treeNodeList);
-                }
-                else
-                {
-                    treeNodeList.Add(new NodeView
-                    {
-                        ActivityGUID = child.Activity.ActivityGUID,
-                        ActivityName = child.Activity.ActivityName,
-                        Roles = GetActivityRoles(child.Activity.ActivityGUID),
-                        ReceiverType = child.Transition.Receiver != null ? child.Transition.Receiver.ReceiverType 
-                            : ReceiverTypeEnum.Default
-                    });
-                }
-            }
-            return treeNodeList;
-        }
-
-        /// <summary>
-        /// 获取下一步活动节点树，供流转界面使用
-        /// </summary>
-        /// <param name="processInstanceID"></param>
-        /// <param name="currentActivityGUID"></param>
-        /// <param name="condition"></param>
-        /// <returns></returns>
-        public IList<NodeView> GetNextActivityTree(int processInstanceID,
-            string currentActivityGUID, 
-            IDictionary<string, string> condition)
         {
             var treeNodeList = new List<NodeView>();
             var activity = GetActivity(currentActivityGUID);
@@ -326,6 +355,9 @@ namespace Slickflow.Engine.Xpdl
                      ActivityGUID = skiptoActivity.ActivityGUID,
                      ActivityName = skiptoActivity.ActivityName,
                      ActivityCode = skiptoActivity.ActivityCode,
+                     ActivityUrl = skiptoActivity.ActivityUrl,
+                     MyProperties = skiptoActivity.MyProperties,
+                     ActivityType = skiptoActivity.ActivityType,
                      Roles = GetActivityRoles(skiptoActivity.ActivityGUID),
                      Participants = GetActivityParticipants(skiptoActivity.ActivityGUID),
                      IsSkipTo = true
@@ -349,6 +381,9 @@ namespace Slickflow.Engine.Xpdl
                             ActivityGUID = child.Activity.ActivityGUID,
                             ActivityName = child.Activity.ActivityName,
                             ActivityCode = child.Activity.ActivityCode,
+                            ActivityUrl = child.Activity.ActivityUrl,
+                            MyProperties = child.Activity.MyProperties,
+                            ActivityType = child.Activity.ActivityType,
                             Roles = GetActivityRoles(child.Activity.ActivityGUID),
                             Participants = GetActivityParticipants(child.Activity.ActivityGUID),
                             ReceiverType = child.Transition.Receiver != null ? child.Transition.Receiver.ReceiverType
@@ -357,15 +392,14 @@ namespace Slickflow.Engine.Xpdl
                     }
                 }
             }
-
             return treeNodeList;
         }
 
         /// <summary>
         /// 迭代遍历
         /// </summary>
-        /// <param name="root"></param>
-        /// <param name="treeNodeList"></param>
+        /// <param name="root">根节点</param>
+        /// <param name="treeNodeList">树节点信息</param>
         private void Tranverse(NextActivityComponent root, IList<NodeView> treeNodeList)
         {
             foreach (var child in root)
@@ -381,6 +415,9 @@ namespace Slickflow.Engine.Xpdl
                         ActivityGUID = child.Activity.ActivityGUID,
                         ActivityName = child.Activity.ActivityName,
                         ActivityCode = child.Activity.ActivityCode,
+                        ActivityUrl = child.Activity.ActivityUrl,
+                        MyProperties = child.Activity.MyProperties,
+                        ActivityType = child.Activity.ActivityType,
                         Roles = GetActivityRoles(child.Activity.ActivityGUID),
                         ReceiverType = child.Transition.Receiver != null ? child.Transition.Receiver.ReceiverType
                             : ReceiverTypeEnum.Default
@@ -392,9 +429,9 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取下一步节点列表，伴随运行时条件信息
         /// </summary>
-        /// <param name="currentActivityGUID"></param>
-        /// <param name="conditionKeyValuePair"></param>
-        /// <returns></returns>
+        /// <param name="currentActivityGUID">当前节点GUID</param>
+        /// <param name="conditionKeyValuePair">条件对</param>
+        /// <returns>下一步匹配结果</returns>
         public NextActivityMatchedResult GetNextActivityList(string currentActivityGUID,
             IDictionary<string, string> conditionKeyValuePair = null)
         {
@@ -419,7 +456,7 @@ namespace Slickflow.Engine.Xpdl
                         {
                             child = NextActivityComponentFactory.CreateNextActivityComponent(transition, transition.ToActivity);
                         }
-                        else if (transition.ToActivity.ActivityType == ActivityTypeEnum.GatewayNode)
+                        else if (XPDLHelper.IsGatewayComponentNode(transition.ToActivity.ActivityType) == true)
                         {
                             NextActivityScheduleBase activitySchedule = NextActivityScheduleFactory.CreateActivitySchedule(this as IProcessModel,
                                 transition.ToActivity.GatewaySplitJoinType);
@@ -429,9 +466,23 @@ namespace Slickflow.Engine.Xpdl
                                 conditionKeyValuePair,
                                 out resultType);
                         }
+                        else if (XPDLHelper.IsIntermediateEventComponentNode(transition.ToActivity.ActivityType) == true)
+                        {
+                            NextActivityScheduleBase activitySchedule = NextActivityScheduleFactory.CreateActivityScheduleIntermediate(this as IProcessModel);
+                            child = activitySchedule.GetNextActivityListFromGateway(transition,
+                                transition.ToActivity,
+                                conditionKeyValuePair,
+                                out resultType);
+                        }
                         else
                         {
-                            throw new XmlDefinitionException(string.Format("未知的节点类型：{0}", transition.ToActivity.ActivityType.ToString()));
+                            var errMsg = string.Format("未知的节点类型：{0}", transition.ToActivity.ActivityType.ToString());
+                            LogManager.RecordLog("流程获取下一步发生异常",
+                                LogEventType.Exception,
+                                LogPriority.Normal,
+                                null,
+                                new WfXpdlException(errMsg));
+                            throw new XmlDefinitionException(errMsg);
                         }
 
                         if (child != null)
@@ -450,6 +501,11 @@ namespace Slickflow.Engine.Xpdl
             }
             catch (System.Exception e)
             {
+                LogManager.RecordLog("流程获取下一步发生异常",
+                    LogEventType.Exception,
+                    LogPriority.Normal,
+                    null,
+                    new WfXpdlException(e.Message));
                 throw new WfXpdlException(string.Format("解析流程定义文件发生异常，异常描述：{0}", e.Message), e);
             }
         }
@@ -457,38 +513,50 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取下一步节点列表（伴随条件和资源）
         /// </summary>
-        /// <param name="currentActivityGUID"></param>
-        /// <param name="conditionKeyValuePair"></param>
-        /// <param name="activityResource"></param>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="currentActivityGUID">当前节点GUID</param>
+        /// <param name="conditionKeyValuePair">条件对</param>
+        /// <param name="activityResource">活动资源</param>
+        /// <param name="expression">表达式</param>
+        /// <returns>下一步匹配结果</returns>
         public NextActivityMatchedResult GetNextActivityList(string currentActivityGUID,
             IDictionary<string, string> conditionKeyValuePair,
             ActivityResource activityResource,
             Expression<Func<ActivityResource, ActivityEntity, bool>> expression)
         {
-            Boolean isConditionCheck = true;
+            #region AndSplit Multiple Instance
+            Boolean isNotConditionCheck = false;
             NextActivityMatchedResult newResult = null;
             NextActivityComponent newRoot = NextActivityComponentFactory.CreateNextActivityComponent();
 
-            //先获取未加运行时表达式过滤的下一步节点列表
+            //先获取未加运行时表达式(为了过滤前端用户选择的步骤)的下一步节点列表
+            //定义时的条件变量需要传入，返回的是解析后的下一步活动列表
             NextActivityMatchedResult result = GetNextActivityList(currentActivityGUID,
                 conditionKeyValuePair);
 
-            //与分支(多实例)--不需要判断条件，直接返回下一步列表
+            //下一步节点列表为空
+            if (result.Root.HasChildren == false)
+            {
+                newResult = NextActivityMatchedResult.CreateNextActivityMatchedResultObject(NextActivityMatchedType.NoneTransitionFilteredByCondition,
+                    result.Root);
+                return newResult;
+            }
+
+            //下一步节点列表封装
             if (result.Root is NextActivityGateway)
             {
                 var gateway = (NextActivityGateway)result.Root;
                 var gatewayNode = gateway.NextActivityList[0];
+
+                //并行与分支(多实例)--不需要判断条件，直接返回下一步列表
                 if (gatewayNode.Activity.GatewaySplitJoinType == GatewaySplitJoinTypeEnum.Split
                     && gatewayNode.Activity.GatewayDirectionType == GatewayDirectionEnum.AndSplitMI)
                 {
                     newRoot = result.Root;
-                    isConditionCheck = false;
+                    isNotConditionCheck = true;
                 }
             }
 
-            if (isConditionCheck)
+            if (isNotConditionCheck == false)
             {
                 //套入条件表达式
                 foreach (NextActivityComponent c in result.Root)
@@ -503,9 +571,23 @@ namespace Slickflow.Engine.Xpdl
                     }
                     else
                     {
-                        if (expression.Compile().Invoke(activityResource, c.Activity))
+                        //前端用户明确指定下一步的执行用户列表
+                        if (activityResource.AppRunner.NextPerformerType == NextPerformerIntTypeEnum.Specific
+                            && activityResource.NextActivityPerformers != null)
                         {
+                            if (expression.Compile().Invoke(activityResource, c.Activity))
+                            {
+                                newRoot.Add(c);
+                            }
+                        }
+                        else if (IsInternalNextPerformerType(activityResource.AppRunner.NextPerformerType) == true)
+                        {
+                            //系统内部定义的测试使用方式，直接添加下一步步骤到下一步列表
                             newRoot.Add(c);
+                        }
+                        else
+                        {
+                            throw new ApplicationException("未能正确获取下一步的节点信息！");
                         }
                     }
                 }
@@ -522,21 +604,25 @@ namespace Slickflow.Engine.Xpdl
                     newRoot);
             }
             return newResult;
+            #endregion
         }
 
         /// <summary>
         /// 递归获取满足条件的下一步节点列表
         /// </summary>
-        /// <param name="root"></param>
-        /// <param name="activityResource"></param>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        private NextActivityComponent GetNextActivityListByExpressionRecurisivly(NextActivityComponent root,
+        /// <param name="parent">父节点</param>
+        /// <param name="activityResource">活动资源</param>
+        /// <param name="expression">表达式</param>
+        /// <returns>下一步节点</returns>
+        private NextActivityComponent GetNextActivityListByExpressionRecurisivly(NextActivityComponent parent,
            ActivityResource activityResource,
            Expression<Func<ActivityResource, ActivityEntity, bool>> expression)
         {
-            NextActivityComponent r1 = null;
-            foreach (NextActivityComponent c in root)
+            //创建新父节点
+            NextActivityComponent r1 = NextActivityComponentFactory.CreateNextActivityComponent(parent);
+
+            //递归遍历
+            foreach (NextActivityComponent c in parent)
             {
                 if (c.HasChildren)
                 {
@@ -547,7 +633,7 @@ namespace Slickflow.Engine.Xpdl
                 {
                     if (expression.Compile().Invoke(activityResource, c.Activity))
                     {
-                        r1 = AddChildToNewGatewayComponent(r1, root, c);
+                        r1 = AddChildToNewGatewayComponent(r1, parent, c);
                     }
                 }
             }
@@ -557,31 +643,200 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 添加子节点到网关节点
         /// </summary>
-        /// <param name="newRoot">新的根节点</param>
-        /// <param name="root">根节点</param>
+        /// <param name="newParent">新父节点</param>
+        /// <param name="parent">父节点</param>
         /// <param name="child">子节点</param>
         /// <returns>下一步活动节点</returns>
-        private NextActivityComponent AddChildToNewGatewayComponent(NextActivityComponent newRoot,
-            NextActivityComponent root,
+        private NextActivityComponent AddChildToNewGatewayComponent(NextActivityComponent newParent,
+            NextActivityComponent parent,
             NextActivityComponent child)
         {
-            if ((newRoot == null) && (child != null))
-                newRoot = NextActivityComponentFactory.CreateNextActivityComponent(root);
+            if ((newParent != null) && (child != null))
+                newParent.Add(child);
+            return newParent;
+        }
 
-            if ((newRoot != null) && (child != null))
-                newRoot.Add(child);
-            return newRoot;
+        /// <summary>
+        /// 判断是否是内部定义的执行者类型
+        /// </summary>
+        /// <param name="performerType">执行者类型</param>
+        /// <returns>是否</returns>
+        private bool IsInternalNextPerformerType(NextPerformerIntTypeEnum performerType)
+        {
+            bool isInternal = false;
+            if (performerType == NextPerformerIntTypeEnum.Definition
+                    || performerType == NextPerformerIntTypeEnum.Single)
+            {
+                isInternal = true;
+            }
+            return isInternal;
+        }
+
+        /// <summary>
+        /// 不加条件获取下一步节点列表
+        /// </summary>
+        /// <param name="activityGUID">当前节点GUID</param>
+        /// <returns>节点列表</returns>
+        public IList<ActivityEntity> GetNextActivityListWithoutCondition(string activityGUID)
+        {
+            IList<ActivityEntity> activityList = new List<ActivityEntity>();
+            GetNextActivityListWithoutConditionRecurily(activityList, activityGUID);
+
+            return activityList;
+        }
+
+        /// <summary>
+        /// 递归获取下一步节点列表
+        /// </summary>
+        /// <param name="activityList">节点列表</param>
+        /// <param name="activityGUID">当前节点GUID</param>
+        private void GetNextActivityListWithoutConditionRecurily(IList<ActivityEntity> activityList, 
+            string activityGUID)
+        {
+            var transitionList = GetForwardTransitionList(activityGUID);
+            foreach (var transition in transitionList)
+            {
+                var toActivityGUID = transition.ToActivityGUID;
+                if (XPDLHelper.IsGatewayComponentNode(transition.ToActivity.ActivityType) == true)
+                {
+                    GetNextActivityListWithoutConditionRecurily(activityList, transition.ToActivityGUID);
+                }
+                else
+                {
+                    activityList.Add(transition.ToActivity);
+                }
+            }
+        }
+        #endregion
+
+        #region 流程流转解析，处理流程上一步退回步骤列表
+        /// <summary>
+        /// 获取上一步
+        /// </summary>
+        /// <param name="currentActivityGUID">当前节点列表</param>
+        /// <returns>步骤列表</returns>
+        public IList<NodeView> GetPreviousActivityTree(string currentActivityGUID)
+        {
+            var hasGatewayPassed = false;
+            var activityList = GetPreviousActivityList(currentActivityGUID, out hasGatewayPassed);
+            var treeNodeList = new List<NodeView>();
+
+            foreach (var activity in activityList)
+            {
+                treeNodeList.Add(new NodeView
+                {
+                    ActivityGUID = activity.ActivityGUID,
+                    ActivityName = activity.ActivityName,
+                    ActivityCode = activity.ActivityCode,
+                    ActivityUrl = activity.ActivityUrl,
+                    MyProperties = activity.MyProperties,
+                    ActivityType = activity.ActivityType
+                });
+            }
+            return treeNodeList;
+        }
+
+        /// <summary>
+        /// 获取下一步节点列表，伴随运行时条件信息
+        /// （不包含多实例节点内部的判断，因为没有相应的Transition记录）
+        /// </summary>
+        /// <param name="currentActivityGUID">当前节点信息</param>
+        /// <returns>活动列表</returns>
+        public IList<ActivityEntity> GetPreviousActivityList(string currentActivityGUID)
+        {
+            var activityList = new List<ActivityEntity>();
+            var transitionList = GetBackwardTransitionList(currentActivityGUID);
+            foreach (var transition in transitionList)
+            {
+                if (XPDLHelper.IsSimpleComponentNode(transition.FromActivity.ActivityType) == true
+                    || transition.FromActivity.ActivityType == ActivityTypeEnum.SubProcessNode)
+                {
+                    activityList.Add(transition.FromActivity);
+                }
+                else if (transition.FromActivity.ActivityType == ActivityTypeEnum.GatewayNode)
+                {
+                    var nodeList = GetPreviousActivityList(transition.FromActivity.ActivityGUID);
+                    foreach (var node in nodeList)
+                    {
+                        activityList.Add(node);
+                    }
+                }
+                else
+                {
+                    throw new XmlDefinitionException(string.Format("未知的节点类型：{0}", transition.FromActivity.ActivityType.ToString()));
+                }
+            }
+            return activityList;
+        }
+
+        /// <summary>
+        /// 获取前置节点列表（不包含多实例节点内部的判断，因为没有相应的Transition记录）
+        /// </summary>
+        /// <param name="currentActivityGUID">当前运行节点GUID</param>
+        /// <param name="hasGatewayPassed">是否经过网关</param>
+        /// <returns>前置节点列表</returns>
+        public IList<ActivityEntity> GetPreviousActivityList(string currentActivityGUID, out bool hasGatewayPassed)
+        {
+            var hasGatewayPassedInternal = false;
+            IList<ActivityEntity> previousActivityList = new List<ActivityEntity>();
+            GetPreviousActivityList(currentActivityGUID, previousActivityList, ref hasGatewayPassedInternal);
+            hasGatewayPassed = hasGatewayPassedInternal;
+
+            return previousActivityList;
+        }
+
+        /// <summary>
+        /// 获取前置节点列表（不包含多实例节点内部的判断，因为没有相应的Transition记录）
+        /// </summary>
+        /// <param name="currentActivityGUID">当前运行节点GUID</param>
+        /// <param name="previousActivityList">前置节点列表</param>
+        /// <param name="hasGatewayPassed">是否经过网关</param>
+        private void GetPreviousActivityList(string currentActivityGUID, 
+            IList<ActivityEntity> previousActivityList, 
+            ref bool hasGatewayPassed)
+        {
+            var transitionList = GetBackwardTransitionList(currentActivityGUID);
+            foreach (var transition in transitionList)
+            {
+                var fromActivity = GetActivity(transition.FromActivityGUID);
+                if (fromActivity.ActivityType == ActivityTypeEnum.GatewayNode)
+                {
+                    hasGatewayPassed = true;
+                    GetPreviousActivityList(fromActivity.ActivityGUID, previousActivityList, ref hasGatewayPassed);
+                }
+                else
+                {
+                    previousActivityList.Add(GetActivity(fromActivity.ActivityGUID));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 根据XML上的转移获取来源节点列表
+        /// </summary>
+        /// <param name="toActivityGUID">目标节点GUID</param>
+        /// <returns>来源节点列表</returns>
+        public IList<ActivityEntity> GetFromActivityList(string toActivityGUID)
+        {
+            var activityList = new List<ActivityEntity>();
+            var transitionList = GetBackwardTransitionList(toActivityGUID);
+            foreach (var transition in transitionList)
+            {
+                activityList.Add(transition.FromActivity);
+            }
+            return activityList;
         }
         #endregion
 
         #endregion
 
+
         #region Xml活动节点读取操作
         /// <summary>
         /// 获取XML的节点信息
         /// </summary>
-        /// <param name="activityGUID"></param>
-        /// <returns></returns>
+        /// <param name="activityGUID">节点GUID</param>
+        /// <returns>Xml节点</returns>
         private XmlNode GetXmlActivityNodeFromXmlFile(string activityGUID)
         {
             XmlNode xmlNode = XMLHelper.GetXmlNodeByXpath(XmlProcessDefinition,
@@ -592,8 +847,8 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取活动节点的类型信息
         /// </summary>
-        /// <param name="nodeType"></param>
-        /// <returns></returns>
+        /// <param name="nodeType">节点类型</param>
+        /// <returns>Xml节点</returns>
         private XmlNode GetXmlActivityTypeNodeFromXmlFile(string nodeType)
         {
             XmlNode typeNode = XMLHelper.GetXmlNodeByXpath(XmlProcessDefinition,
@@ -604,8 +859,8 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取特定类型的活动节点
         /// </summary>
-        /// <param name="nodeType"></param>
-        /// <returns></returns>
+        /// <param name="nodeType">节点类型</param>
+        /// <returns>Xml节点列表</returns>
         private XmlNodeList GetXmlActivityListByTypeFromXmlFile(string nodeType)
         {
             XmlNodeList nodeList = XMLHelper.GetXmlNodeListByXpath(XmlProcessDefinition,
@@ -616,8 +871,8 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取参与者信息
         /// </summary>
-        /// <param name="participantGUID"></param>
-        /// <returns></returns>
+        /// <param name="participantGUID">参与者GUID</param>
+        /// <returns>XML节点</returns>
         private XmlNode GetXmlParticipantNodeFromXmlFile(string participantGUID)
         {
             XmlNode participantNode = XMLHelper.GetXmlNodeByXpath(XmlProcessDefinition,
@@ -628,7 +883,7 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取当前节点信息
         /// </summary>
-        /// <returns></returns>
+        /// <returns>活动实体</returns>
         public ActivityEntity GetActivity(string activityGUID)
         {
             XmlNode activityNode = GetXmlActivityNodeFromXmlFile(activityGUID);
@@ -641,7 +896,7 @@ namespace Slickflow.Engine.Xpdl
         /// 获取转移上的To节点的对象
         /// </summary>
         /// <param name="transitionNode">转移的xml节点</param>
-        /// <returns></returns>
+        /// <returns>活动实体</returns>
         private ActivityEntity GetActivityFromTransitionTo(XmlNode transitionNode)
         {
             string nextActivityGuid = XMLHelper.GetXmlAttribute(transitionNode, "to");
@@ -656,8 +911,8 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取角色编码信息
         /// </summary>
-        /// <param name="performerGUID"></param>
-        /// <returns></returns>
+        /// <param name="performerGUID">执行用户GUID</param>
+        /// <returns>角色</returns>
         private Role GetRoleFromXmlFile(string performerGUID)
         {
             XmlNode performerNode = GetXmlParticipantNodeFromXmlFile(performerGUID);
@@ -679,8 +934,8 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取执行者信息
         /// </summary>
-        /// <param name="performerGUID"></param>
-        /// <returns></returns>
+        /// <param name="performerGUID">执行用户GUID</param>
+        /// <returns>参与者</returns>
         private Participant GetParticipantFromXmlFile(string performerGUID)
         {
             XmlNode participantNode = GetXmlParticipantNodeFromXmlFile(performerGUID);
@@ -703,10 +958,23 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// 根据活动定义获取办理人员列表
+        /// </summary>
+        /// <param name="activityGUID">活动GUID</param>
+        /// <returns>下一步办理人员列表</returns>
+        public IDictionary<string, PerformerList> GetActivityPerformers(string activityGUID)
+        {
+            var roleList = GetActivityRoles(activityGUID);
+            var performers = ActivityResource.CreateNextActivityPerformers(activityGUID, roleList);
+
+            return performers;
+        }
+
+        /// <summary>
         /// 获取节点上定义的角色code集合
         /// </summary>
-        /// <param name="activityGUID"></param>
-        /// <returns></returns>
+        /// <param name="activityGUID">活动GUID</param>
+        /// <returns>角色列表</returns>
         public IList<Role> GetActivityRoles(string activityGUID)
         {
             IList<Role> roles = new List<Role>();
@@ -728,8 +996,8 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取节点上定义的角色及人员集合
         /// </summary>
-        /// <param name="activityGUID"></param>
-        /// <returns></returns>
+        /// <param name="activityGUID">活动GUID</param>
+        /// <returns>参与者列表</returns>
         internal IList<Participant> GetActivityParticipants(string activityGUID)
         {
             IList<Participant> participants = new List<Participant>();
@@ -776,15 +1044,20 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 把XML节点转换为ActivityEntity实体对象
         /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
+        /// <param name="node">节点</param>
+        /// <returns>活动实体</returns>
         internal ActivityEntity ConvertXmlActivityNodeToActivityEntity(XmlNode node)
         {
             ActivityEntity entity = new ActivityEntity();
+            entity.ActivityGUID = XMLHelper.GetXmlAttribute(node, "id");
             entity.ActivityName = XMLHelper.GetXmlAttribute(node, "name");
             entity.ActivityCode = XMLHelper.GetXmlAttribute(node, "code");
-            entity.ActivityGUID = XMLHelper.GetXmlAttribute(node, "id");
+            entity.ActivityUrl = XMLHelper.GetXmlAttribute(node, "url");
             entity.ProcessGUID = ProcessEntity.ProcessGUID;
+
+            //描述信息
+            XmlNode descNode = node.SelectSingleNode("Description");
+            entity.Description = (descNode != null) ? descNode.InnerText : string.Empty;
 
             //节点类型信息
             XmlNode typeNode = node.SelectSingleNode("ActivityType");
@@ -818,6 +1091,33 @@ namespace Slickflow.Engine.Xpdl
                 entity.ActionList = actionList;
             }
 
+            //获取节点边界列表
+            XmlNode boundariesNode = node.SelectSingleNode("Boundaries");
+            if (boundariesNode != null)
+            {
+                XmlNodeList xmlBoundaryList = boundariesNode.ChildNodes;
+                List<BoundaryEntity> boundaryList = new List<BoundaryEntity>();
+                foreach (XmlNode element in xmlBoundaryList)
+                {
+                    boundaryList.Add(ConvertXmlBoundaryNodeToBoundaryEntity(element));
+                }
+                entity.BoundaryList = boundaryList;
+            }
+
+            //获取节点自定义章节信息
+            XmlNode sectionsNode = node.SelectSingleNode("Sections");
+            if (sectionsNode != null)
+            {
+                XmlNodeList xmlSectionList = sectionsNode.ChildNodes;
+                List<SectionEntity> sectionList = new List<SectionEntity>();
+                foreach (XmlNode element in xmlSectionList)
+                {
+                    sectionList.Add(ConvertXmlSectionNodeToSectionEntity(element));
+                }
+                entity.SectionList = sectionList;
+            }
+
+
             //节点的Split Join 类型
             string gatewaySplitJoinType = XMLHelper.GetXmlAttribute(typeNode, "gatewaySplitJoinType");
             if (!string.IsNullOrEmpty(gatewaySplitJoinType))
@@ -832,14 +1132,20 @@ namespace Slickflow.Engine.Xpdl
                 entity.GatewayDirectionType = (GatewayDirectionEnum)Enum.Parse(typeof(GatewayDirectionEnum), gatewayDirection);
             }
 
+            string gatewayJoinPass = XMLHelper.GetXmlAttribute(typeNode, "gatewayJoinPass");
+            if (!string.IsNullOrEmpty(gatewayJoinPass))
+            {
+                entity.GatewayJoinPassType = EnumHelper.TryParseEnum<GatewayJoinPassEnum>(gatewayJoinPass);
+            }
+
             return entity;
         }
 
         /// <summary>
         /// 把Xml节点转换为ActivityTypeDetail 类（用于会签等复杂类型）
         /// </summary>
-        /// <param name="typeNode"></param>
-        /// <returns></returns>
+        /// <param name="typeNode">类型节点</param>
+        /// <returns>活动类型详细</returns>
         private ActivityTypeDetail ConvertXmlNodeToActivityTypeDetail(XmlNode typeNode)
         {
             ActivityTypeDetail entity = new ActivityTypeDetail();
@@ -869,7 +1175,7 @@ namespace Slickflow.Engine.Xpdl
 
             if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(typeNode, "completeOrder")))
             {
-                entity.CompleteOrder =  double.Parse(XMLHelper.GetXmlAttribute(typeNode, "completeOrder"));
+                entity.CompleteOrder =  float.Parse(XMLHelper.GetXmlAttribute(typeNode, "completeOrder"));
             }
 
             if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(typeNode, "skip")))
@@ -889,32 +1195,76 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 将Action的XML节点
         /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
+        /// <param name="node">XML节点</param>
+        /// <returns>操作实体</returns>
         private ActionEntity ConvertXmlActionNodeToActionEntity(XmlNode node)
         {
+            if (node == null) return null;
+
             ActionEntity action = new ActionEntity();
             var actionType = XMLHelper.GetXmlAttribute(node, "type");
-            ActionTypeEnum actionTypeEnum;
-            Enum.TryParse<ActionTypeEnum>(actionType, out actionTypeEnum);
-            action.ActionType = actionTypeEnum;
+            action.ActionType = EnumHelper.TryParseEnum<ActionTypeEnum>(actionType);
 
-            if (action.ActionType == ActionTypeEnum.ExternalMethod)
+            var actionMethod = XMLHelper.GetXmlAttribute(node, "method");
+            action.ActionMethod = EnumHelper.TryParseEnum<ActionMethodEnum>(actionMethod);
+
+            var subMethod = XMLHelper.GetXmlAttribute(node, "subMethod");
+            action.SubMethod = EnumHelper.TryParseEnum<SubMethodEnum>(subMethod);
+
+            var fireType = XMLHelper.GetXmlAttribute(node, "fire");
+            action.FireType = EnumHelper.TryParseEnum<FireTypeEnum>(fireType);
+
+            if (action.ActionType == ActionTypeEnum.Event)
             {
-                action.ActionName = XMLHelper.GetXmlAttribute(node, "name");
-                action.AssemblyFullName = XMLHelper.GetXmlAttribute(node, "assembly");
-                action.InterfaceFullName = XMLHelper.GetXmlAttribute(node, "interface");
-                action.MethodName = XMLHelper.GetXmlAttribute(node, "method");
-            }
-            else if (action.ActionType == ActionTypeEnum.WebApi)
-            {
-                throw new ApplicationException("WebApi接口，暂时未实现！");
+                if (action.ActionMethod == ActionMethodEnum.Python)
+                {
+                    throw new WfXpdlException("SQL 接口，暂不支持！");
+                }
+                action.Expression = XMLHelper.GetXmlAttribute(node, "expression");
+                action.Arguments = XMLHelper.GetXmlAttribute(node, "arguments");
             }
             return action;
+        }
+
+        /// <summary>
+        /// 转换Boundary节点
+        /// </summary>
+        /// <param name="node">xml节点</param>
+        /// <returns>实体对象</returns>
+        private BoundaryEntity ConvertXmlBoundaryNodeToBoundaryEntity(XmlNode node)
+        {
+            BoundaryEntity boundary = new BoundaryEntity();
+            var eventType = XMLHelper.GetXmlAttribute(node, "event");
+            boundary.EventTriggerType = EnumHelper.TryParseEnum<EventTriggerEnum>(eventType);
+
+            if (boundary.EventTriggerType == EventTriggerEnum.Timer)
+            {
+                boundary.Expression = XMLHelper.GetXmlAttribute(node, "expression");
+            }
+            return boundary;
+        }
+
+        /// <summary>
+        /// 转换Section节点
+        /// </summary>
+        /// <param name="node">xml节点</param>
+        /// <returns>实体对象</returns>
+        private SectionEntity ConvertXmlSectionNodeToSectionEntity(XmlNode node)
+        {
+            SectionEntity section = new SectionEntity();
+            section.Name = XMLHelper.GetXmlAttribute(node, "name");
+            section.Value = node.InnerText;
+
+            return section;
         }
         #endregion
 
         #region 转移连线的获取方法
+        /// <summary>
+        /// 获取转移xml节点
+        /// </summary>
+        /// <param name="transitionGUID">转移GUID</param>
+        /// <returns>XML节点</returns>
         internal XmlNode GetXmlTransitionNode(string transitionGUID)
         {
             XmlNode transitionNode = XMLHelper.GetXmlNodeByXpath(XmlProcessDefinition,
@@ -926,8 +1276,8 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取活动转移的To节点信息
         /// </summary>
-        /// <param name="fromActivityGUID"></param>
-        /// <returns></returns>
+        /// <param name="fromActivityGUID">起始节点ID</param>
+        /// <returns>XML节点</returns>
         internal XmlNode GetForwardXmlTransitionNode(string fromActivityGUID)
         {
             XmlNode transitionNode = XMLHelper.GetXmlNodeByXpath(XmlProcessDefinition,
@@ -939,8 +1289,8 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取活动转移的To节点列表
         /// </summary>
-        /// <param name="fromActivityGUID"></param>
-        /// <returns></returns>
+        /// <param name="fromActivityGUID">起始节点ID</param>
+        /// <returns>XML节点列表</returns>
         internal XmlNodeList GetForwardXmlTransitionNodeList(string fromActivityGUID)
         {
             XmlNodeList transitionNodeList = XMLHelper.GetXmlNodeListByXpath(XmlProcessDefinition,
@@ -952,10 +1302,10 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 根据两个节点，查看是否有连线
         /// </summary>
-        /// <param name="fromActivityGUID"></param>
-        /// <param name="toActivityGUID"></param>
-        /// <returns></returns>
-        internal TransitionEntity GetForwardTransition(string fromActivityGUID, string toActivityGUID)
+        /// <param name="fromActivityGUID">起始节点ID</param>
+        /// <param name="toActivityGUID">目标节点ID</param>
+        /// <returns>转移实体</returns>
+        public TransitionEntity GetForwardTransition(string fromActivityGUID, string toActivityGUID)
         {
             XmlNode xmlTransitionNode = GetForwardXmlTransitionNode(fromActivityGUID, toActivityGUID);
             TransitionEntity transition = xmlTransitionNode != null ? 
@@ -967,8 +1317,8 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取当前节点的后续连线的集合
         /// </summary>
-        /// <param name="fromActivityGUID"></param>
-        /// <returns></returns>
+        /// <param name="fromActivityGUID">起始节点ID</param>
+        /// <returns>转移节点列表</returns>
         public IList<TransitionEntity> GetForwardTransitionList(string fromActivityGUID)
         {
             IList<TransitionEntity> transitionList = new List<TransitionEntity>();
@@ -984,10 +1334,10 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取当前节点的后续连线的集合（使用条件过滤）
         /// </summary>
-        /// <param name="fromActivityGUID"></param>
-        /// <param name="conditionKeyValuePair"></param>
-        /// <returns></returns>
-        internal IList<TransitionEntity> GetForwardTransitionList(string fromActivityGUID,
+        /// <param name="fromActivityGUID">起始节点ID</param>
+        /// <param name="conditionKeyValuePair">条件</param>
+        /// <returns>转移实体列表</returns>
+        public IList<TransitionEntity> GetForwardTransitionList(string fromActivityGUID,
             IDictionary<string, string> conditionKeyValuePair)
         {
             IList<TransitionEntity> transitionList = new List<TransitionEntity>();
@@ -1007,9 +1357,9 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// XOrSplit类型下的连线列表
         /// </summary>
-        /// <param name="fromActivityGUID"></param>
-        /// <param name="conditionKeyValuePair"></param>
-        /// <returns></returns>
+        /// <param name="fromActivityGUID">起始节点ID</param>
+        /// <param name="conditionKeyValuePair">条件</param>
+        /// <returns>转移实体列表</returns>
         internal IList<TransitionEntity> GetForwardTransitionListWithConditionXOrSplit(string fromActivityGUID,
             IDictionary<string, string> conditionKeyValuePair)
         {
@@ -1032,21 +1382,22 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取活动转移的节点信息
         /// </summary>
-        /// <param name="fromActivityGUID"></param>
-        /// <returns></returns>
+        /// <param name="fromActivityGUID">起止节点ID</param>
+        /// <param name="toActivityGUID">目标节点ID</param>
+        /// <returns>XML节点</returns>
         private XmlNode GetForwardXmlTransitionNode(string fromActivityGUID,
             string toActivityGUID)
         {
             XmlNode transitionNode = XMLHelper.GetXmlNodeByXpath(XmlProcessDefinition,
-                string.Format("{0}[@from='" + fromActivityGUID + "' and to='" + toActivityGUID + "']", XPDLDefinition.StrXmlTransitionPath));
+                string.Format("{0}[@from='" + fromActivityGUID + "' and @to='" + toActivityGUID + "']", XPDLDefinition.StrXmlTransitionPath));
             return transitionNode;
         }
 
         /// <summary>
         /// 获取前驱节点的列表
         /// </summary>
-        /// <param name="toActivityGUID"></param>
-        /// <returns></returns>
+        /// <param name="toActivityGUID">目标节点ID</param>
+        /// <returns>XML节点列表</returns>
         internal XmlNodeList GetXmlBackwardTransitonNodeList(string toActivityGUID)
         {
             XmlNodeList transtionNodeList = XMLHelper.GetXmlNodeListByXpath(XmlProcessDefinition,
@@ -1057,9 +1408,9 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取节点的前驱连线
         /// </summary>
-        /// <param name="toActivityGUID"></param>
-        /// <returns></returns>
-        internal IList<TransitionEntity> GetBackwardTransitionList(string toActivityGUID)
+        /// <param name="toActivityGUID">目标节点GUID</param>
+        /// <returns>转移列表</returns>
+        public IList<TransitionEntity> GetBackwardTransitionList(string toActivityGUID)
         {
             XmlNodeList transitionNodeList = GetXmlBackwardTransitonNodeList(toActivityGUID);
             IList<TransitionEntity> transitionList = new List<TransitionEntity>();
@@ -1070,6 +1421,7 @@ namespace Slickflow.Engine.Xpdl
             }
             return transitionList;
         }
+
 		/// <summary>
         /// 获取与合并节点相对应的分支节点
         /// </summary>
@@ -1077,31 +1429,49 @@ namespace Slickflow.Engine.Xpdl
         /// <param name="joinCount">经过的合并节点个数</param>
         /// <param name="splitCount">经过的分支节点个数</param>
         /// <returns>对应的分支节点</returns>
-        public ActivityEntity GetBackwardGatewayActivity(ActivityEntity fromActivity,ref int joinCount,ref int splitCount)
+        public ActivityEntity GetBackwardGatewayActivity(ActivityEntity fromActivity,
+            ref int joinCount,
+            ref int splitCount)
         {
-            if(fromActivity.ActivityType ==ActivityTypeEnum.GatewayNode && fromActivity.GatewaySplitJoinType == GatewaySplitJoinTypeEnum.Join){
+            if(fromActivity.ActivityType ==ActivityTypeEnum.GatewayNode 
+                && fromActivity.GatewaySplitJoinType == GatewaySplitJoinTypeEnum.Join)
+            {
                 joinCount++;
                 IList<TransitionEntity> backwardTrans = GetBackwardTransitionList(fromActivity.ActivityGUID);
-                if(backwardTrans.Count>0){
+                if(backwardTrans.Count > 0)
+                {
                     return GetBackwardGatewayActivity(backwardTrans[0].FromActivity,ref joinCount,ref splitCount);
                 }
-            }else if(fromActivity.ActivityType == ActivityTypeEnum.GatewayNode && fromActivity.GatewaySplitJoinType == GatewaySplitJoinTypeEnum.Split){
+            }
+            else if(fromActivity.ActivityType == ActivityTypeEnum.GatewayNode 
+                && fromActivity.GatewaySplitJoinType == GatewaySplitJoinTypeEnum.Split)
+            {
                 splitCount++;
-                if(splitCount==joinCount){
+                if(splitCount == joinCount)
+                {
                     return fromActivity;
-                }else{
+                }
+                else
+                {
                     IList<TransitionEntity> backwardTrans = GetBackwardTransitionList(fromActivity.ActivityGUID);
-                    if(backwardTrans.Count>0){
-                        return GetBackwardGatewayActivity(backwardTrans[0].FromActivity,ref joinCount,ref splitCount);
+                    if(backwardTrans.Count > 0)
+                    {
+                        return GetBackwardGatewayActivity(backwardTrans[0].FromActivity, ref joinCount, ref splitCount);
                     }
                 }
-            }else if(fromActivity.ActivityType == ActivityTypeEnum.StartNode || fromActivity.ActivityType== ActivityTypeEnum.EndNode)
+            }
+            else if(fromActivity.ActivityType == ActivityTypeEnum.StartNode 
+                || fromActivity.ActivityType== ActivityTypeEnum.EndNode)
+            {
                 return null;
-            else{
+            }
+            else
+            {
                 IList<TransitionEntity> backwardTrans = GetBackwardTransitionList(fromActivity.ActivityGUID);
-                    if(backwardTrans.Count>0){
-                        return GetBackwardGatewayActivity(backwardTrans[0].FromActivity,ref joinCount,ref splitCount);
-                    }
+                if (backwardTrans.Count > 0)
+                {
+                    return GetBackwardGatewayActivity(backwardTrans[0].FromActivity, ref joinCount, ref splitCount);
+                }
             }
             return null;
         }
@@ -1109,9 +1479,9 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取节点的前驱节点列表(Lambda表达式)
         /// </summary>
-        /// <param name="activityGUID"></param>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="activityGUID">活动GUID</param>
+        /// <param name="expression">表达式</param>
+        /// <returns>转移列表</returns>
         internal IList<TransitionEntity> GetBackwardTransitionList(string activityGUID,
             Expression<Func<TransitionEntity, bool>> expression)
         {
@@ -1122,9 +1492,9 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 获取节点的前驱节点列表(Lambda表达式)
         /// </summary>
-        /// <param name="activityGUID"></param>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="transitionList">转移列表</param>
+        /// <param name="expression">表达式</param>
+        /// <returns>转移实体列表</returns>
         internal IList<TransitionEntity> GetBackwardTransitionList(IList<TransitionEntity> transitionList,
             Expression<Func<TransitionEntity, bool>> expression)
         {
@@ -1142,8 +1512,8 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 根据流程定义文件，获取带有条件的节点前驱连线列表，（带有条件，可以用Lambda表达式重构）
         /// </summary>
-        /// <param name="toActivityGUID"></param>
-        /// <returns></returns>
+        /// <param name="toActivityGUID">目标节点GUID</param>
+        /// <returns>转移列表</returns>
         internal IList<TransitionEntity> GetBackworkTransitionListWithCondition(string toActivityGUID)
         {
             return GetBackwardTransitionList(toActivityGUID,
@@ -1151,33 +1521,10 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 获取并行连线的，类型为必需类型
-        /// </summary>
-        /// <param name="transitionList"></param>
-        /// <returns></returns>
-        //internal IList<TransitionEntity> GetBackwardTransitionListNecessary(IList<TransitionEntity> transitionList)
-        //{
-        //    return GetBackwardTransitionList(transitionList,
-        //        (t => (t.GroupBehaviour.ParallelOption != null) && (t.GroupBehaviour.ParallelOption == ParallelOptionEnum.Necessary)));
-        //}
-
-        /// <summary>
-        /// 获取节点前驱连线上必须的Token数目
-        /// </summary>
-        /// <param name="toActivityGUID"></param>
-        /// <returns></returns>
-        //internal int GetBackwardTransitionListNecessaryCount(string toActivityGUID)
-        //{
-        //    IList<TransitionEntity> backwardList = GetBackwardTransitionList(toActivityGUID);
-        //    IList<TransitionEntity> necBackwardList = GetBackwardTransitionListNecessary(backwardList);
-        //    return necBackwardList.Count;
-        //}
-
-        /// <summary>
         /// 获取节点前驱连线的数目
         /// </summary>
-        /// <param name="toActivityGUID"></param>
-        /// <returns></returns>
+        /// <param name="toActivityGUID">目标节点GUID</param>
+        /// <returns>个数</returns>
         public int GetBackwardTransitionListCount(string toActivityGUID)
         {
             IList<TransitionEntity> backwardList = GetBackwardTransitionList(toActivityGUID);
@@ -1188,28 +1535,37 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 用LINQ解析条件表达式
         /// </summary>
-        /// <param name="transition"></param>
-        /// <param name="conditionKeyValuePair"></param>
-        /// <returns></returns>
+        /// <param name="transition">转移</param>
+        /// <param name="conditionKeyValuePair">条件参数</param>
+        /// <returns>解析结果</returns>
         private bool ParseCondition(TransitionEntity transition, IDictionary<string, string> conditionKeyValuePair)
         {
-            string expression = transition.Condition.ConditionText;
-            string expressionReplaced = ReplaceParameterToValue(expression, conditionKeyValuePair);
+            Boolean result = false;
+            try
+            {
+                string expression = transition.Condition.ConditionText;
+                string expressionReplaced = ReplaceParameterToValue(expression, conditionKeyValuePair);
 
-            Expression e = System.Linq.Dynamic.DynamicExpression.Parse(typeof(Boolean), expressionReplaced);
-            LambdaExpression LE = Expression.Lambda(e);
-            Func<bool> testMe = (Func<bool>)LE.Compile();
-            bool result = testMe();
-
+                Expression e = System.Linq.Dynamic.DynamicExpression.Parse(typeof(Boolean), expressionReplaced);
+                LambdaExpression LE = Expression.Lambda(e);
+                Func<bool> testMe = (Func<bool>)LE.Compile();
+                result = testMe();
+            }
+            catch (System.Exception ex)
+            {
+                //throw new WfXpdlException(string.Format("条件表达式解析错误，请确认是否传入所有变量参数！内部错误描述：{0}", ex.Message),
+                //    ex);
+                ;
+            }
             return result;
         }
 
         /// <summary>
         /// 是否是满足条件的Transition，如果条件为空，默认是有效的。
         /// </summary>
-        /// <param name="transition"></param>
-        /// <param name="conditionKeyValuePair"></param>
-        /// <returns></returns>
+        /// <param name="transition">转移</param>
+        /// <param name="conditionKeyValuePair">条件对</param>
+        /// <returns>解析结果</returns>
         public bool IsValidTransition(TransitionEntity transition,
            IDictionary<string, string> conditionKeyValuePair)
         {
@@ -1217,7 +1573,7 @@ namespace Slickflow.Engine.Xpdl
 
             if (transition.Condition != null && !string.IsNullOrEmpty(transition.Condition.ConditionText))
             {
-                if (conditionKeyValuePair != null)
+                if (conditionKeyValuePair != null && conditionKeyValuePair.Count != 0)
                 {
                     isValid = ParseCondition(transition, conditionKeyValuePair);
                 }
@@ -1231,42 +1587,17 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 判断整个连线集合，是否满足条件
-        /// </summary>
-        /// <param name="transitionList"></param>
-        /// <param name="conditionKeyValuePair"></param>
-        /// <returns></returns>
-        public bool CheckAndSplitOccurrenceCondition(IList<TransitionEntity> transitionList,
-            IDictionary<string, string> conditionKeyValuePair)
-        {
-            bool isValidAll = true;
-            foreach (TransitionEntity transition in transitionList)
-            {
-                //只有是必需验证的条件，采取检查
-                if (transition.GroupBehaviour !=null && transition.GroupBehaviour.ParallelOption == ParallelOptionEnum.Necessary)
-                {
-                    bool isVailid = IsValidTransition(transition, conditionKeyValuePair);
-                    if (!isVailid)
-                    {
-                        isValidAll = false;
-                        break;
-                    }
-                }
-            }
-            return isValidAll;
-        }
-
-        /// <summary>
         /// 取代条件表达式中的参数值
         /// </summary>
-        /// <param name="expression"></param>
-        /// <param name="dictoinary"></param>
-        /// <returns></returns>
+        /// <param name="expression">表达式</param>
+        /// <param name="dictoinary">列表</param>
+        /// <returns>表达式</returns>
         internal string ReplaceParameterToValue(string expression, IDictionary<string, string> dictoinary)
         {
             foreach (KeyValuePair<string, string> p in dictoinary)
             {
-                if (!ExpressionParser.IsNumeric(p.Value))
+                if (p.Value == string.Empty /* hacked by shiyonglin 2018-4-24*/ 
+                    || !ExpressionParser.IsNumeric(p.Value))
                 {
                     //字符串类型的变量处理，加上双引号。
                     string s = "\"" + p.Value.Trim('\"') + "\"";
@@ -1285,38 +1616,45 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// 把XML节点转换为ActivityEntity实体对象
         /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
+        /// <param name="node">节点</param>
+        /// <returns>转移对象</returns>
         internal TransitionEntity ConvertXmlTransitionNodeToTransitionEntity(XmlNode node)
         {
             //构造转移的基本属性
-            TransitionEntity entity = new TransitionEntity();
-            entity.TransitionGUID = XMLHelper.GetXmlAttribute(node, "id");
-            entity.FromActivityGUID = XMLHelper.GetXmlAttribute(node, "from");
-            entity.ToActivityGUID = XMLHelper.GetXmlAttribute(node, "to");
+            TransitionEntity transition = new TransitionEntity();
+            transition.TransitionGUID = XMLHelper.GetXmlAttribute(node, "id");
+            transition.FromActivityGUID = XMLHelper.GetXmlAttribute(node, "from");
+            transition.ToActivityGUID = XMLHelper.GetXmlAttribute(node, "to");
             if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(node, "direction")))
             {
-                entity.DirectionType = (TransitionDirectionTypeEnum)Enum.Parse(typeof(TransitionDirectionTypeEnum),
+                transition.DirectionType = (TransitionDirectionTypeEnum)Enum.Parse(typeof(TransitionDirectionTypeEnum),
                     XMLHelper.GetXmlAttribute(node, "direction"));
             }
 
+            //转移描述
+            XmlNode descriptionNode = node.SelectSingleNode("Description");
+            if (descriptionNode != null)
+            {
+                transition.Description = descriptionNode.InnerText;
+            }
+
             //构造活动节点的实体对象
-            entity.FromActivity = GetActivity(entity.FromActivityGUID);
-            entity.ToActivity = GetActivity(entity.ToActivityGUID);
+            transition.FromActivity = GetActivity(transition.FromActivityGUID);
+            transition.ToActivity = GetActivity(transition.ToActivityGUID);
 
             //构造转移的接收者类型
             XmlNode receiverNode = node.SelectSingleNode("Receiver");
             if (receiverNode != null)
             {
-                entity.Receiver = new Receiver();
+                transition.Receiver = new Receiver();
                 if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(receiverNode, "type")))
                 {
-                    entity.Receiver.ReceiverType = (ReceiverTypeEnum)Enum.Parse(typeof(ReceiverTypeEnum),
+                    transition.Receiver.ReceiverType = (ReceiverTypeEnum)Enum.Parse(typeof(ReceiverTypeEnum),
                         XMLHelper.GetXmlAttribute(receiverNode, "type"));
                     int candidates = 0;
                     if (int.TryParse(XMLHelper.GetXmlAttribute(receiverNode, "candidates"), out candidates) == true)
                     {
-                        entity.Receiver.Candidates = candidates;
+                        transition.Receiver.Candidates = candidates;
                     }
                 }
             }
@@ -1325,48 +1663,158 @@ namespace Slickflow.Engine.Xpdl
             XmlNode conditionNode = node.SelectSingleNode("Condition");
             if (conditionNode != null)
             {
-                entity.Condition = new ConditionEntity();
+                transition.Condition = new ConditionEntity();
                 if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(conditionNode, "type")))
                 {
                     ConditionTypeEnum conditionTypeEnum;
                     Enum.TryParse<ConditionTypeEnum>(XMLHelper.GetXmlAttribute(conditionNode, "type"), out conditionTypeEnum);
-                    entity.Condition.ConditionType = conditionTypeEnum;
+                    transition.Condition.ConditionType = conditionTypeEnum;
                 }
 
                 if ((conditionNode.SelectSingleNode("ConditionText") != null)
                     && !string.IsNullOrEmpty(XMLHelper.GetXmlNodeValue(conditionNode, "ConditionText")))
                 {
-                    entity.Condition.ConditionText = XMLHelper.GetXmlNodeValue(conditionNode, "ConditionText");
+                    transition.Condition.ConditionText = XMLHelper.GetXmlNodeValue(conditionNode, "ConditionText");
                 }
             }
 
             //构造转移的行为节点
-            XmlNode groupBehaviourNode = node.SelectSingleNode("GroupBehaviour");
-            if (groupBehaviourNode != null)
+            XmlNode groupBehavioursNode = node.SelectSingleNode("GroupBehaviours");
+            if (groupBehavioursNode != null)
             {
-                entity.GroupBehaviour = new GroupBehaviourEntity();
-                if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(groupBehaviourNode, "priority")))
+                transition.GroupBehaviours = new GroupBehaviourEntity();
+                if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(groupBehavioursNode, "priority")))
                 {
-                    entity.GroupBehaviour.Priority = short.Parse(XMLHelper.GetXmlAttribute(groupBehaviourNode, "priority"));
+                    short priority = 0;
+                    bool isPriorityParsed = short.TryParse(XMLHelper.GetXmlAttribute(groupBehavioursNode, "priority"), out priority);
+                    if (isPriorityParsed) transition.GroupBehaviours.Priority = priority;
                 }
 
-                if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(groupBehaviourNode, "parallelOption")))
+                if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(groupBehavioursNode, "forced")))
                 {
-                    entity.GroupBehaviour.ParallelOption = (ParallelOptionEnum)Enum.Parse(typeof(ParallelOptionEnum),
-                        XMLHelper.GetXmlAttribute(groupBehaviourNode, "parallelOption"));
+                    bool isForced = false;
+                    bool canBeParsed = Boolean.TryParse(XMLHelper.GetXmlAttribute(groupBehavioursNode, "forced"), out isForced);
+                    if (canBeParsed) transition.GroupBehaviours.Forced = isForced;
                 }
             }
-            return entity;
+            return transition;
         }
         #endregion
+        #endregion
+
+        #region 节点类型判断
+        /// <summary>
+        /// 是否并行会签节点
+        /// </summary>
+        /// <param name="activity">节点</param>
+        /// <returns>是否并行</returns>
+        public Boolean IsMIParallel(ActivityEntity activity)
+        {
+            var isParallel = false;
+            if (activity.ActivityType == ActivityTypeEnum.MultipleInstanceNode)
+            {
+                if (activity.ActivityTypeDetail.ComplexType == ComplexTypeEnum.SignTogether
+                    || activity.ActivityTypeDetail.ComplexType == ComplexTypeEnum.SignForward)
+                {
+                    if (activity.ActivityTypeDetail.MergeType == MergeTypeEnum.Parallel)
+                    {
+                        isParallel = true;
+                    }
+                }
+            }
+            return isParallel;
+        }
+
+        /// <summary>
+        /// 是否串行会签节点
+        /// </summary>
+        /// <param name="activity">节点</param>
+        /// <returns>是否串行</returns>
+        public Boolean IsMISequence(ActivityEntity activity)
+        {
+            var isSequence = false;
+            if (activity.ActivityType == ActivityTypeEnum.MultipleInstanceNode)
+            {
+                if (activity.ActivityTypeDetail.ComplexType == ComplexTypeEnum.SignTogether
+                    || activity.ActivityTypeDetail.ComplexType == ComplexTypeEnum.SignForward)
+                {
+                    if (activity.ActivityTypeDetail.MergeType == MergeTypeEnum.Sequence)
+                    {
+                        isSequence = true;
+                    }
+                }
+            }
+            return isSequence;
+        }
+
+        /// <summary>
+        /// 判断是否会签节点
+        /// </summary>
+        /// <param name="activity">节点</param>
+        /// <returns>是否会签</returns>
+        public Boolean IsMINode(ActivityEntity activity)
+        {
+            var isMI = false;
+            if (activity.ActivityType == ActivityTypeEnum.MultipleInstanceNode)
+            {
+                isMI = true;
+            }
+            return isMI;
+        }
+
+        /// <summary>
+        /// 是否任务节点
+        /// </summary>
+        /// <param name="activity">节点</param>
+        /// <returns>是否任务</returns>
+        public Boolean IsTaskNode(ActivityEntity activity)
+        {
+            var isTask = false;
+            if (activity.ActivityType == ActivityTypeEnum.TaskNode)
+            {
+                isTask = true;
+            }
+            return isTask;
+        }
+
+        /// <summary>
+        /// 是否任务节点
+        /// </summary>
+        /// <param name="activityInstance">节点</param>
+        /// <returns>是否任务</returns>
+        public Boolean IsTaskNode(ActivityInstanceEntity activityInstance)
+        {
+            var isTask = false;
+            if (activityInstance.ActivityType == (short)ActivityTypeEnum.TaskNode)
+            {
+                isTask = true;
+            }
+            return isTask;
+        }
+
+        /// <summary>
+        /// 是否并行容器节点
+        /// </summary>
+        /// <param name="activity">节点</param>
+        /// <returns>是否</returns>
+        public Boolean IsAndSplitMI(ActivityEntity activity)
+        {
+            var isAndSplitMI = false;
+            if (activity.GatewaySplitJoinType == GatewaySplitJoinTypeEnum.Split
+                    && activity.GatewayDirectionType == GatewayDirectionEnum.AndSplitMI)
+            {
+                isAndSplitMI = true;
+            }
+            return isAndSplitMI;
+        }
         #endregion
 
         #region 资源数据内容操作
         /// <summary>
         /// 获取角色可以编辑的数据项列表
         /// </summary>
-        /// <param name="roleCode"></param>
-        /// <returns></returns>
+        /// <param name="roleCode">角色代码</param>
+        /// <returns>列表</returns>
         internal IList<string> GetRoleDataItems(string roleCode)
         {
             XmlNode participantNode = XMLHelper.GetXmlNodeByXpath(this.XmlProcessDefinition,
