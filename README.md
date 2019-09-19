@@ -56,10 +56,10 @@
     //create a simple sequence process diagram by hand code rather than a HTML designer  
     var pmb = ProcessModelBuilder.CreateProcess("simple-process-name", "simple-process-code");
 	var process = pmb.Start("Start")
-					 .Task("Task1")
-					 .Task("Task2")
-					 .End("End")
-					 .Store();       
+				.Task("Task1")
+				.Task("Task2")
+				.End("End")
+				.Store();       
 
    ![simple sequence diagram](http://www.slickflow.com/content/img/simple-sequence.png)  
     
