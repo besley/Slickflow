@@ -50,20 +50,17 @@
      the process has version property to upgrade a new definition due to business process changed.    
 **7. XML Cache**    
      the runtime instance use cache to keep xml process diagram by an expired duration.  
-**8. Code Style**  
+**8. Sequence Process Code Style**  
  **0). Model**  
 	
     //create a simple sequence process diagram by hand code rather than a HTML designer  
-    var processGUID = Guid.NewGuid().ToString();
-    IProcessModelBuilder pmb = new ProcessModelBuilder();
-    var entity = pmb.Create(processGUID, "1")
-        .CreateActivity(ActivityTypeEnum.StartNode, "Start", "Start")
-        .CreateActivity(ActivityTypeEnum.TaskNode, "Task1", "Task1")
-        .CreateActivity(ActivityTypeEnum.TaskNode, "Task2", "Task2")
-        .CreateActivity(ActivityTypeEnum.EndNode, "End", "End")
-        .Sequence();
-	
-	
+    var pmb = ProcessModelBuilder.CreateProcess("simple-process-name", "simple-process-code");
+	var process = pmb.Start()
+                 .Task("Task1")
+　　　　　　　　 .Task("Task2")
+                 .End()
+                 .Store();        
+
    ![simple sequence diagram](http://www.slickflow.com/content/img/simple-sequence.png)  
     
                 
@@ -71,35 +68,41 @@
     
     //start a new process instance
     IWorkflowService wfService = new WorkflowService();
-    var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
-             .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-             .UseProcess(runner.ProcessGUID, runner.Version)
-             .Subscribe(EventFireTypeEnum.OnProcessStarted, (id, processGUID, delegateService) => {
-                 var processInstanceID = id;
-                 delegateService.SetVariable("name", "book");
-                 delegateService.SetVariable("amount", "30");
-                 return true;
-             })
-             .Start();
+    var wfResult = wfService.CreateRunner("10", "jack")
+                .UseApp("DS-100", "Book-Order", "DS-100-LX")
+                .UseProcess("PriceProcessCode")
+                .Start();
 
  **2). Run**  
     
     //run a process instance to next step
     IWorkflowService wfService = new WorkflowService();
-    var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
-             .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-             .UseProcess(runner.ProcessGUID, runner.Version)
-             .NextStep(runner.NextActivityPerformers)
-             .IfCondition(runner.Conditions)	//condition on the transiton
-             .Subscribe(EventFireTypeEnum.OnActivityExecuting, (activityInstanceID, activityCode, delegateService) => {
-                 if (activityCode == "Task1")
-                 {
-                     delegateService.SetVariable("name", "book-task1");
-                     delegateService.SetVariable("amount", "50");
-                 }
-                 return true;
-             })
-             .Run();
+    var wfResult = wfService.CreateRunner("10", "jack")
+                .UseApp("DS-100", "Book-Order", "DS-100-LX")
+                .UseProcess("PriceProcessCode")
+                .NextStepInt("20", "Alice")
+                .Run();
+				 
+ **3). Withdraw**  
+    
+    //Withdraw a activity instance to previous step
+    IWorkflowService wfService = new WorkflowService();
+    var wfResult = wfService.CreateRunner("10", "Jack")
+                .UseApp("DS-100", "Book-Order", "DS-100-LX")
+                .UseProcess("PriceProcessCode")
+                .OnTask(id)             //TaskID
+                .Withdraw();
+
+ **4). SendBack**  
+    
+    //Sendback a activity instance to previous step
+    IWorkflowService wfService = new WorkflowService();
+    var wfResult = wfService.CreateRunner("20", "Alice")
+                .UseApp("DS-100", "Book-Order", "DS-100-LX")
+                .UseProcess("PriceProcessCode")
+                .PrevStepInt()
+                .OnTask(id)             //TaskID
+                .SendBack();
 
 **9. Rich demo projects**  
   WebDemo, MvcDemo and WinformDemo project are domonstated for different type enterprise information system.   
@@ -132,7 +135,19 @@ http://demo.slickflow.com/sfd/
 **Document:**  
 http://www.slickflow.com/wiki/index  
 
-**Slickflow(1.7.3.0) 企业版：**  
+**Slickflow(1.7.5.0) 企业版：**  
+2019-09-19
+1. 增加外部事件类型
+1). WebApi调用；
+2). SQL\存储过程调用；
+3). Python脚本调用
+2. 重构撤销(Withdraw)功能；
+3. 流程变量修改为区分和支持流程和活动类型；
+4. WebTest项目增加流程变量的存储操作；
+5. 数据库WfProcessVariable表字段变化：
+   增加ProcessGUID, ActivityGUID和ActivityName字段；
+   删除ActivityInstanceID字段。
+   
 2019-05-05
 1. 增加互斥(XOr)分支和合并模式；
 2. 增加增强或合并模式(EOrJoin)，用于解决强制分支或者合并数目限制的用户需求
