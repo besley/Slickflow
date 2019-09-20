@@ -138,15 +138,16 @@ http://www.slickflow.com/wiki/index
 **Slickflow(1.7.5.0) 企业版：**  
 2019-09-19
 1. 增加外部事件类型
-1). WebApi调用；
-2). SQL\存储过程调用；
+1). WebApi方法调用；
+2). SQL脚本和SQL存储过程调用；
 3). Python脚本调用
+
 2. 重构撤销(Withdraw)功能；
 3. 流程变量修改为区分和支持流程和活动类型；
-4. WebTest项目增加流程变量的存储操作；
+4. WebTest测试产品增加流程变量的存储和显示操作；
 5. 数据库WfProcessVariable表字段变化：
-   增加ProcessGUID, ActivityGUID和ActivityName字段；
-   删除ActivityInstanceID字段。
+1). 增加ProcessGUID, ActivityGUID和ActivityName字段；
+2). 删除ActivityInstanceID字段。
    
 2019-05-05
 1. 增加互斥(XOr)分支和合并模式；
