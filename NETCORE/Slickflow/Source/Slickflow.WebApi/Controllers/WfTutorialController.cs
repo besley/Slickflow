@@ -9,11 +9,77 @@ using SlickOne.WebUtility;
 using Slickflow.Data;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Core.Result;
-using Slickflow.Graph;
+using Slickflow.Engine.Xpdl.Graph;
 using Slickflow.Engine.Service;
 
 namespace Slickflow.WebApi.Controllers
 {
+    /// <summary>
+    /// 串行序列流程测试流程
+    /// </summary>
+    public class WfSequenceController : Controller
+    {
+        [HttpGet]
+        public void Create()
+        {
+            var pmb = ProcessModelBuilder.CreateProcess("BookSellerProcess", "BookSellerProcessCode");
+            var process = pmb.Start("Start")
+                             .Task("Package Books")
+                             .Task("Deliver Books")
+                             .End("End")
+                             .Store();
+        }
+
+        [HttpGet]
+        public string Start()
+        {
+            IWorkflowService wfService = new WorkflowService();
+            var wfResult = wfService.CreateRunner("10", "jack")
+                     .UseApp("BS-100", "Delivery-Books", "BS-100-LX")
+                     .UseProcess("BookSellerProcessCode")
+                     .Start();
+            return wfResult.Status.ToString();
+        }
+
+        [HttpGet]
+        public string Run(int id)
+        {
+            IWorkflowService wfService = new WorkflowService();
+            var wfResult = wfService.CreateRunner("10", "jack")
+                     .UseApp("BS-100", "Delivery-Books", "BS-100-LX")
+                     .UseProcess("BookSellerProcessCode")
+                     .OnTask(id)        //TaskID
+                     .NextStepInt("20", "Alice")
+                     .Run();
+            return wfResult.Status.ToString();
+        }
+
+        [HttpGet]
+        public string Withdraw(int id)
+        {
+            IWorkflowService wfService = new WorkflowService();
+            var wfResult = wfService.CreateRunner("10", "Jack")
+                     .UseApp("BS-100", "Delivery-Books", "BS-100-LX")
+                     .UseProcess("BookSellerProcessCode")
+                     .OnTask(id)             //TaskID
+                     .Withdraw();
+            return wfResult.Status.ToString();
+        }
+
+        [HttpGet]
+        public string SendBack(int id)
+        {
+            IWorkflowService wfService = new WorkflowService();
+            var wfResult = wfService.CreateRunner("20", "Alice")
+                     .UseApp("BS-100", "Delivery-Books", "BS-100-LX")
+                     .UseProcess("BookSellerProcessCode")
+                     .PrevStepInt()
+                     .OnTask(id)             //TaskID
+                     .SendBack();
+            return wfResult.Status.ToString();
+        }
+    }
+
     /// <summary>
     /// 并行分支测试流程
     /// </summary>
@@ -27,20 +93,20 @@ namespace Slickflow.WebApi.Controllers
         [HttpGet]
         public void Create()
         {
-            var pmb = ProcessModelBuilder.CreateProcess("process-split-name", "process-split-code");
+            var pmb = ProcessModelBuilder.CreateProcess("LargeOrderProcess", "LargeOrderProcessCode");
             var process = pmb.Start("Start")
-                             .Task("Task-001")
-                             .AndSplit("Split")
+                             .Task("Large Order Received")
+                             .AndSplit("AndSplit")
                              .Parallels(
                                    () => pmb.Branch(
-                                       () => pmb.Task("Task-100")
+                                       () => pmb.Task("Engineering Review")
                                    )
-                                   , () => pmb.Branch(
-                                        () => pmb.Task("Task-200")
-                                    )
+                                   ,() => pmb.Branch(
+                                       () => pmb.Task("Design Review")
+                                   )
                              )
-                             .AndJoin("Join")
-                             .Task("Task-500")
+                             .AndJoin("AndJoin")
+                             .Task("Management Approve")
                              .End("End")
                              .Store();
         }
@@ -50,8 +116,8 @@ namespace Slickflow.WebApi.Controllers
         {
             IWorkflowService wfService = new WorkflowService();
             var wfResult = wfService.CreateRunner("10", "jack")
-                     .UseApp("DS-100", "Book-Order", "DS-100-LX")
-                     .UseProcess("process-split-code")
+                     .UseApp("PS-100", "Large-Car-Order", "PS-100-LX")
+                     .UseProcess("LargeOrderProcessCode")
              .Start();
             return wfResult.Status.ToString();
         }
@@ -61,24 +127,11 @@ namespace Slickflow.WebApi.Controllers
         {
             IWorkflowService wfService = new WorkflowService();
             var wfResult = wfService.CreateRunner("10", "jack")
-                     .UseApp("DS-100", "Book-Order", "DS-100-LX")
-                     .UseProcess("process-split-code")
+                     .UseApp("PS-100", "Large-Car-Order", "PS-100-LX")
+                     .UseProcess("LargeOrderProcessCode")
                      .OnTask(id)
                      .NextStepInt("20", "Alice")
                      .Run();
-            return wfResult.Status.ToString();
-        }
-
-        [HttpGet]
-        public string SendBack(int id)
-        {
-            IWorkflowService wfService = new WorkflowService();
-            var wfResult = wfService.CreateRunner("20", "Alice")
-                     .UseApp("DS-100", "Book-Order", "DS-100-LX")
-                     .UseProcess("process-split-code")
-                     .PrevStepInt()
-                     .OnTask(id)             //TaskID
-                     .SendBack();
             return wfResult.Status.ToString();
         }
 
@@ -87,10 +140,23 @@ namespace Slickflow.WebApi.Controllers
         {
             IWorkflowService wfService = new WorkflowService();
             var wfResult = wfService.CreateRunner("10", "Jack")
-                     .UseApp("DS-100", "Book-Order", "DS-100-LX")
-                     .UseProcess("process-split-code")
+                     .UseApp("PS-100", "Large-Car-Order", "PS-100-LX")
+                     .UseProcess("LargeOrderProcessCode")
                      .OnTask(id)             //TaskID
                      .Withdraw();
+            return wfResult.Status.ToString();
+        }
+
+        [HttpGet]
+        public string SendBack(int id)
+        {
+            IWorkflowService wfService = new WorkflowService();
+            var wfResult = wfService.CreateRunner("20", "Alice")
+                     .UseApp("PS-100", "Large-Car-Order", "PS-100-LX")
+                     .UseProcess("LargeOrderProcessCode")
+                     .PrevStepInt()
+                     .OnTask(id)             //TaskID
+                     .SendBack();
             return wfResult.Status.ToString();
         }
     }
@@ -100,11 +166,6 @@ namespace Slickflow.WebApi.Controllers
     /// </summary>
     public class WfOrSplitOrJoinController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         [HttpGet]
         public void Create()
         {
@@ -160,6 +221,18 @@ namespace Slickflow.WebApi.Controllers
         }
 
         [HttpGet]
+        public string Withdraw(int id)
+        {
+            IWorkflowService wfService = new WorkflowService();
+            var wfResult = wfService.CreateRunner("10", "Jack")
+                     .UseApp("DS-100", "Leave-Request", "DS-100-LX")
+                     .UseProcess("LeaveRequestCode")
+                     .OnTask(id)             //TaskID
+                     .Withdraw();
+            return wfResult.Status.ToString();
+        }
+
+        [HttpGet]
         public string SendBack(int id)
         {
             IWorkflowService wfService = new WorkflowService();
@@ -169,18 +242,6 @@ namespace Slickflow.WebApi.Controllers
                      .PrevStepInt()
                      .OnTask(id)             //TaskID
                      .SendBack();
-            return wfResult.Status.ToString();
-        }
-
-        [HttpGet]
-        public string Withdraw(int id)
-        {
-            IWorkflowService wfService = new WorkflowService();
-            var wfResult = wfService.CreateRunner("10", "Jack")
-                     .UseApp("DS-100", "Leave-Request", "DS-100-LX")
-                     .UseProcess("LeaveRequestCode")
-                     .OnTask(id)             //TaskID
-                     .Withdraw();
             return wfResult.Status.ToString();
         }
     }
