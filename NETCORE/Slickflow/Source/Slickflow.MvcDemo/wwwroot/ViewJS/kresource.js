@@ -58,7 +58,9 @@ var kresource = (function () {
                 kresource.mxCurrentLanguageJSON = json;
                 $(".lang").each(function (o) {
                     var key = $(this).attr("as");
-                    var content = $(this).html() + json[key];
+                    var html = $(this).html();
+                    html = html.replace(json[key], '');
+                    var content = html + json[key];
                     $(this).html(content);
                 });
             });
