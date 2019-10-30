@@ -43,13 +43,13 @@
     }
 
     accountmanager.fillUsers = function (roleCode) {
-        //清空第一项之外的options
+        //clear up options
         $("#ddlUsers").find("option:gt(0)").remove();
         var items = jQuery.grep(accountmanager.mrolelist, function (x) {
             return x.RoleCode == roleCode;
         });
         var userlist = items[0].UserList;
-        //从新加载
+        //reload
         $.each(userlist, function (i, user) {
             $('#ddlUsers').append($('<option>', {
                 value: user.UserID,
@@ -62,7 +62,7 @@
         //remove temp cacahe data
         lsm.removeTempStorage();
 
-        //检查角色用户是否选中
+        //check the selected users
         var selectedText = $('#ddlUsers').find(":selected").text();
         var selectedValue = $('#ddlUsers').find(":selected").val();
 
@@ -92,7 +92,7 @@
         } else {
             $.msgBox({
                 title: "DynamicFlow / Login",
-                content: "请选择角色和用户！",
+                content: kresource.getItem("chooseroleanduserwarnmsg"),
                 type: "alert"
             });
         }

@@ -47,7 +47,7 @@ var kresource = (function () {
 
     kresource.setLang = function (lang) {
         mxLanguage = lang;
-        mxClient.language = lang;
+        //if (mxClient !== undefined) mxClient.language = lang;
         window.localStorage.setItem(kresource.MX_RESOURCE_LOCAL_LANGUAGE, lang);
     }
 
@@ -58,7 +58,8 @@ var kresource = (function () {
                 kresource.mxCurrentLanguageJSON = json;
                 $(".lang").each(function (o) {
                     var key = $(this).attr("as");
-                    $(this).text(json[key]);
+                    var content = $(this).html() + json[key];
+                    $(this).html(content);
                 });
             });
     }
