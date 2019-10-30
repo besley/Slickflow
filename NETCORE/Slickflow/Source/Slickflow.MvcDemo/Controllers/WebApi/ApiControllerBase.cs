@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using SlickOne.WebUtility;
 using Slickflow.Data;
 
-namespace Slickflow.MvcDemo.Controllers.WebApi
+namespace Slickflow.OrderDemo.Controllers.WebApi
 {
     /// <summary>
     /// 控制器基类

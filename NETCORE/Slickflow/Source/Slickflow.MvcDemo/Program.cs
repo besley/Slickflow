@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Slickflow.MvcDemo
+namespace Slickflow.OrderDemo
 {
     public class Program
     {

@@ -20,7 +20,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Slickflow.MvcDemo": {
+    "Slickflow.OrderDemo": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
