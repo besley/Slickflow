@@ -741,7 +741,7 @@ var kmain = (function () {
 
     //#region step test
     kmain.simuTest = function () {
-        var win = window.open("/sfw2/", '_blank');
+        var win = window.open("/sfw2c/", '_blank');
         win.focus();
     }
     //#endregion

@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Slickflow.Data;
 
-namespace Slickflow.MvcDemo
+namespace Slickflow.OrderDemo
 {
     public class Startup
     {

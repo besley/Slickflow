@@ -11,7 +11,7 @@ using Slickflow.BizAppService.Entity;
 using Slickflow.BizAppService.Interface;
 using Slickflow.BizAppService.Service;
 
-namespace Slickflow.MvcDemo.Controllers.WebApi
+namespace Slickflow.OrderDemo.Controllers.WebApi
 {
     /// <summary>
     /// 生产订单控制器

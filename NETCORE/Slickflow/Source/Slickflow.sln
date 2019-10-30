@@ -25,11 +25,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.Designer", "Slick
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.Data", "Slickflow.Data\Slickflow.Data.csproj", "{87A163CD-97E3-4ED5-BDCB-6C1038E6841E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.MvcDemo", "Slickflow.MvcDemo\Slickflow.MvcDemo.csproj", "{F4EEE842-B858-4B51-B89F-28284BD877A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.OrderDemo", "Slickflow.MvcDemo\Slickflow.OrderDemo.csproj", "{F4EEE842-B858-4B51-B89F-28284BD877A4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Designer", "Designer", "{9351AEE3-F408-4302-9739-64203C98FF11}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.BizAppService", "Slickflow.BizAppService\Slickflow.BizAppService.csproj", "{FF35A70E-692D-4CDB-96FD-06B559500ED7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.WebTest", "Slickflow.WebTest\Slickflow.WebTest.csproj", "{08F3B49F-DE10-49F5-A162-7CA6F9DA4381}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,10 @@ Global
 		{FF35A70E-692D-4CDB-96FD-06B559500ED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF35A70E-692D-4CDB-96FD-06B559500ED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF35A70E-692D-4CDB-96FD-06B559500ED7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08F3B49F-DE10-49F5-A162-7CA6F9DA4381}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08F3B49F-DE10-49F5-A162-7CA6F9DA4381}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08F3B49F-DE10-49F5-A162-7CA6F9DA4381}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08F3B49F-DE10-49F5-A162-7CA6F9DA4381}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +93,7 @@ Global
 		{87A163CD-97E3-4ED5-BDCB-6C1038E6841E} = {1B362C32-D778-4079-ADAA-E9AF1366829D}
 		{F4EEE842-B858-4B51-B89F-28284BD877A4} = {3E538BD6-2283-46AC-93DC-9F4019E3A04B}
 		{FF35A70E-692D-4CDB-96FD-06B559500ED7} = {D2D47324-482A-4EA7-A37E-FF8FDFFA6FCF}
+		{08F3B49F-DE10-49F5-A162-7CA6F9DA4381} = {3E538BD6-2283-46AC-93DC-9F4019E3A04B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0AA9B361-0AF3-4C2F-8AE4-2EEA4AC2FABE}
