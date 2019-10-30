@@ -124,7 +124,9 @@
 **EMail: sales@ruochisoft.com**  
 **QQ(Author): 47743901**
 
-**Quick Start:**  
+**Quick Start Tutorial:**  
+https://github.com/besley/Slickflow/wiki/Slickflow-Quick-Start-Tutorial  
+**Wiki Page:**  
 https://github.com/besley/Slickflow/wiki  
 **Slickflow website:**  
 http://www.slickflow.com  
