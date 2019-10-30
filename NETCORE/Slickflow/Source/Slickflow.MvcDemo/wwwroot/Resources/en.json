@@ -14,6 +14,11 @@
 
     "relogin": "relogin",
     "reloginwarnmsg": "please select the user to login again!",
+    "choosesystemrole": "please select the system role",
+    "rolelist": "--role list--",
+    "chooseroleuser": "please select user of the role",
+    "userlist": "--user list--",
+    "login": "login",
     "chooseroleanduserwarnmsg": "please select the role and user!",
     "showprocessgraphwarnmsg": "please select the correct process!",
 
