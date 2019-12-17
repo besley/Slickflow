@@ -128,9 +128,9 @@
 https://github.com/besley/Slickflow/wiki/Slickflow-Quick-Start-Tutorial  
 **Wiki Page:**  
 https://github.com/besley/Slickflow/wiki  
-**CodeProject Articles:**
+**CodeProject Articles:**  
 https://www.codeproject.com/Articles/5246528/Slickflow-NET-Core-Open-Source-Workflow-Engine 
-https://www.codeproject.com/Articles/5252483/Slickflow-Coding-Graphic-Model-User-Manual
+https://www.codeproject.com/Articles/5252483/Slickflow-Coding-Graphic-Model-User-Manual  
 **Slickflow website:**  
 http://www.slickflow.com  
 **Demo:**  
@@ -139,7 +139,7 @@ http://www.slickflow.com/demo/index
 http://demo.slickflow.com/sfd/  
 **Document:**  
 http://www.slickflow.com/wiki/index  
-**Discourse:**
+**Discourse:**  
 https://forum.slickflow.com/
 
 **Slickflow(1.7.5.0) 企业版：**  
