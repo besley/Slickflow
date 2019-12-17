@@ -137,6 +137,8 @@ http://www.slickflow.com
 http://www.slickflow.com/demo/index  
 **Designer Demo:**  
 http://demo.slickflow.com/sfd/  
+**Modeler Demo:**  
+http://demo.slickflow.com/sfd/model  
 **Document:**  
 http://www.slickflow.com/wiki/index  
 **Discourse:**  
