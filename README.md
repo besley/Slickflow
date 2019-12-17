@@ -328,7 +328,7 @@ GetRoleUserByRoleIDs();
 **5. 增加Slickflow.Data项目，开放源代码**  
 **6. 修正1.5.0版本对Demo中的SQL语句报错问题**  
 
-**EMail: sales@ruochisoft.com**
+**EMail: sales@ruochisoft.com**  
 **QQ(Author): 47743901**
 
 **Slickflow 网站:**  
