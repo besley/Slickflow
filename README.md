@@ -128,14 +128,21 @@
 https://github.com/besley/Slickflow/wiki/Slickflow-Quick-Start-Tutorial  
 **Wiki Page:**  
 https://github.com/besley/Slickflow/wiki  
+**CodeProject Articles:**  
+https://www.codeproject.com/Articles/5246528/Slickflow-NET-Core-Open-Source-Workflow-Engine 
+https://www.codeproject.com/Articles/5252483/Slickflow-Coding-Graphic-Model-User-Manual  
 **Slickflow website:**  
 http://www.slickflow.com  
 **Demo:**  
 http://www.slickflow.com/demo/index  
 **Designer Demo:**  
 http://demo.slickflow.com/sfd/  
+**Modeler Demo:**  
+http://demo.slickflow.com/sfd/model  
 **Document:**  
 http://www.slickflow.com/wiki/index  
+**Discourse:**  
+https://forum.slickflow.com/  
 
 **Slickflow(1.7.5.0) 企业版：**  
 2019-09-19
@@ -321,7 +328,7 @@ GetRoleUserByRoleIDs();
 **5. 增加Slickflow.Data项目，开放源代码**  
 **6. 修正1.5.0版本对Demo中的SQL语句报错问题**  
 
-**EMail: sales@ruochisoft.com**
+**EMail: sales@ruochisoft.com**  
 **QQ(Author): 47743901**
 
 **Slickflow 网站:**  
