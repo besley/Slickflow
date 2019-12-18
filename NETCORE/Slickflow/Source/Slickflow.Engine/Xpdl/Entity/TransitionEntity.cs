@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using Slickflow.Engine.Common;
 
-namespace Slickflow.Engine.Xpdl
+namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
     /// 转移定义

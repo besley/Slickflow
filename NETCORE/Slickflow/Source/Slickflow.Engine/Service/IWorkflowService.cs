@@ -29,7 +29,7 @@ using Slickflow.Engine.Common;
 using Slickflow.Engine.Delegate;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Core.Result;
-using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Entity;
 
 
 namespace Slickflow.Engine.Service
@@ -163,8 +163,7 @@ namespace Slickflow.Engine.Service
         IWorkflowService CreateRunner(WfAppRunner runner);
         IWorkflowService CreateRunner(string userID, string UserName);
         IWorkflowService UseApp(string appInstanceID, string appName, string appCode = null);
-        IWorkflowService UseProcess(string processGUID, string version);
-        IWorkflowService UseProcess(string processCode);
+        IWorkflowService UseProcess(string processCodeOrProcessGUID, string version = null);
         IWorkflowService IfCondition(IDictionary<string, string> conditions);
         IWorkflowService IfCondition(string name, string value);
         IWorkflowService OnTask(int taskID);

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Slickflow.Engine.Common;
 
-namespace Slickflow.Engine.Xpdl
+namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
     /// 边界实体对象

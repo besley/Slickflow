@@ -30,6 +30,7 @@ using Slickflow.Engine.Core.Event;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Core.SendBack;
 using Slickflow.Engine.Core.Parser;
+using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Node;
 using Slickflow.Engine.Business.Entity;

@@ -2,29 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Slickflow.Engine.Common;
 
-namespace Slickflow.Engine.Xpdl
+namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
-    /// 接收者
+    /// Transition上的条件类
     /// </summary>
-    public class Receiver
+    public class ConditionEntity
     {
         /// <summary>
-        /// 接收者类型
+        /// 条件类型
         /// </summary>
-        public ReceiverTypeEnum ReceiverType
+        public ConditionTypeEnum ConditionType
         {
             get;
             set;
         }
 
         /// <summary>
-        /// 数目限制
+        /// 条件表达式
         /// </summary>
-        public int Candidates
+        public string ConditionText
         {
             get;
             set;

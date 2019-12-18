@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Slickflow.Engine.Xpdl
+namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
     /// 连线上的行为属性实体

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Slickflow.Data;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Service;
 

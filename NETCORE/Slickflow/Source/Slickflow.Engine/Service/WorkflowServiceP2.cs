@@ -82,29 +82,31 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
-        /// 绑定流程定义
+        /// Use Process Definition
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">流程版本</param>
-        /// <returns>服务类</returns>
-        public IWorkflowService UseProcess(string processGUID, string version)
+        /// <param name="processCodeOrProcessGUID">ProcessCode/ProcessGUId</param>
+        /// <param name="version">Version</param>
+        /// <returns>Workflow Service</returns>
+        public IWorkflowService UseProcess(string processCodeOrProcessGUID, string version = null)
         {
-            _wfAppRunner.ProcessGUID = processGUID;
-            _wfAppRunner.Version = version;
+            if (string.IsNullOrEmpty(version)) version = "1";
+
+            Guid newGUID = Guid.Empty;
+            bool isProcessGUID = Guid.TryParse(processCodeOrProcessGUID, out newGUID);
+            if (isProcessGUID == true)
+            {
+                _wfAppRunner.ProcessGUID = processCodeOrProcessGUID;
+                _wfAppRunner.Version = version;
+            }
+            else
+            {
+                var pm = new ProcessManager();
+                var entity = pm.GetByCode(processCodeOrProcessGUID, version);
+                _wfAppRunner.ProcessGUID = entity.ProcessGUID;
+                _wfAppRunner.Version = entity.Version;
+            }
+
             return this;
-        }
-
-        /// <summary>
-        /// 绑定流程定义
-        /// </summary>
-        /// <param name="processCode">流程代码</param>
-        /// <returns>流程服务类</returns>
-        public IWorkflowService UseProcess(string processCode)
-        {
-            var pm = new ProcessManager();
-            var entity = pm.GetByCode(processCode);
-
-            return UseProcess(entity.ProcessGUID, entity.Version);
         }
 
         /// <summary>
@@ -116,8 +118,14 @@ namespace Slickflow.Engine.Service
         /// <returns>服务类</returns>
         public IWorkflowService NextStepInt(PerformerList performerList)
         {
+            if (_wfAppRunner.TaskID.HasValue == false)
+            {
+                var tm = new TaskManager();
+                var task = tm.GetTaskOfMine(_wfAppRunner);
+                _wfAppRunner.TaskID = task.TaskID;
+            }
             var nextStep = new Dictionary<string, PerformerList>();
-            var nodeList = GetNextActivityTree(_wfAppRunner.TaskID.Value);
+            var nodeList = GetNextActivityTree(_wfAppRunner.TaskID.Value, _wfAppRunner.Conditions);
             foreach (var node in nodeList)
             {
                 if (node.ActivityType == ActivityTypeEnum.TaskNode)
@@ -143,18 +151,7 @@ namespace Slickflow.Engine.Service
             var performerList = new PerformerList();
             performerList.Add(new Performer(userID, userName));
 
-            var nextStep = new Dictionary<string, PerformerList>();
-            var nodeList = GetNextActivityTree(_wfAppRunner.TaskID.Value, _wfAppRunner.Conditions);
-            foreach (var node in nodeList)
-            {
-                if (node.ActivityType == ActivityTypeEnum.TaskNode)
-                {
-                    nextStep.Add(node.ActivityGUID, performerList);
-                }
-            }
-            _wfAppRunner.NextActivityPerformers = nextStep;
-
-            return this;
+            return NextStepInt(performerList);
         }
 
         /// <summary>

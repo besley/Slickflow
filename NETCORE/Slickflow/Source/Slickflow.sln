@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.WebTest", "Slickf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.Engine", "Slickflow.Engine\Slickflow.Engine.csproj", "{20E54CB4-0FBE-42D8-89D4-9C53C2E0BA44}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.Graph", "..\..\..\..\SlickGraph\Slickflow.Graph\Slickflow.Graph.csproj", "{9CA35F9A-67EB-4EAE-A516-72D5CD1D2F23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{20E54CB4-0FBE-42D8-89D4-9C53C2E0BA44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20E54CB4-0FBE-42D8-89D4-9C53C2E0BA44}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20E54CB4-0FBE-42D8-89D4-9C53C2E0BA44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CA35F9A-67EB-4EAE-A516-72D5CD1D2F23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CA35F9A-67EB-4EAE-A516-72D5CD1D2F23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CA35F9A-67EB-4EAE-A516-72D5CD1D2F23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CA35F9A-67EB-4EAE-A516-72D5CD1D2F23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +100,7 @@ Global
 		{FF35A70E-692D-4CDB-96FD-06B559500ED7} = {D2D47324-482A-4EA7-A37E-FF8FDFFA6FCF}
 		{08F3B49F-DE10-49F5-A162-7CA6F9DA4381} = {3E538BD6-2283-46AC-93DC-9F4019E3A04B}
 		{20E54CB4-0FBE-42D8-89D4-9C53C2E0BA44} = {1B362C32-D778-4079-ADAA-E9AF1366829D}
+		{9CA35F9A-67EB-4EAE-A516-72D5CD1D2F23} = {9351AEE3-F408-4302-9739-64203C98FF11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0AA9B361-0AF3-4C2F-8AE4-2EEA4AC2FABE}
