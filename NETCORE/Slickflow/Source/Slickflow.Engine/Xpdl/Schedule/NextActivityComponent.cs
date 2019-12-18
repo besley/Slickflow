@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Slickflow.Engine.Xpdl.Entity;
 
 namespace Slickflow.Engine.Xpdl.Schedule
 {

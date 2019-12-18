@@ -11,6 +11,7 @@ using Slickflow.Engine.Utility;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Xpdl.Schedule;
+using Slickflow.Engine.Xpdl.Entity;
 
 namespace Slickflow.Engine.Xpdl
 {

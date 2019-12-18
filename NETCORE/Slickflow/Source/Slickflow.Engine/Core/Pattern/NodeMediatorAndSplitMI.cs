@@ -27,8 +27,8 @@ using System.Text;
 using Slickflow.Engine.Common;
 using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
+using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Xpdl;
-using Slickflow.Engine.Xpdl.Node;
 
 namespace Slickflow.Engine.Core.Pattern
 {

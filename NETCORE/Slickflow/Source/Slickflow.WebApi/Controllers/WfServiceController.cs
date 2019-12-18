@@ -30,7 +30,7 @@ using Slickflow.Data;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Service;
 
 namespace Slickflow.WebApi.Controllers

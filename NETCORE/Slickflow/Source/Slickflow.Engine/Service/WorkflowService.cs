@@ -30,7 +30,7 @@ using Slickflow.Data;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Storage;
-using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Core.Result;
@@ -38,6 +38,7 @@ using Slickflow.Engine.Core.Event;
 using Slickflow.Engine.Core.Runtime;
 using Slickflow.Engine.Core.Parser;
 using Slickflow.Engine.Utility;
+using Slickflow.Engine.Xpdl;
 
 namespace Slickflow.Engine.Service
 {

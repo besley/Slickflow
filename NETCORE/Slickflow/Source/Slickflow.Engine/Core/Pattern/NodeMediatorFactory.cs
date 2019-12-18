@@ -29,6 +29,7 @@ using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
 using Slickflow.Data;
 using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Entity;
 
 namespace Slickflow.Engine.Core.Pattern
 {
@@ -58,11 +59,11 @@ namespace Slickflow.Engine.Core.Pattern
             {
                 if (forwardContext.FromActivityInstance.MIHostActivityInstanceID != null)
                 {
-                    if (forwardContext.Activity.ActivityTypeDetail.ComplexType == Xpdl.ComplexTypeEnum.SignTogether)        //会签子节点
+                    if (forwardContext.Activity.ActivityTypeDetail.ComplexType == ComplexTypeEnum.SignTogether)        //会签子节点
                     {
                         return new NodeMediatorMISignTogether(forwardContext, session);
                     }
-                    else if (forwardContext.Activity.ActivityTypeDetail.ComplexType == Xpdl.ComplexTypeEnum.SignForward)            //加签子节点
+                    else if (forwardContext.Activity.ActivityTypeDetail.ComplexType == ComplexTypeEnum.SignForward)            //加签子节点
                     {
                         return new NodeMediatorMISignForward(forwardContext, session);
                     }
@@ -72,7 +73,7 @@ namespace Slickflow.Engine.Core.Pattern
                     }
                 }
                 else if (forwardContext.FromActivityInstance.MIHostActivityInstanceID == null
-                    && forwardContext.Activity.ActivityTypeDetail.ComplexType == Xpdl.ComplexTypeEnum.SignForward)        //加签主节点的分发操作
+                    && forwardContext.Activity.ActivityTypeDetail.ComplexType == ComplexTypeEnum.SignForward)        //加签主节点的分发操作
                 {
                     //加签的动态变量传入
                     var controlParamSheet = forwardContext.ActivityResource.AppRunner.ControlParameterSheet;

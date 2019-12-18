@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Slickflow.Engine.Xpdl
+namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
     /// 操作实体

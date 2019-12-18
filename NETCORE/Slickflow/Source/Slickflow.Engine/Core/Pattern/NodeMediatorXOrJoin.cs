@@ -23,6 +23,7 @@ using Slickflow.Data;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Entity;
 
 namespace Slickflow.Engine.Core.Pattern
 {

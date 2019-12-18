@@ -27,7 +27,7 @@ using System.Text;
 using System.Reflection;
 using Slickflow.Engine.Common;
 using Slickflow.Data;
-using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Delegate;

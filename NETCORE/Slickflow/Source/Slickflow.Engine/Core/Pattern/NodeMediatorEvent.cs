@@ -29,6 +29,7 @@ using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Delegate;
 
 namespace Slickflow.Engine.Core.Pattern

@@ -5,7 +5,7 @@ using System.Text;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Xpdl.Node;
 
-namespace Slickflow.Engine.Xpdl
+namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
     /// 节点类型详细信息

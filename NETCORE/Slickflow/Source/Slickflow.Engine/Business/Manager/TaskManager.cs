@@ -33,7 +33,7 @@ using Slickflow.Engine.Utility;
 using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
-using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Provider;
 using Slickflow.Module.Resource;
 

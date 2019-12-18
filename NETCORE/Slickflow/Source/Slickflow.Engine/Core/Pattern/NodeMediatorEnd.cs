@@ -27,6 +27,7 @@ using Slickflow.Engine.Common;
 using Slickflow.Data;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Delegate;

@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
+using Slickflow.Engine.Xpdl.Entity;
 
 namespace Slickflow.Engine.Xpdl
 {

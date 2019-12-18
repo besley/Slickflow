@@ -28,7 +28,7 @@ using Slickflow.Engine.Common;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Core.Pattern;
 using Slickflow.Engine.Core.SendBack;
-using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Entity;
 
 namespace Slickflow.Engine.Core.Runtime
 {

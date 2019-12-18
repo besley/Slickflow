@@ -19,6 +19,22 @@ namespace Slickflow.WebApi.Controllers
     /// </summary>
     public class WfEDevController : Controller
     {
+        [HttpPost]
+        public string CreateByText(TextLine text)
+        {
+            var message = "OK";
+            try
+            {
+                RoslynRun.Execute(text.Body);
+            }
+            catch(System.Exception ex)
+            {
+                message = ex.Message;
+            }
+
+            return message;
+        }
+
         [HttpGet]
         public string Create()
         {

@@ -23,7 +23,7 @@ web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 using System;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Entity;
 
 
 namespace Slickflow.Engine.Core

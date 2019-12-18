@@ -27,7 +27,7 @@ using System.Text;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Xpdl.Node;
 
-namespace Slickflow.Engine.Xpdl
+namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
     /// 活动节点属性定义
