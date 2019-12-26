@@ -129,7 +129,7 @@ namespace Slickflow.Engine.Service
             var nodeList = GetNextActivityTree(_wfAppRunner.TaskID.Value, _wfAppRunner.Conditions);
             foreach (var node in nodeList)
             {
-                if (node.ActivityType == ActivityTypeEnum.TaskNode)
+                if (Xpdl.XPDLHelper.IsSimpleComponentNode(node.ActivityType) == true)
                 {
                     nextStep.Add(node.ActivityGUID, performerList);
                 }
