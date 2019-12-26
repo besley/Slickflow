@@ -63,6 +63,7 @@ namespace Slickflow.Engine.Service
         {
             _wfAppRunner.UserID = userID;
             _wfAppRunner.UserName = userName;
+			_wfAppRunner.TaskID = null;
             return this;
         }
 
