@@ -10,14 +10,14 @@
 
 .NET/.NETCore Workflow Engine With Full Source Code 
 1. **.NET, .NET CORE version both supported**  
- Slickflow is an open source project based on .NET Framework 4.5, .NET CORE 2; It's easy to use engine product into cross platform applilcation.  
+ Slickflow is an open-source project based on .NET Framework 4.5, .NET CORE 2; It's easy to use engine product into the cross-platform application.  
 2. **BPMN graphic style process diagram**   
- Slickflow is using BPMN natation to descript process diagram, the Slickflow designer is HTML5 graph editor and user friendly to business process communicaiton and business analysis.  
+ Slickflow is using BPMN notation to describe process diagram, the Slickflow designer is HTML5 graph editor and user-friendly to business process communication and business analysis.  
 3. **High performance with Dapper.NET library**  
- Dapper is a simple object mapper for .NET and own the title of King of Micro ORM in terms of speed and is virtually as fast as using a raw ADO.NET data reader. An ORM is an Object Relational Mapper, which is responsible for mapping between database and programming language.
+ Dapper is a simple object mapper for .NET and owns the title of King of Micro ORM in terms of speed and is virtually as fast as using a raw ADO.NET data reader. An ORM is an Object Relational Mapper, which is responsible for mapping between database and programming language.
 (Ref: https://dapper-tutorial.net/dapper)  
- 4. **Multiple database supported**  
- Slickflow supports SQLSERVER, ORACLE, MySQL and other database, it implemented by Dapper.NET extension library. The .net core version using EF core to support different database products.  
+ 4. **Multiple databases supported**  
+ Slickflow supports SQLSERVER, ORACLE, MySQL and another database, it implemented by the Dapper.NET extension library. The .net core version using EF core to support different database products.  
 5. **Workflow patterns supported**  
 ![Wokflow Pattern](http://www.slickflow.com/content/img/sfterm-en.png)  
  **1). Sequence**  
@@ -25,31 +25,31 @@
  **2). Split/Merge**  
    support and/or gateway such as **and/or split**, **and/or join**, together with  condition variables on the transition  
  **3). Sub-process**  
-    in the main process, a sub process node can start a new process life cycle.  
+    in the main process, a subprocess node can start a new process life cycle.  
  **4). Multi-instance**  
-   muptile performers processing a task together by multiple task instances. All performer both compete their task, then the process can be continued on. There are **sequence** and **parallel** pattern, and the **percentage** or **count** parameters can be set on it to ensue when can go to next step.   
+   multiple performers processing a task together by multiple task instances. All performers both compete for their task, then the process can be continued on. There are **sequence** and **parallel** pattern, and the **percentage** or **count** parameters can be set on it to ensue when can go to the next step.   
     ![Muliple Instance Pattern](http://www.slickflow.com/content/img/wfpattern-mi-en.png)  
  **5). Event interoperation**  
    process instance and activity instance event delegation service, such as process/activity start, execute and complete.  
  **6). Timer**  
    integrated with **HangFire** library, and with **CRON** expression supported  
  **7). Email**  
-   todo or overdue taks email notification  
+   todo or overdue tasks email notification  
  **8). Withdraw**  
 	withdraw the task after just sent out to next step users.  
  **9). Sendback**  
-    send back to previous step user, becuase some exceptions.  
+    send back to the previous step user, because of some exceptions.  
  **10). Resend**  
-    combined after sendback and re-send the task to origianl sendback users.  
+    combined after sendback and re-send the task to original sendback users.  
  **11). Reverse**  
-    reverse the process instance alive when completed them.  
+    reverse the process instance alive when completed.  
  **12). Jump**  
-    jump the process over by serveral steps forward or backward. 
+    jump the process over by several steps forward or backward. 
     
 **6. Process Version**  
-     the process has version property to upgrade a new definition due to business process changed.    
+     the process has version property to upgrade a new definition due to the business process changed.    
 **7. XML Cache**    
-     the runtime instance use cache to keep xml process diagram by an expired duration.  
+     the runtime instance use cache to keep the XML process diagram by an expired duration.  
 **8. Sequence Process Code Style**  
  **0). Model**  
 	
@@ -105,23 +105,23 @@
                 .SendBack();
 
 **9. Rich demo projects**  
-  WebDemo, MvcDemo and WinformDemo project are domonstated for different type enterprise information system.   
+  WebDemo, MvcDemo, and WinformDemo project are demonstrated for a different type of enterprise information systems.   
 **10. Target**  
-  Slickflow is very suitable for software teams or companies who want to  integrat workflow engine into their products.  
+  Slickflow is very suitable for software teams or companies who want to integrate workflow engine into their products.  
 **11. Suggestions**  
-  Slickflow is suggusted to give programmers an flexible way to integrate workflow engine component into their products or customer projects. The programmers can write their own code segemnts based on the engine component.   
+  Slickflow is suggested to give programmers a flexible way to integrate workflow engine components into their products or customer projects. The programmers can write their own code segments based on the engine component.   
 **12. Open Source Project License**    
  The product is under **Slickflow Open Source Project license**.    
- 1). Slickflow software must be legally used, and should not be used in violation of law, morality and other acts that endanger social interests;  
+ 1). Slickflow software must be legally used, and should not be used in violation of the law, morality and other acts that endanger social interests;  
  2). Non-transferable, non-transferable and indivisible authorization of this software;  
  3). The source code can be modified to apply Slickflow components in their own projects or products, but Slickflow source code can not be separately encapsulated for sale or distributed to third-party users;  
  4). The intellectual property rights of Slickflow software shall be protected by law, and no documents such as technical data shall be made public or sold.  
 **13. Commercial license**  
- The enterprise, ultimate and universe version can be provided with commercial license, technical support and upgrade service.
+ The enterprise, ultimate and universe version can be provided with a commercial license, technical support and upgrade service.
  
- if you have any further inquery, please feel free to contact us:   
+ if you have any further inquiry, please feel free to contact us:   
 
-**EMail: sales@ruochisoft.com**  
+**Email: sales@ruochisoft.com**  
 **QQ(Author): 47743901**
 
 **Quick Start Tutorial:**  
@@ -144,7 +144,15 @@ http://www.slickflow.com/wiki/index
 **Discourse:**  
 https://forum.slickflow.com/  
 
-**Slickflow(1.7.5.0) 企业版：**  
+**Slickflow(1.7.5.3) 企业版：** 
+2020-01-08 
+1.开发代码图形建模工具Slickflow.Graph工具；
+2.集成CodeMirror实现引擎建模语言脚本执行；
+3.实现流程有效性验证功能；
+4.增加节点外部事件类型(C#组件方法反射调用)；
+5.增加中间事件节点(IntermediateEvent)的事件注册和调用
+6.搭建面向全球客户引擎论坛:Http://forum.slickflow.com；
+
 2019-09-19
 1. 增加外部事件类型
 1). WebApi方法调用；
