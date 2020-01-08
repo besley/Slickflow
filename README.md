@@ -145,13 +145,14 @@ http://www.slickflow.com/wiki/index
 https://forum.slickflow.com/  
 
 **Slickflow(1.7.5.3) 企业版：** 
+
 2020-01-08 
-1.开发代码图形建模工具Slickflow.Graph工具；
-2.集成CodeMirror实现引擎建模语言脚本执行；
-3.实现流程有效性验证功能；
-4.增加节点外部事件类型(C#组件方法反射调用)；
-5.增加中间事件节点(IntermediateEvent)的事件注册和调用
-6.搭建面向全球客户引擎论坛:Http://forum.slickflow.com；
+1. 开发代码图形建模工具Slickflow.Graph工具；
+2. 集成CodeMirror实现引擎建模语言脚本执行；
+3. 实现流程有效性验证功能；
+4. 增加节点外部事件类型(C#组件方法反射调用)；
+5. 增加中间事件节点(IntermediateEvent)的事件注册和调用
+6. 搭建面向全球客户引擎论坛:Http://forum.slickflow.com；
 
 2019-09-19
 1. 增加外部事件类型
