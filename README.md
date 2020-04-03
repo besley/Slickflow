@@ -144,7 +144,7 @@ http://www.slickflow.com/wiki/index
 **Discourse:**  
 https://forum.slickflow.com/  
 
-**Slickflow(1.7.5.3) 企业版：** 
+**Slickflow(1.7.5.6) 企业版：** 
 2020-04-02
 1. 集成RabbitMQ消息队列;
 2. 实现多语言(中文\英文)环境配置项目;
