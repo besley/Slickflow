@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Slickflow.Module.Localize;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Xpdl.Entity;
 
@@ -65,11 +64,27 @@ namespace Slickflow.Engine.Xpdl.Schedule
                     conditionKeyValuePair,
                     out resultType);
             }
+            else if (forwardTransition.ToActivity.ActivityType == ActivityTypeEnum.IntermediateNode)
+            {
+                if (forwardTransition.ToActivity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.Timer)
+                {
+                    child = NextActivityComponentFactory.CreateNextActivityComponent(forwardTransition, forwardTransition.ToActivity);
+                    resultType = NextActivityMatchedType.Successed;
+                }
+                else
+                {
+                    NextActivityScheduleBase activitySchedule = NextActivityScheduleFactory.CreateActivityScheduleIntermediate(this.ProcessModel);
+                    child = activitySchedule.GetNextActivityListFromGateway(forwardTransition,
+                        forwardTransition.ToActivity,
+                        conditionKeyValuePair,
+                        out resultType);
+                }
+            }
             else
             {
                 resultType = NextActivityMatchedType.Failed;
 
-                throw new XmlDefinitionException(string.Format("未知的节点类型：{0}", forwardTransition.ToActivity.ActivityType.ToString()));
+                throw new XmlDefinitionException(LocalizeHelper.GetEngineMessage("nextactivityschedulebase.unknownnodetype", forwardTransition.ToActivity.ActivityType.ToString()));
             }
             return child;
         }

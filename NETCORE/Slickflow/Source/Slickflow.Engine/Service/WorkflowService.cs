@@ -27,9 +27,11 @@ using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Slickflow.Data;
+using Slickflow.Module.Localize;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Storage;
+using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
@@ -38,12 +40,11 @@ using Slickflow.Engine.Core.Event;
 using Slickflow.Engine.Core.Runtime;
 using Slickflow.Engine.Core.Parser;
 using Slickflow.Engine.Utility;
-using Slickflow.Engine.Xpdl;
 
 namespace Slickflow.Engine.Service
 {
     /// <summary>
-    /// 工作流服务(执行部分)
+    /// 流程运行流转服务(执行部分)
     /// </summary>
     public partial class WorkflowService : IWorkflowService
     {
@@ -63,307 +64,6 @@ namespace Slickflow.Engine.Service
             //资源接口组件
             ResourceService = ResourceServiceFactory.Create();
         }
-
-        #endregion
-
-        #region 流程定义数据
-        /// <summary>
-        /// 流程定义数据读取
-        /// </summary>
-        /// <param name="processGUID">流程定义GUID</param>
-        /// <param name="version">版本号</param>
-        /// <returns>流程</returns>
-        public ProcessEntity GetProcessByVersion(string processGUID, string version = null)
-        {
-            var pm = new ProcessManager();
-            var entity = pm.GetByVersion(processGUID, version);
-
-            return entity;
-        }
-
-        /// <summary>
-        /// 流程定义数据读取
-        /// </summary>
-        /// <param name="processName">流程名称</param>
-        /// <param name="version">版本号</param>
-        /// <returns>流程</returns>
-        public ProcessEntity GetProcessByName(string processName, string version = null)
-        {
-            var pm = new ProcessManager();
-            var entity = pm.GetByName(processName, version);
-
-            return entity;
-        }
-
-        /// <summary>
-        /// 流程定义数据读取
-        /// </summary>
-        /// <param name="processCode">流程代码</param>
-        /// <param name="version">版本号</param>
-        /// <returns>流程</returns>
-        public ProcessEntity GetProcessByCode(string processCode, string version = null)
-        {
-            var pm = new ProcessManager();
-            var entity = pm.GetByCode(processCode, version);
-
-            return entity;
-        }
-
-        /// <summary>
-        /// 获取当前版本的流程定义记录
-        /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <returns>流程</returns>
-        public ProcessEntity GetProcess(string processGUID)
-        {
-            return GetProcessByVersion(processGUID);
-        }
-
-        /// <summary>
-        /// 获取流程定义记录
-        /// </summary>
-        /// <param name="processID">流程主键ID</param>
-        /// <returns>流程</returns>
-        public ProcessEntity GetProcessByID(int processID)
-        {
-            var pm = new ProcessManager();
-            var entity = pm.GetByID(processID);
-            return entity;
-        }
-
-        /// <summary>
-        /// 获取流程定义文件
-        /// </summary>
-        /// <param name="id">流程ID</param>
-        /// <returns></returns>
-        public ProcessFileEntity GetProcessFileByID(int id)
-        {
-            var pm = new ProcessManager();
-            var entity = pm.GetProcessFileByID(id, XPDLStorageFactory.CreateXPDLStorage());
-
-            return entity;
-        }
-
-        /// <summary>
-        /// 获取流程定义数据
-        /// </summary>
-        /// <returns></returns>
-        public IList<ProcessEntity> GetProcessList()
-        {
-            var pm = new ProcessManager();
-            var list = pm.GetAll();
-
-            return list;
-        }
-
-        /// <summary>
-        /// 获取流程定义数据（只包括基本属性）
-        /// </summary>
-        /// <returns></returns>
-        public IList<ProcessEntity> GetProcessListSimple()
-        {
-            var pm = new ProcessManager();
-            var list = pm.GetListSimple();
-            return list;
-        }
-
-
-        /// <summary>
-        /// 流程定义的XML文件获取
-        /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <returns>流程文件</returns>
-        public ProcessFileEntity GetProcessFile(string processGUID, string version)
-        {
-            var pm = new ProcessManager();
-            var entity = pm.GetProcessFile(processGUID, version, XPDLStorageFactory.CreateXPDLStorage());
-
-            return entity;
-        }
-
-        /// <summary>
-        /// 保存流程定义的xml文件
-        /// </summary>
-        /// <param name="entity">流程文件实体</param>
-        public void SaveProcessFile(ProcessFileEntity entity)
-        {
-            var pm = new ProcessManager();
-            pm.SaveProcessFile(entity, XPDLStorageFactory.CreateXPDLStorage());
-        }
-
-        /// <summary>
-        /// 创建流程定义记录
-        /// </summary>
-        /// <param name="entity">流程定义实体</param>
-        /// <returns>新ID</returns>
-        public int InsertProcess(ProcessEntity entity)
-        {
-            var pm = new ProcessManager();
-            var processID = pm.Insert(entity);
-
-            return processID;
-        }
-
-        /// <summary>
-        /// 创建流程定义记录
-        /// </summary>
-        /// <param name="entity">流程定义实体</param>
-        /// <returns>新ID</returns>
-        public int CreateProcess(ProcessEntity entity)
-        {
-            var pm = new ProcessManager();
-            var processID = pm.CreateProcess(entity, XPDLStorageFactory.CreateXPDLStorage());
-
-            return processID;
-        }
-
-        /// <summary>
-        /// 创建流程定义记录新版本
-        /// </summary>
-        /// <param name="entity">流程</param>
-        public int CreateProcessVersion(ProcessEntity entity)
-        {
-            var processManager = new ProcessManager();
-            entity.CreatedDateTime = DateTime.Now;
-            entity.IsUsing = 1;
-
-            var session = SessionFactory.CreateSession();
-            try
-            {
-                session.BeginTrans();
-                processManager.UpdateUsingState(session.Connection, entity.ProcessGUID, session.Transaction);
-                int processId = processManager.Insert(session.Connection, entity, session.Transaction);
-                session.Commit();
-
-                return processId;
-            }
-            catch (System.Exception ex)
-            {
-                session.Rollback();
-                throw;
-            }
-            finally
-            {
-                session.Dispose();
-            }
-        }
-        /// <summary>
-        /// 更新流程定义记录
-        /// </summary>
-        /// <param name="entity">流程</param>
-        public void UpdateProcess(ProcessEntity entity)
-        {
-            var processManager = new ProcessManager();
-            processManager.Update(entity);
-        }
-
-        /// <summary>
-        /// 升级流程记录
-        /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">流程版本</param>
-        /// <param name="newVersion">新版本编号</param>
-        public void UpgradeProcess(string processGUID, string version, string newVersion)
-        {
-            var processManager = new ProcessManager();
-            processManager.Upgrade(processGUID, version, newVersion);
-        }
-
-        /// <summary>
-        /// 删除流程定义记录
-        /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        public void DeleteProcess(string processGUID, string version)
-        {
-            var pm = new ProcessManager();
-            pm.DeleteProcess(processGUID, version, XPDLStorageFactory.CreateXPDLStorage());
-        }
-
-		/// <summary>
-        /// 删除流程定义记录
-        /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        public void DeleteProcess(string processGUID)
-        {
-            IDbSession session = SessionFactory.CreateSession();
-            try
-            {
-                session.BeginTrans();
-                var processManager = new ProcessManager();
-                processManager.Delete(session.Connection, processGUID, session.Transaction);
-                session.Commit();
-            }
-            catch (System.Exception ex)
-            {
-                session.Rollback();
-                throw;
-            }
-            finally
-            {
-                session.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// 删除流程实例包括其关联数据
-        /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <returns>是否删除</returns>
-        public bool DeleteInstanceInt(string processGUID, string version)
-        {
-            var pim = new ProcessInstanceManager();
-            return pim.Delete(processGUID, version);
-        }
-
-        /// <summary>
-        /// 导入流程XML文件，并生成新流程
-        /// </summary>
-        /// <param name="entity">流程实体</param>
-        /// <returns>新流程ID</returns>
-        public int ImportProcess(ProcessEntity entity)
-        {
-            string xmlContent = entity.XmlContent;
-
-            var pm = new ProcessManager();
-            var processID = pm.CreateProcess(entity);
-
-            var fileEntity = new ProcessFileEntity
-            {
-                ProcessGUID = entity.ProcessGUID,
-                Version = entity.Version,
-                ProcessName = entity.ProcessName,
-                XmlContent = xmlContent
-            };
-            pm.SaveProcessFile(fileEntity);
-
-            return processID;
-        }
-
-        /// <summary>
-        /// 重置缓存中的流程定义信息
-        /// </summary>
-        /// <param name="processGUID">流程Guid编号</param>
-        /// <param name="version">流程版本</param>
-        public void ResetCache(string processGUID, string version = null)
-        {
-            //获取流程信息
-            var process = GetProcessByVersion(processGUID, version);
-            var pm = new ProcessManager();
-            var xmlDoc = pm.GetProcessXmlDocument(process.ProcessGUID, process.Version,
-                XPDLStorageFactory.CreateXPDLStorage());    //xml文件读取方式，数据库或外部文件
-            if (MemoryCachedHelper.GetXpdlCache(process.ProcessGUID, process.Version) == null)
-            {
-                MemoryCachedHelper.SetXpdlCache(process.ProcessGUID, process.Version, xmlDoc);
-            }
-            else
-            {
-                MemoryCachedHelper.TryUpdate(process.ProcessGUID, process.Version, xmlDoc);
-            }
-        }
-
         #endregion
 
         #region 获取要运行节点(下一步)节点信息(正常流转运行)
@@ -458,7 +158,7 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
-        /// 简单模式：根据应用获取流程下一步节点（不考虑有多个后续节点的情况）
+        /// 简单模式：根据应用获取流程下一步节点(不考虑有多个后续节点的情况）
         /// </summary>
         /// <param name="runner">运行者</param>
         /// <param name="condition">条件</param>
@@ -476,7 +176,7 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
-        /// 简单模式：根据应用获取流程下一步节点（不考虑有多个后续节点的情况）
+        /// 简单模式：根据应用获取流程下一步节点(不考虑有多个后续节点的情况）
         /// </summary>
         /// <param name="taskID">任务ID</param>
         /// <param name="condition">条件</param>
@@ -950,7 +650,8 @@ namespace Slickflow.Engine.Service
             catch (System.Exception e)
             {
                 startedResult.Status = WfExecutedStatus.Failed;
-                startedResult.Message = string.Format("流程启动发生异常！详细错误:{0}", e.Message);
+                var error = e.InnerException != null ? e.InnerException.Message : e.Message;
+                startedResult.Message = LocalizeHelper.GetEngineMessage("workflowservice.startprocess.error", error);
                 LogManager.RecordLog(WfDefine.WF_PROCESS_START_ERROR, LogEventType.Error, LogPriority.High, runner, e);
             }
             finally
@@ -992,9 +693,6 @@ namespace Slickflow.Engine.Service
         /// <returns>启动结果</returns>
         public WfExecutedResult StartProcess(WfAppRunner runner)
         {
-            string time = string.Format("engine time:{0}", System.DateTime.Now.ToString());
-            System.Diagnostics.Debug.WriteLine(time);
-
             _wfAppRunner = runner;
             var result = Start();
 
@@ -1129,7 +827,7 @@ namespace Slickflow.Engine.Service
             {
                 runAppResult.Status = WfExecutedStatus.Failed;
                 var error = e.InnerException != null ? e.InnerException.Message : e.Message;
-                runAppResult.Message = string.Format("流程运行时发生异常！详细错误：{0}", error);
+                runAppResult.Message = LocalizeHelper.GetEngineMessage("workflowservice.runprocess.error", error);
                 LogManager.RecordLog(WfDefine.WF_PROCESS_RUN_ERROR, LogEventType.Error, LogPriority.High, runner, e);
             }
             finally
@@ -1321,7 +1019,7 @@ namespace Slickflow.Engine.Service
             {
                 withdrawedResult.Status = WfExecutedStatus.Failed;
                 var error = e.InnerException != null ? e.InnerException.Message : e.Message;
-                withdrawedResult.Message = string.Format("流程撤销发生异常！详细错误：{0}", error);
+                withdrawedResult.Message = LocalizeHelper.GetEngineMessage("workflowservice.withdrawprocess.error", error);
                 LogManager.RecordLog(WfDefine.WF_PROCESS_WITHDRAW_ERROR, LogEventType.Error, LogPriority.High, runner, e);
             }
             finally
@@ -1487,7 +1185,7 @@ namespace Slickflow.Engine.Service
             {
                 sendbackResult.Status = WfExecutedStatus.Failed;
                 var error = e.InnerException != null ? e.InnerException.Message : e.Message;
-                sendbackResult.Message = string.Format("流程退回发生异常！详细错误：{0}", error);
+                sendbackResult.Message = LocalizeHelper.GetEngineMessage("workflowservice.sendbackprocess.error", error);
                 LogManager.RecordLog(WfDefine.WF_PROCESS_SENDBACK_ERROR, LogEventType.Error, LogPriority.High, runner, e);
             }
             finally
@@ -1584,7 +1282,7 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 流程返签（已经结束的流程可以被复活）
+        #region 流程返签(已经结束的流程可以被复活）
         /// <summary>
         /// 流程返签
         /// </summary>
@@ -1653,7 +1351,7 @@ namespace Slickflow.Engine.Service
             {
                 reversedResult.Status = WfExecutedStatus.Failed;
                 var error = e.InnerException != null ? e.InnerException.Message : e.Message;
-                reversedResult.Message = string.Format("流程返签时发生异常！详细错误：{0}", error);
+                reversedResult.Message = LocalizeHelper.GetEngineMessage("workflowservice.reverseprocess.error", error);
                 LogManager.RecordLog(WfDefine.WF_PROCESS_REVERSE_ERROR, LogEventType.Error, LogPriority.High, runner, e);
             }
             finally
@@ -1823,7 +1521,7 @@ namespace Slickflow.Engine.Service
             {
                 jumpResult.ExceptionType = WfExceptionType.Jump_OtherError;
                 var error = e.InnerException != null ? e.InnerException.Message : e.Message;
-                jumpResult.Message = string.Format("流程跳转时发生异常！详细错误：{0}", error);
+                jumpResult.Message = LocalizeHelper.GetEngineMessage("workflowservice.jumpprocess.error", error);
                 LogManager.RecordLog(WfDefine.WF_PROCESS_JUMP_ERROR, LogEventType.Error, LogPriority.High, runner, e);
             }
             finally
@@ -1964,9 +1662,9 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 挂起（恢复）流程成、取消（运行的）流程、废弃执行中或执行完的流程
+        #region 挂起(恢复)流程成、取消(运行的)流程、废弃执行中或执行完的流程
         /// <summary>
-        /// 恢复流程实例（只针对挂起操作）
+        /// 恢复流程实例(只针对挂起操作）
         /// </summary>
         /// <param name="processInstanceId">挂起操作的实例ID</param>
         /// <param name="runner">执行者</param>

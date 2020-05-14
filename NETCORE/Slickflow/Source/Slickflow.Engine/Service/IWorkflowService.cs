@@ -72,23 +72,49 @@ namespace Slickflow.Engine.Service
 
         void ResetCache(string processGUID, string version = null);
 
-        WfExecutedResult StartProcess(WfAppRunner runner);
-        WfExecutedResult StartProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+
         [Obsolete("replaced by the new method RunProcess()")]
         WfExecutedResult RunProcessApp(WfAppRunner runner);
         [Obsolete("replaced by the new method RunProcess()")]
         WfExecutedResult RunProcessApp(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+    
+        //启动流程
+        WfExecutedResult StartProcess(WfAppRunner runner);
+        WfExecutedResult StartProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+        Task<WfExecutedResult> StartProcessAsync(WfAppRunner runner);
+        Task<WfExecutedResult> StartProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+
+        //运行流程
         WfExecutedResult RunProcess(WfAppRunner runner);
         WfExecutedResult RunProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+        Task<WfExecutedResult> RunProcessAsync(WfAppRunner runner);
+        Task<WfExecutedResult> RunProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
 
-        WfExecutedResult JumpProcess(WfAppRunner runner, JumpOptionEnum jumpOption = JumpOptionEnum.Default);
-        WfExecutedResult JumpProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans, JumpOptionEnum jumpOption = JumpOptionEnum.Default);        
+        //撤销流程
         WfExecutedResult WithdrawProcess(WfAppRunner runner);
         WfExecutedResult WithdrawProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+        Task<WfExecutedResult> WithdrawProcessAsync(WfAppRunner runner);
+        Task<WfExecutedResult> WithdrawProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+
+        //退回流程
         WfExecutedResult SendBackProcess(WfAppRunner runner);
-        WfExecutedResult SendBackProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);       
+        WfExecutedResult SendBackProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+        Task<WfExecutedResult> SendBackProcessAsync(WfAppRunner runner);
+        Task<WfExecutedResult> SendBackProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+
+        //返签流程
         WfExecutedResult ReverseProcess(WfAppRunner runner);
         WfExecutedResult ReverseProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+        Task<WfExecutedResult> ReverseProcessAsync(WfAppRunner runner);
+        Task<WfExecutedResult> ReverseProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+
+        //跳转流程
+        WfExecutedResult JumpProcess(WfAppRunner runner, JumpOptionEnum jumpOption = JumpOptionEnum.Default);
+        WfExecutedResult JumpProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans, 
+            JumpOptionEnum jumpOption = JumpOptionEnum.Default);
+        Task<WfExecutedResult> JumpProcessAsync(WfAppRunner runner, JumpOptionEnum jumpOption = JumpOptionEnum.Default);
+        Task<WfExecutedResult> JumpProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans, 
+            JumpOptionEnum jumpOption = JumpOptionEnum.Default);
 
         Boolean ResumeProcess(int activityInstanceId, WfAppRunner runner);
         Boolean SuspendProcess(int taskId, WfAppRunner runner);
@@ -97,8 +123,10 @@ namespace Slickflow.Engine.Service
         Boolean TerminateProcess(WfAppRunner terminator);
         Boolean SetTaskRead(WfAppRunner runner);
         Boolean SetTaskEMailSent(int taskID);
-        Boolean EntrustTask(TaskEntrustedEntity entrusted, bool cancalOriginalTask = true);  
-
+        Boolean EntrustTask(TaskEntrustedEntity entrusted, bool cancalOriginalTask = true);
+        Boolean SetProcessOverdue(int processInstanceID, DateTime overdueDateTime, WfAppRunner runner);
+        int SaveProcessVariable(ProcessVariableEntity entity);
+        
         IList<NodeImage> GetActivityInstanceCompleted(int taskID);
         IList<NodeImage> GetActivityInstanceCompleted(WfAppRunner runner);
         IList<TransitionImage> GetTransitionInstanceList(TransitionInstanceQuery query);
@@ -127,9 +155,9 @@ namespace Slickflow.Engine.Service
         IList<ActivityInstanceEntity> GetTargetActivityInstanceList(int fromActivityInstanceID);
         ActivityInstanceEntity GetActivityInstance(int activityInstanceID);
 
-        ProcessEntity GetProcess(string processGUID);
         ProcessEntity GetProcessByID(int processID);
-        ProcessEntity GetProcessByVersion(string processGUID, string version = null);
+        ProcessEntity GetProcessUsing(string processGUID);
+        ProcessEntity GetProcessByVersion(string processGUID, string version);
         ProcessEntity GetProcessByName(string processName, string version = null);
         ProcessEntity GetProcessByCode(string processCode, string version = null);
         IList<ProcessEntity> GetProcessList();
@@ -138,6 +166,7 @@ namespace Slickflow.Engine.Service
         ProcessFileEntity GetProcessFile(string processGUID, string version);
         ProcessFileEntity GetProcessFileByID(int id);
         void SaveProcessFile(ProcessFileEntity entity);
+        void SaveProcessFilePool(ProcessFilePool entity);
 
         int CreateProcess(ProcessEntity entity);
         int CreateProcessVersion(ProcessEntity entity);
@@ -148,6 +177,7 @@ namespace Slickflow.Engine.Service
 		void DeleteProcess(string processGUID);
         bool DeleteInstanceInt(string processGUID, string version);
         int ImportProcess(ProcessEntity entity);
+        ProcessValidateResult ValidateProcess(ProcessValidateEntity processValidateEntity);
         
 
         //资源接口
@@ -156,6 +186,10 @@ namespace Slickflow.Engine.Service
         IList<Role> GetRoleUserListByProcess(string processGUId, string version);
         IList<User> GetUserListByRole(string roleID);
         PerformerList GetPerformerList(NodeView nextNode);
+        IList<ProcessVariableEntity> GetProcessVariableList(ProcessVariableQuery query);
+        ProcessVariableEntity GetProcessVariable(ProcessVariableQuery query);
+        ProcessVariableEntity GetProcessVariable(int variableID);
+        void DeleteProcessVariable(int variableID);
 
 
         #region 链式服务接口
@@ -167,6 +201,8 @@ namespace Slickflow.Engine.Service
         IWorkflowService IfCondition(IDictionary<string, string> conditions);
         IWorkflowService IfCondition(string name, string value);
         IWorkflowService OnTask(int taskID);
+        IWorkflowService SetVariable(string name, string value);
+        IWorkflowService SetVariable(IDictionary<string, string> variables);
         IWorkflowService Subscribe(EventFireTypeEnum eventType, Func<DelegateContext, IDelegateService, Boolean> func);
         IWorkflowService NextStep(string activityGUID, PerformerList performerList);
         IWorkflowService NextStep(IDictionary<string, PerformerList> nextActivityPerformers);
@@ -185,6 +221,8 @@ namespace Slickflow.Engine.Service
         WfExecutedResult SendBack(IDbConnection conn, IDbTransaction trans);
         WfExecutedResult Jump(JumpOptionEnum jumpOption = JumpOptionEnum.Default);
         WfExecutedResult Jump(IDbConnection conn, IDbTransaction trans, JumpOptionEnum jumpOption = JumpOptionEnum.Default);
+        WfExecutedResult Reverse();
+        WfExecutedResult Reverse(IDbConnection conn, IDbTransaction trans);
         #endregion
     }
 }

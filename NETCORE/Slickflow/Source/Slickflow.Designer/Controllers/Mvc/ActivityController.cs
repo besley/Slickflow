@@ -16,5 +16,15 @@ namespace Slickflow.Designer.Controllers.Mvc
         {
             return View();
         }
+
+        public ActionResult Pool()
+        {
+            return View();
+        }
+
+        public ActionResult Lane()
+        {
+            return View();
+        }
     }
 }

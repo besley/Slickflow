@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Slickflow.Data;
+using Slickflow.Module.Localize;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
@@ -232,7 +233,7 @@ namespace Slickflow.Engine.Core.Parser
                 }
                 else
                 {
-                    throw new ApplicationException("无效的节点CompleteOrder数值！");
+                    throw new ApplicationException(LocalizeHelper.GetEngineMessage("previousstepchecker.getpreviousactivitylist.error"));
                 }
             }
 

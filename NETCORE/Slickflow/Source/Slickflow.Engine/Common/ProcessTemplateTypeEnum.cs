@@ -25,9 +25,9 @@ namespace Slickflow.Engine.Common
         Sequence = 2,
 
         /// <summary>
-        /// 网关
+        /// 并行网关
         /// </summary>
-        Gateway = 3,
+        Parallel = 3,
 
         /// <summary>
         /// 会签
@@ -47,6 +47,16 @@ namespace Slickflow.Engine.Common
         /// <summary>
         /// 复杂模式
         /// </summary>
-        Complex = 21
+        Complex = 21,
+
+        /// <summary>
+        /// 批处理更新
+        /// </summary>
+        BatchUpdate = 30,
+
+        /// <summary>
+        /// Startup Process
+        /// </summary>
+        RunProcess = 40,
     }
 }

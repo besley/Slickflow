@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Slickflow.Data;
+using Slickflow.Module.Localize;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Common;
@@ -69,6 +70,7 @@ namespace Slickflow.Engine.Core.SendBack
             ActivityInstanceEntity entity = ActivityInstanceManager.CreateBackwardActivityInstanceObject(
                 processInstance.AppName,
                 processInstance.AppInstanceID,
+                processInstance.AppInstanceCode,
                 processInstance.ID,
                 this.SendBackOperation.BackwardToTaskActivity,
                 backwardType,
@@ -93,7 +95,7 @@ namespace Slickflow.Engine.Core.SendBack
         {
             if (activityResource.NextActivityPerformers == null)
             {
-                throw new WorkflowException("无法创建任务，流程流转下一步的办理人员不能为空！");
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("nodesendback.ExecuteInstanceImp.error"));
             }
 
             TaskManager.Insert(toActivityInstance,
@@ -163,13 +165,14 @@ namespace Slickflow.Engine.Core.SendBack
 
             if (previousActivityInstance == null)
             {
-                throw new WorkflowException("上一步的活动实例信息为空，请检验流程流转数据！");
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("nodesendback.CreateBackwardActivityTaskTransitionInstance.error"));
             }
 
             //实例化Activity
             var toActivityInstance = this.ActivityInstanceManager.CreateBackwardActivityInstanceObject(
                processInstance.AppName,
                processInstance.AppInstanceID,
+               processInstance.AppInstanceCode,
                processInstance.ID,
                backwardToTaskActivity,
                backwardType,

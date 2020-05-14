@@ -10,15 +10,15 @@ using Slickflow.Module.Resource;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Xpdl.Schedule;
 using Slickflow.Engine.Xpdl.Entity;
+using Slickflow.Engine.Xpdl.Schedule;
 
 namespace Slickflow.Engine.Xpdl
 {
     /// <summary>
     /// 流程模型解析
     /// </summary>
-    internal interface IProcessModel 
+    public interface IProcessModel 
     {
         ProcessEntity ProcessEntity { get; set; }
         XmlDocument XmlProcessDefinition { get; }
@@ -26,8 +26,10 @@ namespace Slickflow.Engine.Xpdl
         //方法列表
         ActivityEntity GetFirstActivity();
         ActivityEntity GetStartActivity();
+        ActivityEntity GetActivityByType(string xmlContent, string processGUID,  ActivityTypeEnum activityType);
         ActivityEntity GetEndActivity();
         ActivityEntity GetActivity(string activityGUID);
+        IList<ActivityEntity> GetActivityList();
         ActivityEntity GetNextActivity(string activityGUID);
         IList<NodeView> GetNextActivityTree(string currentActivityGUID,
             IDictionary<string, string> condition = null);

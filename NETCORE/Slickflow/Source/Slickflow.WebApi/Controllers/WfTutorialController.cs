@@ -5,11 +5,6 @@ using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using SlickOne.WebUtility;
-using Slickflow.Data;
-using Slickflow.Engine.Common;
-using Slickflow.Engine.Core.Result;
-using Slickflow.Graph;
 using Slickflow.Engine.Service;
 
 namespace Slickflow.WebApi.Controllers
@@ -17,18 +12,8 @@ namespace Slickflow.WebApi.Controllers
     /// <summary>
     /// 串行序列流程测试流程
     /// </summary>
-    public class WfSequenceController : Controller
+    public class WfTutorialController : Controller
     {
-        [HttpGet]
-        public void Create()
-        {
-            var pmb = ProcessModelBuilder.CreateProcess("BookSellerProcess", "BookSellerProcessCode");
-            var process = pmb.Start("Start")
-                             .Task("Package Books")
-                             .Task("Deliver Books")
-                             .End("End")
-                             .Store();
-        }
 
         [HttpGet]
         public string Start()
@@ -91,27 +76,6 @@ namespace Slickflow.WebApi.Controllers
         }
 
         [HttpGet]
-        public void Create()
-        {
-            var pmb = ProcessModelBuilder.CreateProcess("LargeOrderProcess", "LargeOrderProcessCode");
-            var process = pmb.Start("Start")
-                             .Task("Large Order Received")
-                             .AndSplit("AndSplit")
-                             .Parallels(
-                                   () => pmb.Branch(
-                                       () => pmb.Task("Engineering Review")
-                                   )
-                                   ,() => pmb.Branch(
-                                       () => pmb.Task("Design Review")
-                                   )
-                             )
-                             .AndJoin("AndJoin")
-                             .Task("Management Approve")
-                             .End("End")
-                             .Store();
-        }
-
-        [HttpGet]
         public string Start()
         {
             IWorkflowService wfService = new WorkflowService();
@@ -166,34 +130,6 @@ namespace Slickflow.WebApi.Controllers
     /// </summary>
     public class WfOrSplitOrJoinController : Controller
     {
-        [HttpGet]
-        public void Create()
-        {
-            var pmb = ProcessModelBuilder.CreateProcess("LeaveRequest", "LeaveRequestCode");
-            var process = pmb.Start("Start")
-                             .Task("Fill Leave Days")
-                             .OrSplit("OrSplit")
-                             .Parallels(
-                                   () => pmb.Branch(
-                                       () => pmb.Task(
-                                           VertexBuilder.CreateTask("CEO Evaluate"),
-                                           LinkBuilder.CreateTransition("days>=3")
-                                                      .AddCondition(ConditionTypeEnum.Expression, "days>=3")
-                                           )
-                                   )
-                                   , () => pmb.Branch(
-                                       () => pmb.Task(
-                                           VertexBuilder.CreateTask("Manager Evaluate"),
-                                           LinkBuilder.CreateTransition("days<3")
-                                                      .AddCondition(ConditionTypeEnum.Expression, "days<3")
-                                           )
-                                    )
-                             )
-                             .OrJoin("OrJoin")
-                             .Task("HR Notify")
-                             .End("End")
-                             .Store();
-        }
 
         [HttpGet]
         public string Start()

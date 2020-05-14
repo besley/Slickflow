@@ -50,7 +50,7 @@ function mxCellMarker(graph, validColor, invalidColor, hotspot)
 	{
 		this.graph = graph;
 		this.validColor = (validColor != null) ? validColor : mxConstants.DEFAULT_VALID_COLOR;
-		this.invalidColor = (validColor != null) ? invalidColor : mxConstants.DEFAULT_INVALID_COLOR;
+		this.invalidColor = (invalidColor != null) ? invalidColor : mxConstants.DEFAULT_INVALID_COLOR;
 		this.hotspot = (hotspot != null) ? hotspot : mxConstants.DEFAULT_HOTSPOT;
 		
 		this.highlight = new mxCellHighlight(graph);
@@ -370,7 +370,7 @@ mxCellMarker.prototype.getMarkerColor = function(evt, state, isValid)
 mxCellMarker.prototype.getState = function(me)
 {
 	var view = this.graph.getView();
-	cell = this.getCell(me);
+	var cell = this.getCell(me);
 	var state = this.getStateToMark(view.getState(cell));
 
 	return (state != null && this.intersects(state, me)) ? state : null;

@@ -73,35 +73,30 @@ function mxPanningHandler(graph)
 						this.mouseDownEvent = null;
 					}
 				}
-				else if (evt.type == 'gestureend' && this.initialScale == null)
+				else if (evt.type == 'gestureend' && this.initialScale != null)
 				{
 					this.initialScale = null;
 				}
 				
 				if (this.initialScale != null)
 				{
-					var value = Math.round(this.initialScale * evt.scale * 100) / 100;
-					
-					if (this.minScale != null)
-					{
-						value = Math.max(this.minScale, value);
-					}
-					
-					if (this.maxScale != null)
-					{
-						value = Math.min(this.maxScale, value);
-					}
-	
-					if (this.graph.view.scale != value)
-					{
-						this.graph.zoomTo(value);
-						mxEvent.consume(evt);
-					}
+					this.zoomGraph(evt);
 				}
 			}
 		});
 		
 		this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
+		
+		this.mouseUpListener = mxUtils.bind(this, function()
+		{
+	    	if (this.active)
+	    	{
+	    		this.reset();
+	    	}
+		});
+		
+		// Stops scrolling on every mouseup anywhere in the document
+		mxEvent.addListener(document, 'mouseup', this.mouseUpListener);
 	}
 };
 
@@ -432,6 +427,43 @@ mxPanningHandler.prototype.mouseUp = function(sender, me)
 		this.fireEvent(new mxEventObject(mxEvent.PAN_END, 'event', me));
 	}
 	
+	this.reset();
+};
+
+/**
+ * Function: zoomGraph
+ * 
+ * Zooms the graph to the given value and consumed the event if needed.
+ */
+mxPanningHandler.prototype.zoomGraph = function(evt)
+{
+	var value = Math.round(this.initialScale * evt.scale * 100) / 100;
+	
+	if (this.minScale != null)
+	{
+		value = Math.max(this.minScale, value);
+	}
+	
+	if (this.maxScale != null)
+	{
+		value = Math.min(this.maxScale, value);
+	}
+
+	if (this.graph.view.scale != value)
+	{
+		this.graph.zoomTo(value);
+		mxEvent.consume(evt);
+	}
+};
+
+/**
+ * Function: mouseUp
+ * 
+ * Handles the event by setting the translation on the view or showing the
+ * popupmenu.
+ */
+mxPanningHandler.prototype.reset = function()
+{
 	this.panningTrigger = false;
 	this.mouseDownEvent = null;
 	this.active = false;
@@ -459,4 +491,5 @@ mxPanningHandler.prototype.destroy = function()
 	this.graph.removeMouseListener(this);
 	this.graph.removeListener(this.forcePanningHandler);
 	this.graph.removeListener(this.gestureHandler);
+	mxEvent.removeListener(document, 'mouseup', this.mouseUpListener);
 };

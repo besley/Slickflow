@@ -28,7 +28,7 @@ var transitionproperty = (function () {
     transitionproperty.mIsGroupBehaviousForcedBranchEnabled = false;
 
     transitionproperty.load = function () {
-        var transition = kmain.mxSelectedDomElement.Element;
+        var transition = kmain.mxSelectedDomElement.ElementObject;
 
         if (transition) {
             $("#txtDescription").val(transition.description);
@@ -135,7 +135,7 @@ var transitionproperty = (function () {
             }
         }
 
-        var transition = kmain.mxSelectedDomElement.Element;
+        var transition = kmain.mxSelectedDomElement.ElementObject;
         if (transition !== null){
             transition.description = description;
             transition.receiver = receiver;

@@ -161,7 +161,7 @@ mxSelectionCellsHandler.prototype.refresh = function()
 					handler.destroy();
 					handler = null;
 				}
-				else
+				else if (!this.isHandlerActive(handler))
 				{
 					if (handler.refresh != null)
 					{
@@ -194,6 +194,16 @@ mxSelectionCellsHandler.prototype.refresh = function()
 };
 
 /**
+ * Function: isHandlerActive
+ * 
+ * Returns true if the given handler is active and should not be redrawn.
+ */
+mxSelectionCellsHandler.prototype.isHandlerActive = function(handler)
+{
+	return handler.index != null;
+};
+
+/**
  * Function: updateHandler
  * 
  * Updates the handler for the given shape if one exists.
@@ -204,12 +214,22 @@ mxSelectionCellsHandler.prototype.updateHandler = function(state)
 	
 	if (handler != null)
 	{
+		// Transfers the current state to the new handler
+		var index = handler.index;
+		var x = handler.startX;
+		var y = handler.startY;
+		
 		handler.destroy();
 		handler = this.graph.createHandler(state);
-		
+
 		if (handler != null)
 		{
 			this.handlers.put(state.cell, handler);
+			
+			if (index != null && x != null && y != null)
+			{
+				handler.start(x, y, index);
+			}
 		}
 	}
 };

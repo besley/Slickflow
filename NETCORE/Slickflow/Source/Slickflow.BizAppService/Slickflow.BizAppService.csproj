@@ -6,12 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Slickflow.Engine\Slickflow.Engine.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Dapper">
-      <HintPath>..\DLL\Dapper.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\SlickOne.WebUtility\SlickOne.WebUtility.csproj" />
   </ItemGroup>
 
 </Project>

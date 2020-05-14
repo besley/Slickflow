@@ -83,6 +83,12 @@
  * *alpha* defines the degree of transparency used between 1.0 for fully opaque
  * and 0.0 for fully transparent.
  * 
+ * *fillalpha* defines the degree of fill transparency used between 1.0 for fully
+ * opaque and 0.0 for fully transparent.
+ * 
+ * *strokealpha* defines the degree of stroke transparency used between 1.0 for
+ * fully opaque and 0.0 for fully transparent.
+ * 
  * *strokewidth* defines the integer thickness of drawing elements rendered by
  * stroking. Use fixed="1" to apply the value as-is, without scaling.
  * 
@@ -201,6 +207,11 @@ function mxStencil(desc)
 	this.parseDescription();
 	this.parseConstraints();
 };
+
+/**
+ * Extends mxShape.
+ */
+mxUtils.extend(mxStencil, mxShape);
 
 /**
  * Variable: defaultLocalized
@@ -400,6 +411,8 @@ mxStencil.prototype.evaluateAttribute = function(node, attribute, shape)
  */
 mxStencil.prototype.drawShape = function(canvas, shape, x, y, w, h)
 {
+	var stack = canvas.states.slice();
+	
 	// TODO: Internal structure (array of special structs?), relative and absolute
 	// coordinates (eg. note shape, process vs star, actor etc.), text rendering
 	// and non-proportional scaling, how to implement pluggable edge shapes
@@ -414,8 +427,25 @@ mxStencil.prototype.drawShape = function(canvas, shape, x, y, w, h)
 			Number(this.strokewidth) * minScale;
 	canvas.setStrokeWidth(sw);
 
-	this.drawChildren(canvas, shape, x, y, w, h, this.bgNode, aspect, false);
-	this.drawChildren(canvas, shape, x, y, w, h, this.fgNode, aspect, true);
+	// Draws a transparent rectangle for catching events
+	if (shape.style != null && mxUtils.getValue(shape.style, mxConstants.STYLE_POINTER_EVENTS, '0') == '1')
+	{
+		canvas.setStrokeColor(mxConstants.NONE);
+		canvas.rect(x, y, w, h);
+		canvas.stroke();
+		canvas.setStrokeColor(shape.stroke);
+	}
+
+	this.drawChildren(canvas, shape, x, y, w, h, this.bgNode, aspect, false, true);
+	this.drawChildren(canvas, shape, x, y, w, h, this.fgNode, aspect, true,
+		!shape.outline || shape.style == null || mxUtils.getValue(
+		shape.style, mxConstants.STYLE_BACKGROUND_OUTLINE, 0) == 0);
+	
+	// Restores stack for unequal count of save/restore calls
+	if (canvas.states.length != stack.length)
+	{
+		canvas.states = stack;
+	}
 };
 
 /**
@@ -423,7 +453,7 @@ mxStencil.prototype.drawShape = function(canvas, shape, x, y, w, h)
  *
  * Draws this stencil inside the given bounds.
  */
-mxStencil.prototype.drawChildren = function(canvas, shape, x, y, w, h, node, aspect, disableShadow)
+mxStencil.prototype.drawChildren = function(canvas, shape, x, y, w, h, node, aspect, disableShadow, paint)
 {
 	if (node != null && w > 0 && h > 0)
 	{
@@ -433,7 +463,7 @@ mxStencil.prototype.drawChildren = function(canvas, shape, x, y, w, h, node, asp
 		{
 			if (tmp.nodeType == mxConstants.NODETYPE_ELEMENT)
 			{
-				this.drawNode(canvas, shape, tmp, aspect, disableShadow);
+				this.drawNode(canvas, shape, tmp, aspect, disableShadow, paint);
 			}
 			
 			tmp = tmp.nextSibling;
@@ -500,7 +530,7 @@ mxStencil.prototype.computeAspect = function(shape, x, y, w, h, direction)
  *
  * Draws this stencil inside the given bounds.
  */
-mxStencil.prototype.drawNode = function(canvas, shape, node, aspect, disableShadow)
+mxStencil.prototype.drawNode = function(canvas, shape, node, aspect, disableShadow, paint)
 {
 	var name = node.nodeName;
 	var x0 = aspect.x;
@@ -508,7 +538,7 @@ mxStencil.prototype.drawNode = function(canvas, shape, node, aspect, disableShad
 	var sx = aspect.width;
 	var sy = aspect.height;
 	var minScale = Math.min(sx, sy);
-
+	
 	if (name == 'save')
 	{
 		canvas.save();
@@ -517,245 +547,321 @@ mxStencil.prototype.drawNode = function(canvas, shape, node, aspect, disableShad
 	{
 		canvas.restore();
 	}
-	else if (name == 'path')
+	else if (paint)
 	{
-		canvas.begin();
-
-		// Renders the elements inside the given path
-		var childNode = node.firstChild;
-		
-		while (childNode != null)
+		if (name == 'path')
 		{
-			if (childNode.nodeType == mxConstants.NODETYPE_ELEMENT)
+			canvas.begin();
+			
+			var parseRegularly = true;
+			
+			if (node.getAttribute('rounded') == '1')
 			{
-				this.drawNode(canvas, shape, childNode, aspect, disableShadow);
-			}
-			
-			childNode = childNode.nextSibling;
-		}
-	}
-	else if (name == 'close')
-	{
-		canvas.close();
-	}
-	else if (name == 'move')
-	{
-		canvas.moveTo(x0 + Number(node.getAttribute('x')) * sx, y0 + Number(node.getAttribute('y')) * sy);
-	}
-	else if (name == 'line')
-	{
-		canvas.lineTo(x0 + Number(node.getAttribute('x')) * sx, y0 + Number(node.getAttribute('y')) * sy);
-	}
-	else if (name == 'quad')
-	{
-		canvas.quadTo(x0 + Number(node.getAttribute('x1')) * sx,
-				y0 + Number(node.getAttribute('y1')) * sy,
-				x0 + Number(node.getAttribute('x2')) * sx,
-				y0 + Number(node.getAttribute('y2')) * sy);
-	}
-	else if (name == 'curve')
-	{
-		canvas.curveTo(x0 + Number(node.getAttribute('x1')) * sx,
-				y0 + Number(node.getAttribute('y1')) * sy,
-				x0 + Number(node.getAttribute('x2')) * sx,
-				y0 + Number(node.getAttribute('y2')) * sy,
-				x0 + Number(node.getAttribute('x3')) * sx,
-				y0 + Number(node.getAttribute('y3')) * sy);
-	}
-	else if (name == 'arc')
-	{
-		canvas.arcTo(Number(node.getAttribute('rx')) * sx,
-				Number(node.getAttribute('ry')) * sy,
-				Number(node.getAttribute('x-axis-rotation')),
-				Number(node.getAttribute('large-arc-flag')),
-				Number(node.getAttribute('sweep-flag')),
-				x0 + Number(node.getAttribute('x')) * sx,
-				y0 + Number(node.getAttribute('y')) * sy);
-	}
-	else if (name == 'rect')
-	{
-		canvas.rect(x0 + Number(node.getAttribute('x')) * sx,
-				y0 + Number(node.getAttribute('y')) * sy,
-				Number(node.getAttribute('w')) * sx,
-				Number(node.getAttribute('h')) * sy);
-	}
-	else if (name == 'roundrect')
-	{
-		var arcsize = Number(node.getAttribute('arcsize'));
-
-		if (arcsize == 0)
-		{
-			arcsize = mxConstants.RECTANGLE_ROUNDING_FACTOR * 100;
-		}
-		
-		var w = Number(node.getAttribute('w')) * sx;
-		var h = Number(node.getAttribute('h')) * sy;
-		var factor = Number(arcsize) / 100;
-		var r = Math.min(w * factor, h * factor);
-		
-		canvas.roundrect(x0 + Number(node.getAttribute('x')) * sx,
-				y0 + Number(node.getAttribute('y')) * sy,
-				w, h, r, r);
-	}
-	else if (name == 'ellipse')
-	{
-		canvas.ellipse(x0 + Number(node.getAttribute('x')) * sx,
-			y0 + Number(node.getAttribute('y')) * sy,
-			Number(node.getAttribute('w')) * sx,
-			Number(node.getAttribute('h')) * sy);
-	}
-	else if (name == 'image')
-	{
-		if (!shape.outline)
-		{
-			var src = this.evaluateAttribute(node, 'src', shape);
-			
-			canvas.image(x0 + Number(node.getAttribute('x')) * sx,
-				y0 + Number(node.getAttribute('y')) * sy,
-				Number(node.getAttribute('w')) * sx,
-				Number(node.getAttribute('h')) * sy,
-				src, false, node.getAttribute('flipH') == '1',
-				node.getAttribute('flipV') == '1');
-		}
-	}
-	else if (name == 'text')
-	{
-		if (!shape.outline)
-		{
-			var str = this.evaluateTextAttribute(node, 'str', shape);
-			var rotation = node.getAttribute('vertical') == '1' ? -90 : 0;
-			
-			if (node.getAttribute('align-shape') == '0')
-			{
-				var dr = shape.rotation;
-	
-				// Depends on flipping
-				var flipH = mxUtils.getValue(shape.style, mxConstants.STYLE_FLIPH, 0) == 1;
-				var flipV = mxUtils.getValue(shape.style, mxConstants.STYLE_FLIPV, 0) == 1;
+				parseRegularly = false;
 				
-				if (flipH && flipV)
+				var arcSize = Number(node.getAttribute('arcSize'));
+				var pointCount = 0;
+				var segs = [];
+				
+				// Renders the elements inside the given path
+				var childNode = node.firstChild;
+				
+				while (childNode != null)
 				{
-					rotation -= dr;
+					if (childNode.nodeType == mxConstants.NODETYPE_ELEMENT)
+					{
+						var childName = childNode.nodeName;
+						
+						if (childName == 'move' || childName == 'line')
+						{
+							if (childName == 'move' || segs.length == 0)
+							{
+								segs.push([]);
+							}
+							
+							segs[segs.length - 1].push(new mxPoint(x0 + Number(childNode.getAttribute('x')) * sx,
+								y0 + Number(childNode.getAttribute('y')) * sy));
+							pointCount++;
+						}
+						else
+						{
+							//We only support move and line for rounded corners
+							parseRegularly = true;
+							break;
+						}
+					}
+					
+					childNode = childNode.nextSibling;
 				}
-				else if (flipH || flipV)
+
+				if (!parseRegularly && pointCount > 0)
 				{
-					rotation += dr;
+					for (var i = 0; i < segs.length; i++)
+					{
+						var close = false, ps = segs[i][0], pe = segs[i][segs[i].length - 1];
+						
+						if (ps.x == pe.x && ps.y == pe.y) 
+						{
+							segs[i].pop();
+							close = true;
+						}
+						
+						this.addPoints(canvas, segs[i], true, arcSize, close);
+					}
 				}
 				else
 				{
-					rotation -= dr;
+					parseRegularly = true;
 				}
 			}
-	
-			rotation -= node.getAttribute('rotation');
-	
-			canvas.text(x0 + Number(node.getAttribute('x')) * sx,
-					y0 + Number(node.getAttribute('y')) * sy,
-					0, 0, str, node.getAttribute('align') || 'left',
-					node.getAttribute('valign') || 'top', false, '',
-					null, false, rotation);
+			
+			if (parseRegularly)
+			{
+				// Renders the elements inside the given path
+				var childNode = node.firstChild;
+				
+				while (childNode != null)
+				{
+					if (childNode.nodeType == mxConstants.NODETYPE_ELEMENT)
+					{
+						this.drawNode(canvas, shape, childNode, aspect, disableShadow, paint);
+					}
+					
+					childNode = childNode.nextSibling;
+				}
+			}
 		}
-	}
-	else if (name == 'include-shape')
-	{
-		var stencil = mxStencilRegistry.getStencil(node.getAttribute('name'));
-		
-		if (stencil != null)
+		else if (name == 'close')
 		{
-			var x = x0 + Number(node.getAttribute('x')) * sx;
-			var y = y0 + Number(node.getAttribute('y')) * sy;
+			canvas.close();
+		}
+		else if (name == 'move')
+		{
+			canvas.moveTo(x0 + Number(node.getAttribute('x')) * sx, y0 + Number(node.getAttribute('y')) * sy);
+		}
+		else if (name == 'line')
+		{
+			canvas.lineTo(x0 + Number(node.getAttribute('x')) * sx, y0 + Number(node.getAttribute('y')) * sy);
+		}
+		else if (name == 'quad')
+		{
+			canvas.quadTo(x0 + Number(node.getAttribute('x1')) * sx,
+					y0 + Number(node.getAttribute('y1')) * sy,
+					x0 + Number(node.getAttribute('x2')) * sx,
+					y0 + Number(node.getAttribute('y2')) * sy);
+		}
+		else if (name == 'curve')
+		{
+			canvas.curveTo(x0 + Number(node.getAttribute('x1')) * sx,
+					y0 + Number(node.getAttribute('y1')) * sy,
+					x0 + Number(node.getAttribute('x2')) * sx,
+					y0 + Number(node.getAttribute('y2')) * sy,
+					x0 + Number(node.getAttribute('x3')) * sx,
+					y0 + Number(node.getAttribute('y3')) * sy);
+		}
+		else if (name == 'arc')
+		{
+			canvas.arcTo(Number(node.getAttribute('rx')) * sx,
+					Number(node.getAttribute('ry')) * sy,
+					Number(node.getAttribute('x-axis-rotation')),
+					Number(node.getAttribute('large-arc-flag')),
+					Number(node.getAttribute('sweep-flag')),
+					x0 + Number(node.getAttribute('x')) * sx,
+					y0 + Number(node.getAttribute('y')) * sy);
+		}
+		else if (name == 'rect')
+		{
+			canvas.rect(x0 + Number(node.getAttribute('x')) * sx,
+					y0 + Number(node.getAttribute('y')) * sy,
+					Number(node.getAttribute('w')) * sx,
+					Number(node.getAttribute('h')) * sy);
+		}
+		else if (name == 'roundrect')
+		{
+			var arcsize = Number(node.getAttribute('arcsize'));
+	
+			if (arcsize == 0)
+			{
+				arcsize = mxConstants.RECTANGLE_ROUNDING_FACTOR * 100;
+			}
+			
 			var w = Number(node.getAttribute('w')) * sx;
 			var h = Number(node.getAttribute('h')) * sy;
+			var factor = Number(arcsize) / 100;
+			var r = Math.min(w * factor, h * factor);
 			
-			stencil.drawShape(canvas, shape, x, y, w, h);
+			canvas.roundrect(x0 + Number(node.getAttribute('x')) * sx,
+					y0 + Number(node.getAttribute('y')) * sy,
+					w, h, r, r);
 		}
-	}
-	else if (name == 'fillstroke')
-	{
-		canvas.fillAndStroke();
-	}
-	else if (name == 'fill')
-	{
-		canvas.fill();
-	}
-	else if (name == 'stroke')
-	{
-		canvas.stroke();
-	}
-	else if (name == 'strokewidth')
-	{
-		var s = (node.getAttribute('fixed') == '1') ? 1 : minScale;
-		canvas.setStrokeWidth(Number(node.getAttribute('width')) * s);
-	}
-	else if (name == 'dashed')
-	{
-		canvas.setDashed(node.getAttribute('dashed') == '1');
-	}
-	else if (name == 'dashpattern')
-	{
-		var value = node.getAttribute('pattern');
-		
-		if (value != null)
+		else if (name == 'ellipse')
 		{
-			var tmp = value.split(' ');
-			var pat = [];
-			
-			for (var i = 0; i < tmp.length; i++)
-			{
-				if (tmp[i].length > 0)
-				{
-					pat.push(Number(tmp[i]) * minScale);
-				}
-			}
-			
-			value = pat.join(' ');
-			canvas.setDashPattern(value);
+			canvas.ellipse(x0 + Number(node.getAttribute('x')) * sx,
+				y0 + Number(node.getAttribute('y')) * sy,
+				Number(node.getAttribute('w')) * sx,
+				Number(node.getAttribute('h')) * sy);
 		}
-	}
-	else if (name == 'strokecolor')
-	{
-		canvas.setStrokeColor(node.getAttribute('color'));
-	}
-	else if (name == 'linecap')
-	{
-		canvas.setLineCap(node.getAttribute('cap'));
-	}
-	else if (name == 'linejoin')
-	{
-		canvas.setLineJoin(node.getAttribute('join'));
-	}
-	else if (name == 'miterlimit')
-	{
-		canvas.setMiterLimit(Number(node.getAttribute('limit')));
-	}
-	else if (name == 'fillcolor')
-	{
-		canvas.setFillColor(node.getAttribute('color'));
-	}
-	else if (name == 'alpha')
-	{
-		canvas.setAlpha(node.getAttribute('alpha'));
-	}
-	else if (name == 'fontcolor')
-	{
-		canvas.setFontColor(node.getAttribute('color'));
-	}
-	else if (name == 'fontstyle')
-	{
-		canvas.setFontStyle(node.getAttribute('style'));
-	}
-	else if (name == 'fontfamily')
-	{
-		canvas.setFontFamily(node.getAttribute('family'));
-	}
-	else if (name == 'fontsize')
-	{
-		canvas.setFontSize(Number(node.getAttribute('size')) * minScale);
-	}
-	
-	if (disableShadow && (name == 'fillstroke' || name == 'fill' || name == 'stroke'))
-	{
-		disableShadow = false;
-		canvas.setShadow(false);
+		else if (name == 'image')
+		{
+			if (!shape.outline)
+			{
+				var src = this.evaluateAttribute(node, 'src', shape);
+				
+				canvas.image(x0 + Number(node.getAttribute('x')) * sx,
+					y0 + Number(node.getAttribute('y')) * sy,
+					Number(node.getAttribute('w')) * sx,
+					Number(node.getAttribute('h')) * sy,
+					src, false, node.getAttribute('flipH') == '1',
+					node.getAttribute('flipV') == '1');
+			}
+		}
+		else if (name == 'text')
+		{
+			if (!shape.outline)
+			{
+				var str = this.evaluateTextAttribute(node, 'str', shape);
+				var rotation = node.getAttribute('vertical') == '1' ? -90 : 0;
+				
+				if (node.getAttribute('align-shape') == '0')
+				{
+					var dr = shape.rotation;
+		
+					// Depends on flipping
+					var flipH = mxUtils.getValue(shape.style, mxConstants.STYLE_FLIPH, 0) == 1;
+					var flipV = mxUtils.getValue(shape.style, mxConstants.STYLE_FLIPV, 0) == 1;
+					
+					if (flipH && flipV)
+					{
+						rotation -= dr;
+					}
+					else if (flipH || flipV)
+					{
+						rotation += dr;
+					}
+					else
+					{
+						rotation -= dr;
+					}
+				}
+		
+				rotation -= node.getAttribute('rotation');
+		
+				canvas.text(x0 + Number(node.getAttribute('x')) * sx,
+						y0 + Number(node.getAttribute('y')) * sy,
+						0, 0, str, node.getAttribute('align') || 'left',
+						node.getAttribute('valign') || 'top', false, '',
+						null, false, rotation);
+			}
+		}
+		else if (name == 'include-shape')
+		{
+			var stencil = mxStencilRegistry.getStencil(node.getAttribute('name'));
+			
+			if (stencil != null)
+			{
+				var x = x0 + Number(node.getAttribute('x')) * sx;
+				var y = y0 + Number(node.getAttribute('y')) * sy;
+				var w = Number(node.getAttribute('w')) * sx;
+				var h = Number(node.getAttribute('h')) * sy;
+				
+				stencil.drawShape(canvas, shape, x, y, w, h);
+			}
+		}
+		else if (name == 'fillstroke')
+		{
+			canvas.fillAndStroke();
+		}
+		else if (name == 'fill')
+		{
+			canvas.fill();
+		}
+		else if (name == 'stroke')
+		{
+			canvas.stroke();
+		}
+		else if (name == 'strokewidth')
+		{
+			var s = (node.getAttribute('fixed') == '1') ? 1 : minScale;
+			canvas.setStrokeWidth(Number(node.getAttribute('width')) * s);
+		}
+		else if (name == 'dashed')
+		{
+			canvas.setDashed(node.getAttribute('dashed') == '1');
+		}
+		else if (name == 'dashpattern')
+		{
+			var value = node.getAttribute('pattern');
+			
+			if (value != null)
+			{
+				var tmp = value.split(' ');
+				var pat = [];
+				
+				for (var i = 0; i < tmp.length; i++)
+				{
+					if (tmp[i].length > 0)
+					{
+						pat.push(Number(tmp[i]) * minScale);
+					}
+				}
+				
+				value = pat.join(' ');
+				canvas.setDashPattern(value);
+			}
+		}
+		else if (name == 'strokecolor')
+		{
+			canvas.setStrokeColor(node.getAttribute('color'));
+		}
+		else if (name == 'linecap')
+		{
+			canvas.setLineCap(node.getAttribute('cap'));
+		}
+		else if (name == 'linejoin')
+		{
+			canvas.setLineJoin(node.getAttribute('join'));
+		}
+		else if (name == 'miterlimit')
+		{
+			canvas.setMiterLimit(Number(node.getAttribute('limit')));
+		}
+		else if (name == 'fillcolor')
+		{
+			canvas.setFillColor(node.getAttribute('color'));
+		}
+		else if (name == 'alpha')
+		{
+			canvas.setAlpha(node.getAttribute('alpha'));
+		}
+		else if (name == 'fillalpha')
+		{
+			canvas.setAlpha(node.getAttribute('alpha'));
+		}
+		else if (name == 'strokealpha')
+		{
+			canvas.setAlpha(node.getAttribute('alpha'));
+		}
+		else if (name == 'fontcolor')
+		{
+			canvas.setFontColor(node.getAttribute('color'));
+		}
+		else if (name == 'fontstyle')
+		{
+			canvas.setFontStyle(node.getAttribute('style'));
+		}
+		else if (name == 'fontfamily')
+		{
+			canvas.setFontFamily(node.getAttribute('family'));
+		}
+		else if (name == 'fontsize')
+		{
+			canvas.setFontSize(Number(node.getAttribute('size')) * minScale);
+		}
+		
+		if (disableShadow && (name == 'fillstroke' || name == 'fill' || name == 'stroke'))
+		{
+			disableShadow = false;
+			canvas.setShadow(false);
+		}
 	}
 };

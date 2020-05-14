@@ -10,7 +10,7 @@ using Slickflow.Engine.Core;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
 using Slickflow.Data;
-using Slickflow.Engine.Xpdl.Entity;
+using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Core.Result;
@@ -42,7 +42,7 @@ namespace Slickflow.Engine.Storage
             if (!File.Exists(physicalFileName))
             {
                 throw new ApplicationException(
-                    string.Format("请配置流程XML文件，路径:{0}", physicalFileName)
+                    string.Format("Process Xml File Path:{0}", physicalFileName)
                 );
             }
 

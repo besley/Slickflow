@@ -30,8 +30,11 @@ function mxGraphHandler(graph)
 	// Repaints the handler after autoscroll
 	this.panHandler = mxUtils.bind(this, function()
 	{
-		this.updatePreviewShape();
-		this.updateHint();
+		if (!this.suspended)
+		{
+			this.updatePreview();
+			this.updateHint();
+		}
 	});
 	
 	this.graph.addListener(mxEvent.PAN, this.panHandler);
@@ -43,6 +46,37 @@ function mxGraphHandler(graph)
 	});
 	
 	this.graph.addListener(mxEvent.ESCAPE, this.escapeHandler);
+	
+	// Updates the preview box for remote changes
+	this.refreshHandler = mxUtils.bind(this, function(sender, evt)
+	{
+		if (this.first != null && !this.suspended)
+		{
+			try
+			{
+				this.bounds = this.graph.getView().getBounds(this.cells);
+				this.pBounds = this.getPreviewBounds(this.cells);
+				this.updatePreview(true);
+				
+				// Resets handlers after they have been refreshed
+				window.setTimeout(mxUtils.bind(this, function()
+				{
+					if (this.livePreviewUsed)
+					{
+						this.setHandlesVisibleForCells(this.graph.getSelectionCells(), false);
+						this.updatePreview();
+					}
+				}), 0);
+			}
+			catch (e)
+			{
+				// Resets the handler if cells have vanished
+				this.reset();
+			}
+		}
+	});
+	
+	this.graph.getModel().addListener(mxEvent.CHANGE, this.refreshHandler);
 };
 
 /**
@@ -145,6 +179,14 @@ mxGraphHandler.prototype.selectEnabled = true;
 mxGraphHandler.prototype.removeCellsFromParent = true;
 
 /**
+ * Variable: removeEmptyParents
+ * 
+ * If empty parents should be removed from the model after all child cells
+ * have been moved out. Default is true.
+ */
+mxGraphHandler.prototype.removeEmptyParents = false;
+
+/**
  * Variable: connectOnDrop
  * 
  * Specifies if drop events are interpreted as new connections if no other
@@ -204,6 +246,22 @@ mxGraphHandler.prototype.scaleGrid = false;
  * Specifies if the bounding box should allow for rotation. Default is true.
  */
 mxGraphHandler.prototype.rotationEnabled = true;
+
+/**
+ * Variable: maxLivePreview
+ * 
+ * Maximum number of cells for which live preview should be used. Default is 0
+ * which means no live preview.
+ */
+mxGraphHandler.prototype.maxLivePreview = 0;
+
+/**
+ * Variable: allowLivePreview
+ * 
+ * If live preview is allowed on this system. Default is true for systems with
+ * SVG support.
+ */
+mxGraphHandler.prototype.allowLivePreview = mxClient.IS_SVG;
 
 /**
  * Function: isEnabled
@@ -334,7 +392,7 @@ mxGraphHandler.prototype.isDelayedSelection = function(cell, me)
  * 
  * Consumes the given mouse event. NOTE: This may be used to enable click
  * events for links in labels on iOS as follows as consuming the initial
- * touchStart disables firing the subsequent click evnent on the link.
+ * touchStart disables firing the subsequent click event on the link.
  * 
  * <code>
  * mxGraphHandler.prototype.consumeMouseEvent = function(evtName, me)
@@ -584,18 +642,90 @@ mxGraphHandler.prototype.createPreviewShape = function(bounds)
  * 
  * Starts the handling of the mouse gesture.
  */
-mxGraphHandler.prototype.start = function(cell, x, y)
+mxGraphHandler.prototype.start = function(cell, x, y, cells)
 {
 	this.cell = cell;
 	this.first = mxUtils.convertPoint(this.graph.container, x, y);
-	this.cells = this.getCells(this.cell);
+	this.cells = (cells != null) ? cells : this.getCells(this.cell);
 	this.bounds = this.graph.getView().getBounds(this.cells);
 	this.pBounds = this.getPreviewBounds(this.cells);
-
+	this.allCells = new mxDictionary();
+	this.cloning = false;
+	this.cellCount = 0;
+	
+	for (var i = 0; i < this.cells.length; i++)
+	{
+		this.cellCount += this.addStates(this.cells[i], this.allCells);
+	}
+	
 	if (this.guidesEnabled)
 	{
 		this.guide = new mxGuide(this.graph, this.getGuideStates());
+		var parent = this.graph.model.getParent(cell);
+		var ignore = this.graph.model.getChildCount(parent) < 2;
+		
+		// Uses connected states as guides
+		var connected = new mxDictionary();
+		var opps = this.graph.getOpposites(this.graph.getEdges(this.cell), this.cell);
+		
+		for (var i = 0; i < opps.length; i++)
+		{
+			var state = this.graph.view.getState(opps[i]);
+			
+			if (state != null && !connected.get(state))
+			{
+				connected.put(state, true);
+			}
+		}
+
+		this.guide.isStateIgnored = mxUtils.bind(this, function(state)
+		{
+			var p = this.graph.model.getParent(state.cell);
+			
+			return state.cell != null && ((!this.cloning &&
+				this.isCellMoving(state.cell)) ||
+				(state.cell != (this.target || parent) && !ignore &&
+				!connected.get(state) &&
+				(this.target == null || this.graph.model.getChildCount(
+				this.target) >= 2) && p != (this.target || parent)));  
+		});
 	}
+};
+
+/**
+ * Function: addStates
+ * 
+ * Adds the states for the given cell recursively to the given dictionary.
+ */
+mxGraphHandler.prototype.addStates = function(cell, dict)
+{
+	var state = this.graph.view.getState(cell);
+	var count = 0;
+	
+	if (state != null && dict.get(cell) == null)
+	{
+		dict.put(cell, state);
+		count++;
+		
+		var childCount = this.graph.model.getChildCount(cell);
+		
+		for (var i = 0; i < childCount; i++)
+		{
+			count += this.addStates(this.graph.model.getChildAt(cell, i), dict);
+		}
+	}
+	
+	return count;
+};
+
+/**
+ * Function: isCellMoving
+ * 
+ * Returns true if the given cell is currently being moved.
+ */
+mxGraphHandler.prototype.isCellMoving = function(cell)
+{
+	return this.allCells.get(cell) != null;
 };
 
 /**
@@ -634,10 +764,9 @@ mxGraphHandler.prototype.snap = function(vector)
 mxGraphHandler.prototype.getDelta = function(me)
 {
 	var point = mxUtils.convertPoint(this.graph.container, me.getX(), me.getY());
-	var s = this.graph.view.scale;
 	
-	return new mxPoint(this.roundLength((point.x - this.first.x) / s) * s,
-		this.roundLength((point.y - this.first.y) / s) * s);
+	return new mxPoint(point.x - this.first.x - this.graph.panDx,
+		point.y - this.first.y - this.graph.panDy);
 };
 
 /**
@@ -657,11 +786,13 @@ mxGraphHandler.prototype.removeHint = function() { };
 /**
  * Function: roundLength
  * 
- * Hook for rounding the unscaled vector. This uses Math.round.
+ * Hook for rounding the unscaled vector. Allows for half steps in the raster so
+ * numbers coming in should be rounded if no half steps are allowed (ie for non
+ * aligned standard moving where pixel steps should be preferred).
  */
 mxGraphHandler.prototype.roundLength = function(length)
 {
-	return Math.round(length);
+	return Math.round(length * 100) / 100;
 };
 
 /**
@@ -675,7 +806,7 @@ mxGraphHandler.prototype.mouseMove = function(sender, me)
 	var graph = this.graph;
 
 	if (!me.isConsumed() && graph.isMouseDown && this.cell != null &&
-		this.first != null && this.bounds != null)
+		this.first != null && this.bounds != null && !this.suspended)
 	{
 		// Stops moving if a multi touch event is received
 		if (mxEvent.isMultiTouchEvent(me.getEvent()))
@@ -685,11 +816,9 @@ mxGraphHandler.prototype.mouseMove = function(sender, me)
 		}
 		
 		var delta = this.getDelta(me);
-		var dx = delta.x;
-		var dy = delta.y;
 		var tol = graph.tolerance;
 
-		if (this.shape != null || Math.abs(dx) > tol || Math.abs(dy) > tol)
+		if (this.shape != null || this.livePreviewActive || Math.abs(delta.x) > tol || Math.abs(delta.y) > tol)
 		{
 			// Highlight is used for highlighting drop targets
 			if (this.highlight == null)
@@ -697,61 +826,13 @@ mxGraphHandler.prototype.mouseMove = function(sender, me)
 				this.highlight = new mxCellHighlight(this.graph,
 					mxConstants.DROP_TARGET_COLOR, 3);
 			}
-			
-			if (this.shape == null)
-			{
-				this.shape = this.createPreviewShape(this.bounds);
-			}
-			
-			var gridEnabled = graph.isGridEnabledEvent(me.getEvent());
-			var hideGuide = true;
-			
-			if (this.guide != null && this.useGuidesForEvent(me))
-			{
-				delta = this.guide.move(this.bounds, new mxPoint(dx, dy), gridEnabled);
-				hideGuide = false;
-				dx = delta.x;
-				dy = delta.y;
-			}
-			else if (gridEnabled)
-			{
-				var trx = graph.getView().translate;
-				var scale = graph.getView().scale;				
-				
-				var tx = this.bounds.x - (graph.snap(this.bounds.x / scale - trx.x) + trx.x) * scale;
-				var ty = this.bounds.y - (graph.snap(this.bounds.y / scale - trx.y) + trx.y) * scale;
-				var v = this.snap(new mxPoint(dx, dy));
-			
-				dx = v.x - tx;
-				dy = v.y - ty;
-			}
-			
-			if (this.guide != null && hideGuide)
-			{
-				this.guide.hide();
-			}
-
-			// Constrained movement if shift key is pressed
-			if (graph.isConstrainedEvent(me.getEvent()))
-			{
-				if (Math.abs(dx) > Math.abs(dy))
-				{
-					dy = 0;
-				}
-				else
-				{
-					dx = 0;
-				}
-			}
-
-			this.currentDx = dx;
-			this.currentDy = dy;
-			this.updatePreviewShape();
-
-			var target = null;
-			var cell = me.getCell();
 
 			var clone = graph.isCloneEvent(me.getEvent()) && graph.isCellsCloneable() && this.isCloneEnabled();
+			var gridEnabled = graph.isGridEnabledEvent(me.getEvent());
+			var cell = me.getCell();
+			var hideGuide = true;
+			var target = null;
+			this.cloning = clone;
 			
 			if (graph.isDropEnabled() && this.highlightEnabled)
 			{
@@ -801,6 +882,60 @@ mxGraphHandler.prototype.mouseMove = function(sender, me)
 			{
 				this.highlight.hide();
 			}
+			
+			if (this.livePreviewActive && clone)
+			{
+				this.resetLivePreview();
+				this.livePreviewActive = false;
+			}
+			else if (this.maxLivePreview >= this.cellCount && !this.livePreviewActive && this.allowLivePreview)
+			{
+				if (!clone || !this.livePreviewActive)
+				{
+					this.setHandlesVisibleForCells(this.graph.getSelectionCells(), false);
+					this.livePreviewActive = true;
+					this.livePreviewUsed = true;
+				}
+			}
+			else if (!this.livePreviewUsed && this.shape == null)
+			{
+				this.shape = this.createPreviewShape(this.bounds);
+			}
+			
+			if (this.guide != null && this.useGuidesForEvent(me))
+			{
+				delta = this.guide.move(this.bounds, delta, gridEnabled, clone);
+				hideGuide = false;
+			}
+			else
+			{
+				delta = this.graph.snapDelta(delta, this.bounds, !gridEnabled, false, false);
+			}
+			
+			if (this.guide != null && hideGuide)
+			{
+				this.guide.hide();
+			}
+
+			// Constrained movement if shift key is pressed
+			if (graph.isConstrainedEvent(me.getEvent()))
+			{
+				if (Math.abs(delta.x) > Math.abs(delta.y))
+				{
+					delta.y = 0;
+				}
+				else
+				{
+					delta.x = 0;
+				}
+			}
+
+			if (this.currentDx != delta.x || this.currentDy != delta.y)
+			{
+				this.currentDx = delta.x;
+				this.currentDy = delta.y;
+				this.updatePreview();
+			}
 		}
 
 		this.updateHint(me);
@@ -811,8 +946,8 @@ mxGraphHandler.prototype.mouseMove = function(sender, me)
 		// fired on the container with no associated state.
 		mxEvent.consume(me.getEvent());
 	}
-	else if ((this.isMoveEnabled() || this.isCloneEnabled()) && this.updateCursor &&
-		!me.isConsumed() && me.getState() != null && !graph.isMouseDown)
+	else if ((this.isMoveEnabled() || this.isCloneEnabled()) && this.updateCursor && !me.isConsumed() &&
+			(me.getState() != null || me.sourceState != null) && !graph.isMouseDown)
 	{
 		var cursor = graph.getCursorForMouseEvent(me);
 		
@@ -830,10 +965,30 @@ mxGraphHandler.prototype.mouseMove = function(sender, me)
 
 		// Sets the cursor on the original source state under the mouse
 		// instead of the event source state which can be the parent
-		if (me.sourceState != null)
+		if (cursor != null && me.sourceState != null)
 		{
 			me.sourceState.setCursor(cursor);
 		}
+	}
+};
+
+/**
+ * Function: updatePreview
+ * 
+ * Updates the bounds of the preview shape.
+ */
+mxGraphHandler.prototype.updatePreview = function(remote)
+{
+	if (this.livePreviewUsed && !remote)
+	{
+		if (this.cells != null)
+		{
+			this.updateLivePreview(this.currentDx, this.currentDy);
+		}
+	}
+	else
+	{
+		this.updatePreviewShape();
 	}
 };
 
@@ -846,9 +1001,299 @@ mxGraphHandler.prototype.updatePreviewShape = function()
 {
 	if (this.shape != null)
 	{
-		this.shape.bounds = new mxRectangle(Math.round(this.pBounds.x + this.currentDx - this.graph.panDx),
-				Math.round(this.pBounds.y + this.currentDy - this.graph.panDy), this.pBounds.width, this.pBounds.height);
+		this.shape.bounds = new mxRectangle(Math.round(this.pBounds.x + this.currentDx),
+				Math.round(this.pBounds.y + this.currentDy), this.pBounds.width, this.pBounds.height);
 		this.shape.redraw();
+	}
+};
+
+/**
+ * Function: updateLivePreview
+ * 
+ * Updates the bounds of the preview shape.
+ */
+mxGraphHandler.prototype.updateLivePreview = function(dx, dy)
+{
+	if (!this.suspended)
+	{
+		var states = [];
+		
+		if (this.allCells != null)
+		{
+			this.allCells.visit(mxUtils.bind(this, function(key, state)
+			{
+				// Saves current state
+				var tempState = state.clone();
+				states.push([state, tempState]);
+	
+				// Makes transparent for events to detect drop targets
+				if (state.shape != null)
+				{
+					if (state.shape.originalPointerEvents == null)
+					{
+						state.shape.originalPointerEvents = state.shape.pointerEvents;
+					}
+					
+					state.shape.pointerEvents = false;
+	
+					if (state.text != null)
+					{
+						if (state.text.originalPointerEvents == null)
+						{
+							state.text.originalPointerEvents = state.text.pointerEvents;
+						}
+					
+						state.text.pointerEvents = false;
+					}
+				}
+	
+				// Temporarily changes position
+				if (this.graph.model.isVertex(state.cell))
+				{
+					state.x += dx;
+					state.y += dy;
+					
+					// Draws the live preview
+					if (!this.cloning)
+					{
+						state.view.graph.cellRenderer.redraw(state, true);
+						
+						// Forces redraw of connected edges after all states
+						// have been updated but avoids update of state
+						state.view.invalidate(state.cell);
+						state.invalid = false;
+						
+						// Hides folding icon
+						if (state.control != null && state.control.node != null)
+						{
+							state.control.node.style.visibility = 'hidden';
+						}
+					}
+				}
+			}));
+		}
+	
+		// Redraws connected edges
+		var s = this.graph.view.scale;
+		
+		for (var i = 0; i < states.length; i++)
+		{
+			var state = states[i][0];
+			
+			if (this.graph.model.isEdge(state.cell))
+			{
+				var geometry = this.graph.getCellGeometry(state.cell);
+				var points = [];
+				
+				if (geometry != null && geometry.points != null)
+				{
+					for (var j = 0; j < geometry.points.length; j++)
+					{
+						if (geometry.points[j] != null)
+						{
+							points.push(new mxPoint(
+								geometry.points[j].x + dx / s,
+								geometry.points[j].y + dy / s));
+						}
+					}
+				}
+	
+				var source = state.visibleSourceState;
+				var target = state.visibleTargetState;
+				var pts = states[i][1].absolutePoints;
+				
+				if (source == null || !this.isCellMoving(source.cell))
+				{
+					var pt0 = pts[0];
+					state.setAbsoluteTerminalPoint(new mxPoint(pt0.x + dx, pt0.y + dy), true);
+					source = null;
+				}
+				else
+				{
+					state.view.updateFixedTerminalPoint(state, source, true,
+						this.graph.getConnectionConstraint(state, source, true));
+				}
+				
+				if (target == null || !this.isCellMoving(target.cell))
+				{
+					var ptn = pts[pts.length - 1];
+					state.setAbsoluteTerminalPoint(new mxPoint(ptn.x + dx, ptn.y + dy), false);
+					target = null;
+				}
+				else
+				{
+					state.view.updateFixedTerminalPoint(state, target, false,
+						this.graph.getConnectionConstraint(state, target, false));
+				}
+				
+				state.view.updatePoints(state, points, source, target);
+				state.view.updateFloatingTerminalPoints(state, source, target);
+				state.view.updateEdgeLabelOffset(state);
+				state.invalid = false;
+
+				// Draws the live preview but avoids update of state
+				if (!this.cloning)
+				{
+					state.view.graph.cellRenderer.redraw(state, true);
+				}
+			}
+		}
+	
+		this.graph.view.validate();
+		this.redrawHandles(states);
+		this.resetPreviewStates(states);
+	}
+};
+
+/**
+ * Function: redrawHandles
+ * 
+ * Redraws the preview shape for the given states array.
+ */
+mxGraphHandler.prototype.redrawHandles = function(states)
+{
+	for (var i = 0; i < states.length; i++)
+	{
+		var handler = this.graph.selectionCellsHandler.getHandler(states[i][0].cell);
+		
+		if (handler != null)
+		{
+			handler.redraw(true);
+		}
+	}
+};
+
+/**
+ * Function: resetPreviewStates
+ * 
+ * Resets the given preview states array.
+ */
+mxGraphHandler.prototype.resetPreviewStates = function(states)
+{
+	for (var i = 0; i < states.length; i++)
+	{
+		states[i][0].setState(states[i][1]);
+	}
+};
+
+/**
+ * Function: suspend
+ * 
+ * Suspends the livew preview.
+ */
+mxGraphHandler.prototype.suspend = function()
+{
+	if (!this.suspended)
+	{
+		if (this.livePreviewUsed)
+		{
+			this.updateLivePreview(0, 0);
+		}
+		
+		if (this.shape != null)
+		{
+			this.shape.node.style.visibility = 'hidden';
+		} 
+	
+		if (this.guide != null)
+		{
+			this.guide.setVisible(false);
+		}
+		
+		this.suspended = true;
+	}
+};
+
+/**
+ * Function: resume
+ * 
+ * Suspends the livew preview.
+ */
+mxGraphHandler.prototype.resume = function()
+{
+	if (this.suspended)
+	{
+		this.suspended = null;
+		
+		if (this.livePreviewUsed)
+		{
+			this.livePreviewActive = true;
+		}
+		
+		if (this.shape != null)
+		{
+			this.shape.node.style.visibility = 'visible';
+		}
+		
+		if (this.guide != null)
+		{
+			this.guide.setVisible(true);
+		}
+	}
+};
+
+/**
+ * Function: resetLivePreview
+ * 
+ * Resets the livew preview.
+ */
+mxGraphHandler.prototype.resetLivePreview = function()
+{
+	if (this.allCells != null)
+	{
+		this.allCells.visit(mxUtils.bind(this, function(key, state)
+		{
+			// Restores event handling
+			if (state.shape != null && state.shape.originalPointerEvents != null)
+			{
+				state.shape.pointerEvents = state.shape.originalPointerEvents;
+				state.shape.originalPointerEvents = null;
+				
+				if (state.text != null)
+				{
+					state.text.pointerEvents = state.text.originalPointerEvents;
+					state.text.originalPointerEvents = null;
+				}
+			}
+
+			// Shows folding icon
+			if (state.control != null && state.control.node != null &&
+				state.control.node.style.visibility == 'hidden')
+			{
+				state.control.node.style.visibility = '';
+			}
+			
+			// Forces repaint of state and connected edges
+			state.view.invalidate(state.cell);
+		}));
+
+		// Repaints all invalid states
+		this.graph.view.validate();
+	}
+};
+
+/**
+ * Function: reset
+ * 
+ * Resets the state of this handler.
+ */
+mxGraphHandler.prototype.setHandlesVisibleForCells = function(cells, visible)
+{
+	for (var i = 0; i < cells.length; i++)
+	{
+		var cell = cells[i];
+
+		var handler = this.graph.selectionCellsHandler.getHandler(cell);
+		
+		if (handler != null)
+		{
+			handler.setHandlesVisible(visible);
+			
+			if (visible)
+			{
+				handler.redraw();
+			}
+		}
 	}
 };
 
@@ -878,11 +1323,15 @@ mxGraphHandler.prototype.mouseUp = function(sender, me)
 {
 	if (!me.isConsumed())
 	{
-		var graph = this.graph;
+		if (this.livePreviewUsed)
+		{
+			this.resetLivePreview();
+		}
 		
-		if (this.cell != null && this.first != null && this.shape != null &&
+		if (this.cell != null && this.first != null && (this.shape != null || this.livePreviewUsed) &&
 			this.currentDx != null && this.currentDy != null)
 		{
+			var graph = this.graph;
 			var cell = me.getCell();
 			
 			if (this.connectOnDrop && this.target == null && cell != null && graph.getModel().isVertex(cell) &&
@@ -943,17 +1392,31 @@ mxGraphHandler.prototype.selectDelayed = function(me)
  */
 mxGraphHandler.prototype.reset = function()
 {
+	if (this.livePreviewUsed)
+	{
+		this.resetLivePreview();
+		this.setHandlesVisibleForCells(this.graph.getSelectionCells(), true);
+	}
+	
 	this.destroyShapes();
 	this.removeHint();
-	
-	this.cellWasClicked = false;
+
 	this.delayedSelection = false;
+	this.livePreviewActive = null;
+	this.livePreviewUsed = null;
+	this.cellWasClicked = false;
+	this.suspended = null;
 	this.currentDx = null;
 	this.currentDy = null;
+	this.cellCount = null;
+	this.cloning = false;
+	this.allCells = null;
+	this.pBounds = null;
 	this.guides = null;
-	this.first = null;
-	this.cell = null;
 	this.target = null;
+	this.first = null;
+	this.cells = null;
+	this.cell = null;
 };
 
 /**
@@ -1002,27 +1465,92 @@ mxGraphHandler.prototype.moveCells = function(cells, dx, dy, clone, target, evt)
 	}
 	
 	// Removes cells from parent
+	var parent = this.graph.getModel().getParent(this.cell);
+	
 	if (target == null && this.isRemoveCellsFromParent() &&
-		this.shouldRemoveCellsFromParent(this.graph.getModel().getParent(this.cell), cells, evt))
+		this.shouldRemoveCellsFromParent(parent, cells, evt))
 	{
 		target = this.graph.getDefaultParent();
 	}
 	
-	// Passes all selected cells in order to correctly clone or move into
-	// the target cell. The method checks for each cell if its movable.
-	cells = this.graph.moveCells(cells, dx - this.graph.panDx / this.graph.view.scale,
-			dy - this.graph.panDy / this.graph.view.scale, clone, target, evt);
-	
-	if (this.isSelectEnabled() && this.scrollOnMove)
+	// Cloning into locked cells is not allowed
+	clone = clone && !this.graph.isCellLocked(target || this.graph.getDefaultParent());
+
+	this.graph.getModel().beginUpdate();
+	try
 	{
-		this.graph.scrollCellToVisible(cells[0]);
-	}
+		var parents = [];
+		
+		// Removes parent if all child cells are removed
+		if (!clone && target != null && this.removeEmptyParents)
+		{
+			// Collects all non-selected parents
+			var dict = new mxDictionary();
 			
+			for (var i = 0; i < cells.length; i++)
+			{
+				dict.put(cells[i], true);
+			}
+			
+			// LATER: Recurse up the cell hierarchy
+			for (var i = 0; i < cells.length; i++)
+			{
+				var par = this.graph.model.getParent(cells[i]);
+
+				if (par != null && !dict.get(par))
+				{
+					dict.put(par, true);
+					parents.push(par);
+				}
+			}
+		}
+		
+		// Passes all selected cells in order to correctly clone or move into
+		// the target cell. The method checks for each cell if its movable.
+		cells = this.graph.moveCells(cells, dx, dy, clone, target, evt);
+
+		// Removes parent if all child cells are removed
+		var temp = [];
+		
+		for (var i = 0; i < parents.length; i++)
+		{
+			if (this.shouldRemoveParent(parents[i]))
+			{
+				temp.push(parents[i]);
+			}
+		}
+		
+		this.graph.removeCells(temp, false);
+	}
+	finally
+	{
+		this.graph.getModel().endUpdate();
+	}
+
 	// Selects the new cells if cells have been cloned
 	if (clone)
 	{
 		this.graph.setSelectionCells(cells);
 	}
+
+	if (this.isSelectEnabled() && this.scrollOnMove)
+	{
+		this.graph.scrollCellToVisible(cells[0]);
+	}
+};
+
+/**
+ * Function: shouldRemoveParent
+ * 
+ * Returns true if the given parent should be removed after removal of child cells.
+ */
+mxGraphHandler.prototype.shouldRemoveParent = function(parent)
+{
+	var state = this.graph.view.getState(parent);
+	
+	return state != null && (this.graph.model.isEdge(state.cell) || this.graph.model.isVertex(state.cell)) &&
+		this.graph.isCellDeletable(state.cell) && this.graph.model.getChildCount(state.cell) == 0 &&
+		this.graph.isTransparentState(state);
 };
 
 /**
@@ -1067,6 +1595,12 @@ mxGraphHandler.prototype.destroy = function()
 	{
 		this.graph.removeListener(this.escapeHandler);
 		this.escapeHandler = null;
+	}
+	
+	if (this.refreshHandler != null)
+	{
+		this.graph.getModel().removeListener(this.refreshHandler);
+		this.refreshHandler = null;
 	}
 	
 	this.destroyShapes();

@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Slickflow.Engine.Common;
+using Slickflow.Engine.Xpdl.Entity;
 
 namespace Slickflow.Engine.Xpdl
 {
     /// <summary>
     /// 常用的一些帮助方法
     /// </summary>
-    internal class XPDLHelper
+    public class XPDLHelper
     {
         /// <summary>
         /// 是否简单组件节点
@@ -51,6 +52,17 @@ namespace Slickflow.Engine.Xpdl
         internal static Boolean IsIntermediateEventComponentNode(ActivityTypeEnum activityType)
         {
             return activityType == ActivityTypeEnum.IntermediateNode;
+        }
+
+        /// <summary>
+        /// 判断是否是中间Timer事件节点
+        /// </summary>
+        /// <param name="activity">活动节点</param>
+        /// <returns>判断结果</returns>
+        internal static Boolean IsInterTimerEventComponentNode(ActivityEntity activity)
+        {
+            return activity.ActivityType == ActivityTypeEnum.IntermediateNode
+                    && activity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.Timer;
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 <mxEditor>
-	<include name="scripts/mxGraph/src/editor/config/wfeditor-commons.xml"/>
+	<include name="Scripts/mxGraph/src/editor/config/wfeditor-commons.xml"/>
 	<ui>
 		<add as="graph" element="kgraphContainer"
 			style="left:90px;right:20px;top:40px;bottom:40px"/>
@@ -8,9 +8,9 @@
 		<add as="toolbar" x="16" y="45" width="60" style="padding:5px;padding-top:8px;padding-right:0px;"/>
 	</ui>
 	<mxGraph as="graph">
-		<include name="scripts/mxGraph/src/editor/config/wfgraph-commons.xml"/>
+		<include name="Scripts/mxGraph/src/editor/config/wfgraph-commons.xml"/>
 	</mxGraph>
 	<mxDefaultToolbar as="toolbar">
-		<include name="scripts/mxGraph/src/editor/config/wftoolbar-commons.xml"/>
+		<include name="Scripts/mxGraph/src/editor/config/wftoolbar-commons.xml"/>
 	</mxDefaultToolbar>
 </mxEditor>

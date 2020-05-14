@@ -31,7 +31,7 @@ function mxCellState(view, cell, style)
 {
 	this.view = view;
 	this.cell = cell;
-	this.style = style;
+	this.style = (style != null) ? style : {};
 	
 	this.origin = new mxPoint();
 	this.absoluteOffset = new mxPoint();
@@ -64,6 +64,13 @@ mxCellState.prototype.cell = null;
  * cell.
  */
 mxCellState.prototype.style = null;
+
+/**
+ * Variable: invalidStyle
+ * 
+ * Specifies if the style is invalid. Default is false.
+ */
+mxCellState.prototype.invalidStyle = false;
 
 /**
  * Variable: invalid
@@ -154,6 +161,13 @@ mxCellState.prototype.text = null;
  * Holds the unscaled width of the state.
  */
 mxCellState.prototype.unscaledWidth = null;
+
+/**
+ * Variable: unscaledHeight
+ * 
+ * Holds the unscaled height of the state.
+ */
+mxCellState.prototype.unscaledHeight = null;
 
 /**
  * Function: getPerimeterBounds
@@ -371,6 +385,7 @@ mxCellState.prototype.setState = function(state)
 	this.width = state.width;
 	this.height = state.height;
 	this.unscaledWidth = state.unscaledWidth;
+	this.unscaledHeight = state.unscaledHeight;
 };
 
 /**
@@ -416,6 +431,7 @@ mxCellState.prototype.clone = function()
 	clone.width = this.width;
 	clone.height = this.height;
 	clone.unscaledWidth = this.unscaledWidth;
+	clone.unscaledHeight = this.unscaledHeight;
 	
 	return clone;
 };

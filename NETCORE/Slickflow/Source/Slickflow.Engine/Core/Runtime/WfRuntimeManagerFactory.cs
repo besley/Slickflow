@@ -24,14 +24,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Slickflow.Data;
+using Slickflow.Module.Localize;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Core.Event;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Core.SendBack;
 using Slickflow.Engine.Core.Parser;
-using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Xpdl.Node;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
@@ -70,7 +71,7 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Started_IsRunningAlready;
-                result.Message = "流程已经处于运行状态，如果要重新启动，请先终止当前流程实例！";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceStartup.error");
                 return rmins;
             }
 
@@ -87,9 +88,19 @@ namespace Slickflow.Engine.Core.Runtime
                     runner.UserID,
                     runner.UserName);
             }
-            else if (startActivity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.Timer)
+            else if (startActivity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.Timer
+                || startActivity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.Message)
             {
-                rmins.AppRunner.NextActivityPerformers = rmins.ProcessModel.GetActivityPerformers(firstActivity.ActivityGUID);
+                if (!string.IsNullOrEmpty(runner.UserID))
+                {
+                    rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(firstActivity.ActivityGUID,
+                        runner.UserID,
+                        runner.UserName);
+                }
+                else
+                {
+                    rmins.AppRunner.NextActivityPerformers = rmins.ProcessModel.GetActivityPerformers(firstActivity.ActivityGUID);
+                }
             }
             rmins.ActivityResource = new ActivityResource(runner, rmins.AppRunner.NextActivityPerformers);
 
@@ -130,7 +141,7 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Started_IsRunningAlready;
-                result.Message = "流程已经处于运行状态，如果要重新启动，请先终止当前流程实例！";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceStartup.error");
                 return rmins;
             }
 
@@ -174,7 +185,7 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.RunApp_ErrorArguments;
-                result.Message = "方法参数错误，无法运行流程！";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceAppRunning.missing.error");
                 return rmins;
             }
 
@@ -190,13 +201,12 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.RunApp_HasNoTask;
-                result.Message = "当前没有登录用户要办理的任务，无法运行流程！";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceAppRunning.nonetask.error");
                 return rmins;
             }
 
             //用于流程注册事件时的流程实例ID提供
             rmins.ProcessInstanceID = runningNode.ProcessInstanceID;
-
             var processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
             var activityResource = new ActivityResource(runner,
                 runner.NextActivityPerformers,
@@ -229,9 +239,10 @@ namespace Slickflow.Engine.Core.Runtime
                || runner.ProcessGUID == null
                || runner.NextActivityPerformers == null)
             {
+                //缺失方法参数
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Jump_ErrorArguments;
-                result.Message = "方法参数错误，无法运行流程！";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceJump.missing.error");
                 return rmins;
             }
 
@@ -240,8 +251,8 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Jump_OverOneStep;
-                result.Message = string.Format("不能跳转到多个节点！节点数:{0}",
-                    runner.NextActivityPerformers.Count());
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceJump.jump.error",
+                    runner.NextActivityPerformers.Count().ToString());
                 return rmins;
             }
 
@@ -311,9 +322,10 @@ namespace Slickflow.Engine.Core.Runtime
                     //回跳到早前节点
                     if (jumpBackActivityInstance.ActivityState != (short)ActivityStateEnum.Completed)
                     {
+                        //回跳节点不在完成状态
                         result.Status = WfExecutedStatus.Exception;
                         result.ExceptionType = WfExceptionType.Jump_NotActivityBackCompleted;
-                        result.Message = string.Format("回跳到的节点不在完成状态，无法重新回跳！");
+                        result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceJump.back.error");
 
                         return rmins;
                     }
@@ -355,203 +367,6 @@ namespace Slickflow.Engine.Core.Runtime
         }
         #endregion
 
-        #region WfRuntimeManager 创建驳回运行时对象
-        /// <summary>
-        /// 跳转到流程发起节点
-        /// </summary>
-        /// <param name="runner">当前运行用户</param>
-        /// <param name="result">运行结果</param>
-        /// <returns>运行时对象</returns>
-        public static WfRuntimeManager CreateRuntimeInstanceReject(WfAppRunner runner,
-            ref WfExecutedResult result)
-        {
-            var rmins = new WfRuntimeManagerReject();
-            rmins.WfExecutedResult = result = new WfExecutedResult();
-
-            if (string.IsNullOrEmpty(runner.AppName)
-               || String.IsNullOrEmpty(runner.AppInstanceID)
-               || runner.ProcessGUID == null
-               || runner.NextActivityPerformers == null)
-            {
-                result.Status = WfExecutedStatus.Exception;
-                result.ExceptionType = WfExceptionType.Jump_ErrorArguments;
-                result.Message = "方法参数错误，无法运行流程！";
-                return rmins;
-            }
-
-            //流程跳转时，只能跳转到一个节点
-            if (runner.NextActivityPerformers.Count() > 1)
-            {
-                result.Status = WfExecutedStatus.Exception;
-                result.ExceptionType = WfExceptionType.Jump_OverOneStep;
-                result.Message = string.Format("不能跳转到多个节点！节点数:{0}",
-                    runner.NextActivityPerformers.Count());
-                return rmins;
-            }
-
-            //获取当前运行节点信息
-            var aim = new ActivityInstanceManager();
-            TaskViewEntity taskView = null;
-            var runningNode = aim.GetRunningNode(runner, out taskView);
-
-            //传递runner变量
-            rmins.TaskView = taskView;
-            rmins.AppRunner = runner;
-            rmins.AppRunner.AppName = runner.AppName;
-            rmins.AppRunner.AppInstanceID = runner.AppInstanceID;
-            rmins.AppRunner.ProcessGUID = runner.ProcessGUID;
-            rmins.AppRunner.UserID = runner.UserID;
-            rmins.AppRunner.UserName = runner.UserName;
-
-            //用于流程注册时间调用时候的流程实例ID提供
-            rmins.ProcessInstanceID = runningNode.ProcessInstanceID;
-
-            var processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
-            rmins.ProcessModel = processModel;
-
-            //获取跳转节点信息
-            var jumpBackActivityGUID = runner.NextActivityPerformers.First().Key;
-            var jumpBackActivityInstance = aim.GetActivityInstanceLatest(runningNode.ProcessInstanceID, jumpBackActivityGUID);
-
-
-            //跳转到曾经执行过的节点上,可以作为跳回方式处理
-            rmins.IsBackward = true;
-            rmins.BackwardContext.ProcessInstance = (new ProcessInstanceManager()).GetById(runningNode.ProcessInstanceID);
-            rmins.BackwardContext.BackwardToTaskActivity = processModel.GetActivity(jumpBackActivityGUID);
-
-            //获取当前运行节点的上一步节点
-            bool hasGatewayNode = false;
-            var tim = new TransitionInstanceManager();
-            var lastTaskTransitionInstance = tim.GetLastTaskTransition(runner.AppName,
-                runner.AppInstanceID, runner.ProcessGUID);
-
-            var npc = new PreviousStepChecker();
-            var previousActivityInstance = npc.GetPreviousActivityInstanceList(runningNode, true,
-                out hasGatewayNode).ToList()[0];
-
-            //仅仅是回跳到上一步节点，即按SendBack方式处理
-            if (previousActivityInstance.ActivityGUID == jumpBackActivityGUID)
-            {
-                rmins.BackwardContext.BackwardToTaskActivityInstance = previousActivityInstance;
-                rmins.BackwardContext.BackwardToTargetTransitionGUID =
-                    hasGatewayNode == false ? lastTaskTransitionInstance.TransitionGUID : WfDefine.WF_XPDL_GATEWAY_BYPASS_GUID;        //如果中间有Gateway节点，则没有直接相连的TransitonGUID
-
-                rmins.BackwardContext.BackwardFromActivity = processModel.GetActivity(runningNode.ActivityGUID);
-                rmins.BackwardContext.BackwardFromActivityInstance = runningNode;
-                rmins.BackwardContext.BackwardTaskReceiver = WfBackwardTaskReceiver.Instance(
-                    previousActivityInstance.ActivityName,
-                    previousActivityInstance.EndedByUserID,
-                    previousActivityInstance.EndedByUserName);
-
-                rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(
-                    previousActivityInstance.ActivityGUID,
-                    previousActivityInstance.EndedByUserID,
-                    previousActivityInstance.EndedByUserName);
-            }
-            else
-            {
-                //回跳到早前节点
-                if (jumpBackActivityInstance.ActivityState != (short)ActivityStateEnum.Completed)
-                {
-                    result.Status = WfExecutedStatus.Exception;
-                    result.ExceptionType = WfExceptionType.Jump_NotActivityBackCompleted;
-                    result.Message = string.Format("回跳到的节点不在完成状态，无法重新回跳！");
-
-                    return rmins;
-                }
-
-                rmins.BackwardContext.BackwardToTaskActivityInstance = jumpBackActivityInstance;
-
-                //判断两个节点是否有Transition的定义存在
-                var transition = processModel.GetForwardTransition(runningNode.ActivityGUID, jumpBackActivityGUID);
-                rmins.BackwardContext.BackwardToTargetTransitionGUID = transition != null ? transition.TransitionGUID : WfDefine.WF_XPDL_GATEWAY_BYPASS_GUID;
-
-                rmins.BackwardContext.BackwardFromActivity = processModel.GetActivity(runningNode.ActivityGUID);
-                rmins.BackwardContext.BackwardFromActivityInstance = runningNode;
-                rmins.BackwardContext.BackwardTaskReceiver = WfBackwardTaskReceiver.Instance(
-                    jumpBackActivityInstance.ActivityName,
-                    jumpBackActivityInstance.EndedByUserID,
-                    jumpBackActivityInstance.EndedByUserName);
-
-                rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(
-                    jumpBackActivityInstance.ActivityGUID,
-                    jumpBackActivityInstance.EndedByUserID,
-                    jumpBackActivityInstance.EndedByUserName);
-            }
-
-            //获取资源数据
-            var activityResourceBack = new ActivityResource(rmins.AppRunner,
-                rmins.AppRunner.NextActivityPerformers,
-                runner.Conditions);
-            rmins.ActivityResource = activityResourceBack;
-
-            return rmins;
-        }
-        #endregion
-
-        #region WfRuntimeManager 创建关闭运行时对象
-        /// <summary>
-        /// 跳转到结束节点
-        /// </summary>
-        /// <param name="runner">当前运行用户</param>
-        /// <param name="result">运行结果</param>
-        /// <returns>运行时对象</returns>
-        public static WfRuntimeManager CreateRuntimeInstanceClose(WfAppRunner runner,
-            ref WfExecutedResult result)
-        {
-            var rmins = new WfRuntimeManagerClose();
-            rmins.WfExecutedResult = result = new WfExecutedResult();
-
-            if (string.IsNullOrEmpty(runner.AppName)
-               || String.IsNullOrEmpty(runner.AppInstanceID)
-               || runner.ProcessGUID == null
-               || runner.NextActivityPerformers == null)
-            {
-                result.Status = WfExecutedStatus.Exception;
-                result.ExceptionType = WfExceptionType.Jump_ErrorArguments;
-                result.Message = "方法参数错误，无法运行流程！";
-                return rmins;
-            }
-
-            //流程跳转时，只能跳转到一个节点
-            if (runner.NextActivityPerformers.Count() > 1)
-            {
-                result.Status = WfExecutedStatus.Exception;
-                result.ExceptionType = WfExceptionType.Jump_OverOneStep;
-                result.Message = string.Format("不能跳转到多个节点！节点数:{0}",
-                    runner.NextActivityPerformers.Count());
-                return rmins;
-            }
-
-            //获取当前运行节点信息
-            var aim = new ActivityInstanceManager();
-            TaskViewEntity taskView = null;
-            var runningNode = aim.GetRunningNode(runner, out taskView);
-
-            //传递runner变量
-            rmins.TaskView = taskView;
-            rmins.AppRunner = runner;
-            rmins.AppRunner.AppName = runner.AppName;
-            rmins.AppRunner.AppInstanceID = runner.AppInstanceID;
-            rmins.AppRunner.ProcessGUID = runner.ProcessGUID;
-            rmins.AppRunner.UserID = runner.UserID;
-            rmins.AppRunner.UserName = runner.UserName;
-
-            //用于流程注册时间调用时候的流程实例ID提供
-            rmins.ProcessInstanceID = runningNode.ProcessInstanceID;
-
-            var processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
-            rmins.ProcessModel = processModel;
-
-            var endActivityGUID = runner.NextActivityPerformers.First().Key;
-            var activityResource = new ActivityResource(runner, runner.NextActivityPerformers);
-            rmins.ActivityResource = activityResource;
-            rmins.RunningActivityInstance = runningNode;
-
-            return rmins;
-        }
-        #endregion
-
         #region WfRuntimeManager 创建退回运行时对象
         /// <summary>
         /// 退回操作
@@ -571,7 +386,7 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Sendback_IsNull;
-                result.Message = "退回节点为空，请指定退回节点数据！";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceSendBack.null.error");
 
                 return rmins;
             }
@@ -585,7 +400,7 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Sendback_NotInRunning;
-                result.Message = "当前没有运行状态的节点存在，流程不存在，或者已经结束或取消";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceSendBack.nonerun.error");
 
                 return rmins;
             }
@@ -594,7 +409,7 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Sendback_NotMineTask;
-                result.Message = "不是当前登录用户的任务，无法退回！";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceSendBack.nonetask.error");
                 return rmins;
             }
 
@@ -603,7 +418,7 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Sendback_NotTaskNode;
-                result.Message = "当前节点不是任务类型的节点，无法退回上一步节点！";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceSendBack.nottask.error");
                 return rmins;
             }
 
@@ -619,7 +434,7 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Sendback_IsNull;
-                result.Message = "没有可以退回的节点数据，无法退回！";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceSendBack.empty.error");
                 return rmins;
             }
 
@@ -630,7 +445,7 @@ namespace Slickflow.Engine.Core.Runtime
                 {
                     result.Status = WfExecutedStatus.Exception;
                     result.ExceptionType = WfExceptionType.Sendback_IsNull;
-                    result.Message = "退回节点为空，请指定退回节点数据！";
+                    result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceSendBack.noneperformer.error");
 
                     return rmins;
                 }
@@ -654,7 +469,7 @@ namespace Slickflow.Engine.Core.Runtime
                     {
                         result.Status = WfExecutedStatus.Exception;
                         result.ExceptionType = WfExceptionType.Sendback_IsTooManyPrevious;
-                        result.Message = "指定了不一致的退回节点，请核对退回节点数据！";
+                        result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceSendBack.notunique.error");
 
                         return rmins;
                     }
@@ -771,7 +586,7 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Withdraw_ErrorArguments;
-                result.Message = "撤销发生错误:未传入已办任务的TaskID参数!";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceWithdraw.missingtaskid.error");
                 return rmins;
             }
             //获取已经完成任务的信息
@@ -782,7 +597,7 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Sendback_NotMineTask;
-                result.Message = "不是当前登录用户的任务，无法退回！";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceWithdraw.nonetask.error");
                 return rmins;
             }
 
@@ -795,7 +610,7 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Sendback_IsNull;
-                result.Message = "退回节点为空，请指定退回节点数据！";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceWithdraw.noneperformer.error");
 
                 return rmins;
             }
@@ -809,7 +624,7 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Sendback_NotInRunning;
-                result.Message = "当前没有运行状态的节点存在，流程不存在，或者已经结束或取消";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceWithdraw.nonerun.error");
 
                 return rmins;
             }
@@ -819,7 +634,7 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Sendback_NotTaskNode;
-                result.Message = "当前节点不是任务类型的节点，无法退回上一步节点！";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceWithdraw.nottask.error");
                 return rmins;
             }
 
@@ -841,7 +656,7 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Sendback_IsNull;
-                result.Message = "没有可以退回的节点数据，无法退回！";
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceWithdraw.empty.error");
                 return rmins;
             }
 
@@ -864,7 +679,7 @@ namespace Slickflow.Engine.Core.Runtime
                 {
                     result.Status = WfExecutedStatus.Exception;
                     result.ExceptionType = WfExceptionType.Sendback_IsTooManyPrevious;
-                    result.Message = "指定了不一致的退回节点，请核对退回节点数据！";
+                    result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceWithdraw.notunique.error");
 
                     return rmins;
                 }
@@ -899,113 +714,6 @@ namespace Slickflow.Engine.Core.Runtime
         }
         #endregion
 
-        #region WfRuntimeManager 创建返送运行时对象
-        /// <summary>
-        /// 返送操作
-        /// </summary>
-        /// <param name="runner">执行者</param>
-        /// <param name="result">结果对象</param>
-        /// <returns>运行时实例对象</returns>
-        internal static WfRuntimeManager CreateRuntimeInstanceResend(WfAppRunner runner,
-            ref WfExecutedResult result)
-        {
-            WfRuntimeManager rmins = new WfRuntimeManagerResend();
-            rmins.WfExecutedResult = result = new WfExecutedResult();
-
-            if (runner.TaskID == null)
-            {
-                result.Status = WfExecutedStatus.Exception;
-                result.ExceptionType = WfExceptionType.Resend_NotTaskNode;
-                result.Message = "流程返送发送异常: 没有指定明确的任务ID！";
-
-                return rmins;
-            }
-
-            //获取退回源活动实例数据
-            var tm = new TaskManager();
-            var taskView = tm.GetTaskView(runner.TaskID.Value);
-
-            var aim = new ActivityInstanceManager();
-            var runningActivityInstance = aim.GetById(taskView.ActivityInstanceID);
-            if (runningActivityInstance.BackSrcActivityInstanceID == null)
-            {
-                result.Status = WfExecutedStatus.Exception;
-                result.ExceptionType = WfExceptionType.Resend_WithoutBackSourceNode;
-                result.Message = "流程返送发送异常: 来源节点信息(BackSrcActivityInstanceID)为空！";
-
-                return rmins;
-            }
-            var backSrcActivityInstance = aim.GetById(runningActivityInstance.BackSrcActivityInstanceID.Value);
-
-            //封装AppUser对象
-            rmins.TaskView = taskView;
-            rmins.RunningActivityInstance = aim.GetById(taskView.ActivityInstanceID);
-            rmins.ProcessModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
-
-            rmins.AppRunner.AppName = runner.AppName;
-            rmins.AppRunner.AppInstanceID = runner.AppInstanceID;
-            rmins.AppRunner.UserID = runner.UserID;
-            rmins.AppRunner.UserName = runner.UserName;
-            rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(
-                backSrcActivityInstance.ActivityGUID,
-                runningActivityInstance.CreatedByUserID,
-                runningActivityInstance.CreatedByUserName);
-            rmins.ActivityResource = new ActivityResource(runner, rmins.AppRunner.NextActivityPerformers);
-
-            //用于流程注册事件时的流程实例ID提供
-            rmins.ProcessInstanceID = runningActivityInstance.ProcessInstanceID;
-
-            return rmins;
-        }
-        #endregion
-
-        #region WfRuntimerManager 创建修订运行时对象
-        /// <summary>
-        /// 修订操作
-        /// </summary>
-        /// <param name="runner">执行者</param>
-        /// <param name="result">结果对象</param>
-        /// <returns>运行时实例对象</returns>
-        public static WfRuntimeManager CreateRuntimeInstanceRevise(WfAppRunner runner,
-            ref WfExecutedResult result)
-        {
-            WfRuntimeManager rmins = new WfRuntimeManagerRevise();
-            rmins.WfExecutedResult = result = new WfExecutedResult();
-
-            if (runner.TaskID == null)
-            {
-                result.Status = WfExecutedStatus.Exception;
-                result.ExceptionType = WfExceptionType.Resend_NotTaskNode;
-                result.Message = "流程修订发送异常: 没有指定明确的任务ID！";
-
-                return rmins;
-            }
-
-            //获取退回源活动实例数据
-            var tm = new TaskManager();
-            var taskView = tm.GetTaskView(runner.TaskID.Value);
-
-            var aim = new ActivityInstanceManager();
-
-            //封装AppUser对象
-            rmins.TaskView = taskView;
-            rmins.RunningActivityInstance = aim.GetById(taskView.ActivityInstanceID);
-            rmins.ProcessModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
-
-            rmins.AppRunner.AppName = runner.AppName;
-            rmins.AppRunner.AppInstanceID = runner.AppInstanceID;
-            rmins.AppRunner.UserID = runner.UserID;
-            rmins.AppRunner.UserName = runner.UserName;
-            rmins.AppRunner.NextActivityPerformers = runner.NextActivityPerformers;
-            rmins.ActivityResource = new ActivityResource(runner, rmins.AppRunner.NextActivityPerformers);
-
-            //用于流程注册事件时的流程实例ID提供
-            rmins.ProcessInstanceID = taskView.ProcessInstanceID;
-
-            return rmins;
-        }
-        #endregion
-
         #region WfRuntimeManager 创建返签运行时对象
         /// <summary>
         /// 流程返签，先检查约束条件，然后调用wfruntimeinstance执行
@@ -1024,8 +732,7 @@ namespace Slickflow.Engine.Core.Runtime
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Reverse_NotInCompleted;
-                result.Message = string.Format("当前应用:{0}，实例ID：{1}, 没有完成的流程实例，无法让流程重新运行！",
-                    runner.AppName, runner.AppInstanceID);
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceReverse.error");
                 return rmins;
             }
 
@@ -1070,71 +777,6 @@ namespace Slickflow.Engine.Core.Runtime
                 lastTaskActivityInstance.EndedByUserID,
                 lastTaskActivityInstance.EndedByUserName);
             
-
-            return rmins;
-        }
-        #endregion
-
-        #region WfRuntimeManager 创建加签运行时对象
-        /// <summary>
-        /// 加签操作
-        /// </summary>
-        /// <param name="runner">执行者</param>
-        /// <param name="result">结果对象</param>
-        /// <returns>运行时实例对象</returns>
-        public static WfRuntimeManager CreateRuntimeInstanceSignForward(WfAppRunner runner,
-            ref WfExecutedResult result)
-        {
-            var rmins = new WfRuntimeManagerSignForward();
-            rmins.WfExecutedResult = result = new WfExecutedResult();
-
-            if (string.IsNullOrEmpty(runner.AppName)
-                || String.IsNullOrEmpty(runner.AppInstanceID)
-                || runner.ProcessGUID == null
-                || runner.NextActivityPerformers == null)
-            {
-                result.Status = WfExecutedStatus.Exception;
-                result.ExceptionType = WfExceptionType.SignForward_ErrorArguments;
-                result.Message = "方法参数错误，无法加签流程！";
-                return rmins;
-            }
-
-            if (runner.NextActivityPerformers.Count() == 0)
-            {
-                result.Status = WfExecutedStatus.Exception;
-                result.ExceptionType = WfExceptionType.SignForward_NoneSigners;
-                result.Message = "没有添加要发送加签的人员";
-                return rmins;
-            }
-
-            rmins.AppRunner = runner;
-
-            var aim = new ActivityInstanceManager();
-            TaskViewEntity taskView = null;
-            var runningNode = aim.GetRunningNode(runner, out taskView);
-
-            //判断是否是当前登录用户的任务
-            if (runningNode.AssignedToUserIDs.Contains(runner.UserID.ToString()) == false)
-            {
-                result.Status = WfExecutedStatus.Exception;
-                result.ExceptionType = WfExceptionType.RunApp_HasNoTask;
-                result.Message = "当前没有登录用户要办理的任务，无法运行流程！";
-                return rmins;
-            }
-
-            //用于注册事件时候的流程ID
-            rmins.ProcessInstanceID = runningNode.ProcessInstanceID;
-
-            var processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
-            var activityResource = new ActivityResource(runner, 
-                runner.NextActivityPerformers, 
-                runner.Conditions);
-
-            var tm = new TaskManager();
-            rmins.TaskView = taskView;
-            rmins.RunningActivityInstance = runningNode;
-            rmins.ProcessModel = processModel;
-            rmins.ActivityResource = activityResource;
 
             return rmins;
         }

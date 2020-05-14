@@ -24,10 +24,25 @@ var mxtoolkit = (function () {
 	function mxtoolkit() {
 	}
 
+    //#region insert element
     mxtoolkit.insertSwimlane = function(graph, swimlane){
         var doc = mxUtils.createXmlDocument();
         var swimlaneElement = doc.createElement('Swimlane');
-        swimlaneElement.setAttribute("label", swimlane.name);
+        swimlaneElement.setAttribute("id", swimlane.id);
+        swimlaneElement.setAttribute("label", swimlane.title);
+        swimlaneElement.setAttribute("type", swimlane.type);
+
+        var process = swimlane.process;
+        if (process) {
+            var processElement = doc.createElement('Process');
+            swimlaneElement.appendChild(processElement);
+
+            processElement.setAttribute("package", process.package);
+            processElement.setAttribute("id", process.id);
+            processElement.setAttribute("name", process.name);
+            processElement.setAttribute("code", process.code);
+            processElement.setAttribute("description", process.description);
+        }
 
         var model = graph.getModel();
         var parent = graph.getDefaultParent();
@@ -54,6 +69,35 @@ var mxtoolkit = (function () {
             geography.style);
 
         return groupVertex;
+    }
+
+    mxtoolkit.insertMessage = function (graph, message) {
+        var doc = mxUtils.createXmlDocument();
+        var messageElement = mxfile.setMessageElement(doc, message);
+
+        //var geography
+        var geography = message.geography;
+        var model = graph.getModel();
+
+        var parent = null;
+        if (geography) parent = model.getCell(geography.parent);
+        if (!parent) parent = graph.getDefaultParent();
+
+        var edge = graph.insertEdge(parent, message.id, messageElement,
+            graph.getModel().getCell(message.from), graph.getModel().getCell(message.to), geography.style);
+
+        //points
+        if (geography) {
+            if (geography.points) {
+                edge.geometry.points = geography.points;
+            }
+        }
+        return edge;
+    }
+
+    mxtoolkit.insertSubSwimlane = function (graph, parent) {
+        var lane = graph.insertVertex(parent, null, 'Lane A', 0, 0, 640, 110);
+        lane.setConnectable(false);
     }
 
 	mxtoolkit.insertVertex = function(graph, activity){
@@ -175,6 +219,120 @@ var mxtoolkit = (function () {
         }
         return edge;
     }
+    //#endregion
+
+    //#region binding mouse event
+    mxtoolkit.bindingMouseEvent = function (graph) {
+        graph.addMouseListener(
+            {
+                currentState: null,
+                currentIconSet: null,
+                mouseDown: function (sender, me) {
+                    // Hides icons on mouse down
+                    if (this.currentState != null) {
+                        this.dragLeave(me.getEvent(), this.currentState);
+                        this.currentState = null;
+                    }
+                },
+                mouseMove: function (sender, me) {
+                    if (this.currentState != null && (me.getState() == this.currentState ||
+                        me.getState() == null)) {
+                        var iconTolerance = 20;
+                        var tmp = new mxRectangle(me.getGraphX() - iconTolerance,
+                            me.getGraphY() - iconTolerance, 2 * iconTolerance, 2 * iconTolerance);
+
+                        if (mxUtils.intersects(tmp, this.currentState)) {
+                            return;
+                        }
+                    }
+
+                    var tmp = graph.view.getState(me.getCell());
+
+                    // Ignores everything but vertices
+                    if (graph.isMouseDown || (tmp != null && !graph.getModel().isVertex(tmp.cell))) {
+                        tmp = null;
+                    }
+
+                    if (tmp != this.currentState) {
+                        if (this.currentState != null) {
+                            this.dragLeave(me.getEvent(), this.currentState);
+                        }
+
+                        this.currentState = tmp;
+
+                        if (this.currentState != null) {
+                            this.dragEnter(me.getEvent(), this.currentState);
+                        }
+                    }
+                },
+                mouseUp: function (sender, me) { },
+                dragEnter: function (evt, state) {
+                    if (this.currentIconSet == null) {
+                        var currentCell = state.cell;
+                        if (currentCell.value.nodeName === "Swimlane") {
+                            this.currentIconSet = new mxIconSet(state);
+                        }
+                    }
+                },
+                dragLeave: function (evt, state) {
+                    if (this.currentIconSet != null) {
+                        this.currentIconSet.destroy();
+                        this.currentIconSet = null;
+                    }
+                }
+            });
+    };
+    //#endregion
+
+    //#region common node method
+    mxtoolkit.getActivityType = function (snode) {
+        var activityTypeNode = snode.getElementsByTagName("ActivityType")[0];
+        var activityType = activityTypeNode.getAttribute("type");
+        return activityType;
+    }
+    //#endregion
+
+    //#region mxIconSet class
+    // Defines a new class for all icons
+    function mxIconSet(state) {
+        this.images = [];
+        var graph = state.view.graph;
+        var currentCell = state.cell;
+
+        // Icon1
+        var img = mxUtils.createImage('scripts/mxgraph/src/images/insert.gif');
+        img.setAttribute('title', 'Insert');
+        img.style.position = 'absolute';
+        img.style.cursor = 'pointer';
+        img.style.width = '16px';
+        img.style.height = '16px';
+        img.style.left = (state.x + state.width) + 'px';
+        img.style.top = (state.y - 16) + 'px';
+
+        mxEvent.addGestureListeners(img,
+            mxUtils.bind(this, function (evt) {
+                var s = graph.gridSize;
+                mxtoolkit.insertSubSwimlane(graph, currentCell);
+                mxEvent.consume(evt);
+                this.destroy();
+            })
+        );
+
+        state.view.graph.container.appendChild(img);
+        this.images.push(img);
+    };
+
+    mxIconSet.prototype.destroy = function () {
+        if (this.images != null) {
+            for (var i = 0; i < this.images.length; i++) {
+                var img = this.images[i];
+                img.parentNode.removeChild(img);
+            }
+        }
+
+        this.images = null;
+    };
+    //#endregion
 
 	return mxtoolkit;
 })()

@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Dynamic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Slickflow.Data;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
@@ -11,7 +14,7 @@ using Slickflow.BizAppService.Entity;
 using Slickflow.BizAppService.Interface;
 using Slickflow.BizAppService.Service;
 
-namespace Slickflow.OrderDemo.Controllers.WebApi
+namespace Slickflow.MvcDemo.Controllers.WebApi
 {
     /// <summary>
     /// 生产订单控制器
@@ -114,8 +117,23 @@ namespace Slickflow.OrderDemo.Controllers.WebApi
             var result = ResponseResult<ProductOrderEntity>.Default();
             try
             {
-                var entity = ProductOrderService.SyncOrder();
-                result = ResponseResult<ProductOrderEntity>.Success(entity, "同步订单数据成功！");
+                using (var session = SessionFactory.CreateSession())
+                {
+                    try
+                    {
+                        session.BeginTrans();
+                        var entity = ProductOrderService.SyncOrder(session.Connection, session.Transaction);
+                        session.Commit();
+                        result = ResponseResult<ProductOrderEntity>.Success(entity, "同步订单数据成功！");
+                    }
+                    catch (System.Exception ex)
+                    {
+                        session.Rollback();
+                        result = ResponseResult<ProductOrderEntity>.Error(
+                            string.Format("同步订单{0}失败, 错误:{1}", "ProductOrder", ex.Message)
+                        );
+                    }
+                }
             }
             catch (System.Exception ex)
             {
@@ -123,6 +141,64 @@ namespace Slickflow.OrderDemo.Controllers.WebApi
                     string.Format("同步订单{0}失败, 错误:{1}", "ProductOrder", ex.Message)
                 );
             }
+            return result;
+        }
+
+        /// <summary>
+        /// 同步订单
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ResponseResult<ProductOrderEntity>> SyncOrder2()
+        {
+            var result = ResponseResult<ProductOrderEntity>.Default();
+            using (IDbSession session = SessionFactory.CreateSession())
+            {
+                try
+                {
+                    session.BeginTrans();
+                    var entity = ProductOrderService.SyncOrder(session.Connection, session.Transaction);
+                    session.Commit();
+
+                    //发布消息主题
+                    var wfResult = PublishProductOrderCreateMessage(entity);
+                    if (wfResult.Status == 1)
+                    {
+                        result = ResponseResult<ProductOrderEntity>.Success(entity,
+                            string.Format("同步订单数据状态:{0}", wfResult.Status));
+                    }
+                    else
+                    {
+                        session.Rollback();
+                        result = ResponseResult<ProductOrderEntity>.Error(
+                            string.Format("订单消息启动流程失败失败, 错误:{0}", wfResult.Message)
+                        );
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    session.Rollback();
+                    result = ResponseResult<ProductOrderEntity>.Error(
+                        string.Format("同步订单{0}失败, 错误:{1}", "ProductOrder", ex.Message)
+                    );
+                }
+            }
+            return result;
+        }
+
+        private ResponseResult PublishProductOrderCreateMessage(ProductOrderEntity entity)
+        {
+            var topic = "Slickflow/ERP/OrderSystem/WorkflowService/ProductOrderSynced";
+            var appRunner = new WfAppRunner();
+            appRunner.MessageTopic = topic;
+            appRunner.AppName = entity.ProductName;
+            appRunner.AppInstanceID = entity.ID.ToString();
+            appRunner.AppInstanceCode = entity.OrderCode;
+
+            //var mqService = new MessageQueueService();
+            //await mqService.Publish(topic, JsonConvert.SerializeObject(appRunner));
+            var httpclient = HttpClientHelper.CreateHelper("http://localhost/sfa2/api/MessageQueue/InvokeProcess");
+            var result = httpclient.Post(appRunner);
             return result;
         }
 

@@ -16,8 +16,11 @@ namespace Slickflow.Module.External
         public override void Execute()
         {
             //实现用户自己的业务逻辑
-            var id = DelegateService.GetProcessInstanceID();
-            DelegateService.SaveVariable(ProcessVariableTypeEnum.Process, "date", System.DateTime.Now.ToShortDateString());
+            if (DelegateService != null)
+            {
+                var id = DelegateService.GetProcessInstanceID();
+                DelegateService.SaveVariable(ProcessVariableTypeEnum.Process, "date", System.DateTime.Now.ToShortDateString());
+            }
             System.Diagnostics.Debug.WriteLine("order has been processing...");
         }
     }

@@ -20,16 +20,11 @@ License along with this library; if not, you can access the official
 web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ServiceStack.Text;
 using Slickflow.Engine.Common;
 using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Entity;
 
 namespace Slickflow.Engine.Core.Pattern
 {

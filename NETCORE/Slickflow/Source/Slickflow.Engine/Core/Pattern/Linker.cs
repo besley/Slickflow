@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
-using Slickflow.Data;
-using Slickflow.Engine.Common;
-using Slickflow.Engine.Utility;
-using Slickflow.Engine.Xpdl.Entity;
-using Slickflow.Engine.Xpdl.Node;
-using Slickflow.Engine.Xpdl.Entity;
+﻿using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Business.Manager;
-using Slickflow.Engine.Core.Result;
+
 
 namespace Slickflow.Engine.Core.Pattern
 {

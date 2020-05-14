@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Slickflow.Engine.Common;
 using Slickflow.Data;
+using Slickflow.Module.Localize;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Entity;
@@ -70,12 +71,6 @@ namespace Slickflow.Engine.Core.Pattern
 
             //执行后Action列表
             OnAfterExecuteWorkItem();
-
-            //调用流程结束事件
-            DelegateExecutor.InvokeExternalDelegate(Session,
-                        EventFireTypeEnum.OnProcessCompleted,
-                        ActivityForwardContext.ActivityResource.AppRunner.DelegateEventList,
-                        ActivityForwardContext.ProcessInstance.ID);
         }
 
         /// <summary>
@@ -96,7 +91,7 @@ namespace Slickflow.Engine.Core.Pattern
             var runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceAppRunning(runner, session, ref runAppResult);
             if (runAppResult.Status == WfExecutedStatus.Exception)
             {
-                throw new WfRuntimeException(string.Format("子流程执行异常，详细错误:{0}", runAppResult.Message));
+                throw new WfRuntimeException(LocalizeHelper.GetEngineMessage("nodemediatorend.ContinueMainProcessRunning.warn", runAppResult.Message));
             }
 
             //注册事件并运行
@@ -161,7 +156,7 @@ namespace Slickflow.Engine.Core.Pattern
                 if (node.ActivityType != ActivityTypeEnum.EndNode
                     && performerList.Count == 0)
                 {
-                    throw new WfRuntimeException(string.Format("当前节点上没有定义角色人员信息，请确认！节点名称：{0}", node.ActivityName));
+                    throw new WfRuntimeException(LocalizeHelper.GetEngineMessage("nodemediatorend.FillNextActivityPerformersByRoleList.warn", node.ActivityName));
                 }
                 else
                 {

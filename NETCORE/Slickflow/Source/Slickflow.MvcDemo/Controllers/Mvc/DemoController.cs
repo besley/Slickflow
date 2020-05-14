@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Slickflow.OrderDemo.Controllers.Mvc
+namespace Slickflow.MvcDemo.Controllers.Mvc
 {
     public class DemoController : Controller
     {

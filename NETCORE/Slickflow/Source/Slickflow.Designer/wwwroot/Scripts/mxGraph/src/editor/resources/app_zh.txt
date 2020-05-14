@@ -1,5 +1,5 @@
 ﻿// Use http://centricle.com/tools/ascii-hex/ for hex codes
-urlHelp=scripts/mxGraph/src/editor/help/index.html
+urlHelp=Scripts/mxGraph/src/editor/help/index.html
 lastSaved=最近保存
 currentFile=当前文件
 toolbar=Tools
@@ -13,6 +13,7 @@ undo=撤销
 redo=重复
 select=选择
 connect=连线
+message=消息
 pan=Pan
 zoomIn=Zoom In
 zoomOut=Zoom Out

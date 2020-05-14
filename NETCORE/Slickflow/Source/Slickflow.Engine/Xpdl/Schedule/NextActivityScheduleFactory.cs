@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Slickflow.Module.Localize;
 using Slickflow.Engine.Common;
 
 namespace Slickflow.Engine.Xpdl.Schedule
@@ -31,7 +29,8 @@ namespace Slickflow.Engine.Xpdl.Schedule
             }
             else
             {
-                throw new Exception("未知的splitJoinType!");
+                //未知的splitJoinType
+                throw new Exception(LocalizeHelper.GetEngineMessage("nextactivityschedulefactory.unknownnodetype"));
             }
             return activitySchedule;
         }

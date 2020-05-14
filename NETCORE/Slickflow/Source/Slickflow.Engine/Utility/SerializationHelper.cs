@@ -19,7 +19,7 @@ namespace Slickflow.Engine.Utility
         /// <param name="type">对象类型</param>
         /// <param name="obj">实例对象</param>
         /// <returns>序列化后的文本</returns>
-        public static string Serialize(Type type, object obj, string rootName, string nameSpace)
+        public static string Serialize(Type type, object obj)
         {
             using (MemoryStream mStream = new MemoryStream())
             {
@@ -35,8 +35,10 @@ namespace Slickflow.Engine.Utility
         /// <summary>
         /// 反序列化一个对象
         /// </summary>
+        /// <param name="type">对象类型</param>
+        /// <param name="strObject">实例对象</param>
         /// <returns>序列化后的对象</returns>
-        public static object Deserialize(Type type, string strObject, string rootName, string nameSpace)
+        public static object Deserialize(Type type, string strObject)
         {
             using (XmlReader reader = XmlReader.Create(new StringReader(strObject)))
             {

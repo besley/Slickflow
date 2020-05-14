@@ -62,7 +62,7 @@ var mxDefaultToolbarCodec = mxCodecRegistry.register(function()
 	 * a node:
 	 * 
 	 * (code)
-	 * <add as="Swimlane" template="swimlane" icon="scripts/mxGraph/src/editor/images/swimlane.gif"><![CDATA[
+	 * <add as="Swimlane" template="swimlane" icon="images/swimlane.gif"><![CDATA[
 	 *   function (editor, cell, evt, targetCell)
 	 *   {
 	 *     var pt = mxUtils.convertPoint(
@@ -109,10 +109,10 @@ var mxDefaultToolbarCodec = mxCodecRegistry.register(function()
 	 * 
 	 * (code)
 	 * <mxDefaultToolbar as="toolbar">
-	 *   <add as="save" action="save" icon="scripts/mxGraph/src/editor/images/save.gif"/>
+	 *   <add as="save" action="save" icon="images/save.gif"/>
 	 *   <br/><hr/>
-	 *   <add as="select" mode="select" icon="scripts/mxGraph/src/editor/images/select.gif"/>
-	 *   <add as="connect" mode="connect" icon="scripts/mxGraph/src/editor/images/connect.gif"/>
+	 *   <add as="select" mode="select" icon="images/select.gif"/>
+	 *   <add as="connect" mode="connect" icon="images/connect.gif"/>
 	 * </mxDefaultToolbar>
 	 * (end)
 	 */
@@ -170,7 +170,7 @@ var mxDefaultToolbarCodec = mxCodecRegistry.register(function()
 								
 								if (cell != null && style != null)
 								{
-									cell = editor.graph.cloneCells([cell])[0];
+									cell = editor.graph.cloneCell(cell);
 									cell.setStyle(style);
 								}
 								

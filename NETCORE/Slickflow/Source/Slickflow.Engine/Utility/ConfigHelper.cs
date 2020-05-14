@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Configuration;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Reflection;
+using Slickflow.Module.Localize;
 
 namespace Slickflow.Engine.Utility
 {
@@ -28,7 +26,7 @@ namespace Slickflow.Engine.Utility
             }
             catch (System.NullReferenceException ex)
             {
-                throw new Exception(string.Format("GetAppSettingString 配置文件中没有相应的节点存在！节点名称:{0}", key));
+                throw new Exception(LocalizeHelper.GetEngineMessage("confighelper.GetAppSettingString.error", key));
             }
         }
 
@@ -46,7 +44,7 @@ namespace Slickflow.Engine.Utility
             }
             catch (System.NullReferenceException ex)
             {
-                throw new Exception(string.Format("GetConnectionString 配置文件中没有相应的节点存在！节点名称:{0}", key));
+                throw new Exception(LocalizeHelper.GetEngineMessage("confighelper.GetConnectionString.error", key));
             }
         }
 

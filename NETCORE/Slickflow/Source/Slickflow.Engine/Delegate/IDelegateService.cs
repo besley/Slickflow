@@ -39,6 +39,9 @@ namespace Slickflow.Engine.Delegate
         string ActivityGUID { get; set; }
         int GetProcessInstanceID();
         IDbSession GetSession();
+        string GetVariable(ProcessVariableTypeEnum variableType, string name);
+        string GetVariableThroughly(string name);
+        void SaveVariable(ProcessVariableTypeEnum variableType, string name, string value);
         string GetCondition(string name);
         void SetCondition(string name, string value);
         T GetInstance<T>(int id) where T : class;

@@ -136,6 +136,7 @@ namespace Slickflow.Engine.Core.Pattern
         }
         #endregion
 
+        #region 节点逻辑及事件响应执行
         internal virtual void ExecuteWorkItem() { }
 
         /// <summary>
@@ -153,6 +154,62 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// 获取委托服务
+        /// </summary>
+        /// <returns>委托服务类</returns>
+        private DelegateServiceBase GetDelegateService()
+        {
+            //执行Action列表
+            var delegateContext = new DelegateContext
+            {
+                AppInstanceID = ActivityForwardContext.ProcessInstance.AppInstanceID,
+                ProcessGUID = ActivityForwardContext.ProcessInstance.ProcessGUID,
+                ProcessInstanceID = ActivityForwardContext.ProcessInstance.ID,
+                ActivityGUID = ActivityForwardContext.FromActivityInstance.ActivityGUID,
+                ActivityName = ActivityForwardContext.FromActivityInstance.ActivityName
+            };
+
+            var delegateService = DelegateServiceFactory.CreateDelegateService(DelegateScopeTypeEnum.Activity,
+                this.Session,
+                delegateContext);
+            return delegateService;
+        }
+
+        /// <summary>
+        /// 触发前执行
+        /// </summary>
+        protected void OnBeforeExecuteWorkItem()
+        {
+            var delegateService = GetDelegateService();
+            var actionList = this.EventActivity.ActionList;
+            ActionExecutor.ExecteActionListBefore(actionList, delegateService as IDelegateService);
+
+            //----> 节点流转前，调用活动执行的委托事件
+            DelegateExecutor.InvokeExternalDelegate(this.Session,
+                EventFireTypeEnum.OnActivityExecuting,
+                this.EventActivity,
+                ActivityForwardContext);
+        }
+
+        /// <summary>
+        /// 触发后执行
+        /// </summary>
+        protected void OnAfterExecuteWorkItem()
+        {
+            var delegateService = GetDelegateService();
+            var actionList = this.EventActivity.ActionList;
+            ActionExecutor.ExecteActionListAfter(actionList, delegateService as IDelegateService);
+
+            //----> 节点流转完成后，调用活动完成执行的委托事件
+            DelegateExecutor.InvokeExternalDelegate(this.Session,
+                EventFireTypeEnum.OnActivityExecuted,
+                this.EventActivity,
+                ActivityForwardContext);
+        }
+        #endregion
+
+        #region 节点创建
+        /// <summary>
         /// 创建节点对象
         /// </summary>
         /// <param name="activity">活动</param>
@@ -165,6 +222,7 @@ namespace Slickflow.Engine.Core.Pattern
             ActivityInstanceManager aim = new ActivityInstanceManager();
             this.EventActivityInstance = aim.CreateActivityInstanceObject(processInstance.AppName,
                 processInstance.AppInstanceID,
+                processInstance.AppInstanceCode,
                 processInstance.ID,
                 activity,
                 runner);
@@ -233,5 +291,6 @@ namespace Slickflow.Engine.Core.Pattern
                 runner,
                 session);
         }
+        #endregion
     }
 }

@@ -1,9 +1,9 @@
 <mxEditor defaultGroup="group" defaultEdge="edge"
 	layoutDiagram="1" maintainSwimlanes="1"
 	swimlaneRequired="1" forcedInserting="1"
-	helpWindowImage="scripts/mxGraph/src/editor/images/help.gif"
-	tasksWindowImage="scripts/mxGraph/src/editor/images/tasks.gif">
-	<include name="scripts/mxGraph/src/editor/config/editor-commons.xml"/>
+	helpWindowImage="Scripts/mxGraph/src/editor/images/help.gif"
+	tasksWindowImage="Scripts/mxGraph/src/editor/images/tasks.gif">
+	<include name="Scripts/mxGraph/src/editor/config/editor-commons.xml"/>
 	<add as="onInit"><![CDATA[
 		function ()
 		{
@@ -295,39 +295,39 @@
 		</mxGraphModel>
 	</mxGraph>
 	<mxDefaultToolbar as="toolbar">
-		<add as="Save" action="save" icon="scripts/mxGraph/src/editor/images/save.gif"/>
+		<add as="Save" action="save" icon="Scripts/mxGraph/src/editor/images/save.gif"/>
 		<separator/>
-		<add as="Undo" action="undo" icon="scripts/mxGraph/src/editor/images/undo.gif"/>
-		<add as="Redo" action="redo" icon="scripts/mxGraph/src/editor/images/redo.gif"/>
-		<add as="Cut" action="cut" icon="scripts/mxGraph/src/editor/images/cut.gif"/>
-		<add as="Copy" action="copy" icon="scripts/mxGraph/src/editor/images/copy.gif"/>
-		<add as="Paste" action="paste" icon="scripts/mxGraph/src/editor/images/paste.gif"/>
-		<add as="Delete" action="delete" icon="scripts/mxGraph/src/editor/images/delete.gif"/>
-		<add as="Group" action="group" icon="scripts/mxGraph/src/editor/images/group.gif"/>
-		<add as="Ungroup" action="ungroup" icon="scripts/mxGraph/src/editor/images/ungroup.gif"/>
+		<add as="Undo" action="undo" icon="Scripts/mxGraph/src/editor/images/undo.gif"/>
+		<add as="Redo" action="redo" icon="Scripts/mxGraph/src/editor/images/redo.gif"/>
+		<add as="Cut" action="cut" icon="Scripts/mxGraph/src/editor/images/cut.gif"/>
+		<add as="Copy" action="copy" icon="Scripts/mxGraph/src/editor/images/copy.gif"/>
+		<add as="Paste" action="paste" icon="Scripts/mxGraph/src/editor/images/paste.gif"/>
+		<add as="Delete" action="delete" icon="Scripts/mxGraph/src/editor/images/delete.gif"/>
+		<add as="Group" action="group" icon="Scripts/mxGraph/src/editor/images/group.gif"/>
+		<add as="Ungroup" action="ungroup" icon="Scripts/mxGraph/src/editor/images/ungroup.gif"/>
 		<separator/>
-		<add as="Select" mode="select" icon="scripts/mxGraph/src/editor/images/select.gif"/>
-		<add as="Pan" mode="pan" icon="scripts/mxGraph/src/editor/images/pan.gif"/>
-		<add as="Connect" mode="connect" icon="scripts/mxGraph/src/editor/images/connect.gif"/>
+		<add as="Select" mode="select" icon="Scripts/mxGraph/src/editor/images/select.gif"/>
+		<add as="Pan" mode="pan" icon="Scripts/mxGraph/src/editor/images/pan.gif"/>
+		<add as="Connect" mode="connect" icon="Scripts/mxGraph/src/editor/images/connect.gif"/>
 		<separator/>
-		<add as="Swimlane" template="swimlane" icon="scripts/mxGraph/src/editor/images/swimlane.gif"/>
-		<add as="Task" template="task" icon="scripts/mxGraph/src/editor/images/rectangle.gif"/>
-		<add as="Subprocess" template="subprocess" icon="scripts/mxGraph/src/editor/images/rounded.gif"/>
-		<add as="Ellipse" template="shape" style="ellipse" icon="scripts/mxGraph/src/editor/images/ellipse.gif"/>
-		<add as="Rhombus" template="shape" style="rhombus" icon="scripts/mxGraph/src/editor/images/rhombus.gif"/>
-		<add as="Actor" template="shape" style="actor" icon="scripts/mxGraph/src/editor/images/actor.gif"/>
-		<add as="Cylinder" template="shape" style="cylinder" icon="scripts/mxGraph/src/editor/images/cylinder.gif"/>
-		<add as="Line" template="hline" style="hline" icon="scripts/mxGraph/src/editor/images/hline.gif"/>
+		<add as="Swimlane" template="swimlane" icon="Scripts/mxGraph/src/editor/images/swimlane.gif"/>
+		<add as="Task" template="task" icon="Scripts/mxGraph/src/editor/images/rectangle.gif"/>
+		<add as="Subprocess" template="subprocess" icon="Scripts/mxGraph/src/editor/images/rounded.gif"/>
+		<add as="Ellipse" template="shape" style="ellipse" icon="Scripts/mxGraph/src/editor/images/ellipse.gif"/>
+		<add as="Rhombus" template="shape" style="rhombus" icon="Scripts/mxGraph/src/editor/images/rhombus.gif"/>
+		<add as="Actor" template="shape" style="actor" icon="Scripts/mxGraph/src/editor/images/actor.gif"/>
+		<add as="Cylinder" template="shape" style="cylinder" icon="Scripts/mxGraph/src/editor/images/cylinder.gif"/>
+		<add as="Line" template="hline" style="hline" icon="Scripts/mxGraph/src/editor/images/hline.gif"/>
 		<separator/>
-		<add as="Fit" action="fit" icon="scripts/mxGraph/src/editor/images/zoom.gif"/>
-		<add as="Zoom In" action="zoomIn" icon="scripts/mxGraph/src/editor/images/zoomin.gif"/>
-		<add as="Zoom Out" action="zoomOut" icon="scripts/mxGraph/src/editor/images/zoomout.gif"/>
-		<add as="Actual Size" action="actualSize" icon="scripts/mxGraph/src/editor/images/zoomactual.gif"/>
-		<add as="Zoom" action="zoom" icon="scripts/mxGraph/src/editor/images/zoom.gif"/>
+		<add as="Fit" action="fit" icon="Scripts/mxGraph/src/editor/images/zoom.gif"/>
+		<add as="Zoom In" action="zoomIn" icon="Scripts/mxGraph/src/editor/images/zoomin.gif"/>
+		<add as="Zoom Out" action="zoomOut" icon="Scripts/mxGraph/src/editor/images/zoomout.gif"/>
+		<add as="Actual Size" action="actualSize" icon="Scripts/mxGraph/src/editor/images/zoomactual.gif"/>
+		<add as="Zoom" action="zoom" icon="Scripts/mxGraph/src/editor/images/zoom.gif"/>
 		<separator/>
-		<add as="outline" action="toggleOutline" icon="scripts/mxGraph/src/editor/images/outline.gif"/>
-		<add as="Tasks" action="toggleTasks" icon="scripts/mxGraph/src/editor/images/tasks.gif"/>
-		<add as="Help" action="toggleHelp" icon="scripts/mxGraph/src/editor/images/help.gif"/>
-		<add as="Console" action="toggleConsole" icon="scripts/mxGraph/src/editor/images/console.gif"/>
+		<add as="outline" action="toggleOutline" icon="Scripts/mxGraph/src/editor/images/outline.gif"/>
+		<add as="Tasks" action="toggleTasks" icon="Scripts/mxGraph/src/editor/images/tasks.gif"/>
+		<add as="Help" action="toggleHelp" icon="Scripts/mxGraph/src/editor/images/help.gif"/>
+		<add as="Console" action="toggleConsole" icon="Scripts/mxGraph/src/editor/images/console.gif"/>
 	</mxDefaultToolbar>
 </mxEditor>

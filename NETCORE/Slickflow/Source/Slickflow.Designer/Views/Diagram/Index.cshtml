@@ -29,7 +29,7 @@
                 border-style: solid;
                 border-color: #F2F2F2;
                 border-width: 1px;
-                background: url('scripts/mxGraph/src/editor/images/grid.gif');
+                background: url('Scripts/mxGraph/src/editor/images/grid.gif');
             }
 
         hr {
@@ -77,7 +77,6 @@
     <!--helper-->
     <script type="text/javascript" src="~/Scripts/slick.event.js"></script>
     <script type="text/javascript" src="~/Scripts/jshelper.js"></script>
-    <script type="text/javascript" src="~/Scripts/localhelper.js"></script>
     <script type="text/javascript" src="~/Scripts/xmlhelper.js"></script>
     <script type="text/javascript" src="~/Scripts/vkbeautify.js"></script>
     <script type="text/javascript" src="~/Scripts/XMLWriter-1.0.0-min.js"></script>
@@ -85,6 +84,7 @@
     <script type="text/javascript" src="~/Scripts/mxGraph/src/mxClient.js"></script>
 
     <!-- Slickflow kgraph main files -->
+    <script type="text/javascript" src="~/ViewJS/kresource.js"></script>
     <script type="text/javascript" src="~/ViewJS/mxfile.js"></script>
     <script type="text/javascript" src="~/ViewJS/kloader.js"></script>
     <script type="text/javascript" src="~/ViewJS/kmain.js"></script>
@@ -118,6 +118,8 @@
     </script>
     <script type="text/javascript">
         $(function () {
+            kresource.localize();
+
             kmain.init();
             kmain.showDiagramReadOnly();
 
@@ -136,7 +138,7 @@
 
             var query = {
                 ProcessGUID: '@ViewBag.ProcessGUID',
-                ProcessVersion: "1"
+                Version: "1"
             };
 
             $('#loading-indicator2').show();

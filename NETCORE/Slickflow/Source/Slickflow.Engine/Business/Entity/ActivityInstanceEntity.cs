@@ -15,6 +15,7 @@ namespace Slickflow.Engine.Business.Entity
         public int ProcessInstanceID { get; set; }
         public string AppName { get; set; }
         public string AppInstanceID { get; set; }
+        public string AppInstanceCode { get; set; }
         public string ProcessGUID { get; set; }
         public string ActivityGUID { get; set; }
         public string ActivityName { get; set; }

@@ -45,7 +45,8 @@ var mxfile = (function () {
             || activity.type === kmodel.Config.NODE_TYPE_END) {
 
             activityTypeElement.setAttribute("trigger", activity.trigger);
-            if (activity.trigger === "Timer") {
+            if (activity.trigger === "Timer"
+                || activity.trigger === "Message") {
                 activityTypeElement.setAttribute("expression", activity.expression);
             }
         } else if (activity.type === kmodel.Config.NODE_TYPE_MULTIPLEINSTANCE) {
@@ -71,9 +72,7 @@ var mxfile = (function () {
             || activity.type === kmodel.Config.NODE_TYPE_END
             || activity.type === kmodel.Config.NODE_TYPE_INTERMEDIATE) {
             activity.trigger = activityTypeElement.getAttribute("trigger");
-            if (activity.trigger === "Timer") {
-                activity.expression = activityTypeElement.getAttribute("expression");
-            }
+            activity.expression = activityTypeElement.getAttribute("expression");
         } else if (activity.type === kmodel.Config.NODE_TYPE_MULTIPLEINSTANCE) {
             activity.complexType = activityTypeElement.getAttribute("complexType");
             activity.mergeType = activityTypeElement.getAttribute("mergeType");
@@ -146,6 +145,17 @@ var mxfile = (function () {
             var methodType = action.method;
             if (methodType === kmodel.Config.ACTION_METHOD_TYPE_WEBAPI) {
                 actionElement.setAttribute("subMethod", action.subMethod);
+            } else if (methodType === kmodel.Config.ACTION_METHOD_TYPE_CSHARPLIBRARY) {
+                if (action.methodInfo !== undefined) {
+                    var methodInfoElement = setActionMethodInfoElement(doc, action.methodInfo);
+                    actionElement.appendChild(methodInfoElement);
+                }
+            } else if (methodType === kmodel.Config.ACTION_METHOD_TYPE_SQL
+                || methodType === kmodel.Config.ACTION_METHOD_TYPE_PYTHON) {
+                if (action.codeInfo !== undefined) {
+                    var codeInfoElement = setActionCodeInfoElement(doc, action.codeInfo);
+                    actionElement.appendChild(codeInfoElement);
+                }
             }
         }
         else {
@@ -155,7 +165,23 @@ var mxfile = (function () {
         return actionElement;
     }
 
-    mxfile.setActionElementByHTML = function (actionElement, action) {
+    function setActionMethodInfoElement(doc, methodInfo) {
+        var methodInfoElement = doc.createElement("MethodInfo");
+        methodInfoElement.setAttribute("assemblyFullName", methodInfo.assemblyFullName);
+        methodInfoElement.setAttribute("typeFullName", methodInfo.typeFullName);
+        methodInfoElement.setAttribute("methodName", methodInfo.methodName);
+
+        return methodInfoElement;
+    }
+
+    function setActionCodeInfoElement(doc, codeInfo) {
+        var codeInfoElement = doc.createElement("CodeInfo");
+        var codeTextNode = doc.createCDATASection(codeInfo.codeText);
+        codeInfoElement.appendChild(codeTextNode);
+        return codeInfoElement;
+    }
+
+    mxfile.setActionElementByHTML = function (doc, actionElement, action) {
         actionElement.setAttribute("type", action.getAttribute("type"));
         var actionType = action.getAttribute("type");
         if (actionType === kmodel.Config.ACTION_TYPE_EVENT) {
@@ -168,12 +194,41 @@ var mxfile = (function () {
             var methodType = action.getAttribute("method");
             if (methodType === kmodel.Config.ACTION_METHOD_TYPE_WEBAPI) {
                 actionElement.setAttribute("subMethod", action.getAttribute("subMethod"));
+            } else if (methodType === kmodel.Config.ACTION_METHOD_TYPE_CSHARPLIBRARY) {
+                var methodInfoNode = action.getElementsByTagName("MethodInfo")[0];
+                if (methodInfoNode !== null) {
+                    var methodInfoElement = setActionMethodInfoElementByHTML(doc, methodInfoNode);
+                    actionElement.appendChild(methodInfoElement);
+                }
+            } else if (methodType === kmodel.Config.ACTION_METHOD_TYPE_SQL
+                || methodType === kmodel.Config.ACTION_METHOD_TYPE_PYTHON) {
+                var codeInfoNode = action.getElementsByTagName("CodeInfo")[0];
+                if (codeInfoNode !== null) {
+                    var codeInfoElement = setActionCodeInfoElementByHTML(doc, codeInfoNode);
+                    actionElement.appendChild(codeInfoElement);
+                }
             }
         }
         else {
              //throw "Unkown Action Type: " + actionType;
         }
         return actionElement;
+    }
+
+    function setActionMethodInfoElementByHTML(doc, methodInfo) {
+        var methodInfoElement = doc.createElement("MethodInfo");
+        methodInfoElement.setAttribute("assemblyFullName", methodInfo.getAttribute("assemblyFullName"));
+        methodInfoElement.setAttribute("typeFullName", methodInfo.getAttribute("typeFullName"));
+        methodInfoElement.setAttribute("methodName", methodInfo.getAttribute("methodName"));
+
+        return methodInfoElement;
+    }
+
+    function setActionCodeInfoElementByHTML(doc, codeInfo) {
+        var codeInfoElement = doc.createElement("CodeInfo");
+        var codeTextNode = doc.createCDATASection(codeInfo.textContent);
+        codeInfoElement.appendChild(codeTextNode);
+        return codeInfoElement;
     }
 
     mxfile.getActionObject = function (actionElement) {
@@ -188,6 +243,17 @@ var mxfile = (function () {
 
             if (methodType === kmodel.Config.ACTION_METHOD_TYPE_WEBAPI) {
                 action.subMethod = actionElement.getAttribute("subMethod");
+            } else if (methodType === kmodel.Config.ACTION_METHOD_TYPE_CSHARPLIBRARY) {
+                var methodInfoElement = actionElement.getElementsByTagName("MethodInfo")[0];
+                if (methodInfoElement !== undefined) {
+                    action.methodInfo = getActionMethodInfo(methodInfoElement);
+                }
+            } else if (methodType === kmodel.Config.ACTION_METHOD_TYPE_SQL
+                || methodType === kmodel.Config.ACTION_METHOD_TYPE_PYTHON) {
+                var codeInfoElement = actionElement.getElementsByTagName("CodeInfo")[0];
+                if (codeInfoElement !== undefined) {
+                    action.codeInfo = getActionCodeInfo(codeInfoElement);
+                }
             }
         }
         else {
@@ -195,6 +261,20 @@ var mxfile = (function () {
              //throw "Unkown Action Type: " + actionType;
         }
         return action;
+    }
+
+    function getActionMethodInfo(methodInfoElement) {
+        var methodInfo = {};
+        methodInfo.assemblyFullName = methodInfoElement.getAttribute("assemblyFullName");
+        methodInfo.typeFullName = methodInfoElement.getAttribute("typeFullName");
+        methodInfo.methodName = methodInfoElement.getAttribute("methodName");
+        return methodInfo;
+    }
+
+    function getActionCodeInfo(codeInfoElement) {
+        var codeInfo = {};
+        codeInfo.codeText = jshelper.replaceHTMLTags(codeInfoElement.textContent);
+        return codeInfo;
     }
 
     //boundaries
@@ -241,8 +321,8 @@ var mxfile = (function () {
     mxfile.setSectionElement = function (sectionElement, section) {
         sectionElement.setAttribute("name", section.name);
 
-        var sectionText = sectionElement.ownerDocument.createTextNode($.trim(section.text));
-        sectionElement.appendChild(sectionText);    
+        var sectionTextNode = sectionElement.ownerDocument.createTextNode($.trim(section.text));
+        sectionElement.appendChild(sectionTextNode);    
 
         return sectionElement;
     }
@@ -350,6 +430,34 @@ var mxfile = (function () {
         return receiver;
     }
 
+    //messages
+    mxfile.setMessageElement = function (doc, message) {
+        var messageElement = doc.createElement('Message');
+        messageElement.setAttribute('from', message.from);
+        messageElement.setAttribute('to', message.to);
+
+        //description
+        var descElement = doc.createElement('Description');
+        messageElement.appendChild(descElement);
+
+        var description = doc.createTextNode(message.description);
+        descElement.appendChild(description);
+
+        //set edge text
+        messageElement.setAttribute("label", message.description);
+
+        return messageElement;
+    }
+
+    mxfile.getMessageObject = function (messageElement) {
+        var message = {};
+        message.id = messageElement.getAttribute("id");
+        message.from = messageElement.getAttribute("from");
+        message.to = messageElement.getAttribute("to");
+
+        return message;
+    }
+
     mxfile.getGeographyEdgeObject = function (geographyElement) {
         var geography = {};
         geography.parent = geographyElement.getAttribute("parent");
@@ -422,9 +530,39 @@ var mxfile = (function () {
     mxfile.getSwimlaneObject = function (swimlaneElement) {
         var swimlane = {};
         swimlane.id = swimlaneElement.getAttribute("id");
-        swimlane.name = swimlaneElement.getAttribute("name");
+        swimlane.title = swimlaneElement.getAttribute("title");
+        swimlane.type = swimlaneElement.getAttribute("type");
 
+        var processElement = swimlaneElement.getElementsByTagName("Process")[0];
+        if (processElement) {
+            var process = {};
+            swimlane.process = process;
+            process.package = processElement.getAttribute("package");
+            process.id = processElement.getAttribute("id");
+            process.name = processElement.getAttribute("name");
+            process.code = processElement.getAttribute("code");
+            process.description = processElement.getAttribute("description");
+        }
         return swimlane;
+    }
+
+    mxfile.setSwimlaneElement = function (doc, swimlane) {
+        var swimlaneElement = doc.createElement("Swimlane");
+        swimlaneElement.setAttribute("title", swimlane.getAttribute("label"));
+        swimlaneElement.setAttribute("type", swimlane.getAttribute("type"));
+
+        var process = swimlane.getElementsByTagName("Process")[0];
+        if (process) {
+            var processElement = doc.createElement("Process");
+            swimlaneElement.appendChild(processElement);
+
+            processElement.setAttribute("package", process.getAttribute("package"));
+            processElement.setAttribute("id", process.getAttribute("id"));
+            processElement.setAttribute("name", process.getAttribute("name"));
+            processElement.setAttribute("code", process.getAttribute("code"));
+            processElement.setAttribute("description", process.getAttribute("description"));
+        }
+        return swimlaneElement;
     }
 
     mxfile.getGeographySwimlaneObject = function (geographyElement) {

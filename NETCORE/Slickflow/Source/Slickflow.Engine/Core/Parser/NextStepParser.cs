@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ServiceStack.Text;
 using Slickflow.Data;
+using Slickflow.Module.Localize;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
@@ -62,16 +63,26 @@ namespace Slickflow.Engine.Core.Parser
                 }
             }
             
-            //获取网关节点信息
             IProcessModel processModel = ProcessModelFactory.Create(runner.ProcessGUID, runner.Version);
             var nextActivity = processModel.GetNextActivity(taskView.ActivityGUID);
             if (nextActivity.ActivityType == ActivityTypeEnum.GatewayNode)
             {
+                //获取网关节点信息
                 var gatewayActivityInstance = aim.GetActivityInstanceLatest(taskView.ProcessInstanceID, nextActivity.ActivityGUID);
                 if (gatewayActivityInstance != null
                     && !string.IsNullOrEmpty(gatewayActivityInstance.NextStepPerformers))
                 {
                     nextSteps = NextStepUtility.DeserializeNextStepPerformers(gatewayActivityInstance.NextStepPerformers);
+                }
+            } 
+            else if (XPDLHelper.IsInterTimerEventComponentNode(nextActivity) == true)
+            {
+                //中间Timer事件节点
+                var timerActivityInstance = aim.GetActivityInstanceLatest(taskView.ProcessInstanceID, nextActivity.ActivityGUID);
+                if (timerActivityInstance != null
+                    && !string.IsNullOrEmpty(timerActivityInstance.NextStepPerformers))
+                {
+                    nextSteps = NextStepUtility.DeserializeNextStepPerformers(timerActivityInstance.NextStepPerformers);
                 }
             }
             return nextSteps;
@@ -92,7 +103,7 @@ namespace Slickflow.Engine.Core.Parser
             if (string.IsNullOrEmpty(runner.AppInstanceID)
                 || string.IsNullOrEmpty(runner.ProcessGUID))
             {
-                throw new WorkflowException("应用(AppInstanceID)或流程(ProcessGUID)参数为空，请重新传入正确参数！");
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("nextstepparser.getnextactivityroleusertree.error"));
             }
 
             //条件参数一致

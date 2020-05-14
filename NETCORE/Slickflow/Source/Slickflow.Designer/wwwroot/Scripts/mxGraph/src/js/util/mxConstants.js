@@ -674,7 +674,7 @@
 	 * Defines the rectangle for the A4 portrait page format. The dimensions
 	 * of this page format are 826x1169 pixels.
 	 */
-	PAGE_FORMAT_A4_PORTRAIT: new mxRectangle(0, 0, 826, 1169),
+	PAGE_FORMAT_A4_PORTRAIT: new mxRectangle(0, 0, 827, 1169),
 
 	/**
 	 * Variable: PAGE_FORMAT_A4_PORTRAIT
@@ -682,7 +682,7 @@
 	 * Defines the rectangle for the A4 portrait page format. The dimensions
 	 * of this page format are 826x1169 pixels.
 	 */
-	PAGE_FORMAT_A4_LANDSCAPE: new mxRectangle(0, 0, 1169, 826),
+	PAGE_FORMAT_A4_LANDSCAPE: new mxRectangle(0, 0, 1169, 827),
 
 	/**
 	 * Variable: PAGE_FORMAT_LETTER_PORTRAIT
@@ -757,6 +757,24 @@
 	 * the vertex. Value is "portConstraintRotation".
 	 */
 	STYLE_PORT_CONSTRAINT_ROTATION: 'portConstraintRotation',
+
+	/**
+	 * Variable: STYLE_SOURCE_PORT_CONSTRAINT
+	 * 
+	 * Defines the direction(s) that edges are allowed to connect to sources in.
+	 * Possible values are "DIRECTION_NORTH, DIRECTION_SOUTH, DIRECTION_EAST"
+	 * and "DIRECTION_WEST". Value is "sourcePortConstraint".
+	 */
+	STYLE_SOURCE_PORT_CONSTRAINT: 'sourcePortConstraint',
+
+	/**
+	 * Variable: STYLE_TARGET_PORT_CONSTRAINT
+	 * 
+	 * Defines the direction(s) that edges are allowed to connect to targets in.
+	 * Possible values are "DIRECTION_NORTH, DIRECTION_SOUTH, DIRECTION_EAST"
+	 * and "DIRECTION_WEST". Value is "targetPortConstraint".
+	 */
+	STYLE_TARGET_PORT_CONSTRAINT: 'targetPortConstraint',
 
 	/**
 	 * Variable: STYLE_OPACITY
@@ -845,6 +863,23 @@
 	 */
 	STYLE_EXIT_Y: 'exitY',
 
+	
+	/**
+	* Variable: STYLE_EXIT_DX
+	* 
+	* Defines the key for the horizontal offset of the connection point
+	* of an edge with its source terminal. Value is "exitDx".
+	*/
+	STYLE_EXIT_DX: 'exitDx',
+
+	/**
+	* Variable: STYLE_EXIT_DY
+	* 
+	* Defines the key for the vertical offset of the connection point
+	* of an edge with its source terminal. Value is "exitDy".
+	*/
+	STYLE_EXIT_DY: 'exitDy',
+	
 	/**
 	 * Variable: STYLE_EXIT_PERIMETER
 	 * 
@@ -869,6 +904,22 @@
 	 * of an edge with its target terminal. Value is "entryY".
 	 */
 	STYLE_ENTRY_Y: 'entryY',
+
+	/**
+	 * Variable: STYLE_ENTRY_DX
+	 * 
+	* Defines the key for the horizontal offset of the connection point
+	* of an edge with its target terminal. Value is "entryDx".
+	*/
+	STYLE_ENTRY_DX: 'entryDx',
+
+	/**
+	 * Variable: STYLE_ENTRY_DY
+	 * 
+	* Defines the key for the vertical offset of the connection point
+	* of an edge with its target terminal. Value is "entryDy".
+	*/
+	STYLE_ENTRY_DY: 'entryDy',
 
 	/**
 	 * Variable: STYLE_ENTRY_PERIMETER
@@ -1397,6 +1448,15 @@
 	STYLE_DASH_PATTERN: 'dashPattern',
 
 	/**
+	 * Variable: STYLE_FIX_DASH
+	 * 
+	 * Defines the key for the fixDash style. Use 0 (default) for dash patterns
+	 * that depend on the linewidth and 1 for dash patterns that ignore the
+	 * line width. Value is "fixDash".
+	 */
+	STYLE_FIX_DASH: 'fixDash',
+
+	/**
 	 * Variable: STYLE_ROUNDED
 	 * 
 	 * Defines the key for the rounded style. The type of this value is
@@ -1430,13 +1490,13 @@
 	STYLE_ARCSIZE: 'arcSize',
 
 	/**
-	 * Variable: STYLE_SMOOTH
+	 * Variable: STYLE_ABSOLUTE_ARCSIZE
 	 * 
-	 * An experimental style for edges. This style is currently not available
-	 * in the backends and is implemented differently for VML and SVG. The use
-	 * of this style is currently only recommended for VML. Value is "smooth".
+	 * Defines the key for the absolute arc size style. This specifies if
+	 * arcSize for rectangles is abolute or relative. Possible values are 1
+	 * and 0 (default). Value is "absoluteArcSize".
 	 */
-	STYLE_SMOOTH: 'smooth',
+	STYLE_ABSOLUTE_ARCSIZE: 'absoluteArcSize',
 
 	/**
 	 * Variable: STYLE_SOURCE_PERIMETER_SPACING
@@ -1540,6 +1600,17 @@
 	STYLE_DIRECTION: 'direction',
 
 	/**
+	 * Variable: STYLE_ANCHOR_POINT_DIRECTION
+	 * 
+	 * Defines the key for the anchorPointDirection style. The defines if the
+	 * direction style should be taken into account when computing the fixed
+	 * point location for connected edges. Default is 1 (yes). Set this to 0
+	 * to ignore the direction style for fixed connection points. Value is
+	 * "anchorPointDirection".
+	 */
+	STYLE_ANCHOR_POINT_DIRECTION: 'anchorPointDirection',
+
+	/**
 	 * Variable: STYLE_ELBOW
 	 * 
 	 * Defines the key for the elbow style. Possible values are
@@ -1622,6 +1693,15 @@
 	STYLE_EDITABLE: 'editable',
 
 	/**
+	 * Variable: STYLE_BACKGROUND_OUTLINE
+	 * 
+	 * Defines the key for the backgroundOutline style. This specifies if a
+	 * only the background of a cell should be painted when it is highlighted.
+	 * Possible values are 0 or 1. Default is 0. Value is "backgroundOutline".
+	 */
+	STYLE_BACKGROUND_OUTLINE: 'backgroundOutline',
+
+	/**
 	 * Variable: STYLE_BENDABLE
 	 * 
 	 * Defines the key for the bendable style. This specifies if the control
@@ -1652,7 +1732,7 @@
 	 * Variable: STYLE_RESIZE_WIDTH
 	 * 
 	 * Defines the key for the resizeWidth style. This specifies if a cell's
-	 * width if resize if the parent is resized. If this is 1 then the width
+	 * width is resized if the parent is resized. If this is 1 then the width
 	 * will be resized even if the cell's geometry is relative. If this is 0
 	 * then the cell's width will not be resized. Default is not defined. Value
 	 * is "resizeWidth".
@@ -1718,6 +1798,8 @@
 	 * 
 	 * Defines the key for the jetty size in <mxEdgeStyle.OrthConnector>.
 	 * Default is 10. Possible values are all numeric values or "auto".
+	 * Jetty size is the minimum length of the orthogonal segment before
+	 * it attaches to a shape.
 	 * Value is "jettySize".
 	 */
 	STYLE_JETTY_SIZE: 'jettySize',
@@ -1744,7 +1826,8 @@
 	 * Variable: STYLE_LOOP
 	 * 
 	 * Defines the key for the loop style. Possible values are the functions
-	 * defined in <mxEdgeStyle>. Value is "loopStyle".
+	 * defined in <mxEdgeStyle>. Value is "loopStyle". Default is
+	 * <mxGraph.defaultLoopStylean>.
 	 */
 	STYLE_LOOP: 'loopStyle',
 
@@ -1753,9 +1836,8 @@
 	 * 
 	 * Defines the key for the orthogonal loop style. Possible values are 0 and
 	 * 1. Default is 0. Value is "orthogonalLoop". Use this style to specify
-	 * if loops should be routed using an orthogonal router. Currently, this
-	 * uses <mxEdgeStyle.OrthConnector> but will be replaced with a dedicated
-	 * orthogonal loop router in later releases.
+	 * if loops with no waypoints and defined anchor points should be routed
+	 * using <STYLE_LOOP> or not routed.
 	 */
 	STYLE_ORTHOGONAL_LOOP: 'orthogonalLoop',
 
@@ -1800,6 +1882,13 @@
 	 */
 	FONT_UNDERLINE: 4,
 
+	/**
+	 * Variable: FONT_STRIKETHROUGH
+	 * 
+	 * Constant for strikthrough fonts. Default is 8.
+	 */
+	FONT_STRIKETHROUGH: 8,
+	
 	/**
 	 * Variable: SHAPE_RECTANGLE
 	 * 
@@ -2244,5 +2333,4 @@
 	 * for the STYLE_PERIMETER style.
 	 */
 	PERIMETER_TRIANGLE: 'trianglePerimeter'
-
 };

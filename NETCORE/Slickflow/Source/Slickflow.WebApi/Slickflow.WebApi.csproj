@@ -17,8 +17,6 @@
     <Compile Remove="Controllers\WfAndSplitMIController.cs" />
     <Compile Remove="Controllers\WfGatewayController.cs" />
     <Compile Remove="Controllers\WfReceiverTypeController.cs" />
-    <Compile Remove="Controllers\WfSequenceController.cs" />
-    <Compile Remove="Controllers\WfSplitJoinController.cs" />
     <Compile Remove="Controllers\WfSplitJoinMultiController.cs" />
     <Compile Remove="Controllers\WfSubProcessController.cs" />
     <Compile Remove="Controllers\WfTaskMISignForwardController.cs" />
@@ -31,6 +29,8 @@
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.3.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="3.3.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.1">
       <PrivateAssets>all</PrivateAssets>
@@ -51,12 +51,6 @@
     <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj" />
     <ProjectReference Include="..\Slickflow.Engine\Slickflow.Engine.csproj" />
     <ProjectReference Include="..\SlickOne.WebUtility\SlickOne.WebUtility.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Slickflow.Graph">
-      <HintPath>..\DLL\Slickflow.Graph.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

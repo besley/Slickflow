@@ -90,7 +90,7 @@
                     </div>
                 </div>
             </div>
-            <div id="sub" class="tab-pane">
+            <div class="tab-pane" id="sub">
                 <div class="row" style="margin-top:5px;">
                     <div>
                         <p>
@@ -114,6 +114,17 @@
                     </p>
                 </div>
             </div>
+            <div class="tab-pane" id="myProperties">
+                <div class="row" style="margin-top:5px;">
+                    <p>
+                        <span class="a_tit lang" as="properties"></span>
+                        <span>
+                            <textarea rows="3" id="txtMyProperties" style="width:340px;" placeholder='说明：JSON字符串的形式，如：{"A":"a", "B":"b"}'></textarea>
+                            @*<div id="jsoneditor" style="width: 340px; height: 200px;"></div>*@
+                        </span>
+                    </p>
+                </div>
+            </div>
             <div id="action" class="tab-pane">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
@@ -125,18 +136,25 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="actionBefore">
                         <div class="row" style="margin-top:5px;">
-                            <p>
+                            <div class="methodselect-Before">
                                 <span class="a_tit lang" as="calltype"></span>
-                                <select id="ddlActionMethodTypeBefore" class="form-control actionmethodoptions-before" style="width:160px;">
+                                <select id="ddlActionMethodTypeBefore" class="form-control actionmethodoptions-Before" style="width:160px;">
                                     <option value="None" selected class="lang" as="optiondefault"></option>
-                                    <option value="LocalMethod" class="lang" as="localmethod"></option>
+                                    <option value="LocalService" class="lang" as="localservice"></option>
+                                    <option value="CSharpLibrary" class="lang" as="csharplibrary"></option>
                                     <option value="WebApi" class="lang" as="webapi"></option>
                                     <option value="SQL" class="lang" as="sqlcommand"></option>
                                     <option value="StoreProcedure" class="lang" as="storeprocedure"></option>
                                     <option value="Python" class="lang" as="pythonscript"></option>
                                 </select>
-                            </p>
-                            <p class="webapioptions-before" id="divWebApiMethodBefore" style="display:none;">
+                            </div>
+                            <div class="methoditemhideme process process-Before" style="display:none;">
+                                <span class="a_tit lang" as="processinfo"></span>
+                                <span>
+                                    <input type="text" id="txtActionArgumentsBefore" class="form-control" style="width:340px;" placeholder="varA, varB" />
+                                </span>
+                            </div>
+                            <div class="methoditemhideme webapi webapi-Before" id="divWebApiMethodBefore" style="display:none;">
                                 <span class="a_tit lang" as="webapimethodtype"></span>
                                 <select id="ddlWebApiMethodBefore" class="form-control" style="width:160px;">
                                     <option value="HttpGet">HttpGet</option>
@@ -144,35 +162,56 @@
                                     <option value="HttpPut">HttpPut</option>
                                     <option value="HttpDelete">HttpDelete</option>
                                 </select>
-                            </p>
-                            <p>
+                            </div>
+                            <div class="methoditemhideme argument argument-Before" style="display:none;">
                                 <span class="a_tit lang" as="argumentslist"></span>
                                 <span>
                                     <input type="text" id="txtActionArgumentsBefore" class="form-control" style="width:340px;" placeholder="varA, varB" />
                                 </span>
-                            </p>
-                            <p>
+                            </div>
+                            <div class="methoditemhideme assembly assembly-Before" id="divCSharplibrarySettingBefore" style="display:none;">
+                                <p>
+                                    <span class="a_tit lang" as="assemblyfullname"></span>
+                                    <span><input type="text" id="txtAssemblyFullNameBefore" class="form-control" style="width:340px;" /></span>
+                                </p>
+                                <p>
+                                    <span class="a_tit lang" as="typefullname"></span>
+                                    <span><input type="text" id="txtTypeFullNameBefore" class="form-control" style="width:340px;" /></span>
+                                </p>
+                                <p>
+                                    <span class="a_tit lang" as="methodname"></span>
+                                    <span><input type="text" id="txtMethodNameBefore" class="form-control" style="width:340px;" /></span>
+                                </p>
+                            </div>
+                            <div class="methoditemhideme expression expression-Before" style="display:none;">
                                 <span class="a_tit lang" as="expression"></span>
                                 <span>
-                                    <textarea rows="3" id="txtActionExpressionBefore" style="width:340px;"></textarea>
+                                    <input type="text" id="txtActionExpressionBefore" class="form-control" style="width:340px;" />
                                 </span>
-                            </p>
+                            </div>
+                            <div class="methoditemhideme codetext codetext-Before" style="display:none;">
+                                <span class="a_tit lang" as="codetext"></span>
+                                <span>
+                                    <textarea rows="3" id="txtCodeTextBefore" style="width:340px;height:200px;"></textarea>
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div class="tab-pane" id="actionAfter">
                         <div class="row" style="margin-top:5px;">
-                            <p>
+                            <div class="methodselect-After">
                                 <span class="a_tit lang" as="calltype"></span>
-                                <select id="ddlActionMethodTypeAfter" class="form-control actionmethodoptions-after" style="width:160px;">
+                                <select id="ddlActionMethodTypeAfter" class="form-control actionmethodoptions-After" style="width:160px;">
                                     <option value="None" selected class="lang" as="optiondefault"></option>
-                                    <option value="LocalMethod" class="lang" as="localmethod"></option>
+                                    <option value="LocalService" class="lang" as="localservice"></option>
+                                    <option value="CSharpLibrary" class="lang" as="csharplibrary"></option>
                                     <option value="WebApi" class="lang" as="webapi"></option>
                                     <option value="SQL" class="lang" as="sqlcommand"></option>
                                     <option value="StoreProcedure" class="lang" as="storeprocedure"></option>
                                     <option value="Python" class="lang" as="pythonscript"></option>
                                 </select>
-                            </p>
-                            <p class="webapioptions-after"  id="divWebApiMethodAfter" style="display:none;">
+                            </div>
+                            <div class="methoditemhideme webapi webapi-After" id="divWebApiMethodAfter" style="display:none;">
                                 <span class="a_tit lang" as="webapimethodtype"></span>
                                 <select id="ddlWebApiMethodAfter" class="form-control" style="width:160px;">
                                     <option value="HttpGet">HttpGet</option>
@@ -180,19 +219,39 @@
                                     <option value="HttpPut">HttpPut</option>
                                     <option value="HttpDelete">HttpDelete</option>
                                 </select>
-                            </p>
-                            <p>
+                            </div>
+                            <div class="methoditemhideme argument argument-After" style="display:none;">
                                 <span class="a_tit lang" as="argumentslist"></span>
                                 <span>
                                     <input type="text" id="txtActionArgumentsAfter" class="form-control" style="width:340px;" placeholder="varA, varB" />
                                 </span>
-                            </p>
-                            <p>
+                            </div>
+                            <div class="methoditemhideme assembly assembly-After" id="divCSharplibrarySettingAfter" style="display:none;">
+                                <p>
+                                    <span class="a_tit lang" as="assemblyfullname"></span>
+                                    <span><input type="text" id="txtAssemblyFullNameAfter" class="form-control" style="width:340px;" /></span>
+                                </p>
+                                <p>
+                                    <span class="a_tit lang" as="typefullname"></span>
+                                    <span><input type="text" id="txtTypeFullNameAfter" class="form-control" style="width:340px;" /></span>
+                                </p>
+                                <p>
+                                    <span class="a_tit lang" as="methodname"></span>
+                                    <span><input type="text" id="txtMethodNameAfter" class="form-control" style="width:340px;" /></span>
+                                </p>
+                            </div>
+                            <div class="methoditemhideme expression exprssion-After" style="display:none;">
                                 <span class="a_tit lang" as="expression"></span>
                                 <span>
-                                    <textarea rows="3" id="txtActionExpressionAfter" style="width:340px;"></textarea>
+                                    <input type="text" id="txtActionExpressionAfter" class="form-control" style="width:340px;" />
                                 </span>
-                            </p>
+                            </div>
+                            <div class="methoditemhideme codetext codetext-After" style="display:none;">
+                                <span class="a_tit lang" as="codetext"></span>
+                                <span>
+                                    <textarea rows="3" id="txtCodeTextAfter" style="width:340px;height:200px;"></textarea>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>

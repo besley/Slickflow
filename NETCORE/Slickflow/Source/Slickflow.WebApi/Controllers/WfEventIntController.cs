@@ -24,11 +24,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using SlickOne.WebUtility;
 using Slickflow.Data;
-using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Delegate;
 using Slickflow.Engine.Core.Result;
@@ -71,6 +70,8 @@ namespace Slickflow.WebApi.Controllers
                          .UseProcess(runner.ProcessGUID, runner.Version)
                          .Subscribe(EventFireTypeEnum.OnProcessStarted, (delegateContext, delegateService) => {
                              var processInstanceID = delegateContext.ProcessInstanceID;
+                             delegateService.SaveVariable(ProcessVariableTypeEnum.Process, "name", "book");
+                             delegateService.SaveVariable(ProcessVariableTypeEnum.Process, "amount", "30");
                              return true;  
                          })
                          .Start();
@@ -101,7 +102,12 @@ namespace Slickflow.WebApi.Controllers
                          .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
                          .UseProcess(runner.ProcessGUID, runner.Version)
                          .Subscribe(EventFireTypeEnum.OnProcessStarted, (delegateContext, delegateService) => {
-                             var processInstanceID = delegateContext.ProcessInstanceID;
+                             delegateService.SaveVariable(ProcessVariableTypeEnum.Process, "product", "toy");
+                             delegateService.SaveVariable(ProcessVariableTypeEnum.Process, "country", "china");
+                             var country = delegateService.GetVariable(ProcessVariableTypeEnum.Process, "country");
+
+                             //var processInstance = delegateService.GetInstance<ProcessInstanceEntity>(processInstanceID);
+                             //throw new ApplicationException("errror");
                              return true;
                          })
                          .Start(conn, trans);
@@ -146,18 +152,27 @@ namespace Slickflow.WebApi.Controllers
                          .NextStep(runner.NextActivityPerformers)
                          .IfCondition(runner.Conditions)
                          .Subscribe(EventFireTypeEnum.OnActivityExecuting, (delegateContext, delegateService) => {
-                             var processInstanceID = delegateContext.ProcessInstanceID;
+                             Debug.WriteLine(string.Format("Activity Executing...{0}", delegateContext.ActivityName));
+                             if (delegateContext.ActivityCode == "OrderSubmit")
+                             {
+                                 delegateService.SaveVariable(ProcessVariableTypeEnum.Activity, "name", "book-task1");
+                                 delegateService.SaveVariable(ProcessVariableTypeEnum.Activity, "amount", "50");
+                                 var country = delegateService.GetVariable(ProcessVariableTypeEnum.Process, "country");
+                                 delegateService.SaveVariable(ProcessVariableTypeEnum.Process, "date", System.DateTime.Today.ToShortDateString());
+                                 amount = delegateService.GetVariable(ProcessVariableTypeEnum.Activity, "amount");
+                             }
                              return true;
                          })
                          .Subscribe(EventFireTypeEnum.OnActivityExecuted, (delegateContext, delegateService) => {
+                             Debug.WriteLine(string.Format("Activity Executed...{0}", delegateContext.ActivityName));
                              if (delegateContext.ActivityCode == "OrderSubmit")
                              {
-                                 ;
+                                 delegateService.SaveVariable(ProcessVariableTypeEnum.Activity, "name", "book-task1-0701"); ;
                              }
                              return true;
                          })
                          .Subscribe(EventFireTypeEnum.OnProcessCompleted, (delegateContext, delegateService) => {
-                             System.Diagnostics.Debug.WriteLine(string.Format("Process Completed...{0}", delegateContext.ProcessInstanceID.ToString()));
+                             Debug.WriteLine(string.Format("Process Completed...{0}", delegateContext.ProcessInstanceID.ToString()));
 
                              return true;
                          })
@@ -170,8 +185,6 @@ namespace Slickflow.WebApi.Controllers
             }
             return result;
         }
-
-        
         #endregion
     }
 }

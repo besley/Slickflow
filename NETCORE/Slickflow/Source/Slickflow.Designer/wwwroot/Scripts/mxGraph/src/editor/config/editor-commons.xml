@@ -1,53 +1,53 @@
 <mxEditor>
 	<ui>
-		<resource basename="scripts/mxGraph/src/editor/resources/app"/>
+		<resource basename="Scripts/mxGraph/src/editor/resources/app"/>
 	</ui>
 	<mxDefaultPopupMenu as="popupHandler">
-		<add as="cut" action="cut" icon="scripts/mxGraph/src/editor/images/cut.gif"/>
-		<add as="copy" action="copy" icon="scripts/mxGraph/src/editor/images/copy.gif"/>
-		<add as="paste" action="paste" icon="scripts/mxGraph/src/editor/images/paste.gif"/>
+		<add as="cut" action="cut" icon="Scripts/mxGraph/src/editor/images/cut.gif"/>
+		<add as="copy" action="copy" icon="Scripts/mxGraph/src/editor/images/copy.gif"/>
+		<add as="paste" action="paste" icon="Scripts/mxGraph/src/editor/images/paste.gif"/>
 		<separator/>
-		<add as="delete" action="delete" icon="scripts/mxGraph/src/editor/images/delete.gif" if="cell"/>
+		<add as="delete" action="delete" icon="Scripts/mxGraph/src/editor/images/delete.gif" if="cell"/>
 		<separator/>
-		<add as="exitGroup" action="exitGroup" icon="scripts/mxGraph/src/editor/images/up.gif" if="notRoot"/>
-		<add as="enterGroup" action="enterGroup" icon="scripts/mxGraph/src/editor/images/down.gif" if="validRoot"/>
+		<add as="exitGroup" action="exitGroup" icon="Scripts/mxGraph/src/editor/images/up.gif" if="notRoot"/>
+		<add as="enterGroup" action="enterGroup" icon="Scripts/mxGraph/src/editor/images/down.gif" if="validRoot"/>
 		<separator/>
 		<add as="shape" if="cell">
-			<add as="group" action="group" icon="scripts/mxGraph/src/editor/images/group.gif" if="ncells"/>
-			<add as="ungroup" action="ungroup" icon="scripts/mxGraph/src/editor/images/ungroup.gif" if="cell"/>
+			<add as="group" action="group" icon="Scripts/mxGraph/src/editor/images/group.gif" if="ncells"/>
+			<add as="ungroup" action="ungroup" icon="Scripts/mxGraph/src/editor/images/ungroup.gif" if="cell"/>
 			<separator/>
 			<add as="removeFromParent" action="removeFromParent" if="cell"/>
 			<separator/>
-			<add as="collapse" action="collapse" icon="scripts/mxGraph/src/editor/images/collapse.gif" if="expandable"/>
-			<add as="expand" action="expand" icon="scripts/mxGraph/src/editor/images/expand.gif" if="collapsable"/>
+			<add as="collapse" action="collapse" icon="Scripts/mxGraph/src/editor/images/collapse.gif" if="expandable"/>
+			<add as="expand" action="expand" icon="Scripts/mxGraph/src/editor/images/expand.gif" if="collapsable"/>
 			<separator/>
-			<add as="toFront" action="toFront" icon="scripts/mxGraph/src/editor/images/tofront.gif" if="cell"/>
-			<add as="toBack" action="toBack" icon="scripts/mxGraph/src/editor/images/toback.gif" if="cell"/>
+			<add as="toFront" action="toFront" icon="Scripts/mxGraph/src/editor/images/tofront.gif" if="cell"/>
+			<add as="toBack" action="toBack" icon="Scripts/mxGraph/src/editor/images/toback.gif" if="cell"/>
 			<separator/>
 			<add as="editStyle" action="editStyle" if="cell"/>
 		</add>
 		<add as="format" if="cell">
-			<add as="fillColor" action="fillColor" icon="scripts/mxGraph/src/editor/images/fillcolor.gif" if="cell"/>
+			<add as="fillColor" action="fillColor" icon="Scripts/mxGraph/src/editor/images/fillcolor.gif" if="cell"/>
 			<add as="gradientColor" action="gradientColor" if="cell"/>
-			<add as="strokeColor" action="strokeColor" icon="scripts/mxGraph/src/editor/images/linecolor.gif" if="cell"/>
+			<add as="strokeColor" action="strokeColor" icon="Scripts/mxGraph/src/editor/images/linecolor.gif" if="cell"/>
 			<separator/>
 			<add as="toggleRounded" action="toggleRounded" if="cell"/>
 			<add as="toggleShadow" action="toggleShadow" if="cell"/>
 		</add>
 		<add as="font" if="cell">
-			<add as="fontColor" action="fontColor" icon="scripts/mxGraph/src/editor/images/fontcolor.gif" if="cell"/>
+			<add as="fontColor" action="fontColor" icon="Scripts/mxGraph/src/editor/images/fontcolor.gif" if="cell"/>
 			<add as="fontFamily" action="fontFamily" if="cell"/>
 			<add as="fontSize" action="fontSize" if="cell"/>
 			<separator/>
-			<add as="bold" action="bold" icon="scripts/mxGraph/src/editor/images/bold.gif" if="cell"/>
-			<add as="italic" action="italic" icon="scripts/mxGraph/src/editor/images/italic.gif" if="cell"/>
+			<add as="bold" action="bold" icon="Scripts/mxGraph/src/editor/images/bold.gif" if="cell"/>
+			<add as="italic" action="italic" icon="Scripts/mxGraph/src/editor/images/italic.gif" if="cell"/>
 		</add>
 		<separator/>
-		<add as="properties" action="showProperties" icon="scripts/mxGraph/src/editor/images/properties.gif"/>
+		<add as="properties" action="showProperties" icon="Scripts/mxGraph/src/editor/images/properties.gif"/>
 		<separator/>
-		<!--<add as="openHref" action="openHref" icon="scripts/mxGraph/src/editor/images/link.gif"/>-->
+		<!--<add as="openHref" action="openHref" icon="Scripts/mxGraph/src/editor/images/link.gif"/>-->
 	</mxDefaultPopupMenu>
-	<include name="scripts/mxGraph/src/editor/config/keyhandler-commons.xml"/>
+	<include name="Scripts/mxGraph/src/editor/config/keyhandler-commons.xml"/>
 	<Array as="actions">
 		<add as="open"><![CDATA[
 			function (editor)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Slickflow.Module.Localize;
 using Slickflow.Engine.Xpdl.Entity;
 
 namespace Slickflow.Engine.Xpdl.Schedule
@@ -73,7 +72,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
         /// <param name="nextActivity"></param>
         public virtual void Add(NextActivityComponent nextActivity)
         {
-            throw new InvalidOperationException("非组合节点，不能添加子项！");
+            throw new InvalidOperationException(LocalizeHelper.GetEngineMessage("nextactivitycomponent.Add.error"));
         }
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
         /// <returns></returns>
         public virtual bool Remove(NextActivityComponent nextActivity)
         {
-            throw new InvalidOperationException("非组合节点，无子项可以删除！");
+            throw new InvalidOperationException(LocalizeHelper.GetEngineMessage("nextactivitycomponent.Remove.error"));
         }
     }
 }

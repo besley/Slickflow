@@ -9,6 +9,7 @@
     }
 
     sfmain.initWfAppRunner = function () {
+        //仅作示例用
         var user = lsm.getUserIdentity();
 
         sfmain.WfAppRunner.UserID = user.UserID;
@@ -26,24 +27,20 @@
         $(".form_datetime").datetimepicker({ format: 'yyyy-mm-dd' });
     }
 
-    //show process diagram
+    //显示流程图
     sfmain.showKGraph = function () {
         if (pordermanager.mProductOrderProcessGUID == "") {
             $.msgBox({
                 title: "DynamicFlow / KGraph",
-                content: kresource.getItem("showprocessgraphwarnmsg"),
+                content: "请选定有流程信息的表单！",
                 type: "alert"
             });
             return false;
         } else {
-        	window.open('/sfd2c/Diagram?AppInstanceID=' + pordermanager.selectedProductOrderID
+        	window.open('/sfd/Diagram?AppInstanceID=' + pordermanager.selectedProductOrderID
 				+ '&ProcessGUID=' + pordermanager.mProductOrderProcessGUID + '&Mode=' + 'READONLY');
         }
     }
 
-    sfmain.changeLang = function (lang) {
-        kresource.setLang(lang);
-        location.reload();
-    }
     return sfmain;
 })();

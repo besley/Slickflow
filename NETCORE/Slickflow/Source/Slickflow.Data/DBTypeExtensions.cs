@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 //using Oracle.ManagedDataAccess.Client;
+//using MySql.Data.MySqlClient;
 
 namespace Slickflow.Data
 {
@@ -80,6 +81,8 @@ namespace Slickflow.Data
 
             //如果是Oracle数据库，请使用Oracle类型参数
             //SetDBType(DBTypeEnum.ORACLE);
+
+            //SetDBType(DBTypeEnum.MYSQL);
         }
 
         /// <summary>
@@ -102,7 +105,7 @@ namespace Slickflow.Data
             }
             else if (DBTypeExtenstions.DBType == DBTypeEnum.MYSQL)
             {
-                //conn = new MySqlConnection(ConnectionString);
+                ///conn = new MySqlConnection(ConnectionString);
             }
             else if (DBTypeExtenstions.DBType == DBTypeEnum.KINGBASE)
             {

@@ -1,5 +1,5 @@
 <mxEditor defaultGroup="group" defaultEdge="connector">
-	<include name="scripts/mxGraph/src/editor/config/editor-commons.xml"/>
+	<include name="Scripts/mxGraph/src/editor/config/editor-commons.xml"/>
 	<add as="onInit"><![CDATA[
 		function ()
 		{
@@ -287,7 +287,7 @@
 		</mxGraphModel>
 	</mxGraph>
 	<mxDefaultToolbar as="toolbar">
-		<add as="connect" mode="connect" icon="scripts/mxGraph/src/editor/images/connect.gif"><![CDATA[
+		<add as="connect" mode="connect" icon="Scripts/mxGraph/src/editor/images/connect.gif"><![CDATA[
 			function (editor)
 			{
 				if (editor.defaultEdge != null)
@@ -296,7 +296,7 @@
 				}
 			}
 		]]></add>
-		<add as="connect" mode="connect" icon="scripts/mxGraph/src/editor/images/straight.gif"><![CDATA[
+		<add as="connect" mode="connect" icon="Scripts/mxGraph/src/editor/images/straight.gif"><![CDATA[
 			function (editor)
 			{
 				if (editor.defaultEdge != null)
@@ -305,7 +305,7 @@
 				}
 			}
 		]]></add>
-		<add as="connect" mode="connect" icon="scripts/mxGraph/src/editor/images/arrow.gif"><![CDATA[
+		<add as="connect" mode="connect" icon="Scripts/mxGraph/src/editor/images/arrow.gif"><![CDATA[
 			function (editor)
 			{
 				if (editor.defaultEdge != null)
@@ -315,19 +315,19 @@
 			}
 		]]></add>
 		<br/><br/>
-		<add as="Text" template="text" icon="scripts/mxGraph/src/editor/images/text.gif"/>
-		<add as="Container" template="container" icon="scripts/mxGraph/src/editor/images/swimlane.gif"/>
-		<add as="Rectangle" template="rectangle" icon="scripts/mxGraph/src/editor/images/rectangle.gif"/>
-		<add as="Rounded" template="rounded" icon="scripts/mxGraph/src/editor/images/rounded.gif"/>
-		<add as="Ellipse" template="shape" style="ellipse" icon="scripts/mxGraph/src/editor/images/ellipse.gif"/>
-		<add as="Double Ellipse" template="shape" style="doubleEllipse" icon="scripts/mxGraph/src/editor/images/doubleellipse.gif"/>
-		<add as="Rhombus" template="shape" style="rhombus" icon="scripts/mxGraph/src/editor/images/rhombus.gif"/>
-		<add as="Triangle" template="actor" style="triangle" icon="scripts/mxGraph/src/editor/images/triangle.gif"/>
-		<add as="Hexagon" template="cloud" style="hexagon" icon="scripts/mxGraph/src/editor/images/hexagon.gif"/>
-		<add as="Actor" template="actor" style="actor" icon="scripts/mxGraph/src/editor/images/actor.gif"/>
-		<add as="Cylinder" template="shape" style="cylinder" icon="scripts/mxGraph/src/editor/images/cylinder.gif"/>
-		<add as="Cloud" template="cloud" style="cloud" icon="scripts/mxGraph/src/editor/images/cloud.gif"/>
-		<add as="Line" template="hline" style="hline" icon="scripts/mxGraph/src/editor/images/hline.gif"/>
-		<add as="Image" template="image" icon="scripts/mxGraph/src/editor/images/image.gif"/>
+		<add as="Text" template="text" icon="Scripts/mxGraph/src/editor/images/text.gif"/>
+		<add as="Container" template="container" icon="Scripts/mxGraph/src/editor/images/swimlane.gif"/>
+		<add as="Rectangle" template="rectangle" icon="Scripts/mxGraph/src/editor/images/rectangle.gif"/>
+		<add as="Rounded" template="rounded" icon="Scripts/mxGraph/src/editor/images/rounded.gif"/>
+		<add as="Ellipse" template="shape" style="ellipse" icon="Scripts/mxGraph/src/editor/images/ellipse.gif"/>
+		<add as="Double Ellipse" template="shape" style="doubleEllipse" icon="Scripts/mxGraph/src/editor/images/doubleellipse.gif"/>
+		<add as="Rhombus" template="shape" style="rhombus" icon="Scripts/mxGraph/src/editor/images/rhombus.gif"/>
+		<add as="Triangle" template="actor" style="triangle" icon="Scripts/mxGraph/src/editor/images/triangle.gif"/>
+		<add as="Hexagon" template="cloud" style="hexagon" icon="Scripts/mxGraph/src/editor/images/hexagon.gif"/>
+		<add as="Actor" template="actor" style="actor" icon="Scripts/mxGraph/src/editor/images/actor.gif"/>
+		<add as="Cylinder" template="shape" style="cylinder" icon="Scripts/mxGraph/src/editor/images/cylinder.gif"/>
+		<add as="Cloud" template="cloud" style="cloud" icon="Scripts/mxGraph/src/editor/images/cloud.gif"/>
+		<add as="Line" template="hline" style="hline" icon="Scripts/mxGraph/src/editor/images/hline.gif"/>
+		<add as="Image" template="image" icon="Scripts/mxGraph/src/editor/images/image.gif"/>
 	</mxDefaultToolbar>
 </mxEditor>

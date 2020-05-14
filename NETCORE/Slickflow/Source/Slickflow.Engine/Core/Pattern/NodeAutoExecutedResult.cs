@@ -31,14 +31,14 @@ namespace Slickflow.Engine.Core.Pattern
 
         internal static NodeAutoExecutedResult CreateGatewayExecutedResult(NodeAutoExecutedStatus status)
         {
-            NodeAutoExecutedResult result = new NodeAutoExecutedResult(NodeAutoExecutedStatus.Unknown, "Gateway节点的执行状态未知！");
+            NodeAutoExecutedResult result = new NodeAutoExecutedResult(NodeAutoExecutedStatus.Unknown, "Unknown Gateway executing status!");
             switch (status)
             {
                 case NodeAutoExecutedStatus.Successed:
-                    result = new NodeAutoExecutedResult(NodeAutoExecutedStatus.Successed, "Gateway节点成功执行！");
+                    result = new NodeAutoExecutedResult(NodeAutoExecutedStatus.Successed, "Gateway executed successfully!");
                     break;
                 case NodeAutoExecutedStatus.FallBehindOfXOrJoin:
-                    result = new NodeAutoExecutedResult(NodeAutoExecutedStatus.FallBehindOfXOrJoin, "第一个满足条件的节点已经执行，互斥合并节点不能再次被实例化！");
+                    result = new NodeAutoExecutedResult(NodeAutoExecutedStatus.FallBehindOfXOrJoin, "The first matched node has been executed(XOrJoin)!");
                     break;
                 default:
                     break;

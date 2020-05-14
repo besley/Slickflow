@@ -12,7 +12,7 @@ namespace Slickflow.Engine.Common
     public enum WorkItemTypeEnum
     {
         /// <summary>
-        /// 非工作项StartNode, EndNode, GatewayNode
+        /// 非工作项StartNode, EndNode, GatewayNode, IntermediateNode
         /// </summary>
         NonWorkItem = 0,
 

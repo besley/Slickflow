@@ -52,20 +52,9 @@ namespace Slickflow.Engine.Core.Pattern
         {
             try
             {
-                //执行Action列表
-                var delegateContext = new DelegateContext
-                {
-                    AppInstanceID = ActivityForwardContext.ProcessInstance.AppInstanceID,
-                    ProcessGUID = ActivityForwardContext.ProcessInstance.ProcessGUID,
-                    ProcessInstanceID = ActivityForwardContext.ProcessInstance.ID,
-                    ActivityGUID = ActivityForwardContext.FromActivityInstance.ActivityGUID,
-                    ActivityName = ActivityForwardContext.FromActivityInstance.ActivityName
-                };
+                OnBeforeExecuteWorkItem();
 
-                var delegateService = DelegateServiceFactory.CreateDelegateService(DelegateScopeTypeEnum.Activity,
-                    this.Session,
-                    delegateContext);
-                ExecteActionList(base.EventActivity.ActionList, delegateService as IDelegateService);
+                OnAfterExecuteWorkItem();
             }
             catch (System.Exception ex)
             {
@@ -92,8 +81,6 @@ namespace Slickflow.Engine.Core.Pattern
             IDbSession session)
         {
             var gatewayActivityInstance = base.CreateActivityInstanceObject(base.EventActivity, processInstance, runner);
-            gatewayActivityInstance.GatewayDirectionTypeID = (short)GatewayDirectionEnum.OrSplit;
-
             base.InsertActivityInstance(gatewayActivityInstance,
                 session);
 

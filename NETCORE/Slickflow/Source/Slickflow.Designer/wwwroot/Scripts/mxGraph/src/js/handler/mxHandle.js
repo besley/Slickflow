@@ -39,9 +39,9 @@ mxHandle.prototype.cursor = 'default';
 mxHandle.prototype.image = null;
 
 /**
- * Variable: image
+ * Variable: ignoreGrid
  * 
- * Specifies the <mxImage> to be used to render the handle. Default is null.
+ * Default is false.
  */
 mxHandle.prototype.ignoreGrid = false;
 
@@ -238,7 +238,6 @@ mxHandle.prototype.redraw = function()
 			this.shape.bounds.y = Math.floor((pt.y + tr.y) * scale - this.shape.bounds.height / 2);
 			
 			// Needed to force update of text bounds
-			this.state.unscaledWidth = null;
 			this.shape.redraw();
 		}
 	}
