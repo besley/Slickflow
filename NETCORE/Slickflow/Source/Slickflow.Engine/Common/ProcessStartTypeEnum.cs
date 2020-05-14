@@ -22,9 +22,9 @@ namespace Slickflow.Engine.Common
         Timer = 1,
 
         /// <summary>
-        /// 邮件启动
+        /// 消息启动
         /// </summary>
-        EMail = 2
+        Message = 2
     }
 
     /// <summary>
@@ -38,13 +38,13 @@ namespace Slickflow.Engine.Common
         None = 0,
 
         /// <summary>
-        /// 定时启动
+        /// 定时结束
         /// </summary>
         Timer = 1,
 
         /// <summary>
-        /// 邮件启动
+        /// 消息结束
         /// </summary>
-        EMail = 2
+        Message = 2
     }
 }

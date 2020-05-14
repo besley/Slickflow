@@ -5,16 +5,11 @@
     <Authors>Besley</Authors>
     <Company>Hangzhou, Ligong</Company>
     <Product>Slickflow.NET</Product>
-    <Copyright>@2014-2019</Copyright>
-    <AssemblyVersion>1.7.5.0</AssemblyVersion>
-    <FileVersion>1.7.5.0</FileVersion>
+    <Copyright>@2014-2020</Copyright>
+    <AssemblyVersion>1.7.6.0</AssemblyVersion>
+    <FileVersion>1.7.6.0</FileVersion>
     <Description>Open Source Workflow Engine in .NET Core2.1 Framework</Description>
-    <Version>1.7.5.0</Version>
-    <PackageProjectUrl>http://github.com/besley/slickflow</PackageProjectUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>https://opensource.org/licenses/lgpl-3.0.html</PackageLicenseUrl>
-    <PackageTags>Workflow Engine, .NET Core</PackageTags>
+    <Version>1.7.6</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -35,14 +30,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj" />
+    <ProjectReference Include="..\Slickflow.Module.Localize\Slickflow.Module.Localize.csproj" />
     <ProjectReference Include="..\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj" />
     <ProjectReference Include="..\Slickflow.Module\Slickflow.Module.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Dapper">
-      <HintPath>..\DLL\Dapper.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

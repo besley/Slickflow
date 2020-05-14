@@ -1,4 +1,4 @@
-urlHelp=scripts/mxGraph/src/editor/help/index.html
+urlHelp=Scripts/mxGraph/src/editor/help/index.html
 lastSaved=Last Saved
 currentFile=Current File
 toolbar=Tools
@@ -12,6 +12,7 @@ undo=Undo
 redo=Redo
 select=Select
 connect=Connect
+message=Message
 pan=Pan
 zoomIn=Zoom In
 zoomOut=Zoom Out

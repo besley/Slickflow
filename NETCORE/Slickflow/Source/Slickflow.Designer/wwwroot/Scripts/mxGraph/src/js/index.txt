@@ -260,7 +260,7 @@ Functions:
   function on the isSelectable function object of the mxGraph prototype, using
   the special this and arguments variables as parameters. Calls to the
   superclass function are only possible if the function is not replaced in the
-  superclass as follows, which is another way of “subclassing?in JavaScript.
+  superclass as follows, which is another way of “subclassing” in JavaScript.
 
   (code)
   mxGraph.prototype.isCellSelectable = function(cell)

@@ -1097,7 +1097,9 @@ mxConnectionHandler.prototype.updateCurrentState = function(me, point)
 			{
 				this.currentState = this.constraintHandler.currentFocus;
 			}
-			else
+					
+			if (this.error != null || (this.currentState != null &&
+				!this.isCellEnabled(this.currentState.cell)))
 			{
 				this.constraintHandler.reset();
 			}
@@ -1114,6 +1116,13 @@ mxConnectionHandler.prototype.updateCurrentState = function(me, point)
 		{
 			this.marker.process(me);
 			this.currentState = this.marker.getValidState();
+		}
+			
+		if (this.currentState != null && !this.isCellEnabled(this.currentState.cell))
+		{
+			this.constraintHandler.reset();
+			this.marker.reset();
+			this.currentState = null;
 		}
 
 		var outline = this.isOutlineConnectEvent(me);
@@ -1166,6 +1175,17 @@ mxConnectionHandler.prototype.updateCurrentState = function(me, point)
 			}
 		}
 	}
+};
+
+/**
+ * Function: isCellEnabled
+ * 
+ * Returns true if the given cell allows new connections to be created. This implementation
+ * always returns true.
+ */
+mxConnectionHandler.prototype.isCellEnabled = function(cell)
+{
+	return true;
 };
 
 /**
@@ -1240,7 +1260,10 @@ mxConnectionHandler.prototype.mouseMove = function(sender, me)
 		this.snapToPreview(me, point);
 		this.currentPoint = point;
 		
-		if (this.first != null || (this.isEnabled() && this.graph.isEnabled()))
+		if ((this.first != null || (this.isEnabled() && this.graph.isEnabled())) &&
+			(this.shape != null || this.first == null ||
+			Math.abs(me.getGraphX() - this.first.x) > this.graph.tolerance ||
+			Math.abs(me.getGraphY() - this.first.y) > this.graph.tolerance))
 		{
 			this.updateCurrentState(me, point);
 		}
@@ -1258,9 +1281,11 @@ mxConnectionHandler.prototype.mouseMove = function(sender, me)
 				constraint = this.constraintHandler.currentConstraint;
 				current = this.constraintHandler.currentPoint.clone();
 			}
-			else if (this.previous != null && !this.graph.isIgnoreTerminalEvent(me.getEvent()) && mxEvent.isShiftDown(me.getEvent()))
+			else if (this.previous != null && !this.graph.isIgnoreTerminalEvent(me.getEvent()) &&
+				mxEvent.isShiftDown(me.getEvent()))
 			{
-				if (Math.abs(this.previous.getCenterX() - point.x) < Math.abs(this.previous.getCenterY() - point.y))
+				if (Math.abs(this.previous.getCenterX() - point.x) <
+					Math.abs(this.previous.getCenterY() - point.y))
 				{
 					point.x = this.previous.getCenterX();
 				}
@@ -1371,8 +1396,8 @@ mxConnectionHandler.prototype.mouseMove = function(sender, me)
 			// Creates the preview shape (lazy)
 			if (this.shape == null)
 			{
-				var dx = Math.abs(point.x - this.first.x);
-				var dy = Math.abs(point.y - this.first.y);
+				var dx = Math.abs(me.getGraphX() - this.first.x);
+				var dy = Math.abs(me.getGraphY() - this.first.y);
 
 				if (dx > this.graph.tolerance || dy > this.graph.tolerance)
 				{
@@ -1674,6 +1699,20 @@ mxConnectionHandler.prototype.addWaypointForEvent = function(me)
 };
 
 /**
+ * Function: checkConstraints
+ * 
+ * Returns true if the connection for the given constraints is valid. This
+ * implementation returns true if the constraints are not pointing to the
+ * same fixed connection point.
+ */
+mxConnectionHandler.prototype.checkConstraints = function(c1, c2)
+{
+	return (c1 == null || c2 == null || c1.point == null || c2.point == null ||
+		!c1.point.equals(c2.point) || c1.dx != c2.dx || c1.dy != c2.dy ||
+		c1.perimeter != c2.perimeter);
+};
+
+/**
  * Function: mouseUp
  * 
  * Handles the event by inserting the new connection.
@@ -1690,23 +1729,27 @@ mxConnectionHandler.prototype.mouseUp = function(sender, me)
 			return;
 		}
 		
-		// Inserts the edge if no validation error exists
-		if (this.error == null)
+		var c1 = this.sourceConstraint;
+		var c2 = this.constraintHandler.currentConstraint;
+
+		var source = (this.previous != null) ? this.previous.cell : null;
+		var target = null;
+		
+		if (this.constraintHandler.currentConstraint != null &&
+			this.constraintHandler.currentFocus != null)
 		{
-			var source = (this.previous != null) ? this.previous.cell : null;
-			var target = null;
-			
-			if (this.constraintHandler.currentConstraint != null &&
-				this.constraintHandler.currentFocus != null)
-			{
-				target = this.constraintHandler.currentFocus.cell;
-			}
-			
-			if (target == null && this.currentState != null)
-			{
-				target = this.currentState.cell;
-			}
-			
+			target = this.constraintHandler.currentFocus.cell;
+		}
+		
+		if (target == null && this.currentState != null)
+		{
+			target = this.currentState.cell;
+		}
+		
+		// Inserts the edge if no validation error exists and if constraints differ
+		if (this.error == null && (source == null || target == null ||
+			source != target || this.checkConstraints(c1, c2)))
+		{
 			this.connect(source, target, me.getEvent(), me.getCell());
 		}
 		else
@@ -1715,12 +1758,12 @@ mxConnectionHandler.prototype.mouseUp = function(sender, me)
 			if (this.previous != null && this.marker.validState != null &&
 				this.previous.cell == this.marker.validState.cell)
 			{
-				this.graph.selectCellForEvent(this.marker.source, evt);
+				this.graph.selectCellForEvent(this.marker.source, me.getEvent());
 			}
 			
 			// Displays the error message if it is not an empty string,
 			// for empty error messages, the event is silently dropped
-			if (this.error.length > 0)
+			if (this.error != null && this.error.length > 0)
 			{
 				this.graph.validationAlert(this.error);
 			}
@@ -1946,8 +1989,7 @@ mxConnectionHandler.prototype.connect = function(source, target, evt, dropTarget
 
 					if (tmp != null && tmp.parent != null && tmp.parent == edge.parent)
 					{
-						var index = tmp.parent.getIndex(tmp);
-						tmp.parent.insert(edge, index);
+						model.add(parent, edge, tmp.parent.getIndex(tmp));
 					}
 				}
 				
@@ -2065,7 +2107,7 @@ mxConnectionHandler.prototype.createTargetVertex = function(evt, source)
 		geo = this.graph.getCellGeometry(source);
 	}
 	
-	var clone = this.graph.cloneCells([source])[0];
+	var clone = this.graph.cloneCell(source);
 	var geo = this.graph.getModel().getGeometry(clone);
 	
 	if (geo != null)

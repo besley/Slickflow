@@ -202,6 +202,19 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// 获取全部数据集合
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="conn"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
+        public IEnumerable<T> GetAll<T>(IDbConnection conn, IDbTransaction trans) where T : class
+        {
+            var dataList = conn.GetList<T>(null, null, trans);
+            return dataList;
+        }
+
+        /// <summary>
         /// 查询匹配的一条数据
         /// </summary>
         /// <typeparam name="T"></typeparam>

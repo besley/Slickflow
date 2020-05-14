@@ -281,7 +281,7 @@ mxGraphView.prototype.setCurrentRoot = function(root)
 	{
 		var change = new mxCurrentRootChange(this, root);
 		change.execute();
-		var edit = new mxUndoableEdit(this, false);
+		var edit = new mxUndoableEdit(this, true);
 		edit.add(change);
 		this.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', edit));
 		this.graph.sizeDidChange();
@@ -316,8 +316,7 @@ mxGraphView.prototype.scaleAndTranslate = function(scale, dx, dy)
 
 		if (this.isEventsEnabled())
 		{
-			this.revalidate();
-			this.graph.sizeDidChange();
+			this.viewStateChanged();
 		}
 	}
 	
@@ -356,8 +355,7 @@ mxGraphView.prototype.setScale = function(value)
 
 		if (this.isEventsEnabled())
 		{
-			this.revalidate();
-			this.graph.sizeDidChange();
+			this.viewStateChanged();
 		}
 	}
 	
@@ -398,13 +396,23 @@ mxGraphView.prototype.setTranslate = function(dx, dy)
 
 		if (this.isEventsEnabled())
 		{
-			this.revalidate();
-			this.graph.sizeDidChange();
+			this.viewStateChanged();
 		}
 	}
 	
 	this.fireEvent(new mxEventObject(mxEvent.TRANSLATE,
 		'translate', this.translate, 'previousTranslate', previousTranslate));
+};
+
+/**
+ * Function: viewStateChanged
+ * 
+ * Invoked after <scale> and/or <translate> has changed.
+ */
+mxGraphView.prototype.viewStateChanged = function()
+{
+	this.revalidate();
+	this.graph.sizeDidChange();
 };
 
 /**
@@ -947,9 +955,10 @@ mxGraphView.prototype.validateCellState = function(cell, recurse)
 			{
 				state.invalid = false;
 				
-				if (state.style == null)
+				if (state.style == null || state.invalidStyle)
 				{
 					state.style = this.graph.getCellStyle(state.cell);
+					state.invalidStyle = false;
 				}
 				
 				if (cell != this.currentRoot)
@@ -966,6 +975,9 @@ mxGraphView.prototype.validateCellState = function(cell, recurse)
 				if (cell != this.currentRoot && !state.invalid)
 				{
 					this.graph.cellRenderer.redraw(state, false, this.isRendering());
+
+					// Handles changes to invertex paintbounds after update of rendering shape
+					state.updateCachedBounds();
 				}
 			}
 
@@ -1032,7 +1044,7 @@ mxGraphView.prototype.updateCellState = function(state)
 		{
 			if (!model.isEdge(state.cell))
 			{
-				offset = geo.offset || this.EMPTY_POINT;
+				offset = (geo.offset != null) ? geo.offset : this.EMPTY_POINT;
 	
 				if (geo.relative && pState != null)
 				{
@@ -1048,8 +1060,8 @@ mxGraphView.prototype.updateCellState = function(state)
 					}
 					else
 					{
-						state.origin.x += geo.x * pState.width / this.scale + offset.x;
-						state.origin.y += geo.y * pState.height / this.scale + offset.y;
+						state.origin.x += geo.x * pState.unscaledWidth + offset.x;
+						state.origin.y += geo.y * pState.unscaledHeight + offset.y;
 					}
 				}
 				else
@@ -1066,6 +1078,7 @@ mxGraphView.prototype.updateCellState = function(state)
 			state.width = this.scale * geo.width;
 			state.unscaledWidth = geo.width;
 			state.height = this.scale * geo.height;
+			state.unscaledHeight = geo.height;
 			
 			if (model.isVertex(state.cell))
 			{
@@ -1336,7 +1349,7 @@ mxGraphView.prototype.getFixedTerminalPoint = function(edge, terminal, source, c
 	
 	if (constraint != null)
 	{
-		pt = this.graph.getConnectionPoint(terminal, constraint);
+		pt = this.graph.getConnectionPoint(terminal, constraint, false); // FIXME Rounding introduced bugs when calculating label positions -> , this.graph.isOrthogonal(edge));
 	}
 	
 	if (pt == null && terminal == null)
@@ -1467,15 +1480,17 @@ mxGraphView.prototype.transformControlPoint = function(state, pt)
  * 
  * Returns true if the given edge should be routed with <mxGraph.defaultLoopStyle>
  * or the <mxConstants.STYLE_LOOP> defined for the given edge. This implementation
- * returns true if the given edge is a loop and does not 
+ * returns true if the given edge is a loop and does not have connections constraints
+ * associated.
  */
 mxGraphView.prototype.isLoopStyleEnabled = function(edge, points, source, target)
 {
 	var sc = this.graph.getConnectionConstraint(edge, source, true);
 	var tc = this.graph.getConnectionConstraint(edge, target, false);
 	
-	if (!mxUtils.getValue(edge.style, mxConstants.STYLE_ORTHOGONAL_LOOP, false) ||
-		((sc == null || sc.point == null) && (tc == null || tc.point == null)))
+	if ((points == null || points.length < 2) &&
+		(!mxUtils.getValue(edge.style, mxConstants.STYLE_ORTHOGONAL_LOOP, false) ||
+		((sc == null || sc.point == null) && (tc == null || tc.point == null))))
 	{
 		return source != null && source == target;
 	}
@@ -1604,7 +1619,7 @@ mxGraphView.prototype.getFloatingTerminalPoint = function(edge, start, end, sour
 		var sin = Math.sin(alpha);
 		pt = mxUtils.getRotatedPoint(pt, cos, sin, center);
 	}
-	
+
 	return pt;
 };
 
@@ -1667,10 +1682,50 @@ mxGraphView.prototype.getPerimeterPoint = function(terminal, next, orthogonal, b
 		if (perimeter != null && next != null)
 		{
 			var bounds = this.getPerimeterBounds(terminal, border);
-			
+
 			if (bounds.width > 0 || bounds.height > 0)
 			{
-				point = perimeter(bounds, terminal, next, orthogonal);
+				point = new mxPoint(next.x, next.y);
+				var flipH = false;
+				var flipV = false;	
+				
+				if (this.graph.model.isVertex(terminal.cell))
+				{
+					flipH = mxUtils.getValue(terminal.style, mxConstants.STYLE_FLIPH, 0) == 1;
+					flipV = mxUtils.getValue(terminal.style, mxConstants.STYLE_FLIPV, 0) == 1;	
+	
+					// Legacy support for stencilFlipH/V
+					if (terminal.shape != null && terminal.shape.stencil != null)
+					{
+						flipH = (mxUtils.getValue(terminal.style, 'stencilFlipH', 0) == 1) || flipH;
+						flipV = (mxUtils.getValue(terminal.style, 'stencilFlipV', 0) == 1) || flipV;
+					}
+	
+					if (flipH)
+					{
+						point.x = 2 * bounds.getCenterX() - point.x;
+					}
+					
+					if (flipV)
+					{
+						point.y = 2 * bounds.getCenterY() - point.y;
+					}
+				}
+				
+				point = perimeter(bounds, terminal, point, orthogonal);
+
+				if (point != null)
+				{
+					if (flipH)
+					{
+						point.x = 2 * bounds.getCenterX() - point.x;
+					}
+					
+					if (flipV)
+					{
+						point.y = 2 * bounds.getCenterY() - point.y;
+					}
+				}
 			}
 		}
 		
@@ -1855,8 +1910,10 @@ mxGraphView.prototype.getVisibleTerminal = function(edge, source)
 		result = model.getParent(result);
 	}
 
-	// Checks if the result is not a layer
-	if (model.getParent(best) == model.getRoot())
+	// Checks if the result is valid for the current view state
+	if (best != null && (!model.contains(best) ||
+		model.getParent(best) == model.getRoot() ||
+		best == this.currentRoot))
 	{
 		best = null;
 	}
@@ -2815,6 +2872,8 @@ mxGraphView.prototype.createSvg = function()
 	this.canvas.appendChild(this.decoratorPane);
 	
 	var root = document.createElementNS(mxConstants.NS_SVG, 'svg');
+	root.style.left = '0px';
+	root.style.top = '0px';
 	root.style.width = '100%';
 	root.style.height = '100%';
 	

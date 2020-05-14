@@ -104,6 +104,11 @@
 			<add as="shape" value="connector"/>
 			<add as="endArrow" value="classic"/>
 		</add>
+    <add as="message">
+      <add as="shape" value="connector"/>
+      <add as="endArrow" value="classic"/>
+      <add as="dashed" value="1"/>
+    </add>
 		<add as="arrowEdge">
 			<add as="shape" value="arrow"/>
 			<add as="fillColor" value="red"/>
@@ -117,6 +122,15 @@
 			<add as="fontColor" value="white"/>
 			<add as="labelBackgroundColor" value="none"/>
 		</add>
+    <add as="pool">
+      <add as="shape" value="pool"/>
+      <add as="shadow" value="0"/>
+      <add as="startSize" value="23"/>
+      <add as="align" value="center"/>
+      <add as="verticalAlign" value="top"/>
+      <add as="strokeColor" value="#EEEEEE"/>
+      <add as="fillColor" value="#D4D4D4"/>
+    </add>
 		<add as="group">
 			<add as="shape" value="rectangle"/>
 			<add as="rounded" value="1"/>

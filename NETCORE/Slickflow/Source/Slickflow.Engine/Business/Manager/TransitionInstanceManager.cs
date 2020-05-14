@@ -25,15 +25,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
-using System.Diagnostics;
 using Dapper;
 using DapperExtensions;
-using Slickflow.Engine.Common;
 using Slickflow.Data;
-using Slickflow.Engine.Xpdl.Entity;
-using Slickflow.Engine.Xpdl.Node;
+using Slickflow.Module.Localize;
+using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Utility;
 
 namespace Slickflow.Engine.Business.Manager
@@ -124,7 +121,6 @@ namespace Slickflow.Engine.Business.Manager
         }
         #endregion
 
-
         #region 数据查询
         /// <summary>
         /// 根据ID获取实例数据
@@ -151,7 +147,7 @@ namespace Slickflow.Engine.Business.Manager
 
             if (nodeList == null || nodeList.Count == 0)
             {
-                throw new WorkflowException("没有流程结束的流转记录！");
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("transitioninstancemanager.entrust.error"));
             }
 
             return nodeList[0];
@@ -170,7 +166,7 @@ namespace Slickflow.Engine.Business.Manager
 
             if (nodeList.Count == 0)
             {
-                throw new WorkflowException("没有符合条件的最后流转任务的实例数据，请查看流程其它信息！");
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("transitioninstancemanager.getlasttasktransition.error"));
             }
 
             return nodeList[0];

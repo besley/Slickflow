@@ -106,6 +106,7 @@ input{ outline:none;}
 .btnNew{background-position:-60px -140px;}/*add*/
 .btnDel{background-position:-20px -140px;width:18px;}/*delete*/
 .btnEdit{background-position:-120px -60px;}
+.btnUp{background-position:-142px -36px;}
 .btnSave{background-position:-0px -60px;}
 .btnSetting{background-position:-60px -20px;}
 .btnDelete{background-position:-80px -120px;}

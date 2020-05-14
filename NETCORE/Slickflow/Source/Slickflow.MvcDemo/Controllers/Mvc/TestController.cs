@@ -5,7 +5,7 @@ using System.Web;
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Slickflow.OrderDemo.Controllers.Mvc
+namespace Slickflow.MvcDemo.Controllers.Mvc
 {
     /// <summary>
     /// 任务的执行者对象

@@ -50,6 +50,7 @@ namespace Slickflow.Data
         IEnumerable<T> GetByIds<T>(IList<dynamic> ids) where T : class;
         IEnumerable<T> GetByIds<T>(IDbConnection conn, IList<dynamic> ids, IDbTransaction trans = null, bool buffered = true) where T : class;
         IEnumerable<T> GetAll<T>() where T : class;
+        IEnumerable<T> GetAll<T>(IDbConnection conn, IDbTransaction trans) where T : class;
         IEnumerable<T> Query<T>(string sql, dynamic param = null, bool buffered = true) where T : class;
         IEnumerable<T> Query<T>(IDbConnection conn, string sql, dynamic param = null, IDbTransaction trans = null, bool buffered = true) where T : class;
         IEnumerable<dynamic> Query(IDbConnection conn, string sql, dynamic param = null, IDbTransaction trans = null, bool buffered = true);

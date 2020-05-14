@@ -42,6 +42,16 @@ namespace Slickflow.Engine.Xpdl.Entity
         /// 表达式
         /// </summary>
         public string Expression { get; set; }
+
+        /// <summary>
+        /// 反射方法配置信息
+        /// </summary>
+        public MethodInfo MethodInfo { get; set; }
+
+        /// <summary>
+        /// 文本脚本代码
+        /// </summary>
+        public CodeInfo CodeInfo { get; set; }
         #endregion
     }
 
@@ -72,9 +82,14 @@ namespace Slickflow.Engine.Xpdl.Entity
         None = 0,
 
         /// <summary>
-        /// 本地程序
+        /// 本地服务程序
         /// </summary>
-        LocalMethod = 1,
+        LocalService = 1,
+
+        /// <summary>
+        /// C# 代码
+        /// </summary>
+        CSharpLibrary = 2,
 
         /// <summary>
         /// 外部插件方法
@@ -157,7 +172,47 @@ namespace Slickflow.Engine.Xpdl.Entity
         /// 执行后
         /// </summary>
         After = 2
-    }        
+    }
 
+    /// <summary>
+    /// 反射组件方法
+    /// </summary>
+    public class MethodInfo
+    {
+        /// <summary>
+        /// Assembly Full Name
+        /// </summary>
+        public string AssemblyFullName { get; set; }
 
+        /// <summary>
+        /// Class Full Name
+        /// </summary>
+        public string TypeFullName { get; set; }
+
+        /// <summary>
+        /// Class Constructor Parameter
+        /// </summary>
+        public object[] ConstructorParameters { get; set; }
+
+        /// <summary>
+        /// Method Name
+        /// </summary>
+        public string MethodName { get; set; }
+
+        /// <summary>
+        /// Method Parameters
+        /// </summary>
+        public object[] MethodParameters { get; set; }
+    }
+
+    /// <summary>
+    /// Code Info
+    /// </summary>
+    public class CodeInfo
+    {
+        /// <summary>
+        /// Code Script Text
+        /// </summary>
+        public string CodeText { get; set; }
+    }
 }

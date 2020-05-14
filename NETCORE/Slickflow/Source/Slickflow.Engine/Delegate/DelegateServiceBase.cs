@@ -107,5 +107,106 @@ namespace Slickflow.Engine.Delegate
         {
             _activityResource = activityResource;
         }
+
+        /// <summary>
+        /// 设置变量
+        /// </summary>
+        /// <param name="name">名称</param>
+        /// <param name="value">数值</param>
+        /// <param name="variableType">变量类型</param>
+        public void SaveVariable(ProcessVariableTypeEnum variableType, string name, string value)
+        {
+            var pvm = new ProcessVariableManager();
+            ProcessVariableEntity entity = null;
+
+            if (variableType == ProcessVariableTypeEnum.Process)
+            {
+                //设置流程变量
+                entity = new ProcessVariableEntity
+                {
+                    VariableType = ProcessVariableTypeEnum.Process.ToString(),
+                    AppInstanceID = this.AppInstanceID,
+                    ProcessGUID = this.ProcessGUID,
+                    ProcessInstanceID = this.ProcessInstanceID,
+                    Name = name,
+                    Value = value,
+                    LastUpdatedDateTime = System.DateTime.Now
+                };
+            }
+            else if (variableType == ProcessVariableTypeEnum.Activity)
+            {
+                entity = new ProcessVariableEntity
+                {
+                    VariableType = ProcessVariableTypeEnum.Activity.ToString(),
+                    AppInstanceID = this.AppInstanceID,
+                    ProcessGUID = this.ProcessGUID,
+                    ProcessInstanceID = this.ProcessInstanceID,
+                    ActivityGUID = this.ActivityGUID,
+                    ActivityName = this.ActivityName,
+                    Name = name,
+                    Value = value,
+                    LastUpdatedDateTime = System.DateTime.Now
+                };
+            }
+            pvm.SaveVariable(Session.Connection, entity, Session.Transaction);
+        }
+
+        /// <summary>
+        /// 获取变量
+        /// </summary>
+        /// <param name="name">名称</param>
+        /// <param name="variableType">变量类型</param>
+        /// <returns>数值</returns>
+        public string GetVariable(ProcessVariableTypeEnum variableType, string name)
+        {
+            //查询活动变量
+            var value = string.Empty;
+            ProcessVariableQuery query = null;
+            var pvm = new ProcessVariableManager();
+
+            if (variableType == ProcessVariableTypeEnum.Process)
+            {
+                //查询流程变量
+                query = new ProcessVariableQuery
+                {
+                    VariableType = ProcessVariableTypeEnum.Process,
+                    ProcessInstanceID = this.ProcessInstanceID,
+                    Name = name
+                };
+                value = pvm.GetVariableValue(Session.Connection, query, Session.Transaction);
+            }
+            else if (variableType == ProcessVariableTypeEnum.Activity)
+            {
+                query = new ProcessVariableQuery
+                {
+                    VariableType = ProcessVariableTypeEnum.Activity,
+                    ProcessInstanceID = this.ProcessInstanceID,
+                    ActivityGUID = this.ActivityGUID,
+                    Name = name
+                };
+                value = pvm.GetVariableValue(Session.Connection, query, Session.Transaction);
+            }
+            return value;
+        }
+
+        /// <summary>
+        /// 获取变量内容
+        /// </summary>
+        /// <param name="name">变量名称</param>
+        /// <returns>变量内容</returns>
+        public string GetVariableThroughly(string name)
+        {
+            var query = new ProcessVariableQuery();
+            query.VariableType = ProcessVariableTypeEnum.Activity;
+            query.ProcessInstanceID = this.ProcessInstanceID;
+            query.Name = name;
+
+            var value = GetVariable(ProcessVariableTypeEnum.Activity, name);
+            if (value == null)
+            {
+                value = GetVariable(ProcessVariableTypeEnum.Process, name);
+            }
+            return value;
+        }
     }
 }

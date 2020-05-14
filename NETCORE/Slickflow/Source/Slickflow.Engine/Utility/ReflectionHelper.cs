@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Reflection;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
+using Slickflow.Module.Localize;
 using Slickflow.Engine.Config;
 
 namespace Slickflow.Engine.Utility
@@ -38,7 +36,7 @@ namespace Slickflow.Engine.Utility
             }
             else
             {
-                throw new ApplicationException(string.Format("未能加载外部服务类的程序集：类型名称：{0}", fullName));
+                throw new ApplicationException(LocalizeHelper.GetEngineMessage("reflectionhelper.GetSpecialInstance.error", fullName));
             }
         }
 

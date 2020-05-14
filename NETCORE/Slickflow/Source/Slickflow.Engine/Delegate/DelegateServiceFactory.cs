@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Slickflow.Data;
+using Slickflow.Module.Localize;
 
 namespace Slickflow.Engine.Delegate
 {
@@ -35,7 +32,7 @@ namespace Slickflow.Engine.Delegate
             }
             else
             {
-                throw new ApplicationException("不正确的委托类型参数！");
+                throw new ApplicationException(LocalizeHelper.GetEngineMessage("delegateservicefactory.CreateDelegateService.error"));
             }
         }
     }

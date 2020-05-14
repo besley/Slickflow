@@ -21,10 +21,12 @@ web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 */
 
 using Slickflow.Data;
+using Slickflow.Engine.Common;
 using Slickflow.Engine.Core.Pattern;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Delegate;
-
+using Slickflow.Engine.Business.Entity;
+using Slickflow.Engine.Business.Manager;
 
 namespace Slickflow.Engine.Core.Runtime
 {
@@ -51,21 +53,17 @@ namespace Slickflow.Engine.Core.Runtime
                     false,
                     session);
 
-                //----> 节点开始流转，调用活动开始执行的委托事件
-                DelegateExecutor.InvokeExternalDelegate(session,
-                    EventFireTypeEnum.OnActivityExecuting,
-                    runningExecutionContext);
+                //执行流程运行事件
+                OnProcessRunning(session);
 
                 //执行节点流转过程
                 NodeMediator mediator = NodeMediatorFactory.CreateNodeMediator(runningExecutionContext, session);
                 mediator.Linker.FromActivityInstance = RunningActivityInstance;
                 mediator.ExecuteWorkItem();
 
-                //----> 节点流转完成后，调用活动完成执行的委托事件
-                DelegateExecutor.InvokeExternalDelegate(session,
-                    EventFireTypeEnum.OnActivityExecuted,
-                    runningExecutionContext);
-
+                //执行流程完成事件
+                OnProcessCompleted(session);
+               
                 //构造回调函数需要的数据
                 result.Status = WfExecutedStatus.Success;
                 result.Message = mediator.GetNodeMediatedMessage();
@@ -84,6 +82,37 @@ namespace Slickflow.Engine.Core.Runtime
                 result.Message = ex.Message;
                 throw ex;
             } 
+        }
+
+        /// <summary>
+        /// 执行流程完成事件
+        /// </summary>
+        /// <param name="session">会话</param>
+        private void OnProcessRunning(IDbSession session)
+        {
+            //调用流程结束事件
+            DelegateExecutor.InvokeExternalDelegate(session,
+                EventFireTypeEnum.OnProcessRunning,
+                base.ActivityResource.AppRunner.DelegateEventList,
+                RunningActivityInstance.ProcessInstanceID);
+        }
+
+        /// <summary>
+        /// 执行流程完成事件
+        /// </summary>
+        /// <param name="session">会话</param>
+        private void OnProcessCompleted(IDbSession session)
+        {
+            var pim = new ProcessInstanceManager();
+            var entity = pim.GetById(session.Connection, RunningActivityInstance.ProcessInstanceID, session.Transaction);
+            if (entity.ProcessState == (short)ProcessStateEnum.Completed)
+            {
+                //调用流程结束事件
+                DelegateExecutor.InvokeExternalDelegate(session,
+                    EventFireTypeEnum.OnProcessCompleted,
+                    base.ActivityResource.AppRunner.DelegateEventList,
+                    RunningActivityInstance.ProcessInstanceID);
+            }
         }
     }
 }

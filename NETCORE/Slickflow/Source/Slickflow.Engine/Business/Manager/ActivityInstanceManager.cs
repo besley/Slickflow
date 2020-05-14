@@ -25,10 +25,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
-using System.Diagnostics;
 using Slickflow.Data;
+using Slickflow.Module.Localize;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Utility;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
@@ -60,8 +59,8 @@ namespace Slickflow.Engine.Business.Manager
             }
             catch (System.Exception e)
             {
-                throw new ApplicationException(string.Format("数据读取方法GetById发生错误，请查看内部异常: {0}",
-                    e.Message), e);
+                throw new ApplicationException(LocalizeHelper.GetEngineMessage("activityinstancemanager.getbyid.error", e.Message),
+                    e);
             }
         }
 
@@ -144,8 +143,9 @@ namespace Slickflow.Engine.Business.Manager
             if (activityInstanceList == null || activityInstanceList.Count == 0)
             {
                 //当前没有运行状态的节点存在，流程不存在，或者已经结束或取消
-                var e = new WorkflowException("当前流程没有运行节点，状态异常！");
-                LogManager.RecordLog("获取当前运行节点信息异常", LogEventType.Exception, LogPriority.Normal, null, e);
+                var message = LocalizeHelper.GetEngineMessage("activityinstancemanager.getrunningnode.error");
+                var e = new WorkflowException(message);
+                LogManager.RecordLog(message, LogEventType.Exception, LogPriority.Normal, null, e);
                 throw e;
             }
 
@@ -175,8 +175,10 @@ namespace Slickflow.Engine.Business.Manager
                 else
                 {
                     //当前用户的待办任务不唯一，抛出异常，需要TaskID唯一界定
-                    var e = new WorkflowException("当前流程有多个运行节点，但没有TaskID传入，状态异常！");
-                    LogManager.RecordLog("获取当前运行节点信息异常", LogEventType.Exception, LogPriority.Normal, null, e);
+                    var msgException = LocalizeHelper.GetEngineMessage("activityinstancemanager.getrunningnode.unique.error");
+                    var e = new WorkflowException(msgException);
+                    LogManager.RecordLog(LocalizeHelper.GetEngineMessage("activityinstancemanager.getrunningnode.error"), 
+                        LogEventType.Exception, LogPriority.Normal, null, e);
                     throw e;
                 }
             }
@@ -1073,12 +1075,14 @@ namespace Slickflow.Engine.Business.Manager
         /// </summary>
         /// <param name="appName">应用名称</param>
         /// <param name="appInstanceID">应用实例ID</param>
+        /// <param name="appInstanceCode">应用实例代码</param>
         /// <param name="processInstanceID">流程实例ID</param>
         /// <param name="activity">活动</param>
         /// <param name="runner">运行者</param>
         /// <returns>活动实例实体</returns>
         internal ActivityInstanceEntity CreateActivityInstanceObject(string appName,
             string appInstanceID,
+            string appInstanceCode,
             int processInstanceID,
             ActivityEntity activity,
             WfAppRunner runner)
@@ -1093,6 +1097,7 @@ namespace Slickflow.Engine.Business.Manager
             instance.ProcessGUID = activity.ProcessGUID;
             instance.AppName = appName;
             instance.AppInstanceID = appInstanceID;
+            instance.AppInstanceCode = appInstanceCode;
             instance.ProcessInstanceID = processInstanceID;
             instance.TokensRequired = 1;
             instance.TokensHad = 1;
@@ -1152,6 +1157,7 @@ namespace Slickflow.Engine.Business.Manager
             instance.ProcessGUID = main.ProcessGUID;
             instance.AppName = main.AppName;
             instance.AppInstanceID = main.AppInstanceID;
+            instance.AppInstanceCode = main.AppInstanceCode;
             instance.ProcessInstanceID = main.ProcessInstanceID;
             instance.TokensRequired = 1;
             instance.TokensHad = 1;
@@ -1169,6 +1175,7 @@ namespace Slickflow.Engine.Business.Manager
         /// </summary>
         /// <param name="appName">应用名称</param>
         /// <param name="appInstanceID">应用实例ID</param>
+        /// <param name="appInstanceCode">应用实例代码</param>
         /// <param name="processInstanceID">流程实例ID</param>
         /// <param name="activity">活动</param>
         /// <param name="backwardType">退回类型</param>
@@ -1178,6 +1185,7 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns>活动实例</returns>
         internal ActivityInstanceEntity CreateBackwardActivityInstanceObject(string appName,
             string appInstanceID,
+            string appInstanceCode,
             int processInstanceID,
             ActivityEntity activity,
             BackwardTypeEnum backwardType,
@@ -1195,6 +1203,7 @@ namespace Slickflow.Engine.Business.Manager
             instance.ProcessGUID = activity.ProcessGUID;
             instance.AppName = appName;
             instance.AppInstanceID = appInstanceID;
+            instance.AppInstanceCode = appInstanceCode;
             instance.ProcessInstanceID = processInstanceID;
             instance.BackwardType = (short)backwardType;
             instance.BackSrcActivityInstanceID = backSrcActivityInstanceID;

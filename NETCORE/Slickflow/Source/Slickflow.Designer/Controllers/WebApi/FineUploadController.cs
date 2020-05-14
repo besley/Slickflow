@@ -33,6 +33,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
+using Slickflow.Module.Localize;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Service;
@@ -57,7 +58,7 @@ namespace Slickflow.Designer.Controllers.WebApi
 
             if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
             {
-                return Ok(new { success = false, Message = "不支持的媒介类型！" });
+                return Ok(new { success = false, Message = "Unsupported media type!" });
             }
 
             var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(Request.ContentType),
@@ -92,7 +93,7 @@ namespace Slickflow.Designer.Controllers.WebApi
                 // reads the headers for the next section.
                 section = await reader.ReadNextSectionAsync();
             }
-            return Ok(new { success = false, Message = "未知的其它原因！" });
+            return Ok(new { success = false, Message = "Unknown other reasons！" });
         }
 
         /// <summary>
@@ -131,21 +132,21 @@ namespace Slickflow.Designer.Controllers.WebApi
                         var wfService = new WorkflowService();
                         wfService.ImportProcess(processEntity);
                         isUploaded = true;
-                        message = "导入XML文件成功，并生成新的流程记录！";
+                        message = LocalizeHelper.GetDesignerMessage("fineuploadcontroller.importprocess.success");
                     }
                     else
                     {
-                        message = "流程名称和GUID数据不完整！";
+                        message = LocalizeHelper.GetDesignerMessage("fineuploadcontroller.createnewprocess.warning");
                     }
                 }
                 else
                 {
-                    message = "流程节点为空！";
+                    message = LocalizeHelper.GetDesignerMessage("fineuploadcontroller.createnewprocess.noxmlnode.warning");
                 }
             }
             else
             {
-                message = "流程文件根节点为空！";
+                message = LocalizeHelper.GetDesignerMessage("fineuploadcontroller.createnewprocess.norootelement.warning");
             }
             return isUploaded;
         }

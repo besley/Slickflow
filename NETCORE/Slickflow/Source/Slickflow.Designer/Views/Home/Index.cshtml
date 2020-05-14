@@ -33,7 +33,7 @@
             border-style: solid;
             border-color: #F2F2F2;
             border-width: 1px;
-            background: url('scripts/mxGraph/src/editor/images/grid.gif');
+            background: url('Scripts/mxGraph/src/editor/images/grid.gif');
         }
 
         hr {
@@ -58,11 +58,16 @@
                 <a href="#" class="btn btn-info" onclick="kmain.saveProcessFile();"><span class="glyphicon glyphicon-ok lang" as="save"> </span></a>
             </div>
             <div class="dropdown" style="float:left;margin-left: 5px;">
-                <a class="btn btn-info dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th lang" as="options"> </span><span class="caret"></span></a>
+                <a class="btn btn-info dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench lang" as="tools"> </span><span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#" class="lang" as="content" onclick="kmain.previewXml();"></a></li>
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#" class="lang" as="importxml" onclick="kmain.importDiagram();"></a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" class="lang" as="simutest" onclick="kmain.simuTest();"></a></li>
+                </ul>
+            </div>
+            <div class="dropdown" style="float:left;margin-left: 5px;">
+                <a class="btn btn-info dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th lang" as="options"> </span><span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" class="lang" as="slickflowgraphtutorial" onclick="kmain.gotoTutorial();"></a></li>
                     <li class="divider">&nbsp</li>
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#" class="lang" as="en" onclick="kmain.changeLang('en');"></a></li>
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#" class="lang" as="zh" onclick="kmain.changeLang('zh');"></a></li>
@@ -121,13 +126,16 @@
     <script type="text/javascript" src="~/ViewJS/kmain.js"></script>
     <script type="text/javascript" src="~/ViewJS/kmodel.js"></script>
     <script type="text/javascript" src="~/ViewJS/kresource.js"></script>
+    <script type="text/javascript" src="~/ViewJS/kvalidator.js"></script>
     <script type="text/javascript" src="~/ViewJS/mxtoolkit.js"></script>
     <script type="text/javascript" src="~/ViewJS/mxconfig.js"></script>
     <script type="text/javascript" src="~/ViewJS/processlist.js"></script>
+    <script type="text/javascript" src="~/ViewJS/processmodel.js"></script>
     <script type="text/javascript" src="~/ViewJS/activityproperty.js"></script>
     <script type="text/javascript" src="~/ViewJS/transitionproperty.js"></script>
     <script type="text/javascript" src="~/ViewJS/cronmanager.js"></script>
     <script type="text/javascript" src="~/ViewJS/rolelist.js"></script>
+    <script type="text/javascript" src="~/Scripts/codemirror/lib/codemirror-csharp.js"></script>
     @*<script type="text/javascript" src="~/ViewJS/kmx.min.js"></script>*@
 
     <script type="text/javascript">

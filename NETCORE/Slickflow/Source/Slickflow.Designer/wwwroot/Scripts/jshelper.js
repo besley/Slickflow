@@ -443,6 +443,16 @@ if (!jshelper) jshelper = {};
         return (fn.toString().match(/function (.+?)\(/) || [, ''])[1];
     }
 
+
+    jshelper.getRandomString = function(len) {
+        len = len || 32;
+        var t = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+            a = t.length,
+            n = "";
+        for (i = 0; i < len; i++) n += t.charAt(Math.floor(Math.random() * a));
+        return n
+    }
+
     jshelper.getUUID = function () {
         var d = new Date().getTime();
         var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

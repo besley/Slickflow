@@ -634,6 +634,11 @@ mxObjectCodec.prototype.convertAttributeFromXml = function(dec, attr, obj)
 	if (this.isNumericAttribute(dec, attr, obj))
 	{
 		value = parseFloat(value);
+		
+		if (isNaN(value) || !isFinite(value))
+		{
+			value = 0;
+		}
 	}
 	
 	return value;
@@ -642,7 +647,7 @@ mxObjectCodec.prototype.convertAttributeFromXml = function(dec, attr, obj)
 /**
  * Function: isNumericAttribute
  * 
- * Returns true if the given XML attribute is a numeric value.
+ * Returns true if the given XML attribute is or should be a numeric value.
  * 
  * Parameters:
  *
@@ -652,7 +657,15 @@ mxObjectCodec.prototype.convertAttributeFromXml = function(dec, attr, obj)
  */
 mxObjectCodec.prototype.isNumericAttribute = function(dec, attr, obj)
 {
-	return mxUtils.isNumeric(attr.value);
+	// Handles known numeric attributes for generic objects
+	var result = (obj.constructor == mxGeometry &&
+		(attr.name == 'x' || attr.name == 'y' ||
+		attr.name == 'width' || attr.name == 'height')) ||
+		(obj.constructor == mxPoint &&
+		(attr.name == 'x' || attr.name == 'y')) ||
+		mxUtils.isNumeric(attr.value);
+	
+	return result;
 };
 
 /**
@@ -939,7 +952,14 @@ mxObjectCodec.prototype.decodeChild = function(dec, child, obj)
 			value = dec.decode(child, template);
 		}
 
-		this.addObjectValue(obj, fieldname, value, template);
+		try
+		{
+			this.addObjectValue(obj, fieldname, value, template);
+		}
+		catch (e)
+		{
+			throw new Error(e.message + ' for ' + child.nodeName);
+		}
 	}
 };
 

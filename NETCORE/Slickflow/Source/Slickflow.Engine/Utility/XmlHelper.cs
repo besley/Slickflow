@@ -65,7 +65,7 @@ namespace Slickflow.Engine.Utility
         /// <param name="xmlNode">XML节点</param>
         /// <param name="childNodeName">子节点名称</param>
         /// <returns>文本</returns>
-        public static string GetXmlNodeValue(XmlNode xmlNode, string childNodeName)
+        public static string GetXmlNodeText(XmlNode xmlNode, string childNodeName)
         {
             return xmlNode.SelectSingleNode(childNodeName).InnerText;
         }

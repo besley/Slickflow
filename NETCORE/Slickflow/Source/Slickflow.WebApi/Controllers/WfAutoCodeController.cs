@@ -121,6 +121,8 @@ namespace Slickflow.WebApi.Controllers
                          .UseProcess(runner.ProcessGUID, runner.Version)
                          .Subscribe(EventFireTypeEnum.OnProcessStarted, (delegateContext, delegateService) => {
                              var processInstanceID = delegateContext.ProcessInstanceID;
+                             delegateService.SaveVariable(ProcessVariableTypeEnum.Process, "name", "book");
+                             delegateService.SaveVariable(ProcessVariableTypeEnum.Process, "amount", "30");
                              return true;
                          })
                          .Start();
@@ -154,7 +156,11 @@ namespace Slickflow.WebApi.Controllers
                          //.NextStepInt(NextPerformerIntTypeEnum.Single)
                          .IfCondition(runner.Conditions)
                          .Subscribe(EventFireTypeEnum.OnActivityExecuting, (delegateContext, delegateService) => {
-                             var processInstanceID = delegateContext.ProcessInstanceID;
+                             if (delegateContext.ActivityCode == "Task1")
+                             {
+                                 delegateService.SaveVariable(ProcessVariableTypeEnum.Process, "name", "book-task1");
+                                 delegateService.SaveVariable(ProcessVariableTypeEnum.Process, "amount", "50");
+                             }
                              return true;
                          })
                          .Run();

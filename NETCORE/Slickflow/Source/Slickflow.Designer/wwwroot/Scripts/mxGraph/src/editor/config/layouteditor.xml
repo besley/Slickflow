@@ -1,5 +1,5 @@
 <mxEditor layoutDiagram="1" layoutSwimlanes="1" maintainSwimlanes="1">
-	<include name="scripts/mxGraph/src/editor/config/wfeditor-commons.xml"/>
+	<include name="Scripts/mxGraph/src/editor/config/wfeditor-commons.xml"/>
 	<ui>
 		<add as="graph" element="graph"
 			style="left:70px;right:20px;top:20px;bottom:40px"/>
@@ -17,7 +17,7 @@
 		</add>
 	</Array>
 	<mxGraph as="graph" swimlaneNesting="0">
-		<include name="scripts/mxGraph/src/editor/config/wfgraph-commons.xml"/>
+		<include name="Scripts/mxGraph/src/editor/config/wfgraph-commons.xml"/>
 		<mxStylesheet as="stylesheet">
 			<add as="defaultEdge">
 				<add as="shape" value="connector"/>
@@ -31,6 +31,6 @@
 		</mxStylesheet>
 	</mxGraph>
 	<mxDefaultToolbar as="toolbar">
-		<include name="scripts/mxGraph/src/editor/config/wftoolbar-commons.xml"/>
+		<include name="Scripts/mxGraph/src/editor/config/wftoolbar-commons.xml"/>
 	</mxDefaultToolbar>
 </mxEditor>

@@ -25,17 +25,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
 using Dapper;
 using DapperExtensions;
-using Slickflow.Engine.Common;
-using Slickflow.Engine.Delegate;
-using Slickflow.Engine.Utility;
 using Slickflow.Data;
-using Slickflow.Engine.Xpdl.Entity;
+using Slickflow.Module.Localize;
+using Slickflow.Engine.Common;
+using Slickflow.Engine.Utility;
 using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Business.Manager;
 using Slickflow.Module.Resource;
 
 namespace Slickflow.Engine.Business.Manager
@@ -494,7 +490,7 @@ namespace Slickflow.Engine.Business.Manager
             }
             else
             {
-                throw new ProcessInstanceException("流程不在运行状态，不能被完成！");
+                throw new ProcessInstanceException(LocalizeHelper.GetEngineMessage("processinstancemanager.complete.error"));
             }
             return processInstance;
         }
@@ -522,16 +518,16 @@ namespace Slickflow.Engine.Business.Manager
             }
             else
             {
-                throw new ProcessInstanceException("流程不在运行状态，不能被完成！");
+                throw new ProcessInstanceException(LocalizeHelper.GetEngineMessage("processinstancemanager.suspend.error"));
             }
         }
 
         /// <summary>
         /// 恢复流程实例
         /// </summary>
-        /// <param name="processInstanceID"></param>
-        /// <param name="runner"></param>
-        /// <param name="session"></param>
+        /// <param name="processInstanceID">流程实例ID</param>
+        /// <param name="runner">运行者</param>
+        /// <param name="session">会话</param>
         internal void Resume(int processInstanceID,
             WfAppRunner runner,
             IDbSession session)
@@ -549,7 +545,7 @@ namespace Slickflow.Engine.Business.Manager
             }
             else
             {
-                throw new ProcessInstanceException("流程不在挂起状态，不能被完成！");
+                throw new ProcessInstanceException(LocalizeHelper.GetEngineMessage("processinstancemanager.resume.error"));
             }
         }
         /// <summary>
@@ -587,7 +583,7 @@ namespace Slickflow.Engine.Business.Manager
             }
             else
             {
-                throw new ProcessInstanceException("流程不在挂起状态，不能被完成！");
+                throw new ProcessInstanceException(LocalizeHelper.GetEngineMessage("processinstancemanager.recallsubprocess.error"));
             }
         }
 
@@ -613,7 +609,7 @@ namespace Slickflow.Engine.Business.Manager
             }
             else
             {
-                throw new ProcessInstanceException("流程不在运行状态，不能被完成！");
+                throw new ProcessInstanceException(LocalizeHelper.GetEngineMessage("processinstancemanager.reverse.error"));
             }
         }
 
@@ -638,7 +634,7 @@ namespace Slickflow.Engine.Business.Manager
 
                 if (entity == null || entity.ProcessState != (short)ProcessStateEnum.Running)
                 {
-                    throw new WorkflowException("无法取消流程，错误原因：当前没有运行中的流程实例，或者同时有多个运行中的流程实例（不合法数据）!");
+                    throw new WorkflowException(LocalizeHelper.GetEngineMessage("processinstancemanager.cancel.error"));
                 }
 
                 IDbSession session = SessionFactory.CreateSession();
@@ -654,7 +650,7 @@ namespace Slickflow.Engine.Business.Manager
             }
             catch (System.Exception e)
             {
-                throw new WorkflowException(string.Format("取消流程实例失败，错误原因：{0}", e.Message));
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("processinstancemanager.cancel.error", e.Message));
             }
             finally
             {
@@ -680,19 +676,23 @@ namespace Slickflow.Engine.Business.Manager
             var transaction = conn.BeginTransaction();
             try
             {
+                //process state:7--discard status
+                //record status:1 --invalid status
                 string updSql = @"UPDATE WfProcessInstance
-		                         SET [ProcessState] = 7, --废弃状态
-			                         [RecordStatusInvalid] = 1, --设置记录为无效状态
+		                         SET [ProcessState] = 7, 
+			                         [RecordStatusInvalid] = 1,
 			                         [LastUpdatedDateTime] = GETDATE(),
 			                         [LastUpdatedByUserID] = @userID,
 			                         [LastUpdatedByUserName] = @userName
 		                        WHERE AppInstanceID = @appInstanceID
-			                        AND ProcessGUID = @processGUID";
+			                        AND ProcessGUID = @processGUID
+                                    AND Version = @version";
 
                 int result = Repository.Execute(conn, updSql, new
                     {
                         appInstanceID = runner.AppInstanceID,
                         processGUID = runner.ProcessGUID,
+                        version = runner.Version,
                         userID = runner.UserID,
                         userName = runner.UserName
                     },
@@ -708,7 +708,7 @@ namespace Slickflow.Engine.Business.Manager
             catch (System.Exception e)
             {
                 transaction.Rollback();
-                throw new WorkflowException(string.Format("执行废弃流程的操作失败，错误原因：{0}", e.Message));
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("processinstancemanager.discard.error", e.Message));
             }
             finally
             {
@@ -739,7 +739,7 @@ namespace Slickflow.Engine.Business.Manager
             }
             else
             {
-                throw new ProcessInstanceException("流程已经结束，或者已经被取消！");
+                throw new ProcessInstanceException(LocalizeHelper.GetEngineMessage("processinstancemanager.terminate.error"));
             }
         }
 
@@ -769,7 +769,7 @@ namespace Slickflow.Engine.Business.Manager
             }
             else
             {
-                throw new ProcessInstanceException("流程已经结束，或者已经被取消！");
+                throw new ProcessInstanceException(LocalizeHelper.GetEngineMessage("processinstancemanager.setoverdue.error"));
             }
         }
 
@@ -832,7 +832,7 @@ namespace Slickflow.Engine.Business.Manager
                 }
                 else
                 {
-                    throw new ProcessInstanceException("流程只有先取消，才可以删除！");
+                    throw new ProcessInstanceException(LocalizeHelper.GetEngineMessage("processinstancemanager.delete.error"));
                 }
             }
             catch (System.Exception)

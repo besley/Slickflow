@@ -24,10 +24,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
+using Slickflow.Module.Localize;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Delegate;
-using Slickflow.Engine.Core.Result;
-using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 
 namespace Slickflow.Engine.Service
@@ -63,7 +62,8 @@ namespace Slickflow.Engine.Service
         {
             _wfAppRunner.UserID = userID;
             _wfAppRunner.UserName = userName;
-			_wfAppRunner.TaskID = null;
+            _wfAppRunner.TaskID = null;
+
             return this;
         }
 
@@ -170,7 +170,7 @@ namespace Slickflow.Engine.Service
             }
             else
             {
-                throw new ApplicationException("下一步办理用户列表不能为空！");
+                throw new ApplicationException(LocalizeHelper.GetEngineMessage("workflowservice.nextstep.error"));
             }
             return this;
         }
@@ -189,7 +189,7 @@ namespace Slickflow.Engine.Service
             }
             else
             {
-                throw new ApplicationException("下一步办理用户列表不能为空！");
+                throw new ApplicationException(LocalizeHelper.GetEngineMessage("workflowservice.nextstep.error"));
             }
             return this;
         }

@@ -27,12 +27,13 @@ var kresource = (function () {
 
     kresource.mxCurrentLanguageJSON = null;
     kresource.MX_RESOURCE_LOCAL_LANGUAGE = "mx-resource-local-lang";
+    kresource.IsIE = navigator.userAgent.indexOf('MSIE') >= 0;
 
     kresource.getLang = function () {
         //get user enviroment language
         var localLang = window.localStorage.getItem(kresource.MX_RESOURCE_LOCAL_LANGUAGE);
         if (localLang === null || localLang === "") {
-            var lan = (mxClient.IS_IE) ? navigator.userLanguage : navigator.language;
+            var lan = (kresource.IsIE) ? navigator.userLanguage : navigator.language;
             if (lan.substring(0, 2) !== "zh")
                 window.localStorage.setItem(kresource.MX_RESOURCE_LOCAL_LANGUAGE, "en");
             else
@@ -44,7 +45,7 @@ var kresource = (function () {
 
     kresource.setLang = function (lang) {
         mxLanguage = lang;
-        mxClient.language = lang;
+        if (mxClient) mxClient.language = lang;
         window.localStorage.setItem(kresource.MX_RESOURCE_LOCAL_LANGUAGE, lang);
     }
 
@@ -58,6 +59,12 @@ var kresource = (function () {
                     $(this).text(json[key]);
                 });
             });
+
+        jshelper.ajaxGet('Language/SetLang/' + lang, null,
+            function (result) {
+                var status = result.Status;
+            }
+        );
     }
 
     kresource.getItem = function (key) {

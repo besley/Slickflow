@@ -24,30 +24,28 @@
             <div class="login-wrap">
                 <div class="panel-body" style="margin-left:20px;">
                     <div class="row">
-                        <label class="lang" as="choosesystemrole"></label>
+                        <label>请选择系统角色: </label>
                         <select class="form-control input-lg m-bot15" id="ddlRoles">
-                            <option value="0" class="lang" as="rolelist"></option>
+                            <option value="0">--角色列表--</option>
                         </select>
                     </div>
                     <div class="row">
-                        <label class="lang" as="chooseroleuser"></label>
+                        <label>请选择角色人员: </label>
                         <select class="form-control input-lg m-bot15" id="ddlUsers">
-                            <option value="0" class="lang" as="userlist"></option>
+                            <option value="0">--人员列表--</option>
                         </select>
                     </div>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary lang" as="login" onclick="accountmanager.login();"></button>
+            <button class="btn btn-primary" onclick="accountmanager.login();">登 录</button>
         </div>
     </div>
     <script type="text/javascript" src="~/ViewJS/accountmanager.js"></script>
 
     <script type="text/javascript">
         $(function () {
-            kresource.localize();
-
             accountmanager.loadRoles();
 
             $("#loginForm").submit(function (e) {

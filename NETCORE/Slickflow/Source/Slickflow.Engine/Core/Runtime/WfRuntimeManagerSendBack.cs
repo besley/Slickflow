@@ -23,12 +23,11 @@ web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 using System;
 using System.Collections.Generic;
 using Slickflow.Data;
+using Slickflow.Module.Localize;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Core.Result;
-using Slickflow.Engine.Core.Pattern;
 using Slickflow.Engine.Core.SendBack;
-using Slickflow.Engine.Xpdl.Entity;
 
 namespace Slickflow.Engine.Core.Runtime
 {
@@ -81,7 +80,7 @@ namespace Slickflow.Engine.Core.Runtime
                     }
                     else
                     {
-                        throw new ApplicationException("不支持的退回节点类型，请联系技术人员！");
+                        throw new ApplicationException(LocalizeHelper.GetEngineMessage("wfruntimemanagersendback.ExecuteInstanceImp.error"));
                     }
 
                     //执行退回方法
@@ -118,7 +117,7 @@ namespace Slickflow.Engine.Core.Runtime
                     }
                     else
                     {
-                        throw new ApplicationException("不支持的退回节点类型，请联系技术人员！");
+                        throw new ApplicationException(LocalizeHelper.GetEngineMessage("wfruntimemanagersendback.ExecuteInstanceImp.error"));
                     }
 
                     //执行退回方法

@@ -17,7 +17,17 @@ namespace Slickflow.Designer.Controllers.Mvc
             return View();
         }
 
+        public ActionResult Create()
+        {
+            return View();
+        }
+
         public ActionResult Edit()
+        {
+            return View();
+        }
+
+        public ActionResult XmlContent()
         {
             return View();
         }

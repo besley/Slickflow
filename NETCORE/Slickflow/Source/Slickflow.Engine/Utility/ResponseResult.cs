@@ -50,9 +50,8 @@ namespace Slickflow.Engine.Utility
         /// <summary>
         /// 响应消息封装类
         /// </summary>
-        /// <param name="Status">状态:1-成功；0-缺省; -1失败</param>
-        /// <param name="Message">消息内容</param>
-        /// <returns></returns>
+        /// <param name="message">消息内容</param>
+        /// <returns>响应结果</returns>
         public static ResponseResult Default(string message = null)
         {
             var result = new ResponseResult();
@@ -65,9 +64,8 @@ namespace Slickflow.Engine.Utility
         /// <summary>
         /// 响应消息封装类
         /// </summary>
-        /// <param name="Status">状态:1-成功；0-缺省; -1失败</param>
-        /// <param name="Message">消息内容</param>
-        /// <returns></returns>
+        /// <param name="message">消息内容</param>
+        /// <returns>响应结果</returns>
         public static ResponseResult Success(string message = null)
         {
             var result = new ResponseResult();
@@ -80,9 +78,9 @@ namespace Slickflow.Engine.Utility
         /// <summary>
         /// 响应消息封装类，用于插入操作，返回新ID
         /// </summary>
-        /// <param name="Status">状态:1-成功; 0-缺省; -1失败</param>
-        /// <param name="Message">消息内容</param>
-        /// <returns></returns>
+        /// <param name="newId">新实体ID</param>
+        /// <param name="message">消息内容</param>
+        /// <returns>响应结果</returns>
         public static ResponseResult Success(dynamic newId, string message = null)
         {
             var result = new ResponseResult();
@@ -96,8 +94,7 @@ namespace Slickflow.Engine.Utility
         /// <summary>
         /// 响应消息封装类
         /// </summary>
-        /// <param name="Status">状态:1-成功；0-缺省; -1失败</param>
-        /// <param name="Message">消息内容</param>
+        /// <param name="errorMessage">消息内容</param>
         /// <returns></returns>
         public static ResponseResult Error(string errorMessage)
         {
@@ -170,8 +167,6 @@ namespace Slickflow.Engine.Utility
         /// <summary>
         /// 响应消息封装类
         /// </summary>
-        /// <param name="Status">状态:1-成功; 0-缺省; -1失败</param>
-        /// <param name="Message">消息内容</param>
         /// <returns></returns>
         public static ResponseResult<T> Default()
         {
@@ -186,8 +181,8 @@ namespace Slickflow.Engine.Utility
         /// <summary>
         /// 响应消息封装类
         /// </summary>
-        /// <param name="Status">状态:1-成功; 0-缺省; -1失败</param>
-        /// <param name="Message">消息内容</param>
+        /// <param name="t">实体</param>
+        /// <param name="message">消息内容</param>
         /// <returns></returns>
         public static ResponseResult<T> Success(T t, string message = null)
         {
@@ -202,9 +197,9 @@ namespace Slickflow.Engine.Utility
         /// <summary>
         /// 响应消息封装类，用于插入操作，返回新ID
         /// </summary>
-        /// <param name="Status">状态:1-成功; 0-缺省; -1失败</param>
-        /// <param name="Message">消息内容</param>
-        /// <returns></returns>
+        /// <param name="newId">新实体ID</param>
+        /// <param name="message">消息内容</param>
+        /// <returns>响应结果</returns>
         public static ResponseResult<T> Success(int newId, string message = null)
         {
             var result = new ResponseResult<T>();
@@ -216,9 +211,8 @@ namespace Slickflow.Engine.Utility
         /// <summary>
         /// Http 响应消息封装类
         /// </summary>
-        /// <param name="Status">状态:1-成功; 0-缺省; -1失败</param>
-        /// <param name="Message">消息内容</param>
-        /// <returns></returns>
+        /// <param name="message">消息内容</param>
+        /// <returns>响应结果</returns>
         public static ResponseResult<T> Error(string message = null)
         {
             var result = new ResponseResult<T>();

@@ -7,14 +7,14 @@ using Newtonsoft.Json;
 
 namespace Slickflow.Engine.Common
 {
-    internal class NextStepUtility
+    public class NextStepUtility
     {
         /// <summary>
         /// 根据文本内容反序列化下一步人员列表
         /// </summary>
         /// <param name="jsonNextStep">json格式的步骤文本</param>
         /// <returns>下一步步骤对象</returns>
-        internal static IDictionary<string, PerformerList> DeserializeNextStepPerformers(string jsonNextStep)
+        public static IDictionary<string, PerformerList> DeserializeNextStepPerformers(string jsonNextStep)
         {
             IDictionary<string, PerformerList> nextSteps = null;
             if (!string.IsNullOrEmpty(jsonNextStep))
@@ -30,7 +30,7 @@ namespace Slickflow.Engine.Common
         /// </summary>
         /// <param name="nextSteps">下一步步骤对象</param>
         /// <returns>json格式的步骤文本</returns>
-        internal static string SerializeNextStepPerformers(IDictionary<string, PerformerList> nextSteps)
+        public static string SerializeNextStepPerformers(IDictionary<string, PerformerList> nextSteps)
         {
             var jsonNextSteps = string.Empty;
             if (nextSteps != null 
@@ -50,7 +50,9 @@ namespace Slickflow.Engine.Common
         /// <param name="userID">用户ID</param>
         /// <param name="userName">用户名称</param>
         /// <returns>步骤列表</returns>
-        internal static IDictionary<string, PerformerList> CreateNextStepPerformerList(string activityGUID, string userID, string userName)
+        public static IDictionary<string, PerformerList> CreateNextStepPerformerList(string activityGUID, 
+            string userID, 
+            string userName)
         {
             var performerList = PerformerBuilder.CreatePerformerList(userID, userName);
             var nextStep = new Dictionary<string, PerformerList>();

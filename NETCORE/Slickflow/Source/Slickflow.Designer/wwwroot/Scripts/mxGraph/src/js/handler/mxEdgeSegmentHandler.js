@@ -24,8 +24,11 @@ mxEdgeSegmentHandler.prototype.getCurrentPoints = function()
 	if (pts != null)
 	{
 		// Special case for straight edges where we add a virtual middle handle for moving the edge
-		if (pts.length == 2 || (pts.length == 3 && (pts[0].x == pts[1].x && pts[1].x == pts[2].x ||
-				pts[0].y == pts[1].y && pts[1].y == pts[2].y)))
+		var tol = Math.max(1, this.graph.view.scale);
+		
+		if (pts.length == 2 || (pts.length == 3 &&
+			(Math.abs(pts[0].x - pts[1].x) < tol && Math.abs(pts[1].x - pts[2].x) < tol ||
+			Math.abs(pts[0].y - pts[1].y) < tol && Math.abs(pts[1].y - pts[2].y) < tol)))
 		{
 			var cx = pts[0].x + (pts[pts.length - 1].x - pts[0].x) / 2;
 			var cy = pts[0].y + (pts[pts.length - 1].y - pts[0].y) / 2;
@@ -205,40 +208,48 @@ mxEdgeSegmentHandler.prototype.updatePreviewState = function(edge, point, termin
  */
 mxEdgeSegmentHandler.prototype.connect = function(edge, terminal, isSource, isClone, me)
 {
-	// Merges adjacent edge segments
-	var pts = this.abspoints;
-	var pt0 = pts[0];
-	var pt1 = pts[1];
-	var result = [];
-	
-	for (var i = 2; i < pts.length; i++)
-	{
-		var pt2 = pts[i];
-	
-		// Merges adjacent segments only if more than 2 to allow for straight edges
-		if ((Math.round(pt0.x - pt1.x) != 0 || Math.round(pt1.x - pt2.x) != 0) &&
-			(Math.round(pt0.y - pt1.y) != 0 || Math.round(pt1.y - pt2.y) != 0))
-		{
-			result.push(this.convertPoint(pt1.clone(), false));
-		}
-
-		pt0 = pt1;
-		pt1 = pt2;
-	}
-	
 	var model = this.graph.getModel();
+	var geo = model.getGeometry(edge);
+	var result = null;
+	
+	// Merges adjacent edge segments
+	if (geo != null && geo.points != null && geo.points.length > 0)
+	{
+		var pts = this.abspoints;
+		var pt0 = pts[0];
+		var pt1 = pts[1];
+		result = [];
+		
+		for (var i = 2; i < pts.length; i++)
+		{
+			var pt2 = pts[i];
+		
+			// Merges adjacent segments only if more than 2 to allow for straight edges
+			if ((Math.round(pt0.x - pt1.x) != 0 || Math.round(pt1.x - pt2.x) != 0) &&
+				(Math.round(pt0.y - pt1.y) != 0 || Math.round(pt1.y - pt2.y) != 0))
+			{
+				result.push(this.convertPoint(pt1.clone(), false));
+			}
+	
+			pt0 = pt1;
+			pt1 = pt2;
+		}
+	}
 	
 	model.beginUpdate();
 	try
 	{
-		var geo = model.getGeometry(edge);
-		
-		if (geo != null)
+		if (result != null)
 		{
-			geo = geo.clone();
-			geo.points = result;
+			var geo = model.getGeometry(edge);
 			
-			model.setGeometry(edge, geo);
+			if (geo != null)
+			{
+				geo = geo.clone();
+				geo.points = result;
+				
+				model.setGeometry(edge, geo);
+			}
 		}
 		
 		edge = mxEdgeHandler.prototype.connect.apply(this, arguments);
@@ -270,7 +281,8 @@ mxEdgeSegmentHandler.prototype.start = function(x, y, index)
 {
 	mxEdgeHandler.prototype.start.apply(this, arguments);
 	
-	if (this.bends[index] != null && !this.isSource && !this.isTarget)
+	if (this.bends != null && this.bends[index] != null &&
+		!this.isSource && !this.isTarget)
 	{
 		mxUtils.setOpacity(this.bends[index].node, 100);
 	}

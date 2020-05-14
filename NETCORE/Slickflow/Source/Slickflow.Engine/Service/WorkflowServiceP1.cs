@@ -34,7 +34,7 @@ using Slickflow.Engine.Xpdl;
 namespace Slickflow.Engine.Service
 {
     /// <summary>
-    /// 工作流服务（数据查询）
+    /// 工作流服务(数据查询)
     /// </summary>
     public partial class WorkflowService : IWorkflowService
     {
@@ -306,6 +306,53 @@ namespace Slickflow.Engine.Service
             var list = aim.GetRunningActivityInstanceList(query.AppInstanceID, query.ProcessGUID).ToList();
             return list;
         }
+
+        /// <summary>
+        /// 获取流程变量
+        /// </summary>
+        /// <param name="variableID">变量ID</param>
+        /// <returns>变量实体</returns>
+        public ProcessVariableEntity GetProcessVariable(int variableID)
+        {
+            var pvm = new ProcessVariableManager();
+            var entity = pvm.GetVariableEntity(variableID);
+
+            return entity;
+        }
+
+        /// <summary>
+        /// 获取流程变量
+        /// </summary>
+        /// <param name="query">查询</param>
+        /// <returns>变量实体</returns>
+        public ProcessVariableEntity GetProcessVariable(ProcessVariableQuery query)
+        {
+            var pvm = new ProcessVariableManager();
+            var entity = pvm.GetVariableEntity(query);
+            return entity;
+        }
+
+        /// <summary>
+        /// 获取变量列表
+        /// </summary>
+        /// <param name="query">变量查询</param>
+        /// <returns>活动实例列表</returns>
+        public IList<ProcessVariableEntity> GetProcessVariableList(ProcessVariableQuery query)
+        {
+            var pvm = new ProcessVariableManager();
+            var list = pvm.GetVariableList(query.ProcessInstanceID);
+            return list;
+        }
+
+        /// <summary>
+        /// 删除流程变量
+        /// </summary>
+        /// <param name="variableID">变量ID</param>
+        public void DeleteProcessVariable(int variableID)
+        {
+            var pvm = new ProcessVariableManager();
+            pvm.DeleteVariable(variableID);
+        }
         #endregion
 
         #region 流程实例数据更新
@@ -317,6 +364,18 @@ namespace Slickflow.Engine.Service
         {
             var pim = new ProcessInstanceManager();
             pim.Update(entity);
+        }
+
+        /// <summary>
+        /// 保存流程变量
+        /// </summary>
+        /// <param name="entity">流程实体</param>
+        /// <returns>流程变量ID</returns>
+        public int SaveProcessVariable(ProcessVariableEntity entity)
+        {
+            var pvm = new ProcessVariableManager();
+            var entityID = pvm.SaveVariable(entity);
+            return entityID;
         }
         #endregion
 
@@ -364,8 +423,8 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 根据角色获取用户列表
         /// </summary>
-        /// <param name="roleID"></param>
-        /// <returns></returns>
+        /// <param name="roleID">角色ID</param>
+        /// <returns>用户列表</returns>
         public IList<User> GetUserListByRole(string roleID)
         {
             return ResourceService.GetUserListByRole(roleID);
@@ -374,8 +433,8 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 获取节点上的执行者列表
         /// </summary>
-        /// <param name="nextNode"></param>
-        /// <returns></returns>
+        /// <param name="nextNode">节点</param>
+        /// <returns>执行用户列表</returns>
         public PerformerList GetPerformerList(NodeView nextNode)
         {
             var performerList = PerformerBuilder.CreatePerformerList(nextNode.Roles);

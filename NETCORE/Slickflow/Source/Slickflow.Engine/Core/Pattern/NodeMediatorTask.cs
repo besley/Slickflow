@@ -28,6 +28,7 @@ using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
 
+
 namespace Slickflow.Engine.Core.Pattern
 {
     /// <summary>

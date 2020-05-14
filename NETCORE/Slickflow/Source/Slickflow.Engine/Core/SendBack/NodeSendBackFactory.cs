@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Slickflow.Data;
+using Slickflow.Module.Localize;
 using Slickflow.Engine.Common;
 
 namespace Slickflow.Engine.Core.SendBack
@@ -31,15 +32,15 @@ namespace Slickflow.Engine.Core.SendBack
                 else
                 {
                     //如果有其它模式，没有处理到，则直接抛出异常
-                    throw new WorkflowException(string.Format("社区版不支持的退回场景:{0}，建议请使用企业版以上版本！",
+                    throw new WorkflowException(LocalizeHelper.GetEngineMessage("nodesendbackfactory.CreateNodeReverter.error",
                         sendbackOperation.PreviousNodeOperationType.ToString()));
                 }
             }
             else if (sendbackOperation.CurrentNodeOperationType == SendBackOperationTypeEnum.MultipleInstance)
             {
                 //如果有其它模式，没有处理到，则直接抛出异常
-                throw new WorkflowException(string.Format("社区版不支持的退回场景:{0}，建议请使用企业版以上版本！",
-                   sendbackOperation.CurrentMultipleInstanceDetailType.ToString()));
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("nodesendbackfactory.CreateNodeReverter.error",
+                    sendbackOperation.CurrentMultipleInstanceDetailType.ToString()));
             }
             return nodeSendBack;
         }

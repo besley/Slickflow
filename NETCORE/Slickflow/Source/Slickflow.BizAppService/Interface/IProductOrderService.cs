@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
 using Slickflow.BizAppService.Entity;
 
 namespace Slickflow.BizAppService.Interface
@@ -13,7 +14,7 @@ namespace Slickflow.BizAppService.Interface
     public partial interface IProductOrderService
     {
         List<ProductOrderEntity> GetPaged(ProductOrderQuery query, out int count);
-        ProductOrderEntity SyncOrder();
+        ProductOrderEntity SyncOrder(IDbConnection conn, IDbTransaction trans);
         WfAppResult Dispatch(ProductOrderEntity entity);
         WfAppResult Sample(ProductOrderEntity entity);
         WfAppResult Manufacture(ProductOrderEntity entity);

@@ -24,4 +24,14 @@ namespace Slickflow.Engine.Business.Entity
         public String XmlContent { get; set; }
         public ProcessTemplateType TemplateType { get; set; }
     }
+
+    /// <summary>
+    /// 泳道流程实体对象
+    /// </summary>
+    public class ProcessFilePool
+    {
+        public List<ProcessEntity> ProcessEntityList { get; set; }
+        public string XmlContent { get; set; }
+    }
+
 }

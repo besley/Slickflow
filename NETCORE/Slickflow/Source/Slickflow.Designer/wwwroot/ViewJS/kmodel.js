@@ -38,7 +38,8 @@ var kmodel = (function () {
 		ELEMENT_TYPE_NODE: "NODE",
         ELEMENT_TYPE_CONNECTION: "CONNECTION",
         ACTION_TYPE_EVENT: "Event",
-        ACTION_METHOD_TYPE_LOCALMETHOD: "LocalMethod",
+        ACTION_METHOD_TYPE_LOCALSERVICE: "LocalService",
+        ACTION_METHOD_TYPE_CSHARPLIBRARY: "CSharpLibrary",
         ACTION_METHOD_TYPE_WEBAPI: "WebApi",
         ACTION_METHOD_TYPE_SQL: "SQL",
         ACTION_METHOD_TYPE_STOREPROCEDURE: "StoreProcedure",
@@ -59,79 +60,70 @@ var kmodel = (function () {
         IntermediateNode: "IntermediateNode",
     }
 
-    kmodel.GraphData = function(graphData){
+    kmodel.GraphData = function (graphData) {
         this.package = graphData.package;
-        this.process = graphData.package.process;
 
         //Swimlanes
         function createSwimlanes(swimlanes){
-            var yongdao = null,
-                yongdaos = [];
             if (swimlanes && swimlanes.length > 0){
                 var graph = kmain.mxGraphEditor.graph;
                 var model = graph.getModel();
                 model.beginUpdate();
                 try{
-				    for (var i = 0; i < swimlanes.length; i++) {
-                        yongdao = mxtoolkit.insertSwimlane(graph, swimlanes[i]);
-					    yongdaos.push(yongdao);
+                    for (var i = 0; i < swimlanes.length; i++) {
+                        mxtoolkit.insertSwimlane(graph, swimlanes[i]);
 				    }
                 }finally{
                     model.endUpdate();
                 }
             }
-            return yongdaos;
         }
-        this.yongdaos = createSwimlanes(this.process.swimlanes);
+        createSwimlanes(this.package.swimlanes);
 
         //Groups
         function createGroups(groups) {
-            var zuhe = null,
-                zuhes = [];
             if (groups && groups.length > 0) {
                 var graph = kmain.mxGraphEditor.graph;
                 var model = graph.getModel();
                 model.beginUpdate();
                 try {
                     for (var i = 0; i < groups.length; i++) {
-                        zuhe = mxtoolkit.insertGroup(graph, groups[i]);
-                        zuhes.push(zuhe);
+                        mxtoolkit.insertGroup(graph, groups[i]);
                     }
                 } finally {
                     model.endUpdate();
                 }
             }
-            return zuhes;
         }
-        this.zuhes = createGroups(this.process.groups);
+        createGroups(this.package.groups);
+
+        function createProcesses(processes) {
+            for (var i = 0; i < processes.length; i++) {
+                var process = processes[i];
+                createNodes(process.activities);
+                createLines(process.transitions);
+            }
+        }
+        createProcesses(this.package.processes);
 
         //Activities
         function createNodes(activities){
-            var node = null,
-                nodes = [];
-
 			if (activities && activities.length > 0) {
                 var graph = kmain.mxGraphEditor.graph;
                 var model = graph.getModel();
                 model.beginUpdate();
                 try{
 				    for (var i = 0; i < activities.length; i++) {
-                        node = mxtoolkit.insertVertex(graph, activities[i]);
-					    nodes.push(node);
+                        mxtoolkit.insertVertex(graph, activities[i]);
 				    }
                 }finally{
                     model.endUpdate();
                 }
 			}
-			return nodes;
         }
-        this.nodes = createNodes(this.process.activities);
 
         //Transitions
         function createLines(transitions){
-            var line = null, 
-                lines = [];
-
 			if (transitions && transitions.length > 0) {
                 var graph = kmain.mxGraphEditor.graph;
                 var model = graph.getModel();
@@ -139,15 +131,29 @@ var kmodel = (function () {
                 try{
 				    for (var i = 0; i < transitions.length; i++) {
                         mxtoolkit.insertEdge(graph, transitions[i]);
-					    lines.push(line);
 				    }
                 }finally{
                     model.endUpdate();
                 }
 			}
-			return lines;
         }
-        this.lines = createLines(this.process.transitions);
+
+        //Messages
+        function createMessages(messages) {
+            if (messages && messages.length > 0) {
+                var graph = kmain.mxGraphEditor.graph;
+                var model = graph.getModel();
+                model.beginUpdate();
+                try {
+                    for (var i = 0; i < messages.length; i++) {
+                        mxtoolkit.insertMessage(graph, messages[i]);
+                    }
+                } finally {
+                    model.endUpdate();
+                }
+            }
+        }
+        createMessages(this.package.messages);
     }
     return kmodel;
 })()

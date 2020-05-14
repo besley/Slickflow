@@ -56,6 +56,11 @@ namespace Slickflow.Engine.Xpdl.Entity
         /// 子流程信息
         /// </summary>
         public String SubProcessGUID { get; set; }
+
+        /// <summary>
+        /// 事件类型表达式
+        /// </summary>
+        public String Expression { get; set; }
     }
 
     /// <summary>
@@ -76,7 +81,7 @@ namespace Slickflow.Engine.Xpdl.Entity
         /// <summary>
         /// 消息
         /// </summary>
-        EMail = 2
+        Message = 2
     }
 
     /// <summary>

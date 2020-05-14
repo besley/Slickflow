@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Slickflow.Module.Localize;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Xpdl.Entity;
 
@@ -25,12 +23,14 @@ namespace Slickflow.Engine.Xpdl.Schedule
             NextActivityComponent component = null;
             if (XPDLHelper.IsSimpleComponentNode(activity.ActivityType) == true)           //可流转简单类型节点
             {
-                name = "单一节点";
+                //单一节点
+                name = LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.singlenode");
                 component = new NextActivityItem(name, transition, activity);
             }
             else if (XPDLHelper.IsIntermediateEventComponentNode(activity.ActivityType) == true)
             {
-                name = "跨事件节点";
+                //跨事件节点
+                name = LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.intermediatenode");
                 component = new NextActivityIntermediate(name, transition, activity);
             }
             else if (XPDLHelper.IsGatewayComponentNode(activity.ActivityType) == true)
@@ -38,42 +38,48 @@ namespace Slickflow.Engine.Xpdl.Schedule
                 if (activity.GatewayDirectionType == GatewayDirectionEnum.AndSplit
                     || activity.GatewayDirectionType == GatewayDirectionEnum.AndJoin)
                 {
-                    name = "必全选节点";                 
+                    //必全选节点
+                    name = LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.mandatorycheckall");                 
                 }
                 else if (activity.GatewayDirectionType == GatewayDirectionEnum.AndSplitMI
                     || activity.GatewayDirectionType == GatewayDirectionEnum.AndJoinMI)
                 {
-                    name = "并行多实例节点";
+                    //并行多实例节点
+                    name = LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.parallelmultipleinstance");
                 }
                 else if (activity.GatewayDirectionType == GatewayDirectionEnum.OrSplit
                     || activity.GatewayDirectionType == GatewayDirectionEnum.OrJoin)
                 {
-                    name = "或多选节点";
+                    //或多选节点
+                    name = LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.orsplitorjoin");
                 }
                 else if (activity.GatewayDirectionType == GatewayDirectionEnum.XOrSplit
                     || activity.GatewayDirectionType == GatewayDirectionEnum.XOrJoin)
                 {
-                    name = "异或节点";
+                    //异或节点
+                    name = LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.xor");
                 }
                 else if (activity.GatewayDirectionType == GatewayDirectionEnum.EOrJoin)
                 {
-                    name = "增强合并多选节点";
+                    //增强合并多选节点
+                    name = LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.eorjoin");
                 }
                 else
                 {
-                    throw new WfXpdlException(string.Format("无法创建下一步节点列表，不明确的分支类型：{0}", 
+                    throw new WfXpdlException(LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.CreateNextActivityComponent.gateway.error", 
                         activity.GatewayDirectionType.ToString()));
                 }
                 component = new NextActivityGateway(name, transition, activity);
             }
             else if (activity.ActivityType == ActivityTypeEnum.SubProcessNode)
             {
-                name = "子流程节点";
+                //子流程节点
+                name = LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.subprocess");
                 component = new NextActivityItem(name, transition, activity);
             }
             else
             {
-                throw new WfXpdlException(string.Format("无法创建下一步节点列表，不明确的节点类型：{0}",
+                throw new WfXpdlException(LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.CreateNextActivityComponent.error",
                     activity.ActivityType.ToString()));
             }
 
@@ -92,15 +98,16 @@ namespace Slickflow.Engine.Xpdl.Schedule
             NextActivityComponent component = null;
             if (XPDLHelper.IsSimpleComponentNode(fromActivity.ActivityType) == true)       //可流转简单类型节点
             {
-                string name = "单一节点";
+                //单一节点
+                string name = LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.singlenode"); ;
                 var transition = CreateJumpforwardEmptyTransition(fromActivity, toActivity);
 
                 component = new NextActivityItem(name, transition, toActivity);     //强制拉取跳转类型的transition 为空类型
             }
             else
             {
-                throw new ApplicationException(string.Format("不能跳转到其它非任务类型的节点！当前节点:{0}", 
-                    fromActivity.ActivityType));
+                throw new ApplicationException(LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.CreateNextActivityComponent.jump.error", 
+                    fromActivity.ActivityType.ToString()));
             }
             return component;
         }
@@ -131,7 +138,9 @@ namespace Slickflow.Engine.Xpdl.Schedule
         /// <returns>根节点</returns>
         internal static NextActivityComponent CreateNextActivityComponent()
         {
-            NextActivityComponent root = new NextActivityGateway("下一步步骤列表", null,  null);
+            //下一步步骤列表
+            NextActivityComponent root = new NextActivityGateway(LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.nextsteplist"), 
+                null,  null);
             return root;
         }
 
@@ -141,7 +150,9 @@ namespace Slickflow.Engine.Xpdl.Schedule
         /// <returns>根节点</returns>
         internal static NextActivityComponent CreatePreviousActivityComponent()
         {
-            NextActivityComponent root = new NextActivityGateway("上一步步骤列表", null, null);
+            //上一步步骤列表
+            NextActivityComponent root = new NextActivityGateway(LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.previoussteplist"),
+                null, null);
             return root;
         }
 

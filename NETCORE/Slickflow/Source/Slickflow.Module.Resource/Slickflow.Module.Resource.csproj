@@ -16,10 +16,4 @@
     <ProjectReference Include="..\Slickflow.Module\Slickflow.Module.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Dapper">
-      <HintPath>..\DLL\Dapper.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

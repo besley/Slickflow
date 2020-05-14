@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Slickflow.Module.Localize;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Xpdl.Entity;
 
@@ -103,9 +103,9 @@ namespace Slickflow.Engine.Xpdl.Schedule
             else
             {
                 resultType = NextActivityMatchedType.Failed; 
-                throw new Exception("Split 分支节点的类型不明确！");
+                throw new WfXpdlException(LocalizeHelper.GetEngineMessage("nextactivityschedulesplit.error", 
+                    currentGatewayActivity.GatewayDirectionType.ToString()));
             }
-
             return gatewayComponent;
         }
     }

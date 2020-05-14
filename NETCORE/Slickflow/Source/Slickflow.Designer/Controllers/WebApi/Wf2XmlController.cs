@@ -21,19 +21,19 @@ web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 */
 
 using System;
-using System.IO;
-using System.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Mvc;
-using SlickOne.WebUtility;
+using Slickflow.Data;
+using Slickflow.Module.Localize;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
+using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Service;
-using Slickflow.Graph;
-
+using Slickflow.Engine.Xpdl.Entity;
+using Slickflow.Engine.Utility;
 
 namespace Slickflow.Designer.Controllers.WebApi
 {
@@ -115,33 +115,34 @@ namespace Slickflow.Designer.Controllers.WebApi
             var result = ResponseResult<ProcessEntity>.Default();
             try
             {
-                ProcessEntity entity = null;
-                //根据模板类型来创建流程
-                if (fileEntity.TemplateType == ProcessTemplateType.Blank)
+                if (string.IsNullOrEmpty(fileEntity.ProcessName.Trim())
+                    || string.IsNullOrEmpty(fileEntity.ProcessCode.Trim())
+                    || string.IsNullOrEmpty(fileEntity.Version.Trim()))
                 {
-                    entity = new ProcessEntity
-                    {
-                        ProcessGUID = fileEntity.ProcessGUID,
-                        ProcessName = fileEntity.ProcessName,
-                        ProcessCode = fileEntity.ProcessCode,
-                        Version = fileEntity.Version,
-                        IsUsing = fileEntity.IsUsing,
-                        Description = fileEntity.Description,
-                    };
-                    var wfService = new WorkflowService();
-                    var processID = wfService.CreateProcess(entity);
-                    entity.ID = processID;
+                    result = ResponseResult<ProcessEntity>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.crateprocess.warning"));
+                    return result;
                 }
-                else
+
+                ProcessEntity entity = new ProcessEntity
                 {
-                    //模板默认生成XML内容
-                    entity = ProcessGraphFactory.CreateProcess(fileEntity);
-                }
-                result = ResponseResult<ProcessEntity>.Success(entity);
+                    ProcessGUID = fileEntity.ProcessGUID,
+                    ProcessName = fileEntity.ProcessName,
+                    ProcessCode = fileEntity.ProcessCode,
+                    Version = fileEntity.Version,
+                    IsUsing = fileEntity.IsUsing,
+                    Description = fileEntity.Description,
+                };
+                var wfService = new WorkflowService();
+                var processID = wfService.CreateProcess(entity);
+                entity.ID = processID;
+
+                result = ResponseResult<ProcessEntity>.Success(entity,
+                    LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.crateprocess.success")
+                );
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<ProcessEntity>.Error(string.Format("创建流程记录失败,错误:{0}", ex.Message));
+                result = ResponseResult<ProcessEntity>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.crateprocess.error", ex.Message));
             }
             return result;
         }
@@ -164,17 +165,46 @@ namespace Slickflow.Designer.Controllers.WebApi
                 processEntity.XmlFileName = entity.XmlFileName;
                 processEntity.AppType = entity.AppType;
                 processEntity.Description = entity.Description;
+                processEntity.IsUsing = entity.IsUsing;
                 if (!string.IsNullOrEmpty(entity.XmlContent))
                 {
                     processEntity.XmlContent = PaddingContentWithRightSpace(entity.XmlContent);
                 }
                 wfService.UpdateProcess(processEntity);
 
-                result = ResponseResult.Success();
+                result = ResponseResult.Success(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.updateprocess.success")
+                );
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult.Error(string.Format("更新流程记录失败,错误:{0}", ex.Message));
+                result = ResponseResult.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.updateprocess.error", ex.Message));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 更新流程数据
+        /// </summary>
+        /// <param name="entity">流程实体</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult UpgradeProcess([FromBody] ProcessEntity entity)
+        {
+            var result = ResponseResult.Default();
+            try
+            {
+                var wfService = new WorkflowService();
+                var process = wfService.GetProcessByID(entity.ID);
+                int newVersion = 1;
+                var parsed = int.TryParse(process.Version, out newVersion);
+                if (parsed == true) newVersion = newVersion + 1;
+                wfService.UpgradeProcess(process.ProcessGUID, process.Version, newVersion.ToString());
+               
+                result = ResponseResult.Success(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.upgradeprocess.success"));
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.upgradeprocess.error", ex.Message));
             }
             return result;
         }
@@ -193,17 +223,43 @@ namespace Slickflow.Designer.Controllers.WebApi
                 var wfService = new WorkflowService();
                 wfService.DeleteProcess(entity.ProcessGUID, entity.Version);
 
-                result = ResponseResult.Success();
+                result = ResponseResult.Success(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.deleteprocess.success")
+                );
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult.Error(string.Format("删除流程记录失败,错误:{0}", ex.Message));
+                result = ResponseResult.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.deleteprocess.error", ex.Message));
             }
             return result;
         }
+        
         #endregion
 
         #region 读取流程XML文件数据处理
+        /// <summary>
+        /// 根据流程名称获取流程实体
+        /// </summary>
+        /// <param name="query">查询实体</param>
+        /// <returns>流程实体</returns>
+        [HttpPost]
+        public ResponseResult<ProcessEntity> QueryProcessByName([FromBody] ProcessQuery query)
+        {
+            var result = ResponseResult<ProcessEntity>.Default();
+            try
+            {
+                var wfService = new WorkflowService();
+                var entity = wfService.GetProcessByName(query.ProcessName, query.Version);
+
+                result = ResponseResult<ProcessEntity>.Success(entity);
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<ProcessEntity>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.queryprocess.error", ex.Message)
+                );
+            }
+            return result;
+        }
+
         /// <summary>
         /// 读取XML文件
         /// </summary>
@@ -222,8 +278,34 @@ namespace Slickflow.Designer.Controllers.WebApi
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<ProcessFileEntity>.Error(
-                    string.Format("获取流程XML文件失败！{0}", ex.Message)
+                result = ResponseResult<ProcessFileEntity>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.queryprocessfile.error", ex.Message)
+                );
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 检查流程文件是否重复
+        /// </summary>
+        /// <param name="query">查询实体</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult<ProcessEntity> CheckProcessFile([FromBody] ProcessEntity query)
+        {
+            var result = ResponseResult<ProcessEntity>.Default();
+            try
+            {
+                var wfService = new WorkflowService();
+                var entity = wfService.GetProcessByName(query.ProcessName, query.Version);
+                if (entity == null)
+                {
+                    entity = wfService.GetProcessByCode(query.ProcessCode, query.Version);
+                }
+                result = ResponseResult<ProcessEntity>.Success(entity);
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<ProcessEntity>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.queryprocessfile.error", ex.Message)
                 );
             }
             return result;
@@ -247,9 +329,7 @@ namespace Slickflow.Designer.Controllers.WebApi
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<ProcessFileEntity>.Error(
-                    string.Format("获取流程XML文件失败！{0}", ex.Message)
-                );
+                result = ResponseResult<ProcessFileEntity>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.queryprocessfile.error", ex.Message));
             }
             return result;
         }
@@ -272,9 +352,7 @@ namespace Slickflow.Designer.Controllers.WebApi
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<ProcessEntity>.Error(
-                    string.Format("获取流程基本信息失败！{0}", ex.Message)
-                );
+                result = ResponseResult<ProcessEntity>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.queryprocess.error", ex.Message));
             }
             return result;
         } 
@@ -296,9 +374,7 @@ namespace Slickflow.Designer.Controllers.WebApi
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<List<ProcessEntity>>.Error(
-                    string.Format("获取流程基本信息失败！{0}", ex.Message)
-                );
+                result = ResponseResult<List<ProcessEntity>>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.getprocesslist.error", ex.Message));
             }
             return result;
         }
@@ -315,15 +391,13 @@ namespace Slickflow.Designer.Controllers.WebApi
             try
             {
                 var wfService = new WorkflowService();
-                var entity = wfService.GetProcess(query.ProcessGUID);
+                var entity = wfService.GetProcessUsing(query.ProcessGUID);
 
                 result = ResponseResult<ProcessEntity>.Success(entity);
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<ProcessEntity>.Error(
-                    string.Format("获取流程基本信息失败！{0}", ex.Message)
-                );
+                result = ResponseResult<ProcessEntity>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.queryprocess.error", ex.Message));
             }
             return result;
         }
@@ -343,13 +417,11 @@ namespace Slickflow.Designer.Controllers.WebApi
                 entity.XmlContent = PaddingContentWithRightSpace(entity.XmlContent);
                 wfService.SaveProcessFile(entity);
 
-                result = ResponseResult.Success();
+                result = ResponseResult.Success(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.saveprocessfile.success"));
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult.Error(
-                    string.Format("保存流程XML文件失败！{0}", ex.Message)
-                );
+                result = ResponseResult.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.saveprocessfile.error", ex.Message));
             }
             return result;
         }
@@ -372,6 +444,31 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// 校验流程有效性
+        /// </summary>
+        /// <param name="entity">校验实体</param>
+        /// <returns>校验结果对象</returns>
+        [HttpPost]
+        public ResponseResult<ProcessValidateResult> ValidateProcess([FromBody] ProcessValidateEntity entity)
+        {
+            var result = ResponseResult<ProcessValidateResult>.Default();
+            try
+            {
+                var wfService = new WorkflowService();
+                var validateResult = wfService.ValidateProcess(entity);
+
+                result = ResponseResult<ProcessValidateResult>.Success(validateResult, LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.validateprocess.success"));
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<ProcessValidateResult>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.validateprocess.error", ex.Message));
+            }
+            return result;
+        }
+        #endregion
+
+        #region 任务数据记录
+        /// <summary>
         /// 获取待办状态的节点
         /// </summary>
         /// <param name="query">查询实体</param>
@@ -390,9 +487,7 @@ namespace Slickflow.Designer.Controllers.WebApi
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<List<ActivityInstanceEntity>>.Error(string.Format(
-                    "获取待办任务数据失败, 异常信息:{0}",
-                    ex.Message));
+                result = ResponseResult<List<ActivityInstanceEntity>>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.queryreadyactivityinstance.error", ex.Message));
             }
             return result;
         }
@@ -415,9 +510,7 @@ namespace Slickflow.Designer.Controllers.WebApi
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<List<TransitionImage>>.Error(string.Format(
-                    "获取已完成转移数据失败, 异常信息:{0}",
-                    ex.Message));
+                result = ResponseResult<List<TransitionImage>>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.querycompletedtransitioninstance.error", ex.Message));
             }
             return result;
         }
@@ -425,8 +518,8 @@ namespace Slickflow.Designer.Controllers.WebApi
         /// <summary>
         /// 获取完成状态的任务
         /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
+        /// <param name="query">任务查询实体</param>
+        /// <returns>任务列表</returns>
         [HttpPost]
         public ResponseResult<List<TaskViewEntity>> QueryCompletedTasks([FromBody] TaskQuery query)
         {
@@ -445,9 +538,49 @@ namespace Slickflow.Designer.Controllers.WebApi
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<List<TaskViewEntity>>.Error(string.Format(
-                    "获取已办任务数据失败, 异常信息:{0}",
-                    ex.Message));
+                result = ResponseResult<List<TaskViewEntity>>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.querycompletedtasks.error", ex.Message));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get Task todo list Top 10
+        /// </summary>
+        /// <returns>Task List</returns>
+        [HttpGet]
+        public ResponseResult<List<TaskViewEntity>> GetTaskToDoListTop()
+        {
+            var result = ResponseResult<List<TaskViewEntity>>.Default();
+            try
+            {
+                var tm = new TaskManager();
+                var taskList = tm.GetTaskToDoListTop();
+                result = ResponseResult<List<TaskViewEntity>>.Success(taskList);
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<List<TaskViewEntity>>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.gettasktodolisttop.error", ex.Message));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get Task Done List top 10
+        /// </summary>
+        /// <returns>task list</returns>
+        [HttpGet]
+        public ResponseResult<List<TaskViewEntity>> GetTaskDoneListTop()
+        {
+            var result = ResponseResult<List<TaskViewEntity>>.Default();
+            try
+            {
+                var tm = new TaskManager();
+                var taskList = tm.GetTaskDoneListTop();
+                result = ResponseResult<List<TaskViewEntity>>.Success(taskList);
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<List<TaskViewEntity>>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.gettaskdonelisttop.error", ex.Message));
             }
             return result;
         }
@@ -471,9 +604,7 @@ namespace Slickflow.Designer.Controllers.WebApi
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<List<Role>>.Error(
-                    string.Format("获取角色数据失败！{0}", ex.Message)
-                );
+                result = ResponseResult<List<Role>>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.getroleall.error", ex.Message));
             }
             return result;
         }

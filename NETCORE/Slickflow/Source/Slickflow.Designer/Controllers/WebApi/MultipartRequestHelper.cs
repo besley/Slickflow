@@ -13,13 +13,13 @@ namespace Slickflow.Designer.Controllers.WebApi
             var boundary = HeaderUtilities.RemoveQuotes(contentType.Boundary);
             if (string.IsNullOrWhiteSpace(boundary.Value))
             {
-                throw new InvalidDataException("缺失内容类型定义！");
+                throw new InvalidDataException("Missing Content type definition！");
             }
 
             if (boundary.Length > lengthLimit)
             {
                 throw new InvalidDataException(
-                    $"文件或文本内容{lengthLimit}超长！");
+                    $"The length of file {lengthLimit} is too long!");
             }
 
             return boundary.Value;

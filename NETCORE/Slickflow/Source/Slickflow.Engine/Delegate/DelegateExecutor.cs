@@ -30,6 +30,7 @@ using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Core;
+using Slickflow.Engine.Xpdl.Entity;
 
 namespace Slickflow.Engine.Delegate
 {
@@ -43,19 +44,23 @@ namespace Slickflow.Engine.Delegate
         /// </summary>
         /// <param name="session">数据会话</param>
         /// <param name="eventType">事件类型</param>
+        /// <param name="currentActivity">当前活动节点</param>
         /// <param name="context">活动上下文</param>
         internal static void InvokeExternalDelegate(IDbSession session,
             EventFireTypeEnum eventType,
+            ActivityEntity currentActivity,
             ActivityForwardContext context)
         {
+            //默认为linker.FromActivity表示执行当前运行节点
+            //linker.ToActivity != null 为运行事件类型的节点
             var delegateContext = new DelegateContext
             {
                 AppInstanceID = context.ProcessInstance.AppInstanceID,
                 ProcessGUID = context.ProcessInstance.ProcessGUID,
                 ProcessInstanceID = context.ProcessInstance.ID,
-                ActivityGUID = context.FromActivityInstance.ActivityGUID,
-                ActivityName = context.Activity.ActivityName,
-                ActivityCode = context.Activity.ActivityCode,
+                ActivityGUID = currentActivity.ActivityGUID,
+                ActivityName = currentActivity.ActivityName,
+                ActivityCode = currentActivity.ActivityCode,
                 ActivityResource = context.ActivityResource
             };
             InvokeExternalDelegate(session, eventType,

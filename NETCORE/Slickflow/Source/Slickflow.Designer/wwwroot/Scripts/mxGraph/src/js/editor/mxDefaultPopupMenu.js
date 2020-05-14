@@ -96,7 +96,7 @@ mxDefaultPopupMenu.prototype.config = null;
  * 
  * (code)
  * <mxDefaultPopupMenu as="popupHandler">
- *   <add as="delete" action="delete" icon="scripts/mxGraph/src/editor/images/delete.gif" if="cell"/>
+ *   <add as="delete" action="delete" icon="images/delete.gif" if="cell"/>
  * </mxDefaultPopupMenu>
  * (end)
  * 

@@ -50,6 +50,10 @@ namespace Slickflow.Engine.Xpdl.Schedule
             set;
         }
 
+        /// <summary>
+        /// 下一步活动结果
+        /// </summary>
+        /// <param name="routeChoiceType">路由选择类型</param>
         public NextActivityRouteResult(NextActivityRouteChoiceEnum routeChoiceType)
         {
             RouteChoiceType = routeChoiceType;
