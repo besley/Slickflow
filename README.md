@@ -44,7 +44,7 @@
  **11). Reverse**  
     reverse the process instance alive when completed.  
  **12). Jump**  
-    jump the process over by several steps forward or backward. 
+    jump the process over by several steps forward or backward.   
  **13). MessageQueue(RabbitMQ)**  
     message publishing and subscribing to implement message throwing and catching. 
     
@@ -147,6 +147,7 @@ http://www.slickflow.com/wiki/index
 https://forum.slickflow.com/  
 
 **Slickflow(1.7.6.0) 企业版：** 
+
 2020-05-11
 1. 中间消息节点Throw/Catch功能定义实现;
 2. 开始消息启动节点：消息发布订阅启动流程实现;
