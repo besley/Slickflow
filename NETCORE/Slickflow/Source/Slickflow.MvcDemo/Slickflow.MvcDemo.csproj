@@ -326,6 +326,7 @@
     <ProjectReference Include="..\Slickflow.BizAppService\Slickflow.BizAppService.csproj" />
     <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj" />
     <ProjectReference Include="..\Slickflow.Engine\Slickflow.Engine.csproj" />
+    <ProjectReference Include="..\Slickflow.Module.Localize\Slickflow.Module.Localize.csproj" />
     <ProjectReference Include="..\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj" />
     <ProjectReference Include="..\Slickflow.Module\Slickflow.Module.csproj" />
     <ProjectReference Include="..\SlickOne.WebUtility\SlickOne.WebUtility.csproj" />
