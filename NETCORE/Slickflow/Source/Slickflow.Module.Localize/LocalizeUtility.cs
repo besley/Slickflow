@@ -49,18 +49,6 @@ namespace Slickflow.Module.Localize
             dictLangDesigner[LangTypeEnum.en] = "Slickflow.Module.Localize.Designer.en.json";
             dictLangDesigner[LangTypeEnum.zh] = "Slickflow.Module.Localize.Designer.zh.json";
             ReadProjectJSONResourceFromFile(ProjectTypeEnum.Designer, dictLangDesigner);
-
-            //WebTest Localize Language
-            var dictLangWebTest = new Dictionary<LangTypeEnum, string>();
-            dictLangWebTest[LangTypeEnum.en] = "Slickflow.Module.Localize.WebTest.en.json";
-            dictLangWebTest[LangTypeEnum.zh] = "Slickflow.Module.Localize.WebTest.zh.json";
-            ReadProjectJSONResourceFromFile(ProjectTypeEnum.WebTest, dictLangWebTest);
-
-            //Scheduler Localize Language
-            //var dictLangScheduler = new Dictionary<LangTypeEnum, string>();
-            //dictLangScheduler[LangTypeEnum.en] = "Slickflow.Module.Localize.Schduler.en.json";
-            //dictLangScheduler[LangTypeEnum.zh] = "Slickflow.Module.Localize.Scheduler.zh.json";
-            //ReadProjectJSONResourceFromFile(ProjectTypeEnum.Scheduler, dictLangScheduler);
         }
 
         static void ReadProjectJSONResourceFromFile(ProjectTypeEnum project, Dictionary<LangTypeEnum, string> jsonFile)
