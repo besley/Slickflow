@@ -13,7 +13,7 @@
     <form id="form1" runat="server">
         <div class="login-screen" style="margin-left:-185px">
             <div class="login-form" style="margin-left:0px;">
-                <h1>用户切换</h1>
+                <h1>用户切换(SwitchUser)</h1>
                 <div class="control-group">
                     <asp:DropDownList ID="ddlRole" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlRole_SelectedIndexChanged" Width="200"></asp:DropDownList>
                 </div>
@@ -21,7 +21,7 @@
                     <asp:DropDownList ID="ddlUser" runat="server" Width="200"></asp:DropDownList>
                 </div>
                 <div>
-                    <asp:Button ID="btnSwitchUser" CssClass="btn-login" runat="server" Text="切换" OnClick="btnSwitchUser_Click" />
+                    <asp:Button ID="btnSwitchUser" CssClass="btn-login" runat="server" Text="切换(Switch)" OnClick="btnSwitchUser_Click" />
                 </div>
             </div>
         </div>

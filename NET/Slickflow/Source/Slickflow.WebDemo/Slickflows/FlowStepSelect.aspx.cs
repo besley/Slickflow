@@ -32,7 +32,7 @@ namespace Slickflow.WebDemo.Slickflows
                 }
                 else
                 {
-                    LiteralMSG.Text = "您可能尚未登录或登录信息已失效，请重新登录后再操作";
+                    LiteralMSG.Text = "您可能尚未登录或登录信息已失效，请重新登录后再操作--Please login firstly!";
                 }
             }
         }
@@ -50,7 +50,7 @@ namespace Slickflow.WebDemo.Slickflows
             string Step = Request.QueryString["Step"] == null ? "" : Request.QueryString["Step"].ToString();
             if (string.IsNullOrEmpty(flowGuid) || string.IsNullOrEmpty(Step))
             {
-                base.RegisterStartupScript("", "<script>alert('流程GUID为空');</script>");
+                base.RegisterStartupScript("", "<script>alert('流程GUID为空--ProcessGUID is null');</script>");
             }
             else
             {
@@ -102,7 +102,7 @@ namespace Slickflow.WebDemo.Slickflows
                         }
                         else
                         {
-                            LiteralMSG.Text = "当前没有需要您办理的步骤";
+                            LiteralMSG.Text = "当前没有需要您办理的步骤--none steps choosed";
                         }
                         break;
                     case "task":
@@ -145,7 +145,7 @@ namespace Slickflow.WebDemo.Slickflows
                                 }
                                 else
                                 {
-                                    LiteralMSG.Text = "当前没有需要您办理的步骤";
+                                    LiteralMSG.Text = "当前没有需要您办理的步骤--none steps choosed";
                                 }
                             }
                         }

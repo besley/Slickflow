@@ -17,10 +17,10 @@
 
         <table width="100%" border="1" cellspacing="0" cellpadding="0" class="ltable">
             <tr>
-                <th align="center" width="12%">步骤</th>
-                <th align="center" width="8%">办理人</th>
-                <th align="center" width="10%">办理意见</th>
-                <th align="center" width="10%">操作时间</th>
+                <th align="center" width="12%">步骤(Step)</th>
+                <th align="center" width="8%">办理人(User)</th>
+                <th align="center" width="10%">办理意见(Opinion)</th>
+                <th align="center" width="10%">操作时间(ApprovingDate)</th>
             </tr>
             <asp:Repeater ID="Repeater1" runat="server">
                 <ItemTemplate>

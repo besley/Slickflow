@@ -37,7 +37,7 @@ namespace Slickflow.WebDemo.Slickflows
                 IDictionary<string, PerformerList> nextActivityPerformers = NextActivityPerformers(strNextActivityPerformers);
                 if (nextActivityPerformers == null)
                 {
-                    base.RegisterStartupScript("", "<script>alert('请选择办理步骤或办理人员');</script>");
+                    base.RegisterStartupScript("", "<script>alert('请选择办理步骤或办理人员--Please select next step and user');</script>");
                     return;
                 }
 
@@ -76,7 +76,7 @@ namespace Slickflow.WebDemo.Slickflows
                     IWorkflowService service = new WorkflowService();
 
                     WfAppRunner initiator = new WfAppRunner();
-                    initiator.AppName = "请假流程";
+                    initiator.AppName = "请假流程(AskforLeaveProcess)";
                     initiator.AppInstanceID = instanceId.ToString();
                     initiator.ProcessGUID = processGUID;
                     initiator.UserID = LoginUserID.ToString();
@@ -119,21 +119,21 @@ namespace Slickflow.WebDemo.Slickflows
                     HrsLeaveOpinionEntity hrsleaveOpinionEntity = new HrsLeaveOpinionEntity();
                     hrsleaveOpinionEntity.AppInstanceID = instanceId.ToString();
                     hrsleaveOpinionEntity.ActivityID = System.Guid.Empty.ToString();
-                    hrsleaveOpinionEntity.ActivityName = "流程发起";
-                    hrsleaveOpinionEntity.Remark = string.Format("申请人:{0}-{1}", LoginUserID, LoginUserName);
+                    hrsleaveOpinionEntity.ActivityName = "流程发起(Apply)";
+                    hrsleaveOpinionEntity.Remark = string.Format("申请人(Applicant):{0}-{1}", LoginUserID, LoginUserName);
                     hrsleaveOpinionEntity.ChangedTime = now;
                     hrsleaveOpinionEntity.ChangedUserID = LoginUserID.ToString();
                     hrsleaveOpinionEntity.ChangedUserName = LoginUserName;
                     WorkFlows.AddHrsLeaveOpinion(hrsleaveOpinionEntity);
 
 
-                    base.RegisterStartupScript("", "<script>alert('流程发起成功');window.location.href='FlowList.aspx';</script>");
+                    base.RegisterStartupScript("", "<script>alert('流程发起成功--Successed');window.location.href='FlowList.aspx';</script>");
 
                 }
             }
             catch (Exception ex)
             {
-                base.RegisterStartupScript("", "<script>alert('流程发起出现异常 EXCEPTION:" + ex.ToString() + "');</script>");
+                base.RegisterStartupScript("", "<script>alert('流程发起出现异常--EXCEPTION:" + ex.ToString() + "');</script>");
             }
         }
     }

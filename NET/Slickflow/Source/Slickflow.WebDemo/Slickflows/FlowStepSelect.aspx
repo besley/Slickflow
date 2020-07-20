@@ -28,7 +28,7 @@
             $("#hiddenNextActivityPerformers").val(nodesArray.join(','));
             var NextActivityPerformers = $("#hiddenNextActivityPerformers").val();
             if (step == undefined || step == null || step == "" || step == "0" || step.length < 1) {
-                alert("请选择办理步骤或办理人员");
+                alert("请选择办理步骤或办理人员(Please select step and user)");
                 return;
             }
         }
@@ -48,7 +48,7 @@
             $("#hiddenNextActivityPerformers").val(nodesArray.join(','));
             var nextActivityPerformers = $("#hiddenNextActivityPerformers").val();
             if (nextActivityPerformers == undefined || nextActivityPerformers == null || nextActivityPerformers == "" || nextActivityPerformers == "0" || nextActivityPerformers.length < 1) {
-                alert("请选择办理步骤或办理人员");
+                alert("请选择办理步骤或办理人员(Please select step and user)");
                 return;
             }
 
@@ -80,8 +80,8 @@
 
             <input type="hidden" id="hiddenIsSelectMember" value="" runat="server" />
 
-            <input type="button" value="确定" class="btn" onclick="SelectOK();" />&nbsp;&nbsp;
-                <input type="button" value="取消" class="btn" onclick="CloseWindowPage();" />
+            <input type="button" value="确定(Sure)" class="btn" onclick="SelectOK();" />&nbsp;&nbsp;
+                <input type="button" value="取消(Cancel)" class="btn" onclick="CloseWindowPage();" />
         </div>
 
     </form>

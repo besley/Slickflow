@@ -26,7 +26,8 @@ namespace Slickflow.Engine.Xpdl
             if (!string.IsNullOrEmpty(version))
             {
                 entity = pm.GetByVersion(processGUID, version);
-            } else
+            }
+            else
             {
                 //如果版本信息缺省，默认取当前IsUsing=1的流程记录
                 entity = pm.GetVersionUsing(processGUID);
