@@ -16,10 +16,10 @@
 
         <!--导航栏-->
         <div class="location">
-            <a href="javascript:history.back(-1);" class="back"><i></i><span>返回上一页</span></a>
-            <a href="Main.aspx" class="home"><i></i><span>首页</span></a>
+            <a href="javascript:history.back(-1);" class="back"><i></i><span>返回上一页(Return)</span></a>
+            <a href="Main.aspx" class="home"><i></i><span>首页(Home)</span></a>
             <i class="arrow"></i>
-            <span>流程列表</span>
+            <span>流程列表(ProcessList)</span>
         </div>
         <!--/导航栏-->
 
@@ -28,7 +28,7 @@
             <div id="floatHead_1" class="toolbar">
                 <div class="l-list">
                     <ul class="icon-list">
-                        <li><a onclick="javascript:void(0);" id="btnFlowApply" class="add" href="HrsLeaveApply.aspx"><i></i><span>发起请假流程</span></a></li>
+                        <li><a onclick="javascript:void(0);" id="btnFlowApply" class="add" href="HrsLeaveApply.aspx"><i></i><span>发起请假流程(Apply)</span></a></li>
                     </ul>
                 </div>
             </div>
@@ -40,9 +40,9 @@
             <div id="floatHead" class="content-tab">
                 <div class="content-tab-ul-wrap">
                     <ul>
-                        <li><a href="javascript:;" onclick="tabs(this);" class="selected">待办流程</a></li>
-                        <li><a href="javascript:;" onclick="tabs(this);">我发起的流程</a></li>
-                        <li><a href="javascript:;" onclick="tabs(this);">所有流程</a></li>
+                        <li><a href="javascript:;" onclick="tabs(this);" class="selected">待办流程(ToDo)</a></li>
+                        <li><a href="javascript:;" onclick="tabs(this);">我发起的流程(Done)</a></li>
+                        <li><a href="javascript:;" onclick="tabs(this);">所有流程(All)</a></li>
                     </ul>
                 </div>
             </div>
@@ -53,12 +53,12 @@
         <div class="tab-content">
             <table width="100%" border="1" cellspacing="0" cellpadding="0" class="ltable">
                 <tr>
-                    <th align="center">实例名称</th>
-                    <th align="center">活动名称</th>
-                    <th align="center">活动状态</th>
-                    <th align="center">任务状态</th>
-                    <th align="center">创建时间</th>
-                    <th align="center">操作</th>
+                    <th align="center">实例名称(ProcessName)</th>
+                    <th align="center">活动名称(ActivityName)</th>
+                    <th align="center">活动状态(ActivityState)</th>
+                    <th align="center">任务状态(TaskState)</th>
+                    <th align="center">创建时间(CreatedTime)</th>
+                    <th align="center">操作(User)</th>
                 </tr>
                 <asp:Repeater ID="Repeater2" runat="server">
                     <ItemTemplate>
@@ -69,9 +69,9 @@
                             <td align="left"><%#Slickflow.WebDemo.Common.EnumHelper.GetDescription(typeof(Slickflow.WebDemo.Common.TaskStateEnum),Convert.ToInt32(Eval("TaskState"))) %></td>
                             <td align="left"><%#Eval("CreatedDateTime") %></td>
                             <td align="center">
-                                <a href="javascript:ShowFlowOpinion(<%#Eval("AppInstanceID") %>)">流程信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="/sfd/Diagram?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>&AppInstanceID=<%#Eval("AppInstanceID") %>" target="_blank">流程图信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="HrsLeaveApproval.aspx?ProcessGUID=<%#Eval("ProcessGUID") %>&AppInstanceID=<%#Eval("AppInstanceID") %>&ActivityInstanceID=<%#Eval("ActivityInstanceID") %>">办理</a>
+                                <a href="javascript:ShowFlowOpinion(<%#Eval("AppInstanceID") %>)">流程信息(FlowInfo)</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="/sfd/Diagram?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>&AppInstanceID=<%#Eval("AppInstanceID") %>" target="_blank">流程图信息(Diagram)</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="HrsLeaveApproval.aspx?ProcessGUID=<%#Eval("ProcessGUID") %>&AppInstanceID=<%#Eval("AppInstanceID") %>&ActivityInstanceID=<%#Eval("ActivityInstanceID") %>">办理(Approving)</a>
                             </td>
                         </tr>
                     </ItemTemplate>
@@ -84,12 +84,12 @@
         <div class="tab-content" style="display: none;">
             <table width="100%" border="1" cellspacing="0" cellpadding="0" class="ltable">
                 <tr>
-                    <th align="center">流程名称</th>
-                    <th align="center">发起人</th>
-                    <th align="center">创建时间</th>
-                    <th align="center">运行状态</th>
-                    <th align="center">当前步骤</th>
-                    <th align="center">操作</th>
+                    <th align="center">流程名称(ProcessName)</th>
+                    <th align="center">发起人(Applicant)</th>
+                    <th align="center">创建时间(CreateTime)</th>
+                    <th align="center">运行状态(Status)</th>
+                    <th align="center">当前步骤(CurrentStep)</th>
+                    <th align="center">操作(User)</th>
                 </tr>
                 <asp:Repeater ID="RepeaterMyApply" runat="server">
                     <ItemTemplate>
@@ -100,9 +100,9 @@
                             <td align="left"><%#Slickflow.WebDemo.Common.EnumHelper.GetDescription(typeof(Slickflow.WebDemo.Common.ProcessStateEnum),Convert.ToInt32(Eval("ProcessState"))) %></td>
                             <td align="left"><%#Eval("CurrentActivityText") %></td>
                             <td align="center">
-                                <a href="javascript:ShowFlowOpinion(<%#Eval("AppInstanceID") %>)">流程信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="/sfd/Diagram?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>&AppInstanceID=<%#Eval("AppInstanceID") %>" target="_blank">流程图信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="HrsLeaveInfo.aspx?AppInstanceID=<%#Eval("AppInstanceID") %>">申请信息</a>
+                                <a href="javascript:ShowFlowOpinion(<%#Eval("AppInstanceID") %>)">流程信息(FlowInfo)</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="/sfd/Diagram?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>&AppInstanceID=<%#Eval("AppInstanceID") %>" target="_blank">流程图信息(Diagram)</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="HrsLeaveInfo.aspx?AppInstanceID=<%#Eval("AppInstanceID") %>">申请信息(ApplyInfo)</a>
                             </td>
                         </tr>
                     </ItemTemplate>
@@ -115,12 +115,12 @@
         <div class="tab-content" style="display: none;">
             <table width="100%" border="1" cellspacing="0" cellpadding="0" class="ltable">
                 <tr>
-                    <th align="center">流程名称</th>
-                    <th align="center">发起人</th>
-                    <th align="center">创建时间</th>
-                    <th align="center">运行状态</th>
-                    <th align="center">当前步骤</th>
-                    <th align="center">操作</th>
+                    <th align="center">流程名称(ProcessName)</th>
+                    <th align="center">发起人(Applicant)</th>
+                    <th align="center">创建时间(CreateTime)</th>
+                    <th align="center">运行状态(Status)</th>
+                    <th align="center">当前步骤(CurrentStep)</th>
+                    <th align="center">操作(User)</th>
                 </tr>
                 <asp:Repeater ID="RepeaterALL" runat="server">
                     <ItemTemplate>
@@ -131,9 +131,9 @@
                             <td align="left"><%#Slickflow.WebDemo.Common.EnumHelper.GetDescription(typeof(Slickflow.WebDemo.Common.ProcessStateEnum),Convert.ToInt32(Eval("ProcessState"))) %></td>
                             <td align="left"><%#Eval("CurrentActivityText") %></td>
                             <td align="center">
-                                <a href="javascript:ShowFlowOpinion(<%#Eval("AppInstanceID") %>)">流程信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="/sfd/Diagram?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>&AppInstanceID=<%#Eval("AppInstanceID") %>" target="_blank">流程图信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                <a href="HrsLeaveInfo.aspx?AppInstanceID=<%#Eval("AppInstanceID") %>">申请信息</a>
+                                <a href="javascript:ShowFlowOpinion(<%#Eval("AppInstanceID") %>)">流程信息(FlowInfo)</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="/sfd0/Diagram?ProcessGUID=<%#Eval("ProcessGUID") %>&Version=<%#Eval("Version") %>&AppInstanceID=<%#Eval("AppInstanceID") %>" target="_blank">流程图信息(Diagram)</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                <a href="HrsLeaveInfo.aspx?AppInstanceID=<%#Eval("AppInstanceID") %>">申请信息(ApplyInfo)</a>
                             </td>
                         </tr>
                     </ItemTemplate>
@@ -155,7 +155,7 @@
             border: [5, 0.3, '#000', true],
             offset: ['10px', ''],
             area: ['720px', '500px'],
-            title: "查看流程详细办理步骤",
+            title: "查看流程详细办理步骤(ViewDetail)",
             iframe: { src: 'FlowOpinion.aspx?AppInstanceID=' + AppInstanceID },
             close: function (index) {
                 layer.close(index);

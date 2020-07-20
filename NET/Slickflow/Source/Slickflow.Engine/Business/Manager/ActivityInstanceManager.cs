@@ -672,7 +672,7 @@ namespace Slickflow.Engine.Business.Manager
             instance.CreatedByUserName = runner.UserName;
             instance.CreatedDateTime = System.DateTime.Now;
             instance.ActivityState = (short)ActivityStateEnum.Ready;
-            instance.CanRenewInstance = 0;
+            instance.CanNotRenewInstance = 0;
 
             return instance;
         }
@@ -700,7 +700,7 @@ namespace Slickflow.Engine.Business.Manager
             instance.CreatedByUserName = main.CreatedByUserName;
             instance.CreatedDateTime = System.DateTime.Now;
             instance.ActivityState = (short)ActivityStateEnum.Ready;
-            instance.CanRenewInstance = 0;
+            instance.CanNotRenewInstance = 0;
 
             return instance;
         }
@@ -741,7 +741,7 @@ namespace Slickflow.Engine.Business.Manager
             instance.CreatedByUserName = runner.UserName;
             instance.CreatedDateTime = System.DateTime.Now;
             instance.ActivityState = (short)ActivityStateEnum.Ready;
-            instance.CanRenewInstance = 0;
+            instance.CanNotRenewInstance = 0;
 
             return instance;
         }

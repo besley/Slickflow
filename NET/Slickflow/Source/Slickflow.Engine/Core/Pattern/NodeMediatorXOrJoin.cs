@@ -65,7 +65,7 @@ namespace Slickflow.Engine.Core.Pattern
             else
             {
                 //判断是否可以激活下一步节点
-                canRenewInstance = (joinNode.CanRenewInstance == 1);
+                canRenewInstance = (joinNode.CanNotRenewInstance == 1);
                 if (!canRenewInstance)
                 {
                     result = GatewayExecutedResult.CreateGatewayExecutedResult(GatewayExecutedStatus.FallBehindOfXOrJoin);

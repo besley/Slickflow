@@ -238,7 +238,7 @@
                 border: [5, 0.3, '#000', true],
                 offset: ['80px', ''],
                 area: ['620px', '410px'],
-                title: "登录用户切换",
+                title: "登录用户切换(SwitchUser)",
                 iframe: { src: 'Slickflows/SwitchLoginUser.aspx' },
                 close: function (index) {
                     layer.close(index);
@@ -271,8 +271,8 @@
                         <div class="drop-box">
                             <div class="arrow"></div>
                             <ul class="drop-item">
-                                <li id="link_switch_user"><a href="javascript:void(0);" onclick="ShowSwitchUser();">切换用户</a></li>
-                                <li><a id="lbtnExit" href="javascript:if(confirm('确认要退出吗？')){window.location.href='Login.aspx';}">注销登录</a></li>
+                                <li id="link_switch_user"><a href="javascript:void(0);" onclick="ShowSwitchUser();">切换用户(SwitchUser)</a></li>
+                                <li><a id="lbtnExit" href="javascript:if(confirm('确认要退出吗？')){window.location.href='Login.aspx';}">注销登录(Logout)</a></li>
                             </ul>
                         </div>
                     </div>
@@ -284,19 +284,19 @@
             <div id="sidebar-nav" class="sidebar-nav">
                 <div class="list-box">
                     <div class="list-group" name="Slickflow.WebDemoV2.1.0">
-                        <h2>流程管理<i></i></h2>
+                        <h2>流程管理(ProcessList)<i></i></h2>
                         <ul>
                             <li>
                                 <a navid="plugin_link" href="Slickflows/FlowList.aspx" target="mainframe" class="item">
-                                    <span>请假流程</span>
+                                    <span>请假流程(AskforLeave)</span>
                                 </a>
                             </li>
                         </ul>
-                        <h2>工具箱<i></i></h2>
+                        <h2>工具箱(ToolBox)<i></i></h2>
                         <ul>
                             <li>
                                 <a navid="plugin_link" href="Slickflows/Tool.aspx" target="mainframe" class="item">
-                                    <span>工具箱</span>
+                                    <span>工具箱(ToolBox)</span>
                                 </a>
                             </li>
                         </ul>

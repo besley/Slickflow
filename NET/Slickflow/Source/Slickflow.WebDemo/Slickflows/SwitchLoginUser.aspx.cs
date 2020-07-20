@@ -20,14 +20,14 @@ namespace Slickflow.WebDemo.Slickflows
                 HttpContext.Current.Session.Remove("UserName");
                 HttpContext.Current.Session.Remove("RoleId");
                 HttpContext.Current.Session.Remove("RoleName");
-                Helper.BindDropDownList(this.ddlRole, WorkFlows.GetSysRole(), "RoleName", "ID", true, "请选择系统角色", "0");
+                Helper.BindDropDownList(this.ddlRole, WorkFlows.GetSysRole(), "RoleName", "ID", true, "请选择系统角色(SelectRole)", "0");
             }
         }
 
         protected void ddlRole_SelectedIndexChanged(object sender, EventArgs e)
         {
             int rId = Convert.ToInt32(ddlRole.SelectedValue.ToString());
-            Helper.BindDropDownList(this.ddlUser, WorkFlows.GetSysUser(rId), "UserName", "ID", true, "请选择系统用户", "0");
+            Helper.BindDropDownList(this.ddlUser, WorkFlows.GetSysUser(rId), "UserName", "ID", true, "请选择系统用户(SelectUser)", "0");
         }
 
 
@@ -47,24 +47,22 @@ namespace Slickflow.WebDemo.Slickflows
                         HttpContext.Current.Session["RoleId"] = RoleId.ToString();
                         HttpContext.Current.Session["RoleName"] = this.ddlRole.SelectedItem.Text.ToString();
                         HttpContext.Current.Session.Timeout = 60;
-                        base.RegisterStartupScript("", "<script>alert('切换成功'); window.parent.location.href = window.parent.location.href;</script>");
+                        base.RegisterStartupScript("", "<script>alert('切换成功--Successed'); window.parent.location.href = window.parent.location.href;</script>");
                     }
                     catch (Exception ex)
                     {
-                        base.RegisterStartupScript("", "<script>alert('切换失败');</script>");
+                        base.RegisterStartupScript("", "<script>alert('切换失败--Failed');</script>");
                     }
                 }
                 else
                 {
-                    base.RegisterStartupScript("", "<script>alert('请选择系统用户');</script>");
+                    base.RegisterStartupScript("", "<script>alert('请选择系统用户--Please select user');</script>");
                 }
             }
             else
             {
-                base.RegisterStartupScript("", "<script>alert('请选择系统角色');</script>");
+                base.RegisterStartupScript("", "<script>alert('请选择系统角色--Please select role');</script>");
             }
-
-
         }
     }
 }

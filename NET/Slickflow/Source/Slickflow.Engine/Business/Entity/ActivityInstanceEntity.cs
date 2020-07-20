@@ -24,7 +24,7 @@ namespace Slickflow.Engine.Business.Entity
         public string AssignedToUserIDs { get; set; }
         public string AssignedToUserNames { get; set; }
         public Nullable<short> GatewayDirectionTypeID { get; set; }
-        public byte CanRenewInstance { get; set; }
+        public byte CanNotRenewInstance { get; set; }
         public int TokensRequired { get; set; }
         public int TokensHad { get; set; }
         public Nullable<short> ComplexType { get; set; }

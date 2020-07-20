@@ -13,7 +13,7 @@
         <div class="login-screen">
             <div class="login-icon">LOGO</div>
             <div class="login-form">
-                <h1>系统管理登录</h1>
+                <h1>系统管理登录(Login)</h1>
                 <div class="control-group">
                     <asp:DropDownList ID="ddlRole" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlRole_SelectedIndexChanged" Width="200"></asp:DropDownList>
                 </div>

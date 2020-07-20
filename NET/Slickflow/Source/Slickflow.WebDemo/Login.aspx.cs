@@ -18,14 +18,14 @@ namespace Slickflow.WebDemo
                 HttpContext.Current.Session.Remove("UserName");
                 HttpContext.Current.Session.Remove("RoleId");
                 HttpContext.Current.Session.Remove("RoleName");
-                Helper.BindDropDownList(this.ddlRole, WorkFlows.GetSysRole(), "RoleName", "ID", true, "请选择系统角色", "0");
+                Helper.BindDropDownList(this.ddlRole, WorkFlows.GetSysRole(), "RoleName", "ID", true, "请选择系统角色(SelectRole)", "0");
             }
         }
 
         protected void ddlRole_SelectedIndexChanged(object sender, EventArgs e)
         {
             int rId = Convert.ToInt32(ddlRole.SelectedValue.ToString());
-            Helper.BindDropDownList(this.ddlUser, WorkFlows.GetSysUser(rId), "UserName", "ID", true, "请选择系统用户", "0");
+            Helper.BindDropDownList(this.ddlUser, WorkFlows.GetSysUser(rId), "UserName", "ID", true, "请选择系统用户(SelectUser)", "0");
         }
 
 
@@ -53,12 +53,12 @@ namespace Slickflow.WebDemo
                 }
                 else
                 {
-                    base.RegisterStartupScript("", "<script>alert('请选择系统用户');</script>");
+                    base.RegisterStartupScript("", "<script>alert('请选择系统用户--Please select user');</script>");
                 }
             }
             else
             {
-                base.RegisterStartupScript("", "<script>alert('请选择系统角色');</script>");
+                base.RegisterStartupScript("", "<script>alert('请选择系统角色--Please select role');</script>");
             }
 
 
