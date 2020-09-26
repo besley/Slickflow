@@ -134,6 +134,7 @@ https://github.com/besley/Slickflow/wiki
 https://www.codeproject.com/Articles/5246528/Slickflow-NET-Core-Open-Source-Workflow-Engine 
 https://www.codeproject.com/Articles/5252483/Slickflow-Coding-Graphic-Model-User-Manual  
 **Slickflow website:**  
+http://www.slickflow.net
 http://www.slickflow.com  
 **Demo:**  
 http://www.slickflow.com/demo/index  

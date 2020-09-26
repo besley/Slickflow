@@ -189,7 +189,7 @@ namespace Slickflow.Engine.Business.Manager
         internal IList<ActivityInstanceEntity> GetActivityInstances(int processInstanceID,
             IDbSession session)
         {
-            var sql = @"SELECT * FROM WfActivityInstance 
+            var sql = @"SELECT * FROM WfActivityInstance WITH(NOLOCK)
                         WHERE ProcessInstanceID = @processInstanceID 
                             ORDER BY ID";
 
@@ -426,6 +426,47 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// 根据应用实例、流程GUID，办理用户Id获取任务列表
+        /// </summary>
+        /// <param name="appInstanceID">App实例ID</param>
+        /// <param name="processGUID">流程定义GUID</param>
+        /// <param name="userID">用户Id</param>
+        /// <returns>任务实体</returns>
+        internal ActivityInstanceEntity GetActivityInstanceOfMine(string appInstanceID,
+            string processGUID,
+            string userID)
+        {
+            string sql = @"SELECT 
+                                TOP 1 * 
+                           FROM WfActivityInstance WITH(NOLOCK)
+                           WHERE AppInstanceID=@appInstanceID 
+                                AND ProcessGUID=@processGUID 
+                                AND (ActivityType=4 OR ActivityType=5 OR ActivityType=6 OR WorkItemType=1)
+                                AND (ActivityState=1 OR ActivityState=2) 
+                           ORDER BY ID DESC";
+            var activityInstanceList = Repository.Query<ActivityInstanceEntity>(sql,
+                new
+                {
+                    appInstanceID = appInstanceID,
+                    processGUID = processGUID
+                }).ToList();
+            if (activityInstanceList.Count == 0)
+            {
+                throw new WorkflowException(
+                    string.Format("当前没有你要办理的任务，业务单据标识ID: {0}", appInstanceID.ToString())
+                );
+            }
+
+            var activityInstance = activityInstanceList[0];
+            var assignedUserIDs = activityInstance.AssignedToUserIDs.Split(',');
+            var isMyTask = assignedUserIDs.Contains(userID);
+            if (isMyTask == true)
+                return activityInstance;
+            else
+                return null;
+        }
+
+        /// <summary>
         /// 获取流程实例中运行的活动节点
         /// </summary>
 
@@ -437,8 +478,8 @@ namespace Slickflow.Engine.Business.Manager
             //activityState: 1-ready（准备）, 2-running（）运行；
             var whereSql = @"SELECT 
                                 AI.* 
-                            FROM WfActivityInstance AI
-                            INNER JOIN WfProcessInstance PI 
+                            FROM WfActivityInstance AI WITH(NOLOCK)
+                            INNER JOIN WfProcessInstance PI WITH(NOLOCK)
                                 ON AI.ProcessInstanceID = PI.ID
                             WHERE (AI.ActivityState=1 OR AI.ActivityState=2)
                                 AND PI.ProcessState = 2 

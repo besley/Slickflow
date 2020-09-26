@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slickflow.Designer", "Slick
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slickflow.WebApi", "Slickflow.WebApi\Slickflow.WebApi.csproj", "{023EABA8-4806-4BB2-BE10-59648D742A79}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{E32FAAFA-03A0-4C75-9679-89408CB7B1B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowRunTest", "FlowRunTest1\FlowRunTest.csproj", "{FDA974D8-C96A-494A-9C8E-3AF788EC4B95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +63,10 @@ Global
 		{023EABA8-4806-4BB2-BE10-59648D742A79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{023EABA8-4806-4BB2-BE10-59648D742A79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{023EABA8-4806-4BB2-BE10-59648D742A79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDA974D8-C96A-494A-9C8E-3AF788EC4B95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDA974D8-C96A-494A-9C8E-3AF788EC4B95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDA974D8-C96A-494A-9C8E-3AF788EC4B95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDA974D8-C96A-494A-9C8E-3AF788EC4B95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,5 +79,9 @@ Global
 		{F555C21B-12A5-49E9-9792-4C2142EF481F} = {97172F34-FBD8-4617-8A3E-8F1A7D68311B}
 		{CB8E4382-2B8F-43A7-9773-BAF599FA0C29} = {84ECFC22-63C4-4B8B-97B5-2A231FB116AD}
 		{023EABA8-4806-4BB2-BE10-59648D742A79} = {76DAC76A-385A-4C7F-B916-BBE51A5E3892}
+		{FDA974D8-C96A-494A-9C8E-3AF788EC4B95} = {E32FAAFA-03A0-4C75-9679-89408CB7B1B5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9A6D7083-756D-4D25-8942-EA55151F5C70}
 	EndGlobalSection
 EndGlobal

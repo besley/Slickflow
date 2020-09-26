@@ -302,10 +302,10 @@ namespace Slickflow.Engine.Service
         public IList<NodeView> GetNextActivityTree(WfAppRunner runner, 
             IDictionary<string, string> condition = null)
         {
-            var tm = new TaskManager();
-            var taskView = tm.GetTaskOfMine(runner.AppInstanceID, runner.ProcessGUID, runner.UserID);
-            var processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
-            var nextSteps = processModel.GetNextActivityTree(taskView.ActivityGUID,
+            var aim = new ActivityInstanceManager();
+            var activityInstance = aim.GetActivityInstanceOfMine(runner.AppInstanceID, runner.ProcessGUID, runner.UserID);
+            var processModel = ProcessModelFactory.Create(activityInstance.ProcessGUID, runner.Version);
+            var nextSteps = processModel.GetNextActivityTree(activityInstance.ActivityGUID,
                 condition);
 
             return nextSteps;
@@ -593,7 +593,7 @@ namespace Slickflow.Engine.Service
 
                 //do some thing else here...
                 //...
-                waitHandler.WaitOne();
+               waitHandler.WaitOne();
             }
             catch (System.Exception e)
             {
@@ -687,7 +687,7 @@ namespace Slickflow.Engine.Service
 
                 return result;
             }
-            catch
+            catch (System.Exception ex)
             {
                 trans.Rollback();
                 throw;
@@ -749,8 +749,12 @@ namespace Slickflow.Engine.Service
             finally
             {
                 //卸载事件
-                runtimeInstance.UnRegiesterEvent(runtimeInstance_OnWfProcessRunning,
-                    runtimeInstance_OnWfProcessContinued);
+                if (runtimeInstance != null)
+                {
+                    runtimeInstance.UnRegiesterEvent(runtimeInstance_OnWfProcessRunning,
+                        runtimeInstance_OnWfProcessContinued);
+                }
+
                 waitHandler.Dispose();
             }
             return runAppResult;

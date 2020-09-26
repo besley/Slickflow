@@ -163,7 +163,7 @@ namespace Slickflow.Engine.Business.Manager
         {
             var sql = @"SELECT 
                             * 
-                        FROM WfProcessInstance
+                        FROM WfProcessInstance WITH(NOLOCK)
                         WHERE AppInstanceID=@appInstanceID 
                             AND ProcessGUID=@processGUID 
                             AND RecordStatusInvalid=0
