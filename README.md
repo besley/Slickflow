@@ -149,7 +149,7 @@ https://forum.slickflow.com/
 
 **Slickflow(1.7.6.6) 企业版：** 
 
-2021-02-026
+2021-02-26
 1. 动态子流程调用功能实现；
 2. 增加会签通过率的审批网关（ApprovalOrSplit）模式；
 3. 引擎项目升级到.netcore3.1版本，asp.net core 5版本；
