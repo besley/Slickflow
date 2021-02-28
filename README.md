@@ -147,7 +147,13 @@ http://www.slickflow.com/wiki/index
 **Discourse:**  
 https://forum.slickflow.com/  
 
-**Slickflow(1.7.6.0) 企业版：** 
+**Slickflow(1.7.6.6) 企业版：** 
+
+2021-02-026
+1. 动态子流程调用功能实现；
+2. 增加会签通过率的审批网关（ApprovalOrSplit）模式；
+3. 引擎项目升级到.netcore3.1版本，asp.net core 5版本；
+4. 增加西班牙语(Spanish)语言本地化功能；
 
 2020-11-11
 1. 新增加自动服务节点(ServiceTask)；
