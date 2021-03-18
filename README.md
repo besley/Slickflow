@@ -382,5 +382,5 @@ http://www.slickflow.com
 http://www.slickflow.com/demo/index  
 **文档:**  
 http://www.slickflow.com/wiki/index  
-**捐赠:**  
-http://www.slickflow.com/donate/index  
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](william.ligong@yahoo.com)
