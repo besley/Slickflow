@@ -147,7 +147,14 @@ http://www.slickflow.com/wiki/index
 **Discourse:**  
 https://forum.slickflow.com/  
 
-**Slickflow(1.7.6.6) 企业版：** 
+**Slickflow(1.7.7.0) 企业版：** 
+2021-04-29
+1. 引擎产品升级到.NET5版本；
+2. Quasar(VUE)请假流程Demo示例；
+3. 实现会签结合审批网关分支流转模式；
+4. 设计器及测试工具多语言(中英文)界面显示；
+5. 增加pgsql脚本，满足用户数据库需求；
+
 
 2021-02-26
 1. 动态子流程调用功能实现；
