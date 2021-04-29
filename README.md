@@ -10,7 +10,7 @@
 
 .NET/.NETCore Workflow Engine With Full Source Code 
 1. **.NET, .NET CORE version both supported**  
- Slickflow is an open-source project based on .NET Framework 4.5, .NET CORE 2; It's easy to use engine product into the cross-platform application.  
+ Slickflow is an open-source project based on .NET5; It's easy to use engine product into the cross-platform application.  
 2. **BPMN graphic style process diagram**   
  Slickflow is using BPMN notation to describe process diagram, the Slickflow designer is HTML5 graph editor and user-friendly to business process communication and business analysis.  
 3. **High performance with Dapper.NET library**  
