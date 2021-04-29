@@ -49,8 +49,8 @@
             accountmanager.loadRoles();
 
             $("#loginForm").submit(function (e) {
-                if (accountmanager.isValidated == undefined
-                    || accountmanager.isValidated == false)
+                if (accountmanager.isValidated === undefined
+                    || accountmanager.isValidated === false)
                     e.preventDefault();
             });
         })

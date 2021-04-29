@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Slickflow.Module.Localize;
 
 namespace Slickflow.Engine.Xpdl.Schedule
 {
@@ -11,33 +12,38 @@ namespace Slickflow.Engine.Xpdl.Schedule
     public class NextActivityMatchedResult
     {
         #region 属性和构造函数
-        internal static string Unkonwn = "未知原因";
-        internal static string Exceptional = "未能获取下一步节点";
-        internal static string Successed = "已经成功获取下一步节点";
-        internal static string NoneTransitionAsBeingFiltered = "并行分支上的条件不满足，无路径可达后续节点";
-        internal static string NoneWayMatchedToSplit = "该分支上的条件不成立，不能到后续节点";
-        internal static string WaitingForOthersJoin = "要合并的分支上的条件不是全部成立，无法合并到后续节点";
-        internal static string NotMadeItselfToJoin = "没有满足条件的路径，无法合并到后续节点";
-        internal static string NoneTransitionFilteredByCondition = "无法获取下一步节点列表，因为条件表达式未被满足，请查看必填字段是否已经填写！";
-
+        /// <summary>
+        /// 消息
+        /// </summary>
         public string Message
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 匹配类型
+        /// </summary>
         public NextActivityMatchedType MatchedType
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 根节点
+        /// </summary>
         public NextActivityComponent Root
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="matchedType">匹配类型</param>
+        /// <param name="root">根节点</param>
         private NextActivityMatchedResult(NextActivityMatchedType matchedType,
             NextActivityComponent root)
         {
@@ -61,28 +67,34 @@ namespace Slickflow.Engine.Xpdl.Schedule
             switch (matchedType)
             {
                 case NextActivityMatchedType.Unknown:
-                    result.Message = NextActivityMatchedResult.Unkonwn;
+                    result.Message = LocalizeHelper.GetEngineMessage("nextactivitymatchedresult.Unkonwn");
                     break;
                 case NextActivityMatchedType.Failed:
-                    result.Message = NextActivityMatchedResult.Exceptional;
+                    result.Message = LocalizeHelper.GetEngineMessage("nextactivitymatchedresult.Exceptional"); 
                     break;
                 case NextActivityMatchedType.Successed:
-                    result.Message = NextActivityMatchedResult.Successed;
+                    result.Message = LocalizeHelper.GetEngineMessage("nextactivitymatchedresult.Successed"); 
                     break;
                 case NextActivityMatchedType.NoneTransitionFilteredByCondition:
-                    result.Message = NextActivityMatchedResult.NoneTransitionFilteredByCondition;
+                    result.Message = LocalizeHelper.GetEngineMessage("nextactivitymatchedresult.NoneTransitionFilteredByCondition"); 
                     break;
-                case NextActivityMatchedType.WaitingForSplitting:
-                    result.Message = NextActivityMatchedResult.NoneTransitionAsBeingFiltered;
+                case NextActivityMatchedType.WaitingForOtherSplitting:
+                    result.Message = LocalizeHelper.GetEngineMessage("nextactivitymatchedresult.WaitingForOtherSplitting"); 
+                    break;
+                case NextActivityMatchedType.WaitingForAgreedOrRefused:
+                    result.Message = LocalizeHelper.GetEngineMessage("nextactivitymatchedresult.WaitingForAgreedOrRefused");
                     break;
                 case NextActivityMatchedType.NoneTransitionMatchedToSplit:
-                    result.Message = NextActivityMatchedResult.NoneWayMatchedToSplit;
+                    result.Message = LocalizeHelper.GetEngineMessage("nextactivitymatchedresult.NoneWayMatchedToSplit"); 
+                    break;
+                case NextActivityMatchedType.FailedPassRateOfMulitipleInstance:
+                    result.Message = LocalizeHelper.GetEngineMessage("nextactivitymatchedresult.FailedPassRateOfMulitipleInstance"); 
                     break;
                 case NextActivityMatchedType.WaitingForOthersJoin:
-                    result.Message = NextActivityMatchedResult.WaitingForOthersJoin;
+                    result.Message = LocalizeHelper.GetEngineMessage("nextactivitymatchedresult.WaitingForOthersJoin"); 
                     break;
                 case NextActivityMatchedType.NotMadeItselfToJoin:
-                    result.Message = NextActivityMatchedResult.NotMadeItselfToJoin;
+                    result.Message = LocalizeHelper.GetEngineMessage("nextactivitymatchedresult.NotMadeItselfToJoin"); 
                     break;
             }
             return result;

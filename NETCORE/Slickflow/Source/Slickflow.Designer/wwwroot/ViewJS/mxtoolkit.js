@@ -128,14 +128,14 @@ var mxtoolkit = (function () {
         var vertex = graph.insertVertex(parent, activity.id, createXmlElement(activity), 
             widget.left, widget.top, widget.width, widget.height, 
             geography.style);
-
         return vertex;
     }
 
-    function createXmlElement(activity){
+    function createXmlElement(activity) {
         var doc = mxUtils.createXmlDocument();
         var activityElement = doc.createElement('Activity');
 
+        activityElement.setAttribute("id", activity.id);
         activityElement.setAttribute('label', activity.name);
         activityElement.setAttribute('code', activity.code);
         activityElement.setAttribute('url', activity.url);
@@ -145,7 +145,7 @@ var mxtoolkit = (function () {
 
         var description = doc.createTextNode(activity.description);
         descElement.appendChild(description);
-        
+
         //activity type
         var activityTypeElement = doc.createElement('ActivityType');
         activityTypeElement.setAttribute('type', activity.type);
@@ -153,7 +153,7 @@ var mxtoolkit = (function () {
         activityElement.appendChild(activityTypeElement);
 
         //performers
-        if (activity.performers && activity.performers.length > 0){
+        if (activity.performers && activity.performers.length > 0) {
             var performersElement = mxfile.setPerformersElement(doc, activity.performers);
             activityElement.appendChild(performersElement);
         }
@@ -164,6 +164,12 @@ var mxtoolkit = (function () {
             activityElement.appendChild(actionsElement);
         }
 
+        //services
+        if (activity.services && activity.services.length > 0) {
+            var servicesElement = mxfile.setServicesElement(doc, activity.services);
+            activityElement.appendChild(servicesElement);
+        }
+        
         //boudaries
         if (activity.boundaries && activity.boundaries.length > 0) {
             var boundariesElement = mxfile.setBoundariesElement(doc, activity.boundaries);
@@ -175,7 +181,6 @@ var mxtoolkit = (function () {
             var sectionsElement = mxfile.setSectionsElement(doc, activity.sections);
             activityElement.appendChild(sectionsElement);
         }
-
         return activityElement;
     }
 
@@ -235,8 +240,8 @@ var mxtoolkit = (function () {
                     }
                 },
                 mouseMove: function (sender, me) {
-                    if (this.currentState != null && (me.getState() == this.currentState ||
-                        me.getState() == null)) {
+                    if (this.currentState !== null && (me.getState() === this.currentState ||
+                        me.getState() === null)) {
                         var iconTolerance = 20;
                         var tmp = new mxRectangle(me.getGraphX() - iconTolerance,
                             me.getGraphY() - iconTolerance, 2 * iconTolerance, 2 * iconTolerance);
@@ -267,7 +272,7 @@ var mxtoolkit = (function () {
                 },
                 mouseUp: function (sender, me) { },
                 dragEnter: function (evt, state) {
-                    if (this.currentIconSet == null) {
+                    if (this.currentIconSet === null) {
                         var currentCell = state.cell;
                         if (currentCell.value.nodeName === "Swimlane") {
                             this.currentIconSet = new mxIconSet(state);

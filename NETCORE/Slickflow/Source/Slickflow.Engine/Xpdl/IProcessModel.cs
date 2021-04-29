@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Diagnostics;
+using Slickflow.Data;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Common;
@@ -24,21 +25,25 @@ namespace Slickflow.Engine.Xpdl
         XmlDocument XmlProcessDefinition { get; }
 
         //方法列表
-        ActivityEntity GetFirstActivity();
         ActivityEntity GetStartActivity();
+        ActivityEntity GetFirstActivity();
+        NextActivityMatchedResult GetFirstActivityList(ActivityEntity startActivity, IDictionary<string, string> conditionKeyValuePair);
         ActivityEntity GetActivityByType(string xmlContent, string processGUID,  ActivityTypeEnum activityType);
         ActivityEntity GetEndActivity();
         ActivityEntity GetActivity(string activityGUID);
         IList<ActivityEntity> GetActivityList();
         ActivityEntity GetNextActivity(string activityGUID);
-        IList<NodeView> GetNextActivityTree(string currentActivityGUID,
-            IDictionary<string, string> condition = null);
+        IList<NodeView> GetNextActivityTree(string currentActivityGUID);
+        NextActivityTreeResult GetNextActivityTree(string currentActivityGUID,
+            Nullable<int> taskID,
+            IDictionary<string, string> condition,
+            IDbSession session);
         NextActivityMatchedResult GetNextActivityList(string currentActivityGUID,
-            IDictionary<string, string> conditionKeyValuePair = null);
-        NextActivityMatchedResult GetNextActivityList(string currentActivityGUID,
+            Nullable<int> taskID,
             IDictionary<string, string> conditionKeyValuePair,
             ActivityResource activityResource,
-            Expression<Func<ActivityResource, ActivityEntity, bool>> expression);
+            Expression<Func<ActivityResource, ActivityEntity, bool>> expression,
+            IDbSession session);
         IList<ActivityEntity> GetNextActivityListWithoutCondition(string activityGUID);
 
         IList<NodeView> GetPreviousActivityTree(string currentActivityGUID);

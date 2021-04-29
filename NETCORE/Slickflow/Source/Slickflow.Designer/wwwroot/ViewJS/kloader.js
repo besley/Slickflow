@@ -156,6 +156,7 @@ var kloader = (function () {
             var activity = {},
                 performers = [],
                 actions = [],
+                services = [],
                 boundaries = [],
                 sections = [],
                 geographyElement = {};
@@ -181,10 +182,16 @@ var kloader = (function () {
             //actions list
             Array.prototype.forEach.call(activityElement.getElementsByTagName("Action"), function (actionElement) {
                 var action = mxfile.getActionObject(actionElement);
-
                 actions.push(action);
             });
             activity.actions = actions;
+
+            //services list
+            Array.prototype.forEach.call(activityElement.getElementsByTagName("Service"), function (serviceElement) {
+                var service = mxfile.getServiceObject(serviceElement);
+                services.push(service);
+            });
+            activity.services = services;
 
             //boudaries list
             Array.prototype.forEach.call(activityElement.getElementsByTagName("Boundary"), function (boundaryElement) {
@@ -661,6 +668,7 @@ var kloader = (function () {
             descriptionNode = null,
             performersNode = null,
             actionsNode = null,
+            servicesNode = null,
             boundariesNode = null,
             sectionsNode = null;
 
@@ -701,44 +709,22 @@ var kloader = (function () {
             || activityType === kmodel.Config.NODE_TYPE_INTERMEDIATE) {         // "IntermediateNode"
             var trigger = activityTypeNode.getAttribute("trigger");
             activityTypeElement.setAttribute("trigger", trigger);
-            if (activityType === kmodel.Config.NODE_TYPE_START) {
-                var startExpression = activityTypeNode.getAttribute("expression");
-                activityTypeElement.setAttribute("expression", startExpression);
-                var startType = 0;
-                if (trigger === "Timer") {
-                    startType = 1;
-                } else if (trigger === "Message") {
-                    startType = 2;
-                }
-                kmain.mxSelectedProcessStartType = startType;
-                kmain.mxSelectedProcessStartExpression = startExpression;
-            } else if (activityType === kmodel.Config.NODE_TYPE_END) {
-                var endExpression = activityTypeNode.getAttribute("expression");
-                activityTypeElement.setAttribute("expression", endExpression);
-                var endType = 0;
-                if (trigger === "Timer") {
-                    endType = 1;
-                } else if (trigger === "Message") {
-                    endType = 2;
-                }
-                kmain.mxSelectedProcessEndType = endType;
-                kmain.mxSelectedProcessEndExpression = endExpression;
-            } else if (activityType === kmodel.Config.NODE_TYPE_INTERMEDIATE) {
-                var interExpression = activityTypeNode.getAttribute("expression");
-                activityTypeElement.setAttribute("expression", interExpression);
-            } else {
-                kmain.mxSelectedProcessStartType = 0;
-                kmain.mxSelectedProcessStartExpression = '';
-                kmain.mxSelectedProcessEndType = 0;
-                kmain.mxSelectedProcessEndExpression = '';
-            }  
-        } else if (activityType == "GatewayNode") {
+
+            var expression = activityTypeNode.getAttribute("expression");
+            activityTypeElement.setAttribute("expression", expression);
+
+            //message node
+            var msgDirection = activityTypeNode.getAttribute("messageDirection");
+            activityTypeElement.setAttribute("messageDirection", msgDirection);
+        } else if (activityType === "GatewayNode") {
             activityTypeElement.setAttribute("gatewaySplitJoinType", activityTypeNode.getAttribute("gatewaySplitJoinType"));
             activityTypeElement.setAttribute("gatewayDirection", activityTypeNode.getAttribute("gatewayDirection"));
             activityTypeElement.setAttribute("gatewayJoinPass", activityTypeNode.getAttribute("gatewayJoinPass"));
-        } else if (activityType == "SubProcessNode") {
+        } else if (activityType === "SubProcessNode") {
             activityTypeElement.setAttribute("subId", activityTypeNode.getAttribute("subId"));
-        } else if (activityType == "MultipleInstanceNode") {
+            activityTypeElement.setAttribute("subType", activityTypeNode.getAttribute('subType'));
+            activityTypeElement.setAttribute("subVar", activityTypeNode.getAttribute('subVar'));
+        } else if (activityType === "MultipleInstanceNode") {
             activityTypeElement.setAttribute("complexType", activityTypeNode.getAttribute("complexType"));
             activityTypeElement.setAttribute("mergeType", activityTypeNode.getAttribute("mergeType"));
             activityTypeElement.setAttribute("compareType", activityTypeNode.getAttribute("compareType"));
@@ -778,6 +764,23 @@ var kloader = (function () {
                         actionsElement.appendChild(actionElement);
                         mxfile.setActionElementByHTML(doc, actionElement, action);
                     }
+                }
+            }
+        }
+
+        //Services
+        servicesNode = snode.getElementsByTagName("Services")[0];
+        if (servicesNode) {
+            var serviceList = servicesNode.getElementsByTagName("Service");
+            if (serviceList.length > 0) {
+                var servicesElement = doc.createElement("Services");
+                activityElement.appendChild(servicesElement);
+
+                for (var a = 0; a < serviceList.length; a++) {
+                    var service = serviceList[a];
+                    var serviceElement = doc.createElement("Service");
+                    servicesElement.appendChild(serviceElement);
+                    mxfile.setServiceElementByHTML(doc, serviceElement, service);
                 }
             }
         }
@@ -934,8 +937,10 @@ var kloader = (function () {
             conditionType = '',
             conditionTextNode = null,
             groupBehavioursNode = null,
+            defaultBranch = '',
             priority = '',
-            forced = '';
+            forced = '',
+            approval = '';
 
         //transition
         var transitionElement = doc.createElement("Transition");
@@ -986,14 +991,28 @@ var kloader = (function () {
             var groupBehavioursElement = doc.createElement("GroupBehaviours");
             transitionElement.appendChild(groupBehavioursElement);
 
+            //OrSplit
+            defaultBranch = groupBehavioursNode.getAttribute("defaultBranch");
+            if ($.isEmptyObject(defaultBranch) === false && defaultBranch !== "undefined" && defaultBranch !== "null") {
+                groupBehavioursElement.setAttribute("defaultBranch", defaultBranch);
+            }
+
+            //XOrSplit
             priority = groupBehavioursNode.getAttribute("priority");
             if ($.isEmptyObject(priority) === false && priority !== "undefined" && priority !== "null") {
                 groupBehavioursElement.setAttribute("priority", priority);
             }
 
+            //EOrJoin
             forced = groupBehavioursNode.getAttribute("forced");
             if ($.isEmptyObject(forced) === false && forced !== "undefined" && forced !== "null") {
                 groupBehavioursElement.setAttribute("forced", forced);
+            }
+
+            //ApprovalOrSplit
+            approval = groupBehavioursNode.getAttribute("approval");
+            if ($.isEmptyObject(approval) === false && approval !== "undefined" && approval !== "null") {
+                groupBehavioursElement.setAttribute("approval", approval);
             }
         }
 

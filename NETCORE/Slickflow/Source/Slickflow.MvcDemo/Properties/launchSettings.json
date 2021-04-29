@@ -3,22 +3,23 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "http://localhost/sfmvc2c/",
+      "applicationUrl": "http://localhost/sfmvc0/",
       "sslPort": 0
     },
     "iisExpress": {
-      "applicationUrl": "http://localhost:59379/",
-      "sslPort": 0
+      "applicationUrl": "http://localhost:52619",
+      "sslPort": 44381
     }
   },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
     "IIS Express": {
       "commandName": "IIS",
       "launchBrowser": true,
-      "launchUrl": "http://localhost/sfmvc2c/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "jsWebView2Debugging": true
     },
     "Slickflow.MvcDemo": {
       "commandName": "Project",
@@ -26,7 +27,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:59380/"
+      "dotnetRunMessages": "true",
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
     }
   }
 }

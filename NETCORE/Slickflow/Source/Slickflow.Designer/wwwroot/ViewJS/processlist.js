@@ -65,7 +65,7 @@ var processlist = (function () {
                 };
 
                 function onIsUsingCellRenderer(params) {
-                    return params.value == 1 ? kresource.getItem('active') : kresource.getItem('unactive');
+                    return params.value === 1 ? kresource.getItem('active') : kresource.getItem('unactive');
                 }
 
                 function onPackageTypeRenderer(params) {
@@ -79,18 +79,18 @@ var processlist = (function () {
 
                 function onStartTypeCellRenderer(params) {
                     var startType = '';
-                    if (params.value == 1)
+                    if (params.value === 1)
                         startType = kresource.getItem('timer');
-                    else if (params.value == 2)
+                    else if (params.value === 2)
                         startType = kresource.getItem('message');
                     return startType;
                 }
 
                 function onEndTypeCellRenderer(params) {
                     var endType = '';
-                    if (params.value == 1)
+                    if (params.value === 1)
                         endType = kresource.getItem('timer');
-                    else if (params.value == 2)
+                    else if (params.value === 2)
                         endType = kresource.getItem('message');
                     return endType;
                 }
@@ -113,11 +113,7 @@ var processlist = (function () {
                 }
             }
             else {
-                $.msgBox({
-                    title: "Designer / Process",
-                    content: kresource.getItem("processlisterrormsg"),
-                    type: "error"
-                });
+                kmsgbox.error(kresource.getItem("processlisterrormsg"));
             }
 		});
 	}
@@ -152,21 +148,13 @@ var processlist = (function () {
 
 	processlist.editProcess = function () {
         var process = processlist.pselectedProcessEntity;
-        if (process == null) {
-            $.msgBox({
-                title: "Designer / Process",
-                content: kresource.getItem('processselectedwarnmsg'),
-                type: "alert"
-            });
+        if (process === null) {
+            kmsgbox.warn(kresource.getItem('processselectedwarnmsg'));
             return false;
         } else {
             //泳道流程只能用主流程编辑
             if (process.PackageType === 2) {
-                $.msgBox({
-                    title: "Designer / Process",
-                    content: kresource.getItem('processpoolopendiagramwarnmsg'),
-                    type: "warn"
-                });
+                kmsgbox.warn(kresource.getItem('processpoolopendiagramwarnmsg'));
             } else {
                 //单一流程编辑页面
                 BootstrapDialog.show({
@@ -183,11 +171,7 @@ var processlist = (function () {
         if ($.trim($("#txtProcessName").val()) === ""
             || $.trim($("#txtProcessCode").val()) === ""
             || $.trim($("#txtVersion").val()) === "") {
-            $.msgBox({
-                title: "Designer / Process",
-                content: kresource.getItem('processsavewarnmsg'),
-                type: "alert"
-            });
+            kmsgbox.warn(kresource.getItem('processsavewarnmsg'));
             return false;
         }
 
@@ -203,52 +187,38 @@ var processlist = (function () {
         processapi.checkProcessFile(entity, function (result) {
             if (result.Status === 1) {
                 if (result.Entity === null) {
-                    if (processlist.diagramCreated) {
-                        //把流程实体对象传递到主界面，然后进行XML保存操作
-                        slick.trigger(processlist.diagramCreated, {
-                            "ProcessEntity": entity
-                        });
-                    }
-                } else {
-                    $.msgBox({
-                        title: "Designer / Process",
-                        content: kresource.getItem('processsavenotuniquewarnmsg'),
-                        type: "alert"
+                    processapi.create(entity, false, function (result) {
+                        if (result.Status === 1) {
+                            processlist.pselectedProcessEntity = result.Entity;
+                            kmain.mxSelectedProcessEntity = result.Entity;
+                            //trigger diagram created event
+                            slick.trigger(processlist.diagramCreated, {
+                                "ProcessEntity": entity
+                            });
+                        }
                     });
+                } else {
+                    kmsgbox.warn(kresource.getItem('processsavenotuniquewarnmsg'));
                 }
             } else {
-                $.msgBox({
-                    title: "Designer / Process",
-                    content: kresource.getItem('processsavewarnmsg'),
-                    type: "alert"
-                });
+                kmsgbox.error(kresource.getItem('processcheckfileexisterrormsg'), result.Message);
             }
         })
     }
 
     processlist.upgradeProcess = function () {
         var entity = processlist.pselectedProcessEntity;
-        if (entity == null) {
-            $.msgBox({
-                title: "Designer / Process",
-                content: kresource.getItem('processselectedwarnmsg'),
-                type: "alert"
-            });
+        if (entity === null) {
+            kmsgbox.warn(kresource.getItem('processselectedwarnmsg'));
             return false;
         } else {
-            $.msgBox({
-                title: "Are You Sure",
-                content: kresource.getItem('processupgrademsg'),
-                type: "confirm",
-                buttons: [{ value: "Yes" }, { value: "Cancel" }],
-                success: function (result) {
-                    if (result == "Yes") {
-                        var entity = {
-                            "ID": processlist.pselectedProcessEntity.ID
-                        };
-                        processapi.upgrade(entity);
-                        return;
-                    }
+            kmsgbox.confirm(kresource.getItem('processupgrademsg'), function (result) {
+                if (result === "Yes") {
+                    var entity = {
+                        "ID": processlist.pselectedProcessEntity.ID
+                    };
+                    processapi.upgrade(entity);
+                    return;
                 }
             });
         }
@@ -258,17 +228,13 @@ var processlist = (function () {
         processlist.getProcessList();
     }
 
-	processlist.saveProcess = function () {
+    processlist.saveProcess = function () {
         if ($.trim($("#txtProcessName").val()) === ""
             || $.trim($("#txtProcessCode").val()) === ""
-			|| $.trim($("#txtVersion").val()) === "") {
-					$.msgBox({
-                        title: "Designer / Process",
-                        content: kresource.getItem('processsavewarnmsg'),
-						type: "alert"
-					});
-					return false;
-				}
+            || $.trim($("#txtVersion").val()) === "") {
+            kmsgbox.warn(kresource.getItem('processsavewarnmsg'));
+		    return false;
+		}
 
         var entity = {
 			"ProcessGUID": $("#txtProcessGUID").val(),
@@ -278,21 +244,33 @@ var processlist = (function () {
 			"IsUsing": $("#ddlIsUsing").val(),
             "Description": $("#txtDescription").val(),
             "TemplateType": processlist.mprocessTemplateType === '' ? "Blank" : processlist.mprocessTemplateType
-		};
+        };
 
-		if (processlist.pselectedProcessEntity === null) {
-			processapi.create(entity, function (result) {
-				if (result.Status == 1) {
-                    processlist.pselectedProcessEntity = result.Entity;
-                    //render process into graph canvas
-					if (processlist.afterCreated) {
-						slick.trigger(processlist.afterCreated, {
-                            "ProcessEntity": result.Entity
+        if (processlist.pselectedProcessEntity === null) {
+            processapi.checkProcessFile(entity, function (result) {
+                if (result.Status === 1) {
+                    if (result.Entity === null) {
+                        //create a new process
+                        processapi.create(entity, true, function (result) {
+                            if (result.Status === 1) {
+                                processlist.pselectedProcessEntity = result.Entity;
+                                kmain.mxSelectedProcessEntity = result.Entity;
+                                //render process into graph canvas
+                                if (processlist.afterCreated) {
+                                    slick.trigger(processlist.afterCreated, {
+                                        "ProcessEntity": result.Entity
+                                    });
+                                }
+                                if (processlist.mProcessEditDialog !== null) processlist.mProcessEditDialog.close();
+                            }
                         });
+                    } else {
+                        kmsgbox.warn(kresource.getItem('processsavenotuniquewarnmsg'));
                     }
-                    if (processlist.mProcessEditDialog !== null) processlist.mProcessEditDialog.close();
-				}
-			});
+                } else {
+                    kmsgbox.error(kresource.getItem('processcheckfileexisterrormsg'), result.Message);
+                }
+            })
 		}
 		else
 			processapi.update(entity);
@@ -304,23 +282,16 @@ var processlist = (function () {
         if (process.PackageType === 1) {
             content = kresource.getItem('processpooldeletemsg');
         }
-
-		$.msgBox({
-            title: "Are You Sure",
-            content: content,
-			type: "confirm",
-			buttons: [{ value: "Yes" }, { value: "Cancel" }],
-			success: function (result) {
-				if (result == "Yes") {
-					var entity = {
-						"ProcessGUID": processlist.pselectedProcessEntity.ProcessGUID,
-						"Version": processlist.pselectedProcessEntity.Version
-					};
-					processapi.delete(entity);
-					return;
-				}
-			}
-		});
+        kmsgbox.confirm(content, function (result) {
+            if (result === "Yes") {
+                var entity = {
+                    "ProcessGUID": processlist.pselectedProcessEntity.ProcessGUID,
+                    "Version": processlist.pselectedProcessEntity.Version
+                };
+                processapi.delete(entity);
+                return;
+            }
+        });
 	}
 
 	processlist.sure = function () {
@@ -329,11 +300,7 @@ var processlist = (function () {
         if (process !== null) {
             //泳道流程只能用主流程编辑
             if (process.PackageType === 2) {
-                $.msgBox({
-                    title: "Designer / Process",
-                    content: kresource.getItem('processpoolopendiagramwarnmsg'),
-                    type: "warn"
-                });
+                kmsgbox.warn(kresource.getItem('processpoolopendiagramwarnmsg'));
             } else {
                 onDiagramOpen(processlist.pselectedProcessEntity);
             }
@@ -360,11 +327,7 @@ var processlist = (function () {
                 var process = result.Entity;
                 //泳道流程只能用主流程编辑
                 if (process.PackageType === 2) {
-                    $.msgBox({
-                        title: "Designer / Process",
-                        content: kresource.getItem('processpoolopendiagramwarnmsg'),
-                        type: "warn"
-                    });
+                    kmsgbox.warn(kresource.getItem('processpoolopendiagramwarnmsg'));
                 } else {
                     if (processlist.afterOpened) {
                         slick.trigger(processlist.afterOpened, {
@@ -373,11 +336,7 @@ var processlist = (function () {
                     }
                 }
             } else {
-                $.msgBox({
-                    title: "Designer / Process",
-                    content: kresource.getItem('processopenerrormsg') + result.Message,
-                    type: "error"
-                });
+                kmsgbox.error(kresource.getItem('processopenerrormsg'), result.Message);
             }
         });
     }
@@ -391,18 +350,10 @@ var processlist = (function () {
                 $("#txtXmlContent").val(xmlContent);
             }
             else {
-                $.msgBox({
-                    title: "Designer / Index",
-                    content: kresource.getItem('xmlpreviewwarnmsg'),
-                    type: "warn"
-                });
+                kmsgbox.warn(kresource.getItem('xmlpreviewwarnmsg'));
             }
         } else {
-            $.msgBox({
-                title: "Designer / Index",
-                content: kresource.getItem('xmlprevieexceptionmsg') + result.message,
-                type: "warn"
-            });
+            kmsgbox.warn(kresource.getItem('xmlprevieexceptionmsg'), result.message);
         }
     }
 
@@ -427,25 +378,16 @@ var processlist = (function () {
             validation: {
                 allowedExtensions: ['xml', 'txt'],
                 itemLimit: 1,
-                sizeLimit: 51200 // 50 kB = 50 * 1024 bytes
+                sizeLimit: 102400 // 100 kB = 100 * 1024 bytes
             },
             callbacks: {
                 onComplete: function (id, fileName, result) {
                     if (result.success === true) {
-                        $.msgBox({
-                            title: "Designer / Process",
-                            content: kresource.getItem("processxmlimportokmsg"),
-            			    type: "info",
-            			    buttons: [{ value: "Ok" }],
-            		    });
+                        kmsgbox.info(kresource.getItem("processxmlimportokmsg"));
                     }
                     else {
-            		    $.msgBox({
-                            title: "Designer / Process",
-                            content: kresource.getItem("processxmlimporterrormsg") + result.ExceptionMessage,
-            			    type: "error",
-            			    buttons: [{ value: "Ok" }],
-            		    });
+                        window.console.log(result);
+                        kmsgbox.error(kresource.getItem("processxmlimporterrormsg"), result.Message);
                     }
                 }
             }
@@ -459,25 +401,17 @@ var processapi = (function () {
 	function processapi() {
 	}
 
-	processapi.create = function (entity, callback) {
+	processapi.create = function (entity, isPopupMessage, callback) {
 		jshelper.ajaxPost('api/Wf2Xml/CreateProcess',
             JSON.stringify(entity),
             function (result) {
-            	if (result.Status == 1) {
-            		$.msgBox({
-                        title: "Designer / Process",
-                        content: result.Message,
-            			type: "info"
-            		});
-            	} else {
-            		$.msgBox({
-                        title: "Designer / Process",
-                        content: result.Message,
-            			type: "error",
-            			buttons: [{ value: "Ok" }],
-            		});
+                if (result.Status === 1) {
+                    if (isPopupMessage === true) {
+                        kmsgbox.info(result.Message);
+                    }
+                } else {
+                    kmsgbox.error(result.Message);
             	}
-
             	//execute render in processlist
             	callback(result);
             });
@@ -487,20 +421,11 @@ var processapi = (function () {
         jshelper.ajaxPost('api/Wf2Xml/ExecuteProcessGraph',
             JSON.stringify(entity),
             function (result) {
-                if (result.Status == 1) {
-                    $.msgBox({
-                        title: "Designer / Process",
-                        content: result.Message,
-                        type: "info"
-                    });
+                if (result.Status === 1) {
+                    kmsgbox.info(result.Message);
                     callback(result.Entity);
                 } else {
-                    $.msgBox({
-                        title: "Designer / Process",
-                        content: result.Message,
-                        type: "warn",
-                        buttons: [{ value: "Ok" }],
-                    });
+                    kmsgbox.warn(result.Message);
                 }
             });
     }
@@ -509,19 +434,10 @@ var processapi = (function () {
 		jshelper.ajaxPost('api/Wf2Xml/UpdateProcess',
             JSON.stringify(entity),
             function (result) {
-            	if (result.Status == 1) {
-            		$.msgBox({
-                        title: "Designer / Process",
-                        content: result.Message,
-            			type: "info"
-            		});
-            	} else {
-            		$.msgBox({
-                        title: "Ooops",
-                        content: result.Message,
-            			type: "error",
-            			buttons: [{ value: "Ok" }],
-            		});
+                if (result.Status === 1) {
+                    kmsgbox.info(result.Message);
+                } else {
+                    kmsgbox.error(result.Message);
             	}
             });
     }
@@ -531,22 +447,12 @@ var processapi = (function () {
         jshelper.ajaxPost('api/Wf2Xml/UpgradeProcess',
             JSON.stringify(entity),
             function (result) {
-                if (result.Status == 1) {
-                    $.msgBox({
-                        title: "Designer / Process",
-                        content: result.Message,
-                        type: "info"
-                    });
-
+                if (result.Status === 1) {
+                    kmsgbox.info(result.Message);
                     //refresh
                     processlist.getProcessList();
                 } else {
-                    $.msgBox({
-                        title: "Ooops",
-                        content: result.Message,
-                        type: "error",
-                        buttons: [{ value: "Ok" }],
-                    });
+                    kmsgbox.error(result.Message);
                 }
             });
     }
@@ -556,22 +462,12 @@ var processapi = (function () {
 		jshelper.ajaxPost('api/Wf2Xml/DeleteProcess',
             JSON.stringify(entity),
             function (result) {
-            	if (result.Status == 1) {
-            		$.msgBox({
-                        title: "Designer / Process",
-                        content: result.Message,
-            			type: "info"
-            		});
-
+                if (result.Status === 1) {
+                    kmsgbox.info(result.Message);
             		//refresh
             		processlist.getProcessList();
-            	} else {
-            		$.msgBox({
-                        title: "Ooops",
-                        content: result.Message,
-            			type: "error",
-            			buttons: [{ value: "Ok" }],
-            		});
+                } else {
+                    kmsgbox.error(result.Message);
             	}
             });
 	}
@@ -605,36 +501,20 @@ var processapi = (function () {
 
 	processapi.saveProcessFile = function (entity) {
 		jshelper.ajaxPost('api/Wf2Xml/SaveProcessFile', JSON.stringify(entity), function (result) {
-			if (result.Status == "1") {
-				$.msgBox({
-                    title: "Designer / Index",
-                    content: result.Message,
-					type: "info"
-				});
-			} else {
-				$.msgBox({
-                    title: "Designer / Index",
-                    content: result.Message,
-					type: "info"
-				});
+            if (result.Status === 1) {
+                kmsgbox.info(result.Message);
+            } else {
+                kmsgbox.error(result.Message);
 			}
 		});
     }
 
     processapi.saveProcessFilePool = function (entity) {
         jshelper.ajaxPost('api/Wf2Xml/SaveProcessFilePool', JSON.stringify(entity), function (result) {
-            if (result.Status == "1") {
-                $.msgBox({
-                    title: "Designer / Index",
-                    content: result.Message,
-                    type: "info"
-                });
+            if (result.Status === 1) {
+                kmsgbox.info(result.Message);
             } else {
-                $.msgBox({
-                    title: "Designer / Index",
-                    content: result.Message,
-                    type: "info"
-                });
+                kmsgbox.error(result.Message);
             }
         });
     }
@@ -649,17 +529,13 @@ var processapi = (function () {
         }
 
         jshelper.ajaxGet('api/Wf2Xml/LoadProcessTemplate/' + option, null, function (result) {
-            if (result.Status == "1") {
+            if (result.Status === 1) {
                 var template = result.Entity;
                 //$("#txtCode").val(template.Content);
                 processmodel.mcodemirrorEditor.setCode(template.Content);
                 processmodel.mprocessTemplate[option] = template.Content;
             } else {
-                $.msgBox({
-                    title: "Process / Template",
-                    content: result.Message,
-                    type: "warn"
-                });
+                kmsgbox.warn(result.Message);
             }
         });
     }

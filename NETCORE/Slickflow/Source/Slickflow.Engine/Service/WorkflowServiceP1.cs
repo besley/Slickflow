@@ -101,21 +101,8 @@ namespace Slickflow.Engine.Service
         /// <returns>流程实例实体</returns>
         public ProcessInstanceEntity GetRunningProcessInstance(WfAppRunner runner)
         {
-            ProcessInstanceEntity entity = null;
-            IDbConnection conn = SessionFactory.CreateConnection();
-            try
-            {
-                var pim = new ProcessInstanceManager();
-                entity = pim.GetRunningProcessInstance(conn, runner.AppInstanceID, runner.ProcessGUID);
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                conn.Close();
-            }
+            var pim = new ProcessInstanceManager();
+            var entity = pim.GetRunningProcessInstance(runner.AppInstanceID, runner.ProcessGUID);
             return entity;
         }
 
@@ -127,20 +114,8 @@ namespace Slickflow.Engine.Service
         /// <returns>流程实例记录数</returns>
         public Int32 GetProcessInstanceCount(string processGUID, string version)
         {
-            IDbConnection conn = SessionFactory.CreateConnection();
-            try
-            {
-                var pim = new ProcessInstanceManager();
-                return pim.GetProcessInstanceCount(conn, processGUID, version);
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                conn.Close();
-            }
+            var pim = new ProcessInstanceManager();
+            return pim.GetProcessInstanceCount(processGUID, version);
         }
 
         /// <summary>

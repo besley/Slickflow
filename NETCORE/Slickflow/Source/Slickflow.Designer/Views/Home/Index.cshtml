@@ -10,6 +10,7 @@
     <title>Slickflow Designer</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="~/Content/jquery-ui/jquery-ui.css" />
+    <!--Bootstrap 3.3.7-->
     <link rel="stylesheet" href="~/Content/bootstrap/bootstrap-3.3.7.min.css" />
     <link rel="stylesheet" href="~/Content/bootstrap/bootstrap-theme-3.3.7.min.css" />
     <link rel="stylesheet" href="~/Content/bootstrap/bootstrap-dialog.min.css" />
@@ -18,7 +19,7 @@
     <link rel="stylesheet" href="~/Content/ag-grid/ag-grid.css" />
     <link rel="stylesheet" href="~/Content/ag-grid/theme-bootstrap.css" />
 
-    <link rel="stylesheet" href="~/Content/graphCanvas.css"/>
+    <link rel="stylesheet" href="~/Content/graphCanvas.css" />
     <link rel="stylesheet" href="~/Content/msgBoxLight.css" />
 
     <style type="text/css" media="screen">
@@ -29,12 +30,12 @@
             font-size: 8pt;
         }
 
-        div.base#kgraphContainer {
-            border-style: solid;
-            border-color: #F2F2F2;
-            border-width: 1px;
-            background: url('Scripts/mxGraph/src/editor/images/grid.gif');
-        }
+            div.base#kgraphContainer {
+                border-style: solid;
+                border-color: #F2F2F2;
+                border-width: 1px;
+                background: url('Scripts/mxGraph/src/editor/images/grid.gif');
+            }
 
         hr {
             border-top: 1px solid #000000 !important;
@@ -44,10 +45,10 @@
     </style>
 
     <script type="text/javascript">
-		mxBasePath = "Scripts/mxGraph/src";
+        mxBasePath = "Scripts/mxGraph/src";
     </script>
 
-    
+
 </head>
 <body>
     <div class="container" id="barTopMenu">
@@ -97,13 +98,34 @@
         </div>
     </div>
 
-    <!-- jquery -->
+
+    <div class="modal fade" id="theModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="form">
+            <div class="modal-content">
+                @*<div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">My modal</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>*@
+                <div class="modal-body">
+                    ... remote content from "data-remote" loads here ...
+                </div>
+                @*<div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Send message</button>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+
+    <!-- jquery1.10.2 -->
     <script type="text/javascript" src="~/Scripts/jquery/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery/jquery-ui-1.10.3.min.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery/jquery.event.drag-2.2.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery/jquery.msgBox.js"></script>
     <script type="text/javascript" src="~/Scripts/later.min.js"></script>
-
+    <!-- Bootstrap 3.3.7 -->
     <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap-dialog.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap-progressbar.min.js"></script>
@@ -121,6 +143,8 @@
     <script type="text/javascript" src="~/Scripts/mxGraph/src/mxClient.js"></script>
 
     <!-- Slickflow kgraph main files -->
+    <script type="text/javascript" src="~/ViewJS/kmsgbox.js"></script>
+    <script type="text/javascript" src="~/ViewJS/btxdialog.js"></script>
     <script type="text/javascript" src="~/ViewJS/mxfile.js"></script>
     <script type="text/javascript" src="~/ViewJS/kloader.js"></script>
     <script type="text/javascript" src="~/ViewJS/kmain.js"></script>
@@ -176,6 +200,8 @@
                 //load process diagram from GC outer aplication
                 processlist.openProcessDiagram(processID);
             }
+
+            btxdialog.show();
         });
     </script>
 </body>

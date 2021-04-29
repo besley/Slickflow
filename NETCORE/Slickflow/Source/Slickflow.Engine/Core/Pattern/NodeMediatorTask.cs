@@ -71,7 +71,7 @@ namespace Slickflow.Engine.Core.Pattern
                 //获取下一步节点列表：并继续执行
                 if (canContinueForwardCurrentNode)
                 {
-                    ContinueForwardCurrentNode(ActivityForwardContext.IsNotParsedByTransition);
+                    ContinueForwardCurrentNode(ActivityForwardContext.IsNotParsedByTransition, this.Session);
                 }
             }
             catch (System.Exception ex)
@@ -81,7 +81,7 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 完成任务实例
+        /// 完成节点实例
         /// </summary>
         /// <param name="taskID">任务视图</param>
         /// <param name="activityResource">活动资源</param>
@@ -134,7 +134,6 @@ namespace Slickflow.Engine.Core.Pattern
             ActivityResource activityResource,
             IDbSession session)
         {
-            int newActivityInstanceID = 0;
             Boolean isParallel = false;
             if (fromActivityInstance.ActivityType == (short)ActivityTypeEnum.GatewayNode)
             {
@@ -147,7 +146,7 @@ namespace Slickflow.Engine.Core.Pattern
             if (isParallel)
             {
                 //并行多实例容器
-                var entity = new ActivityInstanceEntity();
+                ActivityInstanceEntity entity = null;
                 var plist = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
 
                 //创建并行多实例分支
@@ -177,12 +176,15 @@ namespace Slickflow.Engine.Core.Pattern
                 //普通任务节点
                 var toActivityInstance = base.CreateActivityInstanceObject(toActivity, processInstance, activityResource.AppRunner);
 
+                //处理多次退回后的返送
+                WriteBackSrcOrgInformation(toActivityInstance, fromActivityInstance, session);
+
                 //进入运行状态
                 toActivityInstance.ActivityState = (short)ActivityStateEnum.Ready;
                 toActivityInstance = GenerateActivityAssignedUserInfo(toActivityInstance, activityResource);
                 
                 //插入活动实例数据
-                newActivityInstanceID = base.ActivityInstanceManager.Insert(toActivityInstance, session);
+                base.ActivityInstanceManager.Insert(toActivityInstance, session);
 
                 //插入任务数据
                 base.CreateNewTask(toActivityInstance, activityResource, session);
@@ -211,6 +213,25 @@ namespace Slickflow.Engine.Core.Pattern
                     EventFireTypeEnum.OnActivityCreated,
                     activityResource.AppRunner.DelegateEventList,
                     delegateContext);
+            }
+        }
+
+        /// <summary>
+        /// 维护多次退回时的源节点信息
+        /// </summary>
+        /// <param name="toActivityInstance">目的节点</param>
+        /// <param name="fromActivityInstance">开始节点</param>
+        /// <param name="session">会话</param>
+        private void WriteBackSrcOrgInformation(ActivityInstanceEntity toActivityInstance, 
+            ActivityInstanceEntity fromActivityInstance,
+            IDbSession session)
+        {
+            if (fromActivityInstance.BackSrcActivityInstanceID != null)
+            {
+                var backSrcActivityInstance = base.ActivityInstanceManager.GetById(session.Connection,
+                    fromActivityInstance.BackSrcActivityInstanceID.Value, session.Transaction);
+                toActivityInstance.BackSrcActivityInstanceID = backSrcActivityInstance.BackSrcActivityInstanceID;
+                toActivityInstance.BackOrgActivityInstanceID = backSrcActivityInstance.BackOrgActivityInstanceID;
             }
         }
     }

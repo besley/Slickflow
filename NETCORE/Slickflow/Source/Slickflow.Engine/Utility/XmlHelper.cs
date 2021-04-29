@@ -82,7 +82,7 @@ namespace Slickflow.Engine.Utility
         {
             try
             {
-                if (xmlNode.Attributes[attributeName] != null)
+                if (xmlNode != null && xmlNode.Attributes[attributeName] != null)
                 {
                     return xmlNode.Attributes[attributeName].InnerText;
                 }
@@ -120,7 +120,16 @@ namespace Slickflow.Engine.Utility
         /// <param name="value">文本</param>
         public static void SetXmlAttribute(XmlNode xmlNode, string name, string value)
         {
-            xmlNode.Attributes[name].Value = value;
+            if (xmlNode.Attributes[name] != null)
+            {
+                xmlNode.Attributes[name].Value = value;
+            }
+            else
+            {
+                var xmlAttribute = xmlNode.OwnerDocument.CreateAttribute(name);
+                xmlAttribute.Value = value;
+                xmlNode.Attributes.Append(xmlAttribute);
+            }
         }
         #endregion
 
@@ -150,7 +159,7 @@ namespace Slickflow.Engine.Utility
             }
             catch (Exception ex)
             {
-                throw ex; //这里可以定义你自己的异常处理
+                throw; //这里可以定义你自己的异常处理
             }
             return isSuccess;
         }
@@ -194,7 +203,7 @@ namespace Slickflow.Engine.Utility
             }
             catch (Exception ex)
             {
-                throw ex; //这里可以定义你自己的异常处理
+                throw; //这里可以定义你自己的异常处理
             }
             return isSuccess;
         }
@@ -242,7 +251,7 @@ namespace Slickflow.Engine.Utility
             }
             catch (Exception ex)
             {
-                throw ex; //这里可以定义你自己的异常处理
+                throw; //这里可以定义你自己的异常处理
             }
             return isSuccess;
         }

@@ -5,10 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Slickflow.Data;
-using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Service;
 using SlickOne.WebUtility;
 using Slickflow.BizAppService.Entity;
 using Slickflow.BizAppService.Interface;
@@ -235,8 +232,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             var result = ResponseResult.Default();
             try
             {
-                var productOrder = JsonConvert.DeserializeObject<ProductOrderEntity>(entity.ProductOrderEntity.ToString());
-                var runner = JsonConvert.DeserializeObject<WfAppRunner>(entity.WfAppRunner.ToString());
+                dynamic clientEntity = JsonConvert.DeserializeObject<dynamic>(entity.ToString());
+                var productOrder = JsonConvert.DeserializeObject<ProductOrderEntity>(clientEntity.ProductOrderEntity.ToString());
+                var runner = JsonConvert.DeserializeObject<WfAppRunner>(clientEntity.WfAppRunner.ToString());
 
                 IWfServiceRegister s = ProductOrderService as IWfServiceRegister;
                 s.RegisterWfAppRunner(runner);
@@ -267,8 +265,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             var result = ResponseResult.Default();
             try
             {
-                var productOrder = JsonConvert.DeserializeObject<ProductOrderEntity>(entity.ProductOrderEntity.ToString());
-                var runner = JsonConvert.DeserializeObject<WfAppRunner>(entity.WfAppRunner.ToString());
+                dynamic clientEntity = JsonConvert.DeserializeObject<dynamic>(entity.ToString());
+                var productOrder = JsonConvert.DeserializeObject<ProductOrderEntity>(clientEntity.ProductOrderEntity.ToString());
+                var runner = JsonConvert.DeserializeObject<WfAppRunner>(clientEntity.WfAppRunner.ToString());
                 
                 IWfServiceRegister s = ProductOrderService as IWfServiceRegister;
                 s.RegisterWfAppRunner(runner);
@@ -299,8 +298,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             var result = ResponseResult.Default();
             try
             {
-                var productOrder = JsonConvert.DeserializeObject<ProductOrderEntity>(entity.ProductOrderEntity.ToString());
-                var runner = JsonConvert.DeserializeObject<WfAppRunner>(entity.WfAppRunner.ToString());
+                dynamic clientEntity = JsonConvert.DeserializeObject<dynamic>(entity.ToString());
+                var productOrder = JsonConvert.DeserializeObject<ProductOrderEntity>(clientEntity.ProductOrderEntity.ToString());
+                var runner = JsonConvert.DeserializeObject<WfAppRunner>(clientEntity.WfAppRunner.ToString());
 
                 IWfServiceRegister s = ProductOrderService as IWfServiceRegister;
                 s.RegisterWfAppRunner(runner);
@@ -331,8 +331,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             var result = ResponseResult.Default();
             try
             {
-                var productOrder = JsonConvert.DeserializeObject<ProductOrderEntity>(entity.ProductOrderEntity.ToString());
-                var runner = JsonConvert.DeserializeObject<WfAppRunner>(entity.WfAppRunner.ToString());
+                dynamic clientEntity = JsonConvert.DeserializeObject<dynamic>(entity.ToString());
+                var productOrder = JsonConvert.DeserializeObject<ProductOrderEntity>(clientEntity.ProductOrderEntity.ToString());
+                var runner = JsonConvert.DeserializeObject<WfAppRunner>(clientEntity.WfAppRunner.ToString());
 
                 IWfServiceRegister s = ProductOrderService as IWfServiceRegister;
                 s.RegisterWfAppRunner(runner);
@@ -363,8 +364,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             var result = ResponseResult.Default();
             try
             {
-                var productOrder = JsonConvert.DeserializeObject<ProductOrderEntity>(entity.ProductOrderEntity.ToString());
-                var runner = JsonConvert.DeserializeObject<WfAppRunner>(entity.WfAppRunner.ToString());
+                dynamic clientEntity = JsonConvert.DeserializeObject<dynamic>(entity.ToString());
+                var productOrder = JsonConvert.DeserializeObject<ProductOrderEntity>(clientEntity.ProductOrderEntity.ToString());
+                var runner = JsonConvert.DeserializeObject<WfAppRunner>(clientEntity.WfAppRunner.ToString());
 
                 IWfServiceRegister s = ProductOrderService as IWfServiceRegister;
                 s.RegisterWfAppRunner(runner);
@@ -395,8 +397,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             var result = ResponseResult.Default();
             try
             {
-                var productOrder = JsonConvert.DeserializeObject<ProductOrderEntity>(entity.ProductOrderEntity.ToString());
-                var runner = JsonConvert.DeserializeObject<WfAppRunner>(entity.WfAppRunner.ToString());
+                dynamic clientEntity = JsonConvert.DeserializeObject<dynamic>(entity.ToString());
+                var productOrder = JsonConvert.DeserializeObject<ProductOrderEntity>(clientEntity.ProductOrderEntity.ToString());
+                var runner = JsonConvert.DeserializeObject<WfAppRunner>(clientEntity.WfAppRunner.ToString());
 
                 IWfServiceRegister s = ProductOrderService as IWfServiceRegister;
                 s.RegisterWfAppRunner(runner);

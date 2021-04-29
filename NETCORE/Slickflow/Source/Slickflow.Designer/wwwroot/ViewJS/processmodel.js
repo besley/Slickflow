@@ -67,11 +67,7 @@ var processmodel = (function () {
             });
         }
         else {
-            $.msgBox({
-                title: "Designer / Model",
-                content: kresource.getItem('domainlangwwarnmsg'),
-                type: "warn"
-            });
+            kmsgbox.warn(kresource.getItem('domainlangwwarnmsg'));
         }
     }
 
@@ -106,13 +102,8 @@ var processmodel = (function () {
 
                 $('#loading-indicator').hide();
             } else {
-                $.msgBox({
-                    title: "Test / Task",
-                    content: kresource.getItem("tasklistloaderrormsg") + result.Message,
-                    type: "error"
-                });
+                kmsgbox.error(kresource.getItem("tasklistloaderrormsg"), result.Message);
             }
-
         });
     };
 
@@ -142,11 +133,7 @@ var processmodel = (function () {
 
                 $('#loading-indicator').hide();
             } else {
-                $.msgBox({
-                    title: "Test / Task",
-                    content: kresource.getItem("tasklistloaderrormsg") + result.Message,
-                    type: "error"
-                });
+                kmsgbox.error(kresource.getItem("tasklistloaderrormsg"), result.Message);
             }
         });
     }

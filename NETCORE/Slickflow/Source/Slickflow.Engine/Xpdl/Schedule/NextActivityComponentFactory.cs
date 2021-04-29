@@ -27,10 +27,10 @@ namespace Slickflow.Engine.Xpdl.Schedule
                 name = LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.singlenode");
                 component = new NextActivityItem(name, transition, activity);
             }
-            else if (XPDLHelper.IsIntermediateEventComponentNode(activity.ActivityType) == true)
+            else if (XPDLHelper.IsCrossOverComponentNode(activity.ActivityType) == true)
             {
-                //跨事件节点
-                name = LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.intermediatenode");
+                //跨事件节点，包括服务节点
+                name = LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.crossovereventnode");
                 component = new NextActivityIntermediate(name, transition, activity);
             }
             else if (XPDLHelper.IsGatewayComponentNode(activity.ActivityType) == true)
@@ -48,7 +48,8 @@ namespace Slickflow.Engine.Xpdl.Schedule
                     name = LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.parallelmultipleinstance");
                 }
                 else if (activity.GatewayDirectionType == GatewayDirectionEnum.OrSplit
-                    || activity.GatewayDirectionType == GatewayDirectionEnum.OrJoin)
+                    || activity.GatewayDirectionType == GatewayDirectionEnum.OrJoin
+                    || activity.GatewayDirectionType == GatewayDirectionEnum.ApprovalOrSplit)
                 {
                     //或多选节点
                     name = LocalizeHelper.GetEngineMessage("nextactivitycomponentfactory.orsplitorjoin");

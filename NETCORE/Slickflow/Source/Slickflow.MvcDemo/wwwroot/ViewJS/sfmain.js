@@ -29,7 +29,7 @@
 
     //显示流程图
     sfmain.showKGraph = function () {
-        if (pordermanager.mProductOrderProcessGUID == "") {
+        if (pordermanager.mProductOrderProcessGUID === "") {
             $.msgBox({
                 title: "DynamicFlow / KGraph",
                 content: "请选定有流程信息的表单！",
@@ -37,7 +37,7 @@
             });
             return false;
         } else {
-        	window.open('/sfd/Diagram?AppInstanceID=' + pordermanager.selectedProductOrderID
+        	window.open('/sfd/Diagram?AppInstanceID=' + pordermanager.selectedProductOrderID.toString()
 				+ '&ProcessGUID=' + pordermanager.mProductOrderProcessGUID + '&Mode=' + 'READONLY');
         }
     }

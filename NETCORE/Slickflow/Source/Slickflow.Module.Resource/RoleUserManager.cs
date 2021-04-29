@@ -16,17 +16,30 @@ namespace Slickflow.Module.Resource
         /// <returns>用户列表</returns>
         internal List<User> GetUserListByRoleCode(string roleCode)
         {
-            var strSQL = @"SELECT 
-                                U.ID as UserID,
-                                U.UserName
-                           FROM SysUser U
-                           INNER JOIN SysRoleUser RU
-                                ON U.ID = RU.UserID
-                           INNER JOIN SysRole R
-                                ON R.ID = RU.RoleID
-                           WHERE R.RoleCode = @roleCode
-                           ORDER BY U.ID";
-            var list = Repository.Query<User>(strSQL, new { roleCode = roleCode }).ToList();
+            //var strSQL = @"SELECT 
+            //                    U.ID as UserID,
+            //                    U.UserName
+            //               FROM SysUser U
+            //               INNER JOIN SysRoleUser RU
+            //                    ON U.ID = RU.UserID
+            //               INNER JOIN SysRole R
+            //                    ON R.ID = RU.RoleID
+            //               WHERE R.RoleCode = @roleCode
+            //               ORDER BY U.ID";
+            //var list = Repository.Query<User>(strSQL, new { roleCode = roleCode }).ToList();
+            var sqlQuery = (from a in Repository.GetAll<RoleEntity>()
+                            join b in Repository.GetAll<RoleUserEntity>() 
+                                on a.ID equals b.RoleID
+                            join c in Repository.GetAll<UserEntity>() 
+                                on b.UserID equals c.ID
+                            where a.RoleCode == roleCode
+                            orderby a.ID, c.ID
+                            select new User
+                            {
+                                UserID = c.ID.ToString(),
+                                UserName = c.UserName
+                            });
+            var list = sqlQuery.ToList<User>();
             return list;
         }
 
@@ -36,20 +49,35 @@ namespace Slickflow.Module.Resource
         /// <returns></returns>
         internal List<RoleUserView> GetRoleUserTree()
         {
-            var strSQL = @"SELECT 
-                                R.ID as RoleID,
-                                R.RoleName as RoleName,
-                                R.RoleCode as RoleCode,
-                                U.ID as UserID,
-                                U.UserName
-                           FROM SysUser U
-                           INNER JOIN SysRoleUser RU
-                                ON U.ID = RU.UserID
-                           INNER JOIN SysRole R
-                                ON R.ID = RU.RoleID
-                           ORDER BY R.ID,
-                                U.ID";
-            List<RoleUserView> list = Repository.Query<RoleUserView>(strSQL, null).ToList();
+            //var strSQL = @"SELECT 
+            //                    R.ID as RoleID,
+            //                    R.RoleName as RoleName,
+            //                    R.RoleCode as RoleCode,
+            //                    U.ID as UserID,
+            //                    U.UserName
+            //               FROM SysUser U
+            //               INNER JOIN SysRoleUser RU
+            //                    ON U.ID = RU.UserID
+            //               INNER JOIN SysRole R
+            //                    ON R.ID = RU.RoleID
+            //               ORDER BY R.ID,
+            //                    U.ID";
+            //List<RoleUserView> list = Repository.Query<RoleUserView>(strSQL, null).ToList();
+            var sqlQuery = (from a in Repository.GetAll<RoleEntity>()
+                            join b in Repository.GetAll<RoleUserEntity>() 
+                                on a.ID equals b.RoleID
+                            join c in Repository.GetAll<UserEntity>() 
+                                on b.UserID equals c.ID
+                            orderby a.ID, c.ID
+                            select new RoleUserView
+                            {
+                                RoleID = a.ID,
+                                RoleCode = a.RoleCode,
+                                RoleName = a.RoleName,
+                                UserID = c.ID,
+                                UserName = c.UserName
+                            });
+            var list = sqlQuery.ToList<RoleUserView>();
             return list;
         }
 
@@ -71,25 +99,40 @@ namespace Slickflow.Module.Resource
         /// <returns>角色用户列表</returns>
         internal List<RoleUserView> GetUserByRole(int roleID)
         {
-            var sql = @"SELECT 
-                            A.ID AS RoleID, 
-                            A.RoleCode, 
-                            A.RoleName,
-                            C.ID AS UserID,
-                            C.UserName
-                        FROM SysRole A
-                        INNER JOIN SysRoleUser B 
-                            ON A.ID = B.RoleID
-                        INNER JOIN SysUser C
-                            ON B.UserID = C.ID
-                        WHERE A.ID = @roleID
-                        ORDER BY A.ID, C.ID                        
-                        ";
-            var list = Repository.Query<RoleUserView>(sql, new
-            {
-                roleID = roleID
-            }).ToList<RoleUserView>();
-
+            //var sql = @"SELECT 
+            //                A.ID AS RoleID, 
+            //                A.RoleCode, 
+            //                A.RoleName,
+            //                C.ID AS UserID,
+            //                C.UserName
+            //            FROM SysRole A
+            //            INNER JOIN SysRoleUser B 
+            //                ON A.ID = B.RoleID
+            //            INNER JOIN SysUser C
+            //                ON B.UserID = C.ID
+            //            WHERE A.ID = @roleID
+            //            ORDER BY A.ID, C.ID                        
+            //            ";
+            //var list = Repository.Query<RoleUserView>(sql, new
+            //{
+            //    roleID = roleID
+            //}).ToList<RoleUserView>();
+            var sqlQuery = (from a in Repository.GetAll<RoleEntity>()
+                            join b in Repository.GetAll<RoleUserEntity>() 
+                                on a.ID equals b.RoleID
+                            join c in Repository.GetAll<UserEntity>() 
+                                on b.UserID equals c.ID
+                            where a.ID == roleID
+                            orderby a.ID, c.ID
+                            select new RoleUserView
+                            {
+                                RoleID = a.ID,
+                                RoleCode = a.RoleCode,
+                                RoleName = a.RoleName,
+                                UserID = c.ID,
+                                UserName = c.UserName
+                            });
+            var list = sqlQuery.ToList<RoleUserView>();
             return list;
         }
 
@@ -100,25 +143,40 @@ namespace Slickflow.Module.Resource
         /// <returns>角色用户列表</returns>
         internal List<RoleUserView> GetUserByRoleIDs(string[] idsin)
         {
-            var sql = @"SELECT 
-                            A.ID AS RoleID, 
-                            A.RoleCode, 
-                            A.RoleName,
-                            C.ID AS UserID,
-                            C.UserName
-                        FROM SysRole A
-                        INNER JOIN SysRoleUser B 
-                            ON A.ID = B.RoleID
-                        INNER JOIN SysUser C
-                            ON B.UserID = C.ID
-                        WHERE A.ID IN @roleIDs
-                        ORDER BY A.ID, C.ID                        
-                        ";
-            var list = Repository.Query<RoleUserView>(sql, new
-            {
-                roleIDs = idsin
-            }).ToList<RoleUserView>();
-
+            //var sql = @"SELECT 
+            //                A.ID AS RoleID, 
+            //                A.RoleCode, 
+            //                A.RoleName,
+            //                C.ID AS UserID,
+            //                C.UserName
+            //            FROM SysRole A
+            //            INNER JOIN SysRoleUser B 
+            //                ON A.ID = B.RoleID
+            //            INNER JOIN SysUser C
+            //                ON B.UserID = C.ID
+            //            WHERE A.ID IN @roleIDs
+            //            ORDER BY A.ID, C.ID                        
+            //            ";
+            //var list = Repository.Query<RoleUserView>(sql, new
+            //{
+            //    roleIDs = idsin
+            //}).ToList<RoleUserView>();
+            var sqlQuery = (from a in Repository.GetAll<RoleEntity>()
+                            join b in Repository.GetAll<RoleUserEntity>() 
+                                on a.ID equals b.RoleID
+                            join c in Repository.GetAll<UserEntity>() 
+                                on b.UserID equals c.ID
+                            where idsin.Contains(a.ID.ToString())
+                            orderby a.ID, c.ID
+                            select new RoleUserView
+                            {
+                                RoleID = a.ID,
+                                RoleCode = a.RoleCode,
+                                RoleName = a.RoleName,
+                                UserID = c.ID,
+                                UserName = c.UserName
+                            });
+            var list = sqlQuery.ToList<RoleUserView>();
             return list;
         }
 
@@ -143,26 +201,38 @@ namespace Slickflow.Module.Resource
         /// <returns>用户列表</returns>
         internal List<User> GetUserListByRoles(string[] idsin, IDbSession session)
         {
-            var sql = @"SELECT DISTINCT 
-                            C.ID AS UserID,
-                            C.UserName
-                        FROM SysRole A
-                        INNER JOIN SysRoleUser B 
-                            ON A.ID = B.RoleID
-                        INNER JOIN SysUser C
-                            ON B.UserID = C.ID
-                        WHERE A.ID IN @roleIDs
-                        ORDER BY C.ID
-                        ";
+            //var sql = @"SELECT DISTINCT 
+            //                C.ID AS UserID,
+            //                C.UserName
+            //            FROM SysRole A
+            //            INNER JOIN SysRoleUser B 
+            //                ON A.ID = B.RoleID
+            //            INNER JOIN SysUser C
+            //                ON B.UserID = C.ID
+            //            WHERE A.ID IN @roleIDs
+            //            ORDER BY C.ID
+            //            ";
 
-            var list = Repository.Query<User>(session.Connection,
-                sql, 
-                new
-                {
-                    roleIDs = idsin
-                },
-                session.Transaction).ToList<User>();
-
+            //var list = Repository.Query<User>(session.Connection,
+            //    sql,
+            //    new
+            //    {
+            //        roleIDs = idsin
+            //    },
+            //    session.Transaction).ToList<User>();
+            var sqlQuery = (from a in Repository.GetAll<RoleEntity>(session.Connection, session.Transaction)
+                            join b in Repository.GetAll<RoleUserEntity>(session.Connection, session.Transaction) 
+                                on a.ID equals b.RoleID
+                            join c in Repository.GetAll<UserEntity>(session.Connection, session.Transaction) 
+                                on b.UserID equals c.ID
+                            where idsin.Contains(a.ID.ToString())
+                            orderby a.ID, c.ID
+                            select new User
+                            {
+                                UserID = c.ID.ToString(),
+                                UserName = c.UserName
+                            });
+            var list = sqlQuery.ToList<User>();
             return list;
         }
 
@@ -173,22 +243,34 @@ namespace Slickflow.Module.Resource
         /// <returns>用户列表</returns>
         internal List<User> GetUserListByRole(string roleID)
         {
-            var sql = @"SELECT 
-                            C.ID AS UserID,
-                            C.UserName
-                        FROM SysRole A
-                        INNER JOIN SysRoleUser B 
-                            ON A.ID = B.RoleID
-                        INNER JOIN SysUser C
-                            ON B.UserID = C.ID
-                        WHERE A.ID = @roleID
-                        ORDER BY A.ID, C.ID                        
-                        ";
-            var list = Repository.Query<User>(sql, new
-            {
-                roleID = roleID
-            }).ToList<User>();
-
+            //var sql = @"SELECT 
+            //                C.ID AS UserID,
+            //                C.UserName
+            //            FROM SysRole A
+            //            INNER JOIN SysRoleUser B 
+            //                ON A.ID = B.RoleID
+            //            INNER JOIN SysUser C
+            //                ON B.UserID = C.ID
+            //            WHERE A.ID = @roleID
+            //            ORDER BY A.ID, C.ID                        
+            //            ";
+            //var list = Repository.Query<User>(sql, new
+            //{
+            //    roleID = roleID
+            //}).ToList<User>();
+            var sqlQuery = (from a in Repository.GetAll<RoleEntity>()
+                            join b in Repository.GetAll<RoleUserEntity>() 
+                                on a.ID equals b.RoleID
+                            join c in Repository.GetAll<UserEntity>() 
+                                on b.UserID equals c.ID
+                            where a.ID == int.Parse(roleID)
+                            orderby a.ID, c.ID
+                            select new User
+                            {
+                                UserID = c.ID.ToString(),
+                                UserName = c.UserName
+                            });
+            var list = sqlQuery.ToList<User>();
             return list;
         }
        
@@ -228,7 +310,6 @@ namespace Slickflow.Module.Resource
                     user.UserName = item.UserName;
                     role.UserList.Add(user);
                 }
-
             }
             return newRoleList;
         }

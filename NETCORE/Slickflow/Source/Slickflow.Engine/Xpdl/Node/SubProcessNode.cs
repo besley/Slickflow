@@ -14,7 +14,9 @@ namespace Slickflow.Engine.Xpdl.Node
     /// </summary>
     internal class SubProcessNode : NodeBase
     {
+        public SubProcessTypeEnum SubProcessType { get; set; }
         public string SubProcessGUID { get; set; }
+        public string SubVarName { get; set; }
 
         internal SubProcessNode(ActivityEntity activity) :
             base(activity)

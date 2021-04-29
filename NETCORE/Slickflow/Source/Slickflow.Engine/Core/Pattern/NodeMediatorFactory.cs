@@ -26,6 +26,8 @@ using Slickflow.Data;
 using Slickflow.Module.Localize;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Entity;
+using Slickflow.Engine.Core.Pattern.Event;
+using Slickflow.Engine.Core.Pattern.Gateway;
 
 namespace Slickflow.Engine.Core.Pattern
 {
@@ -45,19 +47,43 @@ namespace Slickflow.Engine.Core.Pattern
         {
             if (forwardContext.Activity.ActivityType == ActivityTypeEnum.StartNode)         //开始节点
             {
-                return new NodeMediatorStart(forwardContext, session);
+                if (forwardContext.Activity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.None)
+                {
+                    return new NodeMediatorStart(forwardContext, session);
+                }
+                else
+                {
+                    throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.uncertain.warn",
+                        string.Format("ActivityType:{0},trigger:{1}", forwardContext.Activity.ActivityType.ToString(),
+                                                         forwardContext.Activity.ActivityTypeDetail.TriggerType)
+                    ));
+                }
+            }
+            else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.EndNode)
+            {
+                if (forwardContext.Activity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.None)
+                {
+                    return new NodeMediatorEnd(forwardContext, session);
+                }
+                else
+                {
+                    throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.uncertain.warn",
+                        string.Format("ActivityType:{0},trigger:{1}", forwardContext.Activity.ActivityType.ToString(),
+                                                         forwardContext.Activity.ActivityTypeDetail.TriggerType)
+                    ));
+                }
             }
             else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.TaskNode)         //任务节点
             {
                 return new NodeMediatorTask(forwardContext, session);
             }
+            else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.ServiceNode)      //自动服务节点
+            {
+                return new NodeMediatorService(forwardContext, session);
+            }
             else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.SubProcessNode)
             {
                 return new NodeMediatorSubProcess(forwardContext, session);
-            }
-            else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.EndNode)
-            {
-                return new NodeMediatorEnd(forwardContext, session);
             }
             else
             {
@@ -104,6 +130,10 @@ namespace Slickflow.Engine.Core.Pattern
                 {
                     nodeMediator = new NodeMediatorXOrJoin(gActivity, processModel, session);
                 }
+                else if (gActivity.GatewayDirectionType == GatewayDirectionEnum.EOrJoin)
+                {
+                    nodeMediator = new NodeMediatorEOrJoin(gActivity, processModel, session);
+                }
                 else
                 {
                     throw new XmlDefinitionException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediatorGateway.uncertaingateway.warn", 
@@ -119,29 +149,28 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 创建中间事件节点处理类实例
+        /// 创建结束事件节点处理类实例
         /// </summary>
         /// <param name="forwardContext">活动上下文</param>
-        /// <param name="eActivity">节点</param>
-        /// <param name="processModel">流程模型类</param>
+        /// <param name="endActivity">节点</param>
         /// <param name="session">会话</param>
-        /// <returns>Gateway节点处理实例</returns>
-        internal static NodeMediatorEvent CreateNodeMediatorEvent(ActivityForwardContext forwardContext,
-            ActivityEntity eActivity,
-            IProcessModel processModel,
+        /// <returns>节点处理实例</returns>
+        internal static NodeMediator CreateNodeMediatorEnd(ActivityForwardContext forwardContext, 
+            ActivityEntity endActivity, 
             IDbSession session)
         {
-            NodeMediatorEvent nodeMediator = null;
-            if (eActivity.ActivityType == ActivityTypeEnum.IntermediateNode)
+
+            if (endActivity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.None)
             {
-                nodeMediator = new NodeMediatorIntermediate(forwardContext, eActivity, processModel, session);
+                return new NodeMediatorEnd(forwardContext, session);
             }
             else
             {
-                throw new XmlDefinitionException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediatorEvent.uncertain.warn",
-                    eActivity.ActivityType.ToString()));
+                throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.uncertain.warn",
+                    string.Format("ActivityType:{0},trigger:{1}", endActivity.ActivityType.ToString(),
+                                                        endActivity.ActivityTypeDetail.TriggerType)
+                ));
             }
-            return nodeMediator;
         }
     }
 }

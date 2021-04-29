@@ -39,6 +39,7 @@ var mxconfig = (function () {
     mxconfig.style["gateway-join"] = 'symbol;image=Scripts/mxGraph/src/editor/images/symbols/merge.png';
     mxconfig.style["subprocess"] = 'symbol;image=Scripts/mxGraph/src/editor/images/symbols/subprocess.png';;
     mxconfig.style["multipleinstance"] = 'symbol;image=Scripts/mxGraph/src/editor/images/symbols/multiple_instance_task.png';
+    mxconfig.style["service"] = 'symbol;image=Scripts/mxGraph/src/editor/images/symbols/service_task.png';
 
     mxconfig.getVertexStyle = function(activity){
         var style = null;
@@ -73,7 +74,10 @@ var mxconfig = (function () {
 		}
 		else if (nodeType === kmodel.Config.NODE_TYPE_MULTIPLEINSTANCE) {
 			style = mxconfig.style["multipleinstance"];
-		}
+        }
+        else if (nodeType === kmodel.Config.NODE_TYPE_SERVICE) {
+            style = mxconfig.style["service"];
+        }
 		else if (nodeType === kmodel.Config.NODE_TYPE_GATEWAY) {
 			style = mxconfig.style["gateway-split"];
 		}

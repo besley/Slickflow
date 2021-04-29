@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Slickflow.Data;
 using Slickflow.Module.Localize;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Xpdl.Entity;
@@ -33,11 +34,13 @@ namespace Slickflow.Engine.Xpdl.Schedule
         /// <param name="fromTransition">转移</param>
         /// <param name="currentGatewayActivity">活动</param>
         /// <param name="conditionKeyValuePair">条件kv对</param>
+        /// <param name="session">会话</param>
         /// <param name="resultType">匹配类型</param>
         /// <returns></returns>
         internal abstract NextActivityComponent GetNextActivityListFromGateway(TransitionEntity fromTransition,
             ActivityEntity currentGatewayActivity,
             IDictionary<string, string> conditionKeyValuePair,
+            IDbSession session,
             out NextActivityMatchedType resultType);
 
 
@@ -46,9 +49,11 @@ namespace Slickflow.Engine.Xpdl.Schedule
         /// </summary>
         /// <param name="forwardTransition">转移实体</param>
         /// <param name="conditionKeyValuePair">条件kv对</param>
+        /// <param name="session">会话</param>
         /// <param name="resultType">结果类型</param>
         protected NextActivityComponent GetNextActivityListFromGatewayCore(TransitionEntity forwardTransition,
             IDictionary<string, string> conditionKeyValuePair,
+            IDbSession session,
             out NextActivityMatchedType resultType)
         {
             NextActivityComponent child = null;
@@ -62,6 +67,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
                 child = GetNextActivityListFromGateway(forwardTransition, 
                     forwardTransition.ToActivity, 
                     conditionKeyValuePair,
+                    session,
                     out resultType);
             }
             else if (forwardTransition.ToActivity.ActivityType == ActivityTypeEnum.IntermediateNode)
@@ -77,8 +83,18 @@ namespace Slickflow.Engine.Xpdl.Schedule
                     child = activitySchedule.GetNextActivityListFromGateway(forwardTransition,
                         forwardTransition.ToActivity,
                         conditionKeyValuePair,
+                        session,
                         out resultType);
                 }
+            }
+            else if (forwardTransition.ToActivity.ActivityType == ActivityTypeEnum.ServiceNode)
+            {
+                NextActivityScheduleBase activitySchedule = NextActivityScheduleFactory.CreateActivityScheduleIntermediate(this.ProcessModel);
+                child = activitySchedule.GetNextActivityListFromGateway(forwardTransition,
+                    forwardTransition.ToActivity,
+                    conditionKeyValuePair,
+                    session,
+                    out resultType);
             }
             else
             {

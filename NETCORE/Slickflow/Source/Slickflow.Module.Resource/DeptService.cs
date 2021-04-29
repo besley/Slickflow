@@ -77,24 +77,36 @@ namespace Slickflow.Module.Resource
         /// <returns>用户列表</returns>
         private IList<User> GetSuperiorList(string[] roleIDs, int curUserID, IDbSession session)
         {
-            var sql = @"SELECT 
-                            U.ID AS UserID,
-                            U.UserName
-                        FROM SysUser U
-                        INNER JOIN SysEmployeeManager EM
-                           ON U.ID = EM.MgrUserID
-                        INNER JOIN SysRoleUser RU
-                           ON U.ID = RU.UserID
-                        WHERE RU.RoleID in @roleIDs
-                            AND EM.EmpUserID = @curUserID";
-            var list = Repository.Query<User>(session.Connection,
-                sql,
-                new
-                {
-                    roleIDs = roleIDs,
-                    curUserID = curUserID
-                },
-                session.Transaction).ToList();
+            //var sql = @"SELECT 
+            //                U.ID AS UserID,
+            //                U.UserName
+            //            FROM SysUser U
+            //            INNER JOIN SysEmployeeManager EM
+            //               ON U.ID = EM.MgrUserID
+            //            INNER JOIN SysRoleUser RU
+            //               ON U.ID = RU.UserID
+            //            WHERE RU.RoleID in @roleIDs
+            //                AND EM.EmpUserID = @curUserID";
+            //var list = Repository.Query<User>(session.Connection,
+            //    sql,
+            //    new
+            //    {
+            //        roleIDs = roleIDs,
+            //        curUserID = curUserID
+            //    },
+            //    session.Transaction).ToList();
+            var sqlQuery = (from u in Repository.GetAll<UserEntity>(session.Connection, session.Transaction)
+                            join em in Repository.GetAll<EmpManagerEntity>(session.Connection, session.Transaction)
+                                on u.ID equals em.MgrUserID
+                            join ru in Repository.GetAll<RoleUserEntity>(session.Connection, session.Transaction)
+                                on u.ID equals ru.UserID
+                            where em.EmpUserID == curUserID
+                                && roleIDs.Contains(ru.RoleID.ToString())
+                            select new User { 
+                                UserID = u.ID.ToString(),
+                                UserName = u.UserName
+                            });
+            var list = sqlQuery.ToList<User>();
             return list;
         }
 
@@ -107,30 +119,54 @@ namespace Slickflow.Module.Resource
         /// <returns>用户列表</returns>
         private IList<User> GetCompeerList(string[] roleIDs, int curUserID, IDbSession session)
         {
-            var sql = @"SELECT 
-            	            U.ID AS UserID,
-            	            U.UserName
-                        FROM SysUser U
-                        INNER JOIN SysEmployeeManager EM
-            	            ON U.ID = EM.EmpUserID
-                        INNER JOIN SysRoleUser RU
-                            ON U.ID = RU.UserID
-                        WHERE RU.RoleID in @roleIDs
-                            AND EM.MgrUserID IN
-            	                (
-            		                SELECT 
-            			                MgrUserID
-            		                FROM SysEmployeeManager
-            		                WHERE EmpUserID = @curUserID
-            	                )";
-            var list = Repository.Query<User>(session.Connection,
-                sql,
-                new
-                {
-                    roleIDs = roleIDs,
-                    curUserID = curUserID
-                },
-                session.Transaction).ToList();
+            //var sql = @"SELECT 
+            //	            U.ID AS UserID,
+            //	            U.UserName
+            //            FROM SysUser U
+            //            INNER JOIN SysEmployeeManager EM
+            //	            ON U.ID = EM.EmpUserID
+            //            INNER JOIN SysRoleUser RU
+            //                ON U.ID = RU.UserID
+            //            WHERE RU.RoleID in @roleIDs
+            //                AND EM.MgrUserID IN
+            //	                (
+            //		                SELECT 
+            //			                MgrUserID
+            //		                FROM SysEmployeeManager
+            //		                WHERE EmpUserID = @curUserID
+            //	                )";
+            //var list = Repository.Query<User>(session.Connection,
+            //    sql,
+            //    new
+            //    {
+            //        roleIDs = roleIDs,
+            //        curUserID = curUserID
+            //    },
+            //    session.Transaction).ToList();
+            // 首选列表查询EmpManager表
+            var mgrQuery = (from emb in Repository.GetAll<EmpManagerEntity>(session.Connection, session.Transaction)
+                            where emb.EmpUserID == curUserID
+                            select new EmpManagerEntity
+                            {
+                                MgrUserID = emb.MgrUserID
+                            });
+            var mgrList = mgrQuery.ToList<EmpManagerEntity>();
+
+            // 关联查询
+            var sqlQuery = (from u in Repository.GetAll<UserEntity>(session.Connection, session.Transaction)
+                            join ema in Repository.GetAll<EmpManagerEntity>(session.Connection, session.Transaction)
+                                on u.ID equals ema.EmpUserID
+                            join ru in Repository.GetAll<RoleUserEntity>(session.Connection, session.Transaction)
+                                on u.ID equals ru.UserID
+                            join emb in mgrList
+                                on ema.MgrUserID equals emb.MgrUserID
+                            where roleIDs.Contains(ru.RoleID.ToString())
+                            select new User
+                            {
+                                UserID = u.ID.ToString(),
+                                UserName = u.UserName
+                            });
+            var list = sqlQuery.ToList<User>();
             return list;
         }
 
@@ -143,24 +179,37 @@ namespace Slickflow.Module.Resource
         /// <returns>用户列表</returns>
         private IList<User> GetSubordinateList(string[] roleIDs, int curUserID, IDbSession session)
         {
-            var sql = @"SELECT 
-            	            U.ID AS UserID,
-            	            U.UserName
-                        FROM SysUser U
-                        INNER JOIN SysEmployeeManager EM
-            	            ON U.ID = EM.EmpUserID
-                        INNER JOIN SysRoleUser RU
-                            ON U.ID = RU.UserID
-                        WHERE RU.RoleID in @roleIDs 
-                            AND EM.MgrUserID = @curUserID";
-            var list = Repository.Query<User>(session.Connection,
-                sql,
-                new
-                {
-                    roleIDs = roleIDs,
-                    curUserID = curUserID
-                },
-                session.Transaction).ToList();
+            //var sql = @"SELECT 
+            //	            U.ID AS UserID,
+            //	            U.UserName
+            //            FROM SysUser U
+            //            INNER JOIN SysEmployeeManager EM
+            //	            ON U.ID = EM.EmpUserID
+            //            INNER JOIN SysRoleUser RU
+            //                ON U.ID = RU.UserID
+            //            WHERE RU.RoleID in @roleIDs 
+            //                AND EM.MgrUserID = @curUserID";
+            //var list = Repository.Query<User>(session.Connection,
+            //    sql,
+            //    new
+            //    {
+            //        roleIDs = roleIDs,
+            //        curUserID = curUserID
+            //    },
+            //    session.Transaction).ToList();
+            var sqlQuery = (from u in Repository.GetAll<UserEntity>(session.Connection, session.Transaction)
+                            join em in Repository.GetAll<EmpManagerEntity>(session.Connection, session.Transaction)
+                                on u.ID equals em.EmpUserID
+                            join ru in Repository.GetAll<RoleUserEntity>(session.Connection, session.Transaction)
+                                on u.ID equals ru.UserID
+                            where em.MgrUserID == curUserID
+                                && roleIDs.Contains(ru.RoleID.ToString())
+                            select new User
+                            {
+                                UserID = u.ID.ToString(),
+                                UserName = u.UserName
+                            });
+            var list = sqlQuery.ToList<User>();
             return list;
         }
     }

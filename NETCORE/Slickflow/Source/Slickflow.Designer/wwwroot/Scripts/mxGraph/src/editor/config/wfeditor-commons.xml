@@ -78,6 +78,18 @@
 				</mxCell>
 			</Activity>
 		</add>
+    <add as="servicetask">
+      <Activity label="Service" name="" code="">
+        <Description></Description>
+        <ActivityType type="ServiceNode"/>
+        <Performers></Performers>
+        <Services></Services>
+        <Boundaries></Boundaries>
+        <mxCell vertex="1" style="symbol;image=images/symbols/service_task.png">
+          <mxGeometry as="geometry" width="72" height="32"/>
+        </mxCell>
+      </Activity>
+    </add>
     <add as="multipleinstance">
       <Activity label="MultipleInstance" name="" code="">
         <Description></Description>
@@ -92,7 +104,7 @@
     <add as="subprocess">
       <Activity label="Subprocess"  name="" code="">
         <Description></Description>
-        <ActivityType type="SubProcessNode"  subId=""/>
+        <ActivityType type="SubProcessNode"  subId="" subType="" subVar="" />
         <Performers></Performers>
         <Actions></Actions>
         <mxCell vertex="1" style="symbol;image=images/symbols/subprocess.png">
@@ -155,10 +167,10 @@
         </mxCell>
       </Activity>
     </add>
-    <add as="start-message">
-      <Activity label="MessageStart" name="" code="">
+    <add as="start-message-catch">
+      <Activity label="StartMessageCatch" name="" code="">
         <Description></Description>
-        <ActivityType type="StartNode" trigger="Message"/>
+        <ActivityType type="StartNode" trigger="Message" messageDirection="Catch"/>
         <Performers></Performers>
         <Actions></Actions>
         <mxCell vertex="1" style="symbol;image=Scripts/mxGraph/src/editor/images/symbols/message.png">
@@ -166,13 +178,35 @@
         </mxCell>
       </Activity>
     </add>
-    <add as="end-message">
-      <Activity label="MessageEnd" name="" code="">
+    <add as="start-message-throw">
+      <Activity label="StartMessageThrow" name="" code="">
         <Description></Description>
-        <ActivityType type="EndNode" trigger="Message"/>
+        <ActivityType type="StartNode" trigger="Message" messageDirection="Throw"/>
+        <Performers></Performers>
+        <Actions></Actions>
+        <mxCell vertex="1" style="symbol;image=Scripts/mxGraph/src/editor/images/symbols/message_throw.png">
+          <mxGeometry as="geometry" width="32" height="32"/>
+        </mxCell>
+      </Activity>
+    </add>
+    <add as="end-message-catch">
+      <Activity label="EndMessageCatch" name="" code="">
+        <Description></Description>
+        <ActivityType type="EndNode" trigger="Message" messageDirection="Catch"/>
         <Performers></Performers>
         <Actions></Actions>
         <mxCell vertex="1" style="symbol;image=Scripts/mxGraph/src/editor/images/symbols/message_end.png">
+          <mxGeometry as="geometry" width="32" height="32"/>
+        </mxCell>
+      </Activity>
+    </add>
+    <add as="end-message-throw">
+      <Activity label="EndMessageThrow" name="" code="">
+        <Description></Description>
+        <ActivityType type="EndNode" trigger="Message" messageDirection="Throw"/>
+        <Performers></Performers>
+        <Actions></Actions>
+        <mxCell vertex="1" style="symbol;image=Scripts/mxGraph/src/editor/images/symbols/message_end_throw.png">
           <mxGeometry as="geometry" width="32" height="32"/>
         </mxCell>
       </Activity>
@@ -188,10 +222,21 @@
         </mxCell>
       </Activity>
     </add>
-    <add as="intermediate-message">
-      <Activity label="InterMessage" name="" code="">
+    <add as="intermediate-message-catch">
+      <Activity label="InterMessageCatch" name="" code="">
         <Description></Description>
-        <ActivityType type="IntermediateNode" trigger="Message"/>
+        <ActivityType type="IntermediateNode" trigger="Message" messageDirection="Catch"/>
+        <Performers></Performers>
+        <Actions></Actions>
+        <mxCell vertex="1" style="symbol;image=Scripts/mxGraph/src/editor/images/symbols/message_intermediate.png">
+          <mxGeometry as="geometry" width="32" height="32"/>
+        </mxCell>
+      </Activity>
+    </add>
+    <add as="intermediate-message-throw">
+      <Activity label="InterMessageThrow" name="" code="">
+        <Description></Description>
+        <ActivityType type="IntermediateNode" trigger="Message" messageDirection="Throw"/>
         <Performers></Performers>
         <Actions></Actions>
         <mxCell vertex="1" style="symbol;image=Scripts/mxGraph/src/editor/images/symbols/message_intermediate.png">

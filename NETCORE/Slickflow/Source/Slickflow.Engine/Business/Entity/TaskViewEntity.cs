@@ -34,6 +34,7 @@ namespace Slickflow.Engine.Business.Entity
         public string AssignedToUserID { get; set; }
         public string AssignedToUserName { get; set; }
         public byte IsEMailSent { get; set; }
+        public short ApprovalStatus { get; set; }
         public System.DateTime CreatedDateTime { get; set; }
         public Nullable<DateTime> LastUpdatedDateTime { get; set; }
         public Nullable<System.DateTime> EndedDateTime { get; set; }

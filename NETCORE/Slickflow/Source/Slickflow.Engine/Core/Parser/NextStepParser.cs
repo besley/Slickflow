@@ -30,9 +30,10 @@ namespace Slickflow.Engine.Core.Parser
             IDictionary<string, string> condition = null)
         {
             NextStepInfo nextStepInfo = new NextStepInfo();
-            var nextActivityTree = GetNextActivityRoleUserTree(resourceService, runner, condition);
-            nextStepInfo.NextActivityRoleUserTree = nextActivityTree;
-            nextStepInfo.NextActivityPerformers = GetNextActivityPerformers(nextActivityTree, runner);
+            var nextResult = GetNextActivityRoleUserTree(resourceService, runner, condition);
+            nextStepInfo.Message = nextResult.Message;
+            nextStepInfo.NextActivityRoleUserTree = nextResult.StepList;
+            nextStepInfo.NextActivityPerformers = GetNextActivityPerformersPriliminary(runner);
 
             return nextStepInfo;
         }
@@ -40,11 +41,9 @@ namespace Slickflow.Engine.Core.Parser
         /// <summary>
         /// 获取预选步骤人员列表
         /// </summary>
-        /// <param name="nextActivityTree">下一步活动节点树</param>
         /// <param name="runner">当前运行用户</param>
         /// <returns>步骤预选人员列表</returns>
-        private IDictionary<string, PerformerList> GetNextActivityPerformers(IList<NodeView> nextActivityTree,
-            WfAppRunner runner)
+        private IDictionary<string, PerformerList> GetNextActivityPerformersPriliminary(WfAppRunner runner)
         {
             IDictionary<string, PerformerList> nextSteps = null;
 
@@ -65,24 +64,28 @@ namespace Slickflow.Engine.Core.Parser
             
             IProcessModel processModel = ProcessModelFactory.Create(runner.ProcessGUID, runner.Version);
             var nextActivity = processModel.GetNextActivity(taskView.ActivityGUID);
-            if (nextActivity.ActivityType == ActivityTypeEnum.GatewayNode)
+
+            if (nextActivity != null)
             {
-                //获取网关节点信息
-                var gatewayActivityInstance = aim.GetActivityInstanceLatest(taskView.ProcessInstanceID, nextActivity.ActivityGUID);
-                if (gatewayActivityInstance != null
-                    && !string.IsNullOrEmpty(gatewayActivityInstance.NextStepPerformers))
+                if (nextActivity.ActivityType == ActivityTypeEnum.GatewayNode)
                 {
-                    nextSteps = NextStepUtility.DeserializeNextStepPerformers(gatewayActivityInstance.NextStepPerformers);
+                    //获取网关节点信息
+                    var gatewayActivityInstance = aim.GetActivityInstanceLatest(taskView.ProcessInstanceID, nextActivity.ActivityGUID);
+                    if (gatewayActivityInstance != null
+                        && !string.IsNullOrEmpty(gatewayActivityInstance.NextStepPerformers))
+                    {
+                        nextSteps = NextStepUtility.DeserializeNextStepPerformers(gatewayActivityInstance.NextStepPerformers);
+                    }
                 }
-            } 
-            else if (XPDLHelper.IsInterTimerEventComponentNode(nextActivity) == true)
-            {
-                //中间Timer事件节点
-                var timerActivityInstance = aim.GetActivityInstanceLatest(taskView.ProcessInstanceID, nextActivity.ActivityGUID);
-                if (timerActivityInstance != null
-                    && !string.IsNullOrEmpty(timerActivityInstance.NextStepPerformers))
+                else if (XPDLHelper.IsInterTimerEventComponentNode(nextActivity) == true)
                 {
-                    nextSteps = NextStepUtility.DeserializeNextStepPerformers(timerActivityInstance.NextStepPerformers);
+                    //中间Timer事件节点
+                    var timerActivityInstance = aim.GetActivityInstanceLatest(taskView.ProcessInstanceID, nextActivity.ActivityGUID);
+                    if (timerActivityInstance != null
+                        && !string.IsNullOrEmpty(timerActivityInstance.NextStepPerformers))
+                    {
+                        nextSteps = NextStepUtility.DeserializeNextStepPerformers(timerActivityInstance.NextStepPerformers);
+                    }
                 }
             }
             return nextSteps;
@@ -95,9 +98,9 @@ namespace Slickflow.Engine.Core.Parser
         /// <param name="runner">应用执行人</param>
         /// <param name="condition">条件</param>
         /// <returns>节点列表</returns>
-        internal IList<NodeView> GetNextActivityRoleUserTree(IResourceService resourceService, 
+        internal NextActivityTreeResult GetNextActivityRoleUserTree(IResourceService resourceService, 
             WfAppRunner runner,
-            IDictionary<string, string> condition = null)
+            IDictionary<string, string> condition)
         {
             //判断应用数据是否缺失
             if (string.IsNullOrEmpty(runner.AppInstanceID)
@@ -112,7 +115,7 @@ namespace Slickflow.Engine.Core.Parser
                 condition = runner.Conditions;
             }
 
-            IList<NodeView> nextSteps = new List<NodeView>();
+            NextActivityTreeResult nextTreeResult = null;
             IProcessModel processModel = ProcessModelFactory.Create(runner.ProcessGUID, runner.Version);
 
             using (var session = SessionFactory.CreateSession())
@@ -132,10 +135,15 @@ namespace Slickflow.Engine.Core.Parser
                     var tm = new TaskManager();
                     TaskViewEntity taskView = tm.GetTaskOfMine(session.Connection, runner, session.Transaction);
 
-                    //获取下一步列表
-                    nextSteps = processModel.GetNextActivityTree(taskView.ActivityGUID, condition);
+                    var isRunningTask = tm.CheckTaskStateInRunningState(taskView);
+                    if (isRunningTask == false)
+                    {
+                        throw new WorkflowException(LocalizeHelper.GetEngineMessage("nextstepparser.getnextactivityroleusertree.notrunning.error"));
+                    }
 
-                    foreach (var ns in nextSteps)
+                    //获取下一步列表
+                    nextTreeResult = processModel.GetNextActivityTree(taskView.ActivityGUID, taskView.TaskID, condition, session);
+                    foreach (var ns in nextTreeResult.StepList)
                     {
                         if (ns.ReceiverType == ReceiverTypeEnum.ProcessInitiator)       //下一步执行人为流程发起人
                         {
@@ -157,18 +165,18 @@ namespace Slickflow.Engine.Core.Parser
                 {
                     //流程准备启动，获取第一个办理节点的用户列表
                     var firstActivity = processModel.GetFirstActivity();
-                    nextSteps = processModel.GetNextActivityTree(firstActivity.ActivityGUID,
-                        condition);
-
-                    foreach (var ns in nextSteps)
+                    nextTreeResult = processModel.GetNextActivityTree(firstActivity.ActivityGUID,
+                        null,
+                        condition,
+                        session);
+                    foreach (var ns in nextTreeResult.StepList)
                     {
                         var roleIDs = ns.Roles.Select(x => x.ID).ToArray();
                         ns.Users = resourceService.GetUserListByRoleReceiverType(roleIDs, runner.UserID, (int)ns.ReceiverType);     //增加转移前置过滤条件
                     }
                 }
             }
-
-            return nextSteps;
+            return nextTreeResult;
         }
 
         /// <summary>

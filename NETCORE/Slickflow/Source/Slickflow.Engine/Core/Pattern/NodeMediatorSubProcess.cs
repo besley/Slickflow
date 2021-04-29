@@ -29,6 +29,7 @@ using ServiceStack.Text;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
 using Slickflow.Data;
+using Slickflow.Module.Localize;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Node;
 using Slickflow.Engine.Xpdl.Entity;
@@ -37,6 +38,7 @@ using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Core.Event;
 using Slickflow.Engine.Core.Runtime;
+
 
 namespace Slickflow.Engine.Core.Pattern
 {
@@ -73,8 +75,8 @@ namespace Slickflow.Engine.Core.Pattern
                         Session.Transaction);
                     if (isCompleted == false)
                     {
-                        throw new WfRuntimeException(string.Format("当前子流程:[{0}]并没有到达结束状态，主流程无法向下执行。",
-                            base.Linker.FromActivity.ActivityName));
+                        throw new WfRuntimeException(LocalizeHelper.GetEngineMessage("nodemediatorsubprocess.ExecuteWorkItem.notcompleted.warn",
+                            string.Format("Activity:{0}", base.Linker.FromActivity.ActivityName)));
                     }
                 }
 
@@ -86,7 +88,7 @@ namespace Slickflow.Engine.Core.Pattern
                 //获取下一步节点列表：并继续执行
                 if (canContinueForwardCurrentNode)
                 {
-                    ContinueForwardCurrentNode(ActivityForwardContext.IsNotParsedByTransition);
+                    ContinueForwardCurrentNode(ActivityForwardContext.IsNotParsedByTransition, this.Session);
                 }
             }
             catch (System.Exception ex)
@@ -305,22 +307,23 @@ namespace Slickflow.Engine.Core.Pattern
             var subProcessNode = (SubProcessNode)toActivity.Node;
             subProcessNode.ActivityInstance = toActivityInstance;
 
+            //复制子流程启动用户信息
             WfAppRunner subRunner = null;
             var performerList = new PerformerList();
             if (performer != null)
             {
-                subRunner = CopyActivityForwardRunner(activityResource.AppRunner,
-                    new Performer(performer.UserID,
-                        performer.UserName),
-                    subProcessNode);
+                subRunner = CreateSubProcessRunner(activityResource.AppRunner,
+                    new Performer(performer.UserID, performer.UserName),
+                    subProcessNode,
+                    session);
                 performerList.Add(performer);
             }
             else
             {
-                subRunner = CopyActivityForwardRunner(activityResource.AppRunner,
-                   new Performer(activityResource.AppRunner.UserID,
-                       activityResource.AppRunner.UserName),
-                   subProcessNode);
+                subRunner = CreateSubProcessRunner(activityResource.AppRunner,
+                   new Performer(activityResource.AppRunner.UserID, activityResource.AppRunner.UserName),
+                   subProcessNode,
+                   session);
                 performerList = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
             }
 
@@ -413,9 +416,10 @@ namespace Slickflow.Engine.Core.Pattern
                 IDbSession subSession = SessionFactory.CreateSession();
                 var subProcessNode = (SubProcessNode)toActivity.Node;
                 subProcessNode.ActivityInstance = entity;   //在流程实例表中记录激活子流程的活动节点ID
-                WfAppRunner subRunner = CopyActivityForwardRunner(activityResource.AppRunner, 
+                WfAppRunner subRunner = CreateSubProcessRunner(activityResource.AppRunner, 
                     plist[i],
-                    subProcessNode);
+                    subProcessNode,
+                    session);
 
                 WfExecutedResult startedResult = WfExecutedResult.Default();
                 var runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceStartupSub(subRunner,
@@ -445,10 +449,12 @@ namespace Slickflow.Engine.Core.Pattern
         /// <param name="runner">运行者</param>
         /// <param name="performer">下一步执行者</param>
         /// <param name="subProcessNode">子流程节点</param>
+        /// <param name="session">会话</param>
         /// <returns></returns>
-        private WfAppRunner CopyActivityForwardRunner(WfAppRunner runner, 
+        private WfAppRunner CreateSubProcessRunner(WfAppRunner runner, 
             Performer performer,
-            SubProcessNode subProcessNode)
+            SubProcessNode subProcessNode,
+            IDbSession session)
         {
             WfAppRunner subRunner = new WfAppRunner();
             subRunner.AppInstanceCode = runner.AppInstanceCode;
@@ -456,6 +462,44 @@ namespace Slickflow.Engine.Core.Pattern
             subRunner.AppName = runner.AppName;
             subRunner.UserID = performer.UserID;
             subRunner.UserName = performer.UserName;
+
+            //如果是动态调用子流程，则需要获取具体子流程实体对象
+            var isSubProcessNotExisted = false;
+            if (subProcessNode.SubProcessType == SubProcessTypeEnum.Dynamic)
+            {
+                var subProcessId = runner.DynamicVariables[subProcessNode.SubVarName];
+                if (!string.IsNullOrEmpty(subProcessId))
+                {
+                    int processID = 0;
+                    int.TryParse(subProcessId, out processID);
+                    if (processID > 0)
+                    {
+                        var pm = new ProcessManager();
+                        var process = pm.GetByID(session.Connection, processID, session.Transaction);
+                        if (process != null)
+                        {
+                            subProcessNode.SubProcessGUID = process.ProcessGUID;
+                        }
+                        else
+                        {
+                            isSubProcessNotExisted = true;
+                        }
+                    }
+                    else
+                    {
+                        isSubProcessNotExisted = true;
+                    }
+                }
+                else
+                {
+                    isSubProcessNotExisted = true;
+                }
+            }
+
+            if (isSubProcessNotExisted == true)
+            {
+                throw new WfRuntimeException(LocalizeHelper.GetEngineMessage("nodemediatorsubprocess.CreateSubProcessRunner.nonevariableparamsvalue.warn"));
+            }
             subRunner.ProcessGUID = subProcessNode.SubProcessGUID;
 
             return subRunner;

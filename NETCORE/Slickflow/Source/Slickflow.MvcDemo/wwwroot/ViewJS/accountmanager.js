@@ -14,7 +14,7 @@
         jshelper.ajaxPost('api/wf/QueryProcessRoleUserList',
             JSON.stringify(query),
             function (result) {
-                if (result.Status == 1) {
+                if (result.Status === 1) {
                     var rolelist = result.Entity;
                     accountmanager.mrolelist = rolelist;
 
@@ -46,7 +46,7 @@
         //清空第一项之外的options
         $("#ddlUsers").find("option:gt(0)").remove();
         var items = jQuery.grep(accountmanager.mrolelist, function (x) {
-            return x.RoleCode == roleCode;
+            return x.RoleCode === roleCode;
         });
         var userlist = items[0].UserList;
         //从新加载

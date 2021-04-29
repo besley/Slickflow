@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Business.Entity;
+using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Xpdl.Node;
 using Slickflow.Engine.Utility;
@@ -74,6 +74,16 @@ namespace Slickflow.Engine.Xpdl
             {
                 //子流程节点
                 var subProcessNode = new SubProcessNode(entity);
+                var strSubType = XMLHelper.GetXmlAttribute(typeNode, "subType");
+                if (!string.IsNullOrEmpty(strSubType))
+                {
+                    subProcessNode.SubProcessType = (SubProcessTypeEnum)Enum.Parse(typeof(SubProcessTypeEnum), strSubType);
+                    subProcessNode.SubVarName = XMLHelper.GetXmlAttribute(typeNode, "subVar");
+                }
+                else
+                {
+                    subProcessNode.SubProcessType = SubProcessTypeEnum.Fixed;
+                }
                 subProcessNode.SubProcessGUID = XMLHelper.GetXmlAttribute(typeNode, "subId");
                 entity.Node = subProcessNode;
             }
@@ -94,6 +104,19 @@ namespace Slickflow.Engine.Xpdl
                     actionList.Add(ConvertXmlActionNodeToActionEntity(element));
                 }
                 entity.ActionList = actionList;
+            }
+
+            //获取节点的服务列表
+            XmlNode servicesNode = node.SelectSingleNode("Services");
+            if (servicesNode != null)
+            {
+                XmlNodeList xmlServiceList = servicesNode.ChildNodes;
+                List<ServiceEntity> serviceList = new List<ServiceEntity>();
+                foreach (XmlNode element in xmlServiceList)
+                {
+                    serviceList.Add(ConvertXmlServiceNodeToServiceEntity(element));
+                }
+                entity.ServiceList = serviceList;
             }
 
             //获取节点边界列表
@@ -153,40 +176,55 @@ namespace Slickflow.Engine.Xpdl
         /// <returns>活动类型详细</returns>
         private static ActivityTypeDetail ConvertXmlNodeToActivityTypeDetail(XmlNode typeNode)
         {
-            ActivityTypeDetail entity = new ActivityTypeDetail();
-            entity.ActivityType = (ActivityTypeEnum)Enum.Parse(typeof(ActivityTypeEnum), XMLHelper.GetXmlAttribute(typeNode, "type"));
+            ActivityTypeDetail typeDetail = new ActivityTypeDetail();
+            typeDetail.ActivityType = (ActivityTypeEnum)Enum.Parse(typeof(ActivityTypeEnum), XMLHelper.GetXmlAttribute(typeNode, "type"));
 
             if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(typeNode, "trigger")))
             {
                 TriggerTypeEnum triggerType = TriggerTypeEnum.None;
                 Enum.TryParse<TriggerTypeEnum>(XMLHelper.GetXmlAttribute(typeNode, "trigger"), out triggerType);
-                entity.TriggerType = triggerType;
+                typeDetail.TriggerType = triggerType;
 
-                //获取时间表达式
+                //获取时间或消息表达式
                 if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(typeNode, "expression")))
                 {
-                    entity.Expression = XMLHelper.GetXmlAttribute(typeNode, "expression");
+                    typeDetail.Expression = XMLHelper.GetXmlAttribute(typeNode, "expression");
+                }
+
+                //获取消息捕获或抛出类型
+                if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(typeNode, "messageDirection")))
+                {
+                    MessageDirectionEnum msgDirection = MessageDirectionEnum.None;
+                    Enum.TryParse<MessageDirectionEnum>(XMLHelper.GetXmlAttribute(typeNode, "messageDirection"), out msgDirection);
+                    typeDetail.MessageDirection = msgDirection;
                 }
             }
 
             if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(typeNode, "complexType")))
             {
-                entity.ComplexType = EnumHelper.ParseEnum<ComplexTypeEnum>(XMLHelper.GetXmlAttribute(typeNode, "complexType"));
+                typeDetail.ComplexType = EnumHelper.ParseEnum<ComplexTypeEnum>(XMLHelper.GetXmlAttribute(typeNode, "complexType"));
             }
 
             if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(typeNode, "mergeType")))
             {
-                entity.MergeType = EnumHelper.ParseEnum<MergeTypeEnum>(XMLHelper.GetXmlAttribute(typeNode, "mergeType"));
+                typeDetail.MergeType = EnumHelper.ParseEnum<MergeTypeEnum>(XMLHelper.GetXmlAttribute(typeNode, "mergeType"));
             }
 
             if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(typeNode, "compareType")))
             {
-                entity.CompareType = EnumHelper.ParseEnum<CompareTypeEnum>(XMLHelper.GetXmlAttribute(typeNode, "compareType"));
+                typeDetail.CompareType = EnumHelper.ParseEnum<CompareTypeEnum>(XMLHelper.GetXmlAttribute(typeNode, "compareType"));
             }
 
             if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(typeNode, "completeOrder")))
             {
-                entity.CompleteOrder = float.Parse(XMLHelper.GetXmlAttribute(typeNode, "completeOrder"));
+                typeDetail.CompleteOrder = float.Parse(XMLHelper.GetXmlAttribute(typeNode, "completeOrder"));
+            }
+
+            if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(typeNode, "subType")))
+            {
+                typeDetail.SubProcessType = EnumHelper.ParseEnum<SubProcessTypeEnum>(XMLHelper.GetXmlAttribute(typeNode, "subType"));
+                typeDetail.SubProcessGUID = XMLHelper.GetXmlAttribute(typeNode, "subId");
+                typeDetail.SubVariableName = XMLHelper.GetXmlAttribute(typeNode, "subVar");
             }
 
             if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(typeNode, "skip")))
@@ -196,15 +234,15 @@ namespace Slickflow.Engine.Xpdl
 
                 if (skip)
                 {
-                    entity.SkipInfo = new SkipInfo { IsSkip = skip, Skipto = skipto };
+                    typeDetail.SkipInfo = new SkipInfo { IsSkip = skip, Skipto = skipto };
                 }
             }
 
-            return entity;
+            return typeDetail;
         }
 
         /// <summary>
-        /// 将Action的XML节点
+        /// 转换Action实体
         /// </summary>
         /// <param name="node">XML节点</param>
         /// <returns>操作实体</returns>
@@ -219,42 +257,93 @@ namespace Slickflow.Engine.Xpdl
             var actionMethod = XMLHelper.GetXmlAttribute(node, "method");
             action.ActionMethod = EnumHelper.TryParseEnum<ActionMethodEnum>(actionMethod);
 
-            var subMethod = XMLHelper.GetXmlAttribute(node, "subMethod");
-            action.SubMethod = EnumHelper.TryParseEnum<SubMethodEnum>(subMethod);
-
-            var fireType = XMLHelper.GetXmlAttribute(node, "fire");
-            action.FireType = EnumHelper.TryParseEnum<FireTypeEnum>(fireType);
-
-            if (action.ActionType == ActionTypeEnum.Event)
+            if (action.ActionMethod != ActionMethodEnum.None)
             {
-                action.Arguments = XMLHelper.GetXmlAttribute(node, "arguments");
-                action.Expression = XMLHelper.GetXmlAttribute(node, "expression");
+                var subMethod = XMLHelper.GetXmlAttribute(node, "subMethod");
+                action.SubMethod = EnumHelper.TryParseEnum<SubMethodEnum>(subMethod);
 
-                if (action.ActionMethod == ActionMethodEnum.CSharpLibrary)
+                var fireType = XMLHelper.GetXmlAttribute(node, "fire");
+                action.FireType = EnumHelper.TryParseEnum<FireTypeEnum>(fireType);
+
+                if (action.ActionType == ActionTypeEnum.Event)
                 {
-                    var methodInfoNode = node.SelectSingleNode("MethodInfo");
-                    if (methodInfoNode != null)
+                    action.Arguments = XMLHelper.GetXmlAttribute(node, "arguments");
+                    action.Expression = XMLHelper.GetXmlAttribute(node, "expression");
+
+                    if (action.ActionMethod == ActionMethodEnum.CSharpLibrary)
                     {
-                        var methodInfo = action.MethodInfo = new MethodInfo();
-                        methodInfo.AssemblyFullName = XMLHelper.GetXmlAttribute(methodInfoNode, "assemblyFullName");
-                        methodInfo.TypeFullName = XMLHelper.GetXmlAttribute(methodInfoNode, "typeFullName");
-                        //method.ConstructorParameters = XMLHelper.GetXmlAttribute(methodNode, "constructorParameters");
-                        methodInfo.MethodName = XMLHelper.GetXmlAttribute(methodInfoNode, "methodName");
-                        //method.MethodParameters = XMLHelper.GetXmlAttribute(methodNode, "methodParameters");
+                        var methodInfoNode = node.SelectSingleNode("MethodInfo");
+                        if (methodInfoNode != null)
+                        {
+                            var methodInfo = action.MethodInfo = new MethodInfo();
+                            methodInfo.AssemblyFullName = XMLHelper.GetXmlAttribute(methodInfoNode, "assemblyFullName");
+                            methodInfo.TypeFullName = XMLHelper.GetXmlAttribute(methodInfoNode, "typeFullName");
+                            //method.ConstructorParameters = XMLHelper.GetXmlAttribute(methodNode, "constructorParameters");
+                            methodInfo.MethodName = XMLHelper.GetXmlAttribute(methodInfoNode, "methodName");
+                            //method.MethodParameters = XMLHelper.GetXmlAttribute(methodNode, "methodParameters");
+                        }
                     }
-                }
-                else if(action.ActionMethod == ActionMethodEnum.SQL
-                    || action.ActionMethod == ActionMethodEnum.Python)
-                {
-                    var codeInfoNode = node.SelectSingleNode("CodeInfo");
-                    if (codeInfoNode != null)
+                    else if (action.ActionMethod == ActionMethodEnum.SQL
+                        || action.ActionMethod == ActionMethodEnum.Python)
                     {
-                        var codeInfo = action.CodeInfo = new CodeInfo();
-                        codeInfo.CodeText = codeInfoNode.InnerText;
+                        var codeInfoNode = node.SelectSingleNode("CodeInfo");
+                        if (codeInfoNode != null)
+                        {
+                            var codeInfo = action.CodeInfo = new CodeInfo();
+                            codeInfo.CodeText = codeInfoNode.InnerText;
+                            codeInfo.CodeText = codeInfo.CodeText.Replace('\t', ' ');
+                        }
                     }
                 }
             }
             return action;
+        }
+
+        /// <summary>
+        /// 转换Service实体
+        /// </summary>
+        /// <param name="node">XML节点</param>
+        /// <returns>操作实体</returns>
+        private static ServiceEntity ConvertXmlServiceNodeToServiceEntity(XmlNode node)
+        {
+            if (node == null) return null;
+
+            ServiceEntity service = new ServiceEntity();
+
+            var serviceMethod = XMLHelper.GetXmlAttribute(node, "method");
+            service.Method = EnumHelper.TryParseEnum<ServiceMethodEnum>(serviceMethod);
+
+            var subMethod = XMLHelper.GetXmlAttribute(node, "subMethod");
+            service.SubMethod = EnumHelper.TryParseEnum<SubMethodEnum>(subMethod);
+
+            service.Arguments = XMLHelper.GetXmlAttribute(node, "arguments");
+            service.Expression = XMLHelper.GetXmlAttribute(node, "expression");
+
+            if (service.Method == ServiceMethodEnum.CSharpLibrary)
+            {
+                var methodInfoNode = node.SelectSingleNode("MethodInfo");
+                if (methodInfoNode != null)
+                {
+                    var methodInfo = service.MethodInfo = new MethodInfo();
+                    methodInfo.AssemblyFullName = XMLHelper.GetXmlAttribute(methodInfoNode, "assemblyFullName");
+                    methodInfo.TypeFullName = XMLHelper.GetXmlAttribute(methodInfoNode, "typeFullName");
+                    //method.ConstructorParameters = XMLHelper.GetXmlAttribute(methodNode, "constructorParameters");
+                    methodInfo.MethodName = XMLHelper.GetXmlAttribute(methodInfoNode, "methodName");
+                    //method.MethodParameters = XMLHelper.GetXmlAttribute(methodNode, "methodParameters");
+                }
+            }
+            else if (service.Method == ServiceMethodEnum.SQL
+                || service.Method == ServiceMethodEnum.Python)
+            {
+                var codeInfoNode = node.SelectSingleNode("CodeInfo");
+                if (codeInfoNode != null)
+                {
+                    var codeInfo = service.CodeInfo = new CodeInfo();
+                    codeInfo.CodeText = codeInfoNode.InnerText;
+                    codeInfo.CodeText = codeInfo.CodeText.Replace('\t', ' ');
+                }
+            }
+            return service;
         }
 
         /// <summary>
@@ -290,7 +379,7 @@ namespace Slickflow.Engine.Xpdl
         }
         #endregion
 
-        #region Xml节点转换信息
+        #region Xml节点连线信息
         /// <summary>
         /// 把XML节点转换为ActivityEntity实体对象
         /// </summary>
@@ -363,6 +452,13 @@ namespace Slickflow.Engine.Xpdl
             if (groupBehavioursNode != null)
             {
                 transition.GroupBehaviours = new GroupBehaviourEntity();
+                if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(groupBehavioursNode, "defaultBranch")))
+                {
+                    bool defaultBranch = false;
+                    bool isDefaultParsed = Boolean.TryParse(XMLHelper.GetXmlAttribute(groupBehavioursNode, "defaultBranch"), out defaultBranch);
+                    if (isDefaultParsed) transition.GroupBehaviours.DefaultBranch = defaultBranch;
+                }
+
                 if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(groupBehavioursNode, "priority")))
                 {
                     short priority = 0;
@@ -376,8 +472,35 @@ namespace Slickflow.Engine.Xpdl
                     bool canBeParsed = Boolean.TryParse(XMLHelper.GetXmlAttribute(groupBehavioursNode, "forced"), out isForced);
                     if (canBeParsed) transition.GroupBehaviours.Forced = isForced;
                 }
+
+                if (!string.IsNullOrEmpty(XMLHelper.GetXmlAttribute(groupBehavioursNode, "approval")))
+                {
+                    short approval = 0;
+                    bool isApprovalParsed = short.TryParse(XMLHelper.GetXmlAttribute(groupBehavioursNode, "approval"), out approval);
+                    if (isApprovalParsed) transition.GroupBehaviours.Approval = approval;
+                }
             }
             return transition;
+        }
+        #endregion
+
+        #region 活动视图转换
+        /// <summary>
+        /// 从活动节点转换为活动视图
+        /// </summary>
+        /// <param name="entity">活动实体</param>
+        /// <returns>活动视图</returns>
+        public static ActivityView ConvertFromActivityEntity(ActivityEntity entity)
+        {
+            var view = new ActivityView();
+            view.ActivityGUID = entity.ActivityGUID;
+            view.ActivityName = entity.ActivityName;
+            view.ActivityCode = entity.ActivityCode;
+            view.ActivityType = entity.ActivityType.ToString();
+            view.TriggerType = entity.ActivityTypeDetail.TriggerType.ToString();
+            view.MessageDirection = entity.ActivityTypeDetail.MessageDirection.ToString();
+            view.Expression = entity.ActivityTypeDetail.Expression;
+            return view;
         }
         #endregion
     }

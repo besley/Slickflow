@@ -98,6 +98,29 @@ namespace Slickflow.Engine.Core
         }
 
         /// <summary>
+        /// Interrupt事件类型活动实例执行上下文对象
+        /// </summary>
+        /// <param name="activityInstance">活动实例</param>
+        /// <param name="processModel">流程模型</param>
+        /// <param name="activityResource">活动资源</param>
+        /// <param name="isNotParsedByTransition">非解析流转</param>
+        /// <param name="session">数据会话</param>
+        private ActivityForwardContext(ActivityInstanceEntity activityInstance,
+            IProcessModel processModel,
+            ActivityResource activityResource,
+            Boolean isNotParsedByTransition,
+            IDbSession session)
+        {
+            //check task condition has load activity instance
+            FromActivityInstance = (new ActivityInstanceManager()).GetById(session.Connection, activityInstance.ID, session.Transaction);
+            ProcessInstance = (new ProcessInstanceManager()).GetById(session.Connection, activityInstance.ProcessInstanceID, session.Transaction);
+            Activity = processModel.GetActivity(activityInstance.ActivityGUID);
+            ProcessModel = processModel;
+            ActivityResource = activityResource;
+            IsNotParsedByTransition = isNotParsedByTransition;
+        }
+
+        /// <summary>
         /// 启动流程的上下文对象
         /// </summary>
         /// <param name="processModel"></param>
@@ -122,13 +145,31 @@ namespace Slickflow.Engine.Core
         /// <param name="isNotParsedForward">不需要解析的流转</param>
         /// <param name="session">数据会话</param>
         /// <returns>活动上下文</returns>
-        internal static ActivityForwardContext CreateRunningContext(TaskViewEntity taskView,
+        internal static ActivityForwardContext CreateRunningContextByTask(TaskViewEntity taskView,
             IProcessModel processModel,
             ActivityResource activityResource,
             Boolean isNotParsedForward,
             IDbSession session)
         {
             return new ActivityForwardContext(taskView, processModel, activityResource, isNotParsedForward, session);
+        }
+
+        /// <summary>
+        /// Interrupt事件类型创建活动执行上下文对象
+        /// </summary>
+        /// <param name="activityInstance">活动实例</param>
+        /// <param name="processModel">流程模型</param>
+        /// <param name="activityResource">活动资源</param>
+        /// <param name="isNotParsedForward">不需要解析的流转</param>
+        /// <param name="session">数据会话</param>
+        /// <returns>活动上下文</returns>
+        internal static ActivityForwardContext CreateRunningContextByActivity(ActivityInstanceEntity activityInstance,
+            IProcessModel processModel,
+            ActivityResource activityResource,
+            Boolean isNotParsedForward,
+            IDbSession session)
+        {
+            return new ActivityForwardContext(activityInstance, processModel, activityResource, isNotParsedForward, session);
         }
 
         /// <summary>

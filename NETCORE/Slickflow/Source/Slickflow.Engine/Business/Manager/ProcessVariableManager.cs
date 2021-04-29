@@ -135,20 +135,21 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns>流程变量列表</returns>
         internal IList<ProcessVariableEntity> GetVariableList(int processInstanceID)
         {
-            string sql = @"SELECT * FROM WfProcessVariable
-                           WHERE ProcessInstanceID=@processInstanceID
-                           ORDER BY ActivityGUID";
-            using (var session = SessionFactory.CreateSession())
-            {
-                var list = Repository.Query<ProcessVariableEntity>(session.Connection, sql,
-                    new
-                    {
-                        processInstanceID = processInstanceID,
-                    },
-                    session.Transaction
-                    ).ToList();
-                return list;
-            }
+            //string sql = @"SELECT * FROM WfProcessVariable
+            //            WHERE ProcessInstanceID=@processInstanceID
+            //            ORDER BY ActivityGUID";
+            //var list = Repository.Query<ProcessVariableEntity>(sql,
+            //    new
+            //    {
+            //        processInstanceID = processInstanceID,
+            //    }).ToList();
+
+            var sqlQuery = (from pv in Repository.GetAll<ProcessVariableEntity>()
+                            where pv.ProcessInstanceID == processInstanceID
+                            select pv
+                            );
+            var list = sqlQuery.OrderBy(pv => pv.ActivityGUID).ToList<ProcessVariableEntity>();
+            return list;
         }
 
         /// <summary>
@@ -249,24 +250,30 @@ namespace Slickflow.Engine.Business.Manager
             IDbTransaction trans)
         {
             ProcessVariableEntity entity = null;
-            string sql = @"SELECT * FROM WfProcessVariable
-                           WHERE VariableType=@variableType
-                                AND ProcessInstanceID=@newProcessInstanceID
-                                AND Name=@newName
-                           ORDER BY ID DESC";
+            //string sql = @"SELECT * FROM WfProcessVariable
+            //               WHERE VariableType=@variableType
+            //                    AND ProcessInstanceID=@newProcessInstanceID
+            //                    AND Name=@newName
+            //               ORDER BY ID DESC";
 
-            var list = Repository.Query<ProcessVariableEntity>(conn, sql,
-                new
-                {
-                    variableType = ProcessVariableTypeEnum.Process.ToString(),
-                    newProcessInstanceID = processInstanceID,
-                    newName = name
-                },
-                trans
-                ).ToList();
+            //var list = Repository.Query<ProcessVariableEntity>(conn, sql,
+            //    new
+            //    {
+            //        variableType = ProcessVariableTypeEnum.Process.ToString(),
+            //        newProcessInstanceID = processInstanceID,
+            //        newName = name
+            //    },
+            //    trans
+            //    ).ToList();
+            var sqlQuery = (from pv in Repository.GetAll<ProcessVariableEntity>(conn, trans)
+                            where pv.VariableType == ProcessVariableTypeEnum.Process.ToString()
+                                && pv.ProcessInstanceID == processInstanceID
+                                && pv.Name == name
+                            select pv
+                            );
+            var list = sqlQuery.OrderByDescending(pv => pv.ID).ToList<ProcessVariableEntity>();
 
-            
-            if (list != null && list.Count() > 0)
+            if (list.Count() > 0)
                 entity = list[0];
 
             return entity;
@@ -287,30 +294,68 @@ namespace Slickflow.Engine.Business.Manager
             string name,
             IDbTransaction trans)
         {
-            ProcessVariableEntity entity = null;
-            string sql = @"SELECT * FROM WfProcessVariable
-                           WHERE VariableType=@variableType
-                                AND ProcessInstanceID=@newProcessInstanceID 
-                                AND Name=@newName ";
-            StringBuilder sqlB = new StringBuilder(1024);
-            sqlB.Append(sql);
-
-            DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("@variableType", ProcessVariableTypeEnum.Activity.ToString());
-            parameters.Add("@newProcessInstanceID", processInstanceID);
-            parameters.Add("@newName", name);
             if (!string.IsNullOrEmpty(activityGUID))
             {
-                sqlB.Append(" AND ActivityGUID = @newActivityGUID ");
-                parameters.Add("@newActivityGUID", activityGUID);
+                return GetVariableOfActivity(conn, processInstanceID, activityGUID, name, trans);
             }
-            sqlB.Append(" ORDER BY ID DESC ");
+            else
+            {
+                return GetVariableOfProcess(conn, processInstanceID, name, trans);
+            }
+        }
 
-            var list = Repository.Query<ProcessVariableEntity>(conn, sqlB.ToString(),
-                parameters,
-                trans
-                ).ToList();
+        /// <summary>
+        /// 流程变量查询
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="processInstanceID">流程实例ID</param>
+        /// <param name="name">变量名称</param>
+        /// <param name="trans">事务</param>
+        /// <returns>流程变量实体</returns>
+        private ProcessVariableEntity GetVariableOfProcess(IDbConnection conn,
+            int processInstanceID,
+            string name,
+            IDbTransaction trans)
+        {
+            ProcessVariableEntity entity = null;
+            var sqlQuery = (from pv in Repository.GetAll<ProcessVariableEntity>()
+                            where pv.VariableType == ProcessVariableTypeEnum.Process.ToString()
+                                && pv.ProcessInstanceID == processInstanceID
+                                && pv.Name == name
+                            select pv
+                            );
+            var list = sqlQuery.OrderByDescending(pv => pv.ID).ToList<ProcessVariableEntity>();
+            if (list != null && list.Count() > 0)
+                entity = list[0];
 
+            return entity;
+
+        }
+
+        /// <summary>
+        /// 活动变量查询
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="processInstanceID">流程实例ID</param>
+        /// <param name="activityGUID">活动GUID</param>
+        /// <param name="name">变量名称</param>
+        /// <param name="trans">事务</param>
+        /// <returns>流程变量实体</returns>
+        private ProcessVariableEntity GetVariableOfActivity(IDbConnection conn,
+            int processInstanceID,
+            string activityGUID,
+            string name,
+            IDbTransaction trans)
+        {
+            ProcessVariableEntity entity = null;
+            var sqlQuery = (from pv in Repository.GetAll<ProcessVariableEntity>()
+                            where pv.VariableType == ProcessVariableTypeEnum.Activity.ToString()
+                                && pv.ProcessInstanceID == processInstanceID
+                                && pv.Name == name
+                                && pv.ActivityGUID == activityGUID
+                            select pv
+                            );
+            var list = sqlQuery.OrderByDescending(pv => pv.ID).ToList<ProcessVariableEntity>();
             if (list != null && list.Count() > 0)
                 entity = list[0];
 

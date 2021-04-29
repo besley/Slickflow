@@ -81,7 +81,8 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.ProcessModel = ProcessModelFactory.Create(runner.ProcessGUID, runner.Version);
             var startActivity = rmins.ProcessModel.GetStartActivity();
             var firstActivity = rmins.ProcessModel.GetFirstActivity();
-
+            //var firstActivityList = rmins.ProcessModel.GetFirstActivityList(startActivity, runner.Conditions);
+            
             if (startActivity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.None)
             {
                 rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(firstActivity.ActivityGUID,
@@ -177,7 +178,7 @@ namespace Slickflow.Engine.Core.Runtime
             ref WfExecutedResult result)
         {
             //检查传人参数是否有效
-            var rmins = new WfRuntimeManagerAppRunning();
+            var rmins = new WfRuntimeManagerRun();
             rmins.WfExecutedResult = result = new WfExecutedResult();
             if (string.IsNullOrEmpty(runner.AppName)
                 || String.IsNullOrEmpty(runner.AppInstanceID)
@@ -197,7 +198,8 @@ namespace Slickflow.Engine.Core.Runtime
             var runningNode = aim.GetRunningNode(runner, session, out taskView);
 
             //判断是否是当前登录用户的任务
-            if (runningNode.AssignedToUserIDs.Contains(runner.UserID.ToString()) == false)
+            if (!string.IsNullOrEmpty(runningNode.AssignedToUserIDs)
+                && runningNode.AssignedToUserIDs.Contains(runner.UserID.ToString()) == false)
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.RunApp_HasNoTask;
@@ -205,9 +207,19 @@ namespace Slickflow.Engine.Core.Runtime
                 return rmins;
             }
 
+            var isRunning = (new TaskManager()).CheckTaskStateInRunningState(taskView);
+            if (isRunning == false)
+            {
+                result.Status = WfExecutedStatus.Exception;
+                result.ExceptionType = WfExceptionType.Sendback_NotInRunning;
+                result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceAppRunning.notrunning.error");
+                return rmins;
+            }
+
             //用于流程注册事件时的流程实例ID提供
+            var processInstance = (new ProcessInstanceManager()).GetById(session.Connection, runningNode.ProcessInstanceID, session.Transaction);
             rmins.ProcessInstanceID = runningNode.ProcessInstanceID;
-            var processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
+            var processModel = ProcessModelFactory.Create(processInstance.ProcessGUID, processInstance.Version);
             var activityResource = new ActivityResource(runner,
                 runner.NextActivityPerformers,
                 runner.Conditions);

@@ -43,7 +43,7 @@ namespace Slickflow.WebApi.Controllers
     //run process app:
     ////订单处理节点：
     ////下一步是结束节点
-    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"4be58a96-926c-4aff-a383-fe71185572e5","UserID":"10","UserName":"Long","NextActivityPerformers":{"de50335a-034c-4c58-db72-ddd00c1aebfe":[{"UserID":10,"UserName":"Long"}]}}
+    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"4be58a96-926c-4aff-a383-fe71185572e5","UserID":"10","UserName":"Long","NextActivityPerformers":{"de50335a-034c-4c58-db72-ddd00c1aebfe":[{"UserID":"10","UserName":"Long"}]}}
 
     /// <summary>
     /// 事件控制器

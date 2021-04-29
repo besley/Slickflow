@@ -138,7 +138,7 @@
 
             var query = {
                 ProcessGUID: '@ViewBag.ProcessGUID',
-                Version: "1"
+                Version: '@ViewBag.Version',
             };
 
             $('#loading-indicator2').show();
@@ -147,7 +147,7 @@
             jshelper.ajaxPost('api/Wf2Xml/QueryProcessFile',
                 JSON.stringify(query),
                 function (result) {
-                    if (result.Status == 1) {
+                    if (result.Status === 1) {
                         var graphData = kloader.load(result.Entity);
 
                         //render running nodes with red color
@@ -158,16 +158,12 @@
 
                         jshelper.ajaxPost('api/Wf2Xml/QueryReadyActivityInstance',
                             JSON.stringify(taskQuery), function (result) {
-                                if (result.Status == 1) {
+                                if (result.Status === 1) {
                                     kmain.renderReadyTasks(result.Entity);
 
                                     $('#loading-indicator2').hide();
                                 } else {
-                                    $.msgBox({
-                                        title: "Process / KGraph",
-                                        content: kresource.getItem('processdiagramreaderrormsg') + result.Message,
-                                        type: "error"
-                                    });
+                                    kmsgbox.error(kresource.getItem('processdiagramreaderrormsg'), result.Message);
                                 }
                             });
                         jshelper.ajaxPost('api/Wf2Xml/QueryCompletedTransitionInstance',
@@ -176,19 +172,11 @@
                                     kmain.renderCompletedTransitions(result.Entity);
                                     $('#loading-indicator2').hide();
                                 } else {
-                                    $.msgBox({
-                                        title: "Process / KGraph",
-                                        content: kresource.getItem('processdiagramreaderrormsg') + result.Message,
-                                        type: "error"
-                                    });
+                                    kmsgbox.error(kresource.getItem('processdiagramreaderrormsg'), result.Message);
                                 }
                             });
                     } else {
-                        $.msgBox({
-                            title: "Process / KGraph",
-                            content: kresource.getItem('processdiagramreaderrormsg') + result.Message,
-                            type: "error"
-                        });
+                        kmsgbox.error(kresource.getItem('processdiagramreaderrormsg'), result.Message);
                     }
                 }
             );

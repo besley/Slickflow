@@ -22,8 +22,10 @@ namespace Slickflow.Module.Localize
     {
         Engine = 0,
         Designer = 1,
-        WebTest = 2,
-        Scheduler = 3
+        Graph = 2,
+        WebTest = 3,
+        Scheduler = 4,
+        Insight = 5
     }
 
     /// <summary>
@@ -31,44 +33,62 @@ namespace Slickflow.Module.Localize
     /// </summary>
     public class LocalizeUtility
     {
-        private static LangTypeEnum _langType;
-
         /// <summary>
         /// 静态构造方法
         /// </summary>
         static LocalizeUtility()
         {
-            //Engine Localize Language
-            var dictLangEngine = new Dictionary<LangTypeEnum, string>();
-            dictLangEngine[LangTypeEnum.en] = "Slickflow.Module.Localize.Engine.en.json";
-            dictLangEngine[LangTypeEnum.zh] = "Slickflow.Module.Localize.Engine.zh.json";
-            ReadProjectJSONResourceFromFile(ProjectTypeEnum.Engine, dictLangEngine);
-
-            //Designer Localize Language
-            var dictLangDesigner = new Dictionary<LangTypeEnum, string>();
-            dictLangDesigner[LangTypeEnum.en] = "Slickflow.Module.Localize.Designer.en.json";
-            dictLangDesigner[LangTypeEnum.zh] = "Slickflow.Module.Localize.Designer.zh.json";
-            ReadProjectJSONResourceFromFile(ProjectTypeEnum.Designer, dictLangDesigner);
+            ReadProjectJSONResourceFromFile(ProjectTypeEnum.Engine);
+            ReadProjectJSONResourceFromFile(ProjectTypeEnum.Designer);
+            ReadProjectJSONResourceFromFile(ProjectTypeEnum.Graph);
+            ReadProjectJSONResourceFromFile(ProjectTypeEnum.WebTest);
+            ReadProjectJSONResourceFromFile(ProjectTypeEnum.Scheduler);
         }
 
-        static void ReadProjectJSONResourceFromFile(ProjectTypeEnum project, Dictionary<LangTypeEnum, string> jsonFile)
+        /// <summary>
+        /// 读取JSON资源文件
+        /// </summary>
+        /// <param name="project">项目</param>
+        /// <param name="jsonFile">json文件</param>
+        static void ReadProjectJSONResourceFromFile(ProjectTypeEnum project)
         {
-            var langJsonResource = new Dictionary<LangTypeEnum, Dictionary<string, string>>();
-            foreach (var item in jsonFile)
+            var jsonFile = GetJSONFileNameByProject(project);
+            try
             {
-                var jsonResource = ReadProjectJSONResourceFromFile(project, item.Value);
-                langJsonResource.Add(item.Key, jsonResource);
+                var langJsonResource = new Dictionary<LangTypeEnum, Dictionary<string, string>>();
+                foreach (var item in jsonFile)
+                {
+                    var jsonResource = ReadProjectJSONResourceFromFile(item.Value);
+                    langJsonResource.Add(item.Key, jsonResource);
+                }
+                LanguageCachedHelper.SetJsonResource(project, langJsonResource);
             }
-            LanguageCachedHelper.SetJsonResource(project, langJsonResource);
+            catch (System.Exception ex)
+            {
+                throw new ApplicationException(string.Format("An error occurred when reading json resource file, detai:{0}", ex.Message), ex);
+            }
+        }
+
+        /// <summary>
+        /// 返回JSON文件资源
+        /// </summary>
+        /// <param name="prjType">项目类型</param>
+        /// <returns>Key-Value字典对象</returns>
+        private static Dictionary<LangTypeEnum, string> GetJSONFileNameByProject(ProjectTypeEnum prjType)
+        {
+            var dictLang = new Dictionary<LangTypeEnum, string>();
+            dictLang[LangTypeEnum.en] = string.Format("Slickflow.Module.Localize.{0}.en.json", prjType.ToString());
+            dictLang[LangTypeEnum.zh] = string.Format("Slickflow.Module.Localize.{0}.zh.json", prjType.ToString());
+
+            return dictLang;
         }
 
         /// <summary>
         /// 从资源文件读取JSON数据
         /// </summary>
-        /// <param name="project">项目</param>
         /// <param name="resourceName">资源名称</param>
         /// <returns>Key-Value字典</returns>
-        private static Dictionary<string, string> ReadProjectJSONResourceFromFile(ProjectTypeEnum project, string resourceName)
+        private static Dictionary<string, string> ReadProjectJSONResourceFromFile(string resourceName)
         {
             var assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
@@ -88,7 +108,7 @@ namespace Slickflow.Module.Localize
         /// <returns>本地显示</returns>
         private static string GetItem(ProjectTypeEnum project, string key)
         {
-            var lang = _langType;
+            var lang = LanguageCachedHelper.GetLang(project);
             var lanJsonResource = LanguageCachedHelper.GetJsonResource(project);
             var value = lanJsonResource[lang][key];
             return value;

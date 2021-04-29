@@ -36,6 +36,11 @@ namespace Slickflow.Engine.Common
         AndSplitMI = 5,
 
         /// <summary>
+        /// 审核网关分支
+        /// </summary>
+        ApprovalOrSplit = 6,
+
+        /// <summary>
         /// 或合并
         /// </summary>
         OrJoin = 16,

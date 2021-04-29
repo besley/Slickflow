@@ -29,8 +29,10 @@ using System.Text;
 using IronPython.Hosting;
 using Dapper;
 using Slickflow.Data;
+using Slickflow.Module.Localize;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
+using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Delegate;
 
@@ -54,8 +56,7 @@ namespace Slickflow.Engine.Core.Pattern
                 foreach (var action in actionList)
                 {
                     if (action.FireType != FireTypeEnum.None
-                        && (!string.IsNullOrEmpty(action.Expression) 
-                                || action.MethodInfo != null))
+                        && (action.ActionMethod != ActionMethodEnum.None))
                     {
                         Execute(action, delegateService);
                     }
@@ -134,7 +135,7 @@ namespace Slickflow.Engine.Core.Pattern
                 }
                 else
                 {
-                    throw new WorkflowException(string.Format("暂不支持的选项:{0}", action.ActionMethod.ToString()));
+                    throw new WorkflowException(LocalizeHelper.GetEngineMessage("actionexecutor.Execute.exception", action.ActionMethod.ToString()));
                 }
             }
         }
@@ -156,24 +157,7 @@ namespace Slickflow.Engine.Core.Pattern
             }
             catch (System.Exception ex)
             {
-                throw new WorkflowException(string.Format("执行LocalService出错:{0}", ex.Message));
-            }
-        }
-
-        /// <summary>
-        /// 执行CSHARP方法
-        /// </summary>
-        /// <param name="action">Action实体</param>
-        /// <param name="delegateService">委托服务</param>
-        private static void ExecuteCSharpCodeMethod(ActionEntity action, IDelegateService delegateService)
-        {
-            try
-            {
-                ;
-            }
-            catch (System.Exception ex)
-            {
-                throw new WorkflowException(string.Format("执行CSharp脚本出错:{0}", ex.Message));
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("actionexecutor.ExecuteLocalService.exception", ex.Message));
             }
         }
 
@@ -220,7 +204,7 @@ namespace Slickflow.Engine.Core.Pattern
             }
             catch (System.Exception ex)
             {
-                throw new WorkflowException(string.Format("执行WebApi出错:{0}", ex.Message));
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("actionexecutor.ExecuteWebApi.exception", ex.Message));
             }
         }
 
@@ -245,12 +229,12 @@ namespace Slickflow.Engine.Core.Pattern
                 }
                 else
                 {
-                    throw new WorkflowException("SQL脚本为空, 不能执行!");
+                    throw new WorkflowException(LocalizeHelper.GetEngineMessage("actionexecutor.ExecuteSQLMethod.warn"));
                 }
             }
             catch (System.Exception ex)
             {
-                throw new WorkflowException(string.Format("执行SQL脚本时出错:{0}", ex.Message));
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("actionexecutor.ExecuteSQLMethod.exception", ex.Message));
             }
         }
 
@@ -271,7 +255,7 @@ namespace Slickflow.Engine.Core.Pattern
             }
             catch (System.Exception ex)
             {
-                throw new WorkflowException(string.Format("执行StoreProcedure方法出错:{0}", ex.Message));
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("actionexecutor.ExecuteStoreProcedureMethod.exception", ex.Message));
             }
         }
 
@@ -303,12 +287,12 @@ namespace Slickflow.Engine.Core.Pattern
                 }
                 else
                 {
-                    throw new WorkflowException("Python脚本为空, 不能执行!");
+                    throw new WorkflowException(LocalizeHelper.GetEngineMessage("actionexecutor.ExecutePythonMethod.warn"));
                 }
             }
             catch (System.Exception ex)
             {
-                throw new WorkflowException(string.Format("执行Pythond方法出错:{0}", ex.Message));
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("actionexecutor.ExecutePythonMethod.exception", ex.Message));
             }
         }
 
@@ -343,7 +327,7 @@ namespace Slickflow.Engine.Core.Pattern
             }
             catch(System.Exception ex)
             {
-                throw new WorkflowException(string.Format("执行C#组件方法出错:{0}", ex.Message));
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("actionexecutor.ExecuteCSharpLibraryMethod.exception", ex.Message));
             }
         }
 
@@ -451,41 +435,5 @@ namespace Slickflow.Engine.Core.Pattern
             }
             return valueArray;
         }
-
-        #region 反射调用(早期版本)
-        ///// <summary>
-        ///// 调用外部事件方法的实现过程
-        ///// <param name="action">操作</param>
-        ///// <param name="parameters">参数</param>
-        ///// </summary>
-        //private void Execute(ActionEntity action, ActionParameterInternal parameters)
-        //{
-        //    if (action.ActionType == ActionTypeEnum.ExternalMethod)
-        //    {
-        //        //取出当前应用程序执行路径
-        //        var executingPath = ConfigHelper.GetExecutingDirectory();
-        //        var pluginAssemblyName = string.Format("{0}\\{1}\\{2}.dll", executingPath, "plugin", action.AssemblyFullName);
-        //        var pluginAssemblyTypes = Assembly.LoadFile(pluginAssemblyName).GetTypes();
-        //        Type outerInfterface = pluginAssemblyTypes
-        //                                    .Single(t => t.Name == action.InterfaceFullName && t.IsInterface);
-        //        Type outerClass = pluginAssemblyTypes
-        //                                .Single(t => !t.IsInterface && outerInfterface.IsAssignableFrom(t));
-        //        object instance = Activator.CreateInstance(outerClass, parameters.ConstructorParameters);
-        //        MethodInfo mi = outerClass.GetMethod(action.MethodName);
-        //        var result = mi.Invoke(instance, parameters.MethodParameters);
-        //    }
-        //    else if (action.ActionType == ActionTypeEnum.ExternalEvent)
-        //    {
-        //        var fullName = action.Expression;
-        //        var instance = ReflectionHelper.GetSpecialInstance<IExternalService>(fullName);
-        //        //instance.SetDelegateService()
-        //        instance.Execute();
-        //    }
-        //    else if (action.ActionType == ActionTypeEnum.WebApi)
-        //    {
-        //        throw new ApplicationException("调用WebAPI功能暂未实现！");
-        //    }
-        //}
-        #endregion
     }
 }

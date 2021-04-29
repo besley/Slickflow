@@ -123,19 +123,38 @@ namespace Slickflow.Designer.Controllers.WebApi
                     return result;
                 }
 
-                ProcessEntity entity = new ProcessEntity
+                //创建新流程,ProcessGUID默认赋值
+                if (string.IsNullOrEmpty(fileEntity.ProcessGUID))
                 {
-                    ProcessGUID = fileEntity.ProcessGUID,
-                    ProcessName = fileEntity.ProcessName,
-                    ProcessCode = fileEntity.ProcessCode,
-                    Version = fileEntity.Version,
-                    IsUsing = fileEntity.IsUsing,
-                    Description = fileEntity.Description,
-                };
-                var wfService = new WorkflowService();
-                var processID = wfService.CreateProcess(entity);
-                entity.ID = processID;
+                    fileEntity.ProcessGUID = Guid.NewGuid().ToString();
+                }
 
+                if (string.IsNullOrEmpty(fileEntity.Version))
+                {
+                    fileEntity.Version = "1";
+                }
+
+                //根据模板类型来创建流程
+                ProcessEntity entity = null;
+                if (fileEntity.TemplateType == ProcessTemplateType.Blank)
+                {
+                    entity = new ProcessEntity
+                    {
+                        ProcessGUID = fileEntity.ProcessGUID,
+                        ProcessName = fileEntity.ProcessName,
+                        ProcessCode = fileEntity.ProcessCode,
+                        Version = fileEntity.Version,
+                        IsUsing = fileEntity.IsUsing,
+                        Description = fileEntity.Description,
+                    };
+                    var wfService = new WorkflowService();
+                    var processID = wfService.CreateProcess(entity);
+                    entity.ID = processID;
+                }
+                else
+                {
+                    ;
+                }
                 result = ResponseResult<ProcessEntity>.Success(entity,
                     LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.crateprocess.success")
                 );
@@ -146,6 +165,7 @@ namespace Slickflow.Designer.Controllers.WebApi
             }
             return result;
         }
+
 
         /// <summary>
         /// 更新流程数据
@@ -231,8 +251,7 @@ namespace Slickflow.Designer.Controllers.WebApi
                 result = ResponseResult.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.deleteprocess.error", ex.Message));
             }
             return result;
-        }
-        
+        }       
         #endregion
 
         #region 读取流程XML文件数据处理
@@ -420,6 +439,32 @@ namespace Slickflow.Designer.Controllers.WebApi
                 result = ResponseResult.Success(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.saveprocessfile.success"));
             }
             catch (System.Exception ex)
+            {
+                result = ResponseResult.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.saveprocessfile.error", ex.Message));
+            }
+            return result;
+        }
+
+
+        /// <summary>
+        /// 保存多泳道流程图形
+        /// WfProcess表中通过PackageProcessID来关联
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult SaveProcessFilePool([FromBody] ProcessFilePool entity)
+        {
+            var result = ResponseResult.Default();
+            try
+            {
+                var wfService = new WorkflowService();
+                entity.XmlContent = PaddingContentWithRightSpace(entity.XmlContent);
+                wfService.SaveProcessFilePool(entity);
+
+                result = ResponseResult.Success(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.saveprocessfile.success"));
+            }
+            catch(System.Exception ex)
             {
                 result = ResponseResult.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.saveprocessfile.error", ex.Message));
             }

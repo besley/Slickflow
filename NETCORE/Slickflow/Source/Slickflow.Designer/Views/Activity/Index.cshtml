@@ -46,7 +46,6 @@
             <li class="hideme"><a href="#sub" role="tab" data-toggle="tab" id="tabSub" class="lang" as="subprocess"></a></li>
             <li class="hideme"><a href="#page" role="tab" data-toggle="tab" id="tabPage" class="lang" as="page"></a></li>
             <li class="hideme"><a href="#myProperties" role="tab" data-toggle="tab" id="tabMyProperties" class="lang" as="properties"></a></li>
-            <li class="hideme"><a href="#action" role="tab" data-toggle="tab" id="tabAction" class="lang" as="action"></a></li>
         </ul>
 
         <!-- Tab panes -->
@@ -91,20 +90,41 @@
                 </div>
             </div>
             <div class="tab-pane" id="sub">
-                <div class="row" style="margin-top:5px;">
-                    <div>
-                        <p>
-                            <span class="a_tit lang" as="subprocessguid"></span>
-                            <span><input type="text" id="txtProcessGUID" class="form-control" style="width:340px;" readonly="readonly" /></span>
-                            <span class="a_tit lang" as="subprocessname"></span>
-                            <span><input type="text" id="txtProcessName" class="form-control" style="width:340px;" readonly /></span>
-                        </p>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="active"><a href="#subFixed" role="tab" data-toggle="tab" class="lang" as="subfixed"></a></li>
+                    <li><a href="#subDynamic" role="tab" data-toggle="tab" class="lang" as="subdynamic"></a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="subFixed">
+                        <div class="row" style="margin-top:5px;">
+                            <div class="row" style="margin-left:10px;">
+                                <p>
+                                    <span class="a_tit lang" as="subprocessguid"></span>
+                                    <span><input type="text" id="txtProcessGUID" class="form-control" style="width:340px;" readonly="readonly" /></span>
+                                </p>
+                                <p>
+                                    <span class="a_tit lang" as="subprocessname"></span>
+                                    <span><input type="text" id="txtProcessName" class="form-control" style="width:340px;" readonly /></span>
+                                </p>
+                            </div>
+                            <div id="mySubProcessGrid" class="ag-bootstrap" style="width:100%;height:200px;float:left;"></div>
+                        </div>
+                        <div class="row" style="margin-top:5px;">
+                            <span class="lang" as="subprocessdblclick"></span>
+                        </div>
                     </div>
-                    <div id="mySubProcessGrid" class="ag-bootstrap" style="width:100%;height:200px;float:left;"></div>
+                    <div class="tab-pane" id="subDynamic">
+                        <div class="row" style="margin-top:5px;">
+                            <p>
+                                <span class="a_tit lang" as="subvar"></span>
+                                <span><input type="text" id="txtSubVar" class="form-control" style="width:340px;" placeholder="subProcessIDs" /></span>
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <div class="row" style="margin-top:5px;">
-                    <span class="lang" as="subprocessdblclick"></span>
-                </div>
+
             </div>
             <div class="tab-pane" id="page">
                 <div class="row" style="margin-top:5px;">
@@ -125,137 +145,6 @@
                     </p>
                 </div>
             </div>
-            <div id="action" class="tab-pane">
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="active"><a href="#actionBefore" role="tab" data-toggle="tab" class="lang" as="before"></a></li>
-                    <li><a href="#actionAfter" role="tab" data-toggle="tab" class="lang" as="after"></a></li>
-                </ul>
-
-                <!-- Tab panes -->
-                <div class="tab-content">
-                    <div class="tab-pane active" id="actionBefore">
-                        <div class="row" style="margin-top:5px;">
-                            <div class="methodselect-Before">
-                                <span class="a_tit lang" as="calltype"></span>
-                                <select id="ddlActionMethodTypeBefore" class="form-control actionmethodoptions-Before" style="width:160px;">
-                                    <option value="None" selected class="lang" as="optiondefault"></option>
-                                    <option value="LocalService" class="lang" as="localservice"></option>
-                                    <option value="CSharpLibrary" class="lang" as="csharplibrary"></option>
-                                    <option value="WebApi" class="lang" as="webapi"></option>
-                                    <option value="SQL" class="lang" as="sqlcommand"></option>
-                                    <option value="StoreProcedure" class="lang" as="storeprocedure"></option>
-                                    <option value="Python" class="lang" as="pythonscript"></option>
-                                </select>
-                            </div>
-                            <div class="methoditemhideme process process-Before" style="display:none;">
-                                <span class="a_tit lang" as="processinfo"></span>
-                                <span>
-                                    <input type="text" id="txtActionArgumentsBefore" class="form-control" style="width:340px;" placeholder="varA, varB" />
-                                </span>
-                            </div>
-                            <div class="methoditemhideme webapi webapi-Before" id="divWebApiMethodBefore" style="display:none;">
-                                <span class="a_tit lang" as="webapimethodtype"></span>
-                                <select id="ddlWebApiMethodBefore" class="form-control" style="width:160px;">
-                                    <option value="HttpGet">HttpGet</option>
-                                    <option value="HttpPost">HttpPost</option>
-                                    <option value="HttpPut">HttpPut</option>
-                                    <option value="HttpDelete">HttpDelete</option>
-                                </select>
-                            </div>
-                            <div class="methoditemhideme argument argument-Before" style="display:none;">
-                                <span class="a_tit lang" as="argumentslist"></span>
-                                <span>
-                                    <input type="text" id="txtActionArgumentsBefore" class="form-control" style="width:340px;" placeholder="varA, varB" />
-                                </span>
-                            </div>
-                            <div class="methoditemhideme assembly assembly-Before" id="divCSharplibrarySettingBefore" style="display:none;">
-                                <p>
-                                    <span class="a_tit lang" as="assemblyfullname"></span>
-                                    <span><input type="text" id="txtAssemblyFullNameBefore" class="form-control" style="width:340px;" /></span>
-                                </p>
-                                <p>
-                                    <span class="a_tit lang" as="typefullname"></span>
-                                    <span><input type="text" id="txtTypeFullNameBefore" class="form-control" style="width:340px;" /></span>
-                                </p>
-                                <p>
-                                    <span class="a_tit lang" as="methodname"></span>
-                                    <span><input type="text" id="txtMethodNameBefore" class="form-control" style="width:340px;" /></span>
-                                </p>
-                            </div>
-                            <div class="methoditemhideme expression expression-Before" style="display:none;">
-                                <span class="a_tit lang" as="expression"></span>
-                                <span>
-                                    <input type="text" id="txtActionExpressionBefore" class="form-control" style="width:340px;" />
-                                </span>
-                            </div>
-                            <div class="methoditemhideme codetext codetext-Before" style="display:none;">
-                                <span class="a_tit lang" as="codetext"></span>
-                                <span>
-                                    <textarea rows="3" id="txtCodeTextBefore" style="width:340px;height:200px;"></textarea>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="actionAfter">
-                        <div class="row" style="margin-top:5px;">
-                            <div class="methodselect-After">
-                                <span class="a_tit lang" as="calltype"></span>
-                                <select id="ddlActionMethodTypeAfter" class="form-control actionmethodoptions-After" style="width:160px;">
-                                    <option value="None" selected class="lang" as="optiondefault"></option>
-                                    <option value="LocalService" class="lang" as="localservice"></option>
-                                    <option value="CSharpLibrary" class="lang" as="csharplibrary"></option>
-                                    <option value="WebApi" class="lang" as="webapi"></option>
-                                    <option value="SQL" class="lang" as="sqlcommand"></option>
-                                    <option value="StoreProcedure" class="lang" as="storeprocedure"></option>
-                                    <option value="Python" class="lang" as="pythonscript"></option>
-                                </select>
-                            </div>
-                            <div class="methoditemhideme webapi webapi-After" id="divWebApiMethodAfter" style="display:none;">
-                                <span class="a_tit lang" as="webapimethodtype"></span>
-                                <select id="ddlWebApiMethodAfter" class="form-control" style="width:160px;">
-                                    <option value="HttpGet">HttpGet</option>
-                                    <option value="HttpPost">HttpPost</option>
-                                    <option value="HttpPut">HttpPut</option>
-                                    <option value="HttpDelete">HttpDelete</option>
-                                </select>
-                            </div>
-                            <div class="methoditemhideme argument argument-After" style="display:none;">
-                                <span class="a_tit lang" as="argumentslist"></span>
-                                <span>
-                                    <input type="text" id="txtActionArgumentsAfter" class="form-control" style="width:340px;" placeholder="varA, varB" />
-                                </span>
-                            </div>
-                            <div class="methoditemhideme assembly assembly-After" id="divCSharplibrarySettingAfter" style="display:none;">
-                                <p>
-                                    <span class="a_tit lang" as="assemblyfullname"></span>
-                                    <span><input type="text" id="txtAssemblyFullNameAfter" class="form-control" style="width:340px;" /></span>
-                                </p>
-                                <p>
-                                    <span class="a_tit lang" as="typefullname"></span>
-                                    <span><input type="text" id="txtTypeFullNameAfter" class="form-control" style="width:340px;" /></span>
-                                </p>
-                                <p>
-                                    <span class="a_tit lang" as="methodname"></span>
-                                    <span><input type="text" id="txtMethodNameAfter" class="form-control" style="width:340px;" /></span>
-                                </p>
-                            </div>
-                            <div class="methoditemhideme expression exprssion-After" style="display:none;">
-                                <span class="a_tit lang" as="expression"></span>
-                                <span>
-                                    <input type="text" id="txtActionExpressionAfter" class="form-control" style="width:340px;" />
-                                </span>
-                            </div>
-                            <div class="methoditemhideme codetext codetext-After" style="display:none;">
-                                <span class="a_tit lang" as="codetext"></span>
-                                <span>
-                                    <textarea rows="3" id="txtCodeTextAfter" style="width:340px;height:200px;"></textarea>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-primary lang" as="sure" data-dismiss="modal" onclick="activityproperty.saveActivity();"></button>
@@ -263,11 +152,11 @@
         </div>
 
         <script type="text/javascript">
-        $(function () {
-            //load activity information
-            kresource.localize();
-            activityproperty.loadActivity();
-        });
+            $(function () {
+                //load activity information
+                kresource.localize();
+                activityproperty.loadActivity();
+            });
         </script>
 </body>
 </html>
