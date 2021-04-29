@@ -97,26 +97,34 @@ namespace Slickflow.Engine.Business.Manager
             int activityInstanceID,
             IDbTransaction trans)
         {
-            string sql = @"SELECT
-                            * 
-                         FROM WfTasks 
-                         WHERE ActivityInstanceID=@activityInstanceID
-                            AND ProcessInstanceID=@processInstanceID
-                        ";
-            var list = Repository.Query<TaskEntity>(conn,
-                sql,
-                new
-                {
-                    processInstanceID = processInstanceID,
-                    activityInstanceID = activityInstanceID
+            TaskEntity task = null;
+            //string sql = @"SELECT
+            //                * 
+            //             FROM WfTasks 
+            //             WHERE ActivityInstanceID=@activityInstanceID
+            //                AND ProcessInstanceID=@processInstanceID
+            //            ";
+            //var list = Repository.Query<TaskEntity>(conn,
+            //    sql,
+            //    new
+            //    {
+            //        processInstanceID = processInstanceID,
+            //        activityInstanceID = activityInstanceID
 
-                },
-                trans).ToList();
-            if (list != null && list.Count() > 0)
+            //    },
+            //    trans).ToList();
+            var sqlQuery = (from t in Repository.GetAll<TaskEntity>(conn, trans)
+                            where t.ActivityInstanceID == activityInstanceID
+                                && t.ProcessInstanceID == processInstanceID
+                            select t
+                            );
+            var list = sqlQuery.ToList<TaskEntity>();
+
+            if (list.Count() > 0)
             {
-                return list[0];
+                task = list[0];
             }
-            return null;
+            return task;
         }
 
         /// <summary>
@@ -128,29 +136,11 @@ namespace Slickflow.Engine.Business.Manager
         internal TaskViewEntity GetTaskViewByActivity(int processInstanceID,
             int activityInstanceID)
         {
-            string sql = @"SELECT
-                            * 
-                         FROM vwWfActivityInstanceTasks 
-                         WHERE ActivityInstanceID=@activityInstanceID
-                            AND ProcessInstanceID=@processInstanceID
-                        ";
-            using (var session = SessionFactory.CreateSession())
+            using (IDbSession session = SessionFactory.CreateSession())
             {
-                var list = Repository.Query<TaskViewEntity>(session.Connection,
-                sql,
-                new
-                {
-                    processInstanceID = processInstanceID,
-                    activityInstanceID = activityInstanceID
-
-                },
-                session.Transaction).ToList();
-                if (list != null && list.Count() > 0)
-                {
-                    return list[0];
-                }
-                return null;
-            };
+                var taskView = GetTaskViewByActivity(session.Connection, processInstanceID, activityInstanceID, session.Transaction);
+                return taskView;
+            }
         }
 
         /// <summary>
@@ -166,25 +156,32 @@ namespace Slickflow.Engine.Business.Manager
             int activityInstanceID,
             IDbTransaction trans)
         {
-            string sql = @"SELECT
-                            * 
-                         FROM vwWfActivityInstanceTasks 
-                         WHERE ActivityInstanceID=@activityInstanceID
-                            AND ProcessInstanceID=@processInstanceID
-                        ";
-            var list = Repository.Query<TaskViewEntity>(conn,
-                sql,
-                new
-                {
-                    processInstanceID = processInstanceID,
-                    activityInstanceID = activityInstanceID
-                },
-                trans).ToList();
-            if (list != null && list.Count() > 0)
+            TaskViewEntity taskView = null;
+            //string sql = @"SELECT
+            //                * 
+            //             FROM vwWfActivityInstanceTasks 
+            //             WHERE ActivityInstanceID=@activityInstanceID
+            //                AND ProcessInstanceID=@processInstanceID
+            //            ";
+
+            //var list = Repository.Query<TaskViewEntity>(sql,
+            //new
+            //{
+            //    processInstanceID = processInstanceID,
+            //    activityInstanceID = activityInstanceID
+
+            //}).ToList();
+            var sqlQuery = (from tv in Repository.GetAll<TaskViewEntity>(conn, trans)
+                            where tv.ActivityInstanceID == activityInstanceID
+                                && tv.ProcessInstanceID == processInstanceID
+                            select tv
+                            );
+            var list = sqlQuery.ToList<TaskViewEntity>();
+            if (list.Count() > 0)
             {
-                return list[0];
+                taskView = list[0];
             }
-            return null;
+            return taskView;
         }
 
         /// <summary>
@@ -201,7 +198,7 @@ namespace Slickflow.Engine.Business.Manager
             var aim = new ActivityInstanceManager();
             var activityInstance = aim.GetById(task.ActivityInstanceID);
 
-            if (activityInstance.MIHostActivityInstanceID != null)
+            if (aim.IsMultipleInstanceChildren(activityInstance) == true)
             {
                 //多实例会签和加签处理
                 //取出会签主节点实例数据
@@ -453,22 +450,32 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns>任务视图</returns>
         internal TaskViewEntity GetFirstRunningTask(int activityInstanceID)
         {
-            string sql = @"SELECT
-                            * 
-                         FROM vwWfActivityInstanceTasks 
-                         WHERE ProcessState=2 
-                            AND ActivityInstanceID=@activityInstanceID 
-                            AND (ActivityType=4 OR WorkItemType=1)
-                            AND (ActivityState=1 OR ActivityState=2)
-                            AND (TaskState=1 OR TaskState=2)
-                            ORDER BY TaskState DESC
-                        ";
-            var list = Repository.Query<TaskViewEntity>(sql,
-                new
-                {
-                    activityInstanceID = activityInstanceID
-                }).ToList();
-            if (list != null && list.Count() > 0)
+            //string sql = @"SELECT
+            //                * 
+            //             FROM vwWfActivityInstanceTasks 
+            //             WHERE ProcessState=2 
+            //                AND ActivityInstanceID=@activityInstanceID 
+            //                AND (ActivityType=4 OR WorkItemType=1)
+            //                AND (ActivityState=1 OR ActivityState=2)
+            //                AND (TaskState=1 OR TaskState=2)
+            //                ORDER BY TaskState DESC
+            //            ";
+            //var list = Repository.Query<TaskViewEntity>(sql,
+            //    new
+            //    {
+            //        activityInstanceID = activityInstanceID
+            //    }).ToList();
+            var sqlQuery = (from tv in Repository.GetAll<TaskViewEntity>()
+                            where tv.ProcessState == 2
+                                && tv.ActivityInstanceID == activityInstanceID
+                                && (tv.ActivityType == 4 || tv.WorkItemType == 1)
+                                && (tv.ActivityState == 1 || tv.ActivityState == 2)
+                                && (tv.TaskState == 1 || tv.TaskState == 2)
+                            select tv
+                            );
+            var list = sqlQuery.OrderByDescending(tv => tv.TaskState).ToList<TaskViewEntity>();
+
+            if (list.Count() > 0)
             {
                 return list[0];
             }
@@ -505,7 +512,7 @@ namespace Slickflow.Engine.Business.Manager
             //                  WHERE ProcessState=2 
             //                     AND (ActivityType=4 OR WorkItemType=1)
             //                     AND ActivityState=@activityState
-            //AND TaskState<>32";
+            //                     AND TaskState<>32";
             allRowsCount = 0;
             var sqlQuery = (from vw in Repository.GetAll<TaskViewEntity>()
                             where vw.ProcessState == 2
@@ -519,7 +526,7 @@ namespace Slickflow.Engine.Business.Manager
             if (!string.IsNullOrEmpty(query.UserID)) sqlQuery = sqlQuery.Where(e => e.AssignedToUserID == query.UserID);
             if (!string.IsNullOrEmpty(query.EndedByUserID)) sqlQuery = sqlQuery.Where(e => e.EndedByUserID == query.EndedByUserID);
             if (!string.IsNullOrEmpty(query.AppName)) sqlQuery = sqlQuery.Where(e => e.AppName.Contains(query.AppName));
-            var list = sqlQuery.Take(100).ToList();
+            var list = sqlQuery.OrderByDescending(vw=>vw.TaskID).Take(100).ToList();
             if (list != null) allRowsCount = list.Count();
             return list;
         }
@@ -603,16 +610,14 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="appInstanceID">App实例ID</param>
         /// <param name="processGUID">流程定义GUID</param>
         /// <param name="userID">用户Id</param>
-        /// <param name="taskID">任务ID</param>
         /// <returns>任务实体</returns>
         internal TaskViewEntity GetTaskOfMine(string appInstanceID, 
             string processGUID, 
-            string userID,
-            Nullable<int> taskID = null)
+            string userID)
         {
             using (var session = SessionFactory.CreateSession())
             {
-                return GetTaskOfMine(session.Connection, appInstanceID, processGUID, userID, taskID, session.Transaction);
+                return GetTaskOfMine(session.Connection, appInstanceID, processGUID, userID, session.Transaction);
             }
         }
 
@@ -623,64 +628,54 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="appInstanceID">App实例ID</param>
         /// <param name="processGUID">流程定义GUID</param>
         /// <param name="userID">用户Id</param>
-        /// <param name="taskID">任务ID</param>
         /// <param name="trans">事务</param>
         /// <returns>任务实体</returns>
         internal TaskViewEntity GetTaskOfMine(IDbConnection conn,
             string appInstanceID,
             string processGUID,
             string userID,
-            Nullable<int> taskID,
             IDbTransaction trans)
         {
-            TaskViewEntity taskView = null;
-            if (taskID != null)
+            //processState:2 -running 流程处于运行状态
+            //activityType:4 -表示“任务”类型的节点
+            //activityState: 1-ready（准备）, 2-running（）运行；
+            //2015.09.10 besley
+            //将ActivityType 修改为 WorkItemType，以处理多类型的任务节点，包括普通任务，多实例，子流程节点
+            //string sql = @"SELECT 
+            //                TOP 1 * 
+            //           FROM vwWfActivityInstanceTasks 
+            //           WHERE AppInstanceID=@appInstanceID 
+            //                AND ProcessGUID=@processGUID 
+            //                AND AssignedToUserID=@userID 
+            //                AND ProcessState=2 
+            //                AND (ActivityType=4 OR ActivityType=5 OR ActivityType=6 OR WorkItemType=1)
+            //                AND (ActivityState=1 OR ActivityState=2) 
+            //           ORDER BY TASKID DESC";
+            var taskList = Repository.GetAll<TaskViewEntity>(conn, trans).Where<TaskViewEntity>(e => e.AppInstanceID == appInstanceID
+                && e.ProcessGUID == processGUID
+                && e.AssignedToUserID == userID
+                && e.ProcessState == 2
+                && (e.ActivityType == 4 || e.ActivityType == 5 || e.ActivityType == 6 || e.WorkItemType == 1)
+                && (e.ActivityState == 1 || e.ActivityState == 2))
+                .OrderByDescending(e => e.TaskID)
+                .ToList();
+
+            if (taskList.Count == 0)
             {
-                taskView = GetTaskView(conn, taskID.Value, trans);
+                var message = LocalizeHelper.GetEngineMessage("taskmanager.gettaskofmine.error");
+                throw new WorkflowException(
+                    string.Format("{0}，AppInstanceID: {1}", message, appInstanceID.ToString())
+                );
+            }
+            else if (taskList.Count > 1)
+            {
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("taskmanager.gettaskofmine.toomoretasks.error"));
             }
             else
             {
-                //processState:2 -running 流程处于运行状态
-                //activityType:4 -表示“任务”类型的节点
-                //activityState: 1-ready（准备）, 2-running（）运行；
-                //2015.09.10 besley
-                //将ActivityType 修改为 WorkItemType，以处理多类型的任务节点，包括普通任务，多实例，子流程节点
-                //string sql = @"SELECT 
-                //                TOP 1 * 
-                //           FROM vwWfActivityInstanceTasks 
-                //           WHERE AppInstanceID=@appInstanceID 
-                //                AND ProcessGUID=@processGUID 
-                //                AND AssignedToUserID=@userID 
-                //                AND ProcessState=2 
-                //                AND (ActivityType=4 OR ActivityType=5 OR ActivityType=6 OR WorkItemType=1)
-                //                AND (ActivityState=1 OR ActivityState=2) 
-                //           ORDER BY TASKID DESC";
-                var taskList = Repository.GetAll<TaskViewEntity>(conn, trans).Where<TaskViewEntity>(e => e.AppInstanceID == appInstanceID
-                    && e.ProcessGUID == processGUID
-                    && e.AssignedToUserID == userID
-                    && e.ProcessState == 2
-                    && (e.ActivityType == 4 || e.ActivityType == 5 || e.ActivityType == 6 || e.WorkItemType == 1)
-                    && (e.ActivityState == 1 || e.ActivityState == 2))
-                    .OrderByDescending(e => e.TaskID)
-                    .ToList();
-
-                if (taskList.Count == 0)
-                {
-                    var message = LocalizeHelper.GetEngineMessage("taskmanager.gettaskofmine.error");
-                    throw new WorkflowException(
-                        string.Format("{0}，AppInstanceID: {1}", message, appInstanceID.ToString())
-                    );
-                }
-                else if (taskList.Count > 1)
-                {
-                    throw new WorkflowException(LocalizeHelper.GetEngineMessage("taskmanager.gettaskofmine.toomoretasks.error"));
-                }
-                else
-                {
-                    taskView = taskList[0];
-                }
+                var taskView = taskList[0];
+                return taskView;
             }
-            return taskView;
         }
 
         /// <summary>
@@ -714,7 +709,7 @@ namespace Slickflow.Engine.Business.Manager
             }
             else
             {
-                taskView = GetTaskOfMine(conn, runner.AppInstanceID, runner.ProcessGUID, runner.UserID, null, trans);
+                taskView = GetTaskOfMine(conn, runner.AppInstanceID, runner.ProcessGUID, runner.UserID, trans);
             }
             return taskView;
         }
@@ -733,6 +728,24 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// 判断任务处于运行状态
+        /// </summary>
+        /// <param name="task">任务</param>
+        /// <returns>是否可运行</returns>
+        internal Boolean CheckTaskStateInRunningState(TaskViewEntity task)
+        {
+            var isRunning = true;
+            if (task.TaskState == (short)TaskStateEnum.Completed)
+            {
+                isRunning = false;
+            }
+            else if (task.ActivityState == (short)ActivityStateEnum.Completed){
+                isRunning = false;
+            }
+            return isRunning;
+        }
+
+        /// <summary>
         /// 获取待办任务(业务实例)
         /// </summary>
         /// <param name="runner">运行者</param>
@@ -742,21 +755,30 @@ namespace Slickflow.Engine.Business.Manager
             //processState:2 -running 流程处于运行状态
             //activityType:4 -表示“任务”类型的节点
             //activityState: 1-ready（准备）
-            string sql = @"SELECT 
-                                * 
-                           FROM vwWfActivityInstanceTasks 
-                           WHERE AppInstanceID=@appInstanceID 
-                                AND ProcessGUID=@processGUID 
-                                AND ProcessState=2 
-                                AND (ActivityType=4 OR WorkItemType=1)
-                                AND ActivityState=1";
-
-            var list = Repository.Query<TaskViewEntity>(sql,
-                new
-                {
-                    appInstanceID = runner.AppInstanceID,
-                    processGUID = runner.ProcessGUID
-                });
+            //string sql = @"SELECT 
+            //                    * 
+            //               FROM vwWfActivityInstanceTasks 
+            //               WHERE AppInstanceID=@appInstanceID 
+            //                    AND ProcessGUID=@processGUID 
+            //                    AND ProcessState=2 
+            //                    AND (ActivityType=4 OR WorkItemType=1)
+            //                    AND ActivityState=1
+            //               ORDER BY TaskID DESC";
+            //var list = Repository.Query<TaskViewEntity>(sql,
+            //    new
+            //    {
+            //        appInstanceID = runner.AppInstanceID,
+            //        processGUID = runner.ProcessGUID
+            //    });
+            var sqlQuery = (from tv in Repository.GetAll<TaskViewEntity>()
+                            where tv.AppInstanceID == runner.AppInstanceID
+                                && tv.ProcessGUID == runner.ProcessGUID
+                                && (tv.ActivityType == 4 || tv.WorkItemType == 1)
+                                && tv.ActivityState == 1
+                            orderby tv.TaskID descending
+                            select tv
+                            );
+            var list = sqlQuery.ToList<TaskViewEntity>();
             return list;
         }
 
@@ -770,16 +792,25 @@ namespace Slickflow.Engine.Business.Manager
             //activityType:4 -表示“任务”类型的节点
             //activityState: 1-ready（准备）, 2-running（运行）
             //isEMailSent: 0-邮件未发送, 1-发送成功, -1-发送失败
-            string sql = @"SELECT * 
-                         FROM vwWfActivityInstanceTasks 
-                         WHERE ProcessState=2 
-                            AND (ActivityType=4 OR WorkItemType=1)
-                            AND ActivityState=1
-                            AND IsEMailSent=0
-							AND TaskState<>32
-                        ";
-            var taskList = Repository.Query<TaskViewEntity>(sql).ToList<TaskViewEntity>();
-            return taskList;
+       //     string sql = @"SELECT * 
+       //                  FROM vwWfActivityInstanceTasks 
+       //                  WHERE ProcessState=2 
+       //                     AND (ActivityType=4 OR WorkItemType=1)
+       //                     AND ActivityState=1
+       //                     AND IsEMailSent=0
+							//AND TaskState<>32
+       //                 ";
+       //     var list = Repository.Query<TaskViewEntity>(sql).ToList<TaskViewEntity>();
+            var sqlQuery = (from tv in Repository.GetAll<TaskViewEntity>()
+                            where tv.ProcessState == 2
+                                && (tv.ActivityType == 4 || tv.WorkItemType == 1)
+                                && tv.ActivityState == 1
+                                && tv.IsEMailSent == 0
+                                && tv.TaskState != 32
+                            select tv
+                            );
+            var list = sqlQuery.ToList<TaskViewEntity>();
+            return list;
         }
         #endregion
 

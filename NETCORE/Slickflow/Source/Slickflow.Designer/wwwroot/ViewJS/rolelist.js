@@ -29,7 +29,7 @@ var rolelist = (function () {
 
     rolelist.getRoleList = function () {
         jshelper.ajaxPost("api/Wf2Xml/GetRoleAll", null, function (result) {
-        	if (result.Status == 1) {
+        	if (result.Status === 1) {
         		var divRoleGrid = document.querySelector('#myRoleGrid');
         		var gridOptions = {
         			columnDefs: [
@@ -62,11 +62,7 @@ var rolelist = (function () {
             activityproperty.syncActivityPerformers(pselectedParticipantType,
                 pselectedParticipantItem);
         } else {
-            $.msgBox({
-                title: "Designer / Role",
-                content: kresource.getItem('rolelistselectwarnmsg'),
-                type: "alert"
-            });
+            kmsgbox.warn(kresource.getItem('rolelistselectwarnmsg'));
         }
     }
     return rolelist;

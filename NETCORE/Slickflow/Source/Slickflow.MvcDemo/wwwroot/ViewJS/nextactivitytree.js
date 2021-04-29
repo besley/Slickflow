@@ -45,14 +45,14 @@
         nextactivitytree.mEntity = entity;
 
         var url = '';
-        if (step == "dispatch")
+        if (step === "dispatch")
             url = 'api/wf/GetFirstStepRoleUserTree';
         else
             url = 'api/wf/GetNextStepRoleUserTree';
 
         //get next step information
         jshelper.ajaxPost(url,
-            JSON.stringify(nextactivitytree.mEntity.WfAppRunner),
+            JSON.stringify(entity.WfAppRunner),
             function (result) {
                 if (result.Status === 1) {
                     //弹窗步骤人员办理弹窗
@@ -118,10 +118,10 @@
         var user = null;
         var userlist = [];
         $.each(selectedNodes, function (i, o) {
-            if (o.type == "activity") {
+            if (o.type === "activity") {
                 activityGUID = o.activityGUID;
                 activityName = o.activityName;
-            } else if (o.type == "user") {
+            } else if (o.type === "user") {
                 user = { UserID: o.uid, UserName: o.name };
                 userlist.push(user);
             }
@@ -137,11 +137,11 @@
             type: "confirm",
             buttons: [{ value: "Yes" }, { value: "Cancel" }],
             success: function (result) {
-                if (result == "Yes") {
+                if (result === "Yes") {
                     jshelper.ajaxPost("api/productorder/" + nextactivitytree.mstepName,
                         JSON.stringify(nextactivitytree.mEntity),
                         function (result) {
-                            if (result.Status == 1) {
+                            if (result.Status === 1) {
                                 $.msgBox({
                                     title: "DynFlow / GoNext",
                                     content: "流程已经流转到下一步！",

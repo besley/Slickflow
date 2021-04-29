@@ -1,0 +1,9 @@
+﻿{
+    "processmodelbuilder.GetPreviousVertexFromStack.error": "An error occurred when reading vertex stack info, stack type and error detail:",
+    "processmodelbuilder.SetTargetVertexLevel.error": "The count of links is not correct!",
+    "processmodelbuilder.GetBuilder.error": "The activity isn't exist! activity code:",
+    "processmodelbuilder.CreateProcess.error": "The process with the same process code and version is already exist!",
+    "processmodelbuilder.LoadProcess.error": "There isn't a process with this process code and version!",
+    "processxmlbuilder.Serialize.error": "The process diagram can't be null,please check its content firstly!",
+    "processtemplatefactory.CreateProcessByTemplateType.exception": "When creating new process, the processguid can't be null!"
+}

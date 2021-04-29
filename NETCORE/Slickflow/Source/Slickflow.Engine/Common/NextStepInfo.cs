@@ -12,6 +12,11 @@ namespace Slickflow.Engine.Common
     public class NextStepInfo
     {
         /// <summary>
+        /// 步骤消息描述
+        /// </summary>
+        public string Message { get; set; }
+
+        /// <summary>
         /// 下一步活动角色用户树
         /// </summary>
         public IList<NodeView> NextActivityRoleUserTree { get; set; }

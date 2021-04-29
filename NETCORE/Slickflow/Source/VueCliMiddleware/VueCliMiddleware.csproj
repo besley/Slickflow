@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Helpers for building single-page applications on ASP.NET MVC Core using Vue Cli.</Description>
+    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+
+    <Title>VueCliMiddleware</Title>
+    <VersionPrefix>5.0.0</VersionPrefix>
+    <VersionSuffix></VersionSuffix>
+    <LangVersion>Latest</LangVersion>
+    <Authors>EEParker</Authors>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RepositoryUrl>https://github.com/EEParker/aspnetcore-vueclimiddleware.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/EEParker/aspnetcore-vueclimiddleware.git</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+  <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+</PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="[5.0.1,6)" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="[5.0.0,6)" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="[3.1.0,4.0)" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="[3.1.0,4.0)" />
+  </ItemGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+</Project>

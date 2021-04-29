@@ -1,5 +1,6 @@
 ﻿{
     "en": "英语",
+    "es": "西班牙",
     "zh": "中文",
 
     "new": "新建",
@@ -21,6 +22,7 @@
     "codestudio": "代码建模",
     "modeling": "流程建模",
     "simutest": "模拟测试",
+    "adminboard": "管理面板",
     "sure": "确定",
     "delete": "删除",
     "cancel": "取消",
@@ -31,6 +33,11 @@
     "run": "执行",
     "workfloweditorstartuperrormsg": "图形设计器启动异常:",
     "explorernotsupportmsg": "不支持当前版本的浏览器，请使用更新版本的浏览器!",
+
+    "error": "错误",
+    "warning": "提醒",
+    "info": "信息",
+    "confirmation": "确认",
 
     "rolecode": "角色代码",
     "rolename": "角色名称",
@@ -88,6 +95,7 @@
     "t-complex": "复杂流程图",
     "processsavewarnmsg": "请输入流程基本信息:流程名称代码和版本!",
     "processsavenotuniquewarnmsg": "流程名称或代码有重复记录已经存在!",
+    "processcheckfileexisterrormsg": "流程文件重复记录检查发生错误:",
     "processupgrademsg": "确实要将当前流程升级吗?",
     "processupgradeerrormsg": "流程升级操作失败!",
     "processdeletemsg": "确实要删除流程定义记录吗?",
@@ -154,6 +162,7 @@
     "startuptimer": "定时启动",
     "enddelay": "超时结束",
     "action": "外部事件",
+    "service": "自动服务",
 
     "gatewaytype": "网关类型",
     "split": "分支",
@@ -162,6 +171,7 @@
     "andsplit": "与分支(AndSplit)",
     "orsplit": "或分支(OrSplit)",
     "xorsplit": "互斥或分支(XOrSplit)",
+    "approvalorsplit": "审批网关(ApprovalOrSplit)",
     "andsplitmi": "与分支多实例(AndSplitMI)",
     "andjoin": "与合并(AndJoin)",
     "orjoin": "或合并(OrJoin)",
@@ -169,8 +179,13 @@
     "eorjoin": "增强或合并(EOrJoin)",
     "andjoinmi": "与合并多实例(AndJoinMI)",
     "passtype": "通过类型",
+    "defaultbranch": "缺省分支",
+    "defaultbranchremark": "当其它分支不满足时，选择此分支流转",
     "branchcount": "分支数目(Tokens)",
     "branchforced": "强制分支(Forced)",
+    "approvaloptions": "审批选项",
+    "approvalofagreed": "同意",
+    "approvalofrefused": "拒绝",
     "gatewaysavewarnmsg": "请重新选择分支合并类型!",
     "gatewaydirectionsavewarnmsg": "请重新选择分支合并的子类型!",
 
@@ -187,9 +202,11 @@
 
     "subprocessguid": "子流程GUID",
     "subprocessname": "子流程名称",
+    "subfixed": "固定",
+    "subdynamic": "动态",
+    "subvar": "变量标识",
     "subprocessconfirmmsg": "请确认要将当前选中记录设置为子流程吗?!",
     "subprocessdblclick": "提示: 请双击流程记录用于选择子流程！",
-    "message": "消息",
     "topic": "主题",
     "pageurl": "页面地址",
     "overdue": "超时时限",

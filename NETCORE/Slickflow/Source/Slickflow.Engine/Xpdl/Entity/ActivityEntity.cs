@@ -128,6 +128,11 @@ namespace Slickflow.Engine.Xpdl.Entity
         public List<ActionEntity> ActionList { get; set; }
 
         /// <summary>
+        /// 服务列表
+        /// </summary>
+        public List<ServiceEntity> ServiceList { get; set; }
+
+        /// <summary>
         /// 边界列表
         /// </summary>
         public List<BoundaryEntity> BoundaryList { get; set; }

@@ -14,14 +14,16 @@ namespace Slickflow.Engine.Xpdl.Schedule
         /// </summary>
         /// <param name="processModel">流程模型</param>
         /// <param name="splitJoinType">分支合并类型</param>
+        /// <param name="taskID">任务ID</param>
         /// <returns>下一步调度类</returns>
         internal static NextActivityScheduleBase CreateActivitySchedule(IProcessModel processModel,
-            GatewaySplitJoinTypeEnum splitJoinType)
+            GatewaySplitJoinTypeEnum splitJoinType,
+            Nullable<int> taskID = null)
         {
             NextActivityScheduleBase activitySchedule = null;
             if (splitJoinType == GatewaySplitJoinTypeEnum.Split)
             {
-                activitySchedule = new NextActivityScheduleSplit(processModel);
+                activitySchedule = new NextActivityScheduleSplit(processModel, taskID);
             }
             else if (splitJoinType == GatewaySplitJoinTypeEnum.Join)
             {

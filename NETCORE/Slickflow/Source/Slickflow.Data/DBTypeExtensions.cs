@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 //using Oracle.ManagedDataAccess.Client;
 //using MySql.Data.MySqlClient;
+//using Npgsql;
 
 namespace Slickflow.Data
 {
@@ -31,9 +32,14 @@ namespace Slickflow.Data
         MYSQL = 3,
 
         /// <summary>
+        /// Postgrel
+        /// </summary>
+        PGSQL = 4,
+
+        /// <summary>
         /// KINGBASE
         /// </summary>
-        KINGBASE = 4
+        KINGBASE = 5
     }
     #endregion
 
@@ -83,6 +89,8 @@ namespace Slickflow.Data
             //SetDBType(DBTypeEnum.ORACLE);
 
             //SetDBType(DBTypeEnum.MYSQL);
+
+            //SetDBType(DBTypeEnum.PGSQL);
         }
 
         /// <summary>
@@ -105,11 +113,15 @@ namespace Slickflow.Data
             }
             else if (DBTypeExtenstions.DBType == DBTypeEnum.MYSQL)
             {
-                ///conn = new MySqlConnection(ConnectionString);
+                //conn = new MySqlConnection(ConnectionString);
             }
             else if (DBTypeExtenstions.DBType == DBTypeEnum.KINGBASE)
             {
                 //conn = new KingbaseConnection(ConnectionString);
+            }
+            else if (DBTypeExtenstions.DBType == DBTypeEnum.PGSQL)
+            {
+                //conn = new NpgsqlConnection(ConnectionString);
             }
             return conn;
         }
@@ -149,6 +161,11 @@ namespace Slickflow.Data
             {
                 //MySQL 数据库
                 DapperExtensions.DapperExtensions.SqlDialect = new DapperExtensions.Sql.MySqlDialect();
+            }
+            else if (type == DBTypeEnum.PGSQL)
+            {
+                //PgSQL 数据库
+                DapperExtensions.DapperExtensions.SqlDialect = new DapperExtensions.Sql.PostgreSqlDialect();
             }
             else if (type == DBTypeEnum.KINGBASE)
             {

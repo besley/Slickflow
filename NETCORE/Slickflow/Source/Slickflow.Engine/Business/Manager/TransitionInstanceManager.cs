@@ -184,24 +184,33 @@ namespace Slickflow.Engine.Business.Manager
             //2015.09.11 besley
             //需考虑后期节点类型增加目前支持TaskNode, SubProcessNode, MultipleInstanceNode
             //以上都是WorkItemType为1类型，保留ToActivityType是为了版本兼容，后期版本去掉ToActivity类型的判断。
-            var sql = @"SELECT 
-                            T.* 
-                        FROM WfTransitionInstance T
-                        INNER JOIN WfActivityInstance A
-                            ON T.ToActivityInstanceID = A.ID
-                        WHERE T.AppInstanceID=@appInstanceID 
-                            AND T.ProcessGUID=@processGUID 
-                            AND (T.ToActivityType=4 OR T.ToActivityType=5 OR T.ToActivityType=6 OR A.WorkItemType=1)          
-                        ORDER BY T.CreatedDateTime DESC";
+            //var sql = @"SELECT 
+            //                T.* 
+            //            FROM WfTransitionInstance T
+            //            INNER JOIN WfActivityInstance A
+            //                ON T.ToActivityInstanceID = A.ID
+            //            WHERE T.AppInstanceID=@appInstanceID 
+            //                AND T.ProcessGUID=@processGUID 
+            //                AND (T.ToActivityType=4 OR T.ToActivityType=5 OR T.ToActivityType=6 OR A.WorkItemType=1)          
+            //            ORDER BY T.CreatedDateTime DESC";
 
-            var transitionList = Repository.Query<TransitionInstanceEntity>(sql,
-                new
-                {
-                    appInstanceID = appInstanceID,
-                    processGUID = processGUID
-                });
-
-            return transitionList;
+            //var transitionList = Repository.Query<TransitionInstanceEntity>(sql,
+            //    new
+            //    {
+            //        appInstanceID = appInstanceID,
+            //        processGUID = processGUID
+            //    });
+            //return transitionList;
+            var sqlQuery = (from t in Repository.GetAll<TransitionInstanceEntity>()
+                            join a in Repository.GetAll<ActivityInstanceEntity>()
+                                on t.ToActivityInstanceID equals a.ID 
+                            where t.AppInstanceID == appInstanceID
+                                && t.ProcessGUID == processGUID
+                                && (t.ToActivityType == 4 || t.ToActivityType == 5 || t.ToActivityType == 6 || a.WorkItemType == 1)
+                            select t
+                            );
+            var list = sqlQuery.OrderByDescending(t => t.CreatedDateTime).ToList<TransitionInstanceEntity>();
+            return list;
         }
 
         /// <summary>
@@ -215,21 +224,29 @@ namespace Slickflow.Engine.Business.Manager
             String processGUID,
             ActivityTypeEnum toActivityType)
         {
-            var sql = @"SELECT * FROM WfTransitionInstance 
-                        WHERE AppInstanceID=@appInstanceID 
-                            AND ProcessGUID=@processGUID 
-                            AND ToActivityType=@toActivityType 
-                        ORDER BY CreatedDateTime DESC";
+            //var sql = @"SELECT * FROM WfTransitionInstance 
+            //            WHERE AppInstanceID=@appInstanceID 
+            //                AND ProcessGUID=@processGUID 
+            //                AND ToActivityType=@toActivityType 
+            //            ORDER BY CreatedDateTime DESC";
 
-            var transitionList = Repository.Query<TransitionInstanceEntity>(sql,
-                new
-                {
-                    appInstanceID = appInstanceID,
-                    processGUID = processGUID,
-                    toActivityType = toActivityType
-                });
+            //var transitionList = Repository.Query<TransitionInstanceEntity>(sql,
+            //    new
+            //    {
+            //        appInstanceID = appInstanceID,
+            //        processGUID = processGUID,
+            //        toActivityType = (int)toActivityType
+            //    });
+            //return transitionList;
 
-            return transitionList;
+            var sqlQuery = (from t in Repository.GetAll<TransitionInstanceEntity>()
+                            where t.AppInstanceID == appInstanceID
+                                && t.ProcessGUID == processGUID
+                                && t.ToActivityType == (short)toActivityType
+                            select t
+                            );
+            var list = sqlQuery.OrderByDescending(t => t.CreatedDateTime).ToList<TransitionInstanceEntity>();
+            return list;
         }
 
         /// <summary>
@@ -262,21 +279,29 @@ namespace Slickflow.Engine.Business.Manager
             string processGUID,
             int processInstanceID)
         {
-            var whereSql = @"SELECT * FROM WfTransitionInstance 
-                        WHERE AppInstanceID=@appInstanceID 
-                            AND ProcessGUID=@processGUID 
-                            AND ProcessInstanceID=@processInstanceID
-                        ORDER BY CreatedDateTime DESC";
+            //var whereSql = @"SELECT * FROM WfTransitionInstance 
+            //            WHERE AppInstanceID=@appInstanceID 
+            //                AND ProcessGUID=@processGUID 
+            //                AND ProcessInstanceID=@processInstanceID
+            //            ORDER BY CreatedDateTime DESC";
 
-            var transitionList = Repository.Query<TransitionInstanceEntity>(whereSql,
-                new
-                {
-                    appInstanceID = appInstanceID,
-                    processGUID = processGUID.ToString(),
-                    processInstanceID = processInstanceID
-                });
+            //var transitionList = Repository.Query<TransitionInstanceEntity>(whereSql,
+            //    new
+            //    {
+            //        appInstanceID = appInstanceID,
+            //        processGUID = processGUID.ToString(),
+            //        processInstanceID = processInstanceID
+            //    });
+            //return transitionList;
 
-            return transitionList;
+            var sqlQuery = (from t in Repository.GetAll<TransitionInstanceEntity>()
+                            where t.AppInstanceID == appInstanceID
+                                && t.ProcessGUID == processGUID
+                                && t.ProcessInstanceID == processInstanceID
+                            select t
+                            );
+            var list = sqlQuery.OrderByDescending(t => t.CreatedDateTime).ToList<TransitionInstanceEntity>();
+            return list;
         }
 
         /// <summary>
@@ -325,15 +350,20 @@ namespace Slickflow.Engine.Business.Manager
         private IList<dynamic> GetTargetActivityInstanceIDs(int fromActivityInstanceID,
             IDbSession session)
         {
-            var sql = @"SELECT * FROM WfTransitionInstance 
-                        WHERE FromActivityInstanceID=@fromActivityInstanceID";
+            //var sql = @"SELECT * FROM WfTransitionInstance 
+            //            WHERE FromActivityInstanceID=@fromActivityInstanceID";
 
-            var transitionList = Repository.Query<TransitionInstanceEntity>(session.Connection,
-                sql,
-                new
-                {
-                    fromActivityInstanceID = fromActivityInstanceID,
-                });
+            //var transitionList = Repository.Query<TransitionInstanceEntity>(session.Connection,
+            //    sql,
+            //    new
+            //    {
+            //        fromActivityInstanceID = fromActivityInstanceID,
+            //    });
+            var sqlQuery = (from t in Repository.GetAll<TransitionInstanceEntity>()
+                            where t.FromActivityInstanceID == fromActivityInstanceID
+                            select t
+                            );
+            var transitionList = sqlQuery.ToList<TransitionInstanceEntity>();
 
             List<dynamic> targetIDs = new List<dynamic>();
             foreach (var trans in transitionList)
@@ -373,48 +403,6 @@ namespace Slickflow.Engine.Business.Manager
                 }
             }
             return isConainedAndCompletedOK;
-        }
-
-        /// <summary>
-        /// 获取转移OUT出去的实例数目
-        /// </summary>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="fromActivityGUID">起始活动节点GUID</param>
-        /// <returns></returns>
-        internal int GetTransitionListCountOfOut(string appInstanceID, int processInstanceID, string fromActivityGUID)
-        {
-            int outCount = 0;
-            var sql = @"SELECT * FROM WfTransitionInstance 
-                        WHERE AppInstanceID=@appInstanceID
-                            AND ProcessInstanceID=@processInstanceID
-                            AND FromActivityGUID=@fromActivityGUID
-                            ORDER BY FromActivityInstanceID";
-
-            var transitionList = Repository.Query<TransitionInstanceEntity>(sql,
-                new
-                {
-                    appInstanceID = appInstanceID,
-                    processInstanceID = processInstanceID,
-                    fromActivityGUID = fromActivityGUID
-                }).ToList<TransitionInstanceEntity>();
-
-            if (transitionList.Count() > 0)
-            {
-                var fromActivityInstanceID = transitionList[0].FromActivityInstanceID;
-                var countSql = @"SELECT COUNT(1) FROM WfTransitionInstance 
-                         WHERE AppInstanceID=@appInstanceID
-                            AND ProcessInstanceID=@processInstanceID
-                            AND FromActivityInstanceID=@fromActivityInstanceID";
-
-                DynamicParameters parameters = new DynamicParameters();
-                parameters.Add("@appInstanceID", appInstanceID);
-                parameters.Add("@processInstanceID", processInstanceID);
-                parameters.Add("@fromActivityInstanceID", fromActivityInstanceID);
-
-                outCount = Repository.Count(countSql, parameters);
-            }
-            return outCount;
         }
         #endregion
     }

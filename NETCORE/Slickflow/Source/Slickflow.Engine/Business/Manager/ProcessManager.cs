@@ -54,6 +54,19 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// 根据ID获取流程实体
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="id">主键ID</param>
+        /// <param name="trans">交易</param>
+        /// <returns>流程实体</returns>
+        public ProcessEntity GetByID(IDbConnection conn, int id, IDbTransaction trans)
+        {
+            var entity = Repository.GetById<ProcessEntity>(conn, id, trans);
+            return entity;
+        }
+
+        /// <summary>
         /// 根据流程GUID和版本标识获取流程
         /// </summary>
         /// <param name="processGUID">流程GUID</param>
@@ -84,17 +97,23 @@ namespace Slickflow.Engine.Business.Manager
             IDbTransaction trans = null)
         {
             ProcessEntity entity = null;
-            var sql = @"SELECT 
-                            * 
-                        FROM WfProcess 
-                        WHERE ProcessGUID=@processGUID 
-                            AND VERSION=@version";
-            var list = Repository.Query<ProcessEntity>(conn, sql, 
-                new {
-                    processGUID = processGUID,
-                    version = version
-                },
-                trans).ToList<ProcessEntity>();
+            //var sql = @"SELECT 
+            //                * 
+            //            FROM WfProcess 
+            //            WHERE ProcessGUID=@processGUID 
+            //                AND VERSION=@version";
+            //var list = Repository.Query<ProcessEntity>(conn, sql, 
+            //    new {
+            //        processGUID = processGUID,
+            //        version = version
+            //    },
+            //    trans).ToList<ProcessEntity>();
+            var sqlQuery = (from p in Repository.GetAll<ProcessEntity>()
+                            where p.ProcessGUID == processGUID
+                                && p.Version == version
+                            select p
+                            );
+            var list = sqlQuery.ToList<ProcessEntity>();
 
             if (list.Count() == 1)
             {
@@ -119,18 +138,42 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns>流程实体</returns>
         public ProcessEntity GetVersionUsing(string processGUID)
         {
+            using (var session = SessionFactory.CreateSession())
+            {
+                return GetVersionUsing(session.Connection, processGUID, session.Transaction);
+            }
+        }
+
+        /// <summary>
+        /// 获取当前使用的流程版本
+        /// </summary>
+        /// <param name="conn">数据库连接</param>
+        /// <param name="processGUID">流程GUID</param>
+        /// <param name="trans">事务</param>
+        /// <returns>流程实体</returns>
+        public ProcessEntity GetVersionUsing(IDbConnection conn, string processGUID, IDbTransaction trans)
+        {
             ProcessEntity entity = null;
-            var sql = @"SELECT 
-                            * 
-                        FROM WfProcess 
-                        WHERE ProcessGUID=@processGUID 
-                            AND IsUsing=1 
-                        ORDER BY ID DESC";             //current using process definition record
-            var list = Repository.Query<ProcessEntity>(sql,
-                new
-                {
-                    processGUID = processGUID
-                }).ToList<ProcessEntity>();
+            //var sql = @"SELECT 
+            //                * 
+            //            FROM WfProcess 
+            //            WHERE ProcessGUID=@processGUID 
+            //                AND IsUsing=1 
+            //            ORDER BY ID DESC";             //current using process definition record
+            //var list = Repository.Query<ProcessEntity>(conn,
+            //    sql,
+            //    new
+            //    {
+            //        processGUID = processGUID
+            //    },
+            //    trans
+            //    ).ToList<ProcessEntity>();
+            var sqlQuery = (from p in Repository.GetAll<ProcessEntity>(conn, trans)
+                            where p.ProcessGUID == processGUID
+                                && p.IsUsing == 1
+                            select p
+                            );
+            var list = sqlQuery.ToList<ProcessEntity>();
 
             if (list.Count() == 1)
             {
@@ -155,14 +198,21 @@ namespace Slickflow.Engine.Business.Manager
         {
             ProcessEntity entity = null;
             if (string.IsNullOrEmpty(version)) version = "1";
-            var sql = @"SELECT 
-                            * 
-                        FROM WfProcess 
-                        WHERE ProcessName=@processName 
-                            AND VERSION=@version";
+            //var sql = @"SELECT 
+            //                * 
+            //            FROM WfProcess 
+            //            WHERE ProcessName=@processName 
+            //                AND VERSION=@version";
 
-            var list = Repository.Query<ProcessEntity>(sql, new { processName = processName, version = version })
-                            .ToList<ProcessEntity>();
+            //var list = Repository.Query<ProcessEntity>(sql, new { processName = processName, version = version })
+            //                .ToList<ProcessEntity>();
+            var sqlQuery = (from p in Repository.GetAll<ProcessEntity>()
+                            where p.ProcessName == processName
+                                && p.Version == version
+                            select p
+                            );
+            var list = sqlQuery.ToList<ProcessEntity>();
+
             if (list.Count() == 1)
             {
                 entity = list[0];
@@ -188,14 +238,21 @@ namespace Slickflow.Engine.Business.Manager
         {
             ProcessEntity entity = null;
             if (string.IsNullOrEmpty(version)) version = "1";
-            var sql = @"SELECT 
-                            * 
-                        FROM WfProcess 
-                        WHERE ProcessCode=@processCode
-                            AND VERSION=@version";
+            //var sql = @"SELECT 
+            //                * 
+            //            FROM WfProcess 
+            //            WHERE ProcessCode=@processCode
+            //                AND VERSION=@version";
 
-            var list = Repository.Query<ProcessEntity>(sql, new { processCode = processCode, version = version })
-                            .ToList<ProcessEntity>();
+            //var list = Repository.Query<ProcessEntity>(sql, new { processCode = processCode, version = version })
+            //                .ToList<ProcessEntity>();
+            var sqlQuery = (from p in Repository.GetAll<ProcessEntity>()
+                            where p.ProcessCode == processCode
+                                && p.Version == version
+                            select p
+                            );
+            var list = sqlQuery.ToList<ProcessEntity>();
+
             if (list.Count() == 1)
             {
                 entity = list[0];
@@ -220,24 +277,27 @@ namespace Slickflow.Engine.Business.Manager
         internal ProcessEntity GetByVersionInternal(string processGUID, string version)
         {
             ProcessEntity entity = null;
-            string sql = @"SELECT 
-                            * 
-                        FROM WfProcess 
-                        WHERE ProcessGUID=@processGUID 
-                            AND VERSION=@version";
+            //string sql = @"SELECT 
+            //                * 
+            //            FROM WfProcess 
+            //            WHERE ProcessGUID=@processGUID 
+            //                AND VERSION=@version";
+            //var list = Repository.Query<ProcessEntity>(sql, new { processGUID = processGUID, version = version })
+            //                .ToList<ProcessEntity>();
+            var sqlQuery = (from p in Repository.GetAll<ProcessEntity>()
+                            where p.ProcessGUID == processGUID
+                                && p.Version == version
+                            select p
+                );
+            var list = sqlQuery.ToList<ProcessEntity>();
 
-            var list = Repository.Query<ProcessEntity>(sql, new { processGUID = processGUID, version = version })
-                            .ToList<ProcessEntity>();
-            if (list != null)
+            if (list.Count() > 1)
             {
-                if (list.Count() > 1)
-                {
-                    throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.getbyversioninternal.error"));
-                }
-                else if(list.Count() == 1)
-                {
-                    entity = list[0];
-                }
+                throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.getbyversioninternal.error"));
+            }
+            else if (list.Count() == 1)
+            {
+                entity = list[0];
             }
             return entity;
         }
@@ -249,27 +309,61 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns>流程实体</returns>
         public ProcessEntity GetByMessage(string topic)
         {
-            //StartType:2  --- message
-            var sql = @"SELECT 
-                            * 
-                        FROM WfProcess 
-                        WHERE StartType=2           
-                            AND StartExpression=@startExpression";
-
             ProcessEntity entity = null;
-            var list = Repository.Query<ProcessEntity>(sql, new { startExpression = topic})
-                            .ToList<ProcessEntity>();
+            //StartType:2  --- message
+            //var sql = @"SELECT 
+            //                * 
+            //            FROM WfProcess 
+            //            WHERE StartType=2           
+            //                AND StartExpression=@startExpression";
+            //var list = Repository.Query<ProcessEntity>(sql, new { startExpression = topic})
+            //                .ToList<ProcessEntity>();
+            var sqlQuery = (from p in Repository.GetAll<ProcessEntity>()
+                            where p.StartType == 2
+                                && p.StartExpression == topic
+                            select p
+                            );
+            var list = sqlQuery.ToList<ProcessEntity>();
+            if (list.Count() > 1)
+            {
+                throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.getbymessage.error"));
+            }
+            else if (list.Count() == 1)
+            {
+                entity = list[0];
+            }
+            return entity;
+        }
+
+        /// <summary>
+        /// 根据AppType获取流程记录
+        /// </summary>
+        /// <param name="appType"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        public ProcessEntity GetSingleByAppType(string appType, 
+            IDbSession session)
+        {
+            ProcessEntity entity = null;
+            //var sql = @"SELECT 
+            //                * 
+            //            FROM WfProcess 
+            //            WHERE AppType=@appType";
+            //var list = Repository.Query<ProcessEntity>(session.Connection, sql, 
+            //    new { appType = appType }, session.Transaction).ToList<ProcessEntity>();
+            var sqlQuery = (from p in Repository.GetAll<ProcessEntity>(session.Connection, session.Transaction)
+                            where p.AppType == appType
+                            select p
+                            );
+            var list = sqlQuery.ToList<ProcessEntity>();
+
             if (list.Count() == 1)
             {
                 entity = list[0];
             }
-            else if (list.Count() == 0)
-            {
-                ;
-            }
             else
             {
-                throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.getbymessage.error"));
+                throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.getsinglebyapptype.error"));
             }
             return entity;
         }
@@ -290,25 +384,45 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns></returns>
         public List<ProcessEntity> GetListSimple()
         {
-            var sql = @"SELECT 
-                        ID, 
-                        ProcessGUID, 
-                        ProcessName,
-                        ProcessCode,
-                        Version,
-                        IsUsing,
-                        AppType,
-                        PackageType,
-                        PackageProcessID,
-                        PageUrl,
-                        StartType,
-                        StartExpression,
-                        EndType,
-                        EndExpression,
-                        CreatedDateTime
-                    FROM WfProcess
-                    ORDER BY ID DESC";
-            var list = Repository.Query<ProcessEntity>(sql).ToList();
+            //var sql = @"SELECT 
+            //            ID, 
+            //            ProcessGUID, 
+            //            ProcessName,
+            //            ProcessCode,
+            //            Version,
+            //            IsUsing,
+            //            AppType,
+            //            PackageType,
+            //            PackageProcessID,
+            //            PageUrl,
+            //            StartType,
+            //            StartExpression,
+            //            EndType,
+            //            EndExpression,
+            //            CreatedDateTime
+            //        FROM WfProcess
+            //        ORDER BY ID DESC";
+            //var list = Repository.Query<ProcessEntity>(sql).ToList();
+            var sqlQuery = (from p in Repository.GetAll<ProcessEntity>()
+                            select new ProcessEntity
+                            {
+                                ID = p.ID,
+                                ProcessGUID = p.ProcessGUID,
+                                ProcessName = p.ProcessName,
+                                ProcessCode = p.ProcessCode,
+                                Version = p.Version,
+                                IsUsing = p.IsUsing,
+                                AppType = p.AppType,
+                                PackageType = p.PackageType,
+                                PackageProcessID = p.PackageProcessID,
+                                PageUrl = p.PageUrl,
+                                StartType = p.StartType,
+                                StartExpression = p.StartExpression,
+                                EndType = p.EndType,
+                                EndExpression = p.EndExpression,
+                                CreatedDateTime = p.CreatedDateTime
+                            });
+            var list = sqlQuery.OrderByDescending(p=>p.ID).ToList<ProcessEntity>();
             return list;
         }
         #endregion
@@ -379,6 +493,7 @@ namespace Slickflow.Engine.Business.Manager
                         sql, 
                         new { isUsing = entity.IsUsing, packageProcessID = entity.ID },
                         session.Transaction);
+
                 }
                 Repository.Update<ProcessEntity>(session.Connection, entity, session.Transaction);
 
@@ -418,11 +533,13 @@ namespace Slickflow.Engine.Business.Manager
             string version,
             IDbTransaction trans)
         {
-            string strSql = @"UPDATE WfProcess 
-                              SET IsUsing=0 
-                              WHERE  ProcessGUID=@processGUID";
-
-            Repository.Execute(conn, strSql, new { processGUID = processGUID }, trans);
+            //string strSql = @"UPDATE WfProcess 
+            //                  SET IsUsing=0 
+            //                  WHERE  ProcessGUID=@processGUID";
+            //Repository.Execute(conn, strSql, new { processGUID = processGUID }, trans);
+            var entity = GetByVersion(conn, processGUID, version, true, trans);
+            entity.IsUsing = 0;
+            Repository.Update<ProcessEntity>(conn, entity, trans);
         }
 
         /// <summary>
@@ -486,14 +603,20 @@ namespace Slickflow.Engine.Business.Manager
             IDbTransaction trans)
         {
             //升级泳道流程的使用状态信息
-            var selSql = @"SELECT * FROM WfProcess
-                        WHERE PackageType = 2
-                            AND PackageProcessID=@packageProcessID";
-            var entityList = Repository.Query<ProcessEntity>(conn,
-                selSql,
-                new { packageProcessID = originProcessID },
-                trans);
-            foreach (var pool in entityList)
+            //var selSql = @"SELECT * FROM WfProcess
+            //            WHERE PackageType = 2
+            //                AND PackageProcessID=@packageProcessID";
+            //var list = Repository.Query<ProcessEntity>(conn,
+            //    selSql,
+            //    new { packageProcessID = originProcessID },
+            //    trans);
+            var sqlQuery = (from p in Repository.GetAll<ProcessEntity>(conn, trans)
+                            where p.PackageType == 2
+                                && p.PackageProcessID == originProcessID
+                            select p
+                            );
+            var list = sqlQuery.ToList<ProcessEntity>();
+            foreach (var pool in list)
             {
                 pool.Version = newVersion;
                 pool.PackageProcessID = newProcessID;
@@ -613,8 +736,11 @@ namespace Slickflow.Engine.Business.Manager
             try
             {
                 session.BeginTrans();
-
-                entity.ProcessGUID = Guid.NewGuid().ToString();
+                if (string.IsNullOrEmpty(entity.ProcessGUID))
+                {
+                    entity.ProcessGUID = Guid.NewGuid().ToString();
+                }
+                
                 if (String.IsNullOrEmpty(entity.Version))
                 {
                     entity.Version = "1";     //default version value;
@@ -691,11 +817,12 @@ namespace Slickflow.Engine.Business.Manager
             {
                 session.BeginTrans();
 
-                var processEntity = GetByVersion(entity.ProcessGUID, entity.Version, false);
+                var processEntity = GetByVersion(session.Connection, entity.ProcessGUID, entity.Version, false, session.Transaction);
+                var processModel = ProcessModelFactory.Create(session.Connection, entity.ProcessGUID, entity.Version, session.Transaction);
                 if (processEntity != null)
                 {
                     processEntity.XmlContent = entity.XmlContent;
-                    SetProcessStartEndType(processEntity, entity.XmlContent);
+                    SetProcessStartEndType(processModel, processEntity, entity.XmlContent);
 
                     processEntity.LastUpdatedDateTime = DateTime.Now;
 
@@ -712,7 +839,7 @@ namespace Slickflow.Engine.Business.Manager
                     processEntity.IsUsing = entity.IsUsing;
                     processEntity.XmlContent = entity.XmlContent;
                     processEntity.CreatedDateTime = DateTime.Now;
-                    SetProcessStartEndType(processEntity, entity.XmlContent);
+                    SetProcessStartEndType(processModel, processEntity, entity.XmlContent);
 
                     //数据库存储
                     Repository.Insert<ProcessEntity>(session.Connection, processEntity, session.Transaction);
@@ -739,15 +866,15 @@ namespace Slickflow.Engine.Business.Manager
             }
         }
 
+
         /// <summary>
         /// 设置流程的启动类型
         /// </summary>
+        /// <param name="processModel">流程模型</param>
         /// <param name="entity">流程实体</param>
         /// <param name="xmlConent">XML内容</param>
-        private void SetProcessStartEndType(ProcessEntity entity, string xmlConent)
+        private void SetProcessStartEndType(IProcessModel processModel, ProcessEntity entity, string xmlConent)
         {
-            var processModel = ProcessModelFactory.Create(entity.ProcessGUID, entity.Version);
-
             //StartNode
             var startNode = processModel.GetActivityByType(xmlConent, entity.ProcessGUID, ActivityTypeEnum.StartNode);
             if (startNode != null)
@@ -784,19 +911,36 @@ namespace Slickflow.Engine.Business.Manager
         /// <summary>
         /// 或者主流程下的泳道流程列表
         /// </summary>
+        /// <param name="conn">链接</param>
         /// <param name="packageProcessID">主图形GUID</param>
+        /// <param name="trans">事务</param>
         /// <returns>流程实体列表</returns>
-        private List<ProcessEntity> GetPoolProcessList(int packageProcessID)
+        private List<ProcessEntity> GetPoolProcessList(IDbConnection conn, 
+            int packageProcessID, 
+            IDbTransaction trans)
         {
-            string sql = @"SELECT 
-                            ID, ProcessGUID, Version, ProcessName, ProcessCode
-                        FROM WfProcess
-                        WHERE PackageProcessID=@packageProcessID";
-            var list = Repository.Query<ProcessEntity>(sql,
-                new
-                {
-                    packageProcessID = packageProcessID
-                }).ToList();
+            //string sql = @"SELECT 
+            //                ID, ProcessGUID, Version, ProcessName, ProcessCode
+            //            FROM WfProcess
+            //            WHERE PackageProcessID=@packageProcessID";
+            //var list = Repository.Query<ProcessEntity>(conn, 
+            //    sql,
+            //    new
+            //    {
+            //        packageProcessID = packageProcessID
+            //    },
+            //    trans).ToList();
+            var sqlQuery = (from p in Repository.GetAll<ProcessEntity>(conn, trans)
+                            where p.PackageProcessID == packageProcessID
+                            select new ProcessEntity
+                            {
+                                ID = p.ID,
+                                ProcessGUID = p.ProcessGUID,
+                                Version = p.Version,
+                                ProcessName = p.ProcessName,
+                                ProcessCode = p.ProcessCode
+                            });
+            var list = sqlQuery.ToList<ProcessEntity>();
             return list;
         }
 
@@ -807,16 +951,32 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="packageProcessID">主流程ID</param>
         /// <param name="poolProcessIDs">泳道流程ID列表</param>
         /// <param name="trans">交易</param>
-        private void DeletePoolProcess(IDbConnection conn, int packageProcessID, List<int> poolProcessIDs, IDbTransaction trans)
+        private void DeletePoolProcess(IDbConnection conn, 
+            int packageProcessID, 
+            List<int> poolProcessIDs, 
+            IDbTransaction trans)
         {
-            string sql = @"DELETE FROM WfProcess
-                            WHERE PackageProcessID=@packageProcessID 
-                                AND ID in @ids";
-            Repository.Execute(conn, sql, 
-                new {
-                    packageProcessID = packageProcessID,
-                    ids = poolProcessIDs
-                }, trans);
+            //string sql = @"DELETE FROM WfProcess
+            //                WHERE PackageProcessID=@packageProcessID 
+            //                    AND ID in @ids";
+            //Repository.Execute(conn, sql,
+            //    new
+            //    {
+            //        packageProcessID = packageProcessID,
+            //        ids = poolProcessIDs
+            //    }, trans);
+
+            int[] pidsin = poolProcessIDs.ToArray();
+            var sqlQuery = (from p in Repository.GetAll<ProcessEntity>()
+                            where p.PackageProcessID == packageProcessID
+                                && pidsin.Contains(p.ID)
+                            select p
+                            );
+            var list = sqlQuery.ToList<ProcessEntity>();
+            foreach (var p in list)
+            {
+                Repository.Delete<ProcessEntity>(conn, p.ID, trans);
+            }
         }
 
         /// <summary>
@@ -827,32 +987,35 @@ namespace Slickflow.Engine.Business.Manager
         {
             var packageProcessClient = file.ProcessEntityList.Single(a=>a.PackageType.Value == (short)PackageTypeEnum.MainProcess);
             var poolProcessListClient = file.ProcessEntityList.Where(a => a.PackageType.Value == (short)PackageTypeEnum.PoolProcess).ToList();
-            var packageProcessDB = GetByVersion(packageProcessClient.ProcessGUID, packageProcessClient.Version);
-
+            
             var session = SessionFactory.CreateSession();
             try
             {
                 session.BeginTrans();
+                var packageProcessDB = GetByVersion(session.Connection, packageProcessClient.ProcessGUID, packageProcessClient.Version, 
+                    false, session.Transaction);
                 if (packageProcessDB == null)
                 {
                     //插入主流程，然后插入泳道流
                     var packageGUID = Guid.NewGuid().ToString();
                     packageProcessClient.XmlContent = file.XmlContent;
                     packageProcessClient.CreatedDateTime = System.DateTime.Now;
-                    SetProcessStartEndType(packageProcessClient, file.XmlContent);
+                    var processModelClient = ProcessModelFactory.Create(session.Connection, packageProcessClient.ProcessGUID, packageProcessClient.Version, session.Transaction);
+                    SetProcessStartEndType(processModelClient, packageProcessClient, file.XmlContent);
 
                     var newPackageProcessID = Insert(session.Connection, packageProcessClient, session.Transaction);
                     foreach (var pool in poolProcessListClient)
                     {
                         pool.PackageProcessID = newPackageProcessID;
                         pool.XmlContent = file.XmlContent;
-                        SetProcessStartEndType(pool, file.XmlContent);
+                        var processModelPool = ProcessModelFactory.Create(session.Connection, pool.ProcessGUID, pool.Version, session.Transaction);
+                        SetProcessStartEndType(processModelPool, pool, file.XmlContent);
                         Insert(session.Connection, pool, session.Transaction);
                     }
                 }
                 else
                 {
-                    var poolProcessListDataBase = GetPoolProcessList(packageProcessDB.ID);
+                    var poolProcessListDataBase = GetPoolProcessList(session.Connection, packageProcessDB.ID, session.Transaction);
                     List<int> poolProcessIDs = new List<int>();
                     foreach (var pool in poolProcessListDataBase)
                     {
@@ -890,12 +1053,13 @@ namespace Slickflow.Engine.Business.Manager
                     packageProcessDB.PackageType = (byte)PackageTypeEnum.MainProcess;
                     packageProcessDB.XmlContent = file.XmlContent;
                     packageProcessDB.LastUpdatedDateTime = System.DateTime.Now;
-                    SetProcessStartEndType(packageProcessDB, file.XmlContent);
+                    var processModelPackageDB = ProcessModelFactory.Create(session.Connection, packageProcessDB.ProcessGUID, packageProcessDB.Version, session.Transaction);
+                    SetProcessStartEndType(processModelPackageDB, packageProcessDB, file.XmlContent);
                     Update(session.Connection, packageProcessDB, session.Transaction);
 
                     foreach (var pool in poolProcessListClient)
                     {
-                        var child = GetByVersion(pool.ProcessGUID, pool.Version, false);
+                        var child = GetByVersion(session.Connection, pool.ProcessGUID, pool.Version, false, session.Transaction);
                         if (child == null)
                         {
                             //新增泳道流程
@@ -903,7 +1067,8 @@ namespace Slickflow.Engine.Business.Manager
                             pool.PackageProcessID = packageProcessDB.ID;
                             pool.XmlContent = file.XmlContent;
                             pool.CreatedDateTime = System.DateTime.Now;
-                            SetProcessStartEndType(pool, file.XmlContent);
+                            var processModelPoolA = ProcessModelFactory.Create(session.Connection, pool.ProcessGUID, pool.Version, session.Transaction);
+                            SetProcessStartEndType(processModelPoolA, pool, file.XmlContent);
                             Insert(session.Connection, pool, session.Transaction);
                         }
                         else
@@ -915,7 +1080,8 @@ namespace Slickflow.Engine.Business.Manager
                             child.PackageType = (byte)PackageTypeEnum.PoolProcess;
                             child.XmlContent = file.XmlContent;
                             child.LastUpdatedDateTime = System.DateTime.Now;
-                            SetProcessStartEndType(child, file.XmlContent);
+                            var processModelPoolChild = ProcessModelFactory.Create(session.Connection, child.ProcessGUID, child.Version, session.Transaction);
+                            SetProcessStartEndType(processModelPoolChild, child, file.XmlContent);
                             Update(session.Connection, child, session.Transaction);
                         }
                     }

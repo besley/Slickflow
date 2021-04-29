@@ -17,6 +17,7 @@ namespace Slickflow.Designer.Controllers.Mvc
         {
             ViewBag.AppInstanceID = Request.Query["AppInstanceID"];
             ViewBag.ProcessGUID = Request.Query["ProcessGUID"];
+            ViewBag.Version = Request.Query["Version"];
             return View();
         }
     }

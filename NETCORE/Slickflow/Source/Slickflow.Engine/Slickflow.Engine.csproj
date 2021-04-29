@@ -1,15 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Authors>Besley</Authors>
     <Company>Hangzhou, Ligong</Company>
     <Product>Slickflow.NET</Product>
-    <Copyright>@2014-2020</Copyright>
-    <AssemblyVersion>1.7.6.0</AssemblyVersion>
-    <FileVersion>1.7.6.0</FileVersion>
-    <Description>Open Source Workflow Engine in .NET Core2.1 Framework</Description>
-    <Version>1.7.6</Version>
+    <Copyright>@2014-2021</Copyright>
+    <AssemblyVersion>1.7.6.2</AssemblyVersion>
+    <FileVersion>1.7.6.2</FileVersion>
+    <Description>Open Source Workflow Engine based on .NET5</Description>
+    <Version>1.7.6.7</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -31,6 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj" />
     <ProjectReference Include="..\Slickflow.Module.Localize\Slickflow.Module.Localize.csproj" />
+    <ProjectReference Include="..\Slickflow.Module.Message\Slickflow.Module.Message.csproj" />
     <ProjectReference Include="..\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj" />
     <ProjectReference Include="..\Slickflow.Module\Slickflow.Module.csproj" />
   </ItemGroup>

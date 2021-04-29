@@ -18,6 +18,20 @@ namespace Slickflow.Engine.Core.Pattern
             string transitionGUID,
             ActivityEntity fromActivity,
             ActivityInstanceEntity fromActivityInstance,
+            ActivityEntity toActivity,
+            WfAppRunner runner,
+            IDbSession session);
+    }
+
+    /// <summary>
+    /// 网关接口
+    /// </summary>
+    internal interface ICompleteGatewayAutomaticlly
+    {
+        NodeAutoExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
+            string transitionGUID,
+            ActivityEntity fromActivity,
+            ActivityInstanceEntity fromActivityInstance,
             WfAppRunner runner,
             IDbSession session);
     }

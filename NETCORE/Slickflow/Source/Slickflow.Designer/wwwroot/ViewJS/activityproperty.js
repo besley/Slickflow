@@ -30,6 +30,7 @@ var activityproperty = (function () {
     myPageTabs["task"] = ["tabRole", "tabPage", "tabMyProperties", "tabAction", "tabTaskDelay"];
     myPageTabs["mi"] = ["tabMI", "tabRole", "tabPage", "tabMyProperties", "tabAction"];
     myPageTabs["sub"] = ["tabSub", "tabRole", "tabMyProperties", "tabAction"];
+    myPageTabs["service"] = ["tabService"];
     myPageTabs["gateway"] = ["tabGateway"];
     myPageTabs["start"] = ["tabAction"];
     myPageTabs["startCron"] = ["tabStartCron", "tabAction"];
@@ -59,12 +60,25 @@ var activityproperty = (function () {
         $("#ddlMergeType").prop("selectedIndex", -1);
         $("#ddlCompareType").prop("selectedIndex", -1);
 
+        //action related control
         $("#ddlActionMethodTypeBefore").on('change', function (e) {
             showMethodPanel(this.value, 'Before');
         });
 
         $("#ddlActionMethodTypeAfter").on('change', function (e) {
             showMethodPanel(this.value, 'After');
+        });
+
+        //service related control
+        $("#ddlServiceMethodType").on('change', function (e) {
+            $(".methoditemhideme").hide();
+            var fields = myActionPanel[this.value];
+
+            if (fields !== undefined) {
+                fields.forEach(function (item, i) {
+                    $("." + item).show();
+                })
+            }
         });
     }
 
@@ -84,7 +98,6 @@ var activityproperty = (function () {
 
         var activity = kmain.mxSelectedDomElement.ElementObject;
         showTabsByActivityType(activity);
-
         dispalyActivityProperty(activity);
     }
 
@@ -97,6 +110,8 @@ var activityproperty = (function () {
             tabs = myPageTabs["task"];
         } else if (type === kmodel.Config.NODE_TYPE_MULTIPLEINSTANCE) {
             tabs = myPageTabs["mi"];
+        } else if (type === kmodel.Config.NODE_TYPE_SERVICE) {
+            tabs = myPageTabs["service"];
         } else if (type === kmodel.Config.NODE_TYPE_GATEWAY) {
             tabs = myPageTabs["gateway"];
         } else if (type === kmodel.Config.NODE_TYPE_SUBPROCESS) {
@@ -141,9 +156,12 @@ var activityproperty = (function () {
 
     function dispalyActivityProperty(activity) {
         displayInfoCommon(activity);
+
         var type = activity.type;
         if (type === kmodel.Config.NODE_TYPE_TASK) {
             displayInfoTask(activity);
+        } else if (type === kmodel.Config.NODE_TYPE_SERVICE) {
+            activityproperty.loadServices(activity);
         } else if (type === kmodel.Config.NODE_TYPE_MULTIPLEINSTANCE) {
             displayInfoMI(activity);
         } else if (type === kmodel.Config.NODE_TYPE_GATEWAY) {
@@ -337,12 +355,8 @@ var activityproperty = (function () {
 				}
 			}
 
-			if (isExisted) {
-				$.msgBox({
-                    title: "Desinger / ActivityProperty",
-                    content: kresource.getItem('syncactivityperformerswarnmsg'),
-					type: "info"
-				});
+            if (isExisted) {
+                kmsgbox.info(kresource.getItem('syncactivityperformerswarnmsg'));
 			} else {
 				var performer = {
 					"id": participantAdded.id,
@@ -492,6 +506,85 @@ var activityproperty = (function () {
     }
     //#endregion
 
+    //#region services操作
+    //load service
+    activityproperty.loadServices = function (activity) {
+        if (activity) {
+            var services = activity.services;
+            if (services && services.length > 0) {
+                for (var i = 0; i < services.length; i++) {
+                    var service = services[i];
+                    //fill action info
+                    loadServiceDetail(service);
+                }
+            }
+        }
+    }
+
+    function loadServiceDetail(service) {
+        if (service.method !== "None") {
+            $("#ddlServiceMethodType").val(service.method).trigger('change');
+        }
+
+        //input fields
+        $("#txtArgumentsService").val(service.arguments);
+        $("#txtExpressionService").val(service.expression);
+
+        if (service.method === "WebApi") {
+            $("#ddlWebApiMethodService").val(service.subMethod);
+        } else if (service.method === "SQL" || service.method === "Python") {
+            var codeInfo = service.codeInfo;
+            if (codeInfo !== undefined) $("#txtCodeTextService").val(codeInfo.codeText.trim());
+        } else if (service.method === "CSharpLibrary") {
+            var methodInfo = service.methodInfo;
+            if (methodInfo !== undefined) {
+                $("#txtAssemblyFullNameService").val(methodInfo.assemblyFullName);
+                $("#txtTypeFullNameService").val(methodInfo.typeFullName);
+                $("#txtMethodNameService").val(methodInfo.methodName);
+            }
+        }
+    }
+
+    //save services
+    activityproperty.saveServices = function (activity) {
+        if (activity) {
+            activity.services = [];
+
+            var methodService = $("#ddlServiceMethodType").val();
+            if (methodService !== "None") {
+                var service = setServiceDetail(methodService);
+                activity.services.push(service);
+            }
+            //update node user object
+            kmain.setVertexServices(activity.services);
+        }
+    }
+
+    function setServiceDetail(method) {
+        var service = {};
+        service.arguments = $("#txtArgumentsService").val();
+        service.expression = $("#txtExpressionService").val();
+        service.method = method;
+
+        //sub method after
+        if (method === "WebApi") {
+            service.subMethod = $("#ddlWebApiMethodService").val();
+        } else if (method === "SQL"
+            || method === "Python") {
+            var codeInfo = {};
+            codeInfo.codeText = $("#txtCodeTextService").val();
+            service.codeInfo = codeInfo;
+        } else if (method === "CSharpLibrary") {
+            var methodInfo = {};
+            methodInfo.assemblyFullName = $("#txtAssemblyFullNameService").val();
+            methodInfo.typeFullName = $("#txtTypeFullNameService").val();
+            methodInfo.methodName = $("#txtMethodNameService").val();
+            service.methodInfo = methodInfo;
+        }
+        return service;
+    }
+    //#endregion
+
     //save activity basic information
     activityproperty.saveActivity = function () {
         var activity = kmain.mxSelectedDomElement.ElementObject;
@@ -502,6 +595,8 @@ var activityproperty = (function () {
             saveTask(activity);
         } else if (type === kmodel.Config.NODE_TYPE_MULTIPLEINSTANCE) {
             saveMI(activity);
+        } else if (type === kmodel.Config.NODE_TYPE_SERVICE) {
+            saveService(activity);
         } else if (type === kmodel.Config.NODE_TYPE_GATEWAY) {
             gatewayproperty.save(activity);
         } else if (type === kmodel.Config.NODE_TYPE_SUBPROCESS) {
@@ -559,6 +654,14 @@ var activityproperty = (function () {
         saveTask(activity);
     }
 
+    function saveService(activity) {
+        //services
+        activityproperty.saveServices(activity);
+
+
+        kmain.setVertexValue(activity);
+    }
+
 	return activityproperty;
 })()
 //#endregion
@@ -576,6 +679,7 @@ var gatewayproperty = (function () {
         OrSplit: "OrSplit",
         OrJoin: "OrJoin",
         XOrSplit: "XOrSplit",
+        ApprovalOrSplit: "ApprovalOrSplit",
         XOrJoin: "XOrJoin",
         EOrJoin: "EOrJoin",
         AndSplitMI: "AndSplitMI",
@@ -630,6 +734,7 @@ var gatewayproperty = (function () {
             { "value": "AndSplit", "text": kresource.getItem('andsplit') },
             { "value": "OrSplit", "text": kresource.getItem('orsplit') },
             { "value": "XOrSplit", "text": kresource.getItem('xorsplit') },
+            { "value": "ApprovalOrSplit", "text": kresource.getItem('approvalorsplit') },
             { "value": "AndSplitMI", "text": kresource.getItem('andsplitmi') },
         ];
 
@@ -675,19 +780,11 @@ var gatewayproperty = (function () {
         var directionType = $("#ddlDirectionType").val();
         var joinPasssType = $("#ddlJoinPassType").val();
 
-        if (splitJoinType == "default") {
-            $.msgBox({
-                title: "Designer / GatewayProperty",
-                content: kresource.getItem("gatewaysavewarnmsg"),
-                type: "info"
-            });
+        if (splitJoinType === "default") {
+            kmsgbox.info(kresource.getItem("gatewaysavewarnmsg"));
             return;
-        } else if (directionType == "default") {
-            $.msgBox({
-                title: "Designer / GatewayProperty",
-                content: kresource.getItem("gatewaydirectionsavewarnmsg"),
-                type: "info"
-            });
+        } else if (directionType === "default") {
+            kmsgbox.info(kresource.getItem("gatewaydirectionsavewarnmsg"));
             return;
         }
 
@@ -807,9 +904,15 @@ var subprocessmanager = (function () {
     var msubprocessname = null;
 
     subprocessmanager.load = function (activity) {
-        if (activity !== null && activity.subId !== "") {
-            $("#txtProcessGUID").val(activity.subId);
-            subprocessmanager.getProcess(activity.subId);
+        if (activity !== null) {
+            if (activity.subId !== "") {
+                $("#txtProcessGUID").val(activity.subId);
+                subprocessmanager.getProcess(activity.subId);
+            } else {
+                if (activity.subVar !== "") {
+                    $("#txtSubVar").val(activity.subVar);
+                }
+            }
         }
         subprocessmanager.getProcessList();
     }
@@ -852,28 +955,18 @@ var subprocessmanager = (function () {
                 function onRowDoubleClicked(e, args) {
                     var currentProcessGUID = $("#txtProcessGUID").val();
                     if (currentProcessGUID !== msubprocessguid) {
-                        $.msgBox({
-                            title: "Are You Sure",
-                            content: kresource.getItem("subprocessconfirmmsg"),
-                            type: "confirm",
-                            buttons: [{ value: "Yes" }, { value: "Cancel" }],
-                            success: function (result) {
-                                if (result == "Yes") {
-                                    $("#txtProcessGUID").val(msubprocessguid);
-                                    $("#txtProcessName").val(msubprocessname);
-                                    return;
-                                }
+                        kmsgbox.confirm(kresource.getItem("subprocessconfirmmsg"), function (result) {
+                            if (result === "Yes") {
+                                $("#txtProcessGUID").val(msubprocessguid);
+                                $("#txtProcessName").val(msubprocessname);
+                                return;
                             }
                         });
                     }
                 }
             }
             else {
-                $.msgBox({
-                    title: "Designer / SubProcess",
-                    content: kresource.getItem("processlisterrormsg"),
-                    type: "error"
-                });
+                kmsgbox.error(kresource.getItem("processlisterrormsg"));
             }
         });
 
@@ -889,7 +982,7 @@ var subprocessmanager = (function () {
             && processGUID !== undefined) {
             var query = { "ProcessGUID": processGUID };
             jshelper.ajaxPost('api/Wf2Xml/GetProcess', JSON.stringify(query), function (result) {
-                if (result.Status == 1) {
+                if (result.Status === 1) {
                     var entity = result.Entity;
 
                     $("#txtProcessName").val(entity.ProcessName);
@@ -900,7 +993,18 @@ var subprocessmanager = (function () {
 
     subprocessmanager.save = function (activity) {
         if (activity) {
-            activity.subId = $("#txtProcessGUID").val();
+            var subProcessId = $("#txtProcessGUID").val();
+            activity.subId = subProcessId;
+            if (subProcessId !== '') {
+                activity.subType = 'Fixed';
+            } else {
+                var subVarName = $("#txtSubVar").val();
+                if (subVarName !== '') {
+                    activity.subType = 'Dynamic';
+                    activity.subVar = subVarName;
+                }
+            }
+            
             //update node user object
             kmain.setVertexValue(activity);
         }
@@ -944,11 +1048,7 @@ var poolproperty = (function () {
             if (packageType === "MainProcess") {   
                 //唯一性检查，只能有一个主流程
                 if (isNotUniqueMainProcessOfCurrentPool() === true) {
-                    $.msgBox({
-                        title: "Process / Pool",
-                        content: kresource.getItem("processpooluniquewarnmsg"),
-                        type: "warn"
-                    });
+                    kmsgbox.warn(kresource.getItem("processpooluniquewarnmsg"));
                     $("#ddlPackageType").val("PoolProcess");
                     return false;
                 } else {
@@ -1026,11 +1126,7 @@ var poolproperty = (function () {
             if (process.package.trim() === ""
                 || process.name.trim() === ""
                 || process.code.trim() === "") {
-                $.msgBox({
-                    title: "Process / Pool",
-                    content: kresource.getItem("processxmlsavepoolwarnmsg"),
-                    type: "warn"
-                });
+                kmsgbox.warn(kresource.getItem("processxmlsavepoolwarnmsg"));
                 return false;
             }
             pool.process = process;

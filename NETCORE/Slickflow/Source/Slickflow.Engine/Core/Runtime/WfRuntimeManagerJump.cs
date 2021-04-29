@@ -26,6 +26,7 @@ using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Core.Pattern;
+using Slickflow.Engine.Core.Pattern.Event;
 
 namespace Slickflow.Engine.Core.Runtime
 {

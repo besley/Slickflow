@@ -111,7 +111,7 @@ var kvalidator = (function () {
         var swimlanes = kloader.getSwimlanes(model);
         for (var i = 0; i < swimlanes.length; i++) {
             childList = model.getChildEdges(model.getCell(swimlanes[i]));
-            lookupEdge(model, childList, transitionList);
+            lookupEdgeList(model, childList, transitionList);
         }
 
         //transitions in groups

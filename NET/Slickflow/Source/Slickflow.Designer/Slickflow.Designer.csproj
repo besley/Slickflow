@@ -904,7 +904,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>17364</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/sfd</IISUrl>
+          <IISUrl>http://localhost/sfd/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

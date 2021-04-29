@@ -9,6 +9,12 @@ using SlickOne.WebUtility;
 
 namespace Slickflow.MvcDemo.Controllers.WebApi
 {
+    public class Conditions
+    {
+        public Dictionary<string, string> KeyValuePair { get; set; }
+        public string Name { get; set; }
+    }
+
     /// <summary>
     /// 流程服务控制器
     /// 示例代码，请勿直接作为生产项目代码使用。
@@ -33,9 +39,7 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<ProcessFileEntity>.Error(
-                    string.Format("获取流程XML文件失败！{0}", ex.Message)
-                );
+                result = ResponseResult<ProcessFileEntity>.Error(ex.Message);
             }
             return result;
         }
@@ -53,13 +57,11 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             {
                 var wfservice = new WorkflowService();
                 var nodeViewList = wfservice.GetNextActivityTree(runner).ToList<NodeView>();
-                result = ResponseResult<List<NodeView>>.Success(nodeViewList, "获取流程下一步信息成功!");
+                result = ResponseResult<List<NodeView>>.Success(nodeViewList);
             }
             catch(System.Exception ex)
             {
-                result = ResponseResult<List<NodeView>>.Error(string.Format(
-                    " 请确认角色身份是否切换?! {0}", 
-                    ex.Message));
+                result = ResponseResult<List<NodeView>>.Error(ex.Message);
             }
             return result;
         }
@@ -77,13 +79,11 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             {
                 var wfservice = new WorkflowService();
                 var nodeViewList = wfservice.GetNextActivityRoleUserTree(runner).ToList<NodeView>();
-                result = ResponseResult<List<NodeView>>.Success(nodeViewList, "获取流程下一步信息成功!");
+                result = ResponseResult<List<NodeView>>.Success(nodeViewList);
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<List<NodeView>>.Error(string.Format(
-                    " 请确认角色身份是否切换?! {0}",
-                    ex.Message));
+                result = ResponseResult<List<NodeView>>.Error(ex.Message);
             }
             return result;
         }
@@ -101,15 +101,19 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             {
                 var wfservice = new WorkflowService();
                 var nodeViewList = wfservice.GetFirstActivityRoleUserTree(runner, runner.Conditions).ToList<NodeView>();
-                result = ResponseResult<List<NodeView>>.Success(nodeViewList, "获取流程第一个办理节点信息成功!");
+                result = ResponseResult<List<NodeView>>.Success(nodeViewList);
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<List<NodeView>>.Error(string.Format(
-                    " 读取第一个办理节点发生异常： {0}",
-                    ex.Message));
+                result = ResponseResult<List<NodeView>>.Error(ex.Message);
             }
             return result;
+        }
+
+        [HttpPost]
+        public string Test([FromBody] WfAppRunner runner)
+        {
+            return "hello";
         }
 
         /// <summary>
@@ -125,13 +129,11 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             {
                 var wfService = new WorkflowService();
                 var roleList = wfService.GetRoleByProcess(query.ProcessGUID, query.Version).ToList();
-                result = ResponseResult<List<Role>>.Success(roleList, "成功获取流程定义的角色数据！");
+                result = ResponseResult<List<Role>>.Success(roleList);
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<List<Role>>.Error(string.Format(
-                    "获取流程定义的角色数据失败, 异常信息:{0}",
-                    ex.Message));
+                result = ResponseResult<List<Role>>.Error(ex.Message);
             }
             return result;
         }
@@ -149,13 +151,11 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             {
                 var wfService = new WorkflowService();
                 var roleList = wfService.GetRoleUserListByProcess(query.ProcessGUID, query.Version).ToList();
-                result = ResponseResult<List<Role>>.Success(roleList, "成功获取流程定义的角色用户数据！");
+                result = ResponseResult<List<Role>>.Success(roleList);
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<List<Role>>.Error(string.Format(
-                    "获取流程定义的角色用户数据失败, 异常信息:{0}",
-                    ex.Message));
+                result = ResponseResult<List<Role>>.Error(ex.Message);
             }
             return result;
         }
@@ -179,39 +179,15 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
                     Performer performer = new Performer(item.UserID.ToString(), item.UserName);
                     performList.Add(performer);
                 }
-                result = ResponseResult<List<Performer>>.Success(performList, "成功获取流角色用户数据！");
+                result = ResponseResult<List<Performer>>.Success(performList);
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<List<Performer>>.Error(string.Format(
-                    "获取角色用户数据失败, 异常信息:{0}",
-                    ex.Message));
+                result = ResponseResult<List<Performer>>.Error(ex.Message);
             }
             return result;
         }
 
-        ///// <summary>
-        ///// 根据角色IDs获取用户列表
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpPost]
-        //public ResponseResult<List<Role>> QueryRoleUserByRoleIDs([FromBody] RoleIDsQuery query)
-        //{
-        //    var result = ResponseResult<List<Role>>.Default();
-        //    try
-        //    {
-        //        var wfService = new WorkflowService();
-        //        var roleList = wfService.GetRoleUserByRoleIDs(query.RoleIDs).ToList();
-        //        result = ResponseResult<List<Role>>.Success(roleList, "成功获取角色用户数据！");
-        //    }
-        //    catch (System.Exception ex)
-        //    {
-        //        result = ResponseResult<List<Role>>.Error(string.Format(
-        //            "获取角色用户数据失败, 异常信息:{0}",
-        //            ex.Message));
-        //    }
-        //    return result;
-        //}
 
         [HttpPost]
         public ResponseResult<List<TaskViewEntity>> QueryReadyTasks([FromBody] TaskQuery query)
@@ -231,9 +207,7 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<List<TaskViewEntity>>.Error(string.Format(
-                    "获取待办任务数据失败, 异常信息:{0}",
-                    ex.Message));
+                result = ResponseResult<List<TaskViewEntity>>.Error(ex.Message);
             }
             return result;
         }
@@ -252,9 +226,7 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<List<ActivityInstanceEntity>>.Error(string.Format(
-                    "获取待办任务数据失败, 异常信息:{0}",
-                    ex.Message));
+                result = ResponseResult<List<ActivityInstanceEntity>>.Error(ex.Message);
             }
             return result;
         }
@@ -277,9 +249,7 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             }
             catch (System.Exception ex)
             {
-                result = ResponseResult<List<TaskViewEntity>>.Error(string.Format(
-                    "获取已办任务数据失败, 异常信息:{0}",
-                    ex.Message));
+                result = ResponseResult<List<TaskViewEntity>>.Error(ex.Message);
             }
             return result;
         }

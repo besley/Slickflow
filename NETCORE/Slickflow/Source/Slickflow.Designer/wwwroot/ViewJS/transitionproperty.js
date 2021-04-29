@@ -26,8 +26,21 @@ var transitionproperty = (function () {
 
     transitionproperty.mIsGroupBehaviousPriorityEnabled = false;
     transitionproperty.mIsGroupBehaviousForcedBranchEnabled = false;
+    transitionproperty.mIsGroupBehaviousApprovalStatusEnabled = false;
+    transitionproperty.mIsGroupBehaviousDefaultBrachOption = false;
+
+    //div display options
+    var myDivOptions = {};
+    myDivOptions["default"] = ["divConditions", "divXOrSplitOptions", "divApprovalOrSplitOptions", "divEOrJoinOptions"];
+    myDivOptions["OrSplit"] = ["divConditions", "divDefaultBranchOptions"];
+    myDivOptions["XOrSplit"] = ["divConditions", "divXOrSplitOptions"];
+    myDivOptions["ApprovalOrSplit"] = ["divApprovalOrSplitOptions"];
+    myDivOptions["EOrJoin"] = ["divEOrJoinOptions"];
+    myDivOptions["else"] = ["divConditions"];
+
 
     transitionproperty.load = function () {
+        showDivOptionsCotnrolBySplitType("default");
         var transition = kmain.mxSelectedDomElement.ElementObject;
 
         if (transition) {
@@ -45,9 +58,6 @@ var transitionproperty = (function () {
     }
 
     function showTranstionGroupBehaviours(transition) {
-        $("#divSplitOptions").hide();
-        $("#divJoinOptions").hide();
-
         var graph = kmain.mxGraphEditor.graph;
         var cell = graph.getSelectionCell();
 
@@ -59,12 +69,38 @@ var transitionproperty = (function () {
             if (activityType === kmodel.ActivityType.GatewayNode) {
                 var splitJoinType = activityTypeElement.getAttribute("gatewaySplitJoinType");
                 var direction = activityTypeElement.getAttribute("gatewayDirection");
+
+                //show divoptions control by dirction type
+                showDivOptionsCotnrolBySplitType(direction);
                 if (splitJoinType === gatewayproperty.Direction.Split) {
-                    if (direction === gatewayproperty.Direction.XOrSplit) {
+                    if (direction === gatewayproperty.Direction.OrSplit) {
+                        //OrSplit
+                        transitionproperty.mIsGroupBehaviousDefaultBrachOption = true;
+                        if (transition.groupBehaviours && transition.groupBehaviours.defaultBranch) {
+                            if (transition.groupBehaviours.defaultBranch === "true") {
+                                $("#chkDefaultBranch").prop("checked", true);
+                            } else {
+                                $("#chkDefaultBranch").prop("checked", false);
+                            } 
+                        } else {
+                            $("#chkDefaultBranch").prop("checked", false);
+                        }
+                    }
+                    else if (direction === gatewayproperty.Direction.XOrSplit) {
+                        //XOrSplit
                         transitionproperty.mIsGroupBehaviousPriorityEnabled = true;
-                        $("#divSplitOptions").show();
                         if (transition.groupBehaviours && transition.groupBehaviours.priority) {
                             $("#txtPriority").val(transition.groupBehaviours.priority);
+                        }
+                    } else if (direction === gatewayproperty.Direction.ApprovalOrSplit) {
+                        //ApprovalOrSplit
+                        transitionproperty.mIsGroupBehaviousApprovalStatusEnabled = true;
+                        if (transition.groupBehaviours && transition.groupBehaviours.approval) {
+                            if (transition.groupBehaviours.approval === "1") {
+                                $("#radAgreed").prop('checked', true);
+                            } else if (transition.groupBehaviours.approval === "-1") {
+                                $("#radRefused").prop('checked', true);
+                            }
                         }
                     }
                 }
@@ -76,15 +112,17 @@ var transitionproperty = (function () {
         if (targetNode) {
             var activityTypeElement = targetNode.getElementsByTagName("ActivityType")[0];
             var activityType = activityTypeElement.getAttribute("type");
-            if (activityType == kmodel.ActivityType.GatewayNode) {
+            if (activityType === kmodel.ActivityType.GatewayNode) {
                 var splitJoinType = activityTypeElement.getAttribute("gatewaySplitJoinType");
                 var direction = activityTypeElement.getAttribute("gatewayDirection");
                 var joinPass = activityTypeElement.getAttribute("gatewayJoinPass");
+                //show divoptions control by dirction type
+                showDivOptionsCotnrolBySplitType(direction);
                 if (splitJoinType === gatewayproperty.Direction.Join) {
+                    //EOrJoin
                     if (direction === gatewayproperty.Direction.EOrJoin) {
                         if (joinPass === gatewayproperty.JoinPass.ForcedBranchPass) {
                             transitionproperty.mIsGroupBehaviousForcedBranchEnabled = true;
-                            $("#divJoinOptions").show();
                             if (transition.groupBehaviours && transition.groupBehaviours.forced) {
                                 if (transition.groupBehaviours.forced === "true") {
                                     $("#chkForced").prop("checked", true);
@@ -100,6 +138,23 @@ var transitionproperty = (function () {
         }
     }
 
+    function showDivOptionsCotnrolBySplitType(direction) {
+        var divArray = myDivOptions[direction];
+        if (divArray !== undefined) {
+            $.each(divArray, function (i) {
+                var divOptionName = divArray[i];
+                if (direction === "default") {
+                    $("#" + divOptionName).hide();
+                } else {
+                    $("#" + divOptionName).show();
+                }
+            });
+        } else {
+            var divElse = myDivOptions["else"];
+            $("#" + divElse).show();
+        }
+    }
+
     transitionproperty.save = function () {
         var description = $("#txtDescription").val();
         var receiver = {};
@@ -111,21 +166,29 @@ var transitionproperty = (function () {
         condition.text = $.trim($("#txtCondition").val());
 
         var groupBehaviours = {};
+        //OrSplit
+        if (transitionproperty.mIsGroupBehaviousDefaultBrachOption === true) {
+            var defaultBranch = $("#chkDefaultBranch").is(':checked');
+            if (defaultBranch === true) {
+                groupBehaviours.defaultBranch = "true";
+            } else {
+                groupBehaviours.defaultBranch = "false";
+            }
+        }
+
+        //XOrSplit
         if (transitionproperty.mIsGroupBehaviousPriorityEnabled === true) {
             var priority = $("#txtPriority").val();
             if (priority) {
                 if (jshelper.isNumber(priority) === true) {
                     groupBehaviours.priority = parseInt(priority);
                 } else {
-                    $.msgBox({
-                        title: "Transition / Property",
-                        content: kresource.getItem("transitionprioritysavewarnmsg"),
-                        type: "alert"
-                    });
+                    kmsgbox.warn(kresource.getItem("transitionprioritysavewarnmsg"));
                 }
             }
         }
 
+        //EOrJoin
         if (transitionproperty.mIsGroupBehaviousForcedBranchEnabled === true) {
             var forced = $("#chkForced").is(':checked');
             if (forced === true) {
@@ -133,6 +196,19 @@ var transitionproperty = (function () {
             } else {
                 groupBehaviours.forced = "false";
             }
+        }
+
+        //ApprovalOrSplit
+        if (transitionproperty.mIsGroupBehaviousApprovalStatusEnabled === true) {
+            var agreed = $("#radAgreed").is(':checked');
+            if (agreed === true) {
+                groupBehaviours.approval = 1;           //agreed
+            } 
+
+            var refused = $("#radRefused").is(':checked');
+            if (refused === true) {
+                groupBehaviours.approval = -1;       //refused
+            } 
         }
 
         var transition = kmain.mxSelectedDomElement.ElementObject;

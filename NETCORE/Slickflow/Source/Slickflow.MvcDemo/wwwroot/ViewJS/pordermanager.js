@@ -21,7 +21,7 @@
         for (var i = 0; i < buttonResource.length; i++) {
             var rescode = $(buttonResource[i]).attr("rescode");
             var isPermitted = lsm.checkUserPermission(rescode);
-            if (isPermitted == false) {
+            if (isPermitted === false) {
                 $(buttonResource[i]).prop('disabled', true);
             }
         }
@@ -38,7 +38,7 @@
     pordermanager.getCurrentLogonUser = function () {
         var user = lsm.getUserIdentity();
 
-        if (user == undefined) {
+        if (user === undefined) {
             $.msgBox({
                 title: "MvcDemo / Order",
                 content: "请选择用户，重新登录！",
@@ -51,7 +51,7 @@
             "UserID": user.UserID,
             "UserName": user.UserName,
             "AppName": "生产订单",
-            "AppInstanceID": pordermanager.selectedProductOrderID,
+            "AppInstanceID": pordermanager.selectedProductOrderID.toString(),
             "ProcessGUID": pordermanager.mProductOrderProcessGUID,
             "Version": "1"
         };
@@ -163,11 +163,11 @@
                 pordermanager.selectedProductOrderID = row.ID;
                 pordermanager.selectedProductOrderCode = row.OrderCode;
 
-                pordermanager.getReadyActivityInstance(row.ID, pordermanager.mProductOrderProcessGUID);
+                pordermanager.getReadyActivityInstance(row.ID.toString(), pordermanager.mProductOrderProcessGUID);
                 pordermanager.getAppFlowList(row.ID);
 
                 var status = row.Status;
-                if (status == "1") {
+                if (status === "1") {
                     $("#divCondition").show();
                 } else {
                     $("#divCondition").hide();
@@ -210,7 +210,7 @@
         jshelper.ajaxPost('api/productorder/syncorder',
             null,
             function (result) {
-                if (result.Status == 1) {
+                if (result.Status === 1) {
                     $.msgBox({
                         title: "MvcDemo / Order",
                         content: "新的订单数据同步成功！",
@@ -231,13 +231,13 @@
 
     pordermanager.runAppFlow = function (step) {
         var user = pordermanager.getCurrentLogonUser();
-        if (user == undefined) return false;
+        if (user === undefined) return false;
 
         var runner = {
             "UserID": user.UserID,
             "UserName": user.UserName,
             "AppName": pordermanager.mcurrentAppName,
-            "AppInstanceID": pordermanager.selectedProductOrderID,
+            "AppInstanceID": pordermanager.selectedProductOrderID.toString(),
             "ProcessGUID": pordermanager.mProductOrderProcessGUID,
             "Version": "1"
         };
@@ -247,16 +247,15 @@
             "OrderCode": pordermanager.selectedProductOrderCode,
         };
 
-        if (step == "dispatch") {
+        if (step === "dispatch") {
             //判断是否是重复派单
             jshelper.ajaxGet("api/productorder/checkdispatched/" + pordermanager.selectedProductOrderID,
                         null,
                         function (result) {
-                            if (result.Status == 1) {
-                                var condition = {};
-                                condition["CanUseStock"] = $("#chkStorage").is(':checked') ? "true" : "false";
-                                condition["IsHavingWeight"] = $("#chkWeight").is(':checked') ? "true" : "false";;
-                                runner.Conditions = condition;
+                            if (result.Status === 1) {
+                                runner.Conditions = {};
+                                runner.Conditions["CanUseStock"] = $("#chkStorage").is(':checked') ? "true" : "false";
+                                runner.Conditions["IsHavingWeight"] = $("#chkWeight").is(':checked') ? "true" : "false";
 
                                 var entity = {
                                     "ProductOrderEntity": productOrder,
@@ -295,8 +294,10 @@
     //#region 业务流程数据记录
     pordermanager.getReadyActivityInstance = function (appInstanceID, processGUID) {
         var query = {};
-        query.AppInstanceID = appInstanceID;
+        query.AppInstanceID = appInstanceID.toString();
         query.ProcessGUID = processGUID;
+
+        window.console.log(query);
 
         jshelper.ajaxPost('api/Wf/QueryReadyActivityInstance',
             JSON.stringify(query), function (result) {
@@ -352,7 +353,7 @@
         var query = {
             "PageIndex": 0,
             "PageSize": 20,
-            "AppInstanceID": appInstanceID
+            "AppInstanceID": appInstanceID.toString()
         };
 
         jshelper.ajaxPost('api/AppFlow/QueryPaged', JSON.stringify(query), function (result) {

@@ -30,7 +30,6 @@ using Slickflow.Data;
 using Slickflow.Module.Localize;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Storage;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
@@ -39,7 +38,6 @@ using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Core.Event;
 using Slickflow.Engine.Core.Runtime;
 using Slickflow.Engine.Core.Parser;
-using Slickflow.Engine.Utility;
 
 namespace Slickflow.Engine.Service
 {
@@ -104,8 +102,10 @@ namespace Slickflow.Engine.Service
             var pm = new ProcessManager();
             var entity = pm.GetByID(processID);
             var processModel = ProcessModelFactory.Create(entity.ProcessGUID, entity.Version);
-            var activityList = processModel.GetTaskActivityList();
+            //update cached process xml
+            ResetCache(entity.ProcessGUID, entity.Version);
 
+            var activityList = processModel.GetTaskActivityList();
             return activityList;
         }
 
@@ -153,8 +153,12 @@ namespace Slickflow.Engine.Service
             IDictionary<string, string> condition)
         {
             var processModel = ProcessModelFactory.Create(processGUID, version);
-            var nextSteps = processModel.GetNextActivityTree(activityGUID, condition);
-            return nextSteps;
+            using (var session = SessionFactory.CreateSession())
+            {
+                var nextResult = processModel.GetNextActivityTree(activityGUID, null, condition, session);
+
+                return nextResult.StepList;
+            }
         }
 
         /// <summary>
@@ -202,13 +206,10 @@ namespace Slickflow.Engine.Service
         public IList<NodeView> GetNextActivityTree(WfAppRunner runner, 
             IDictionary<string, string> condition = null)
         {
-            var tm = new TaskManager();
-            var taskView = tm.GetTaskOfMine(runner.AppInstanceID, runner.ProcessGUID, runner.UserID);
-            var processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
-            var nextSteps = processModel.GetNextActivityTree(taskView.ActivityGUID,
-                condition);
-
-            return nextSteps;
+            using (var session = SessionFactory.CreateSession())
+            {
+                return GetNextActivityTree(session.Connection, runner, condition, session.Transaction);
+            }
         }
 
         /// <summary>
@@ -240,15 +241,28 @@ namespace Slickflow.Engine.Service
             IDictionary<string, string> condition,
             IDbTransaction trans)
         {
-            var tm = new TaskManager();
-            var taskView = tm.GetTaskOfMine(conn, runner.AppInstanceID, runner.ProcessGUID, runner.UserID, runner.TaskID, trans);
-            var processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
-            var nextSteps = processModel.GetNextActivityTree(taskView.ActivityGUID,
-                condition);
+            using (var session = SessionFactory.CreateSession())
+            {
+                var message = string.Empty;
+                TaskViewEntity taskView = null;
+                var tm = new TaskManager();
+                if (runner.TaskID != null)
+                {
+                    taskView = tm.GetTaskView(session.Connection, runner.TaskID.Value, session.Transaction);
+                }
+                else
+                {
+                    taskView = tm.GetTaskOfMine(session.Connection, runner.AppInstanceID, runner.ProcessGUID, runner.UserID, session.Transaction);
+                }
+                var processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
+                var nextResult = processModel.GetNextActivityTree(taskView.ActivityGUID,
+                    taskView.TaskID,
+                    condition,
+                    session);
 
-            return nextSteps;
+                return nextResult.StepList;
+            }
         }
-
 
         /// <summary>
         /// 根据应用获取流程下一步节点列表
@@ -279,12 +293,16 @@ namespace Slickflow.Engine.Service
         public IList<NodeView> GetNextActivityTree(int taskID,
             IDictionary<string, string> condition = null)
         {
-            var taskView = (new TaskManager()).GetTaskView(taskID);
-            var processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
-            var nextSteps = processModel.GetNextActivityTree(taskView.ActivityGUID,
-                condition);
-
-            return nextSteps;
+            using (var session = SessionFactory.CreateSession())
+            {
+                var taskView = (new TaskManager()).GetTaskView(session.Connection, taskID, session.Transaction);
+                var processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
+                var nextResult = processModel.GetNextActivityTree(taskView.ActivityGUID,
+                    taskView.TaskID,
+                    condition,
+                    session);
+                return nextResult.StepList;
+            }
         }
 
         /// <summary>
@@ -313,11 +331,10 @@ namespace Slickflow.Engine.Service
             IDictionary<string, string> condition = null)
         {
             var nsp = new NextStepParser();
-            var nextSteps = nsp.GetNextActivityRoleUserTree(ResourceService, runner, condition);
+            var nextResult = nsp.GetNextActivityRoleUserTree(ResourceService, runner, condition);
 
-            return nextSteps;
+            return nextResult.StepList;
         }
-
 
         /// <summary>
         /// 根据应用获取流程下一步节点列表，包含角色用户
@@ -379,17 +396,22 @@ namespace Slickflow.Engine.Service
         public IList<NodeView> GetFirstActivityRoleUserTree(WfAppRunner runner, 
             IDictionary<string, string> condition = null)
         {
-            var processModel = ProcessModelFactory.Create(runner.ProcessGUID, runner.Version);
-            var firstActivity = processModel.GetFirstActivity();
-            var nextSteps = processModel.GetNextActivityTree(firstActivity.ActivityGUID,
-                condition);
-
-            foreach (var ns in nextSteps)
+            using (var session = SessionFactory.CreateSession())
             {
-                var roleIDs = ns.Roles.Select(x => x.ID).ToArray();
-                ns.Users = ResourceService.GetUserListByRoleReceiverType(roleIDs, runner.UserID, (int)ns.ReceiverType);     //增加转移前置过滤条件
+                var processModel = ProcessModelFactory.Create(runner.ProcessGUID, runner.Version);
+                var firstActivity = processModel.GetFirstActivity();
+                var nextResult = processModel.GetNextActivityTree(firstActivity.ActivityGUID,
+                    null,
+                    condition,
+                    session);
+
+                foreach (var ns in nextResult.StepList)
+                {
+                    var roleIDs = ns.Roles.Select(x => x.ID).ToArray();
+                    ns.Users = ResourceService.GetUserListByRoleReceiverType(roleIDs, runner.UserID, (int)ns.ReceiverType);     //增加转移前置过滤条件
+                }
+                return nextResult.StepList;
             }
-            return nextSteps;
         }
 
         /// <summary>
@@ -448,7 +470,7 @@ namespace Slickflow.Engine.Service
 
             foreach (ActivityInstanceEntity a in list)
             {
-                imageList.Add(new NodeImage 
+                imageList.Add(new NodeImage
                 { 
                     ID = a.ID, 
                     ActivityName = a.ActivityName 
@@ -591,15 +613,16 @@ namespace Slickflow.Engine.Service
                     trans.Commit();
                 }
                 else
+                {
                     trans.Rollback();
-
+                }
                 return result;
             }
             catch
             {
                 trans.Rollback();
                 throw;
-            }
+            }            
             finally
             {
                 if (conn.State == ConnectionState.Open)

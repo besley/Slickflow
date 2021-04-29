@@ -116,6 +116,7 @@ namespace Slickflow.Engine.Service
         Task<WfExecutedResult> JumpProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans, 
             JumpOptionEnum jumpOption = JumpOptionEnum.Default);
 
+
         Boolean ResumeProcess(int activityInstanceId, WfAppRunner runner);
         Boolean SuspendProcess(int taskId, WfAppRunner runner);
         Boolean CancelProcess(WfAppRunner canceler);
@@ -138,6 +139,7 @@ namespace Slickflow.Engine.Service
         IList<TaskViewEntity> GetReadyTasks(TaskQuery query);
         IList<TaskViewEntity> GetCompletedTasks(TaskQuery query);
         IList<TaskViewEntity> GetTaskListEMailUnSent();
+        [Obsolete("replaced by the GetRunningTask, mainly used to run forward method internal")]
         ActivityInstanceEntity GetRunningNode(WfAppRunner runner);
         TaskViewEntity GetFirstRunningTask(int activityInstanceID);
         IList<Performer> GetTaskPerformers(WfAppRunner runner);
@@ -221,8 +223,7 @@ namespace Slickflow.Engine.Service
         WfExecutedResult SendBack(IDbConnection conn, IDbTransaction trans);
         WfExecutedResult Jump(JumpOptionEnum jumpOption = JumpOptionEnum.Default);
         WfExecutedResult Jump(IDbConnection conn, IDbTransaction trans, JumpOptionEnum jumpOption = JumpOptionEnum.Default);
-        WfExecutedResult Reverse();
-        WfExecutedResult Reverse(IDbConnection conn, IDbTransaction trans);
+
         #endregion
     }
 }

@@ -40,7 +40,8 @@ namespace Slickflow.Engine.Core.Runtime
         {
             //构造流程实例
             var processInstance = new ProcessInstanceManager()
-                .CreateNewProcessInstanceObject(base.AppRunner, base.ProcessModel.ProcessEntity,
+                .CreateNewProcessInstanceObject(base.AppRunner, 
+                base.ProcessModel.ProcessEntity,
                 base.ParentProcessInstance,
                 base.InvokedSubProcessNode.ActivityInstance);
 

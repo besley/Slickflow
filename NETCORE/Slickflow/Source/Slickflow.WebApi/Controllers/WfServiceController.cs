@@ -211,7 +211,6 @@ namespace Slickflow.WebApi.Controllers
             return result;
         }
 
-
         /// <summary>
         /// 跳转流程
         /// </summary>
@@ -240,7 +239,6 @@ namespace Slickflow.WebApi.Controllers
             }
             return result;
         }
-
         #endregion
 
         #region Workflow 获取流程定义
@@ -263,7 +261,7 @@ namespace Slickflow.WebApi.Controllers
             catch (System.Exception ex)
             {
                 result = ResponseResult<ProcessEntity>.Error(
-                    string.Format("获取流程定义失败！{0}", ex.Message)
+                    string.Format("An error occurred when reading process by version!{0}", ex.Message)
                 );
             }
             return result;
@@ -287,7 +285,7 @@ namespace Slickflow.WebApi.Controllers
             catch (System.Exception ex)
             {
                 result = ResponseResult<List<ProcessEntity>>.Error(
-                    string.Format("获取流程基本信息失败！{0}", ex.Message)
+                    string.Format("An error occurred when reading process list!{0}", ex.Message)
                 );
             }
             return result;
@@ -312,7 +310,52 @@ namespace Slickflow.WebApi.Controllers
             catch (System.Exception ex)
             {
                 result = ResponseResult<List<ActivityEntity>>.Error(
-                    string.Format("获取任务节点信息失败！{0}", ex.Message)
+                    string.Format("An error occurred when reading taskview list!{0}", ex.Message)
+                );
+            }
+            return result;
+        }
+
+        [HttpPost]
+        public ResponseResult<List<ActivityEntity>> GetAllTaskActivityList([FromBody] ProcessQuery query)
+        {
+            var result = ResponseResult<List<ActivityEntity>>.Default();
+            try
+            {
+                var wfService = new WorkflowService();
+                var entity = wfService.GetAllTaskActivityList(query.ProcessGUID, query.Version).ToList();
+
+                result = ResponseResult<List<ActivityEntity>>.Success(entity);
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<List<ActivityEntity>>.Error(
+                    string.Format("An error occurred when reading taskview list!{0}", ex.Message)
+                );
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 获取任务节点列表
+        /// </summary>
+        /// <param name="id">流程ID</param>
+        /// <returns>节点列表</returns>
+        [HttpGet]
+        public ResponseResult<TaskViewEntity> GetTaskView(int id)
+        {
+            var result = ResponseResult<TaskViewEntity>.Default();
+            try
+            {
+                var wfService = new WorkflowService();
+                var entity = wfService.GetTaskView(id);
+
+                result = ResponseResult<TaskViewEntity>.Success(entity);
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<TaskViewEntity>.Error(
+                    string.Format("An error occurred when reading taskview entity!{0}", ex.Message)
                 );
             }
             return result;
@@ -337,7 +380,7 @@ namespace Slickflow.WebApi.Controllers
             catch(System.Exception ex)
             {
                 result = ResponseResult.Error(
-                   string.Format("导入流程失败！错误：{0}", ex.Message)
+                   string.Format("An error occurred when importing process xml!{0}", ex.Message)
                );
             }
             return result;

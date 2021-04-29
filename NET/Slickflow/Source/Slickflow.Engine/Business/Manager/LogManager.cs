@@ -20,7 +20,7 @@ namespace Slickflow.Engine.Business.Manager
     {
         #region 获取日志数据
         ///// <summary>
-        ///// 获取日志记录（分页）
+        ///// 获取日志记录（分页）B
         ///// </summary>
         ///// <param name="query"></param>
         ///// <param name="activityState"></param>
@@ -66,7 +66,10 @@ namespace Slickflow.Engine.Business.Manager
                 log.Title = title;
                 log.Timestamp = DateTime.Now;
                 log.Message = e.Message;
-                log.StackTrace = e.StackTrace.Length > 4000 ? e.StackTrace.Substring(0, 4000): e.StackTrace;
+                if (e.StackTrace != null)
+                {
+                    log.StackTrace = e.StackTrace.Length > 4000 ? e.StackTrace.Substring(0, 4000) : e.StackTrace;
+                }
                 if (e.InnerException != null)
                 {
                     log.InnerStackTrace = e.InnerException.StackTrace.Length > 4000 ? 

@@ -79,10 +79,26 @@ namespace Slickflow.Engine.Common
         /// 流程数据：待办任务ID
         /// </summary>
         public Nullable<int> TaskID { get; set; }        //任务ID，区分当前用户ActivityInstance列表的唯一任务
+
+        private IDictionary<string, string> conditions;
         /// <summary>
         /// 流程数据：条件参数
         /// </summary>
-        public IDictionary<string, string> Conditions = new Dictionary<string, string>();
+        public IDictionary<string, string> Conditions 
+        {
+            get
+            {
+                if (conditions == null)
+                {
+                    conditions = new Dictionary<string, string>();
+                }
+                return conditions;
+            }
+            set
+            {
+                conditions = value;
+            }
+        }
         /// <summary>
         /// 流程数据：动态变量
         /// </summary>

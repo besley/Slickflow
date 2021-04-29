@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Slickflow.Data;
 using Slickflow.Engine.Xpdl.Entity;
 
 namespace Slickflow.Engine.Xpdl.Schedule
@@ -24,11 +25,13 @@ namespace Slickflow.Engine.Xpdl.Schedule
         /// <param name="fromTransition">起始转移</param>
         /// <param name="currentGatewayActivity">当前节点</param>
         /// <param name="conditionKeyValuePair">条件对</param>
+        /// <param name="session">会话</param>
         /// <param name="resultType">结果类型</param>
         /// <returns>下一步组件类型</returns>
         internal override NextActivityComponent GetNextActivityListFromGateway(TransitionEntity fromTransition,
             ActivityEntity currentGatewayActivity, 
-            IDictionary<string, string> conditionKeyValuePair, 
+            IDictionary<string, string> conditionKeyValuePair,
+            IDbSession session,
             out NextActivityMatchedType resultType)
         {
             NextActivityComponent child = null;
@@ -43,11 +46,10 @@ namespace Slickflow.Engine.Xpdl.Schedule
                 {
                     child = GetNextActivityListFromGatewayCore(transition,
                         conditionKeyValuePair,
+                        session,
                         out resultType);
 
                     gatewayComponent = AddChildToGatewayComponent(fromTransition, currentGatewayActivity, gatewayComponent, child);
-                    //退出循环
-                    break;
                 }
             }
 

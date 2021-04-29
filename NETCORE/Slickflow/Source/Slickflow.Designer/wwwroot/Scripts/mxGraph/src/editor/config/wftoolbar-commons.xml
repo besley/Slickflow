@@ -38,10 +38,13 @@
 	<br/><hr/>
   <add as="Start" template="start" style="symbol;image=Scripts/mxGraph/src/editor/images/symbols/event.png" icon="Scripts/mxGraph/src/editor/images/symbols/small_event.gif"/>
   <add as="End" template="end" style="symbol;image=Scripts/mxGraph/src/editor/images/symbols/event_end.png" icon="Scripts/mxGraph/src/editor/images/symbols/small_event_end.gif"/>
+  <br/><hr/>
   <add as="Split" template="gateway-split" style="symbol;image=Scripts/mxGraph/src/editor/images/symbols/fork.png" icon="Scripts/mxGraph/src/editor/images/symbols/small_fork.gif"/>
   <add as="Join" template="gateway-join" style="symbol;image=Scripts/mxGraph/src/editor/images/symbols/merge.png" icon="Scripts/mxGraph/src/editor/images/symbols/small_merge.gif"/>
   <br/><hr/>
-	<add as="Task" template="task" icon="Scripts/mxGraph/src/editor/images/rectangle.gif"/>
+	<!--<add as="Pool" template="pool" icon="Scripts/mxGraph/src/editor/images/swimlane.gif"/>-->
+  
+	<add as="Task" template="task" icon="Scripts/mxGraph/src/editor/images/symbols/task.gif"/>
   <add as="SubProcess" template="subprocess" style="symbol;image=Scripts/mxGraph/src/editor/images/symbols/subprocess.png" icon="Scripts/mxGraph/src/editor/images/symbols/small_subprocess.gif"/>
 	<br/><hr/>
 	<add as="fit" action="fit" icon="Scripts/mxGraph/src/editor/images/zoom.gif"/>

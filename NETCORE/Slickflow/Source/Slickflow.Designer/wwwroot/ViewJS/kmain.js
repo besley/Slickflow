@@ -60,10 +60,6 @@ var kmain = (function () {
         kmain.mxSelectedProcessEntityList = [];
         kmain.mxSelectedDomElement = {};
         kmain.mxSelectedParticipants = [];
-        kmain.mxSelectedProcessStartType = 0;
-        kmain.mxSelectedProcessStartExpression = '';
-        kmain.mxSelectedProcessEndType = 0;
-        kmain.mxSelectedProcessEndExpression = '';
     }
 
     //intialize workflow editor
@@ -83,7 +79,7 @@ var kmain = (function () {
         kgraph.addListener(mxEvent.CELLS_ADDED, function(cell){
             /*
             $.msgBox({
-				title: "Designer / Index",
+				title: kresource.getItem('info'),
 				content: "cell has been added！",
 				type: "info"
 			});*/
@@ -101,33 +97,21 @@ var kmain = (function () {
                     model.beginUpdate();
                     model.remove(edge);
                     model.endUpdate();
-                    $.msgBox({
-                        title: "Designer / Property",
-                        content: kresource.getItem('messageflowcrosswarn'),
-                        type: "alert"
-                    });
+                    kmsgbox.warn(kresource.getItem('messageflowcrosswarn'));
                 }
             } else {
                 if (source.parent.id !== target.parent.id) {
                     model.beginUpdate();
                     model.remove(edge);
                     model.endUpdate();
-                    $.msgBox({
-                        title: "Designer / Property",
-                        content: kresource.getItem('normalflowcrosswarn'),
-                        type: "alert"
-                    });
+                    kmsgbox.warn(kresource.getItem('normalflowcrosswarn'));
                 }
             }
         });
         
         keditor.createProperties = function (cell) {
             if (kmain.mxSelectedDomElement === undefined) {
-                $.msgBox({
-                    title: "Designer / Property",
-                    content: kresource.getItem('activitypropertycreatemsg'),
-                    type: "alert"
-                });
+                kmsgbox.warn(kresource.getItem('activitypropertycreatemsg'));
                 return;
             }
 
@@ -149,65 +133,9 @@ var kmain = (function () {
                     }
                 } else if (model.isEdge(cell)){ 
                     if (snode.nodeName === "Transition") {
-			            //transition page
-                        kmain.mxSelectedDomElement.ElementType = 'Transition';
-                        var transition = kmain.mxSelectedDomElement.ElementObject = convert2TransitionObject(cell, model);
-                        BootstrapDialog.show({
-                            title: kresource.getItem('transitionproperty'),
-				            message: $('<div></div>').load('transition/edit'),
-                            data: { "node": transition },
-                            draggable: true
-			            });
-                    }
-                } else {
-                    $.msgBox({
-                        title: "Designer / Property",
-                        content: kresource.getItem('activitypropertyeditwarnmsg'),
-                        type: "alert"
-                    });
-                }
-            } else {
-                $.msgBox({
-                    title: "Designer / Property",
-                    content: kresource.getItem('activitypropertyeditwarnmsg'),
-                    type: "alert"
-                });
-            }
-        }
-        /*
-        keditor.createEvents = function (cell) {
-            if (kmain.mxSelectedDomElement === undefined) {
-                $.msgBox({
-                    title: "Designer / Property",
-                    content: kresource.getItem('processselectedwarnmsg'),
-                    type: "alert"
-                });
-                return;
-            }
-
-            var model = this.graph.getModel();
-            var snode = model.getValue(cell);
-
-            if (mxUtils.isNode(snode)) {
-                kmain.mxSelectedDomElement.Cell = cell;
-
-                if (model.isVertex(cell)) {
-                    if (snode.nodeName === "Activity") {
-                        kmain.mxSelectedDomElement.ElementType = 'Activity';
-                        var activity = kmain.mxSelectedDomElement.ElementObject = convert2ActivityObject(cell, model);
-                        showActivityEventDialog(activity);
-                    } else if (snode.nodeName === "Swimlane") {
-                        $.msgBox({
-                            title: "Designer / Property",
-                            content: kresource.getItem('swimlanepropertymsg'),
-                            type: "info"
-                        });
-                    }
-                } else if (model.isEdge(cell)) {
-                    if (snode.nodeName === "Transition") {
                         //transition page
                         kmain.mxSelectedDomElement.ElementType = 'Transition';
-                        var transition = kmain.mxSelectedDomElement.ElementObject = convert2TransitionObject(cell);
+                        var transition = kmain.mxSelectedDomElement.ElementObject = convert2TransitionObject(cell, model);
                         BootstrapDialog.show({
                             title: kresource.getItem('transitionproperty'),
                             message: $('<div></div>').load('transition/edit'),
@@ -216,22 +144,13 @@ var kmain = (function () {
                         });
                     }
                 } else {
-                    $.msgBox({
-                        title: "Designer / Property",
-                        content: kresource.getItem('activitypropertyeditwarnmsg'),
-                        type: "alert"
-                    });
+                    kmsgbox.warn(kresource.getItem('activitypropertyeditwarnmsg'));
                 }
             } else {
-                $.msgBox({
-                    title: "Designer / Property",
-                    content: kresource.getItem('activitypropertyeditwarnmsg'),
-                    type: "alert"
-                });
+                kmsgbox.warn(kresource.getItem('activitypropertyeditwarnmsg'));
             }
         }
-        */
-
+        
         keditor.showAdvanced = function (cell) {
             window.console.log("show advanced...in kmain");
         }
@@ -296,6 +215,17 @@ var kmain = (function () {
                 actions.push(action);
             });
             activity.actions = actions;
+        }
+
+        //services
+        var servicesElement = snode.getElementsByTagName("Services")[0];
+        if (servicesElement) {
+            var services = [];
+            Array.prototype.forEach.call(servicesElement.getElementsByTagName("Service"), function (serviceElement) {
+                var service = mxfile.getServiceObject(serviceElement);
+                services.push(service);
+            });
+            activity.services = services;
         }
 
         //boundaries
@@ -363,12 +293,8 @@ var kmain = (function () {
     function createEditor(config){
         var editor = null;
         try{
-            if (!mxClient.isBrowserSupported()){
-                $.msgBox({
-                    title: "Designer / Index",
-                    content: kresource.getItem('explorernotsupportmsg'),
-				    type: "info"
-			    });
+            if (!mxClient.isBrowserSupported()) {
+                kmsgbox.info(kresource.getItem('explorernotsupportmsg'));
             } else {
                 mxObjectCodec.allowEval = true;
                 var node = mxUtils.load(config).getDocumentElement();
@@ -392,12 +318,8 @@ var kmain = (function () {
                 funct(editor);
                 editor.setStatus('mxGraph ' + mxClient.VERSION);
             }
-        }catch (e){
-            $.msgBox({
-                title: "Designer / Index",
-                content: kresource.getItem('workfloweditorstartuperrormsg') + e.message,
-				type: "info"
-			});
+        } catch (e) {
+            kmsgbox.error(kresource.getItem('workfloweditorstartuperrormsg'), e.message);
             throw e;
         }
         return editor;
@@ -440,19 +362,11 @@ var kmain = (function () {
         try {
             var prepareDetail = kvalidator.prepareValidateEntity();
             if (prepareDetail.type !== "OK") {
-                $.msgBox({
-                    title: "Designer / Process",
-                    content: kresource.getItem(prepareDetail.type),
-                    type: "warn"
-                });
+                kmsgbox.warn(kresource.getItem(prepareDetail.type));
                 return false;
             }
         } catch (e) {
-            $.msgBox({
-                title: "Designer / Process",
-                content: kresource.getItem('processvalidateexceptionmsg') + e.message,
-                type: "warn"
-            });
+            kmsgbox.error(kresource.getItem('processvalidateexceptionmsg'), e.message,)
             return false;
         }
 
@@ -463,30 +377,19 @@ var kmain = (function () {
             var message = '';
 
             if (validatedDetail.type === "OK") {
-                $.msgBox({
-                    title: "Designer / Process",
-                    content: kresource.getItem('processvalidateokmsg'),
-                    type: "info"
-                });
+                kmsgbox.info(kresource.getItem('processvalidateokmsg'));
             } else if (validatedDetail.type === "EXCEPTION") {
-                $.msgBox({
-                    title: "Designer / Process",
-                    content: kresource.getItem('processvalidateexceptionmsg'),
-                    type: "error"
-                });
+                kmsgbox.error(kresource.getItem('processvalidateexceptionmsg'));
             } else {
                 for (var i = 0; i < list.length; i++) {
                     if (message !== '') message = message + ',';
                     var activity = list[i];
                     message = message + activity.ActivityName;
                 }
-                $.msgBox({
-                    title: "Designer / Process",
-                    content: kresource.getItem('processvalidatewarningmsg')
-                        + kresource.getItem(validatedDetail.type)
-                        + message,
-                    type: "warn"
-                });
+                var msgDetail = kresource.getItem('processvalidatewarningmsg')
+                    + kresource.getItem(validatedDetail.type)
+                    + message;
+                kmsgbox.warn(msgDetail);
             }
         });
     }
@@ -519,11 +422,7 @@ var kmain = (function () {
             };
             processapi.saveProcessFile(entity);
         } else {
-            $.msgBox({
-                title: "Designer / Process",
-                content: kresource.getItem("processxmlsaveerrormsg") + result.message,
-                type: "warn"
-            });
+            kmsgbox.error(kresource.getItem("processxmlsaveerrormsg"), result.message);
         }
     }
 
@@ -545,11 +444,7 @@ var kmain = (function () {
                 kmain.mxSelectedParticipants = graphData.package.participants;
                 kmain.mxSelectedProcessEntity = data.ProcessEntity;
             } else {
-                $.msgBox({
-                    title: "Designer / Process",
-                    content: kresource.getItem('processopenerrormsg') + result.Message,
-                    type: "error"
-                });
+                kmsgbox.error(kresource.getItem('processopenerrormsg'), result.Message);
             }
         });
     }
@@ -593,11 +488,7 @@ var kmain = (function () {
                         //保存单一流程
                         saveProcessFileBySingleProcess(kmain.mxSelectedProcessEntity, xmlContent);
                     } else {
-                        $.msgBox({
-                            title: "Designer / Process",
-                            content: kresource.getItem("processxmlsaveerrormsg") + result.message,
-                            type: "warn"
-                        });
+                        kmsgbox.warn(kresource.getItem("processxmlsaveerrormsg"), result.message);
                     }
                 }
             }
@@ -606,46 +497,28 @@ var kmain = (function () {
             var checkType = checkStartActivityExistInSwimlane();
             if (checkType === "SWIMLANE-ACTIVITY-START") {
                 //泳道流程，需要先配置属性
-                $.msgBox({
-                    title: "Designer / Process",
-                    content: kresource.getItem("processxmlsavepoolwarnmsg"),
-                    type: "warn"
-                });
+                kmsgbox.warn(kresource.getItem("processxmlsavepoolwarnmsg"));
             } else if (checkType === "SWIMLANE-PROCESS-HAVE") {
                 //保存多泳道流程
                 saveProcessFileBySwimlaneConfirm();
             } else if (checkType === "") {
-                $.msgBox({
-                    title: "Designer / Process",
-                    content: kresource.getItem("processxmlothersaveerrormsg") + 'need other information!',
-                    type: "warn"
-                });
+                kmsgbox.error(kresource.getItem("processxmlothersaveerrormsg"));
             }
         }
     }
 
     function saveProcessFileBySwimlaneConfirm() {
-        $.msgBox({
-            title: "Are You Sure",
-            content: kresource.getItem('processpoolsaveconfirmmsg'),
-            type: "confirm",
-            buttons: [{ value: "Yes" }, { value: "Cancel" }],
-            success: function (result) {
-                if (result == "Yes") {
-                    //已经绑定流程的泳道流程
-                    var result = kloader.serialize2Xml(kmain.mxSelectedParticipants);
-                    if (result.status === 1) {
-                        var xmlContent = result.xmlContent;
-                        saveProcessFileBySwimlaneProcess(xmlContent);
-                    } else {
-                        $.msgBox({
-                            title: "Designer / Process",
-                            content: kresource.getItem("processxmlpoolsaveerrormsg") + result.message,
-                            type: "warn"
-                        });
-                    }
-                    return;
+        kmsgbox.confirm(kresource.getItem('processpoolsaveconfirmmsg'), function (result) {
+            if (result === "Yes") {
+                //已经绑定流程的泳道流程
+                var result = kloader.serialize2Xml(kmain.mxSelectedParticipants);
+                if (result.status === 1) {
+                    var xmlContent = result.xmlContent;
+                    saveProcessFileBySwimlaneProcess(xmlContent);
+                } else {
+                    kmsgbox.error(kresource.getItem("processxmlpoolsaveerrormsg"), result.message);
                 }
+                return;
             }
         });
     }
@@ -710,10 +583,6 @@ var kmain = (function () {
         var fileEntity = {
             "ProcessGUID": entity.ProcessGUID,
             "Version": entity.Version,
-            "StartType": kmain.mxSelectedProcessStartType,
-            "StartExpression": kmain.mxSelectedProcessStartExpression,
-            "EndType": kmain.mxSelectedProcessEndType,
-            "EndExpression": kmain.mxSelectedProcessEndExpression,
             "XmlContent": xmlContent
         };
         processapi.saveProcessFile(fileEntity);
@@ -783,17 +652,13 @@ var kmain = (function () {
                 draggable: true
             });
         } else {
-            $.msgBox({
-                title: "Designer / Index",
-                content: kresource.getItem('xmlpreviewwarnmsg'),
-                type: "warn"
-            });
+            kmsgbox.warn(kresource.getItem('xmlpreviewwarnmsg'));
             return;
         }
     }
     //#endregion
 
-    //#region set vertex and edut value
+    //#region set vertex and edit value
     kmain.setVertexValue = function(activity){
         var model = kmain.mxGraphEditor.graph.getModel();
         var snode =  model.getValue(kmain.mxSelectedDomElement.Cell);
@@ -886,7 +751,7 @@ var kmain = (function () {
         }
     }
 
-    //set vertext actions
+    //set vertex actions
     kmain.setVertexActions = function (actions) {
         var model = kmain.mxGraphEditor.graph.getModel();
         var snode = model.getValue(kmain.mxSelectedDomElement.Cell);
@@ -916,11 +781,42 @@ var kmain = (function () {
         }
     }
 
-    var removeChildren = function (node) {
+    function removeChildren(node) {
         var last;
         while (last = node.lastChild) node.removeChild(last);
     };
 
+    //set vertex services
+    kmain.setVertexServices = function (services) {
+        var model = kmain.mxGraphEditor.graph.getModel();
+        var snode = model.getValue(kmain.mxSelectedDomElement.Cell);
+
+        if (services) {
+            var servicesElement = snode.getElementsByTagName("Services")[0];
+            if (!servicesElement) {
+                servicesElement = snode.appendChild(snode.ownerDocument.createElement("Services"));
+            } else {
+                removeChildren(servicesElement);
+            }
+
+            var service = null,
+                serviceElement = null;
+            for (var i = 0; i < services.length; i++) {
+                service = services[i];
+                serviceElement = mxfile.setServiceElement(servicesElement.ownerDocument, service);
+                servicesElement.appendChild(serviceElement);
+            }
+        }
+
+        model.beginUpdate();
+        try {
+            model.setValue(kmain.mxSelectedDomElement.Cell, snode);
+        } finally {
+            model.endUpdate();
+        }
+    }
+
+    //set edge
     kmain.setEdgeValue = function(transition){
         var model = kmain.mxGraphEditor.graph.getModel();
         var sline = model.getValue(kmain.mxSelectedDomElement.Cell);
@@ -957,8 +853,16 @@ var kmain = (function () {
                 groupBehavioursElement.setAttribute('priority', transition.groupBehaviours.priority);
             }
 
+            if (transition.groupBehaviours.defaultBranch) {
+                groupBehavioursElement.setAttribute("defaultBranch", transition.groupBehaviours.defaultBranch);
+            }
+
             if (transition.groupBehaviours.forced) {
                 groupBehavioursElement.setAttribute('forced', transition.groupBehaviours.forced);
+            }
+
+            if (transition.groupBehaviours.approval) {
+                groupBehavioursElement.setAttribute("approval", transition.groupBehaviours.approval);
             }
         }
 
@@ -1076,6 +980,11 @@ var kmain = (function () {
 
     kmain.simuTest = function () {
         var win = window.open("/sfw2/", '_blank');
+        win.focus();
+    }
+
+    kmain.insight = function () {
+        var win = window.open("/sfi2/", '_blank');
         win.focus();
     }
 

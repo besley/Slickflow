@@ -85,7 +85,7 @@ namespace Slickflow.Designer.Controllers.WebApi
                         }
                         catch (System.Exception ex)
                         {
-                            throw;
+                            return Ok(new { success = false, Message = ex.Message });
                         }
                     }
                 }
@@ -116,6 +116,9 @@ namespace Slickflow.Designer.Controllers.WebApi
                 {
                     var processName = XMLHelper.GetXmlAttribute(processNode, "name");
                     var processGUID = XMLHelper.GetXmlAttribute(processNode, "id");
+                    var processCode = XMLHelper.GetXmlAttribute(processNode, "code");
+                    //获取8位随机字符串和数字序列作为ProcessCode，保证唯一性
+                    if (string.IsNullOrEmpty(processCode)) processCode = (new RandomSequenceGenerator()).GetRandomSequece();
 
                     if (!string.IsNullOrEmpty(processName) && !string.IsNullOrEmpty(processGUID))
                     {
@@ -123,6 +126,7 @@ namespace Slickflow.Designer.Controllers.WebApi
                         {
                             ProcessGUID = processGUID,
                             ProcessName = processName,
+                            ProcessCode = processCode,
                             Version = "1",
                             IsUsing = 1,
                             XmlContent = xmlContent,

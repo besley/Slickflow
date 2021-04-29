@@ -47,7 +47,7 @@ namespace Slickflow.WebApi.Controllers
     //run process app:
     ////业务员提交办理节点：
     ////下一步是“板房签字”办理节点
-    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"eb833577-abb5-4239-875a-5f2e2fcb6d57":[{"UserID":10,"UserName":"Long"}]}}
+    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"eb833577-abb5-4239-875a-5f2e2fcb6d57":[{"UserID":"10","UserName":"Long"}]}}
 
     //withdraw process:
     //撤销至上一步节点（由板房签字到上一步业务员提交）
@@ -56,17 +56,17 @@ namespace Slickflow.WebApi.Controllers
     //runprocess app
     //板房签字办理节点
     //下一步是业务员确认
-    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"cab57060-f433-422a-a66f-4a5ecfafd54e":[{"UserID":10,"UserName":"Long"}]}}
+    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"cab57060-f433-422a-a66f-4a5ecfafd54e":[{"UserID":"10","UserName":"Long"}]}}
 
     //流程结束
     //业务员确认办理节点
     //下一步流程结束
-    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","NextActivityPerformers":{"b53eb9ab-3af6-41ad-d722-bed946d19792":[{"UserID":10,"UserName":"Long"}]}}
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","NextActivityPerformers":{"b53eb9ab-3af6-41ad-d722-bed946d19792":[{"UserID":"10","UserName":"Long"}]}}
 
     //run sub process
     //有子流程
     //启动子流程
-    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"5fa796f6-2d5d-4ed6-84e2-a7c4e4e6aabc":[{"UserID":10,"UserName":"Long"}]}}
+    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"5fa796f6-2d5d-4ed6-84e2-a7c4e4e6aabc":[{"UserID":"10","UserName":"Long"}]}}
 
 
     //reverse process:
@@ -144,6 +144,33 @@ namespace Slickflow.WebApi.Controllers
         /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult RunProcessApp([FromBody] WfAppRunner runner)
+        {
+            using (var session = SessionFactory.CreateSession())
+            {
+                var transaction = session.BeginTrans();
+                var wfService = new WorkflowService();
+                var result = wfService.RunProcessApp(session.Connection, runner, session.Transaction);
+
+                if (result.Status == WfExecutedStatus.Success)
+                {
+                    transaction.Commit();
+                    return ResponseResult.Success();
+                }
+                else
+                {
+                    transaction.Rollback();
+                    return ResponseResult.Error(result.Message);
+                }
+            }
+        }
+
+        /// <summary>
+        ///  运行流程测试
+        /// </summary>
+        /// <param name="runner">运行者</param>
+        /// <returns>执行结果</returns>
+        [HttpPost]
+        public ResponseResult RunProcess([FromBody] WfAppRunner runner)
         {
             using (var session = SessionFactory.CreateSession())
             {

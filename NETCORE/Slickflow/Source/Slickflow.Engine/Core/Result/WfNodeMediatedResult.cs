@@ -70,28 +70,33 @@ namespace Slickflow.Engine.Core.Result
         WaitingForCompletedMore = 2,
 
         /// <summary>
+        /// 会(加)签时，没有达到通过率要求
+        /// </summary>
+        NotEnoughApprovalBranchesCount = 3,
+
+        /// <summary>
         /// 并行汇合需要其它分支
         /// </summary>
-        NeedOtherGatewayBranchesToJoin = 3,
+        NeedOtherGatewayBranchesToJoin = 13,
 
         /// <summary>
         /// OrJoin场景，第一个满足条件的分支完成，其后的被阻止
         /// </summary>
-        OrJoinOneBranchHasBeenFinishedWaittingOthers = 4,
+        OrJoinOneBranchHasBeenFinishedWaittingOthers = 14,
 
         /// <summary>
         /// 中间事件处理节点异常
         /// </summary>
-        IntermediateEventFailed = 5,
+        IntermediateEventFailed = 15,
 
         /// <summary>
         /// 其它未知因素需调试
         /// </summary>
-        OtherUnknownReasonToDebug = 6,
+        OtherUnknownReasonToDebug = 16,
 
         /// <summary>
         /// 未知类型的节点需监视
         /// </summary>
-        UnknownNodeTypeToWatch = 7
+        UnknownNodeTypeToWatch = 17
     }
 }

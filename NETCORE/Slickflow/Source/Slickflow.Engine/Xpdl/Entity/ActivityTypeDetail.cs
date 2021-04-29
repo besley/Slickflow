@@ -23,6 +23,11 @@ namespace Slickflow.Engine.Xpdl.Entity
         public TriggerTypeEnum TriggerType { get; set; }
 
         /// <summary>
+        /// 消息捕获抛出类型
+        /// </summary>
+        public MessageDirectionEnum MessageDirection { get; set; }
+
+        /// <summary>
         /// 会签加签类型
         /// </summary>
         public ComplexTypeEnum ComplexType { get; set; }
@@ -52,10 +57,20 @@ namespace Slickflow.Engine.Xpdl.Entity
         /// </summary>
         public SkipInfo SkipInfo { get; set; }
 
+
+        /// <summary>
+        /// 子流程调用类型
+        /// </summary>
+        public SubProcessTypeEnum SubProcessType { get;set;}
         /// <summary>
         /// 子流程信息
         /// </summary>
         public String SubProcessGUID { get; set; }
+
+        /// <summary>
+        /// 子流程动态指定查询
+        /// </summary>
+        public string SubVariableName { get; set; }
 
         /// <summary>
         /// 事件类型表达式
@@ -156,6 +171,23 @@ namespace Slickflow.Engine.Xpdl.Entity
         /// 并行加签
         /// </summary>
         SignForwardParallel = 3
+    }
+
+    /// <summary>
+    /// 子流程调用类型
+    /// </summary>
+    public enum SubProcessTypeEnum
+    {
+        /// <summary>
+        /// 固定
+        /// </summary>
+
+        Fixed = 0,
+
+        /// <summary>
+        /// 动态
+        /// </summary>
+        Dynamic = 1
     }
 
     /// <summary>

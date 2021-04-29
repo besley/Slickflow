@@ -46,13 +46,8 @@ namespace Slickflow.Engine.Common
         GatewayNode = 8,
 
         /// <summary>
-        /// 插件节点
+        /// 代码服务节点
         /// </summary>
-        PluginNode = 16,
-
-        /// <summary>
-        /// 脚本节点
-        /// </summary>
-        ScriptNode = 32,
+        ServiceNode = 16
     }
 }

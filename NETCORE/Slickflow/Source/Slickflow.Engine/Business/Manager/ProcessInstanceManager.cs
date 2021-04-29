@@ -104,19 +104,25 @@ namespace Slickflow.Engine.Business.Manager
         private ProcessInstanceEntity GetByVersion(string processGUID, 
             string version)
         {
-            var sql = @"SELECT 
-                            * 
-                        FROM WfProcessInstance
-                        WHERE ProcessGUID=@processGUID
-                            AND Version=@version
-                        ORDER BY ID DESC";
-            var processInstanceList = Repository.Query<ProcessInstanceEntity>(sql,
-                    new
-                    {
-                        processGUID = processGUID,
-                        version = version
-                    }).ToList();
-            var entity = EnumHelper.GetFirst<ProcessInstanceEntity>(processInstanceList);
+            //var sql = @"SELECT 
+            //                * 
+            //            FROM WfProcessInstance
+            //            WHERE ProcessGUID=@processGUID
+            //                AND Version=@version
+            //            ORDER BY ID DESC";
+            //var processInstanceList = Repository.Query<ProcessInstanceEntity>(sql,
+            //        new
+            //        {
+            //            processGUID = processGUID,
+            //            version = version
+            //        }).ToList();
+            var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>()
+                            where pi.ProcessGUID == processGUID
+                                && pi.Version == version
+                            select pi
+                            );
+            var list = sqlQuery.OrderByDescending(pi=>pi.ID).ToList<ProcessInstanceEntity>();
+            var entity = EnumHelper.GetFirst<ProcessInstanceEntity>(list);
 
             return entity;
         }
@@ -228,19 +234,25 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns>流程实例实体</returns>
         internal IEnumerable<ProcessInstanceEntity> GetProcessInstance(String appInstanceID)
         {
-            var sql = @"SELECT 
-                            * 
-                        FROM WfProcessInstance 
-                        WHERE AppInstanceID=@appInstanceID 
-                            AND RecordStatusInvalid = 0 
-                        ORDER BY CreatedDateTime DESC";
+            //var sql = @"SELECT 
+            //                * 
+            //            FROM WfProcessInstance 
+            //            WHERE AppInstanceID=@appInstanceID 
+            //                AND RecordStatusInvalid = 0 
+            //            ORDER BY CreatedDateTime DESC";
 
-            return Repository.Query<ProcessInstanceEntity>(
-                        sql,
-                        new
-                        {
-                            appInstanceID = appInstanceID
-                        });
+            //return Repository.Query<ProcessInstanceEntity>(
+            //            sql,
+            //            new
+            //            {
+            //                appInstanceID = appInstanceID
+            //            });
+            var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>()
+                            where pi.AppInstanceID == appInstanceID
+                            select pi
+                );
+            var list = sqlQuery.OrderByDescending(pi => pi.CreatedDateTime).ToList<ProcessInstanceEntity>();
+            return list;
         }
 
         /// <summary>
@@ -256,51 +268,64 @@ namespace Slickflow.Engine.Business.Manager
             String processGUID,
             IDbTransaction trans)
         {
-            var sql = @"SELECT 
-                            * 
-                        FROM WfProcessInstance 
-                        WHERE AppInstanceID=@appInstanceID 
-                            AND ProcessGUID=@processGUID 
-                            AND RecordStatusInvalid = 0
-                        ORDER BY CreatedDateTime DESC";
+            //var sql = @"SELECT 
+            //                * 
+            //            FROM WfProcessInstance 
+            //            WHERE AppInstanceID=@appInstanceID 
+            //                AND ProcessGUID=@processGUID 
+            //                AND RecordStatusInvalid = 0
+            //            ORDER BY CreatedDateTime DESC";
 
-            return Repository.Query<ProcessInstanceEntity>(conn,
-                        sql,
-                        new {
-                            appInstanceID = appInstanceID, 
-                            processGUID = processGUID
-                        },
-                        trans);
+            //return Repository.Query<ProcessInstanceEntity>(conn,
+            //            sql,
+            //            new {
+            //                appInstanceID = appInstanceID, 
+            //                processGUID = processGUID
+            //            },
+            //            trans);
+            var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>(conn, trans)
+                            where pi.AppInstanceID == appInstanceID
+                                && pi.ProcessGUID == processGUID
+                                && pi.RecordStatusInvalid == 0
+                            select pi
+                            );
+            var list = sqlQuery.OrderByDescending(pi => pi.CreatedDateTime).ToList<ProcessInstanceEntity>();
+            return list;
         }
 
         /// <summary>
         /// 获取处于运行状态的流程实例
         /// </summary>
-        /// <param name="conn">数据库连接</param>
         /// <param name="appInstanceID">应用实例ID</param>
         /// <param name="processGUID">流程GUID</param>
         /// <returns>流程实例实体</returns>
-        internal ProcessInstanceEntity GetRunningProcessInstance(IDbConnection conn, 
-            string appInstanceID,
+        internal ProcessInstanceEntity GetRunningProcessInstance(string appInstanceID,
             string processGUID)
         {
-            var sql = @"SELECT 
-                            * 
-                        FROM WfProcessInstance
-                        WHERE AppInstanceID=@appInstanceID 
-                            AND ProcessGUID=@processGUID 
-                            AND RecordStatusInvalid=0
-                            AND (ProcessState=1 OR ProcessState=2)
-                        ORDER BY CreatedDateTime DESC";
+            //var sql = @"SELECT 
+            //                * 
+            //            FROM WfProcessInstance
+            //            WHERE AppInstanceID=@appInstanceID 
+            //                AND ProcessGUID=@processGUID 
+            //                AND RecordStatusInvalid=0
+            //                AND (ProcessState=1 OR ProcessState=2)
+            //            ORDER BY CreatedDateTime DESC";
 
-            var list = Repository.Query<ProcessInstanceEntity>(
-                    conn,
-                    sql,
-                    new
-                    {
-                        appInstanceID = appInstanceID,
-                        processGUID = processGUID
-                    }).ToList();
+            //var list = Repository.Query<ProcessInstanceEntity>(
+            //        sql,
+            //        new
+            //        {
+            //            appInstanceID = appInstanceID,
+            //            processGUID = processGUID
+            //        }).ToList();
+            var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>()
+                            where pi.AppInstanceID == appInstanceID
+                                && pi.ProcessGUID == processGUID
+                                && pi.RecordStatusInvalid == 0
+                                && (pi.ProcessState == 1 || pi.ProcessState == 2)
+                            select pi
+                            );
+            var list = sqlQuery.OrderByDescending(pi => pi.CreatedDateTime).ToList<ProcessInstanceEntity>();
 
             if (list.Count == 1)
             {
@@ -315,22 +340,28 @@ namespace Slickflow.Engine.Business.Manager
         /// <summary>
         /// 判断流程实例是否存在
         /// </summary>
-        /// <param name="conn">连接</param>
         /// <param name="processGUID">流程GUId</param>
         /// <param name="version">版本</param>
         /// <returns>流程实例记录数</returns>
-        internal Int32 GetProcessInstanceCount(IDbConnection conn, string processGUID, string version)
+        internal Int32 GetProcessInstanceCount(string processGUID, string version)
         {
-            var sql = @"SELECT 
-                            COUNT(1) 
-                        FROM WfProcessInstance
-                        WHERE ProcessGUID=@processGUID
-                            AND Version=@version";
-            var parameters = new DynamicParameters();
-            parameters.Add("@processGUID", processGUID);
-            parameters.Add("@version", version);
+            //var sql = @"SELECT 
+            //                COUNT(1) 
+            //            FROM WfProcessInstance
+            //            WHERE ProcessGUID=@processGUID
+            //                AND Version=@version";
+            //var parameters = new DynamicParameters();
+            //parameters.Add("@processGUID", processGUID);
+            //parameters.Add("@version", version);
+            //return Repository.Count(sql, parameters);
 
-            return Repository.Count(sql, parameters);
+            var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>()
+                            where pi.ProcessGUID == processGUID
+                                && pi.Version == version
+                            select pi
+                            );
+            var count = sqlQuery.ToList<ProcessInstanceEntity>().Count();
+            return count;
         }
 
         /// <summary>
@@ -347,20 +378,28 @@ namespace Slickflow.Engine.Business.Manager
             IDbTransaction trans)
         {
             bool isCompleted = false;
-            var list = Repository.Query<ProcessInstanceEntity>(
-                    conn,
-                    @"SELECT * FROM WfProcessInstance
-                                WHERE InvokedActivityInstanceID=@invokedActivityInstanceID 
-                                    AND InvokedActivityGUID=@invokedActivityGUID 
-                                    AND RecordStatusInvalid=0
-                                    AND ProcessState=4
-                                ORDER BY CreatedDateTime DESC",
-                    new
-                    {
-                        invokedActivityInstanceID = activityInstanceID,
-                        invokedActivityGUID = activityGUID
-                    },
-                    trans).ToList();
+            //var list = Repository.Query<ProcessInstanceEntity>(
+            //        conn,
+            //        @"SELECT * FROM WfProcessInstance
+            //                    WHERE InvokedActivityInstanceID=@invokedActivityInstanceID 
+            //                        AND InvokedActivityGUID=@invokedActivityGUID 
+            //                        AND RecordStatusInvalid=0
+            //                        AND ProcessState=4
+            //                    ORDER BY CreatedDateTime DESC",
+            //        new
+            //        {
+            //            invokedActivityInstanceID = activityInstanceID,
+            //            invokedActivityGUID = activityGUID
+            //        },
+            //        trans).ToList();
+            var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>(conn, trans)
+                            where pi.InvokedActivityInstanceID == activityInstanceID
+                                && pi.InvokedActivityGUID == activityGUID
+                                && pi.RecordStatusInvalid == 0
+                                && pi.ProcessState == 4
+                            select pi
+                );
+            var list = sqlQuery.OrderByDescending(pi => pi.CreatedDateTime).ToList<ProcessInstanceEntity>();
 
             if (list.Count == 1)
             {
@@ -412,12 +451,12 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="runner">运行者</param>
         /// <param name="processEntity">流程定义</param>
         /// <param name="parentProcessInstance">父流程实例</param>
-        /// <param name="subProcessNode">子流程节点</param>
+        /// <param name="subProcessActivityInstance">子流程节点</param>
         /// <returns>流程实例的ID</returns>
         internal ProcessInstanceEntity CreateNewProcessInstanceObject(WfAppRunner runner,
             ProcessEntity processEntity,
             ProcessInstanceEntity parentProcessInstance = null,
-            ActivityInstanceEntity subProcessNode = null)
+            ActivityInstanceEntity subProcessActivityInstance = null)
         {
             ProcessInstanceEntity entity = new ProcessInstanceEntity();
             entity.ProcessGUID = processEntity.ProcessGUID;
@@ -432,8 +471,8 @@ namespace Slickflow.Engine.Business.Manager
                 //流程的Parent信息
                 entity.ParentProcessInstanceID = parentProcessInstance.ID;
                 entity.ParentProcessGUID = parentProcessInstance.ProcessGUID;
-                entity.InvokedActivityInstanceID = subProcessNode.ID;
-                entity.InvokedActivityGUID = subProcessNode.ActivityGUID;
+                entity.InvokedActivityInstanceID = subProcessActivityInstance.ID;
+                entity.InvokedActivityGUID = subProcessActivityInstance.ActivityGUID;
             }
 
             entity.CreatedByUserID = runner.UserID;
@@ -558,17 +597,24 @@ namespace Slickflow.Engine.Business.Manager
             WfAppRunner runner,
             IDbSession session)
         {
-            var list = Repository.Query<ProcessInstanceEntity>(
-                   session.Connection,
-                   @"SELECT * FROM WfProcessInstance
-                                WHERE InvokedActivityInstanceID=@invokedActivityInstanceID 
-                                    AND ProcessState=5
-                                ORDER BY CreatedDateTime DESC",
-                   new
-                   {
-                       invokedActivityInstanceID = invokedActivityInstanceID
-                   },
-                   session.Transaction).ToList();
+            //var list = Repository.Query<ProcessInstanceEntity>(
+            //       session.Connection,
+            //       @"SELECT * FROM WfProcessInstance
+            //                    WHERE InvokedActivityInstanceID=@invokedActivityInstanceID 
+            //                        AND ProcessState=5
+            //                    ORDER BY CreatedDateTime DESC",
+            //       new
+            //       {
+            //           invokedActivityInstanceID = invokedActivityInstanceID
+            //       },
+            //       session.Transaction).ToList();
+
+            var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>(session.Connection, session.Transaction)
+                            where pi.InvokedActivityInstanceID == invokedActivityInstanceID
+                                && pi.ProcessState == 5
+                            select pi
+                            );
+            var list = sqlQuery.OrderByDescending(pi => pi.CreatedDateTime).ToList<ProcessInstanceEntity>();
 
             if (list != null && list.Count() == 1)
             {
@@ -663,47 +709,50 @@ namespace Slickflow.Engine.Business.Manager
         /// 废弃单据下所有流程的信息
         /// </summary>
         /// <param name="runner">运行者</param>
-        /// <param name="conn">数据库链接</param>
+
         /// <returns>设置成功标识</returns>
-        internal bool Discard(WfAppRunner runner, IDbConnection conn=null)
+        internal bool Discard(WfAppRunner runner)
         {
             var isDiscarded = false;
-            if (conn == null)
-            {
-                conn = SessionFactory.CreateConnection();
-            }
-
+            IDbConnection conn = SessionFactory.CreateConnection();
             var transaction = conn.BeginTransaction();
             try
             {
                 //process state:7--discard status
                 //record status:1 --invalid status
-                string updSql = @"UPDATE WfProcessInstance
-		                         SET [ProcessState] = 7, 
-			                         [RecordStatusInvalid] = 1,
-			                         [LastUpdatedDateTime] = GETDATE(),
-			                         [LastUpdatedByUserID] = @userID,
-			                         [LastUpdatedByUserName] = @userName
-		                        WHERE AppInstanceID = @appInstanceID
-			                        AND ProcessGUID = @processGUID
-                                    AND Version = @version";
+                //string updSql = @"UPDATE WfProcessInstance
+		              //           SET [ProcessState] = 7, 
+			             //            [RecordStatusInvalid] = 1,
+			             //            [LastUpdatedDateTime] = GETDATE(),
+			             //            [LastUpdatedByUserID] = @userID,
+			             //            [LastUpdatedByUserName] = @userName
+		              //          WHERE AppInstanceID = @appInstanceID
+			             //           AND ProcessGUID = @processGUID
+                //                    AND Version = @version";
+                //int result = Repository.Execute(conn, updSql, new
+                //{
+                //    appInstanceID = runner.AppInstanceID,
+                //    processGUID = runner.ProcessGUID,
+                //    version = runner.Version,
+                //    userID = runner.UserID,
+                //    userName = runner.UserName
+                //},
+                //transaction);
 
-                int result = Repository.Execute(conn, updSql, new
-                    {
-                        appInstanceID = runner.AppInstanceID,
-                        processGUID = runner.ProcessGUID,
-                        version = runner.Version,
-                        userID = runner.UserID,
-                        userName = runner.UserName
-                    },
-                transaction);
+                var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>(conn, transaction)
+                                where pi.AppInstanceID == runner.AppInstanceID
+                                    && pi.ProcessGUID == runner.ProcessGUID
+                                    && pi.Version == runner.Version
+                                select pi);
+                var list = sqlQuery.ToList<ProcessInstanceEntity>();
+                var entity = EnumHelper.GetFirst<ProcessInstanceEntity>(list);
+                entity.ProcessState = 7;
+                entity.RecordStatusInvalid = 1;
+                entity.LastUpdatedByUserID = runner.UserID;
+                entity.LastUpdatedByUserName = runner.UserName;
+                entity.LastUpdatedDateTime = System.DateTime.Now;
+                isDiscarded = Repository.Update<ProcessInstanceEntity>(conn, entity, transaction);
                 transaction.Commit();
-
-                //返回结果大于0，表示有记录更新
-                if (result > 0)
-                {
-                    isDiscarded = true;
-                }
             }
             catch (System.Exception e)
             {

@@ -29,6 +29,14 @@ namespace Slickflow.Engine.Core.SendBack
                 {
                     nodeSendBack = new NodeSendBackTask(sendbackOperation, session);
                 }
+                else if (sendbackOperation.PreviousNodeOperationType == SendBackOperationTypeEnum.MISPreviousIsLastOne)
+                {
+                    nodeSendBack = new NodeSendBackToMISPrevious(sendbackOperation, session);
+                }
+                else if (sendbackOperation.PreviousNodeOperationType == SendBackOperationTypeEnum.MIPAllIsInCompletedState)
+                {
+                    nodeSendBack = new NodeSendBackToMIPPrevious(sendbackOperation, session);
+                }
                 else
                 {
                     //如果有其它模式，没有处理到，则直接抛出异常
@@ -38,9 +46,24 @@ namespace Slickflow.Engine.Core.SendBack
             }
             else if (sendbackOperation.CurrentNodeOperationType == SendBackOperationTypeEnum.MultipleInstance)
             {
-                //如果有其它模式，没有处理到，则直接抛出异常
-                throw new WorkflowException(LocalizeHelper.GetEngineMessage("nodesendbackfactory.CreateNodeReverter.error",
-                    sendbackOperation.CurrentMultipleInstanceDetailType.ToString()));
+                if (sendbackOperation.CurrentMultipleInstanceDetailType == SendBackOperationTypeEnum.MISFirstOneIsRunning)
+                {
+                    nodeSendBack = new NodeSendBackMISReady(sendbackOperation, session);
+                }
+                else if(sendbackOperation.CurrentMultipleInstanceDetailType == SendBackOperationTypeEnum.MISOneIsRunning)
+                {
+                    nodeSendBack = new NodeSendBackMIS(sendbackOperation, session);
+                }
+                else if(sendbackOperation.CurrentMultipleInstanceDetailType == SendBackOperationTypeEnum.MIPOneIsRunning)
+                {
+                    nodeSendBack = new NodeSendBackMIP(sendbackOperation, session);
+                }
+                else
+                {
+                    //如果有其它模式，没有处理到，则直接抛出异常
+                    throw new WorkflowException(LocalizeHelper.GetEngineMessage("nodesendbackfactory.CreateNodeReverter.error",
+                        sendbackOperation.CurrentMultipleInstanceDetailType.ToString()));
+                }
             }
             return nodeSendBack;
         }

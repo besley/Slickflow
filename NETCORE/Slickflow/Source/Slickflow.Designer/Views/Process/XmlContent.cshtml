@@ -34,18 +34,10 @@
         function copyToClipboard() {
             var clipboard = new ClipboardJS('#btnCopy');
             clipboard.on('success', function () {
-　　             $.msgBox({
-                    title: "Process / XML",
-                    content: kresource.getItem('xmlcopytoclipboardok'),
-				    type: "info"
-			    });
+                kmsgbox.info(kresource.getItem('xmlcopytoclipboardok'));
             });
             clipboard.on('error', function () {
-　　            $.msgBox({
-                    title: "Process / XML",
-                    content: kresource.getItem('xmlcopytoclipboardwarn'),
-				    type: "alert"
-			    });
+                kmsgbox.warn(kresource.getItem('xmlcopytoclipboardwarn'));
             });
         }
     </script>
