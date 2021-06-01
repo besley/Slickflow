@@ -144,8 +144,9 @@ http://demo.slickflow.com/sfd/
 http://demo.slickflow.com/sfd/model  
 **Document:**  
 http://www.slickflow.com/wiki/index  
-**Discourse:**  
-https://forum.slickflow.com/  
+**Quasar Form Builder**  
+The online dynamic form demo:
+![AskForLeave Form Approval](https://github.com/besley/besley.github.io/blob/master/Gif/SlickQua-Ask4Leave-Demo.gif)  
 
 **Slickflow(1.7.7.0) 企业版：** 
 
