@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
+using System.Text;
 using DapperExtensions;
 using Slickflow.Data;
 using Slickflow.Module.Localize;
@@ -450,30 +451,30 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns>任务视图</returns>
         internal TaskViewEntity GetFirstRunningTask(int activityInstanceID)
         {
-            //string sql = @"SELECT
-            //                * 
-            //             FROM vwWfActivityInstanceTasks 
-            //             WHERE ProcessState=2 
-            //                AND ActivityInstanceID=@activityInstanceID 
-            //                AND (ActivityType=4 OR WorkItemType=1)
-            //                AND (ActivityState=1 OR ActivityState=2)
-            //                AND (TaskState=1 OR TaskState=2)
-            //                ORDER BY TaskState DESC
-            //            ";
-            //var list = Repository.Query<TaskViewEntity>(sql,
-            //    new
-            //    {
-            //        activityInstanceID = activityInstanceID
-            //    }).ToList();
-            var sqlQuery = (from tv in Repository.GetAll<TaskViewEntity>()
-                            where tv.ProcessState == 2
-                                && tv.ActivityInstanceID == activityInstanceID
-                                && (tv.ActivityType == 4 || tv.WorkItemType == 1)
-                                && (tv.ActivityState == 1 || tv.ActivityState == 2)
-                                && (tv.TaskState == 1 || tv.TaskState == 2)
-                            select tv
-                            );
-            var list = sqlQuery.OrderByDescending(tv => tv.TaskState).ToList<TaskViewEntity>();
+            string sql = @"SELECT
+                            * 
+                         FROM vwWfActivityInstanceTasks 
+                         WHERE ProcessState=2 
+                            AND ActivityInstanceID=@activityInstanceID 
+                            AND (ActivityType=4 OR WorkItemType=1)
+                            AND (ActivityState=1 OR ActivityState=2)
+                            AND (TaskState=1 OR TaskState=2)
+                            ORDER BY TaskState DESC
+                        ";
+            var list = Repository.Query<TaskViewEntity>(sql,
+                new
+                {
+                    activityInstanceID = activityInstanceID
+                }).ToList();
+            //var sqlQuery = (from tv in Repository.GetAll<TaskViewEntity>()
+            //                where tv.ProcessState == 2
+            //                    && tv.ActivityInstanceID == activityInstanceID
+            //                    && (tv.ActivityType == 4 || tv.WorkItemType == 1)
+            //                    && (tv.ActivityState == 1 || tv.ActivityState == 2)
+            //                    && (tv.TaskState == 1 || tv.TaskState == 2)
+            //                select tv
+            //                );
+            //var list = sqlQuery.OrderByDescending(tv => tv.TaskState).ToList<TaskViewEntity>();
 
             if (list.Count() > 0)
             {
@@ -1140,6 +1141,103 @@ namespace Slickflow.Engine.Business.Manager
                 session.Dispose();
             }
             return isOk;
+        }
+
+        /// <summary>
+        /// 取代当前活动下的任务办理人员
+        /// </summary>
+        /// <param name="activityInstanceID">活动ID</param>
+        /// <param name="replaced">替代用户</param>
+        /// <param name="runner">运行用户</param>
+        /// <returns></returns>
+        internal Boolean Replace(int activityInstanceID, List<TaskReplacedEntity> replaced, WfAppRunner runner)
+        {
+            var isOk = false;
+            var session = SessionFactory.CreateSession();
+            try
+            {
+                CancelTask(activityInstanceID, runner, session);
+
+                var aim = new ActivityInstanceManager();
+                var activityInstance = aim.GetById(session.Connection, activityInstanceID, session.Transaction);
+
+                activityInstance.AssignedToUserIDs = GenerateActivityAssignedUserIDs(replaced);
+                activityInstance.AssignedToUserNames = GenerateActivityAssignedUserNames(replaced);
+
+                foreach (var user in replaced)
+                {
+                    Insert(activityInstance, user.ReplacedByUserID, user.ReplacedByUserName, runner.UserID, runner.UserName, session);
+                }
+
+                session.Commit();
+
+                isOk = true;
+            }
+            catch (System.Exception e)
+            {
+                session.Rollback();
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("taskmanager.replace.error"),
+                    e);
+            }
+            finally
+            {
+                session.Dispose();
+            }
+            return isOk;
+        }
+
+        /// <summary>
+        /// 获取UserIds字符串
+        /// </summary>
+        /// <param name="userList"></param>
+        /// <returns></returns>
+        private string GenerateActivityAssignedUserIDs(List<TaskReplacedEntity> userList)
+        {
+            StringBuilder strBuilder = new StringBuilder(1024);
+            foreach (var user in userList)
+            {
+                if (strBuilder.ToString() != "")
+                    strBuilder.Append(",");
+                strBuilder.Append(user.ReplacedByUserID);
+            }
+            return strBuilder.ToString();
+        }
+
+        /// <summary>
+        /// 获取UserNames字符串
+        /// </summary>
+        /// <param name="userList"></param>
+        /// <returns></returns>
+        private string GenerateActivityAssignedUserNames(List<TaskReplacedEntity> userList)
+        {
+            StringBuilder strBuilder = new StringBuilder(1024);
+            foreach (var user in userList)
+            {
+                if (strBuilder.ToString() != "")
+                    strBuilder.Append(",");
+                strBuilder.Append(user.ReplacedByUserName);
+            }
+            return strBuilder.ToString();
+        }
+
+        /// <summary>
+        /// 取消任务办理
+        /// </summary>
+        /// <param name="activityInstanceID">活动实例id</param>
+        /// <param name="runner">运行着</param>
+        /// <param name="session">会话</param>
+        private void CancelTask(int activityInstanceID, WfAppRunner runner, IDbSession session)
+        {
+            var sqlQuery = (from t in Repository.GetAll<TaskEntity>(session.Connection, session.Transaction)
+                            where t.ActivityInstanceID == activityInstanceID
+                            select t);
+            var list = sqlQuery.ToList();
+            foreach (var task in list)
+            {
+                task.TaskState = (short)TaskStateEnum.Canceled;
+                task.RecordStatusInvalid = 1;
+                Update(task, session);
+            }
         }
 
         /// <summary>

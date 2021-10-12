@@ -137,7 +137,7 @@ namespace Slickflow.Engine.Business.Manager
             }
 
             //没有传递TaskID参数，进行查询
-            var activityInstanceList = aim.GetRunningActivityInstanceList(runner.AppInstanceID, runner.ProcessGUID, session).ToList();
+            var activityInstanceList = aim.GetRunningActivityInstanceList(runner.AppInstanceID, runner.ProcessGUID, runner.Version, session).ToList();
             if (activityInstanceList == null || activityInstanceList.Count == 0)
             {
                 //当前没有运行状态的节点存在，流程不存在，或者已经结束或取消
@@ -638,13 +638,15 @@ namespace Slickflow.Engine.Business.Manager
         /// </summary>
         /// <param name="appInstanceID">应用实例ID</param>
         /// <param name="processGUID">流程GUID</param>
+        /// <param name="version">版本</param>
         /// <returns>活动实例列表</returns>
         internal IEnumerable<ActivityInstanceEntity> GetRunningActivityInstanceList(string appInstanceID,
-            string processGUID)
+            string processGUID,
+            string version = null)
         {
             using (var session = SessionFactory.CreateSession())
             {
-                return GetRunningActivityInstanceList(appInstanceID, processGUID, session);
+                return GetRunningActivityInstanceList(appInstanceID, processGUID, version, session);
             }
         }
 
@@ -653,10 +655,12 @@ namespace Slickflow.Engine.Business.Manager
         /// </summary>
         /// <param name="appInstanceID">应用实例ID</param>
         /// <param name="processGUID">流程GUID</param>
+        /// <param name="version">版本</param>
         /// <param name="session">数据库会话</param>
         /// <returns>活动实例列表</returns>
         internal IEnumerable<ActivityInstanceEntity> GetRunningActivityInstanceList(string appInstanceID,
             string processGUID,
+            string version,
             IDbSession session)
         {
             //activityState: 1-ready（准备）, 2-running（）运行；
@@ -667,6 +671,7 @@ namespace Slickflow.Engine.Business.Manager
             //                    ON AI.ProcessInstanceID = PI.ID
             //                WHERE (AI.ActivityState=1 OR AI.ActivityState=2)
             //                    AND PI.ProcessState = 2 
+            //                    AND PI.Version = @version 
             //                    AND AI.AppInstanceID = @appInstanceID 
             //                    AND AI.ProcessGUID = @processGUID";
 
@@ -675,14 +680,17 @@ namespace Slickflow.Engine.Business.Manager
             //    new
             //    {
             //        appInstanceID = appInstanceID,
-            //        processGUID = processGUID
+            //        processGUID = processGUID,
+            //        version = version
             //    },
             //    session.Transaction);
+            if (string.IsNullOrEmpty(version)) version = "1";
             var sqlQuery = (from ai in Repository.GetAll<ActivityInstanceEntity>(session.Connection, session.Transaction)
                             join pi in Repository.GetAll<ProcessInstanceEntity>(session.Connection, session.Transaction)
                                 on ai.ProcessInstanceID equals pi.ID
                             where (ai.ActivityState == 1 || ai.ActivityState == 2)
                                 && pi.ProcessState == 2
+                                && pi.Version == version
                                 && ai.AppInstanceID == appInstanceID
                                 && ai.ProcessGUID == processGUID
                             select ai
@@ -1523,6 +1531,17 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// 更新活动实例
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="entity">实体</param>
+        /// <param name="trans">事务</param>
+        internal void Update(IDbConnection conn, ActivityInstanceEntity entity, IDbTransaction trans)
+        {
+            Repository.Update(conn, entity, trans);
+        }
+
+        /// <summary>
         /// 取消节点运行
         /// </summary>
         /// <param name="activityInstanceID">活动实例</param>
@@ -1532,22 +1551,38 @@ namespace Slickflow.Engine.Business.Manager
             WfAppRunner runner,
             IDbSession session)
         {
-            var sql = @"UPDATE WfActivityInstance 
-                        SET ActivityState=@activityState,
-                        LastUpdatedByUserID=@lastUpdatedByUserID,
-                        LastUpdatedByUserName=@lastUpdatedByUserName,
-                        LastUpdatedDateTime=@lastUpdatedDateTime 
-                        WHERE ID=@activityInstanceID 
-                            AND (ActivityState=1 OR ActivityState=2 OR ActivityState=5)";
-            Repository.Execute(session.Connection, sql,
-                new
-                {
-                    activityState = (short)ActivityStateEnum.Cancelled,
-                    lastUpdatedByUserID = runner.UserID,
-                    lastUpdatedByUserName = runner.UserName,
-                    LastUpdatedDateTime = System.DateTime.Now,
-                    activityInstanceID = activityInstanceID
-                }, session.Transaction);
+            //var sql = @"UPDATE WfActivityInstance 
+            //            SET ActivityState=@activityState,
+            //            LastUpdatedByUserID=@lastUpdatedByUserID,
+            //            LastUpdatedByUserName=@lastUpdatedByUserName,
+            //            LastUpdatedDateTime=@lastUpdatedDateTime 
+            //            WHERE ID=@activityInstanceID 
+            //                AND (ActivityState=1 OR ActivityState=2 OR ActivityState=5)";
+            //Repository.Execute(session.Connection, sql,
+            //    new
+            //    {
+            //        activityState = (short)ActivityStateEnum.Cancelled,
+            //        lastUpdatedByUserID = runner.UserID,
+            //        lastUpdatedByUserName = runner.UserName,
+            //        LastUpdatedDateTime = System.DateTime.Now,
+            //        activityInstanceID = activityInstanceID
+            //    }, session.Transaction);
+
+            var sqlQuery = (from a in Repository.GetAll<ActivityInstanceEntity>(session.Connection, session.Transaction)
+                            where a.ID == activityInstanceID
+                                && (a.ActivityState == 1 || a.ActivityState == 2 || a.ActivityState == 5)
+                            select a);
+            var list = sqlQuery.ToList<ActivityInstanceEntity>();
+            if (list.Count() == 1)
+            {
+                var entity = list[0];
+                entity.LastUpdatedByUserID = runner.UserID;
+                entity.LastUpdatedByUserName = runner.UserName;
+                entity.LastUpdatedDateTime = System.DateTime.Now;
+                entity.ActivityState = (short)ActivityStateEnum.Cancelled;
+                Repository.Update<ActivityInstanceEntity>(session.Connection, entity, session.Transaction);
+            }
+
         }
 
         /// <summary>

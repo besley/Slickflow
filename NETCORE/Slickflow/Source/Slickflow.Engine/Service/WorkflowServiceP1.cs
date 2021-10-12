@@ -231,6 +231,12 @@ namespace Slickflow.Engine.Service
             return tm.Entrust(entrusted, cancalOriginalTask);
         }
 
+        public Boolean ReplaceTask(int taskID, List<TaskReplacedEntity> replaced, WfAppRunner runner)
+        {
+            var tm = new TaskManager();
+            return tm.Replace(taskID, replaced, runner);
+        }
+
         /// <summary>
         /// 设置流程实例的过期时间
         /// </summary>
@@ -242,6 +248,38 @@ namespace Slickflow.Engine.Service
         {
             var pim = new ProcessInstanceManager();
             return pim.SetOverdue(processInstanceID, overdueDateTime, runner);
+        }
+
+        /// <summary>
+        /// 设置活动实例的定时作业为完成状态
+        /// (用于HangFire后台轮询任务)
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="processInstanceID">流程实例ID</param>
+        /// <param name="trans">事务</param>
+        public void SetProcessJobTimerCompleted(IDbConnection conn, int processInstanceID, IDbTransaction trans)
+        {
+            var pim = new ProcessInstanceManager();
+            var processInstance = pim.GetById(conn, processInstanceID, trans);
+            processInstance.JobTimerStatus = (short)JobTimerStatusEnum.Completed;
+            processInstance.JobTimerTreatedDateTime = System.DateTime.Now;
+            pim.Update(conn, processInstance, trans);
+        }
+
+        /// <summary>
+        /// 设置活动实例的定时作业为完成状态
+        /// (用于HangFire后台轮询任务)
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="activityInstanceID">活动实例ID</param>
+        /// <param name="trans">事务</param>
+        public void SetActivityJobTimerCompleted(IDbConnection conn, int activityInstanceID, IDbTransaction trans)
+        {
+            var aim = new ActivityInstanceManager();
+            var activityInstance = aim.GetById(conn, activityInstanceID, trans);
+            activityInstance.JobTimerStatus = (short)JobTimerStatusEnum.Completed;
+            activityInstance.JobTimerTreatedDateTime = System.DateTime.Now;
+            aim.Update(conn, activityInstance, trans);
         }
 
         /// <summary>
@@ -278,7 +316,7 @@ namespace Slickflow.Engine.Service
         public IList<ActivityInstanceEntity> GetRunningActivityInstance(TaskQuery query)
         {
             var aim = new ActivityInstanceManager();
-            var list = aim.GetRunningActivityInstanceList(query.AppInstanceID, query.ProcessGUID).ToList();
+            var list = aim.GetRunningActivityInstanceList(query.AppInstanceID, query.ProcessGUID, query.Version).ToList();
             return list;
         }
 
@@ -327,6 +365,25 @@ namespace Slickflow.Engine.Service
         {
             var pvm = new ProcessVariableManager();
             pvm.DeleteVariable(variableID);
+        }
+
+        /// <summary>
+        /// 验证触发表达式是否满足
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="processInstanceID">流程实例ID</param>
+        /// <param name="expression">表达式</param>
+        /// <param name="trans">事务</param>
+        /// <returns></returns>
+        public Boolean ValidateProcessVariable(int processInstanceID, string expression)
+        {
+            var isValidated = false;
+            using (var conn = SessionFactory.CreateConnection())
+            {
+                var pvm = new ProcessVariableManager();
+                isValidated = pvm.ValidateProcessVariable(conn, processInstanceID, expression, null);
+            }
+            return isValidated;
         }
         #endregion
 

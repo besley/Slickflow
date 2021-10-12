@@ -24,10 +24,13 @@ namespace Slickflow.Engine.Business.Entity
         public string ParentProcessGUID { get; set; }
         public int InvokedActivityInstanceID { get; set; }
         public string InvokedActivityGUID { get; set; }
+        public Nullable<short> JobTimerType { get; set; }
+        public Nullable<short> JobTimerStatus { get; set; }
+        public string TriggerExpression { get; set; }
+        public Nullable<DateTime> OverdueDateTime { get; set; }
+        public Nullable<DateTime> JobTimerTreatedDateTime { get; set; }
         public string CreatedByUserID { get; set; }
         public string CreatedByUserName { get; set; }
-        public Nullable<DateTime> OverdueDateTime { get; set; }
-        public Nullable<DateTime> OverdueTreatedDateTime { get; set; }
         public Nullable<DateTime> LastUpdatedDateTime { get; set; }
         public string LastUpdatedByUserID { get; set; }
         public string LastUpdatedByUserName { get; set; }

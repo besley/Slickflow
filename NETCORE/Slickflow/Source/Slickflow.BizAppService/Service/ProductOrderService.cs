@@ -247,6 +247,30 @@ namespace Slickflow.BizAppService.Service
                     
                     session.Commit();
                     appResult = WfAppResult.Success();
+
+                    try
+                    {
+                        //调用工厂作业流程节点：
+                        //流程节点:OrderFactoryMessageCaught
+                        //流程ProcessGUID:0f5829c7-17df-43eb-bfe5-1f2870fb2a0e Version:1
+                        var invokeAppRunner = new WfAppRunner();
+                        invokeAppRunner.UserID = WfAppRunner.UserID;
+                        invokeAppRunner.UserName = WfAppRunner.UserName;
+                        invokeAppRunner.ProcessGUID = "0f5829c7-17df-43eb-bfe5-1f2870fb2a0e";
+                        invokeAppRunner.Version = "1";
+                        invokeAppRunner.AppName = WfAppRunner.AppName;
+                        invokeAppRunner.AppInstanceID = WfAppRunner.AppInstanceID;
+                        invokeAppRunner.AppInstanceCode = WfAppRunner.AppInstanceCode;
+                        invokeAppRunner.DynamicVariables["ActivityCode"] = "OrderFactoryMessageCaught";
+
+                        var httpClient = HttpClientHelper.CreateHelper("http://localhost/sfsweb2/api/wfservice/invokejob");
+                        var invokeResult = httpClient.Post(invokeAppRunner);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        //记录异常日志
+                        ;
+                    }
                 }
                 else
                 {

@@ -39,5 +39,10 @@ namespace Slickflow.Engine.Common
         /// 多人可以办理，当别人办理完后，置关闭状态
         /// </summary>
         Closed = 32,
+
+        /// <summary>
+        /// 没有办理，直接取消
+        /// </summary>
+        Canceled = 48
     }
 }

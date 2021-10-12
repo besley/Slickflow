@@ -90,11 +90,30 @@ namespace Slickflow.Engine.Common
             string userID,
             string userName)
         {
-            var performerList = PerformerBuilder.CreatePerformerList(userID, userName);
             var nextActivityPerformers = new Dictionary<string, PerformerList>();
-
+            var performerList = PerformerBuilder.CreatePerformerList(userID, userName);
             nextActivityPerformers.Add(activityGUID, performerList);
 
+            return nextActivityPerformers;
+        }
+
+        /// <summary>
+        /// 创建下一步活动执行者列表
+        /// </summary>
+        /// <param name="nextActivityTree">活动节点列表</param>
+        /// <param name="userID">用户ID</param>
+        /// <param name="userName">用户名称</param>
+        /// <returns>步骤执行者列表</returns>
+        internal static IDictionary<string, PerformerList> CreateNextActivityPerformers(IList<NodeView> nextActivityTree,
+            string userID,
+            string userName)
+        {
+            var nextActivityPerformers = new Dictionary<string, PerformerList>();
+            var performList = PerformerBuilder.CreatePerformerList(userID, userName);
+            foreach (var node in nextActivityTree)
+            {
+                nextActivityPerformers.Add(node.ActivityGUID, performList);
+            }
             return nextActivityPerformers;
         }
 
@@ -113,6 +132,20 @@ namespace Slickflow.Engine.Common
             nextActivityPerformers.Add(activityGUID, performerList);
 
             return nextActivityPerformers;
+        }
+
+        /// <summary>
+        /// 创建下一步活动执行者列表
+        /// </summary>
+        /// <param name="nextActivityPerformers">下一步活动人员列表</param>
+        /// <param name="activityGUID">活动节点GUID</param>
+        /// <param name="roleList">角色列表</param>
+        internal static void CreateNextActivityPerformers(IDictionary<string, PerformerList> nextActivityPerformers,
+            string activityGUID,
+            IList<Role> roleList)
+        {
+            var performerList = PerformerBuilder.CreatePerformerList(roleList);
+            nextActivityPerformers.Add(activityGUID, performerList);
         }
 
         /// <summary>

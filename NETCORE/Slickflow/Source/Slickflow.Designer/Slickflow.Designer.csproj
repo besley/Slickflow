@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>81266c7b-04fe-47f2-8041-4e8ed0bd2b4c</UserSecretsId>
+    <Authors>Besley</Authors>
+    <Company>Hangzhou, Ligong</Company>
+    <Version>1.7.7.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

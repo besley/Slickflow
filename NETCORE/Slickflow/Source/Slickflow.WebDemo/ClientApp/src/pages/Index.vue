@@ -41,7 +41,6 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import kmsgbox from '../js/kmsgbox.js'
-import NextStepTree from 'components/Step/NextStepTree'
 
 export default {
   name: 'Index',

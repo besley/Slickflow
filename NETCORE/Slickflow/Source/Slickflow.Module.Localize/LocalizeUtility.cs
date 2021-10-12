@@ -7,31 +7,9 @@ using Newtonsoft.Json;
 namespace Slickflow.Module.Localize
 {
     /// <summary>
-    /// 语言类型
-    /// </summary>
-    public enum LangTypeEnum
-    {
-        zh = 0,
-        en = 1
-    }
-
-    /// <summary>
-    /// 项目类型
-    /// </summary>
-    public enum ProjectTypeEnum
-    {
-        Engine = 0,
-        Designer = 1,
-        Graph = 2,
-        WebTest = 3,
-        Scheduler = 4,
-        Insight = 5
-    }
-
-    /// <summary>
     /// 本地化帮助工具
     /// </summary>
-    public class LocalizeUtility
+    internal class LocalizeUtility
     {
         /// <summary>
         /// 静态构造方法
@@ -40,9 +18,7 @@ namespace Slickflow.Module.Localize
         {
             ReadProjectJSONResourceFromFile(ProjectTypeEnum.Engine);
             ReadProjectJSONResourceFromFile(ProjectTypeEnum.Designer);
-            ReadProjectJSONResourceFromFile(ProjectTypeEnum.Graph);
-            ReadProjectJSONResourceFromFile(ProjectTypeEnum.WebTest);
-            ReadProjectJSONResourceFromFile(ProjectTypeEnum.Scheduler);
+            ReadProjectJSONResourceFromFile(ProjectTypeEnum.Web);
         }
 
         /// <summary>
@@ -61,7 +37,7 @@ namespace Slickflow.Module.Localize
                     var jsonResource = ReadProjectJSONResourceFromFile(item.Value);
                     langJsonResource.Add(item.Key, jsonResource);
                 }
-                LanguageCachedHelper.SetJsonResource(project, langJsonResource);
+                LocalizeCachedHelper.SetJsonResource(project, langJsonResource);
             }
             catch (System.Exception ex)
             {
@@ -109,7 +85,7 @@ namespace Slickflow.Module.Localize
         private static string GetItem(ProjectTypeEnum project, string key)
         {
             var lang = LanguageCachedHelper.GetLang(project);
-            var lanJsonResource = LanguageCachedHelper.GetJsonResource(project);
+            var lanJsonResource = LocalizeCachedHelper.GetJsonResource(project);
             var value = lanJsonResource[lang][key];
             return value;
         }

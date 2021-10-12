@@ -285,6 +285,34 @@ namespace Slickflow.WebApi.Controllers
             }
             return result;
         }
+
+        /// <summary>
+        /// 获取流程记录列表
+        /// </summary>
+        /// <returns>流程列表</returns>
+        [HttpGet]
+        public ResponseResult<List<TaskViewEntity>> GetTaskPaged()
+        {
+            var result = ResponseResult<List<TaskViewEntity>>.Default();
+            try
+            {
+                var taskQuery = new TaskQuery
+                {
+                    UserID = "10"
+                };
+                var wfService = new WorkflowService();
+                var entity = wfService.GetCompletedTasks(taskQuery).ToList();
+
+                result = ResponseResult<List<TaskViewEntity>>.Success(entity);
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<List<TaskViewEntity>>.Error(
+                    string.Format("获取任务信息失败！{0}", ex.Message)
+                );
+            }
+            return result;
+        }
         #endregion
     }
 }

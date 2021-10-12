@@ -41,6 +41,7 @@ var activityproperty = (function () {
     myPageTabs["startMessage"] = ["tabMessage"];
     myPageTabs["interMessage"] = ["tabMessage"];
     myPageTabs["endMessage"] = ["tabMessage"];
+    myPageTabs["conditional"] = ["tabCondition"];
 
     activityproperty.mselectedActivityPerformerGUID = "";
     //activityproperty.mjsoneditor = null;
@@ -121,6 +122,8 @@ var activityproperty = (function () {
                 tabs = myPageTabs["startCron"];
             } else if (activity.trigger === "Message") {
                 tabs = myPageTabs["startMessage"];
+            } else if (activity.trigger === "Conditional") {
+                tabs = myPageTabs["conditional"];
             } else {
                 tabs = myPageTabs["start"];
             }             
@@ -129,6 +132,8 @@ var activityproperty = (function () {
                 tabs = myPageTabs["interTimerDelay"];
             } else if (activity.trigger === "Message") {
                 tabs = myPageTabs["interMessage"];
+            } else if (activity.trigger === "Conditional") {
+                tabs = myPageTabs["conditional"];
             } else {
                 tabs = myPageTabs["intermediate"];
             }
@@ -839,6 +844,8 @@ var eventproperty = (function () {
                     $("#txtCronExpression").val(activity.expression);
                 } else if (activity.trigger === "Message") {
                     $("#txtMessageTopic").val(activity.expression);
+                } else if (activity.trigger === "Conditional") {
+                    $("#txtCondition").val(activity.expression);
                 }
             }
             else if (activity.type === kmodel.Config.NODE_TYPE_END) {
@@ -846,6 +853,8 @@ var eventproperty = (function () {
                     $("#txtDeadline").val(activity.expression);
                 } else if (activity.trigger === "Message") {
                     $("#txtMessageTopic").val(activity.expression);
+                } else if (activity.trigger === "Conditional") {
+                    $("#txtCondition").val(activity.expression);
                 }
             }
             else if (activity.type === kmodel.Config.NODE_TYPE_INTERMEDIATE) {
@@ -853,6 +862,8 @@ var eventproperty = (function () {
                     $("#txtOverdue").val(activity.expression);
                 } else if (activity.trigger === "Message") {
                     $("#txtMessageTopic").val(activity.expression);
+                } else if (activity.trigger === "Conditional") {
+                    $("#txtCondition").val(activity.expression);
                 }
             }
             activityproperty.loadActions(activity);
@@ -867,6 +878,8 @@ var eventproperty = (function () {
                     activity.expression = $("#txtCronExpression").val();
                 } else if (activity.trigger === "Message") {
                     activity.expression = $("#txtMessageTopic").val();
+                } else if (activity.trigger === "Conditional") {
+                    activity.expression = $("#txtCondition").val();
                 }
             }
             else if (activity.type === kmodel.Config.NODE_TYPE_END) {
@@ -874,6 +887,8 @@ var eventproperty = (function () {
                     activity.expression = $("#txtDeadline").val();
                 } else if (activity.trigger === "Message") {
                     activity.expression = $("#txtMessageTopic").val();
+                } else if (activity.trigger === "Conditional") {
+                    activity.expression = $("#txtCondition").val();
                 }
             }
             else if (activity.type === kmodel.Config.NODE_TYPE_INTERMEDIATE) {
@@ -881,6 +896,8 @@ var eventproperty = (function () {
                     activity.expression = $("#txtOverdue").val();
                 } else if (activity.trigger === "Message") {
                     activity.expression = $("#txtMessageTopic").val();
+                } else if (activity.trigger === "Conditional") {
+                    activity.expression = $("#txtCondition").val();
                 }
             }
 

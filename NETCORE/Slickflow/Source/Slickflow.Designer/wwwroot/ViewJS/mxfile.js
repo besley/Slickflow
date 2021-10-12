@@ -46,7 +46,8 @@ var mxfile = (function () {
 
             activityTypeElement.setAttribute("trigger", activity.trigger);
             if (activity.trigger === "Timer"
-                || activity.trigger === "Message") {
+                || activity.trigger === "Message"
+                || activity.trigger === "Conditional") {
                 activityTypeElement.setAttribute("expression", activity.expression);
                 if (activity.trigger === "Message") {
                     activityTypeElement.setAttribute("messageDirection", activity.messageDirection);

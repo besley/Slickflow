@@ -80,27 +80,28 @@ namespace Slickflow.Engine.Core.Runtime
             //获取流程第一个可办理节点
             rmins.ProcessModel = ProcessModelFactory.Create(runner.ProcessGUID, runner.Version);
             var startActivity = rmins.ProcessModel.GetStartActivity();
-            var firstActivity = rmins.ProcessModel.GetFirstActivity();
-            //var firstActivityList = rmins.ProcessModel.GetFirstActivityList(startActivity, runner.Conditions);
-            
+            var nextActivityTree = rmins.ProcessModel.GetNextActivityTree(startActivity.ActivityGUID, runner.Conditions);
+
+            //开始节点之后可以有网关节点
             if (startActivity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.None)
             {
-                rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(firstActivity.ActivityGUID,
+                rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(nextActivityTree,
                     runner.UserID,
                     runner.UserName);
             }
             else if (startActivity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.Timer
-                || startActivity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.Message)
+                || startActivity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.Message
+                || startActivity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.Conditional)
             {
                 if (!string.IsNullOrEmpty(runner.UserID))
                 {
-                    rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(firstActivity.ActivityGUID,
+                    rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(nextActivityTree,
                         runner.UserID,
                         runner.UserName);
                 }
                 else
                 {
-                    rmins.AppRunner.NextActivityPerformers = rmins.ProcessModel.GetActivityPerformers(firstActivity.ActivityGUID);
+                    rmins.AppRunner.NextActivityPerformers = rmins.ProcessModel.GetActivityPerformers(nextActivityTree);
                 }
             }
             rmins.ActivityResource = new ActivityResource(runner, rmins.AppRunner.NextActivityPerformers);

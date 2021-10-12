@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "http://localhost/sfapi0/",
+      "applicationUrl": "http://localhost/sfapic/",
       "sslPort": 0
     },
     "iisExpress": {
@@ -18,7 +18,8 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "jsWebView2Debugging": true
     },
     "Slickflow.WebApi": {
       "commandName": "Project",

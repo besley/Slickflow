@@ -34,9 +34,10 @@ namespace Slickflow.Engine.Xpdl
         IList<ActivityEntity> GetActivityList();
         ActivityEntity GetNextActivity(string activityGUID);
         IList<NodeView> GetNextActivityTree(string currentActivityGUID);
+        IList<NodeView> GetNextActivityTree(string currentActivityGUID, IDictionary<string, string> conditions);
         NextActivityTreeResult GetNextActivityTree(string currentActivityGUID,
             Nullable<int> taskID,
-            IDictionary<string, string> condition,
+            IDictionary<string, string> conditions,
             IDbSession session);
         NextActivityMatchedResult GetNextActivityList(string currentActivityGUID,
             Nullable<int> taskID,
@@ -77,5 +78,6 @@ namespace Slickflow.Engine.Xpdl
         IList<Role> GetRoles();
         IList<Role> GetActivityRoles(string activityGUID);
         IDictionary<string, PerformerList> GetActivityPerformers(string activityGUID);
+        IDictionary<string, PerformerList> GetActivityPerformers(IList<NodeView> nextActivityTree);
     }
 }

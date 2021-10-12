@@ -21,7 +21,7 @@ namespace Slickflow.Module.Localize
         }
 
         /// <summary>
-        /// 获取本地语言显示信息
+        /// 获取本地语言显示信息=
         /// </summary>
         /// <param name="key">显示项</param>
         /// <param name="message">附属消息</param>
@@ -55,14 +55,15 @@ namespace Slickflow.Module.Localize
             return localMessage;
         }
 
+        
         /// <summary>
         /// 获取本地语言显示信息
         /// </summary>
         /// <param name="key">显示项</param>
         /// <returns>本地化信息</returns>
-        public static string GetGraphMessage(string key)
+        public static string GetWebMessage(string key)
         {
-            var localMessage = LocalizeUtility.GetMessage(ProjectTypeEnum.Graph, key);
+            var localMessage = LocalizeUtility.GetMessage(ProjectTypeEnum.Web, key);
             return localMessage;
         }
 
@@ -72,32 +73,9 @@ namespace Slickflow.Module.Localize
         /// <param name="key">显示项</param>
         /// <param name="message">附属消息</param>
         /// <returns>本地化信息</returns>
-        public static string GetGraphMessage(string key, string message)
+        public static string GetWebMessage(string key, string message)
         {
-            var localMessage = LocalizeUtility.GetMessage(ProjectTypeEnum.Graph, key, message);
-            return localMessage;
-        }
-
-        /// <summary>
-        /// 获取本地语言显示信息
-        /// </summary>
-        /// <param name="key">显示项</param>
-        /// <returns>本地化信息</returns>
-        public static string GetWebTestMessage(string key)
-        {
-            var localMessage = LocalizeUtility.GetMessage(ProjectTypeEnum.WebTest, key);
-            return localMessage;
-        }
-
-        /// <summary>
-        /// 获取本地语言显示信息
-        /// </summary>
-        /// <param name="key">显示项</param>
-        /// <param name="message">附属消息</param>
-        /// <returns>本地化信息</returns>
-        public static string GetWebTestMessage(string key, string message)
-        {
-            var localMessage = LocalizeUtility.GetMessage(ProjectTypeEnum.WebTest, key, message);
+            var localMessage = LocalizeUtility.GetMessage(ProjectTypeEnum.Web, key, message);
             return localMessage;
         }
 
@@ -109,6 +87,30 @@ namespace Slickflow.Module.Localize
         public static void SetLang(ProjectTypeEnum project, LangTypeEnum lang)
         {
             LanguageCachedHelper.SetLang(project, lang);
+        }
+
+        /// <summary>
+        /// 获取当前项目的语言类型
+        /// </summary>
+        /// <param name="project">项目</param>
+        /// <returns>语言</returns>
+        public static LangTypeEnum GetLang(ProjectTypeEnum project)
+        {
+            var lang = LanguageCachedHelper.GetLang(project);
+            return lang;
+        }
+
+        /// <summary>
+        /// 设置项目默认语言==中文
+        /// </summary>
+        /// <param name="project">项目类型</param>
+        public static void SetDefault(ProjectTypeEnum project)
+        {
+            var lang = LanguageCachedHelper.GetLang(project);
+            if (lang == LangTypeEnum.none)
+            {
+                LanguageCachedHelper.SetLang(project, LangTypeEnum.zh);
+            }
         }
     }
 }

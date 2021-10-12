@@ -446,6 +446,18 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// 流程数据插入
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="entity">流程实例实体</param>
+        /// <param name="trans">事务</param>
+        /// <returns>新实例ID</returns>
+        internal void Update(IDbConnection conn, ProcessInstanceEntity entity, IDbTransaction trans)
+        {
+            Repository.Update<ProcessInstanceEntity>(conn, entity, trans);
+        }
+
+        /// <summary>
         /// 根据流程定义，创建新的流程实例
         /// </summary>
         /// <param name="runner">运行者</param>
@@ -773,23 +785,54 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns>设置成功标识</returns>
         internal bool Terminate(WfAppRunner runner)
         {
-            var entity = GetProcessInstanceLatest(runner.AppInstanceID, runner.ProcessGUID);
+            var isTerminated = false;
+            var session = SessionFactory.CreateSession();
+            try
+            {
+                session.BeginTrans();
+                var entity = GetProcessInstanceLatest(session.Connection , runner.AppInstanceID, runner.ProcessGUID, session.Transaction);
+                isTerminated = Terminate(session.Connection, entity, runner.UserID, runner.UserName, session.Transaction);
+                session.Commit();
+            }
+            catch (System.Exception ex)
+            {
+                throw new ProcessInstanceException(LocalizeHelper.GetEngineMessage("processinstancemanager.terminate.error", ex.Message));
+            }
+            finally
+            {
+                session.Dispose();
+            }
+            return isTerminated;
+        }
+
+        /// <summary>
+        /// 终结流程实例
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="entity">流程实例</param>
+        /// <param name="userID">用户ID</param>
+        /// <param name="userName">用户名称</param>
+        /// <param name="trans">事务</param>
+        /// <returns></returns>
+        internal bool Terminate(IDbConnection conn, ProcessInstanceEntity entity, string userID, string userName, IDbTransaction trans)
+        {
+            var isTerminated = false;
             if (entity.ProcessState == (int)ProcessStateEnum.Running
                 || entity.ProcessState == (int)ProcessStateEnum.Ready
                 || entity.ProcessState == (int)ProcessStateEnum.Suspended)
             {
                 entity.ProcessState = (short)ProcessStateEnum.Terminated;
-                entity.EndedByUserID = runner.UserID;
-                entity.EndedByUserName = runner.UserName;
+                entity.EndedByUserID =userID;
+                entity.EndedByUserName = userName;
                 entity.EndedDateTime = DateTime.Now;
 
-                Repository.Update<ProcessInstanceEntity>(entity);
-                return true;
+                isTerminated = Repository.Update<ProcessInstanceEntity>(conn, entity, trans);
             }
             else
             {
                 throw new ProcessInstanceException(LocalizeHelper.GetEngineMessage("processinstancemanager.terminate.error"));
             }
+            return isTerminated;
         }
 
         /// <summary>

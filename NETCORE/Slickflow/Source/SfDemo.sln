@@ -39,6 +39,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebDemo", "WebDemo", "{C2CC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MvcDemo", "MvcDemo", "{C5F199FD-50FA-4F32-9628-DF1020F8BF76}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.Module.Logging", "Slickflow.Module.Logging\Slickflow.Module.Logging.csproj", "{69859E4B-5560-4501-A3BE-B63AC6818779}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{73ABA753-49C9-42E1-94E4-705E6ECEB2A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73ABA753-49C9-42E1-94E4-705E6ECEB2A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73ABA753-49C9-42E1-94E4-705E6ECEB2A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69859E4B-5560-4501-A3BE-B63AC6818779}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69859E4B-5560-4501-A3BE-B63AC6818779}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69859E4B-5560-4501-A3BE-B63AC6818779}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69859E4B-5560-4501-A3BE-B63AC6818779}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -112,6 +118,7 @@ Global
 		{73ABA753-49C9-42E1-94E4-705E6ECEB2A8} = {C2CCEF99-4111-4027-940E-E331663AEC01}
 		{C2CCEF99-4111-4027-940E-E331663AEC01} = {3E538BD6-2283-46AC-93DC-9F4019E3A04B}
 		{C5F199FD-50FA-4F32-9628-DF1020F8BF76} = {3E538BD6-2283-46AC-93DC-9F4019E3A04B}
+		{69859E4B-5560-4501-A3BE-B63AC6818779} = {D2D47324-482A-4EA7-A37E-FF8FDFFA6FCF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0AA9B361-0AF3-4C2F-8AE4-2EEA4AC2FABE}

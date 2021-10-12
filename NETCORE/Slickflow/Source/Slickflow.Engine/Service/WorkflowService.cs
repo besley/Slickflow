@@ -1761,6 +1761,44 @@ namespace Slickflow.Engine.Service
             var pim = new ProcessInstanceManager();
             return pim.Terminate(terminator);
         }
+
+        /// <summary>
+        /// 终结流程实例
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="entity">流程实例</param>
+        /// <param name="userID">用户ID</param>
+        /// <param name="userName">用户名称</param>
+        /// <param name="trans">事务</param>
+        /// <returns></returns>
+        public bool TerminateProcess(IDbConnection conn, ProcessInstanceEntity entity, string userID, string userName, IDbTransaction trans)
+        {
+            var pim = new ProcessInstanceManager();
+            return pim.Terminate(conn, entity, userID, userName, trans);
+        }
+        #endregion
+
+        #region 任务审批同意和拒绝
+        /// <summary>
+        /// 同意
+        /// </summary>
+        /// <param name="taskID">任务ID</param>
+        public void AgreeTask(int taskID)
+        {
+            var aim = new ActivityInstanceManager();
+            aim.Agree(taskID);
+        }
+
+
+        /// <summary>
+        /// 拒绝
+        /// </summary>
+        /// <param name="taskID">任务ID</param>
+        public void RefuseTask(int taskID)
+        {
+            var aim = new ActivityInstanceManager();
+            aim.Refuse(taskID);
+        }
         #endregion
 
         #region 任务读取和处理
@@ -1816,6 +1854,19 @@ namespace Slickflow.Engine.Service
         {
             var tm = new TaskManager();
             var entity = tm.GetTaskView(taskID);
+            return entity;
+        }
+
+        /// <summary>
+        /// 获取任务视图
+        /// </summary>
+        /// <param name="processInstanceID">流程实例ID</param>
+        /// <param name="activityInstanceID">活动实例ID</param>
+        /// <returns></returns>
+        public TaskViewEntity GetTaskView(int processInstanceID, int activityInstanceID)
+        {
+            var tm = new TaskManager();
+            var entity = tm.GetTaskViewByActivity(processInstanceID, activityInstanceID);
             return entity;
         }
 
