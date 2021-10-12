@@ -84,6 +84,7 @@
     <script type="text/javascript" src="~/Scripts/mxGraph/src/mxClient.js"></script>
 
     <!-- Slickflow kgraph main files -->
+    <script type="text/javascript" src="~/ViewJS/kmsgbox.js"></script>
     <script type="text/javascript" src="~/ViewJS/kresource.js"></script>
     <script type="text/javascript" src="~/ViewJS/mxfile.js"></script>
     <script type="text/javascript" src="~/ViewJS/kloader.js"></script>
@@ -131,7 +132,6 @@
         //it's readonly for business process veiwer.
         function loadProcessGraph() {
             var appInstanceID = '@ViewBag.AppInstanceID';
-            var processID = '@ViewBag.ProcessID';
             if (appInstanceID === '') {
                 return;
             }
@@ -148,12 +148,13 @@
                 JSON.stringify(query),
                 function (result) {
                     if (result.Status === 1) {
-                        var graphData = kloader.load(result.Entity);
+                        kloader.load(result.Entity);
 
                         //render running nodes with red color
                         var taskQuery = {
                             "AppInstanceID": '@ViewBag.AppInstanceID',
-                            "ProcessGUID": '@ViewBag.ProcessGUID'
+                            "ProcessGUID": '@ViewBag.ProcessGUID',
+                            "Version": '@ViewBag.Version'
                         };
 
                         jshelper.ajaxPost('api/Wf2Xml/QueryReadyActivityInstance',

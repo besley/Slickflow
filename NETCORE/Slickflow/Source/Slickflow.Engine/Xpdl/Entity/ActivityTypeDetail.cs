@@ -96,7 +96,12 @@ namespace Slickflow.Engine.Xpdl.Entity
         /// <summary>
         /// 消息
         /// </summary>
-        Message = 2
+        Message = 2,
+
+        /// <summary>
+        /// 条件
+        /// </summary>
+        Conditional = 3
     }
 
     /// <summary>

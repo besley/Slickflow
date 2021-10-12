@@ -43,8 +43,16 @@ namespace Slickflow.Engine.Common
         public const bool WF_PROCESS_REGISTER_EVENT = true;
 
         //系统内部用户
-        public const string WF_PROCESS_MESSAGE_USER_ID = "SYSTEM_MESSAGE_USER_ID";
-        public const string WF_PROCESS_MESSAGE_USER_NAME = "SYSTEM_MESSAGE_USER_NAME";
+        public const string SYSTEM_INTERNAL_USER_ID = "SYSTEM_INTERNAL_USER_ID";
+        public const string SYSTEM_INTERNAL_USER_NAME = "SYSTEM_INTERNAL_USER_NAME";
+
+        //系统定时作业用户
+        public const string SYSTEM_JOBTIMER_USER_ID = "SYSTEM_JOBTIMER_USER_ID";
+        public const string SYSTEM_JOBTIMER_USER_NAME = "SYSTEM_JOBTIMER_USER_NAME";
+
+        //系统自动作业名称
+        public const string WF_JOB_QUEUE_TIMER = "WF_JOB_QUEUE_TIMER";
+        public const string WF_JOB_QUEUE_CONDITIONAL = "WF_JOB_QUEUE_CONDITIONAL";
 
     }
 }

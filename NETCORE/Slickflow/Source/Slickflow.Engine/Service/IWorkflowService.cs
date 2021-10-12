@@ -117,15 +117,23 @@ namespace Slickflow.Engine.Service
             JumpOptionEnum jumpOption = JumpOptionEnum.Default);
 
 
+        //审批决策
+        void AgreeTask(int taskID);
+        void RefuseTask(int taskID);
+
         Boolean ResumeProcess(int activityInstanceId, WfAppRunner runner);
         Boolean SuspendProcess(int taskId, WfAppRunner runner);
         Boolean CancelProcess(WfAppRunner canceler);
         Boolean DiscardProcess(WfAppRunner discarder);
         Boolean TerminateProcess(WfAppRunner terminator);
+        Boolean TerminateProcess(IDbConnection conn, ProcessInstanceEntity entity, string userID, string userName, IDbTransaction trans);
         Boolean SetTaskRead(WfAppRunner runner);
         Boolean SetTaskEMailSent(int taskID);
         Boolean EntrustTask(TaskEntrustedEntity entrusted, bool cancalOriginalTask = true);
+        Boolean ReplaceTask(int taskID, List<TaskReplacedEntity> replaced, WfAppRunner runner);
         Boolean SetProcessOverdue(int processInstanceID, DateTime overdueDateTime, WfAppRunner runner);
+        void SetActivityJobTimerCompleted(IDbConnection conn, int activityInstanceID, IDbTransaction trans);
+        void SetProcessJobTimerCompleted(IDbConnection conn, int processInstanceID, IDbTransaction trans);
         int SaveProcessVariable(ProcessVariableEntity entity);
         
         IList<NodeImage> GetActivityInstanceCompleted(int taskID);
@@ -135,6 +143,7 @@ namespace Slickflow.Engine.Service
 
         IList<ActivityInstanceEntity> GetRunningActivityInstance(TaskQuery query);
         TaskViewEntity GetTaskView(int taskID);
+        TaskViewEntity GetTaskView(int processInstanceID, int activityInstanceID);
         IList<TaskViewEntity> GetRunningTasks(TaskQuery query);
         IList<TaskViewEntity> GetReadyTasks(TaskQuery query);
         IList<TaskViewEntity> GetCompletedTasks(TaskQuery query);
@@ -191,6 +200,7 @@ namespace Slickflow.Engine.Service
         IList<ProcessVariableEntity> GetProcessVariableList(ProcessVariableQuery query);
         ProcessVariableEntity GetProcessVariable(ProcessVariableQuery query);
         ProcessVariableEntity GetProcessVariable(int variableID);
+        Boolean ValidateProcessVariable(int processInstanceID, string expression);
         void DeleteProcessVariable(int variableID);
 
 

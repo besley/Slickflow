@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "http://localhost/sfmvc0/",
+      "applicationUrl": "http://localhost/sfmvc2/",
       "sslPort": 0
     },
     "iisExpress": {
@@ -16,14 +16,15 @@
     "IIS Express": {
       "commandName": "IIS",
       "launchBrowser": true,
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "jsWebView2Debugging": true
+      }
     },
     "Slickflow.MvcDemo": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

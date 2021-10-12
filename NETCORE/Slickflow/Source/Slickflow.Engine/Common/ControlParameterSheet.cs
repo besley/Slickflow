@@ -11,6 +11,9 @@ namespace Slickflow.Engine.Common
     /// </summary>
     public class ControlParameterSheet
     {
+        //条件参数变量，用于ConditionalStart/ConditionalTask
+        public IDictionary<string, string> ConditionalVariables { get; set; }
+
         //运行时(动态)加签流转变量
         public string SignForwardType { get; set; }
         public string SignForwardCompareType { get; set; }

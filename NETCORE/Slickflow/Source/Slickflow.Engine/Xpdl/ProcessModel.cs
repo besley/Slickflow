@@ -427,13 +427,28 @@ namespace Slickflow.Engine.Xpdl
         /// 获取下一步活动节点树，供流转界面使用
         /// </summary>
         /// <param name="currentActivityGUID">活动GUID</param>
+        /// <param name="conditions">条件参数</param>
+        /// <returns>下一步列表</returns>
+        public IList<NodeView> GetNextActivityTree(string currentActivityGUID, IDictionary<string, string> conditions)
+        {
+            using (var session = SessionFactory.CreateSession())
+            {
+                var nextResult = GetNextActivityTree(currentActivityGUID, null, conditions, session);
+                return nextResult.StepList;
+            }
+        }
+
+        /// <summary>
+        /// 获取下一步活动节点树，供流转界面使用
+        /// </summary>
+        /// <param name="currentActivityGUID">活动GUID</param>
         /// <param name="taskID">任务ID</param>
-        /// <param name="condition">条件</param>
+        /// <param name="conditions">条件</param>
         /// <param name="session">会话</param>
         /// <returns>下一步列表</returns>
         public NextActivityTreeResult GetNextActivityTree(string currentActivityGUID,
             Nullable<int> taskID,
-            IDictionary<string, string> condition,
+            IDictionary<string, string> conditions,
             IDbSession session)
         {
             var nextTreeResult = new NextActivityTreeResult();
@@ -465,7 +480,7 @@ namespace Slickflow.Engine.Xpdl
             else
             {
                 //Transiton方式的流转定义
-                var nextStepResult = GetNextActivityList(activity.ActivityGUID, taskID, condition, session);
+                var nextStepResult = GetNextActivityList(activity.ActivityGUID, taskID, conditions, session);
                 nextTreeResult.Message = nextStepResult.Message;
 
                 foreach (var child in nextStepResult.Root)
@@ -708,7 +723,7 @@ namespace Slickflow.Engine.Xpdl
                         }
                         else
                         {
-                            throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmodel.getnextactivitylist.error"));
+                            throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmodel.getnextactivitylist.nonenextstepperformer.error"));
                         }
                     }
                 }
@@ -1105,6 +1120,22 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// 根据活动定义获取办理人员列表
+        /// </summary>
+        /// <param name="nextActivityTree">活动列表</param>
+        /// <returns>下一步办理人员列表</returns>
+        public IDictionary<string, PerformerList> GetActivityPerformers(IList<NodeView> nextActivityTree)
+        {
+            var nextActivityPerformers = new Dictionary<string, PerformerList>();
+            foreach (var node in nextActivityTree)
+            {
+                var roleList = GetActivityRoles(node.ActivityGUID);
+                ActivityResource.CreateNextActivityPerformers(nextActivityPerformers, node.ActivityGUID, roleList);
+            }
+            return nextActivityPerformers;
+        }
+
+        /// <summary>
         /// 获取节点上定义的角色code集合
         /// </summary>
         /// <param name="activityGUID">活动GUID</param>
@@ -1463,12 +1494,8 @@ namespace Slickflow.Engine.Xpdl
             try
             {
                 string expression = transition.Condition.ConditionText;
-                string expressionReplaced = ReplaceParameterToValue(expression, conditionKeyValuePair);
-
-                Expression e = System.Linq.Dynamic.DynamicExpression.Parse(typeof(Boolean), expressionReplaced);
-                LambdaExpression LE = Expression.Lambda(e);
-                Func<bool> testMe = (Func<bool>)LE.Compile();
-                result = testMe();
+                string expressionReplaced = ExpressionParser.ReplaceParameterToValue(expression, conditionKeyValuePair);
+                result = ExpressionParser.Parse(expressionReplaced);
             }
             catch (System.Exception ex)
             {
@@ -1503,31 +1530,6 @@ namespace Slickflow.Engine.Xpdl
                 isValid = true;
             }
             return isValid;
-        }
-
-        /// <summary>
-        /// 取代条件表达式中的参数值
-        /// </summary>
-        /// <param name="expression">表达式</param>
-        /// <param name="dictoinary">列表</param>
-        /// <returns>表达式</returns>
-        internal string ReplaceParameterToValue(string expression, IDictionary<string, string> dictoinary)
-        {
-            foreach (KeyValuePair<string, string> p in dictoinary)
-            {
-                if (p.Value == string.Empty /* hacked by shiyonglin 2018-4-24*/ 
-                    || !ExpressionParser.IsNumeric(p.Value))
-                {
-                    //字符串类型的变量处理，加上双引号。
-                    string s = "\"" + p.Value.Trim('\"') + "\"";
-                    expression = expression.Replace(p.Key, s);
-                }
-                else
-                {
-                    expression = expression.Replace(p.Key, p.Value);
-                }
-            }
-            return expression;
         }
         #endregion
         #endregion

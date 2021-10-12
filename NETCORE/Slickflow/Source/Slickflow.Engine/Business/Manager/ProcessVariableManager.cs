@@ -23,7 +23,7 @@ web page about lgpl: https://www.gnu.org/licenses/lgpl.html
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Data;
 using Dapper;
 using DapperExtensions;
@@ -31,6 +31,7 @@ using Slickflow.Data;
 using Slickflow.Module.Localize;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
+using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Business.Entity;
 
 namespace Slickflow.Engine.Business.Manager
@@ -360,6 +361,30 @@ namespace Slickflow.Engine.Business.Manager
                 entity = list[0];
 
             return entity;
+        }
+
+        /// <summary>
+        /// 验证触发表达式是否满足
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="processInstanceID">流程实例ID</param>
+        /// <param name="expression">表达式</param>
+        /// <param name="trans">事务</param>
+        /// <returns></returns>
+        internal bool ValidateProcessVariable(IDbConnection conn, int processInstanceID, string expression, IDbTransaction trans)
+        {
+            var keyValuePair = new Dictionary<string, string>();
+            var regex = new Regex("(?<=@)\\w+", RegexOptions.Compiled);
+            var matches = regex.Matches(expression);
+            foreach (var v in matches)
+            {
+                var value = GetVariableOfProcess(conn, processInstanceID, v.ToString(), trans);
+                keyValuePair.Add(string.Format("{0}{1}", '@', v.ToString()), value.Value);
+            }
+
+            var replaced = ExpressionParser.ReplaceParameterToValue(expression, keyValuePair);
+            var parsed = ExpressionParser.Parse(replaced);
+            return parsed;
         }
     }
 }

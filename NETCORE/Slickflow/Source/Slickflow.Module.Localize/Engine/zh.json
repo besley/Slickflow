@@ -15,6 +15,7 @@
     "processmodel.getstartactivity.error": "未检测到流程配置节点信息，请先设计流程后在进行办理!",
     "processmodel.getfirstactivitylist.error": "解析流程定义文件发生异常,异常描述",
     "processmodel.getnextactivitylist.error": "流程获取下一步发生异常",
+    "processmodel.getnextactivitylist.nonenextstepperformer.error": "流程下一步执行用户指定有误!",
     "processmodel.getpreviousactivitylist.error": "流程获取上一步发生异常,未知节点类型",
     "activityinstancemanager.getbyid.error": "获取活动实例数据发生错误,请查看内部异常",
     "activityinstancemanager.getrunningnode.error": "获取当前运行节点信息异常",
@@ -67,7 +68,10 @@
     "nodemediatorsubprocess.CreateSubProcessRunner.nonevariableparamsvalue.warn": "子流程动态查询条件没有指定必要的查询参数!",
     "nodemediatorend.ContinueMainProcessRunning.warn": "子流程执行异常,详细错误",
     "nodemediatorend.FillNextActivityPerformersByRoleList.warn": "当前节点上没有定义角色人员信息,请确认!节点名称",
-    "nodemediatorintermediatetimer.CalcDataTimeFromVariable.error": "时间表达式有误!表达式",
+    "nodemediatorstartconditional.ExecuteWorkItem.exception": "条件开始节点上定义的条件不满足,流程无法启动执行!",
+    "nodemediatorinterconditionalgo.CheckBeingExecutedInfo.exception": "当前条件节点上的条件没有被满足,流程不能继续运行!",
+    "nodemediatorintertimer.CalcDataTimeFromVariable.error": "时间表达式有误!表达式",
+    "nodemediatorintertimergo.CheckBeingExecutedInfo.exception": "当前时间没有超过逾期时间,流程不能继续运行!",
     "nodemediatormicreator.CreateActivityTaskTransitionInstance.warn": "虽然是会签节点，但是其子类型未知!",
     "nodemediatormicreator.CreateActivityTaskTransitionInstance.exception": "不是会签节点,无法创建活动及任务实例!",
     "nodemediatorrevise.ExecuteWorkItem.warn": "当前节点不满足并行分支多实例(AndSplitMI)的流程修订,暂不支持!请联系技术人员!",
@@ -158,5 +162,12 @@
     "nextactivitymatchedresult.FailedPassRateOfMulitipleInstance": "未满足会签节点的通过率,无法到后续节点",
     "nextactivitymatchedresult.WaitingForOthersJoin": "要合并的分支上的条件不是全部成立,无法合并到后续节点",
     "nextactivitymatchedresult.NotMadeItselfToJoin": "没有满足条件的路径,无法合并到后续节点",
-    "nextactivitymatchedresult.NoneTransitionFilteredByCondition": "无法获取下一步节点列表,可能原因:下一步节点没有被配置，或者条件表达式没有被满足!"
+    "nextactivitymatchedresult.NoneTransitionFilteredByCondition": "无法获取下一步节点列表,可能原因:下一步节点没有被配置，或者条件表达式没有被满足!",
+    "graph.pmb.GetPreviousVertexFromStack.error": "读取节点堆栈发生错误，堆栈类型和错误描述:",
+    "graph.pmb.SetTargetVertexLevel.error": "错误的节点连接数目!",
+    "graph.pmb.GetBuilder.error": "节点不存在!节点代码:",
+    "graph.pmb.CreateProcess.error": "相同流程代码和版本的流程记录已经存在!",
+    "graph.pmb.LoadProcess.error": "该代码和版本的流程不存在!",
+    "graph.pxb.Serialize.error": "流程图形对象不能为空,请确认是否有初始化!",
+    "graph.ptf.CreateProcessByTemplateType.exception": "模板创建新流程时,流程的GUID不能为空!"
 }

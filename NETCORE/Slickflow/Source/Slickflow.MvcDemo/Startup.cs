@@ -43,6 +43,9 @@ namespace Slickflow.MvcDemo
             var dbType = ConfigurationExtensions.GetConnectionString(Configuration, "WfDBConnectionType");
             var sqlConnectionString = ConfigurationExtensions.GetConnectionString(Configuration, "WfDBConnectionString");
             Slickflow.Data.DBTypeExtenstions.InitConnectionString(dbType, sqlConnectionString);
+
+            Slickflow.Module.Localize.LocalizeHelper.SetLang(Slickflow.Module.Localize.ProjectTypeEnum.Engine,
+                Slickflow.Module.Localize.LangTypeEnum.en);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

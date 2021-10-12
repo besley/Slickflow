@@ -148,6 +148,7 @@
     "compeer": "Compeer",
     "subordinate": "Subordinate",
     "conditionexpression": "Condtion",
+    "condition": "Condition",
     "priority": "priority",
     "mergeoptions": "Merge Options",
     "forcedmergebranch": "Forced merge branches",

@@ -15,6 +15,7 @@
     "processmodel.getstartactivity.error": "No process xml nodes exist, please check the xml file!",
     "processmodel.getfirstactivitylist.error": "An error occurred when parsing first step information! detail",
     "processmodel.getnextactivitylist.error": "An error occurred when parsing next step information!",
+    "processmodel.getnextactivitylist.nonenextstepperformer.error": "There is none next step performers, please check it again!",
     "processmodel.getpreviousactivitylist.error": "An error occurred when parsing previous step information!Unknown node type",
     "activityinstancemanager.getbyid.error": "An error occurred when reading activity instance! detail",
     "activityinstancemanager.getrunningnode.error": "An error occurred when getting current running node!",
@@ -69,7 +70,10 @@
     "nodemediatorsubprocess.CreateSubProcessRunner.nonevariableparamsvalue.warn": "The sql query parameter didn't match the sub process!",
     "nodemediatorend.ContinueMainProcessRunning.warn": "An error occurred when executing the process. detail:",
     "nodemediatorend.FillNextActivityPerformersByRoleList.warn": "None role/user is set on the activity. activity name:",
-    "nodemediatorintermediatetimer.CalcDataTimeFromVariable.error": "Time expression format is not correct!",
+    "nodemediatorstartconditional.ExecuteWorkItem.exception": "The process can not be started becuase the conditional parameters in start node invalid",
+    "nodemediatorinterconditionalgo.CheckBeingExecutedInfo.exception": "The condition express need to be passed, the process can not continue running!",
+    "nodemediatorintertimer.CalcDataTimeFromVariable.error": "Time expression format is not correct!",
+    "nodemediatorintertimergo.CheckBeingExecutedInfo.exception": "The overdue time need to be reached, the process can not continue running!",
     "nodemediatormicreator.CreateActivityTaskTransitionInstance.warn": "The subtype of MI activity is unknown, please check it firstly!",
     "nodemediatormicreator.CreateActivityTaskTransitionInstance.exception": "The current activity isn't MI node, unable to create tasks!",
     "nodemediatorrevise.ExecuteWorkItem.warn": "It isn't the suitable AndSplitMI case to revise the process, please contact the techinical support!",
@@ -160,5 +164,12 @@
     "nextactivitymatchedresult.FailedPassRateOfMulitipleInstance": "Pass rate is not enough reached to go forward",
     "nextactivitymatchedresult.WaitingForOthersJoin": "Not all conditions matched to go forward",
     "nextactivitymatchedresult.NotMadeItselfToJoin": "None condition can be matched on transition to go forward",
-    "nextactivitymatchedresult.NoneTransitionFilteredByCondition": "Can't get next step, without next step or none condtion can be matched"
+    "nextactivitymatchedresult.NoneTransitionFilteredByCondition": "Can't get next step, without next step or none condtion can be matched",
+    "graph.pmb.GetPreviousVertexFromStack.error": "An error occurred when reading vertex stack info, stack type and error detail:",
+    "graph.pmb.SetTargetVertexLevel.error": "The count of links is not correct!",
+    "graph.pmb.GetBuilder.error": "The activity isn't exist! activity code:",
+    "graph.pmb.CreateProcess.error": "The process with the same process code and version is already exist!",
+    "graph.pmb.LoadProcess.error": "There isn't a process with this process code and version!",
+    "graph.pxb.Serialize.error": "The process diagram can't be null,please check its content firstly!",
+    "graph.ptf.CreateProcessByTemplateType.exception": "When creating new process, the processguid can't be null!"
 }

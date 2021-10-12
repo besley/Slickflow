@@ -323,7 +323,7 @@ namespace Slickflow.Engine.Core.Pattern
         protected void OnAfterExecuteWorkItem()
         {
             var delegateService = GetDelegateService();
-            var actionList = (this is NodeMediatorEnd) ? Linker.ToActivity.ActionList : Linker.FromActivity.ActionList;
+            var actionList = ((this is NodeMediatorEnd)) ? Linker.ToActivity.ActionList : Linker.FromActivity.ActionList;
             ActionExecutor.ExecteActionListAfter(actionList, delegateService as IDelegateService);
 
             //----> 节点流转完成后，调用活动完成执行的委托事件
@@ -727,10 +727,10 @@ namespace Slickflow.Engine.Core.Pattern
         /// </summary>
         /// <param name="activityInstance">活动资源</param>
         /// <param name="session">会话</param>
-        protected virtual void InsertActivityInstance(ActivityInstanceEntity activityInstance,
+        protected virtual int InsertActivityInstance(ActivityInstanceEntity activityInstance,
             IDbSession session)
         {
-            ActivityInstanceManager.Insert(activityInstance, session);
+            return ActivityInstanceManager.Insert(activityInstance, session);
         }
 
 

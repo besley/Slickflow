@@ -147,6 +147,7 @@
     "compeer": "同事",
     "subordinate": "下属",
     "conditionexpression": "条件表达式",
+    "condition": "条件",
     "priority": "优先级",
     "mergeoptions": "合并选项",
     "forcedmergebranch": "强制合并分支",

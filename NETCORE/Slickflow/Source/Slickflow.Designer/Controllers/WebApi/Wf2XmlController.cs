@@ -153,7 +153,8 @@ namespace Slickflow.Designer.Controllers.WebApi
                 }
                 else
                 {
-                    ;
+                    //模板默认生成XML内容
+                   //entity = ProcessTemplateFactory.CreateProcessByTemplateType(fileEntity);
                 }
                 result = ResponseResult<ProcessEntity>.Success(entity,
                     LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.crateprocess.success")
@@ -165,7 +166,6 @@ namespace Slickflow.Designer.Controllers.WebApi
             }
             return result;
         }
-
 
         /// <summary>
         /// 更新流程数据
@@ -251,7 +251,7 @@ namespace Slickflow.Designer.Controllers.WebApi
                 result = ResponseResult.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.deleteprocess.error", ex.Message));
             }
             return result;
-        }       
+        }
         #endregion
 
         #region 读取流程XML文件数据处理

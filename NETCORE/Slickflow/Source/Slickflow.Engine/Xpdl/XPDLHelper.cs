@@ -46,26 +46,6 @@ namespace Slickflow.Engine.Xpdl
             return activityType == ActivityTypeEnum.GatewayNode;
         }
 
-        ///// <summary>
-        ///// 是否中间事件处理节点
-        ///// </summary>
-        ///// <param name="activityType">活动类型</param>
-        ///// <returns>判断结果</returns>
-        //internal static Boolean IsIntermediateEventComponentNode(ActivityTypeEnum activityType)
-        //{
-        //    return activityType == ActivityTypeEnum.IntermediateNode;
-        //}
-
-        ///// <summary>
-        ///// 是否服务类型节点
-        ///// </summary>
-        ///// <param name="activityType">活动类型</param>
-        ///// <returns>判断结果</returns>
-        //internal static Boolean IsServiceComponentNode(ActivityTypeEnum activityType)
-        //{
-        //    return activityType == ActivityTypeEnum.ServiceNode;
-        //}
-
         /// <summary>
         /// 是否中间事件或服务类型节点
         /// </summary>

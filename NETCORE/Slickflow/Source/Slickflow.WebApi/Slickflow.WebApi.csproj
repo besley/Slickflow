@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj" />
     <ProjectReference Include="..\Slickflow.Engine\Slickflow.Engine.csproj" />
     <ProjectReference Include="..\SlickOne.WebUtility\SlickOne.WebUtility.csproj" />
