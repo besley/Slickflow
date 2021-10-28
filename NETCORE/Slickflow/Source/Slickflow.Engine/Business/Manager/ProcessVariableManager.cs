@@ -136,20 +136,14 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns>流程变量列表</returns>
         internal IList<ProcessVariableEntity> GetVariableList(int processInstanceID)
         {
-            //string sql = @"SELECT * FROM WfProcessVariable
-            //            WHERE ProcessInstanceID=@processInstanceID
-            //            ORDER BY ActivityGUID";
-            //var list = Repository.Query<ProcessVariableEntity>(sql,
-            //    new
-            //    {
-            //        processInstanceID = processInstanceID,
-            //    }).ToList();
-
-            var sqlQuery = (from pv in Repository.GetAll<ProcessVariableEntity>()
-                            where pv.ProcessInstanceID == processInstanceID
-                            select pv
-                            );
-            var list = sqlQuery.OrderBy(pv => pv.ActivityGUID).ToList<ProcessVariableEntity>();
+            var sql = @"SELECT * FROM WfProcessVariable
+                        WHERE ProcessInstanceID=@processInstanceID
+                        ORDER BY ActivityGUID";
+            var list = Repository.Query<ProcessVariableEntity>(sql,
+                new
+                {
+                    processInstanceID = processInstanceID,
+                }).ToList();
             return list;
         }
 
@@ -251,29 +245,21 @@ namespace Slickflow.Engine.Business.Manager
             IDbTransaction trans)
         {
             ProcessVariableEntity entity = null;
-            //string sql = @"SELECT * FROM WfProcessVariable
-            //               WHERE VariableType=@variableType
-            //                    AND ProcessInstanceID=@newProcessInstanceID
-            //                    AND Name=@newName
-            //               ORDER BY ID DESC";
+            string sql = @"SELECT * FROM WfProcessVariable
+                           WHERE VariableType=@variableType
+                                AND ProcessInstanceID=@newProcessInstanceID
+                                AND Name=@newName
+                           ORDER BY ID DESC";
 
-            //var list = Repository.Query<ProcessVariableEntity>(conn, sql,
-            //    new
-            //    {
-            //        variableType = ProcessVariableTypeEnum.Process.ToString(),
-            //        newProcessInstanceID = processInstanceID,
-            //        newName = name
-            //    },
-            //    trans
-            //    ).ToList();
-            var sqlQuery = (from pv in Repository.GetAll<ProcessVariableEntity>(conn, trans)
-                            where pv.VariableType == ProcessVariableTypeEnum.Process.ToString()
-                                && pv.ProcessInstanceID == processInstanceID
-                                && pv.Name == name
-                            select pv
-                            );
-            var list = sqlQuery.OrderByDescending(pv => pv.ID).ToList<ProcessVariableEntity>();
-
+            var list = Repository.Query<ProcessVariableEntity>(conn, sql,
+                new
+                {
+                    variableType = ProcessVariableTypeEnum.Process.ToString(),
+                    newProcessInstanceID = processInstanceID,
+                    newName = name
+                },
+                trans
+                ).ToList();
             if (list.Count() > 0)
                 entity = list[0];
 
@@ -319,13 +305,18 @@ namespace Slickflow.Engine.Business.Manager
             IDbTransaction trans)
         {
             ProcessVariableEntity entity = null;
-            var sqlQuery = (from pv in Repository.GetAll<ProcessVariableEntity>()
-                            where pv.VariableType == ProcessVariableTypeEnum.Process.ToString()
-                                && pv.ProcessInstanceID == processInstanceID
-                                && pv.Name == name
-                            select pv
-                            );
-            var list = sqlQuery.OrderByDescending(pv => pv.ID).ToList<ProcessVariableEntity>();
+            var sql = @"SELECT * FROM WfProcessVariable
+                        WHERE VariableType=@variableType
+                            AND ProcessInstanceID=@processInstanceID
+                            AND Name=@name
+                        ORDER BY ActivityGUID";
+            var list = Repository.Query<ProcessVariableEntity>(sql,
+                new
+                {
+                    variableType = ProcessVariableTypeEnum.Process.ToString(),
+                    processInstanceID = processInstanceID,
+                    name = name
+                }).ToList();
             if (list != null && list.Count() > 0)
                 entity = list[0];
 
@@ -349,14 +340,20 @@ namespace Slickflow.Engine.Business.Manager
             IDbTransaction trans)
         {
             ProcessVariableEntity entity = null;
-            var sqlQuery = (from pv in Repository.GetAll<ProcessVariableEntity>()
-                            where pv.VariableType == ProcessVariableTypeEnum.Activity.ToString()
-                                && pv.ProcessInstanceID == processInstanceID
-                                && pv.Name == name
-                                && pv.ActivityGUID == activityGUID
-                            select pv
-                            );
-            var list = sqlQuery.OrderByDescending(pv => pv.ID).ToList<ProcessVariableEntity>();
+            var sql = @"SELECT * FROM WfProcessVariable
+                        WHERE VariableType=@variableType
+                            AND ProcessInstanceID=@processInstanceID
+                            AND ActivityGUID=@activityGUID 
+                            AND Name=@name
+                        ORDER BY ActivityGUID";
+            var list = Repository.Query<ProcessVariableEntity>(sql,
+                new
+                {
+                    variableType = ProcessVariableTypeEnum.Process.ToString(),
+                    processInstanceID = processInstanceID,
+                    activityGUID = activityGUID,
+                    name = name
+                }).ToList();
             if (list != null && list.Count() > 0)
                 entity = list[0];
 
@@ -379,7 +376,10 @@ namespace Slickflow.Engine.Business.Manager
             foreach (var v in matches)
             {
                 var value = GetVariableOfProcess(conn, processInstanceID, v.ToString(), trans);
-                keyValuePair.Add(string.Format("{0}{1}", '@', v.ToString()), value.Value);
+                if (value != null)
+                {
+                    keyValuePair.Add(string.Format("{0}{1}", '@', v.ToString()), value.Value);
+                }
             }
 
             var replaced = ExpressionParser.ReplaceParameterToValue(expression, keyValuePair);

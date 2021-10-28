@@ -50,6 +50,11 @@ namespace Slickflow.Engine.Common
         Complex = 21,
 
         /// <summary>
+        /// 条件节点
+        /// </summary>
+        Conditional = 23,
+
+        /// <summary>
         /// 批处理更新
         /// </summary>
         BatchUpdate = 30,

@@ -235,23 +235,17 @@ namespace Slickflow.Engine.Business.Manager
         internal IList<ActivityInstanceEntity> GetActivityInstances(int processInstanceID,
             IDbSession session)
         {
-            //var sql = @"SELECT * FROM WfActivityInstance 
-            //            WHERE ProcessInstanceID = @processInstanceID 
-            //                ORDER BY ID";
+            var sql = @"SELECT * FROM WfActivityInstance 
+                        WHERE ProcessInstanceID = @processInstanceID 
+                            ORDER BY ID";
 
-            //var instanceList = Repository.Query<ActivityInstanceEntity>(session.Connection,
-            //    sql,
-            //    new
-            //    {
-            //        processInstanceID = processInstanceID
-            //    },
-            //    session.Transaction).ToList();
-            //return instanceList;
-            var sqlQuery = (from ai in Repository.GetAll<ActivityInstanceEntity>(session.Connection, session.Transaction)
-                            where ai.ProcessInstanceID == processInstanceID
-                            select ai
-                            );
-            var list = sqlQuery.OrderBy(ai => ai.ID).ToList<ActivityInstanceEntity>();
+            var list = Repository.Query<ActivityInstanceEntity>(session.Connection,
+                sql,
+                new
+                {
+                    processInstanceID = processInstanceID
+                },
+                session.Transaction).ToList();
             return list;
         }
 
@@ -293,24 +287,18 @@ namespace Slickflow.Engine.Business.Manager
             IDbSession session)
         {
             ActivityInstanceEntity activityInstance = null;
-            //var sql = @"SELECT * FROM WfActivityInstance 
-            //            WHERE ProcessInstanceID = @processInstanceID
-            //                AND ActivityGUID = @activityGUID
-            //                ORDER BY ID DESC";
-            //var list = Repository.Query<ActivityInstanceEntity>(session.Connection,
-            //    sql,
-            //    new
-            //    {
-            //        processInstanceID = processInstanceID,
-            //        activityGUID = activityGUID
-            //    },
-            //    session.Transaction).ToList();
-            var sqlQuery = (from ai in Repository.GetAll<ActivityInstanceEntity>(session.Connection, session.Transaction)
-                            where ai.ProcessInstanceID == processInstanceID
-                                && ai.ActivityGUID == activityGUID
-                            select ai
-                            );
-            var list = sqlQuery.OrderByDescending(ai => ai.ID).ToList<ActivityInstanceEntity>();
+            var sql = @"SELECT * FROM WfActivityInstance 
+                        WHERE ProcessInstanceID = @processInstanceID
+                            AND ActivityGUID = @activityGUID
+                            ORDER BY ID DESC";
+            var list = Repository.Query<ActivityInstanceEntity>(session.Connection,
+                sql,
+                new
+                {
+                    processInstanceID = processInstanceID,
+                    activityGUID = activityGUID
+                },
+                session.Transaction).ToList();
 
             if (list.Count > 0)
                 activityInstance = list[0];
@@ -330,33 +318,23 @@ namespace Slickflow.Engine.Business.Manager
             string activityGUID)
         {
             ActivityInstanceEntity activityInstance = null;
-            //var sql = @"SELECT 
-            //                    AI.* 
-            //                FROM WfActivityInstance AI
-            //                INNER JOIN WfProcessInstance PI 
-            //                    ON AI.ProcessInstanceID = PI.ID
-            //                WHERE PI.ProcessState = 2 
-            //                    AND AI.AppInstanceID = @appInstanceID 
-            //                    AND AI.ProcessGUID = @processGUID
-            //                    AND AI.ActivityGUID = @activityGUID";
-            //var list = Repository.Query<ActivityInstanceEntity>(
-            //    sql,
-            //    new
-            //    {
-            //        appInstanceID = appInstanceID,
-            //        processGUID = processGUID,
-            //        activityGUID = activityGUID
-            //    }).ToList();
-            var sqlQuery = (from ai in Repository.GetAll<ActivityInstanceEntity>()
-                            join pi in Repository.GetAll<ProcessInstanceEntity>()
-                                on ai.ProcessInstanceID equals pi.ID
-                            where pi.ProcessState == 2
-                                && ai.AppInstanceID == appInstanceID
-                                && ai.ProcessGUID == processGUID
-                                && ai.ActivityGUID == activityGUID
-                            select ai
-                            );
-            var list = sqlQuery.ToList<ActivityInstanceEntity>();
+            var sql = @"SELECT 
+                                AI.* 
+                            FROM WfActivityInstance AI
+                            INNER JOIN WfProcessInstance PI 
+                                ON AI.ProcessInstanceID = PI.ID
+                            WHERE PI.ProcessState = 2 
+                                AND AI.AppInstanceID = @appInstanceID 
+                                AND AI.ProcessGUID = @processGUID
+                                AND AI.ActivityGUID = @activityGUID";
+            var list = Repository.Query<ActivityInstanceEntity>(
+                sql,
+                new
+                {
+                    appInstanceID = appInstanceID,
+                    processGUID = processGUID,
+                    activityGUID = activityGUID
+                }).ToList();
             if (list.Count > 0) activityInstance = list[0];
 
             return activityInstance;
@@ -390,28 +368,21 @@ namespace Slickflow.Engine.Business.Manager
             IDbSession session)
         {
             ActivityInstanceEntity entity = null;
-            //var sql = @"SELECT * FROM WfActivityInstance 
-            //            WHERE ProcessInstanceID = @processInstanceID 
-            //                AND ActivityGUID = @activityGUID 
-            //                AND ActivityState = @state
-            //            ORDER BY ID DESC";
+            var sql = @"SELECT * FROM WfActivityInstance 
+                        WHERE ProcessInstanceID = @processInstanceID 
+                            AND ActivityGUID = @activityGUID 
+                            AND ActivityState = @state
+                        ORDER BY ID DESC";
 
-            //var list = Repository.Query<ActivityInstanceEntity>(session.Connection,
-            //    sql,
-            //    new
-            //    {
-            //        processInstanceID = processInstanceID,
-            //        activityGUID = activityGUID.ToString(),
-            //        state = (short)activityState
-            //    },
-            //    session.Transaction).ToList();
-            var sqlQuery = (from ai in Repository.GetAll<ActivityInstanceEntity>(session.Connection, session.Transaction)
-                            where ai.ProcessInstanceID == processInstanceID
-                                && ai.ActivityGUID == activityGUID
-                                && ai.ActivityState == (short)activityState
-                            select ai
-                            );
-            var list = sqlQuery.OrderByDescending(ai => ai.ID).ToList<ActivityInstanceEntity>();
+            var list = Repository.Query<ActivityInstanceEntity>(session.Connection,
+                sql,
+                new
+                {
+                    processInstanceID = processInstanceID,
+                    activityGUID = activityGUID.ToString(),
+                    state = (short)activityState
+                },
+                session.Transaction).ToList();
             if (list.Count == 1)
             {
                 entity = list[0];
@@ -429,30 +400,23 @@ namespace Slickflow.Engine.Business.Manager
             string processGUID)
         {
             //activityState: 4-completed（完成）
-            //var sql = @"SELECT 
-            //                    AI.* 
-            //                FROM WfActivityInstance AI
-            //                INNER JOIN WfProcessInstance PI 
-            //                    ON AI.ProcessInstanceID = PI.ID
-            //                WHERE PI.ProcessState = 2 
-            //                    AND AI.AppInstanceID = @appInstanceID 
-            //                    AND AI.ProcessGUID = @processGUID
-            //                    AND AI.ActivityState = 4";
+            var sql = @"SELECT 
+                                AI.* 
+                            FROM WfActivityInstance AI
+                            INNER JOIN WfProcessInstance PI 
+                                ON AI.ProcessInstanceID = PI.ID
+                            WHERE PI.ProcessState = 2 
+                                AND AI.AppInstanceID = @appInstanceID 
+                                AND AI.ProcessGUID = @processGUID
+                                AND AI.ActivityState = 4";
 
-            //var list = Repository.Query<ActivityInstanceEntity>(
-            //    sql,
-            //    new
-            //    {
-            //        appInstanceID = appInstanceID,
-            //        processGUID = processGUID.ToString()
-            //    }).ToList();
-            var sqlQuery = (from ai in Repository.GetAll<ActivityInstanceEntity>()
-                            where ai.AppInstanceID == appInstanceID
-                                && ai.ProcessGUID == processGUID
-                                && ai.ActivityState == 4
-                            select ai
-                            );
-            var list = sqlQuery.ToList<ActivityInstanceEntity>();
+            var list = Repository.Query<ActivityInstanceEntity>(
+                sql,
+                new
+                {
+                    appInstanceID = appInstanceID,
+                    processGUID = processGUID.ToString()
+                }).ToList();
             return list;
         }
 
@@ -557,28 +521,21 @@ namespace Slickflow.Engine.Business.Manager
             IDbSession session)
         {
             //activityState: 4-completed（完成）
-            //var sql = @"SELECT * FROM WfActivityInstance 
-            //            WHERE ProcessInstanceID = @processInstanceID 
-            //                AND ActivityGUID = @activityGUID 
-            //                AND ActivityState = @state 
-            //            ORDER BY ID DESC";
+            var sql = @"SELECT * FROM WfActivityInstance 
+                        WHERE ProcessInstanceID = @processInstanceID 
+                            AND ActivityGUID = @activityGUID 
+                            AND ActivityState = @state 
+                        ORDER BY ID DESC";
 
-            //var list = Repository.Query<ActivityInstanceEntity>(session.Connection,
-            //    sql,
-            //    new
-            //    {
-            //        processInstanceID = processInstanceID,
-            //        activityGUID = activityGUID.ToString(),
-            //        state = (short)ActivityStateEnum.Completed
-            //    },
-            //    session.Transaction).ToList();
-            var sqlQuery = (from ai in Repository.GetAll<ActivityInstanceEntity>(session.Connection, session.Transaction)
-                            where ai.ProcessInstanceID == processInstanceID
-                                && ai.ActivityGUID == activityGUID
-                                && ai.ActivityState == 4
-                            select ai
-                );
-            var list = sqlQuery.OrderByDescending(ai => ai.ID).ToList<ActivityInstanceEntity>();
+            var list = Repository.Query<ActivityInstanceEntity>(session.Connection,
+                sql,
+                new
+                {
+                    processInstanceID = processInstanceID,
+                    activityGUID = activityGUID.ToString(),
+                    state = (short)ActivityStateEnum.Completed
+                },
+                session.Transaction).ToList();
             return list;
         }
 
@@ -592,26 +549,19 @@ namespace Slickflow.Engine.Business.Manager
             IDbSession session)
         {
             ActivityInstanceEntity entity = null;
-            //var sql = @"SELECT 
-            //                AI.* 
-            //            FROM WfActivityInstance AI
-            //            INNER JOIN WfTasks T ON AI.ID = T.ActivityInstanceID
-            //            WHERE T.ID = @taskID";
+            var sql = @"SELECT 
+                            AI.* 
+                        FROM WfActivityInstance AI
+                        INNER JOIN WfTasks T ON AI.ID = T.ActivityInstanceID
+                        WHERE T.ID = @taskID";
 
-            //var list = Repository.Query<ActivityInstanceEntity>(session.Connection,
-            //    sql,
-            //    new
-            //    {
-            //        taskID = taskID
-            //    },
-            //    session.Transaction).ToList();
-            var sqlQuery = (from ai in Repository.GetAll<ActivityInstanceEntity>(session.Connection, session.Transaction)
-                            join t in Repository.GetAll<TaskEntity>(session.Connection, session.Transaction)
-                                on ai.ID equals t.ActivityInstanceID
-                            where t.ID == taskID
-                            select ai
-                            );
-            var list = sqlQuery.ToList<ActivityInstanceEntity>();
+            var list = Repository.Query<ActivityInstanceEntity>(session.Connection,
+                sql,
+                new
+                {
+                    taskID = taskID
+                },
+                session.Transaction).ToList();
             if (list.Count == 1)
             {
                 entity = list[0];
@@ -664,38 +614,28 @@ namespace Slickflow.Engine.Business.Manager
             IDbSession session)
         {
             //activityState: 1-ready（准备）, 2-running（）运行；
-            //var sql = @"SELECT 
-            //                    AI.* 
-            //                FROM WfActivityInstance AI
-            //                INNER JOIN WfProcessInstance PI 
-            //                    ON AI.ProcessInstanceID = PI.ID
-            //                WHERE (AI.ActivityState=1 OR AI.ActivityState=2)
-            //                    AND PI.ProcessState = 2 
-            //                    AND PI.Version = @version 
-            //                    AND AI.AppInstanceID = @appInstanceID 
-            //                    AND AI.ProcessGUID = @processGUID";
-
-            //var list = Repository.Query<ActivityInstanceEntity>(session.Connection,
-            //    sql,
-            //    new
-            //    {
-            //        appInstanceID = appInstanceID,
-            //        processGUID = processGUID,
-            //        version = version
-            //    },
-            //    session.Transaction);
             if (string.IsNullOrEmpty(version)) version = "1";
-            var sqlQuery = (from ai in Repository.GetAll<ActivityInstanceEntity>(session.Connection, session.Transaction)
-                            join pi in Repository.GetAll<ProcessInstanceEntity>(session.Connection, session.Transaction)
-                                on ai.ProcessInstanceID equals pi.ID
-                            where (ai.ActivityState == 1 || ai.ActivityState == 2)
-                                && pi.ProcessState == 2
-                                && pi.Version == version
-                                && ai.AppInstanceID == appInstanceID
-                                && ai.ProcessGUID == processGUID
-                            select ai
-                            );
-            var list = sqlQuery.ToList<ActivityInstanceEntity>();
+            var sql = @"SELECT 
+                                AI.* 
+                            FROM WfActivityInstance AI 
+                            INNER JOIN WfProcessInstance PI 
+                                ON AI.ProcessInstanceID = PI.ID 
+                            WHERE (AI.ActivityState=1 OR AI.ActivityState=2) 
+                                AND PI.ProcessState = 2 
+                                AND PI.Version = @version 
+                                AND AI.AppInstanceID = @appInstanceID 
+                                AND AI.ProcessGUID = @processGUID";
+
+            var list = Repository.Query<ActivityInstanceEntity>(session.Connection,
+                sql,
+                new
+                {
+                    appInstanceID = appInstanceID,
+                    processGUID = processGUID,
+                    version = version
+                },
+                session.Transaction);
+
             return list;
         }
 
@@ -731,30 +671,21 @@ namespace Slickflow.Engine.Business.Manager
             IDbSession session)
         {
             //activityState: 4-completed（完成）
-            //var sql = @"SELECT 
-            //                    AI.* 
-            //                FROM WfActivityInstance AI
-            //                INNER JOIN WfProcessInstance PI 
-            //                    ON AI.ProcessInstanceID = PI.ID
-            //                WHERE PI.ProcessState = 2 
-            //                    AND MIHostActivityInstanceID = @mainActivityInstanceID
-            //                    AND AI.ActivityState = 4";
-            //var list = Repository.Query<ActivityInstanceEntity>(session.Connection,
-            //    sql,
-            //    new
-            //    {
-            //        mainActivityInstanceID = mainActivityInstanceID
-            //    },
-            //    session.Transaction).ToList();
-            var sqlQuery = (from ai in Repository.GetAll<ActivityInstanceEntity>(session.Connection, session.Transaction)
-                            join pi in Repository.GetAll<ProcessInstanceEntity>(session.Connection, session.Transaction)
-                                on ai.ProcessInstanceID equals pi.ID
-                            where pi.ProcessState == 2
-                                && ai.MIHostActivityInstanceID == mainActivityInstanceID
-                                && ai.ActivityState == 4
-                            select ai
-                            );
-            var list = sqlQuery.ToList<ActivityInstanceEntity>();
+            var sql = @"SELECT 
+                                AI.* 
+                            FROM WfActivityInstance AI
+                            INNER JOIN WfProcessInstance PI 
+                                ON AI.ProcessInstanceID = PI.ID
+                            WHERE PI.ProcessState = 2 
+                                AND MIHostActivityInstanceID = @mainActivityInstanceID
+                                AND AI.ActivityState = 4";
+            var list = Repository.Query<ActivityInstanceEntity>(session.Connection,
+                sql,
+                new
+                {
+                    mainActivityInstanceID = mainActivityInstanceID
+                },
+                session.Transaction).ToList();
             return list;
         }
 
@@ -807,29 +738,22 @@ namespace Slickflow.Engine.Business.Manager
             {
                 originalRunningNode = runningNode;
             }
-            //var sql = @"SELECT * FROM WfActivityInstance 
-            //            WHERE ProcessInstanceID = @processInstanceID 
-            //                AND ActivityGUID = @activityGUID 
-            //                AND ActivityState = 4
-            //                AND MIHostActivityInstanceID IS NOT NULL 
-            //            ORDER BY ID DESC";
-            //var instanceList = Repository.Query<ActivityInstanceEntity>(
-            //    session.Connection,
-            //    sql,
-            //    new
-            //    {
-            //        processInstanceID = runningNode.ProcessInstanceID,
-            //        activityGUID = previousActivityGUID
-            //    },
-            //    session.Transaction).ToList();
-            var sqlQuery = (from ai in Repository.GetAll<ActivityInstanceEntity>(session.Connection, session.Transaction)
-                            where ai.ProcessInstanceID == runningNode.ProcessInstanceID
-                                && ai.ActivityGUID == previousActivityGUID
-                                && ai.ActivityState == 4
-                                && ai.MIHostActivityInstanceID != null
-                            select ai
-                            );
-            var instanceList = sqlQuery.OrderByDescending(ai => ai.ID).ToList<ActivityInstanceEntity>();
+
+            var sql = @"SELECT * FROM WfActivityInstance 
+                        WHERE ProcessInstanceID = @processInstanceID 
+                            AND ActivityGUID = @activityGUID 
+                            AND ActivityState = 4
+                            AND MIHostActivityInstanceID IS NOT NULL 
+                        ORDER BY ID DESC";
+            var instanceList = Repository.Query<ActivityInstanceEntity>(
+                session.Connection,
+                sql,
+                new
+                {
+                    processInstanceID = runningNode.ProcessInstanceID,
+                    activityGUID = previousActivityGUID
+                },
+                session.Transaction).ToList();
 
             //排除掉是包含已经退回过的非初始节点
             var withoutBackSrcInfoList = instanceList.Where(a => a.BackSrcActivityInstanceID == null).ToList();
@@ -960,43 +884,27 @@ namespace Slickflow.Engine.Business.Manager
             IDbSession session)
         {
             //activityState: 1-ready（准备）, 2-running（）运行；
-            //var sql = @"SELECT * FROM WfActivityInstance 
-            //                WHERE MIHostActivityInstanceID = @activityInstanceID 
-            //                    AND processInstanceID = @processInstanceID
-            //                ";
-            //if (activityState.HasValue)
-            //{
-            //    sql += " AND ActivityState = @activityState ";
-            //}
-            //sql += " ORDER BY CompleteOrder";
-
-            //var list = Repository.Query<ActivityInstanceEntity>(
-            //    session.Connection,
-            //    sql,
-            //    new
-            //    {
-            //        activityInstanceID = mainActivityInstanceID,
-            //        processInstanceID = processInstanceID,
-            //        activityState = activityState
-            //    },
-            //    session.Transaction).ToList();
-            List<ActivityInstanceEntity> list = null;
-            var sqlQuery = (from ai in Repository.GetAll<ActivityInstanceEntity>(session.Connection, session.Transaction)
-                            where ai.MIHostActivityInstanceID == mainActivityInstanceID
-                                && ai.ProcessInstanceID == processInstanceID
-                            select ai
-                            );
+            var sql = @"SELECT * FROM WfActivityInstance 
+                            WHERE MIHostActivityInstanceID = @activityInstanceID 
+                                AND processInstanceID = @processInstanceID
+                            ";
             if (activityState.HasValue)
             {
-                list = sqlQuery.Where(a => a.ActivityState == activityState.Value)
-                    .OrderBy(a=>a.CompleteOrder)
-                    .ToList<ActivityInstanceEntity>();
+                sql += " AND ActivityState = @activityState ";
             }
-            else
-            {
-                list = sqlQuery.OrderBy(a => a.CompleteOrder)
-                    .ToList<ActivityInstanceEntity>();
-            }
+            sql += " ORDER BY CompleteOrder";
+
+            var list = Repository.Query<ActivityInstanceEntity>(
+                session.Connection,
+                sql,
+                new
+                {
+                    activityInstanceID = mainActivityInstanceID,
+                    processInstanceID = processInstanceID,
+                    activityState = activityState
+                },
+                session.Transaction).ToList();
+
             return list;
         }
 
@@ -1014,27 +922,20 @@ namespace Slickflow.Engine.Business.Manager
             int processInstanceID,
             IDbSession session)
         {
-            //var sql = @"SELECT * FROM wftransitioninstance
-            //                WHERE processinstanceid=@processinstanceID 
-            //                    AND fromactivityguid=@fromActivityGUID
-            //                    AND fromactivityinstanceid=@fromActivityInstanceID";
-            //var list = Repository.Query<TransitionInstanceEntity>(
-            //    session.Connection,
-            //    sql,
-            //    new
-            //    {
-            //        fromActivityGUID = splitActivityGUID,
-            //        fromActivityInstanceID = splitActivityInstanceID,
-            //        processinstanceID = processInstanceID
-            //    },
-            //    session.Transaction).ToList();
-            var sqlQuery = (from ti in Repository.GetAll<TransitionInstanceEntity>(session.Connection, session.Transaction)
-                            where ti.ProcessInstanceID == processInstanceID
-                                && ti.FromActivityGUID == splitActivityGUID
-                                && ti.FromActivityInstanceID == splitActivityInstanceID
-                            select ti
-                            );
-            var list = sqlQuery.ToList<TransitionInstanceEntity>();
+            var sql = @"SELECT * FROM wftransitioninstance
+                            WHERE processinstanceid=@processinstanceID 
+                                AND fromactivityguid=@fromActivityGUID
+                                AND fromactivityinstanceid=@fromActivityInstanceID";
+            var list = Repository.Query<TransitionInstanceEntity>(
+                session.Connection,
+                sql,
+                new
+                {
+                    fromActivityGUID = splitActivityGUID,
+                    fromActivityInstanceID = splitActivityInstanceID,
+                    processinstanceID = processInstanceID
+                },
+                session.Transaction).ToList();
             return list.Count();
         }
 
@@ -1049,32 +950,25 @@ namespace Slickflow.Engine.Business.Manager
             int splitGatewayInstanceID, 
             IDbSession session)
         {
-            //var sql = @"SELECT 
-	           //             A.*
-            //            FROM WfActivityInstance A 
-            //            INNER JOIN WfTransitionInstance T ON
-	           //             A.ID = T.ToActivityInstanceID
-            //            WHERE A.ActivityState IN (1, 2, 4, 5)
-	           //             AND T.FromActivityInstanceID = @fromActivityInstanceID
-            //            ";
-            //var list = Repository.Query<ActivityInstanceEntity>(
-            //    session.Connection,
-            //    sql,
-            //    new 
-            //    {
-            //        fromActivityInstanceID = splitGatewayInstanceID
-            //    },
-            //    session.Transaction).ToList();
-            int[] states = new int[] { 1, 2, 4, 5 };
-            var sqlQuery = (from ai in Repository.GetAll<ActivityInstanceEntity>(session.Connection, session.Transaction)
-                            join ti in Repository.GetAll<TransitionInstanceEntity>(session.Connection, session.Transaction)
-                                on ai.ID equals ti.ToActivityInstanceID
-                            where ti.ProcessInstanceID == processInstanceID
-                                && ti.FromActivityInstanceID == splitGatewayInstanceID
-                                && states.Contains(ai.ActivityState)
-                            select ai
-                            );
-            var list = sqlQuery.ToList<ActivityInstanceEntity>();
+            var sql = @"SELECT 
+                         A.*
+                        FROM WfActivityInstance A 
+                        INNER JOIN WfTransitionInstance T ON
+                         A.ID = T.ToActivityInstanceID
+                        WHERE (A.ActivityState=1
+                                  OR A.ActivityState=2
+                                  OR A.ActivityState=4
+                                  OR A.ActivityState=5) 
+                         AND T.FromActivityInstanceID = @fromActivityInstanceID
+                        ";
+            var list = Repository.Query<ActivityInstanceEntity>(
+                session.Connection,
+                sql,
+                new
+                {
+                    fromActivityInstanceID = splitGatewayInstanceID
+                },
+                session.Transaction).ToList();
             return list;
         }
 
@@ -1104,31 +998,25 @@ namespace Slickflow.Engine.Business.Manager
             int processInstanceID,
             IDbSession session)
         {
-            //var sql = @"SELECT 
-	           //             *
-            //            FROM WfActivityInstance
-            //            WHERE ActivityState IN (1, 2, 4, 5)
-	           //             AND MIHostActivityInstanceID = @mainActivityInstanceID
-               //             AND ProcessInstanceID = @processInstanceID
-            //            ";
-            //var list = Repository.Query<ActivityInstanceEntity>(
-            //    session.Connection,
-            //    sql,
-            //    new
-            //    {
-            //        mainActivityInstanceID = mainActivityInstanceID,
-            //        processInstanceID = processInstanceID
-            //    },
-            //    session.Transaction).ToList();
-            //先取出多实例
-            int[] states = new int[] { 1, 2, 4, 5 };
-            var sqlQuery = (from ai in Repository.GetAll<ActivityInstanceEntity>(session.Connection, session.Transaction)
-                            where ai.MIHostActivityInstanceID == mainActivityInstanceID
-                                && ai.ProcessInstanceID == processInstanceID
-                                && states.Contains(ai.ActivityState)
-                            select ai
-                            );
-            var list = sqlQuery.ToList<ActivityInstanceEntity>();
+            var sql = @"SELECT 
+                         *
+                        FROM WfActivityInstance
+                        WHERE (ActivityState=1
+                                  OR ActivityState = 2
+                                  OR ActivityState = 4
+                                  OR ActivityState = 5) 
+	                        AND MIHostActivityInstanceID = @mainActivityInstanceID
+                            AND ProcessInstanceID = @processInstanceID
+                        ";
+            var list = Repository.Query<ActivityInstanceEntity>(
+                session.Connection,
+                sql,
+                new
+                {
+                    mainActivityInstanceID = mainActivityInstanceID,
+                    processInstanceID = processInstanceID
+                },
+                session.Transaction).ToList();
 
             //去除掉有退回过的实例
             var backList = new List<int>();
@@ -1466,33 +1354,20 @@ namespace Slickflow.Engine.Business.Manager
             IList<ActivityEntity> taskActivityList,
             IDbSession session)
         {
-            //var idsin = taskActivityList.Select(a => a.ActivityGUID).ToList();
-            //var updSql = @"UPDATE WfActivityInstance 
-            //            SET CanNotRenewInstance=1 
-            //            WHERE ProcessInstanceID=@processInstanceID 
-            //                AND ActivityState in (1, 2, 5) 
-            //                AND ActivityGUID in @ids";
+            var idsin = taskActivityList.Select(a => a.ActivityGUID).ToList();
+            var updSql = @"UPDATE WfActivityInstance 
+                        SET CanNotRenewInstance=1 
+                        WHERE ProcessInstanceID=@processInstanceID 
+                            AND ActivityState in (1, 2, 5) 
+                            AND ActivityGUID in @ids";
 
-            //var rows = Repository.Execute(session.Connection, updSql, 
-            //    new {
-            //        processInstanceID = processInstanceID,
-            //        ids = idsin
-            //    }, 
-            //    session.Transaction);
-            // 数据量虽然不会太大，但是建议保留上面的SQL批量更新(UpdateBatch)
-            var idsin = taskActivityList.Select(a => a.ActivityGUID).ToArray();
-            var sqlQuery = (from ai in Repository.GetAll<ActivityInstanceEntity>(session.Connection, session.Transaction)
-                            where ai.ProcessInstanceID == processInstanceID
-                                && (ai.ActivityState == 1 || ai.ActivityState == 2 || ai.ActivityState == 5)
-                                && idsin.Contains(ai.ActivityGUID)
-                            select ai
-                            );
-            var list = sqlQuery.ToList<ActivityInstanceEntity>();
-            foreach (var a in list)
-            {
-                a.CanNotRenewInstance = 1;
-                Repository.Update<ActivityInstanceEntity>(session.Connection, a, session.Transaction);
-            }
+            var rows = Repository.Execute(session.Connection, updSql,
+                new
+                {
+                    processInstanceID = processInstanceID,
+                    ids = idsin
+                },
+                session.Transaction);
         }
         #endregion
 
@@ -1551,38 +1426,22 @@ namespace Slickflow.Engine.Business.Manager
             WfAppRunner runner,
             IDbSession session)
         {
-            //var sql = @"UPDATE WfActivityInstance 
-            //            SET ActivityState=@activityState,
-            //            LastUpdatedByUserID=@lastUpdatedByUserID,
-            //            LastUpdatedByUserName=@lastUpdatedByUserName,
-            //            LastUpdatedDateTime=@lastUpdatedDateTime 
-            //            WHERE ID=@activityInstanceID 
-            //                AND (ActivityState=1 OR ActivityState=2 OR ActivityState=5)";
-            //Repository.Execute(session.Connection, sql,
-            //    new
-            //    {
-            //        activityState = (short)ActivityStateEnum.Cancelled,
-            //        lastUpdatedByUserID = runner.UserID,
-            //        lastUpdatedByUserName = runner.UserName,
-            //        LastUpdatedDateTime = System.DateTime.Now,
-            //        activityInstanceID = activityInstanceID
-            //    }, session.Transaction);
-
-            var sqlQuery = (from a in Repository.GetAll<ActivityInstanceEntity>(session.Connection, session.Transaction)
-                            where a.ID == activityInstanceID
-                                && (a.ActivityState == 1 || a.ActivityState == 2 || a.ActivityState == 5)
-                            select a);
-            var list = sqlQuery.ToList<ActivityInstanceEntity>();
-            if (list.Count() == 1)
-            {
-                var entity = list[0];
-                entity.LastUpdatedByUserID = runner.UserID;
-                entity.LastUpdatedByUserName = runner.UserName;
-                entity.LastUpdatedDateTime = System.DateTime.Now;
-                entity.ActivityState = (short)ActivityStateEnum.Cancelled;
-                Repository.Update<ActivityInstanceEntity>(session.Connection, entity, session.Transaction);
-            }
-
+            var sql = @"UPDATE WfActivityInstance 
+                        SET ActivityState=@activityState,
+                        LastUpdatedByUserID=@lastUpdatedByUserID,
+                        LastUpdatedByUserName=@lastUpdatedByUserName,
+                        LastUpdatedDateTime=@lastUpdatedDateTime 
+                        WHERE ID=@activityInstanceID 
+                            AND (ActivityState=1 OR ActivityState=2 OR ActivityState=5)";
+            Repository.Execute(session.Connection, sql,
+                new
+                {
+                    activityState = (short)ActivityStateEnum.Cancelled,
+                    lastUpdatedByUserID = runner.UserID,
+                    lastUpdatedByUserName = runner.UserName,
+                    LastUpdatedDateTime = System.DateTime.Now,
+                    activityInstanceID = activityInstanceID
+                }, session.Transaction);
         }
 
         /// <summary>

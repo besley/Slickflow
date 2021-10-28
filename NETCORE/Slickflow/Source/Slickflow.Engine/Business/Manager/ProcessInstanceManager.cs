@@ -104,26 +104,19 @@ namespace Slickflow.Engine.Business.Manager
         private ProcessInstanceEntity GetByVersion(string processGUID, 
             string version)
         {
-            //var sql = @"SELECT 
-            //                * 
-            //            FROM WfProcessInstance
-            //            WHERE ProcessGUID=@processGUID
-            //                AND Version=@version
-            //            ORDER BY ID DESC";
-            //var processInstanceList = Repository.Query<ProcessInstanceEntity>(sql,
-            //        new
-            //        {
-            //            processGUID = processGUID,
-            //            version = version
-            //        }).ToList();
-            var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>()
-                            where pi.ProcessGUID == processGUID
-                                && pi.Version == version
-                            select pi
-                            );
-            var list = sqlQuery.OrderByDescending(pi=>pi.ID).ToList<ProcessInstanceEntity>();
+            var sql = @"SELECT 
+                            * 
+                        FROM WfProcessInstance
+                        WHERE ProcessGUID=@processGUID
+                            AND Version=@version
+                        ORDER BY ID DESC";
+            var list = Repository.Query<ProcessInstanceEntity>(sql,
+                    new
+                    {
+                        processGUID = processGUID,
+                        version = version
+                    }).ToList();
             var entity = EnumHelper.GetFirst<ProcessInstanceEntity>(list);
-
             return entity;
         }
 
@@ -234,24 +227,19 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns>流程实例实体</returns>
         internal IEnumerable<ProcessInstanceEntity> GetProcessInstance(String appInstanceID)
         {
-            //var sql = @"SELECT 
-            //                * 
-            //            FROM WfProcessInstance 
-            //            WHERE AppInstanceID=@appInstanceID 
-            //                AND RecordStatusInvalid = 0 
-            //            ORDER BY CreatedDateTime DESC";
+            var sql = @"SELECT 
+                            * 
+                        FROM WfProcessInstance 
+                        WHERE AppInstanceID=@appInstanceID 
+                            AND RecordStatusInvalid = 0 
+                        ORDER BY CreatedDateTime DESC";
 
-            //return Repository.Query<ProcessInstanceEntity>(
-            //            sql,
-            //            new
-            //            {
-            //                appInstanceID = appInstanceID
-            //            });
-            var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>()
-                            where pi.AppInstanceID == appInstanceID
-                            select pi
-                );
-            var list = sqlQuery.OrderByDescending(pi => pi.CreatedDateTime).ToList<ProcessInstanceEntity>();
+            var list = Repository.Query<ProcessInstanceEntity>(
+                        sql,
+                        new
+                        {
+                            appInstanceID = appInstanceID
+                        });
             return list;
         }
 
@@ -268,28 +256,21 @@ namespace Slickflow.Engine.Business.Manager
             String processGUID,
             IDbTransaction trans)
         {
-            //var sql = @"SELECT 
-            //                * 
-            //            FROM WfProcessInstance 
-            //            WHERE AppInstanceID=@appInstanceID 
-            //                AND ProcessGUID=@processGUID 
-            //                AND RecordStatusInvalid = 0
-            //            ORDER BY CreatedDateTime DESC";
-
-            //return Repository.Query<ProcessInstanceEntity>(conn,
-            //            sql,
-            //            new {
-            //                appInstanceID = appInstanceID, 
-            //                processGUID = processGUID
-            //            },
-            //            trans);
-            var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>(conn, trans)
-                            where pi.AppInstanceID == appInstanceID
-                                && pi.ProcessGUID == processGUID
-                                && pi.RecordStatusInvalid == 0
-                            select pi
-                            );
-            var list = sqlQuery.OrderByDescending(pi => pi.CreatedDateTime).ToList<ProcessInstanceEntity>();
+            var sql = @"SELECT 
+                            * 
+                        FROM WfProcessInstance 
+                        WHERE AppInstanceID=@appInstanceID 
+                            AND ProcessGUID=@processGUID 
+                            AND RecordStatusInvalid = 0
+                        ORDER BY CreatedDateTime DESC";
+            var list = Repository.Query<ProcessInstanceEntity>(conn,
+                        sql,
+                        new
+                        {
+                            appInstanceID = appInstanceID,
+                            processGUID = processGUID
+                        },
+                        trans);
             return list;
         }
 
@@ -302,39 +283,24 @@ namespace Slickflow.Engine.Business.Manager
         internal ProcessInstanceEntity GetRunningProcessInstance(string appInstanceID,
             string processGUID)
         {
-            //var sql = @"SELECT 
-            //                * 
-            //            FROM WfProcessInstance
-            //            WHERE AppInstanceID=@appInstanceID 
-            //                AND ProcessGUID=@processGUID 
-            //                AND RecordStatusInvalid=0
-            //                AND (ProcessState=1 OR ProcessState=2)
-            //            ORDER BY CreatedDateTime DESC";
+            var sql = @"SELECT 
+                            * 
+                        FROM WfProcessInstance
+                        WHERE AppInstanceID=@appInstanceID 
+                            AND ProcessGUID=@processGUID 
+                            AND RecordStatusInvalid=0
+                            AND (ProcessState=1 OR ProcessState=2)
+                        ORDER BY CreatedDateTime DESC";
 
-            //var list = Repository.Query<ProcessInstanceEntity>(
-            //        sql,
-            //        new
-            //        {
-            //            appInstanceID = appInstanceID,
-            //            processGUID = processGUID
-            //        }).ToList();
-            var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>()
-                            where pi.AppInstanceID == appInstanceID
-                                && pi.ProcessGUID == processGUID
-                                && pi.RecordStatusInvalid == 0
-                                && (pi.ProcessState == 1 || pi.ProcessState == 2)
-                            select pi
-                            );
-            var list = sqlQuery.OrderByDescending(pi => pi.CreatedDateTime).ToList<ProcessInstanceEntity>();
-
-            if (list.Count == 1)
-            {
-                return list[0];
-            } 
-            else 
-            {
-                return null;
-            }
+            var list = Repository.Query<ProcessInstanceEntity>(
+                    sql,
+                    new
+                    {
+                        appInstanceID = appInstanceID,
+                        processGUID = processGUID
+                    }).ToList();
+            var entity = EnumHelper.GetFirst<ProcessInstanceEntity>(list);
+            return entity;
         }
 
         /// <summary>
@@ -345,22 +311,15 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns>流程实例记录数</returns>
         internal Int32 GetProcessInstanceCount(string processGUID, string version)
         {
-            //var sql = @"SELECT 
-            //                COUNT(1) 
-            //            FROM WfProcessInstance
-            //            WHERE ProcessGUID=@processGUID
-            //                AND Version=@version";
-            //var parameters = new DynamicParameters();
-            //parameters.Add("@processGUID", processGUID);
-            //parameters.Add("@version", version);
-            //return Repository.Count(sql, parameters);
-
-            var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>()
-                            where pi.ProcessGUID == processGUID
-                                && pi.Version == version
-                            select pi
-                            );
-            var count = sqlQuery.ToList<ProcessInstanceEntity>().Count();
+            var sql = @"SELECT 
+                            * 
+                        FROM WfProcessInstance
+                        WHERE ProcessGUID=@processGUID
+                            AND Version=@version";
+            var parameters = new DynamicParameters();
+            parameters.Add("@processGUID", processGUID);
+            parameters.Add("@version", version);
+            var count = Repository.Count(sql, parameters);
             return count;
         }
 
@@ -378,28 +337,22 @@ namespace Slickflow.Engine.Business.Manager
             IDbTransaction trans)
         {
             bool isCompleted = false;
-            //var list = Repository.Query<ProcessInstanceEntity>(
-            //        conn,
-            //        @"SELECT * FROM WfProcessInstance
-            //                    WHERE InvokedActivityInstanceID=@invokedActivityInstanceID 
-            //                        AND InvokedActivityGUID=@invokedActivityGUID 
-            //                        AND RecordStatusInvalid=0
-            //                        AND ProcessState=4
-            //                    ORDER BY CreatedDateTime DESC",
-            //        new
-            //        {
-            //            invokedActivityInstanceID = activityInstanceID,
-            //            invokedActivityGUID = activityGUID
-            //        },
-            //        trans).ToList();
-            var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>(conn, trans)
-                            where pi.InvokedActivityInstanceID == activityInstanceID
-                                && pi.InvokedActivityGUID == activityGUID
-                                && pi.RecordStatusInvalid == 0
-                                && pi.ProcessState == 4
-                            select pi
-                );
-            var list = sqlQuery.OrderByDescending(pi => pi.CreatedDateTime).ToList<ProcessInstanceEntity>();
+            var sql = @"SELECT * FROM WfProcessInstance
+                                WHERE InvokedActivityInstanceID=@invokedActivityInstanceID 
+                                    AND InvokedActivityGUID=@invokedActivityGUID 
+                                    AND RecordStatusInvalid=0
+                                    AND ProcessState=4
+                                ORDER BY CreatedDateTime DESC";
+            var list = Repository.Query<ProcessInstanceEntity>(
+                    conn,
+                    sql,
+                    new
+                    {
+                        invokedActivityInstanceID = activityInstanceID,
+                        invokedActivityGUID = activityGUID
+                    },
+                    trans).ToList();
+
 
             if (list.Count == 1)
             {
@@ -609,24 +562,19 @@ namespace Slickflow.Engine.Business.Manager
             WfAppRunner runner,
             IDbSession session)
         {
-            //var list = Repository.Query<ProcessInstanceEntity>(
-            //       session.Connection,
-            //       @"SELECT * FROM WfProcessInstance
-            //                    WHERE InvokedActivityInstanceID=@invokedActivityInstanceID 
-            //                        AND ProcessState=5
-            //                    ORDER BY CreatedDateTime DESC",
-            //       new
-            //       {
-            //           invokedActivityInstanceID = invokedActivityInstanceID
-            //       },
-            //       session.Transaction).ToList();
+            var sql = @"SELECT * FROM WfProcessInstance
+                                WHERE InvokedActivityInstanceID=@invokedActivityInstanceID 
+                                    AND ProcessState=5
+                                ORDER BY CreatedDateTime DESC";
+            var list = Repository.Query<ProcessInstanceEntity>(
+                   session.Connection,
+                   sql,
+                   new
+                   {
+                       invokedActivityInstanceID = invokedActivityInstanceID
+                   },
+                   session.Transaction).ToList();
 
-            var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>(session.Connection, session.Transaction)
-                            where pi.InvokedActivityInstanceID == invokedActivityInstanceID
-                                && pi.ProcessState == 5
-                            select pi
-                            );
-            var list = sqlQuery.OrderByDescending(pi => pi.CreatedDateTime).ToList<ProcessInstanceEntity>();
 
             if (list != null && list.Count() == 1)
             {
@@ -732,38 +680,26 @@ namespace Slickflow.Engine.Business.Manager
             {
                 //process state:7--discard status
                 //record status:1 --invalid status
-                //string updSql = @"UPDATE WfProcessInstance
-		              //           SET [ProcessState] = 7, 
-			             //            [RecordStatusInvalid] = 1,
-			             //            [LastUpdatedDateTime] = GETDATE(),
-			             //            [LastUpdatedByUserID] = @userID,
-			             //            [LastUpdatedByUserName] = @userName
-		              //          WHERE AppInstanceID = @appInstanceID
-			             //           AND ProcessGUID = @processGUID
-                //                    AND Version = @version";
-                //int result = Repository.Execute(conn, updSql, new
-                //{
-                //    appInstanceID = runner.AppInstanceID,
-                //    processGUID = runner.ProcessGUID,
-                //    version = runner.Version,
-                //    userID = runner.UserID,
-                //    userName = runner.UserName
-                //},
-                //transaction);
-
-                var sqlQuery = (from pi in Repository.GetAll<ProcessInstanceEntity>(conn, transaction)
-                                where pi.AppInstanceID == runner.AppInstanceID
-                                    && pi.ProcessGUID == runner.ProcessGUID
-                                    && pi.Version == runner.Version
-                                select pi);
-                var list = sqlQuery.ToList<ProcessInstanceEntity>();
-                var entity = EnumHelper.GetFirst<ProcessInstanceEntity>(list);
-                entity.ProcessState = 7;
-                entity.RecordStatusInvalid = 1;
-                entity.LastUpdatedByUserID = runner.UserID;
-                entity.LastUpdatedByUserName = runner.UserName;
-                entity.LastUpdatedDateTime = System.DateTime.Now;
-                isDiscarded = Repository.Update<ProcessInstanceEntity>(conn, entity, transaction);
+                string updSql = @"UPDATE WfProcessInstance
+		                         SET [ProcessState] = 7, 
+			                         [RecordStatusInvalid] = 1,
+			                         [LastUpdatedDateTime] = @currentDate,
+			                         [LastUpdatedByUserID] = @userID,
+			                         [LastUpdatedByUserName] = @userName
+		                        WHERE AppInstanceID = @appInstanceID
+			                        AND ProcessGUID = @processGUID
+                                    AND Version = @version";
+                int result = Repository.Execute(conn, 
+                    updSql, 
+                    new{
+                        appInstanceID = runner.AppInstanceID,
+                        processGUID = runner.ProcessGUID,
+                        version = runner.Version,
+                        userID = runner.UserID,
+                        userName = runner.UserName,
+                        currentDate = System.DateTime.Now
+                    },
+                transaction);
                 transaction.Commit();
             }
             catch (System.Exception e)

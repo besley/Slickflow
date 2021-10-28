@@ -331,17 +331,48 @@ namespace Slickflow.Data
         }
 
         /// <summary>
-        /// 查询列表数据
+        /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate"></param>
         /// <param name="sort"></param>
         /// <param name="buffered"></param>
         /// <returns></returns>
-        public IEnumerable<T> GetList<T>(IDbConnection conn, IPredicate predicate = null, IList<ISort> sort = null,
+        public IEnumerable<T> GetList<T>(IPredicate predicate = null, IList<ISort> sort = null, bool buffered = false) where T : class
+        {
+            IDbSession session = SessionFactory.CreateSession();
+            try
+            {
+                session.BeginTrans();
+                var list = GetList<T>(session.Connection, predicate, sort, session.Transaction, buffered);
+                session.Commit();
+                return list;
+            }
+            catch
+            {
+                session.Rollback();
+                throw;
+            }
+            finally
+            {
+                session.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// 查询列表数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="conn"></param>
+        /// <param name="predicate"></param>
+        /// <param name="sort"></param>
+        /// <param name="trans"></param>
+        /// <param name="buffered"></param>
+        /// <returns></returns>
+        public IEnumerable<T> GetList<T>(IDbConnection conn, IPredicate predicate = null, IList<ISort> sort = null, IDbTransaction trans = null,
             bool buffered = false) where T : class
         {
-            return conn.GetList<T>(predicate, sort, null, null, buffered);
+            return conn.GetList<T>(predicate, sort, trans, null, buffered);
         }
 
         /// <summary>

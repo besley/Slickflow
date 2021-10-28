@@ -65,9 +65,10 @@ namespace Slickflow.Data
         int Count<T>(IDbConnection conn, string sql, bool buffered = false) where T : class;
         int Count(string sql, DynamicParameters parameters = null);
 
-        //lsit
+        //list
+        IEnumerable<T> GetList<T>(IPredicate predicate = null, IList<ISort> sort = null, bool buffered = false) where T : class;
         IEnumerable<T> GetList<T>(IDbConnection conn, IPredicate predicate = null,
-            IList<ISort> sort = null, bool buffered = false) where T : class;
+            IList<ISort> sort = null, IDbTransaction trans = null, bool buffered = false) where T : class;
 
 
         //paged select
