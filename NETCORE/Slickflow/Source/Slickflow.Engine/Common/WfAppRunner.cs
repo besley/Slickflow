@@ -76,9 +76,17 @@ namespace Slickflow.Engine.Common
         /// </summary>
         public string UserName { get; set; }
         /// <summary>
+        /// 公司ID
+        /// </summary>
+        public string CompanyID { get; set; }
+        /// <summary>
         /// 流程数据：待办任务ID
         /// </summary>
         public Nullable<int> TaskID { get; set; }        //任务ID，区分当前用户ActivityInstance列表的唯一任务
+        /// <summary>
+        /// 审批结果状态
+        /// </summary>
+        public ApprovalStatusEnum ApprovalStatus { get; set; }
 
         private IDictionary<string, string> conditions;
         /// <summary>

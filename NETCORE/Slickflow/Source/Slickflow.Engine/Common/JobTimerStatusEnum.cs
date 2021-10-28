@@ -12,6 +12,10 @@ namespace Slickflow.Engine.Common
     public enum JobTimerStatusEnum
     {
         /// <summary>
+        /// 空
+        /// </summary>
+        None = 0,
+        /// <summary>
         /// 预备
         /// </summary>
         Ready = 1,

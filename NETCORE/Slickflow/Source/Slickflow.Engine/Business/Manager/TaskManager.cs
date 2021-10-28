@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using System.Text;
+using Dapper;
 using DapperExtensions;
 using Slickflow.Data;
 using Slickflow.Module.Localize;
@@ -98,29 +99,29 @@ namespace Slickflow.Engine.Business.Manager
             int activityInstanceID,
             IDbTransaction trans)
         {
+            string sql = @"SELECT
+                            * 
+                         FROM WfTasks 
+                         WHERE ActivityInstanceID=@activityInstanceID
+                            AND ProcessInstanceID=@processInstanceID
+                        ";
+            var list = Repository.Query<TaskEntity>(conn,
+                sql,
+                new
+                {
+                    processInstanceID = processInstanceID,
+                    activityInstanceID = activityInstanceID
+                },
+                trans).ToList();
+
+            #region ORMapping support for multiple databases
+            //var pg = new PredicateGroup { Operator = GroupOperator.And, Predicates = new List<IPredicate>() };
+            //pg.Predicates.Add(Predicates.Field<TaskEntity>(f => f.ActivityInstanceID, Operator.Eq, activityInstanceID));
+            //pg.Predicates.Add(Predicates.Field<TaskEntity>(f => f.ProcessInstanceID, Operator.Eq, processInstanceID));
+            //var list = Repository.GetList<TaskEntity>(conn, pg, null, trans).ToList();
+            #endregion
+
             TaskEntity task = null;
-            //string sql = @"SELECT
-            //                * 
-            //             FROM WfTasks 
-            //             WHERE ActivityInstanceID=@activityInstanceID
-            //                AND ProcessInstanceID=@processInstanceID
-            //            ";
-            //var list = Repository.Query<TaskEntity>(conn,
-            //    sql,
-            //    new
-            //    {
-            //        processInstanceID = processInstanceID,
-            //        activityInstanceID = activityInstanceID
-
-            //    },
-            //    trans).ToList();
-            var sqlQuery = (from t in Repository.GetAll<TaskEntity>(conn, trans)
-                            where t.ActivityInstanceID == activityInstanceID
-                                && t.ProcessInstanceID == processInstanceID
-                            select t
-                            );
-            var list = sqlQuery.ToList<TaskEntity>();
-
             if (list.Count() > 0)
             {
                 task = list[0];
@@ -157,27 +158,29 @@ namespace Slickflow.Engine.Business.Manager
             int activityInstanceID,
             IDbTransaction trans)
         {
+            string sql = @"SELECT
+                            * 
+                         FROM vwWfActivityInstanceTasks 
+                         WHERE ActivityInstanceID=@activityInstanceID
+                            AND ProcessInstanceID=@processInstanceID
+                        ";
+
+            var list = Repository.Query<TaskViewEntity>(sql,
+            new
+            {
+                processInstanceID = processInstanceID,
+                activityInstanceID = activityInstanceID
+
+            }).ToList();
+
+            #region ORMapping support for mutiple databases
+            //var pg = new PredicateGroup { Operator = GroupOperator.And, Predicates = new List<IPredicate>() };
+            //pg.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityInstanceID, Operator.Eq, activityInstanceID));
+            //pg.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessInstanceID, Operator.Eq, processInstanceID));
+            //var list = Repository.GetList<TaskViewEntity>(conn, pg, null, trans).ToList();
+            #endregion
+
             TaskViewEntity taskView = null;
-            //string sql = @"SELECT
-            //                * 
-            //             FROM vwWfActivityInstanceTasks 
-            //             WHERE ActivityInstanceID=@activityInstanceID
-            //                AND ProcessInstanceID=@processInstanceID
-            //            ";
-
-            //var list = Repository.Query<TaskViewEntity>(sql,
-            //new
-            //{
-            //    processInstanceID = processInstanceID,
-            //    activityInstanceID = activityInstanceID
-
-            //}).ToList();
-            var sqlQuery = (from tv in Repository.GetAll<TaskViewEntity>(conn, trans)
-                            where tv.ActivityInstanceID == activityInstanceID
-                                && tv.ProcessInstanceID == processInstanceID
-                            select tv
-                            );
-            var list = sqlQuery.ToList<TaskViewEntity>();
             if (list.Count() > 0)
             {
                 taskView = list[0];
@@ -428,20 +431,19 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="query"></param>
         /// <param name="allRowsCount">任务记录数</param>
         /// <returns>任务视图列表</returns>
-        internal IEnumerable<TaskViewEntity> GetRunningTasks(TaskQuery query, out int allRowsCount)
+        internal IEnumerable<TaskViewEntity> GetRunningTasks(TaskQuery query)
         {
-            return GetTasksPaged(query, 2, out allRowsCount);
+            return GetTasksPaged(query, 2);
         }
 
         /// <summary>
         /// 获取当前用户待办的任务
         /// </summary>
         /// <param name="query">查询实体</param>
-        /// <param name="allRowsCount">任务记录数</param>
         /// <returns>任务列表</returns>
-        internal IEnumerable<TaskViewEntity> GetReadyTasks(TaskQuery query, out int allRowsCount)
+        internal IEnumerable<TaskViewEntity> GetReadyTasks(TaskQuery query)
         {
-            return GetTasksPaged(query, 1, out allRowsCount);
+            return GetTasksPaged(query, 1);
         } 
 
         /// <summary>
@@ -451,6 +453,7 @@ namespace Slickflow.Engine.Business.Manager
         /// <returns>任务视图</returns>
         internal TaskViewEntity GetFirstRunningTask(int activityInstanceID)
         {
+            //sql query
             string sql = @"SELECT
                             * 
                          FROM vwWfActivityInstanceTasks 
@@ -466,15 +469,29 @@ namespace Slickflow.Engine.Business.Manager
                 {
                     activityInstanceID = activityInstanceID
                 }).ToList();
-            //var sqlQuery = (from tv in Repository.GetAll<TaskViewEntity>()
-            //                where tv.ProcessState == 2
-            //                    && tv.ActivityInstanceID == activityInstanceID
-            //                    && (tv.ActivityType == 4 || tv.WorkItemType == 1)
-            //                    && (tv.ActivityState == 1 || tv.ActivityState == 2)
-            //                    && (tv.TaskState == 1 || tv.TaskState == 2)
-            //                select tv
-            //                );
-            //var list = sqlQuery.OrderByDescending(tv => tv.TaskState).ToList<TaskViewEntity>();
+
+            #region ORMapping style to support multiple databases
+            //var pgActivityType = new PredicateGroup { Operator = GroupOperator.Or, Predicates = new List<IPredicate>() };
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityType, Operator.Eq, 4));
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.WorkItemType, Operator.Eq, 1));
+            //var pgActivityState = new PredicateGroup { Operator = GroupOperator.Or, Predicates = new List<IPredicate>() };
+            //pgActivityState.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityState, Operator.Eq, 1));
+            //pgActivityState.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityState, Operator.Eq, 2));
+            //var pgTaskState = new PredicateGroup { Operator = GroupOperator.Or, Predicates = new List<IPredicate>() };
+            //pgTaskState.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.TaskState, Operator.Eq, 1));
+            //pgTaskState.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.TaskState, Operator.Eq, 2));
+
+            //var pgAll = new PredicateGroup { Operator = GroupOperator.And, Predicates = new List<IPredicate>() };
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessState, Operator.Eq, 2));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityInstanceID, Operator.Eq, activityInstanceID));
+            //pgAll.Predicates.Add(pgActivityType);
+            //pgAll.Predicates.Add(pgActivityState);
+            //pgAll.Predicates.Add(pgTaskState);
+
+            //var sortList = new List<DapperExtensions.ISort>();
+            //sortList.Add(new DapperExtensions.Sort { PropertyName = "TaskState", Ascending = false });
+            //var list = Repository.GetList<TaskViewEntity>(pgAll, null).OrderByDescending(tv => tv.TaskState).ToList();
+            #endregion
 
             if (list.Count() > 0)
             {
@@ -489,9 +506,9 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="query">查询实体</param>
         /// <param name="allRowsCount">任务记录数</param>
         /// <returns>任务列表</returns>
-        internal IEnumerable<TaskViewEntity> GetCompletedTasks(TaskQuery query, out int allRowsCount)
+        internal IEnumerable<TaskViewEntity> GetCompletedTasks(TaskQuery query)
         {
-            return GetTasksPaged(query, 4, out allRowsCount);
+            return GetTasksPaged(query, 4);
         }
 
         /// <summary>
@@ -499,68 +516,132 @@ namespace Slickflow.Engine.Business.Manager
         /// </summary>
         /// <param name="query">查询实体</param>
         /// <param name="activityState">活动状态</param>
-        /// <param name="allRowsCount">任务记录数</param>
         /// <returns>活动列表</returns>
-        private IEnumerable<TaskViewEntity> GetTasksPaged(TaskQuery query, int activityState, out int allRowsCount)
+        private IEnumerable<TaskViewEntity> GetTasksPaged(TaskQuery query, int activityState)
         {
             //processState:2 -running 流程处于运行状态
             //activityType:4 -表示“任务”类型的节点
             //activityState: 1-ready（准备）, 2-running（运行）；
 
-            //         string sql = @"SELECT
-            //                     TOP 100 * 
-            //                  FROM vwWfActivityInstanceTasks 
-            //                  WHERE ProcessState=2 
-            //                     AND (ActivityType=4 OR WorkItemType=1)
-            //                     AND ActivityState=@activityState
-            //                     AND TaskState<>32";
-            allRowsCount = 0;
-            var sqlQuery = (from vw in Repository.GetAll<TaskViewEntity>()
-                            where vw.ProcessState == 2
-                                && (vw.ActivityType == 4 || vw.WorkItemType == 1)
-                                && vw.ActivityState == activityState
-                                && vw.TaskState != 32
-                            select vw);
-            if (activityState == 1) sqlQuery = sqlQuery.Where(e => e.ActivityState != 4);
-            if (!string.IsNullOrEmpty(query.AppInstanceID)) sqlQuery = sqlQuery.Where(e => e.AppInstanceID == query.AppInstanceID);
-            if (!string.IsNullOrEmpty(query.ProcessGUID)) sqlQuery = sqlQuery.Where(e => e.ProcessGUID == query.ProcessGUID);
-            if (!string.IsNullOrEmpty(query.UserID)) sqlQuery = sqlQuery.Where(e => e.AssignedToUserID == query.UserID);
-            if (!string.IsNullOrEmpty(query.EndedByUserID)) sqlQuery = sqlQuery.Where(e => e.EndedByUserID == query.EndedByUserID);
-            if (!string.IsNullOrEmpty(query.AppName)) sqlQuery = sqlQuery.Where(e => e.AppName.Contains(query.AppName));
-            var list = sqlQuery.OrderByDescending(vw=>vw.TaskID).Take(100).ToList();
-            if (list != null) allRowsCount = list.Count();
+            string sql = @"SELECT
+                                * 
+                            FROM vwWfActivityInstanceTasks 
+                            WHERE ProcessState=2 
+                                AND (ActivityType=4 OR WorkItemType=1)
+                                AND ActivityState=@activityState
+                                AND TaskState<>32";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@activityState", activityState);
+
+            var sqlBuilder = new StringSQLBuilder(sql);
+            if (activityState == 1) sqlBuilder.And("MiHostState", Data.Operator.Nq, 4);
+            if (!string.IsNullOrEmpty(query.AppInstanceID))
+            {
+                sqlBuilder.And("AppInstanceID", Data.Operator.Eq, "@appInstanceID");
+                parameters.Add("@appInstanceID", query.AppInstanceID);
+            }
+
+            if (!string.IsNullOrEmpty(query.ProcessGUID))
+            {
+                sqlBuilder.And("ProcessGUID", Data.Operator.Eq, "@processGUID");
+                parameters.Add("@processGUID", query.ProcessGUID);
+            }
+
+            if (!string.IsNullOrEmpty(query.UserID))
+            {
+                sqlBuilder.And("AssignedToUserID", Data.Operator.Eq, "@assignedToUserID");
+                parameters.Add("@assignedToUserID", query.UserID);
+            }
+
+            if (!string.IsNullOrEmpty(query.EndedByUserID))
+            {
+                sqlBuilder.And("EndedByUserID", Data.Operator.Eq, "@endedByUserID");
+                parameters.Add("@endedByUserID", query.EndedByUserID);
+            }
+
+            if (!string.IsNullOrEmpty(query.AppName))
+            {
+                sqlBuilder.And("AppName", Data.Operator.Like, "@appName");
+                parameters.Add("@appName", query.AppName);
+            }
+            sqlBuilder.OrderBy("TaskID", true);
+
+            var pageSize = query.PageSize;
+            if (pageSize == 0) pageSize = 100;          //缺省分页每页的记录数
+            var sqlWhere = sqlBuilder.GetSQL();
+            var list = Repository.Query<TaskViewEntity>(sqlWhere, parameters).Take<TaskViewEntity>(pageSize).ToList();
+            
             return list;
         }
 
         /// <summary>
         /// Get Top 10 task todo list
+        /// 仅供用于数据展示使用
         /// </summary>
         /// <returns>task list</returns>
         public List<TaskViewEntity> GetTaskToDoListTop()
         {
-            var sqlQuery = (from vw in Repository.GetAll<TaskViewEntity>()
-                            where vw.ProcessState == 2
-                                && (vw.ActivityType == 4 || vw.WorkItemType == 1)
-                                && vw.ActivityState == 1        //ready
-                                && vw.TaskState != 32
-                            select vw);
-            var list = sqlQuery.Take(10).OrderByDescending(t=>t.TaskID).ToList();
+            string sql = @"SELECT
+                                TOP 10 * 
+                            FROM vwWfActivityInstanceTasks 
+                            WHERE ProcessState=2 
+                                AND (ActivityType=4 OR WorkItemType=1)
+                                AND ActivityState=1
+                                AND TaskState<>32
+                            ORDER BY TaskID DESC";
+            var list = Repository.Query<TaskViewEntity>(sql).ToList();
+
+            #region ORMapping style to support multiple databases
+            //var pgActivityType = new PredicateGroup { Operator = GroupOperator.Or, Predicates = new List<IPredicate>() };
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityType, Operator.Eq, 4));
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.WorkItemType, Operator.Eq, 1));
+
+            //var pgAll = new PredicateGroup { Operator = GroupOperator.And, Predicates = new List<IPredicate>() };
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessState, Operator.Eq, 2));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityState, Operator.Eq, 1));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.TaskState, Operator.Eq, 32, true));
+            //pgAll.Predicates.Add(pgActivityType);
+
+            //var sortList = new List<DapperExtensions.ISort>();
+            //sortList.Add(new DapperExtensions.Sort { PropertyName = "TaskID", Ascending = false });
+            //var list = Repository.GetList<TaskViewEntity>(pgAll, null).Take<TaskViewEntity>(10).OrderByDescending(tv => tv.TaskID).ToList();
+            #endregion
             return list;
         }
 
         /// <summary>
         /// Get Top 10 task done list
+        /// 仅供用于数据展示使用
         /// </summary>
         /// <returns>task list</returns>
         public List<TaskViewEntity> GetTaskDoneListTop()
         {
-            var sqlQuery = (from vw in Repository.GetAll<TaskViewEntity>()
-                            where vw.ProcessState == 2
-                                && (vw.ActivityType == 4 || vw.WorkItemType == 1)
-                                && vw.ActivityState == 4        //completed
-                                && vw.TaskState != 32
-                            select vw);
-            var list = sqlQuery.Take(10).OrderByDescending(t=>t.TaskID).ToList();
+            string sql = @"SELECT
+                                TOP 10 * 
+                            FROM vwWfActivityInstanceTasks 
+                            WHERE ProcessState=2 
+                                AND (ActivityType=4 OR WorkItemType=1)
+                                AND ActivityState=4
+                                AND TaskState<>32
+                            ORDER BY TaskID DESC";
+            var list = Repository.Query<TaskViewEntity>(sql).ToList();
+
+            #region ORMapping style to support multiple databases
+            //var pgActivityType = new PredicateGroup { Operator = GroupOperator.Or, Predicates = new List<IPredicate>() };
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityType, Operator.Eq, 4));
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.WorkItemType, Operator.Eq, 1));
+
+            //var pgAll = new PredicateGroup { Operator = GroupOperator.And, Predicates = new List<IPredicate>() };
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessState, Operator.Eq, 2));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityState, Operator.Eq, 4));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.TaskState, Operator.Eq, 32, true));
+            //pgAll.Predicates.Add(pgActivityType);
+
+            //var sortList = new List<DapperExtensions.ISort>();
+            //sortList.Add(new DapperExtensions.Sort { PropertyName = "TaskID", Ascending = false });
+            //var list = Repository.GetList<TaskViewEntity>(pgAll, null).Take<TaskViewEntity>(10).OrderByDescending(tv => tv.TaskID).ToList();
+            #endregion
             return list;
         }
 
@@ -580,29 +661,62 @@ namespace Slickflow.Engine.Business.Manager
             //processState:2 -running 流程处于运行状态
             //activityType:4 -表示“任务”类型的节点
             //activityState: 1-ready（准备）, 2-running（）运行；
-            //            string whereSql = @"SELECT 
-            //                                    TOP 1 *
-            //                                FROM vwWfActivityInstanceTasks 
-            //                                WHERE ActivityInstanceID=@activityInstanceID 
-            //                                    AND AssignedToUserID=@userID 
-            //                                    AND ProcessState=2 
-            //                                    AND (ActivityType=4 OR ActivityType=5 OR ActivityType=6) 
-            //                                    AND (ActivityState=1 OR ActivityState=2) 
-            //                                ORDER BY TASKID DESC";
-            TaskViewEntity entity = null;
-            var list = Repository.GetAll<TaskViewEntity>(conn, trans).Where<TaskViewEntity>(e => e.ActivityInstanceID == activityInstanceID
-                && e.AssignedToUserID == userID
-                && e.ProcessState == 2
-                && (e.ActivityType == 3 || e.ActivityType == 4 || e.ActivityType == 5 || e.ActivityType == 6 || e.WorkItemType == 1)
-                && (e.ActivityState == 1 || e.ActivityState == 2))
-                .OrderByDescending(e => e.TaskID)
-                .ToList();
+            string sql = @"SELECT 
+                                TOP 1 *
+                            FROM vwWfActivityInstanceTasks 
+                            WHERE ActivityInstanceID=@activityInstanceID 
+                                AND AssignedToUserID=@userID 
+                                AND ProcessState=2 
+                                AND (ActivityType=4 OR ActivityType=5 OR ActivityType=6) 
+                                AND (ActivityState=1 OR ActivityState=2) 
+                            ORDER BY TASKID DESC";
+            var list = Repository.Query<TaskViewEntity>(conn, sql,
+               new
+               {
+                   activityInstanceID = activityInstanceID,
+                   userID = userID
+               },
+               trans).ToList();
 
-            if (list.Count() > 0)
+            #region ORMapping style to support multiple databases
+            //var pgActivityType = new PredicateGroup { Operator = GroupOperator.Or, Predicates = new List<IPredicate>() };
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityType, Operator.Eq, 4));
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityType, Operator.Eq, 5));
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityType, Operator.Eq, 6));
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.WorkItemType, Operator.Eq, 1));
+
+            //var pgActivityState = new PredicateGroup { Operator = GroupOperator.Or, Predicates = new List<IPredicate>() };
+            //pgActivityState.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityState, Operator.Eq, 1));
+            //pgActivityState.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityState, Operator.Eq, 2));
+
+            //var pgAll = new PredicateGroup { Operator = GroupOperator.And, Predicates = new List<IPredicate>() };
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessState, Operator.Eq, 2));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.AssignedToUserID, Operator.Eq, userID));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityInstanceID, Operator.Eq, activityInstanceID));
+            //pgAll.Predicates.Add(pgActivityType);
+            //pgAll.Predicates.Add(pgActivityState);
+
+            ////var sortList = new List<DapperExtensions.ISort>();
+            ////sortList.Add(new DapperExtensions.Sort { PropertyName = "TaskID", Ascending = false });
+            //var list = Repository.GetList<TaskViewEntity>(pgAll, null).OrderByDescending(tv => tv.TaskID).Take(1).ToList();
+            # endregion
+
+            if (list.Count == 0)
             {
-                entity = list[0];
+                var message = LocalizeHelper.GetEngineMessage("taskmanager.gettaskofmine.error");
+                throw new WorkflowException(
+                    string.Format("{0}，ActivityInstanceID: {1}", message, activityInstanceID.ToString())
+                );
             }
-            return entity;
+            else if (list.Count > 1)
+            {
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("taskmanager.gettaskofmine.toomoretasks.error"));
+            }
+            else
+            {
+                var taskView = list[0];
+                return taskView;
+            }
         }
 
         /// <summary>
@@ -642,39 +756,65 @@ namespace Slickflow.Engine.Business.Manager
             //activityState: 1-ready（准备）, 2-running（）运行；
             //2015.09.10 besley
             //将ActivityType 修改为 WorkItemType，以处理多类型的任务节点，包括普通任务，多实例，子流程节点
-            //string sql = @"SELECT 
-            //                TOP 1 * 
-            //           FROM vwWfActivityInstanceTasks 
-            //           WHERE AppInstanceID=@appInstanceID 
-            //                AND ProcessGUID=@processGUID 
-            //                AND AssignedToUserID=@userID 
-            //                AND ProcessState=2 
-            //                AND (ActivityType=4 OR ActivityType=5 OR ActivityType=6 OR WorkItemType=1)
-            //                AND (ActivityState=1 OR ActivityState=2) 
-            //           ORDER BY TASKID DESC";
-            var taskList = Repository.GetAll<TaskViewEntity>(conn, trans).Where<TaskViewEntity>(e => e.AppInstanceID == appInstanceID
-                && e.ProcessGUID == processGUID
-                && e.AssignedToUserID == userID
-                && e.ProcessState == 2
-                && (e.ActivityType == 4 || e.ActivityType == 5 || e.ActivityType == 6 || e.WorkItemType == 1)
-                && (e.ActivityState == 1 || e.ActivityState == 2))
-                .OrderByDescending(e => e.TaskID)
-                .ToList();
+            string sql = @"SELECT 
+                            TOP 1 * 
+                       FROM vwWfActivityInstanceTasks 
+                       WHERE AppInstanceID=@appInstanceID 
+                            AND ProcessGUID=@processGUID 
+                            AND AssignedToUserID=@userID 
+                            AND ProcessState=2 
+                            AND (ActivityType=4 OR ActivityType=5 OR ActivityType=6 OR WorkItemType=1)
+                            AND (ActivityState=1 OR ActivityState=2) 
+                       ORDER BY TASKID DESC";
 
-            if (taskList.Count == 0)
+            var list = Repository.Query<TaskViewEntity>(conn, sql,
+               new
+               {
+                   appInstanceID = appInstanceID,
+                   processGUID = processGUID,
+                   userID = userID
+               },
+               trans).ToList();
+
+
+            #region ORMapping style to support multiple databases
+            //var pgActivityType = new PredicateGroup { Operator = GroupOperator.Or, Predicates = new List<IPredicate>() };
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityType, Operator.Eq, 4));
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityType, Operator.Eq, 5));
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityType, Operator.Eq, 6));
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.WorkItemType, Operator.Eq, 1));
+
+            //var pgActivityState = new PredicateGroup { Operator = GroupOperator.Or, Predicates = new List<IPredicate>() };
+            //pgActivityState.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityState, Operator.Eq, 1));
+            //pgActivityState.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityState, Operator.Eq, 2));
+
+            //var pgAll = new PredicateGroup { Operator = GroupOperator.And, Predicates = new List<IPredicate>() };
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessState, Operator.Eq, 2));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.AssignedToUserID, Operator.Eq, userID));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessGUID, Operator.Eq, processGUID));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.AppInstanceID, Operator.Eq, appInstanceID));
+            //pgAll.Predicates.Add(pgActivityType);
+            //pgAll.Predicates.Add(pgActivityState);
+
+            ////var sortList = new List<DapperExtensions.ISort>();
+            ////sortList.Add(new DapperExtensions.Sort { PropertyName = "TaskID", Ascending = false });
+            //var list = Repository.GetList<TaskViewEntity>(pgAll, null).OrderByDescending(tv => tv.TaskID).Take(1).ToList();
+            #endregion
+
+            if (list.Count == 0)
             {
                 var message = LocalizeHelper.GetEngineMessage("taskmanager.gettaskofmine.error");
                 throw new WorkflowException(
                     string.Format("{0}，AppInstanceID: {1}", message, appInstanceID.ToString())
                 );
             }
-            else if (taskList.Count > 1)
+            else if (list.Count > 1)
             {
                 throw new WorkflowException(LocalizeHelper.GetEngineMessage("taskmanager.gettaskofmine.toomoretasks.error"));
             }
             else
             {
-                var taskView = taskList[0];
+                var taskView = list[0];
                 return taskView;
             }
         }
@@ -756,30 +896,39 @@ namespace Slickflow.Engine.Business.Manager
             //processState:2 -running 流程处于运行状态
             //activityType:4 -表示“任务”类型的节点
             //activityState: 1-ready（准备）
-            //string sql = @"SELECT 
-            //                    * 
-            //               FROM vwWfActivityInstanceTasks 
-            //               WHERE AppInstanceID=@appInstanceID 
-            //                    AND ProcessGUID=@processGUID 
-            //                    AND ProcessState=2 
-            //                    AND (ActivityType=4 OR WorkItemType=1)
-            //                    AND ActivityState=1
-            //               ORDER BY TaskID DESC";
-            //var list = Repository.Query<TaskViewEntity>(sql,
-            //    new
-            //    {
-            //        appInstanceID = runner.AppInstanceID,
-            //        processGUID = runner.ProcessGUID
-            //    });
-            var sqlQuery = (from tv in Repository.GetAll<TaskViewEntity>()
-                            where tv.AppInstanceID == runner.AppInstanceID
-                                && tv.ProcessGUID == runner.ProcessGUID
-                                && (tv.ActivityType == 4 || tv.WorkItemType == 1)
-                                && tv.ActivityState == 1
-                            orderby tv.TaskID descending
-                            select tv
-                            );
-            var list = sqlQuery.ToList<TaskViewEntity>();
+            string sql = @"SELECT 
+                                * 
+                           FROM vwWfActivityInstanceTasks 
+                           WHERE AppInstanceID=@appInstanceID 
+                                AND ProcessGUID=@processGUID 
+                                AND ProcessState=2 
+                                AND (ActivityType=4 OR WorkItemType=1)
+                                AND ActivityState=1
+                           ORDER BY TaskID DESC";
+            var list = Repository.Query<TaskViewEntity>(sql,
+                new
+                {
+                    appInstanceID = runner.AppInstanceID,
+                    processGUID = runner.ProcessGUID
+                });
+
+            #region ORMapping style to support multiple databases
+            //var pgActivityType = new PredicateGroup { Operator = GroupOperator.Or, Predicates = new List<IPredicate>() };
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityType, Operator.Eq, 4));
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.WorkItemType, Operator.Eq, 1));
+
+            //var pgAll = new PredicateGroup { Operator = GroupOperator.And, Predicates = new List<IPredicate>() };
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessState, Operator.Eq, 2));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityState, Operator.Eq, 1));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.AppInstanceID, Operator.Eq, runner.AppInstanceID));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessGUID, Operator.Eq, runner.ProcessGUID));
+            //pgAll.Predicates.Add(pgActivityType);
+
+            ////var sortList = new List<DapperExtensions.ISort>();
+            ////sortList.Add(new DapperExtensions.Sort { PropertyName = "TaskID", Ascending = false });
+            //var list = Repository.GetList<TaskViewEntity>(pgAll, null).OrderByDescending(tv => tv.TaskID).ToList();
+            #endregion
+
             return list;
         }
 
@@ -793,24 +942,30 @@ namespace Slickflow.Engine.Business.Manager
             //activityType:4 -表示“任务”类型的节点
             //activityState: 1-ready（准备）, 2-running（运行）
             //isEMailSent: 0-邮件未发送, 1-发送成功, -1-发送失败
-       //     string sql = @"SELECT * 
-       //                  FROM vwWfActivityInstanceTasks 
-       //                  WHERE ProcessState=2 
-       //                     AND (ActivityType=4 OR WorkItemType=1)
-       //                     AND ActivityState=1
-       //                     AND IsEMailSent=0
-							//AND TaskState<>32
-       //                 ";
-       //     var list = Repository.Query<TaskViewEntity>(sql).ToList<TaskViewEntity>();
-            var sqlQuery = (from tv in Repository.GetAll<TaskViewEntity>()
-                            where tv.ProcessState == 2
-                                && (tv.ActivityType == 4 || tv.WorkItemType == 1)
-                                && tv.ActivityState == 1
-                                && tv.IsEMailSent == 0
-                                && tv.TaskState != 32
-                            select tv
-                            );
-            var list = sqlQuery.ToList<TaskViewEntity>();
+            string sql = @"SELECT * 
+                         FROM vwWfActivityInstanceTasks 
+                         WHERE ProcessState=2 
+                            AND (ActivityType=4 OR WorkItemType=1)
+                            AND ActivityState=1
+                            AND IsEMailSent=0
+							AND TaskState<>32
+                        ";
+            var list = Repository.Query<TaskViewEntity>(sql).ToList<TaskViewEntity>();
+
+            #region ORMapping style to support multiple databases
+            //var pgActivityType = new PredicateGroup { Operator = GroupOperator.Or, Predicates = new List<IPredicate>() };
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityType, Operator.Eq, 4));
+            //pgActivityType.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.WorkItemType, Operator.Eq, 1));
+
+            //var pgAll = new PredicateGroup { Operator = GroupOperator.And, Predicates = new List<IPredicate>() };
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessState, Operator.Eq, 2));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityState, Operator.Eq, 1));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.IsEMailSent, Operator.Eq, 0));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.TaskState, Operator.Eq, 32, true));
+            //pgAll.Predicates.Add(pgActivityType);
+
+            //var list = Repository.GetList<TaskViewEntity>(pgAll, null).ToList();
+            #endregion
             return list;
         }
         #endregion
@@ -1228,16 +1383,17 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="session">会话</param>
         private void CancelTask(int activityInstanceID, WfAppRunner runner, IDbSession session)
         {
-            var sqlQuery = (from t in Repository.GetAll<TaskEntity>(session.Connection, session.Transaction)
-                            where t.ActivityInstanceID == activityInstanceID
-                            select t);
-            var list = sqlQuery.ToList();
-            foreach (var task in list)
-            {
-                task.TaskState = (short)TaskStateEnum.Canceled;
-                task.RecordStatusInvalid = 1;
-                Update(task, session);
-            }
+            var updSql = @"UPDATE WfTasks 
+                        SET TaskState=48, 
+                            RecordStatusInvalid=1  
+                        WHERE ActivityInstanceID=@activityInstanceID";
+
+            var rows = Repository.Execute(session.Connection, updSql,
+                new
+                {
+                    activityInstanceID = activityInstanceID
+                },
+                session.Transaction);
         }
 
         /// <summary>

@@ -1877,9 +1877,8 @@ namespace Slickflow.Engine.Service
         /// <returns>任务列表</returns>
         public IList<TaskViewEntity> GetRunningTasks(TaskQuery query)
         {
-            int allRowsCount = 0;
             var taskManager = new TaskManager();
-            var taskList = taskManager.GetRunningTasks(query, out allRowsCount);
+            var taskList = taskManager.GetRunningTasks(query);
             if (taskList != null)
                 return taskList.ToList();
             else
@@ -1905,9 +1904,8 @@ namespace Slickflow.Engine.Service
         /// <returns>任务列表</returns>
         public IList<TaskViewEntity> GetReadyTasks(TaskQuery query)
         {
-            int allRowsCount = 0;
             var taskManager = new TaskManager();
-            var taskList = taskManager.GetReadyTasks(query, out allRowsCount);
+            var taskList = taskManager.GetReadyTasks(query);
 
             if (taskList != null)
                 return taskList.ToList();
@@ -1922,9 +1920,8 @@ namespace Slickflow.Engine.Service
         /// <returns></returns>
         public IList<TaskViewEntity> GetCompletedTasks(TaskQuery query)
         {
-            int allRowsCount = 0;
             var taskManager = new TaskManager();
-            var taskList = taskManager.GetCompletedTasks(query, out allRowsCount);
+            var taskList = taskManager.GetCompletedTasks(query);
 
             if (taskList != null)
                 return taskList.ToList();
