@@ -62,15 +62,15 @@ namespace Slickflow.BizAppService.Service
 
                 IFieldPredicate predicate = null;
                 if (query.Status > 0){
-                    predicate = Predicates.Field<ProductOrderEntity>(f => f.Status, Operator.Eq, query.Status);
+                    predicate = Predicates.Field<ProductOrderEntity>(f => f.Status, DapperExtensions.Operator.Eq, query.Status);
                 }
                 else if (!string.IsNullOrEmpty(query.RoleCode))
                 {
                     var status = GetStatusByRoleCode(query.RoleCode);
                     if (status < 6)
-                        predicate = Predicates.Field<ProductOrderEntity>(f => f.Status, Operator.Eq, status);
+                        predicate = Predicates.Field<ProductOrderEntity>(f => f.Status, DapperExtensions.Operator.Eq, status);
                     else
-                        predicate = Predicates.Field<ProductOrderEntity>(f => f.Status, Operator.Ge, status);
+                        predicate = Predicates.Field<ProductOrderEntity>(f => f.Status, DapperExtensions.Operator.Ge, status);
                 }
 
                 count = QuickRepository.Count<ProductOrderEntity>(conn, predicate);

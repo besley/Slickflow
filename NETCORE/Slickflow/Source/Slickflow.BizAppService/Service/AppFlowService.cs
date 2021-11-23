@@ -35,7 +35,7 @@ namespace Slickflow.BizAppService.Service
 
                 IFieldPredicate predicate = null;
                 if (!string.IsNullOrEmpty(query.AppInstanceID))
-                    predicate = Predicates.Field<AppFlowEntity>(f => f.AppInstanceID, Operator.Eq, query.AppInstanceID);
+                    predicate = Predicates.Field<AppFlowEntity>(f => f.AppInstanceID, DapperExtensions.Operator.Eq, query.AppInstanceID);
 
                 count = QuickRepository.Count<AppFlowEntity>(conn, predicate);
                 list = QuickRepository.GetPaged<AppFlowEntity>(conn, query.PageIndex, query.PageSize,
