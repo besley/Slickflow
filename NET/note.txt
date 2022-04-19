@@ -1,1 +1,4 @@
 1. csc.exe文件请到Binary目录中下载，Github对此类型文件有限制。
+2. 请尽可能使用NET6版本，NetFramework版本将不再更新。
+
+Please use net6 version as far as possible. Netframework version will not be updated
