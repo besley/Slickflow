@@ -1,4 +1,5 @@
 ## Slickflow
+**Current Version:NET6**
 
 ![](https://img.shields.io/github/stars/besley/slickflow.svg) 
 ![](https://img.shields.io/github/forks/besley/slickflow.svg) 
