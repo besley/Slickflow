@@ -1,5 +1,0 @@
-askZoom=进入缩放(%25)
-events=事件
-outline=轮廓
-tasks=任务
-help=帮助

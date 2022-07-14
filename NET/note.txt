@@ -1,1 +1,0 @@
-1. csc.exe文件请到Binary目录中下载，Github对此类型文件有限制。
