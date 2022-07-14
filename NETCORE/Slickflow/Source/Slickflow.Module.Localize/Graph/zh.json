@@ -1,9 +1,0 @@
-﻿{
-    "processmodelbuilder.GetPreviousVertexFromStack.error": "读取节点堆栈发生错误，堆栈类型和错误描述:",
-    "processmodelbuilder.SetTargetVertexLevel.error": "错误的节点连接数目!",
-    "processmodelbuilder.GetBuilder.error": "节点不存在!节点代码:",
-    "processmodelbuilder.CreateProcess.error": "相同流程代码和版本的流程记录已经存在!",
-    "processmodelbuilder.LoadProcess.error": "该代码和版本的流程不存在!",
-    "processxmlbuilder.Serialize.error": "流程图形对象不能为空,请确认是否有初始化!",
-    "processtemplatefactory.CreateProcessByTemplateType.exception": "模板创建新流程时,流程的GUID不能为空!"
-}
