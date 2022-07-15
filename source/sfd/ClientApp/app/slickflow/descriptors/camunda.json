@@ -1,0 +1,38 @@
+{
+  "name": "TimerProperty",
+  "uri": "http://www.slickflow.com/schema/bpmn/camunda",
+  "prefix": "camunda",
+  "xml": {
+    "tagAlias": "lowerCase"
+  },
+  "types": [
+    {
+      "name": "Properties",
+      "superClass": [ "Element" ],
+      "properties": [
+        {
+          "name": "properties",
+          "isMany": true,
+          "type": "Property"
+        }
+      ]
+    },
+    {
+      "name": "Property",
+      "properties": [
+        {
+          "name": "event",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "expression",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ],
+  "emumerations": [],
+  "associations": []
+}

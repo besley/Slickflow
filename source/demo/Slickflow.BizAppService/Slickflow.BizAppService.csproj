@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lib\Slickflow.Engine\Slickflow.Engine.csproj" />
+    <ProjectReference Include="..\..\utility\SlickOne.WebUtility\SlickOne.WebUtility.csproj" />
+  </ItemGroup>
+
+</Project>

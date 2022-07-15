@@ -1,0 +1,40 @@
+{
+  "service": [
+    {
+      "name": "Services",
+      "superClass": [ "Element" ],
+      "properties": [
+        {
+          "name": "services",
+          "isMany": true,
+          "type": "Service"
+        }
+      ]
+    },
+    {
+      "name": "Service",
+      "properties": [
+        {
+          "name": "methodType",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "subMethodType",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "argus",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "expression",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}

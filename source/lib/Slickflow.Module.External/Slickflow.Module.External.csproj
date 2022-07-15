@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj" />
+    <ProjectReference Include="..\Slickflow.Engine\Slickflow.Engine.csproj" />
+  </ItemGroup>
+
+</Project>

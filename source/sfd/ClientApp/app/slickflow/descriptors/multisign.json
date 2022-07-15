@@ -1,0 +1,39 @@
+{
+  "multisign": {
+    "name": "MultiSignDetail",
+    "superClass": [ "Element" ],
+    "extends": [
+      "bpmn:Task",
+      "bpmn:UserTask"
+    ],
+    "properties": [
+      {
+        "name": "complexType",
+        "isMany": true,
+        "isAttr": true,
+        "type": "String"
+      },
+      {
+        "name": "mergeType",
+        "isMany": true,
+        "isAttr": true,
+        "type": "String"
+      },
+      {
+        "name": "compareType",
+        "isMany": true,
+        "isAttr": true,
+        "type": "String"
+      },
+      {
+        "name": "completeOrder",
+        "isMany": true,
+        "isAttr": true,
+        "type": "String"
+      }
+    ]
+  }
+}
+
+
+

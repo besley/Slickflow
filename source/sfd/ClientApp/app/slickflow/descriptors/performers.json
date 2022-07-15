@@ -1,0 +1,41 @@
+{
+  "performers": [
+    {
+      "name": "Performers",
+      "superClass": [ "Element" ],
+      "properties": [
+        {
+          "name": "values",
+          "isMany": true,
+          "type": "Performer"
+        }
+      ]
+    },
+    {
+      "name": "Performer",
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "outerId",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "outerCode",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "outerType",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+
+}

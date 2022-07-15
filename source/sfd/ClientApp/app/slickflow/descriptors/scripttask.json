@@ -1,0 +1,35 @@
+{
+  "script": [
+    {
+      "name": "Scripts",
+      "superClass": [ "Element" ],
+      "properties": [
+        {
+          "name": "scripts",
+          "isMany": true,
+          "type": "Script"
+        }
+      ]
+    },
+    {
+      "name": "Script",
+      "properties": [
+        {
+          "name": "scriptType",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "argus",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "scriptText",
+          "isBody": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}
