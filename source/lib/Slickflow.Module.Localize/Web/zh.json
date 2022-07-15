@@ -1,0 +1,17 @@
+﻿{
+    "wf2xmlcontroller.setlang.error": "设置本地化语言失败,详细错误",
+    "wf2xmlcontroller.GetProcessListSimple.error": "获取流程基本信息失败!错误",
+    "wf2xmlcontroller.GetTaskList.error": "获取任务信息失败!错误",
+    "wf2xmlcontroller.GetProcessVariableList.error": "获取流程变量数据失败!错误",
+    "wf2xmlcontroller.InsertProcessVariable.name.error": "保存流程变量数据失败,相同名称的变量已经存在!",
+    "wf2xmlcontroller.InsertProcessVariable.task.error": "保存流程变量数据失败,任务记录不存在!",
+    "wf2xmlcontroller.InsertProcessVariable.error": "保存流程变量数据失败!错误",
+    "wf2xmlcontroller.DeleteProcessVariable.error": "删除流程变量数据失败!错误",
+    "wf2xmlcontroller.DeleteInstance.success": "已经成功删除!",
+    "wf2xmlcontroller.DeleteInstance.error": "删除失败,或者记录已经为空!",
+    "jobscheduler.SchedulerServiceJobTimer.InvokeWorkflowByJobTimer.exception": "未处理的作业类型:",
+    "jobscheduler.SchedulerServiceJobTimer.TerminateProcess.exception": "未处理的作业类型:",
+    "jobscheduler.SchedulerService.nullobject.exception": "作业对象为空!",
+    "jobscheduler.SchedulerService.jobnamenotexist.exception": "不存在的作业名称:",
+    "jobscheduler.SchedulerService.upsupportednodetriggertype.exception": "不支持的活动节点及触发类型!"
+}

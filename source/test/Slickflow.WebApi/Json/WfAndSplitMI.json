@@ -1,0 +1,30 @@
+﻿//数据库表: WfProcess
+    //流程记录ID：188
+    //流程名称：并行分支流程测试
+    //GUID: a0f15aad-81d3-467b-8a85-ab865ec4b3ab
+
+    //startup process:
+    //{"UserID":"6","UserName":"XiaoMing","AppName":"Multiple And-Split","AppInstanceID":"123","ProcessGUID":"a0f15aad-81d3-467b-8a85-ab865ec4b3ab"}
+
+    //run process app:
+    ////并行分支
+    //{"AppName":"Multiple And-Split","AppInstanceID":"123","ProcessGUID":"a0f15aad-81d3-467b-8a85-ab865ec4b3ab", "UserID":"6","UserName":"XiaoMing", "NextActivityPerformers":{"d467834b-996c-42d7-fe27-1fff16d92460":[{"UserID":4,"UserName":"MissLi"}, {"UserID":24,"UserName":"MrsLang"}]}}
+
+
+    //AndSplit 之后，并行任务的执行
+    //带任务ID的Json数据，用于AndSplit产生的个人用户同时存在多个任务的案例
+    //{"AppName":"Multiple And-Split","AppInstanceID":"123","ProcessGUID":"a0f15aad-81d3-467b-8a85-ab865ec4b3ab","TaskID":"1781","UserID":"4", "UserName":"MissLi", "NextActivityPerformers":{"2cd8ff3f-fd36-4508-cee5-44dd985618ab":[{"UserID":10,"UserName":"Long"}]}}
+    //{"AppName":"Multiple And-Split","AppInstanceID":"123","ProcessGUID":"a0f15aad-81d3-467b-8a85-ab865ec4b3ab", "TaskID":"1782","UserID":"24", "UserName":"MrsLang", "NextActivityPerformers":{"2cd8ff3f-fd36-4508-cee5-44dd985618ab":[{"UserID":31,"UserName":"Jade"}]}}
+
+
+    //run process app:
+    ////并行汇合--> 归档
+    //{"AppName":"Multiple And-Split","AppInstanceID":"123","ProcessGUID":"a0f15aad-81d3-467b-8a85-ab865ec4b3ab","UserID":"10","UserName":"Long", "NextActivityPerformers":{"e3bfbd48-df18-4e8c-a02f-9ccdfb1c8e4d":[{"UserID":10,"UserName":"Long"}]}}
+
+
+
+    //撤销流程: WithdrawProcess
+    //退回流程：SendBackProcess
+    //返签流程：ReverseProcess
+    //取消运行流程：CancelProcess
+    //废弃所有流程实例：DiscardProcess

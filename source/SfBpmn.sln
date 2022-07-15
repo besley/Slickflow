@@ -1,0 +1,150 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sfdapi", "sfdapi\sfdapi.csproj", "{FACA156E-D43B-4889-A530-A342517B7984}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "sfd", "sfd\", "{AE88229D-66AC-48FE-9FE0-38663CEAD4AB}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_52678"
+		Debug.AspNetCompiler.PhysicalPath = "sfd\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52678\"
+		Debug.AspNetCompiler.Updateable = "false"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_52678"
+		Release.AspNetCompiler.PhysicalPath = "sfd\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52678\"
+		Release.AspNetCompiler.Updateable = "false"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "52678"
+		SlnRelativePath = "sfd\"
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{8B60029A-29B1-4D3C-B5CD-D577DBB63CAE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.Data", "Lib\Slickflow.Data\Slickflow.Data.csproj", "{56C199E4-7F68-4DB5-A4CB-D7C745F286BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{21EBDD8F-B8EC-4ACF-A231-8479FDC11581}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.Engine", "Lib\Slickflow.Engine\Slickflow.Engine.csproj", "{1B28181E-6355-4B89-9B05-04FC7641582C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.Module", "Lib\Slickflow.Module\Slickflow.Module.csproj", "{EE25354D-DC93-43BE-A935-1D59D3E4E8D2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.Module.Essential", "lib\Slickflow.Module.Essential\Slickflow.Module.Essential.csproj", "{7F5FEC2B-BC34-4D7B-9ED5-1DDDE7542D94}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.Module.Localize", "lib\Slickflow.Module.Localize\Slickflow.Module.Localize.csproj", "{6FCCA783-8396-4937-B2EC-538C96A66D65}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.Module.Logging", "lib\Slickflow.Module.Logging\Slickflow.Module.Logging.csproj", "{546812B2-1F01-4FCB-9BA0-D15177FFC50B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.Module.Resource", "lib\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj", "{AA39993C-736A-4FB2-8A88-541A57FB143B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper", "lib\Dapper\Dapper.csproj", "{1B78667E-3F92-44BD-A2D5-931CE6261C48}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.Data.DataProvider", "lib\Slickflow.Data.DataProvider\Slickflow.Data.DataProvider.csproj", "{2038233B-791B-4043-9D74-FAB158CBB7A9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{C4420F65-9A37-4B35-8230-89FB2777CDF5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebTest", "WebTest", "{A1EAF137-442F-48CB-949F-76512826A07A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{8711F0CF-00FF-4F2C-94B2-0F61D0741CDC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.WebApi", "test\Slickflow.WebApi\Slickflow.WebApi.csproj", "{4BDD26BB-BFE5-4D34-AAD6-66EADE8C3B4E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utility", "Utility", "{4149C06B-FF4E-467A-93F5-9838F667ECAD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlickOne.WebUtility", "utility\SlickOne.WebUtility\SlickOne.WebUtility.csproj", "{06F06F99-8992-46C7-A7CC-2C37AB7652B5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slickflow.Graph.BPMN", "lib\Slickflow.Graph.BPMN\Slickflow.Graph.BPMN.csproj", "{5EEDEE3F-36A4-4806-A604-9298238C766C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FACA156E-D43B-4889-A530-A342517B7984}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FACA156E-D43B-4889-A530-A342517B7984}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FACA156E-D43B-4889-A530-A342517B7984}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FACA156E-D43B-4889-A530-A342517B7984}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE88229D-66AC-48FE-9FE0-38663CEAD4AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE88229D-66AC-48FE-9FE0-38663CEAD4AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE88229D-66AC-48FE-9FE0-38663CEAD4AB}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE88229D-66AC-48FE-9FE0-38663CEAD4AB}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{56C199E4-7F68-4DB5-A4CB-D7C745F286BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56C199E4-7F68-4DB5-A4CB-D7C745F286BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56C199E4-7F68-4DB5-A4CB-D7C745F286BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56C199E4-7F68-4DB5-A4CB-D7C745F286BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B28181E-6355-4B89-9B05-04FC7641582C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B28181E-6355-4B89-9B05-04FC7641582C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B28181E-6355-4B89-9B05-04FC7641582C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B28181E-6355-4B89-9B05-04FC7641582C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE25354D-DC93-43BE-A935-1D59D3E4E8D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE25354D-DC93-43BE-A935-1D59D3E4E8D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE25354D-DC93-43BE-A935-1D59D3E4E8D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE25354D-DC93-43BE-A935-1D59D3E4E8D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F5FEC2B-BC34-4D7B-9ED5-1DDDE7542D94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F5FEC2B-BC34-4D7B-9ED5-1DDDE7542D94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F5FEC2B-BC34-4D7B-9ED5-1DDDE7542D94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F5FEC2B-BC34-4D7B-9ED5-1DDDE7542D94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FCCA783-8396-4937-B2EC-538C96A66D65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FCCA783-8396-4937-B2EC-538C96A66D65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FCCA783-8396-4937-B2EC-538C96A66D65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FCCA783-8396-4937-B2EC-538C96A66D65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{546812B2-1F01-4FCB-9BA0-D15177FFC50B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{546812B2-1F01-4FCB-9BA0-D15177FFC50B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{546812B2-1F01-4FCB-9BA0-D15177FFC50B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{546812B2-1F01-4FCB-9BA0-D15177FFC50B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA39993C-736A-4FB2-8A88-541A57FB143B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA39993C-736A-4FB2-8A88-541A57FB143B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA39993C-736A-4FB2-8A88-541A57FB143B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA39993C-736A-4FB2-8A88-541A57FB143B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B78667E-3F92-44BD-A2D5-931CE6261C48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B78667E-3F92-44BD-A2D5-931CE6261C48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B78667E-3F92-44BD-A2D5-931CE6261C48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B78667E-3F92-44BD-A2D5-931CE6261C48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2038233B-791B-4043-9D74-FAB158CBB7A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2038233B-791B-4043-9D74-FAB158CBB7A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2038233B-791B-4043-9D74-FAB158CBB7A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2038233B-791B-4043-9D74-FAB158CBB7A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BDD26BB-BFE5-4D34-AAD6-66EADE8C3B4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BDD26BB-BFE5-4D34-AAD6-66EADE8C3B4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BDD26BB-BFE5-4D34-AAD6-66EADE8C3B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BDD26BB-BFE5-4D34-AAD6-66EADE8C3B4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06F06F99-8992-46C7-A7CC-2C37AB7652B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06F06F99-8992-46C7-A7CC-2C37AB7652B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06F06F99-8992-46C7-A7CC-2C37AB7652B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06F06F99-8992-46C7-A7CC-2C37AB7652B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EEDEE3F-36A4-4806-A604-9298238C766C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EEDEE3F-36A4-4806-A604-9298238C766C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EEDEE3F-36A4-4806-A604-9298238C766C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EEDEE3F-36A4-4806-A604-9298238C766C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FACA156E-D43B-4889-A530-A342517B7984} = {8711F0CF-00FF-4F2C-94B2-0F61D0741CDC}
+		{AE88229D-66AC-48FE-9FE0-38663CEAD4AB} = {C4420F65-9A37-4B35-8230-89FB2777CDF5}
+		{56C199E4-7F68-4DB5-A4CB-D7C745F286BE} = {8B60029A-29B1-4D3C-B5CD-D577DBB63CAE}
+		{1B28181E-6355-4B89-9B05-04FC7641582C} = {21EBDD8F-B8EC-4ACF-A231-8479FDC11581}
+		{EE25354D-DC93-43BE-A935-1D59D3E4E8D2} = {21EBDD8F-B8EC-4ACF-A231-8479FDC11581}
+		{7F5FEC2B-BC34-4D7B-9ED5-1DDDE7542D94} = {21EBDD8F-B8EC-4ACF-A231-8479FDC11581}
+		{6FCCA783-8396-4937-B2EC-538C96A66D65} = {21EBDD8F-B8EC-4ACF-A231-8479FDC11581}
+		{546812B2-1F01-4FCB-9BA0-D15177FFC50B} = {21EBDD8F-B8EC-4ACF-A231-8479FDC11581}
+		{AA39993C-736A-4FB2-8A88-541A57FB143B} = {21EBDD8F-B8EC-4ACF-A231-8479FDC11581}
+		{1B78667E-3F92-44BD-A2D5-931CE6261C48} = {8B60029A-29B1-4D3C-B5CD-D577DBB63CAE}
+		{2038233B-791B-4043-9D74-FAB158CBB7A9} = {8B60029A-29B1-4D3C-B5CD-D577DBB63CAE}
+		{4BDD26BB-BFE5-4D34-AAD6-66EADE8C3B4E} = {A1EAF137-442F-48CB-949F-76512826A07A}
+		{06F06F99-8992-46C7-A7CC-2C37AB7652B5} = {4149C06B-FF4E-467A-93F5-9838F667ECAD}
+		{5EEDEE3F-36A4-4806-A604-9298238C766C} = {21EBDD8F-B8EC-4ACF-A231-8479FDC11581}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8C8EB2B9-51FD-4473-9181-DBEB3074C90D}
+	EndGlobalSection
+EndGlobal
