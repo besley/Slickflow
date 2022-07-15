@@ -14,9 +14,9 @@
 
 **.NET/.NETCore Workflow Engine With Full Source Code** 
 1. **.NET, .NET CORE version both supported**  
- Slickflow is an open-source project based on .NET5; It's easy to use engine product into the cross-platform application.  
+ Slickflow is an open-source project based on .NET6; It's easy to use engine product into the cross-platform application.  
 2. **BPMN graphic style process diagram**   
- Slickflow is using BPMN notation to describe process diagram, the Slickflow designer is HTML5 graph editor and user-friendly to business process communication and business analysis.  
+ Slickflow is using BPMN2 notation to describe process diagram, the Slickflow designer is HTML5 graph editor and user-friendly to business process communication and business analysis.  
 3. **High performance with Dapper.NET library**  
  Dapper is a simple object mapper for .NET and owns the title of King of Micro ORM in terms of speed and is virtually as fast as using a raw ADO.NET data reader. An ORM is an Object Relational Mapper, which is responsible for mapping between database and programming language.
 (Ref: https://dapper-tutorial.net/dapper)  
@@ -154,7 +154,18 @@ The SlickQua project:http://github.com/besley/slickqua/
 
 ![AskForLeave Form Approval](https://github.com/besley/besley.github.io/blob/master/Gif/SlickQua-Ask4Leave-Demo.gif)  
 
-**Slickflow(1.7.7.0) 企业版：** 
+**Slickflow(2.0.0.0) 企业版：** 
+
+2022-07-10
+1. 集成BpmnJS 设计器，XML模式转换为BPMN2;
+2. 重构Slickflow.Engine项目;
+3. 重写ProcessModelBPMN，适应BPMN2模型;
+
+2022-04-26
+1. 全部项目.NET6版本实现；
+2. 技术文档资料同步更新；
+3. ServiceTask节点类型实现;
+4. NET6版本测试工作完成；
 
 2021-09-28
 1. 引擎增加三种类型的中间事件(Intermediate)处理节点定时、消息和条件；
