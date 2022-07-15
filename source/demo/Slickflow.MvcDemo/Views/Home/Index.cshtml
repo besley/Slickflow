@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/bootstrap/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <link href="~/Content/bootstrap/bootstrap-progressbar-2.3.1.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery-ui/jquery-ui.css" rel="stylesheet" />
+
+    <link href="~/Content/slickgrid/slick.grid.css" rel="stylesheet" />
+    <link href="~/Content/slickgrid/slickgrid-bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/slickgrid/slickgrid-example.css" rel="stylesheet" />
+    <link href="~/Content/ztree/metro.css" rel="stylesheet" />
+    <link href="~/Content/msgBoxLight.css" rel="stylesheet" />
+    <link href="~/Content/master.css" rel="stylesheet" />
+
+    <title>
+        产品订单首页
+    </title>
+    <style id="content-styles">
+        .percent-complete-bar {
+            display: inline-block;
+            height: 6px;
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="container-fluid">
+                    <!-- 功能操作按钮 -->
+                    <div class="row-fluid">
+                        <div class="top-nav ">
+                            <a href="#" class="btn btn-info" onclick="pordermanager.syncorder();"><i class="icon-white icon-ok"></i> 同步</a>
+                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('dispatch');">
+                                <i class="icon-white icon-user"></i>派单
+                            </a>
+                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('sample');"><i class="icon-white icon-print"></i> 打样</a>
+                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('manufacture');"><i class="icon-white icon-cog"></i> 生产</a>
+                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('qccheck');"><i class="icon-white icon-zoom-in"></i> 质检</a>
+                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('weight');"><i class="icon-white icon-shopping-cart"></i> 称重</a>
+                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('delivery');"><i class="icon-white icon-plane"></i> 发货</a>
+                            <a href="#" onclick="sfmain.showKGraph();" class="btn btn-success">
+                                <i class="icon-white icon-picture"></i> 流程图
+                            </a>
+
+                            <!--search & user info start-->
+                            <ul class="nav pull-right top-menu">
+                                <!-- user login dropdown start-->
+                                <li class="dropdown">
+                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                        <img alt="" src="~/Content/img/avatar1_small.jpg">
+                                        <span class="username" id="spnLogonUser">Unknown User</span>
+                                        <b class="caret"></b>
+                                    </a>
+                                    <ul class="dropdown-menu extended logout">
+                                        <li>
+                                            <a href="~/Account/Login" data-toggle="modal" data-target="#modelLoginForm"
+                                               role="dialog" id="btnLogount" onclick="onUserLogout();">
+                                                <i class="fa fa-key"></i> 重新登录
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <!-- user login dropdown end -->
+                            </ul>
+                            <!--search & user info end-->
+                        </div>
+                    </div>
+
+                    <!-- 主数据显示 -->
+                    <div class="row-fluid">
+                        <legend>
+                            生产订单
+                            <select id="ddlStatus">
+                                <option value="-1">--请选择--</option>
+                                <option value="1">准备</option>
+                                <option value="2">等待派单</option>
+                                <option value="3">等待打样</option>
+                                <option value="4">等待生产</option>
+                                <option value="5">等待质检</option>
+                                <option value="6">等待称重</option>
+                                <option value="7">完成</option>
+                            </select>
+                            <input type="button" value="查询" onclick="pordermanager.queryByStatus();" />
+                            <span id="divCondition" style="display:none">
+                                <span style="font-size:small"> 请选择条件：</span>
+                                <input type="checkbox" id="chkStorage" /><span style="font-size:small">库存?</span>
+                                <input type="checkbox" id="chkWeight" /><span style="font-size:small">称重?</span>
+                            </span>
+                        </legend>
+                    </div>
+                    <div class="row-fluid">
+                        <div id="myGridProductOrder" style="width:100%;height:400px;"></div>
+                    </div>
+                </div>
+                <legend>流程数据</legend>
+                <!-- 流程待办记录及流转日志-->
+                <div class="row-fluid">
+                    <ul id="myTab" class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#tabReadyActivityInstance" data-toggle="tab">
+                                待办任务
+                            </a>
+                        </li>
+                        <li><a href="#tabAppFlowLog" data-toggle="tab">流转日志</a></li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+                        <div class="tab-pane fade in active" id="tabReadyActivityInstance">
+                            <div class="row-fluid">
+                                <div id="myGridReadyActivityInstance" style="width:1200px;height:300px;"></div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tabAppFlowLog">
+                            <div class="row-fluid">
+                                <div id="myGridAppFlow" style="width:400px;height:300px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <legend>界面操作说明</legend>
+                <!-- 流程操作说明 -->
+                <div class="row-fluid">
+                    <div class="span12">
+                        <span>
+                            <p>1. Demo是模拟一个电商商品订单流程，大致介绍如下：</p>
+
+                            <p>
+                                1) 同步：即将网上订单数据同步到内部订单系统，执行角色是业务员；<br />
+                                2) 派单：即由业务员打单，分单；执行角色是业务员；<br />
+                                3) 打样的执行角色是打样员；<br />
+                                4) 生产的执行角色是跟单员；<br />
+                                5) 质检的执行角色是质检员；<br />
+                                6) 称重和发货的执行角色都是包装员。
+                            </p>
+
+                            <p>
+                                2. 界面按钮有权限控制，按照不同角色下的用户登录，进行相应的操作。<br />
+                                3. 实现流程启动，运行，跳转，条件分支，任务分发等功能。
+                            </p>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- beginning of Modal HTML Page-->
+    <div id="modelLoginForm" class="modal hide eavModalDialog" style="width:360px;height:400px;">
+        <div class="modal-dialog">
+            <!-- Modal -->
+            <div class="modal-body">
+                <!-- Content will be loaded here from "remote.php" file -->
+            </div>
+        </div>
+    </div>
+
+    <div id="modelNextStepForm" class="modal hide eavModalDialog" style="width:400px;height:500px;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">选取下一步人员</h3>
+        </div>
+        <div class="modal-body" style="width:300px;height:320px;">
+            <ul id="nextStepTree" class="ztree" style="overflow:auto;"></ul>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="nextactivitytree.sure();">确定</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+        </div>
+    </div>
+
+    <!--Progress Bar-->
+    <div class="modal js-loading-bar">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="progress">
+                        <div class="bar" data-transitiongoal="75"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="~/Scripts/jquery/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery/jquery-ui-1.10.3.min.js"></script>
+
+    <script type="text/javascript" src="~/Scripts/jquery/jquery.event.drag-2.2.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery/jquery.msgBox.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap/bootbox.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap-progressbar.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript" src="~/Scripts/slickgrid/slickgrid.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/slickgrid/slick.formatters.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery/jquery.ztree.all-3.5.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/handlebars.js"></script>
+    <script type="text/javascript" src="~/Scripts/jshelper.js"></script>
+    <script type="text/javascript" src="~/Scripts/localhelper.js"></script>
+
+    <script type="text/javascript" src="~/ViewJS/config.js"></script>
+    <script type="text/javascript" src="~/ViewJS/sfmain.js"></script>
+    <script type="text/javascript" src="~/ViewJS/pordermanager.js"></script>
+    <script type="text/javascript" src="~/ViewJS/nextactivitytree.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            lsm.removeTempStorage();
+
+            sfmain.ready();
+        })
+
+        function onUserLogout() {
+            lsm.removeTempStorage();
+        }
+    </script>
+
+</body>
+</html>

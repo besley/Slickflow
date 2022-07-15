@@ -1,0 +1,18 @@
+﻿ //webapi: http://localhost/sfapi/api/wfreceivertype/
+    //数据库表: WfProcess
+    //接收者类型流程测试
+    //流程记录ID：104
+    //流程名称：ASK FOR LEAVE
+    //GUID: b2a18777-43f1-4d4d-b9d5-f92aa655a93f
+    //startup process:
+    //{"UserID":"10","UserName":"LiJie","AppName":"Leave","AppInstanceID":"800","ProcessGUID":"b2a18777-43f1-4d4d-b9d5-f92aa655a93f"}
+
+
+    //get next step role user tree
+    //获取下一步办理人员节点树
+    //{"AppName":"Leave","AppInstanceID":"800","ProcessGUID":"b2a18777-43f1-4d4d-b9d5-f92aa655a93f","UserID":"10","UserName":"LiJie","Conditions":{"days":"2"}}
+
+    //run process app:
+    //请假人员填写请假单并提交：
+    //下一步是“部门经理”办理节点
+    //{"AppName":"Leave","AppInstanceID":"800","ProcessGUID":"b2a18777-43f1-4d4d-b9d5-f92aa655a93f","UserID":"10","UserName":"LiJie","Conditions":{"days":"2"}, "NextActivityPerformers":{"6bd98004-cd04-4f3a-bf21-ca232dcd0533":[{"UserID":17,"UserName":"CuiHong"}]}}

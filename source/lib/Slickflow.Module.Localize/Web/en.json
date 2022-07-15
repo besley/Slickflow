@@ -1,0 +1,17 @@
+﻿{
+    "languagecontroller.setlang.error": "An error occurred when setting localized language,detail",
+    "wf2xmlcontroller.GetProcessListSimple.error": "An error occurred when getting process list!detail",
+    "wf2xmlcontroller.GetTaskList.error": "An error occurred when getting task list!detail",
+    "wf2xmlcontroller.GetProcessVariableList.error": "An error occurred when getting process variable!detail",
+    "wf2xmlcontroller.InsertProcessVariable.name.error": "An error occurred when saving process variable because of same variable name exist",
+    "wf2xmlcontroller.InsertProcessVariable.task.error": "An error occurred when saving process variable because of task not exist",
+    "wf2xmlcontroller.InsertProcessVariable.error": "An error occurred when saving process variable!detail",
+    "wf2xmlcontroller.DeleteProcessVariable.error": "An error occurred when deleting process variable!detail",
+    "wf2xmlcontroller.DeleteInstance.success": "Deleted instance successfully!",
+    "wf2xmlcontroller.DeleteInstance.error": "An error occurred when deleting process variable, or the list is empty!",
+    "jobscheduler.SchedulerServiceJobTimer.InvokeWorkflowByJobTimer.exception": "Unsupported job timer type name:",
+    "jobscheduler.SchedulerServiceJobTimer.TerminateProcess.exception": "Unsupported job timer type name:",
+    "jobscheduler.SchedulerService.nullobject.exception": "Job object is null!",
+    "jobscheduler.SchedulerService.jobnamenotexist.exception": "The job name is not exist:",
+    "jobscheduler.SchedulerService.upsupportednodetriggertype.exception": "Unsupported activity and trigger type"
+}
