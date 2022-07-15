@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="RabbitMQ.Client" Version="5.1.2" />
+    <PackageReference Include="ServiceStack.Text" Version="5.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj" />
+    <ProjectReference Include="..\Slickflow.Module.Logging\Slickflow.Module.Logging.csproj" />
+    <ProjectReference Include="..\Slickflow.Module\Slickflow.Module.csproj" />
+  </ItemGroup>
+
+</Project>

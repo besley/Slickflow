@@ -1,0 +1,59 @@
+﻿   //webapi: http://localhost/sfapi/api/wfsequence/
+    //数据库表: WfProcess
+    //普通顺序流程基本测试(顺序,返签,退回,撤销等测试)
+    //流程记录ID：3
+    //流程名称：报价流程
+    //GUID: 072af8c3-482a-4b1c-890b-685ce2fcc75d
+    //startup process:
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
+
+    //run process app:
+    ////业务员提交办理节点：
+    ////下一步是“板房签字”办理节点
+    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"eb833577-abb5-4239-875a-5f2e2fcb6d57":[{"UserID":10,"UserName":"Long"}]}}
+
+    //withdraw process:
+    //撤销至上一步节点（由板房签字到上一步业务员提交）
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
+
+    //runprocess app
+    //板房签字办理节点
+    //下一步是业务员确认
+    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"cab57060-f433-422a-a66f-4a5ecfafd54e":[{"UserID":10,"UserName":"Long"}]}}
+
+    //流程结束
+    //业务员确认办理节点
+    //下一步流程结束
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","NextActivityPerformers":{"b53eb9ab-3af6-41ad-d722-bed946d19792":[{"UserID":10,"UserName":"Long"}]}}
+
+    //run sub process
+    //有子流程
+    //启动子流程
+    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"5fa796f6-2d5d-4ed6-84e2-a7c4e4e6aabc":[{"UserID":10,"UserName":"Long"}]}}
+
+
+    //reverse process:
+    //返签
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
+
+    //sendback process
+    //退回
+    //数据格式同返签(撤销,退回,返签Json数据格式相同.)
+
+    //read task, and make activity running:
+    //任务阅读：
+    //{"UserID":"10","UserName":"Long","TaskID":"17"}}
+
+    //获取下一步办理步骤：
+    //1) 根据应用来获取
+    //GetNextSteps
+    //{"AppName":"SamplePrice","AppInstanceID":915,"UserID":"10","UserName":"Long","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","NextActivityPerformers":{"39c71004-d822-4c15-9ff2-94ca1068d745":[{"UserID":"10","UserName":"Long"}]},"Flowstatus":"启动"}
+
+    //2) 根据任务ID来获取
+    //GetTaskNextSteps
+
+    //撤销流程: WithdrawProcess
+    //退回流程：SendBackProcess
+    //返签流程：ReverseProcess
+    //取消运行流程：CancelProcess
+    //废弃所有流程实例：DiscardProcess

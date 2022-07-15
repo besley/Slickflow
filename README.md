@@ -1,4 +1,5 @@
 ## Slickflow
+**Current Version:NET6**
 
 ![](https://img.shields.io/github/stars/besley/slickflow.svg) 
 ![](https://img.shields.io/github/forks/besley/slickflow.svg) 
@@ -8,7 +9,10 @@
 ![](https://img.shields.io/github/issues/besley/slickflow.svg) 
 
 
-.NET/.NETCore Workflow Engine With Full Source Code 
+**A Quick Design and Testing Demo:**  
+![Large Order Demo](https://github.com/besley/besley.github.io/blob/master/Gif/slickflow-largeorder-andsplit-demo-en.gif)
+
+**.NET/.NETCore Workflow Engine With Full Source Code** 
 1. **.NET, .NET CORE version both supported**  
  Slickflow is an open-source project based on .NET5; It's easy to use engine product into the cross-platform application.  
 2. **BPMN graphic style process diagram**   
@@ -144,10 +148,23 @@ http://demo.slickflow.com/sfd/
 http://demo.slickflow.com/sfd/model  
 **Document:**  
 http://www.slickflow.com/wiki/index  
-**Discourse:**  
-https://forum.slickflow.com/  
+**Quasar Form Builder**  
+The online dynamic form demo:http://demo.slickflow.com/sqd/   
+The SlickQua project:http://github.com/besley/slickqua/   
+
+![AskForLeave Form Approval](https://github.com/besley/besley.github.io/blob/master/Gif/SlickQua-Ask4Leave-Demo.gif)  
 
 **Slickflow(1.7.7.0) 企业版：** 
+
+2021-09-28
+1. 引擎增加三种类型的中间事件(Intermediate)处理节点定时、消息和条件；
+2. 重新调整HangFire作业功能，检测流程实例活动实例的JobTimer数据；
+3. 简化并合并语言本地化项目，只保留Engine, Desiger和Web三种项目类型；
+
+2021-07-18
+1. 完成动态表单设计器Quasar版，并发版；
+2. 完成Quasar版本的多语言及提示组件配置和开发；
+3. 完成新版本WebDemo请假项目的开发，测试并发布；
 
 2021-04-29
 1. 引擎产品升级到.NET5版本；

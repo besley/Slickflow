@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.0" NoWarn="NU1605" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.0" NoWarn="NU1605" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lib\Slickflow.Data\Slickflow.Data.csproj" />
+    <ProjectReference Include="..\..\Lib\Slickflow.Engine\Slickflow.Engine.csproj" />
+    <ProjectReference Include="..\..\Lib\Slickflow.Graph\Slickflow.Graph.csproj" />
+    <ProjectReference Include="..\..\utility\SlickOne.WebUtility\SlickOne.WebUtility.csproj" />
+  </ItemGroup>
+
+</Project>

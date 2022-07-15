@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/sfdapic",
+      "sslPort": 0
+    },
+    "iisExpress": {
+      "applicationUrl": "http://localhost:5001",
+      "sslPort": 44376
+    }
+  },
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost/sfdapi",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost/sfdapi"
+      },
+      "distributionName": ""
+    },
+    "IIS": {
+      "commandName": "IIS"
+    },
+    "IISExpress": {
+      "commandName": "IISExpress"
+    }
+  }
+}
