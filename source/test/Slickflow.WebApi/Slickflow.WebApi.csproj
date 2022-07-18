@@ -13,7 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Lib\Slickflow.Data\Slickflow.Data.csproj" />
     <ProjectReference Include="..\..\Lib\Slickflow.Engine\Slickflow.Engine.csproj" />
-    <ProjectReference Include="..\..\Lib\Slickflow.Graph\Slickflow.Graph.csproj" />
     <ProjectReference Include="..\..\utility\SlickOne.WebUtility\SlickOne.WebUtility.csproj" />
   </ItemGroup>
 
