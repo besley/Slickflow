@@ -17,51 +17,27 @@ import {
 } from 'bpmn-js-properties-panel';
 
 import sfModdleDescriptor from './slickflow/descriptors/sf';
-import magicModdleDescriptor from './slickflow/descriptors/magic';
 import identityModdleDescriptor from './slickflow/descriptors/identity';
-import actionModdleDescriptor from './slickflow/descriptors/action';
 import sectionModdleDescriptor from './slickflow/descriptors/section';
-import boundaryModdleDescriptor from './slickflow/descriptors/boundary';
 import transitionModdleDescriptor from './slickflow/descriptors/transition';
 import performersModdleDescriptor from './slickflow/descriptors/performers';
 import gatewayModdleDescriptor from './slickflow/descriptors/gateway';
-import multisignModdleDescriptor from './slickflow/descriptors/multisign';
-import servicetaskModdleDescriptor from './slickflow/descriptors/servicetask';
-import scripttaskModdleDescriptor from './slickflow/descriptors/scripttask';
-//import triggerModdleDescriptor from './slickflow/descriptors/trigger';
 
 sfModdleDescriptor.types.push(identityModdleDescriptor.identity);
 sfModdleDescriptor.types.push(transitionModdleDescriptor.transition);
 sfModdleDescriptor.types.push(gatewayModdleDescriptor.gateway);
-sfModdleDescriptor.types.push(multisignModdleDescriptor.multisign);
-/*sfModdleDescriptor.types.push(triggerModdleDescriptor.trigger);*/
-sfModdleDescriptor.types = sfModdleDescriptor.types.concat(actionModdleDescriptor.action);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(sectionModdleDescriptor.section);
-sfModdleDescriptor.types = sfModdleDescriptor.types.concat(boundaryModdleDescriptor.boundary);
-sfModdleDescriptor.types = sfModdleDescriptor.types.concat(servicetaskModdleDescriptor.service);
-sfModdleDescriptor.types = sfModdleDescriptor.types.concat(scripttaskModdleDescriptor.script);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(performersModdleDescriptor.performers);
 
 //import external property panel
 import SfCommandInterceptor from './slickflow/module/SfCommandInterceptor';
 import SfCommandExtension from './slickflow/module/SfCommandExtension';
 
-/*import magicPropertiesProviderModule from './slickflow/provider/magic';*/
-import actionPropertiesProviderModule from './slickflow/provider/action';
 import transitionPropertiesProviderModule from './slickflow/provider/transition';
 import sectionPropertiesProviderModule from './slickflow/provider/section/';
-import boundaryPropertiesProviderModule from './slickflow/provider/boundary/';
 import gatewayPropertiesProviderModule from './slickflow/provider/gateway/';
-import multisignPropertiesProviderModule from './slickflow/provider/multisign/';
-import triggerPropertiesProviderModule from './slickflow/provider/trigger/';
-import servicetaskPropertiesProviderModule from './slickflow/provider/servicetask/';
-import scripttaskPropertiesProviderModule from './slickflow/provider/scripttask/';
 import performersPropertiesProviderModule from './slickflow/provider/performers/';
-//import expressionPropertiesProviderModule from './slickflow/provider/expression';
-//import SfOverallPropertiesProviderModule from './slickflow/provider/overall/';
 import identityPropertiesProviderModule from './slickflow/provider/identity';
-/*import customContextModule from './slickflow/context';*/
-
 
 import {
   debounce
@@ -77,27 +53,17 @@ var bpmnModeler = new BpmnModeler({
     parent: '#js-properties-panel'
     },
     moddleExtensions: {
-        sf: sfModdleDescriptor,
-        magic: magicModdleDescriptor
+        sf: sfModdleDescriptor
     },
   additionalModules: [
     BpmnPropertiesPanelModule,
       SfCommandInterceptor,
       SfCommandExtension,
       identityPropertiesProviderModule,
-      actionPropertiesProviderModule,
-/*      magicPropertiesProviderModule,*/
       transitionPropertiesProviderModule,
       sectionPropertiesProviderModule,
-      boundaryPropertiesProviderModule,
       gatewayPropertiesProviderModule,
-      multisignPropertiesProviderModule,
-      triggerPropertiesProviderModule,
-      servicetaskPropertiesProviderModule,
-      scripttaskPropertiesProviderModule,
       performersPropertiesProviderModule
-/*      expressionPropertiesProviderModule,*/
-/*      customContextModule*/
   ]
 });
 

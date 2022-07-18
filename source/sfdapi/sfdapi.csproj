@@ -24,7 +24,6 @@
     <ProjectReference Include="..\Lib\Slickflow.Data\Slickflow.Data.csproj" />
     <ProjectReference Include="..\Lib\Slickflow.Engine\Slickflow.Engine.csproj" />
     <ProjectReference Include="..\lib\Slickflow.Graph.BPMN\Slickflow.Graph.BPMN.csproj" />
-    <ProjectReference Include="..\Lib\Slickflow.Graph\Slickflow.Graph.csproj" />
     <ProjectReference Include="..\lib\Slickflow.Module.Essential\Slickflow.Module.Essential.csproj" />
     <ProjectReference Include="..\lib\Slickflow.Module.Localize\Slickflow.Module.Localize.csproj" />
     <ProjectReference Include="..\lib\Slickflow.Module.Logging\Slickflow.Module.Logging.csproj" />
