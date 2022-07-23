@@ -131,7 +131,12 @@
 **QQ(Author): 47743901**
 
 **Quick Start Tutorial:**  
-https://github.com/besley/Slickflow/wiki/Slickflow-Quick-Start-Tutorial  
+1) setting webapi in kcofnig.js
+kconfig.webApiUrl = "http://localhost/sfdapi/"           //your sfd webapi url
+
+2) run this command in sfd project"
+npm run dev
+
 **Wiki Page:**  
 https://github.com/besley/Slickflow/wiki  
 **CodeProject Articles:**  
@@ -144,6 +149,8 @@ http://www.slickflow.com
 http://www.slickflow.com/demo/index  
 **Designer Demo:**  
 http://demo.slickflow.com/sfd/  
+**Modeler Start Tutorial:**  
+https://github.com/besley/Slickflow/wiki/Slickflow-Quick-Start-Tutorial  
 **Modeler Demo:**  
 http://demo.slickflow.com/sfd/model  
 **Document:**  
