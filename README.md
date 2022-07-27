@@ -132,9 +132,11 @@
 
 **Quick Start Tutorial:**  
 1) setting webapi in kcofnig.js
+
 kconfig.webApiUrl = "http://localhost/sfdapi/"           //your sfd webapi url
 
 2) run this command in sfd project"
+
 npm run dev
 
 **Wiki Page:**  
