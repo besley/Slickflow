@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Diagram</title>
+    <!-- required viewer styles -->
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@9.0.3/dist/assets/bpmn-js.css">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+
+        .header input[type=text] {
+            width: 500px;
+            max-width: 100%;
+        }
+
+        .console textarea {
+            width: 100%;
+            min-height: 80px;
+            border: none;
+            padding: 0;
+        }
+
+        .canvas {
+            border: solid 1px black;
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas">
+        <div id="js-canvas"></div>
+    </div>
+
+
+    <!-- viewer -->
+    <script type="text/javascript" src="https://unpkg.com/bpmn-js@9.3.1/dist/bpmn-viewer.development.js"></script>
+
+    <!-- jquery (required for example only) -->
+    <script type="text/javascript" src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <!-- viewer -->
+    <script type="text/javascript" src="https://unpkg.com/bpmn-js@9.0.3/dist/bpmn-viewer.development.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/bpmn-js@9.0.3/dist/bpmn-modeler.development.js"></script>
+    <!--<script type="text/javascript" src="https://unpkg.com/bpmn-js@9.0.3/dist/bpmn-navigated-viewer.development.js"></script>-->
+
+    <script type="module" src="../../viewjs/kdiagram.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            var appInstanceID = jshelper.getUrlParameter('AppInstanceID');
+            var processGUID = jshelper.getUrlParameter('ProcessGUID');
+            var version = jshelper.getUrlParameter('Version');
+
+            kdiagram.loadXml(appInstanceID, processGUID, version);
+        });
+    </script>
+</body>
+</html>
