@@ -1,0 +1,1 @@
+import kresource from"./kresource.js";window.kresource=kresource;import processmodel from"./processmodel.js";window.processmodel=processmodel,$((function(){processmodel.initLang();var o=CodeMirror.fromTextArea(document.getElementById("txtCode"),{lineNumbers:!0,matchBrackets:!0,mode:"text/x-java"});processmodel.mcodemirrorEditor=o,window.console.log("process model...")}));

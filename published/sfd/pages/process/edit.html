@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Process Edit</title>
+    <style type="text/css">
+        h4 {
+            margin: 20px 10px 10px;
+        }
+
+        p {
+            margin: 10px;
+        }
+
+        #carousel-example-generic {
+            width: 420px;
+            height: 200px;
+        }
+
+        .carousel-indicators li {
+            background-color: orange
+        }
+
+        .carousel-indicators .active {
+            background-color: forestgreen
+        }
+
+        .carousel-item-select {
+            border: 1px solid red;
+        }
+
+        .carousel-caption {
+            top: -20px;
+            bottom: auto;
+        }
+
+        .carousel-caption-title {
+            background-color: dodgerblue;
+        }
+
+        .carousel-control-icon {
+            background-color: darkblue;
+        }
+
+        .form-group.required .control-label:after {
+            content: "*";
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <!-- Modal -->
+    <div class="modal-body">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item hideme"><a href="#info" role="tab" data-toggle="tab" id="tabInfo" class="nav-link active lang" as="processinfo"></a></li>
+            <li class="nav-item hideme"><a href="#template" role="tab" data-toggle="tab" id="tabTemplate" class="nav-link lang" as="processtemplate"></a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="info">
+                <div class="row form-group required">
+                    <p>
+                        <span class="a_tit lang" as="processguid"></span>
+                        <span><input type="text" id="txtProcessGUID" class="form-control" style="width:340px;" readonly="readonly" /></span>
+                    </p>
+                    <p>
+                        <span class="a_tit control-label lang" as="processname"></span>
+                        <span><input type="text" id="txtProcessName" class="form-control" style="width:340px;" /></span>
+                    </p>
+                    <p>
+                        <span class="a_tit control-label lang" as="processcode"></span>
+                        <span><input type="text" id="txtProcessCode" class="form-control" style="width:340px;" /></span>
+                    </p>
+                    <p>
+                        <span class="a_tit lang" as="version"></span>
+                        <span><input type="text" id="txtVersion" class="form-control" placeholder="1" style="width:340px;" value="1" /></span>
+                    </p>
+                    <p>
+                        <span class="a_tit lang" as="status"></span>
+                        <select id="ddlIsUsing" name="isusing" class="form-control ctrl-combobox" style="width:180px;">
+                            <option value="1" selected class="lang" as="active"></option>
+                            <option value="0" class="lang" as="unactive"></option>
+                        </select>
+                    </p>
+                    <p>
+                        <span class="a_tit lang" as="description"></span>
+                        <span><input type="text" id="txtDescription" class="form-control" style="width:340px;" /></span>
+                    </p>
+                </div>
+            </div>
+            <div class="tab-pane" id="template">
+                <div id='carousel-example-generic' class='carousel slide' data-ride='carousel'>
+                    <!-- Indicators -->
+                    <ol class='carousel-indicators'>
+                        <li data-target='#carousel-example-generic' data-slide-to='0' class='active'></li>
+                        <li data-target='#carousel-example-generic' data-slide-to='1'></li>
+                        <li data-target='#carousel-example-generic' data-slide-to='2'></li>
+                        <li data-target='#carousel-example-generic' data-slide-to='3'></li>
+                        <li data-target='#carousel-example-generic' data-slide-to='4'></li>
+                        <li data-target='#carousel-example-generic' data-slide-to='5'></li>
+                        <li data-target='#carousel-example-generic' data-slide-to='6'></li>
+                    </ol>
+
+                    <!-- Wrapper for slides -->
+                    <div class='carousel-inner'>
+                        <div class='carousel-item active' data-template="Sequence">
+                            <img src="../../images/bpmn/bpmn-sequence.png"  class="d-block w-100" alt='' />
+                            <div class="carousel-caption d-none d-md-block">
+                                <span class="carousel-caption-title lang" as="t-sequence"></span>
+                            </div>
+                        </div>
+                        <div class='carousel-item' data-template="Parallel">
+                            <img src="../../images/bpmn/bpmn-gateway.png"  class="d-block w-100" alt='' />
+                            <div class="carousel-caption d-none d-md-block">
+                                <span class="carousel-caption-title lang" as="t-gateway"></span>
+                            </div>
+                        </div>
+                        <div class='carousel-item' data-template="MultipleInstance">
+                            <img src="../../images/bpmn/bpmn-multipleinstance.png"  class="d-block w-100" alt='' />
+                            <div class="carousel-caption d-none d-md-block">
+                                <span class="carousel-caption-title lang" as="t-mi"></span>
+                            </div>
+                        </div>
+                        <div class='carousel-item' data-template="SubProcess">
+                            <img src="../../images/bpmn/bpmn-subprocess.png"  class="d-block w-100" alt='' />
+                            <div class="carousel-caption d-none d-md-block">
+                                <span class="carousel-caption-title lang" as="t-subprocess"></span>
+                            </div>
+                        </div>
+                        <div class='carousel-item' data-template="AndSplitMI">
+                            <img src="../../images/bpmn/bpmn-andsplitmi.png"  class="d-block w-100" alt='' />
+                            <div class="carousel-caption d-none d-md-block">
+                                <span class="carousel-caption-title lang" as="t-andsplitmi"></span>
+                            </div>
+                        </div>
+                        <div class='carousel-item' data-template="Complex">
+                            <img src="../../images/bpmn/bpmn-complex.png"  class="d-block w-100" alt='' />
+                            <div class="carousel-caption d-none d-md-block">
+                                <span class="carousel-caption-title lang" as="t-complex"></span>
+                            </div>
+                        </div>
+                        <div class='carousel-item' data-template="Conditional">
+                            <img src="../../images/bpmn/bpmn-interconditional.png"  class="d-block w-100" alt='' />
+                            <div class="carousel-caption d-none d-md-block">
+                                <span class="carousel-caption-title lang" as="t-interconditional"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <button class="carousel-control-prev" type="button" data-target="#carousel-example-generic" data-slide="prev">
+                        <span class="carousel-control-icon carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-target="#carousel-example-generic" data-slide="next">
+                        <span class="carousel-control-icon carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </button>
+                </div>
+                <p class="lang" as="processtemplateselectiontips"></p>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary lang" as="save" onclick="processlist.saveProcess();"></button>
+        <button class="btn lang" as="cancel" data-dismiss="modal" aria-hidden="true"></button>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            kresource.localize();
+            processlist.loadProcess();
+            $(".carousel-inner>.carousel-item").on("click", function () {
+                $.each($(".carousel-inner>.carousel-item"), function (o, e) {
+                    $(this).removeClass("carousel-item-select");
+                });
+                $(this).addClass("carousel-item-select");
+                processlist.mprocessTemplateType = $(this).data("template");
+            });
+        })
+    </script>
+</body>
+</html>

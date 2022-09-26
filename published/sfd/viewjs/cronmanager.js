@@ -1,0 +1,1 @@
+var cronmanager=function(){function n(){}return n.saveCron=function(){var n=$("#cronExpressionValue").text();$("#txtCronExpression").val(n)},n}();

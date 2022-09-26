@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Slickflow Designer</title>
+    <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="vendor/bootstrap-icons/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="vendor/bootstrap5-dialog/dist/css/bootstrap-dialog.css" />
+    <link rel="stylesheet" href="vendor/bpmn-js/assets/diagram-js.css" />
+    <link rel="stylesheet" href="vendor/bpmn-js/assets/bpmn-js.css" />
+    <link rel="stylesheet" href="vendor/bpmn-js/assets/bpmn-font/css/bpmn-embedded.css" />
+    <link rel="stylesheet" href="vendor/bpmn-js-properties-panel/assets/properties-panel.css" />
+
+    <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+    <div class="row" style="margin-left:160px;">
+        <div style="float:left;">
+            <a href="#" class="btn btn-info" id="btnCreateProcess"><span class="bi bi-file-earmark lang" as="new"> </span> </a>
+            <a href="#" class="btn btn-info" id="btnOpenProcess"><span class="bi bi-folder lang" as="open"> </span></a>
+            <a href="#" class="btn btn-info" id="btnSaveProcess"><span class="bi bi-check-lg lang" as="save"> </span></a>
+        </div>
+        <div class="dropdown" style="float:left;margin-left: 5px;">
+            <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLinkTool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="bi bi-wrench lang" as="tools"> </span><span class="caret"></span>
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLinkTool">
+                <a class="dropdown-item" href="#"><span class="lang" as="content" onclick="kmain.previewXml();"></span></a>
+                <li class="divider">&nbsp</li>
+                <a class="dropdown-item download" href="#" id="js-download-diagram"><span class="lang" as="downgram" onclick="kmain.downloadXml();"></span></a>
+                <a class="dropdown-item download" href="#" id="js-download-svg"><span class="lang" as="downsvg" onclick="kmain.downloadSvg();"></span></a>
+                <li class="divider">&nbsp</li>
+                <!--<a class="dropdown-item" href="#"><span class="lang" as="validate" onclick="kmain.validateProcess();"></span></a>-->
+                <a class="dropdown-item" href="#"><span class="lang" as="importxml" onclick="kmain.importDiagram();"></span></a>
+                <li class="divider">&nbsp</li>
+                <a class="dropdown-item" href="#"><span class="lang" as="createfromtemplate" onclick="kmain.createFromTemplate();"></span></a>
+                <li class="divider">&nbsp</li>
+                <a class="dropdown-item" href="#"><span class="lang" as="simutest" onclick="kmain.simuTest();"></span></a>
+                <!--<li class="divider">&nbsp</li>
+    <a class="dropdown-item" href="#"><span class="lang" as="adminboard" onclick="kmain.webJob();"></span></a>-->
+            </div>
+        </div>
+        <div class="dropdown" style="float:left;margin-left: 5px;">
+            <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLinkOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="bi bi-wrench lang" as="options"> </span><span class="caret"></span>
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLinkOptions">
+                <a class="dropdown-item" href="#"><span class="lang" as="slickflowgraphtutorial" onclick="kmain.gotoTutorial();"></span></a>
+                <li class="divider">&nbsp</li>
+                <a class="dropdown-item" href="#"><span class="lang" as="en" onclick="kmain.changeLang('en');"></span></a>
+                <a class="dropdown-item" href="#"><span class="lang" as="zh" onclick="kmain.changeLang('zh');"></span></a>
+            </div>
+        </div>
+    </div>
+
+    <!--Include bootstrap progress bar in div. -->
+    <div class="progress progress-striped active">
+        <div class="progress-bar progress-bar-success"
+             style="width: 0%">
+        </div>
+    </div>
+
+    <div class="content" id="js-drop-zone">
+
+        <div class="message intro">
+            <div class="note">
+                <a id="js-open-process-list" href role="button"><span class="lang" as="choosefromprocesslist"></span></a> <span class="lang" as="oryoucan"></span>
+                <a id="js-create-diagram" href><span class="lang" as="createnewdiagram"></span></a> <span class="lang" as="togetstarted"></span>
+            </div>
+        </div>
+
+        <div class="message error">
+            <div class="note">
+                <p>Ooops, we could not display the BPMN 2.0 diagram.</p>
+
+                <div class="details">
+                    <span>cause of the problem</span>
+                    <pre></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="canvas" id="js-canvas"></div>
+        <div id="js-properties-panel"></div>
+    </div>
+
+    <!--<ul class="buttons">
+        <li>
+            download
+        </li>
+        <li>
+            <a id="js-download-diagram" href title="download BPMN diagram">
+                BPMN diagram
+            </a>
+        </li>
+        <li>
+            <a id="js-download-svg" href title="download as SVG image">
+                SVG image
+            </a>
+        </li>
+    </ul>-->
+
+    <script type="module">
+        import kconfig from './config/kconfig.js'
+        window.kconfig = kconfig;
+    </script>
+
+    <script type="text/javascript" src="index.js"></script>
+    
+    <script type="text/javascript">
+        $(function () {
+            kresource.localize();
+        });
+    </script>
+
+
+</html>

@@ -1,0 +1,781 @@
+diff --git a/mode/clike/clike.js b/mode/clike/clike.js
+index 15c0fd11..916aee61 100644
+--- a/mode/clike/clike.js
++++ b/mode/clike/clike.js
+@@ -484,7 +484,7 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
+                     "instanceof interface native new package private protected public " +
+                     "return static strictfp super switch synchronized this throw throws transient " +
+                     "try volatile while @interface"),
+-    types: words("byte short int long float double boolean char void Boolean Byte Character Double Float " +
++    types: words("var byte short int long float double boolean char void Boolean Byte Character Double Float " +
+                  "Integer Long Number Object Short String StringBuffer StringBuilder Void"),
+     blockKeywords: words("catch class do else finally for if switch try while"),
+     defKeywords: words("class interface enum @interface"),
+diff --git a/mode/cobol/cobol.js b/mode/cobol/cobol.js
+index 275857b4..a7aeafa0 100644
+--- a/mode/cobol/cobol.js
++++ b/mode/cobol/cobol.js
+@@ -195,7 +195,7 @@ CodeMirror.defineMode("cobol", function () {
+       case "string": // multi-line string parsing mode
+         var next = false;
+         while ((next = stream.next()) != null) {
+-          if (next == "\"" || next == "\'") {
++          if ((next == "\"" || next == "\'") && !stream.match(/['"]/, false)) {
+             state.mode = false;
+             break;
+           }
+diff --git a/mode/css/css.js b/mode/css/css.js
+index 88a869bf..503c48c2 100644
+--- a/mode/css/css.js
++++ b/mode/css/css.js
+@@ -443,13 +443,15 @@ CodeMirror.defineMode("css", function(config, parserConfig) {
+     "monochrome", "min-monochrome", "max-monochrome", "resolution",
+     "min-resolution", "max-resolution", "scan", "grid", "orientation",
+     "device-pixel-ratio", "min-device-pixel-ratio", "max-device-pixel-ratio",
+-    "pointer", "any-pointer", "hover", "any-hover", "prefers-color-scheme"
++    "pointer", "any-pointer", "hover", "any-hover", "prefers-color-scheme",
++    "dynamic-range", "video-dynamic-range"
+   ], mediaFeatures = keySet(mediaFeatures_);
+ 
+   var mediaValueKeywords_ = [
+     "landscape", "portrait", "none", "coarse", "fine", "on-demand", "hover",
+     "interlace", "progressive",
+-    "dark", "light"
++    "dark", "light",
++    "standard", "high"
+   ], mediaValueKeywords = keySet(mediaValueKeywords_);
+ 
+   var propertyKeywords_ = [
+@@ -482,7 +484,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {
+     "cue-before", "cursor", "direction", "display", "dominant-baseline",
+     "drop-initial-after-adjust", "drop-initial-after-align",
+     "drop-initial-before-adjust", "drop-initial-before-align", "drop-initial-size",
+-    "drop-initial-value", "elevation", "empty-cells", "fit", "fit-position",
++    "drop-initial-value", "elevation", "empty-cells", "fit", "fit-content", "fit-position",
+     "flex", "flex-basis", "flex-direction", "flex-flow", "flex-grow",
+     "flex-shrink", "flex-wrap", "float", "float-offset", "flow-from", "flow-into",
+     "font", "font-family", "font-feature-settings", "font-kerning",
+@@ -564,7 +566,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {
+   ], propertyKeywords = keySet(propertyKeywords_);
+ 
+   var nonStandardPropertyKeywords_ = [
+-    "border-block", "border-block-color", "border-block-end",
++    "accent-color", "aspect-ratio", "border-block", "border-block-color", "border-block-end",
+     "border-block-end-color", "border-block-end-style", "border-block-end-width",
+     "border-block-start", "border-block-start-color", "border-block-start-style",
+     "border-block-start-width", "border-block-style", "border-block-width",
+@@ -572,9 +574,9 @@ CodeMirror.defineMode("css", function(config, parserConfig) {
+     "border-inline-end-color", "border-inline-end-style",
+     "border-inline-end-width", "border-inline-start", "border-inline-start-color",
+     "border-inline-start-style", "border-inline-start-width",
+-    "border-inline-style", "border-inline-width", "margin-block",
++    "border-inline-style", "border-inline-width", "content-visibility", "margin-block",
+     "margin-block-end", "margin-block-start", "margin-inline", "margin-inline-end",
+-    "margin-inline-start", "padding-block", "padding-block-end",
++    "margin-inline-start", "overflow-anchor", "overscroll-behavior", "padding-block", "padding-block-end",
+     "padding-block-start", "padding-inline", "padding-inline-end",
+     "padding-inline-start", "scroll-snap-stop", "scrollbar-3d-light-color",
+     "scrollbar-arrow-color", "scrollbar-base-color", "scrollbar-dark-shadow-color",
+@@ -598,16 +600,16 @@ CodeMirror.defineMode("css", function(config, parserConfig) {
+     "bisque", "black", "blanchedalmond", "blue", "blueviolet", "brown",
+     "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue",
+     "cornsilk", "crimson", "cyan", "darkblue", "darkcyan", "darkgoldenrod",
+-    "darkgray", "darkgreen", "darkkhaki", "darkmagenta", "darkolivegreen",
++    "darkgray", "darkgreen", "darkgrey", "darkkhaki", "darkmagenta", "darkolivegreen",
+     "darkorange", "darkorchid", "darkred", "darksalmon", "darkseagreen",
+-    "darkslateblue", "darkslategray", "darkturquoise", "darkviolet",
+-    "deeppink", "deepskyblue", "dimgray", "dodgerblue", "firebrick",
++    "darkslateblue", "darkslategray", "darkslategrey", "darkturquoise", "darkviolet",
++    "deeppink", "deepskyblue", "dimgray", "dimgrey", "dodgerblue", "firebrick",
+     "floralwhite", "forestgreen", "fuchsia", "gainsboro", "ghostwhite",
+     "gold", "goldenrod", "gray", "grey", "green", "greenyellow", "honeydew",
+     "hotpink", "indianred", "indigo", "ivory", "khaki", "lavender",
+     "lavenderblush", "lawngreen", "lemonchiffon", "lightblue", "lightcoral",
+-    "lightcyan", "lightgoldenrodyellow", "lightgray", "lightgreen", "lightpink",
+-    "lightsalmon", "lightseagreen", "lightskyblue", "lightslategray",
++    "lightcyan", "lightgoldenrodyellow", "lightgray", "lightgreen", "lightgrey", "lightpink",
++    "lightsalmon", "lightseagreen", "lightskyblue", "lightslategray", "lightslategrey",
+     "lightsteelblue", "lightyellow", "lime", "limegreen", "linen", "magenta",
+     "maroon", "mediumaquamarine", "mediumblue", "mediumorchid", "mediumpurple",
+     "mediumseagreen", "mediumslateblue", "mediumspringgreen", "mediumturquoise",
+@@ -617,7 +619,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {
+     "papayawhip", "peachpuff", "peru", "pink", "plum", "powderblue",
+     "purple", "rebeccapurple", "red", "rosybrown", "royalblue", "saddlebrown",
+     "salmon", "sandybrown", "seagreen", "seashell", "sienna", "silver", "skyblue",
+-    "slateblue", "slategray", "snow", "springgreen", "steelblue", "tan",
++    "slateblue", "slategray", "slategrey", "snow", "springgreen", "steelblue", "tan",
+     "teal", "thistle", "tomato", "turquoise", "violet", "wheat", "white",
+     "whitesmoke", "yellow", "yellowgreen"
+   ], colorKeywords = keySet(colorKeywords_);
+@@ -628,21 +630,21 @@ CodeMirror.defineMode("css", function(config, parserConfig) {
+     "always", "amharic", "amharic-abegede", "antialiased", "appworkspace",
+     "arabic-indic", "armenian", "asterisks", "attr", "auto", "auto-flow", "avoid", "avoid-column", "avoid-page",
+     "avoid-region", "axis-pan", "background", "backwards", "baseline", "below", "bidi-override", "binary",
+-    "bengali", "blink", "block", "block-axis", "bold", "bolder", "border", "border-box",
+-    "both", "bottom", "break", "break-all", "break-word", "bullets", "button", "button-bevel",
++    "bengali", "blink", "block", "block-axis", "blur", "bold", "bolder", "border", "border-box",
++    "both", "bottom", "break", "break-all", "break-word", "brightness", "bullets", "button", "button-bevel",
+     "buttonface", "buttonhighlight", "buttonshadow", "buttontext", "calc", "cambodian",
+     "capitalize", "caps-lock-indicator", "caption", "captiontext", "caret",
+     "cell", "center", "checkbox", "circle", "cjk-decimal", "cjk-earthly-branch",
+     "cjk-heavenly-stem", "cjk-ideographic", "clear", "clip", "close-quote",
+     "col-resize", "collapse", "color", "color-burn", "color-dodge", "column", "column-reverse",
+-    "compact", "condensed", "contain", "content", "contents",
+-    "content-box", "context-menu", "continuous", "copy", "counter", "counters", "cover", "crop",
+-    "cross", "crosshair", "currentcolor", "cursive", "cyclic", "darken", "dashed", "decimal",
++    "compact", "condensed", "conic-gradient", "contain", "content", "contents",
++    "content-box", "context-menu", "continuous", "contrast", "copy", "counter", "counters", "cover", "crop",
++    "cross", "crosshair", "cubic-bezier", "currentcolor", "cursive", "cyclic", "darken", "dashed", "decimal",
+     "decimal-leading-zero", "default", "default-button", "dense", "destination-atop",
+     "destination-in", "destination-out", "destination-over", "devanagari", "difference",
+     "disc", "discard", "disclosure-closed", "disclosure-open", "document",
+     "dot-dash", "dot-dot-dash",
+-    "dotted", "double", "down", "e-resize", "ease", "ease-in", "ease-in-out", "ease-out",
++    "dotted", "double", "down", "drop-shadow", "e-resize", "ease", "ease-in", "ease-in-out", "ease-out",
+     "element", "ellipse", "ellipsis", "embed", "end", "ethiopic", "ethiopic-abegede",
+     "ethiopic-abegede-am-et", "ethiopic-abegede-gez", "ethiopic-abegede-ti-er",
+     "ethiopic-abegede-ti-et", "ethiopic-halehame-aa-er",
+@@ -652,10 +654,10 @@ CodeMirror.defineMode("css", function(config, parserConfig) {
+     "ethiopic-halehame-ti-er", "ethiopic-halehame-ti-et", "ethiopic-halehame-tig",
+     "ethiopic-numeric", "ew-resize", "exclusion", "expanded", "extends", "extra-condensed",
+     "extra-expanded", "fantasy", "fast", "fill", "fill-box", "fixed", "flat", "flex", "flex-end", "flex-start", "footnotes",
+-    "forwards", "from", "geometricPrecision", "georgian", "graytext", "grid", "groove",
++    "forwards", "from", "geometricPrecision", "georgian", "grayscale", "graytext", "grid", "groove",
+     "gujarati", "gurmukhi", "hand", "hangul", "hangul-consonant", "hard-light", "hebrew",
+     "help", "hidden", "hide", "higher", "highlight", "highlighttext",
+-    "hiragana", "hiragana-iroha", "horizontal", "hsl", "hsla", "hue", "icon", "ignore",
++    "hiragana", "hiragana-iroha", "horizontal", "hsl", "hsla", "hue", "hue-rotate", "icon", "ignore",
+     "inactiveborder", "inactivecaption", "inactivecaptiontext", "infinite",
+     "infobackground", "infotext", "inherit", "initial", "inline", "inline-axis",
+     "inline-block", "inline-flex", "inline-grid", "inline-table", "inset", "inside", "intrinsic", "invert",
+@@ -685,15 +687,15 @@ CodeMirror.defineMode("css", function(config, parserConfig) {
+     "pointer", "polygon", "portrait", "pre", "pre-line", "pre-wrap", "preserve-3d",
+     "progress", "push-button", "radial-gradient", "radio", "read-only",
+     "read-write", "read-write-plaintext-only", "rectangle", "region",
+-    "relative", "repeat", "repeating-linear-gradient",
+-    "repeating-radial-gradient", "repeat-x", "repeat-y", "reset", "reverse",
++    "relative", "repeat", "repeating-linear-gradient", "repeating-radial-gradient",
++    "repeating-conic-gradient", "repeat-x", "repeat-y", "reset", "reverse",
+     "rgb", "rgba", "ridge", "right", "rotate", "rotate3d", "rotateX", "rotateY",
+     "rotateZ", "round", "row", "row-resize", "row-reverse", "rtl", "run-in", "running",
+-    "s-resize", "sans-serif", "saturation", "scale", "scale3d", "scaleX", "scaleY", "scaleZ", "screen",
++    "s-resize", "sans-serif", "saturate", "saturation", "scale", "scale3d", "scaleX", "scaleY", "scaleZ", "screen",
+     "scroll", "scrollbar", "scroll-position", "se-resize", "searchfield",
+     "searchfield-cancel-button", "searchfield-decoration",
+     "searchfield-results-button", "searchfield-results-decoration", "self-start", "self-end",
+-    "semi-condensed", "semi-expanded", "separate", "serif", "show", "sidama",
++    "semi-condensed", "semi-expanded", "separate", "sepia", "serif", "show", "sidama",
+     "simp-chinese-formal", "simp-chinese-informal", "single",
+     "skew", "skewX", "skewY", "skip-white-space", "slide", "slider-horizontal",
+     "slider-vertical", "sliderthumb-horizontal", "sliderthumb-vertical", "slow",
+diff --git a/mode/factor/factor.js b/mode/factor/factor.js
+index 4c876d4d..d3f7d499 100644
+--- a/mode/factor/factor.js
++++ b/mode/factor/factor.js
+@@ -77,7 +77,7 @@
+     // specific to simple modes.
+     meta: {
+       dontIndentStates: ["start", "vocabulary", "string", "string3", "stack"],
+-      lineComment: [ "!", "#!" ]
++      lineComment: "!"
+     }
+   });
+ 
+diff --git a/mode/gas/gas.js b/mode/gas/gas.js
+index b3515abe..016dc29d 100644
+--- a/mode/gas/gas.js
++++ b/mode/gas/gas.js
+@@ -144,18 +144,26 @@ CodeMirror.defineMode("gas", function(_config, parserConfig) {
+   function x86(_parserConfig) {
+     lineCommentStartSymbol = "#";
+ 
++    registers.al  = "variable";
++    registers.ah  = "variable";
+     registers.ax  = "variable";
+     registers.eax = "variable-2";
+     registers.rax = "variable-3";
+ 
++    registers.bl  = "variable";
++    registers.bh  = "variable";
+     registers.bx  = "variable";
+     registers.ebx = "variable-2";
+     registers.rbx = "variable-3";
+ 
++    registers.cl  = "variable";
++    registers.ch  = "variable";
+     registers.cx  = "variable";
+     registers.ecx = "variable-2";
+     registers.rcx = "variable-3";
+ 
++    registers.dl  = "variable";
++    registers.dh  = "variable";
+     registers.dx  = "variable";
+     registers.edx = "variable-2";
+     registers.rdx = "variable-3";
+diff --git a/mode/javascript/javascript.js b/mode/javascript/javascript.js
+index 95cbbd85..7cfee313 100644
+--- a/mode/javascript/javascript.js
++++ b/mode/javascript/javascript.js
+@@ -330,6 +330,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
+     cx.state.context = new Context(cx.state.context, cx.state.localVars, true)
+     cx.state.localVars = null
+   }
++  pushcontext.lex = pushblockcontext.lex = true
+   function popcontext() {
+     cx.state.localVars = cx.state.context.vars
+     cx.state.context = cx.state.context.prev
+diff --git a/mode/julia/julia.js b/mode/julia/julia.js
+index de9f987d..cb0d69c8 100644
+--- a/mode/julia/julia.js
++++ b/mode/julia/julia.js
+@@ -12,9 +12,10 @@
+ "use strict";
+ 
+ CodeMirror.defineMode("julia", function(config, parserConf) {
+-  function wordRegexp(words, end) {
++  function wordRegexp(words, end, pre) {
++    if (typeof pre === "undefined") { pre = ""; }
+     if (typeof end === "undefined") { end = "\\b"; }
+-    return new RegExp("^((" + words.join(")|(") + "))" + end);
++    return new RegExp("^" + pre + "((" + words.join(")|(") + "))" + end);
+   }
+ 
+   var octChar = "\\\\[0-7]{1,3}";
+@@ -22,13 +23,18 @@ CodeMirror.defineMode("julia", function(config, parserConf) {
+   var sChar = "\\\\[abefnrtv0%?'\"\\\\]";
+   var uChar = "([^\\u0027\\u005C\\uD800-\\uDFFF]|[\\uD800-\\uDFFF][\\uDC00-\\uDFFF])";
+ 
++  var asciiOperatorsList = [
++    "[<>]:", "[<>=]=", "<<=?", ">>>?=?", "=>", "--?>", "<--[->]?", "\\/\\/",
++    "\\.{2,3}", "[\\.\\\\%*+\\-<>!\\/^|&]=?", "\\?", "\\$", "~", ":"
++  ];
+   var operators = parserConf.operators || wordRegexp([
+-        "[<>]:", "[<>=]=", "<<=?", ">>>?=?", "=>", "->", "\\/\\/",
+-        "[\\\\%*+\\-<>!=\\/^|&\\u00F7\\u22BB]=?", "\\?", "\\$", "~", ":",
+-        "\\u00D7", "\\u2208", "\\u2209", "\\u220B", "\\u220C", "\\u2218",
+-        "\\u221A", "\\u221B", "\\u2229", "\\u222A", "\\u2260", "\\u2264",
+-        "\\u2265", "\\u2286", "\\u2288", "\\u228A", "\\u22C5",
+-        "\\b(in|isa)\\b(?!\.?\\()"], "");
++    "[<>]:", "[<>=]=", "<<=?", ">>>?=?", "=>", "--?>", "<--[->]?", "\\/\\/",
++    "[\\\\%*+\\-<>!\\/^|&\\u00F7\\u22BB]=?", "\\?", "\\$", "~", ":",
++    "\\u00D7", "\\u2208", "\\u2209", "\\u220B", "\\u220C", "\\u2218",
++    "\\u221A", "\\u221B", "\\u2229", "\\u222A", "\\u2260", "\\u2264",
++    "\\u2265", "\\u2286", "\\u2288", "\\u228A", "\\u22C5",
++    "\\b(in|isa)\\b(?!\.?\\()"
++  ], "");
+   var delimiters = parserConf.delimiters || /^[;,()[\]{}]/;
+   var identifiers = parserConf.identifiers ||
+         /^[_A-Za-z\u00A1-\u2217\u2219-\uFFFF][\w\u00A1-\u2217\u2219-\uFFFF]*!*/;
+@@ -57,10 +63,13 @@ CodeMirror.defineMode("julia", function(config, parserConf) {
+   var keywords = wordRegexp(keywordsList);
+   var builtins = wordRegexp(builtinsList);
+ 
+-  var macro = /^@[_A-Za-z][\w]*/;
++  var macro = /^@[_A-Za-z\u00A1-\uFFFF][\w\u00A1-\uFFFF]*!*/;
+   var symbol = /^:[_A-Za-z\u00A1-\uFFFF][\w\u00A1-\uFFFF]*!*/;
+   var stringPrefixes = /^(`|([_A-Za-z\u00A1-\uFFFF]*"("")?))/;
+ 
++  var macroOperators = wordRegexp(asciiOperatorsList, "", "@");
++  var symbolOperators = wordRegexp(asciiOperatorsList, "", ":");
++
+   function inArray(state) {
+     return (state.nestedArrays > 0);
+   }
+@@ -165,8 +174,7 @@ CodeMirror.defineMode("julia", function(config, parserConf) {
+     }
+ 
+     // Handle symbols
+-    if (!leavingExpr && stream.match(symbol) ||
+-        stream.match(/:([<>]:|<<=?|>>>?=?|->|\/\/|\.{2,3}|[\.\\%*+\-<>!\/^|&]=?|[~\?\$])/)) {
++    if (!leavingExpr && (stream.match(symbol) || stream.match(symbolOperators))) {
+       return "builtin";
+     }
+ 
+@@ -212,7 +220,7 @@ CodeMirror.defineMode("julia", function(config, parserConf) {
+       return state.tokenize(stream, state);
+     }
+ 
+-    if (stream.match(macro)) {
++    if (stream.match(macro) || stream.match(macroOperators)) {
+       return "meta";
+     }
+ 
+diff --git a/mode/meta.js b/mode/meta.js
+index 477d6ae2..38d5e013 100644
+--- a/mode/meta.js
++++ b/mode/meta.js
+@@ -19,7 +19,7 @@
+     {name: "Brainfuck", mime: "text/x-brainfuck", mode: "brainfuck", ext: ["b", "bf"]},
+     {name: "C", mime: "text/x-csrc", mode: "clike", ext: ["c", "h", "ino"]},
+     {name: "C++", mime: "text/x-c++src", mode: "clike", ext: ["cpp", "c++", "cc", "cxx", "hpp", "h++", "hh", "hxx"], alias: ["cpp"]},
+-    {name: "Cobol", mime: "text/x-cobol", mode: "cobol", ext: ["cob", "cpy"]},
++    {name: "Cobol", mime: "text/x-cobol", mode: "cobol", ext: ["cob", "cpy", "cbl"]},
+     {name: "C#", mime: "text/x-csharp", mode: "clike", ext: ["cs"], alias: ["csharp", "cs"]},
+     {name: "Clojure", mime: "text/x-clojure", mode: "clojure", ext: ["clj", "cljc", "cljx"]},
+     {name: "ClojureScript", mime: "text/x-clojurescript", mode: "clojure", ext: ["cljs"]},
+diff --git a/mode/nsis/nsis.js b/mode/nsis/nsis.js
+index 636940f5..7e419f03 100644
+--- a/mode/nsis/nsis.js
++++ b/mode/nsis/nsis.js
+@@ -24,14 +24,14 @@ CodeMirror.defineSimpleMode("nsis",{
+     { regex: /`(?:[^\\`]|\\.)*`?/, token: "string" },
+ 
+     // Compile Time Commands
+-    {regex: /^\s*(?:\!(include|addincludedir|addplugindir|appendfile|cd|delfile|echo|error|execute|packhdr|pragma|finalize|getdllversion|gettlbversion|system|tempfile|warning|verbose|define|undef|insertmacro|macro|macroend|makensis|searchparse|searchreplace))\b/, token: "keyword"},
++    {regex: /^\s*(?:\!(addincludedir|addplugindir|appendfile|cd|define|delfile|echo|error|execute|finalize|getdllversion|gettlbversion|include|insertmacro|macro|macroend|makensis|packhdr|pragma|searchparse|searchreplace|system|tempfile|undef|uninstfinalize|verbose|warning))\b/, token: "keyword"},
+ 
+     // Conditional Compilation
+     {regex: /^\s*(?:\!(if(?:n?def)?|ifmacron?def|macro))\b/, token: "keyword", indent: true},
+     {regex: /^\s*(?:\!(else|endif|macroend))\b/, token: "keyword", dedent: true},
+ 
+     // Runtime Commands
+-    {regex: /^\s*(?:Abort|AddBrandingImage|AddSize|AllowRootDirInstall|AllowSkipFiles|AutoCloseWindow|BGFont|BGGradient|BrandingText|BringToFront|Call|CallInstDLL|Caption|ChangeUI|CheckBitmap|ClearErrors|CompletedText|ComponentText|CopyFiles|CRCCheck|CreateDirectory|CreateFont|CreateShortCut|Delete|DeleteINISec|DeleteINIStr|DeleteRegKey|DeleteRegValue|DetailPrint|DetailsButtonText|DirText|DirVar|DirVerify|EnableWindow|EnumRegKey|EnumRegValue|Exch|Exec|ExecShell|ExecShellWait|ExecWait|ExpandEnvStrings|File|FileBufSize|FileClose|FileErrorText|FileOpen|FileRead|FileReadByte|FileReadUTF16LE|FileReadWord|FileWriteUTF16LE|FileSeek|FileWrite|FileWriteByte|FileWriteWord|FindClose|FindFirst|FindNext|FindWindow|FlushINI|GetCurInstType|GetCurrentAddress|GetDlgItem|GetDLLVersion|GetDLLVersionLocal|GetErrorLevel|GetFileTime|GetFileTimeLocal|GetFullPathName|GetFunctionAddress|GetInstDirError|GetKnownFolderPath|GetLabelAddress|GetTempFileName|Goto|HideWindow|Icon|IfAbort|IfErrors|IfFileExists|IfRebootFlag|IfRtlLanguage|IfShellVarContextAll|IfSilent|InitPluginsDir|InstallButtonText|InstallColors|InstallDir|InstallDirRegKey|InstProgressFlags|InstType|InstTypeGetText|InstTypeSetText|Int64Cmp|Int64CmpU|Int64Fmt|IntCmp|IntCmpU|IntFmt|IntOp|IntPtrCmp|IntPtrCmpU|IntPtrOp|IsWindow|LangString|LicenseBkColor|LicenseData|LicenseForceSelection|LicenseLangString|LicenseText|LoadAndSetImage|LoadLanguageFile|LockWindow|LogSet|LogText|ManifestDPIAware|ManifestLongPathAware|ManifestMaxVersionTested|ManifestSupportedOS|MessageBox|MiscButtonText|Name|Nop|OutFile|Page|PageCallbacks|PEAddResource|PEDllCharacteristics|PERemoveResource|PESubsysVer|Pop|Push|Quit|ReadEnvStr|ReadINIStr|ReadRegDWORD|ReadRegStr|Reboot|RegDLL|Rename|RequestExecutionLevel|ReserveFile|Return|RMDir|SearchPath|SectionGetFlags|SectionGetInstTypes|SectionGetSize|SectionGetText|SectionIn|SectionSetFlags|SectionSetInstTypes|SectionSetSize|SectionSetText|SendMessage|SetAutoClose|SetBrandingImage|SetCompress|SetCompressor|SetCompressorDictSize|SetCtlColors|SetCurInstType|SetDatablockOptimize|SetDateSave|SetDetailsPrint|SetDetailsView|SetErrorLevel|SetErrors|SetFileAttributes|SetFont|SetOutPath|SetOverwrite|SetRebootFlag|SetRegView|SetShellVarContext|SetSilent|ShowInstDetails|ShowUninstDetails|ShowWindow|SilentInstall|SilentUnInstall|Sleep|SpaceTexts|StrCmp|StrCmpS|StrCpy|StrLen|SubCaption|Unicode|UninstallButtonText|UninstallCaption|UninstallIcon|UninstallSubCaption|UninstallText|UninstPage|UnRegDLL|Var|VIAddVersionKey|VIFileVersion|VIProductVersion|WindowIcon|WriteINIStr|WriteRegBin|WriteRegDWORD|WriteRegExpandStr|WriteRegMultiStr|WriteRegNone|WriteRegStr|WriteUninstaller|XPStyle)\b/, token: "keyword"},
++    {regex: /^\s*(?:Abort|AddBrandingImage|AddSize|AllowRootDirInstall|AllowSkipFiles|AutoCloseWindow|BGFont|BGGradient|BrandingText|BringToFront|Call|CallInstDLL|Caption|ChangeUI|CheckBitmap|ClearErrors|CompletedText|ComponentText|CopyFiles|CRCCheck|CreateDirectory|CreateFont|CreateShortCut|Delete|DeleteINISec|DeleteINIStr|DeleteRegKey|DeleteRegValue|DetailPrint|DetailsButtonText|DirText|DirVar|DirVerify|EnableWindow|EnumRegKey|EnumRegValue|Exch|Exec|ExecShell|ExecShellWait|ExecWait|ExpandEnvStrings|File|FileBufSize|FileClose|FileErrorText|FileOpen|FileRead|FileReadByte|FileReadUTF16LE|FileReadWord|FileWriteUTF16LE|FileSeek|FileWrite|FileWriteByte|FileWriteWord|FindClose|FindFirst|FindNext|FindWindow|FlushINI|GetCurInstType|GetCurrentAddress|GetDlgItem|GetDLLVersion|GetDLLVersionLocal|GetErrorLevel|GetFileTime|GetFileTimeLocal|GetFullPathName|GetFunctionAddress|GetInstDirError|GetKnownFolderPath|GetLabelAddress|GetTempFileName|GetWinVer|Goto|HideWindow|Icon|IfAbort|IfErrors|IfFileExists|IfRebootFlag|IfRtlLanguage|IfShellVarContextAll|IfSilent|InitPluginsDir|InstallButtonText|InstallColors|InstallDir|InstallDirRegKey|InstProgressFlags|InstType|InstTypeGetText|InstTypeSetText|Int64Cmp|Int64CmpU|Int64Fmt|IntCmp|IntCmpU|IntFmt|IntOp|IntPtrCmp|IntPtrCmpU|IntPtrOp|IsWindow|LangString|LicenseBkColor|LicenseData|LicenseForceSelection|LicenseLangString|LicenseText|LoadAndSetImage|LoadLanguageFile|LockWindow|LogSet|LogText|ManifestDPIAware|ManifestLongPathAware|ManifestMaxVersionTested|ManifestSupportedOS|MessageBox|MiscButtonText|Name|Nop|OutFile|Page|PageCallbacks|PEAddResource|PEDllCharacteristics|PERemoveResource|PESubsysVer|Pop|Push|Quit|ReadEnvStr|ReadINIStr|ReadRegDWORD|ReadRegStr|Reboot|RegDLL|Rename|RequestExecutionLevel|ReserveFile|Return|RMDir|SearchPath|SectionGetFlags|SectionGetInstTypes|SectionGetSize|SectionGetText|SectionIn|SectionSetFlags|SectionSetInstTypes|SectionSetSize|SectionSetText|SendMessage|SetAutoClose|SetBrandingImage|SetCompress|SetCompressor|SetCompressorDictSize|SetCtlColors|SetCurInstType|SetDatablockOptimize|SetDateSave|SetDetailsPrint|SetDetailsView|SetErrorLevel|SetErrors|SetFileAttributes|SetFont|SetOutPath|SetOverwrite|SetRebootFlag|SetRegView|SetShellVarContext|SetSilent|ShowInstDetails|ShowUninstDetails|ShowWindow|SilentInstall|SilentUnInstall|Sleep|SpaceTexts|StrCmp|StrCmpS|StrCpy|StrLen|SubCaption|Unicode|UninstallButtonText|UninstallCaption|UninstallIcon|UninstallSubCaption|UninstallText|UninstPage|UnRegDLL|Var|VIAddVersionKey|VIFileVersion|VIProductVersion|WindowIcon|WriteINIStr|WriteRegBin|WriteRegDWORD|WriteRegExpandStr|WriteRegMultiStr|WriteRegNone|WriteRegStr|WriteUninstaller|XPStyle)\b/, token: "keyword"},
+     {regex: /^\s*(?:Function|PageEx|Section(?:Group)?)\b/, token: "keyword", indent: true},
+     {regex: /^\s*(?:(Function|PageEx|Section(?:Group)?)End)\b/, token: "keyword", dedent: true},
+ 
+@@ -71,13 +71,13 @@ CodeMirror.defineSimpleMode("nsis",{
+     {regex: /[-+\/*=<>!]+/, token: "operator"},
+ 
+     // Variable
+-    {regex: /\$\w+/, token: "variable"},
++    {regex: /\$\w[\w\.]*/, token: "variable"},
+ 
+     // Constant
+-    {regex: /\${[\w\.:-]+}/, token: "variable-2"},
++    {regex: /\${[\!\w\.:-]+}/, token: "variable-2"},
+ 
+     // Language String
+-    {regex: /\$\([\w\.:-]+\)/, token: "variable-3"}
++    {regex: /\$\([\!\w\.:-]+\)/, token: "variable-3"}
+   ],
+   comment: [
+     {regex: /.*?\*\//, token: "comment", next: "start"},
+diff --git a/mode/php/php.js b/mode/php/php.js
+index b2cae960..127b4a23 100644
+--- a/mode/php/php.js
++++ b/mode/php/php.js
+@@ -80,11 +80,11 @@
+   }
+ 
+   var phpKeywords = "abstract and array as break case catch class clone const continue declare default " +
+-    "do else elseif enddeclare endfor endforeach endif endswitch endwhile extends final " +
++    "do else elseif enddeclare endfor endforeach endif endswitch endwhile enum extends final " +
+     "for foreach function global goto if implements interface instanceof namespace " +
+     "new or private protected public static switch throw trait try use var while xor " +
+     "die echo empty exit eval include include_once isset list require require_once return " +
+-    "print unset __halt_compiler self static parent yield insteadof finally";
++    "print unset __halt_compiler self static parent yield insteadof finally readonly match";
+   var phpAtoms = "true false null TRUE FALSE NULL __CLASS__ __DIR__ __FILE__ __LINE__ __METHOD__ __FUNCTION__ __NAMESPACE__ __TRAIT__";
+   var phpBuiltin = "func_num_args func_get_arg func_get_args strlen strcmp strncmp strcasecmp strncasecmp each error_reporting define defined trigger_error user_error set_error_handler restore_error_handler get_declared_classes get_loaded_extensions extension_loaded get_extension_funcs debug_backtrace constant bin2hex hex2bin sleep usleep time mktime gmmktime strftime gmstrftime strtotime date gmdate getdate localtime checkdate flush wordwrap htmlspecialchars htmlentities html_entity_decode md5 md5_file crc32 getimagesize image_type_to_mime_type phpinfo phpversion phpcredits strnatcmp strnatcasecmp substr_count strspn strcspn strtok strtoupper strtolower strpos strrpos strrev hebrev hebrevc nl2br basename dirname pathinfo stripslashes stripcslashes strstr stristr strrchr str_shuffle str_word_count strcoll substr substr_replace quotemeta ucfirst ucwords strtr addslashes addcslashes rtrim str_replace str_repeat count_chars chunk_split trim ltrim strip_tags similar_text explode implode setlocale localeconv parse_str str_pad chop strchr sprintf printf vprintf vsprintf sscanf fscanf parse_url urlencode urldecode rawurlencode rawurldecode readlink linkinfo link unlink exec system escapeshellcmd escapeshellarg passthru shell_exec proc_open proc_close rand srand getrandmax mt_rand mt_srand mt_getrandmax base64_decode base64_encode abs ceil floor round is_finite is_nan is_infinite bindec hexdec octdec decbin decoct dechex base_convert number_format fmod ip2long long2ip getenv putenv getopt microtime gettimeofday getrusage uniqid quoted_printable_decode set_time_limit get_cfg_var magic_quotes_runtime set_magic_quotes_runtime get_magic_quotes_gpc get_magic_quotes_runtime import_request_variables error_log serialize unserialize memory_get_usage memory_get_peak_usage var_dump var_export debug_zval_dump print_r highlight_file show_source highlight_string ini_get ini_get_all ini_set ini_alter ini_restore get_include_path set_include_path restore_include_path setcookie header headers_sent connection_aborted connection_status ignore_user_abort parse_ini_file is_uploaded_file move_uploaded_file intval floatval doubleval strval gettype settype is_null is_resource is_bool is_long is_float is_int is_integer is_double is_real is_numeric is_string is_array is_object is_scalar ereg ereg_replace eregi eregi_replace split spliti join sql_regcase dl pclose popen readfile rewind rmdir umask fclose feof fgetc fgets fgetss fread fopen fpassthru ftruncate fstat fseek ftell fflush fwrite fputs mkdir rename copy tempnam tmpfile file file_get_contents file_put_contents stream_select stream_context_create stream_context_set_params stream_context_set_option stream_context_get_options stream_filter_prepend stream_filter_append fgetcsv flock get_meta_tags stream_set_write_buffer set_file_buffer set_socket_blocking stream_set_blocking socket_set_blocking stream_get_meta_data stream_register_wrapper stream_wrapper_register stream_set_timeout socket_set_timeout socket_get_status realpath fnmatch fsockopen pfsockopen pack unpack get_browser crypt opendir closedir chdir getcwd rewinddir readdir dir glob fileatime filectime filegroup fileinode filemtime fileowner fileperms filesize filetype file_exists is_writable is_writeable is_readable is_executable is_file is_dir is_link stat lstat chown touch clearstatcache mail ob_start ob_flush ob_clean ob_end_flush ob_end_clean ob_get_flush ob_get_clean ob_get_length ob_get_level ob_get_status ob_get_contents ob_implicit_flush ob_list_handlers ksort krsort natsort natcasesort asort arsort sort rsort usort uasort uksort shuffle array_walk count end prev next reset current key min max in_array array_search extract compact array_fill range array_multisort array_push array_pop array_shift array_unshift array_splice array_slice array_merge array_merge_recursive array_keys array_values array_count_values array_reverse array_reduce array_pad array_flip array_change_key_case array_rand array_unique array_intersect array_intersect_assoc array_diff array_diff_assoc array_sum array_filter array_map array_chunk array_key_exists array_intersect_key array_combine array_column pos sizeof key_exists assert assert_options version_compare ftok str_rot13 aggregate session_name session_module_name session_save_path session_id session_regenerate_id session_decode session_register session_unregister session_is_registered session_encode session_start session_destroy session_unset session_set_save_handler session_cache_limiter session_cache_expire session_set_cookie_params session_get_cookie_params session_write_close preg_match preg_match_all preg_replace preg_replace_callback preg_split preg_quote preg_grep overload ctype_alnum ctype_alpha ctype_cntrl ctype_digit ctype_lower ctype_graph ctype_print ctype_punct ctype_space ctype_upper ctype_xdigit virtual apache_request_headers apache_note apache_lookup_uri apache_child_terminate apache_setenv apache_response_headers apache_get_version getallheaders mysql_connect mysql_pconnect mysql_close mysql_select_db mysql_create_db mysql_drop_db mysql_query mysql_unbuffered_query mysql_db_query mysql_list_dbs mysql_list_tables mysql_list_fields mysql_list_processes mysql_error mysql_errno mysql_affected_rows mysql_insert_id mysql_result mysql_num_rows mysql_num_fields mysql_fetch_row mysql_fetch_array mysql_fetch_assoc mysql_fetch_object mysql_data_seek mysql_fetch_lengths mysql_fetch_field mysql_field_seek mysql_free_result mysql_field_name mysql_field_table mysql_field_len mysql_field_type mysql_field_flags mysql_escape_string mysql_real_escape_string mysql_stat mysql_thread_id mysql_client_encoding mysql_get_client_info mysql_get_host_info mysql_get_proto_info mysql_get_server_info mysql_info mysql mysql_fieldname mysql_fieldtable mysql_fieldlen mysql_fieldtype mysql_fieldflags mysql_selectdb mysql_createdb mysql_dropdb mysql_freeresult mysql_numfields mysql_numrows mysql_listdbs mysql_listtables mysql_listfields mysql_db_name mysql_dbname mysql_tablename mysql_table_name pg_connect pg_pconnect pg_close pg_connection_status pg_connection_busy pg_connection_reset pg_host pg_dbname pg_port pg_tty pg_options pg_ping pg_query pg_send_query pg_cancel_query pg_fetch_result pg_fetch_row pg_fetch_assoc pg_fetch_array pg_fetch_object pg_fetch_all pg_affected_rows pg_get_result pg_result_seek pg_result_status pg_free_result pg_last_oid pg_num_rows pg_num_fields pg_field_name pg_field_num pg_field_size pg_field_type pg_field_prtlen pg_field_is_null pg_get_notify pg_get_pid pg_result_error pg_last_error pg_last_notice pg_put_line pg_end_copy pg_copy_to pg_copy_from pg_trace pg_untrace pg_lo_create pg_lo_unlink pg_lo_open pg_lo_close pg_lo_read pg_lo_write pg_lo_read_all pg_lo_import pg_lo_export pg_lo_seek pg_lo_tell pg_escape_string pg_escape_bytea pg_unescape_bytea pg_client_encoding pg_set_client_encoding pg_meta_data pg_convert pg_insert pg_update pg_delete pg_select pg_exec pg_getlastoid pg_cmdtuples pg_errormessage pg_numrows pg_numfields pg_fieldname pg_fieldsize pg_fieldtype pg_fieldnum pg_fieldprtlen pg_fieldisnull pg_freeresult pg_result pg_loreadall pg_locreate pg_lounlink pg_loopen pg_loclose pg_loread pg_lowrite pg_loimport pg_loexport http_response_code get_declared_traits getimagesizefromstring socket_import_stream stream_set_chunk_size trait_exists header_register_callback class_uses session_status session_register_shutdown echo print global static exit array empty eval isset unset die include require include_once require_once json_decode json_encode json_last_error json_last_error_msg curl_close curl_copy_handle curl_errno curl_error curl_escape curl_exec curl_file_create curl_getinfo curl_init curl_multi_add_handle curl_multi_close curl_multi_exec curl_multi_getcontent curl_multi_info_read curl_multi_init curl_multi_remove_handle curl_multi_select curl_multi_setopt curl_multi_strerror curl_pause curl_reset curl_setopt_array curl_setopt curl_share_close curl_share_init curl_share_setopt curl_strerror curl_unescape curl_version mysqli_affected_rows mysqli_autocommit mysqli_change_user mysqli_character_set_name mysqli_close mysqli_commit mysqli_connect_errno mysqli_connect_error mysqli_connect mysqli_data_seek mysqli_debug mysqli_dump_debug_info mysqli_errno mysqli_error_list mysqli_error mysqli_fetch_all mysqli_fetch_array mysqli_fetch_assoc mysqli_fetch_field_direct mysqli_fetch_field mysqli_fetch_fields mysqli_fetch_lengths mysqli_fetch_object mysqli_fetch_row mysqli_field_count mysqli_field_seek mysqli_field_tell mysqli_free_result mysqli_get_charset mysqli_get_client_info mysqli_get_client_stats mysqli_get_client_version mysqli_get_connection_stats mysqli_get_host_info mysqli_get_proto_info mysqli_get_server_info mysqli_get_server_version mysqli_info mysqli_init mysqli_insert_id mysqli_kill mysqli_more_results mysqli_multi_query mysqli_next_result mysqli_num_fields mysqli_num_rows mysqli_options mysqli_ping mysqli_prepare mysqli_query mysqli_real_connect mysqli_real_escape_string mysqli_real_query mysqli_reap_async_query mysqli_refresh mysqli_rollback mysqli_select_db mysqli_set_charset mysqli_set_local_infile_default mysqli_set_local_infile_handler mysqli_sqlstate mysqli_ssl_set mysqli_stat mysqli_stmt_init mysqli_store_result mysqli_thread_id mysqli_thread_safe mysqli_use_result mysqli_warning_count";
+   CodeMirror.registerHelper("hintWords", "php", [phpKeywords, phpAtoms, phpBuiltin].join(" ").split(" "));
+@@ -95,7 +95,7 @@
+     helperType: "php",
+     keywords: keywords(phpKeywords),
+     blockKeywords: keywords("catch do else elseif for foreach if switch try while finally"),
+-    defKeywords: keywords("class function interface namespace trait"),
++    defKeywords: keywords("class enum function interface namespace trait"),
+     atoms: keywords(phpAtoms),
+     builtin: keywords(phpBuiltin),
+     multiLineStrings: true,
+diff --git a/mode/python/python.js b/mode/python/python.js
+index a11c43f0..9e532ea1 100644
+--- a/mode/python/python.js
++++ b/mode/python/python.js
+@@ -62,7 +62,7 @@
+       var identifiers = parserConf.identifiers|| /^[_A-Za-z\u00A1-\uFFFF][_A-Za-z0-9\u00A1-\uFFFF]*/;
+       myKeywords = myKeywords.concat(["nonlocal", "False", "True", "None", "async", "await"]);
+       myBuiltins = myBuiltins.concat(["ascii", "bytes", "exec", "print"]);
+-      var stringPrefixes = new RegExp("^(([rbuf]|(br)|(fr))?('{3}|\"{3}|['\"]))", "i");
++      var stringPrefixes = new RegExp("^(([rbuf]|(br)|(rb)|(fr)|(rf))?('{3}|\"{3}|['\"]))", "i");
+     } else {
+       var identifiers = parserConf.identifiers|| /^[_A-Za-z][_A-Za-z0-9]*/;
+       myKeywords = myKeywords.concat(["exec", "print"]);
+diff --git a/mode/scheme/scheme.js b/mode/scheme/scheme.js
+index 370250d8..39627e28 100644
+--- a/mode/scheme/scheme.js
++++ b/mode/scheme/scheme.js
+@@ -3,6 +3,7 @@
+ 
+ /**
+  * Author: Koh Zi Han, based on implementation by Koh Zi Chun
++ * Improved by: Jakub T. Jankiewicz
+  */
+ 
+ (function(mod) {
+@@ -17,7 +18,7 @@
+ 
+ CodeMirror.defineMode("scheme", function () {
+     var BUILTIN = "builtin", COMMENT = "comment", STRING = "string",
+-        ATOM = "atom", NUMBER = "number", BRACKET = "bracket";
++        SYMBOL = "symbol", ATOM = "atom", NUMBER = "number", BRACKET = "bracket";
+     var INDENT_WORD_SKIP = 2;
+ 
+     function makeKeywords(str) {
+@@ -67,6 +68,18 @@ CodeMirror.defineMode("scheme", function () {
+         return stream.match(hexMatcher);
+     }
+ 
++    function processEscapedSequence(stream, options) {
++        var next, escaped = false;
++        while ((next = stream.next()) != null) {
++            if (next == options.token && !escaped) {
++
++                options.state.mode = false;
++                break;
++            }
++            escaped = !escaped && next == "\\";
++        }
++    }
++
+     return {
+         startState: function () {
+             return {
+@@ -92,17 +105,19 @@ CodeMirror.defineMode("scheme", function () {
+ 
+             switch(state.mode){
+                 case "string": // multi-line string parsing mode
+-                    var next, escaped = false;
+-                    while ((next = stream.next()) != null) {
+-                        if (next == "\"" && !escaped) {
+-
+-                            state.mode = false;
+-                            break;
+-                        }
+-                        escaped = !escaped && next == "\\";
+-                    }
++                    processEscapedSequence(stream, {
++                        token: "\"",
++                        state: state
++                    });
+                     returnType = STRING; // continue on in scheme-string mode
+                     break;
++                case "symbol": // escape symbol
++                    processEscapedSequence(stream, {
++                        token: "|",
++                        state: state
++                    });
++                    returnType = SYMBOL; // continue on in scheme-symbol mode
++                    break;
+                 case "comment": // comment parsing mode
+                     var next, maybeEnd = false;
+                     while ((next = stream.next()) != null) {
+@@ -143,6 +158,9 @@ CodeMirror.defineMode("scheme", function () {
+                             stream.eatWhile(/[\w_\-!$%&*+\.\/:<=>?@\^~]/);
+                             returnType = ATOM;
+                         }
++                    } else if (ch == '|') {
++                        state.mode = "symbol";
++                        returnType = SYMBOL;
+                     } else if (ch == '#') {
+                         if (stream.eat("|")) {                    // Multi-line comment
+                             state.mode = "comment"; // toggle to comment mode
+diff --git a/mode/soy/soy.js b/mode/soy/soy.js
+index 614c3f23..debe7268 100644
+--- a/mode/soy/soy.js
++++ b/mode/soy/soy.js
+@@ -25,7 +25,7 @@
+     "@state": paramData,
+     "template": { soyState: "templ-def", variableScope: true},
+     "extern": {soyState: "param-def"},
+-    "export": {soyState: "param-def"},
++    "export": {soyState: "export"},
+     "literal": { },
+     "msg": {},
+     "fallbackmsg": { noEndTag: true, reduceIndent: true},
+@@ -33,6 +33,8 @@
+     "plural": {},
+     "let": { soyState: "var-def" },
+     "if": {},
++    "javaimpl": {},
++    "jsimpl": {},
+     "elseif": { noEndTag: true, reduceIndent: true},
+     "else": { noEndTag: true, reduceIndent: true},
+     "switch": {},
+@@ -49,6 +51,7 @@
+     "log": {},
+     "element": { variableScope: true },
+     "velog": {},
++    "const": { soyState: "const-def"},
+   };
+ 
+   var indentingTags = Object.keys(tags).filter(function(tag) {
+@@ -137,10 +140,10 @@
+         state.context = new Context(state.context, "list-literal", state.variables);
+         state.lookupVariables = false;
+         return null;
+-      } else if (stream.match(/map\b/)) {
++      } else if (stream.match(/\bmap(?=\()/)) {
+         state.soyState.push("map-literal");
+         return "keyword";
+-      } else if (stream.match(/record\b/)) {
++      } else if (stream.match(/\brecord(?=\()/)) {
+         state.soyState.push("record-literal");
+         return "keyword";
+       } else if (stream.match(/([\w]+)(?=\()/)) {
+@@ -285,9 +288,6 @@
+               return "type";
+             }
+             if (match = stream.match(/^\w+/)) {
+-              if (match[0] == 'extern') {
+-                return 'keyword';
+-              }
+               state.variables = prepend(state.variables, match[0]);
+               state.soyState.pop();
+               state.soyState.push("param-type");
+@@ -454,11 +454,11 @@
+               state.indent -= 2 * config.indentUnit;
+               return null;
+             }
+-            if (stream.match(/\w+(?=\s+as)/)) {
++            if (stream.match(/\w+(?=\s+as\b)/)) {
+               return "variable";
+             }
+             if (match = stream.match(/\w+/)) {
+-              return /(from|as)/.test(match[0]) ? "keyword" : "def";
++              return /\b(from|as)\b/.test(match[0]) ? "keyword" : "def";
+             }
+             if (match = stream.match(/^["']/)) {
+               state.soyState.push("string");
+@@ -528,6 +528,27 @@
+               return this.token(stream, state);
+             }
+             return tokenUntil(stream, state, /\{\/literal}/);
++          case "export":
++            if (match = stream.match(/\w+/)) {
++              state.soyState.pop();
++              if (match == "const") {
++                state.soyState.push("const-def")
++                return "keyword";
++              } else if (match == "extern") {
++                state.soyState.push("param-def")
++                return "keyword";
++              }
++            } else {
++              stream.next();
++            }
++            return null;
++          case "const-def":
++            if (stream.match(/^\w+/)) {
++              state.soyState.pop();
++              return "def";
++            }
++            stream.next();
++            return null;
+         }
+ 
+         if (stream.match('{literal}')) {
+@@ -584,7 +605,7 @@
+           state.indent += 2 * config.indentUnit;
+           state.soyState.push("tag");
+           return "keyword";
+-        } else if (!state.context && stream.match(/\bimport\b/)) {
++        } else if (!state.context && stream.sol() && stream.match(/import\b/)) {
+           state.soyState.push("import");
+           state.indent += 2 * config.indentUnit;
+           return "keyword";
+diff --git a/mode/soy/test.js b/mode/soy/test.js
+index 6f47a5eb..44e7c4c2 100644
+--- a/mode/soy/test.js
++++ b/mode/soy/test.js
+@@ -315,4 +315,8 @@
+   MT('extern', '[keyword {extern] [def renderer]: ([def s]:[type string])=>[type string][keyword }] [keyword {/extern}]');
+ 
+   MT('export extern', '[keyword {export] [keyword extern] [def renderer]: ([def s]:[type string])=>[type string][keyword }] [keyword {/extern}]');
++
++  MT('const',
++    '[keyword {const] [def FOO] = [atom 5] [keyword /}]',
++    '[keyword {export] [keyword const] [def FOO] = [atom 5] [keyword /}]');
+ })();
+diff --git a/mode/sql/sql.js b/mode/sql/sql.js
+index ead4d6db..cd8b757b 100644
+--- a/mode/sql/sql.js
++++ b/mode/sql/sql.js
+@@ -122,9 +122,9 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
+       if (dateSQL.hasOwnProperty(word) && (stream.match(/^( )+'[^']*'/) || stream.match(/^( )+"[^"]*"/)))
+         return "number";
+       if (atoms.hasOwnProperty(word)) return "atom";
+-      if (builtin.hasOwnProperty(word)) return "builtin";
++      if (builtin.hasOwnProperty(word)) return "type";
+       if (keywords.hasOwnProperty(word)) return "keyword";
+-      if (client.hasOwnProperty(word)) return "string-2";
++      if (client.hasOwnProperty(word)) return "builtin";
+       return null;
+     }
+   }
+@@ -332,7 +332,7 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
+   CodeMirror.defineMIME("text/x-mariadb", {
+     name: "sql",
+     client: set("charset clear connect edit ego exit go help nopager notee nowarning pager print prompt quit rehash source status system tee"),
+-    keywords: set(sqlKeywords + "accessible action add after algorithm all always analyze asensitive at authors auto_increment autocommit avg avg_row_length before binary binlog both btree cache call cascade cascaded case catalog_name chain change changed character check checkpoint checksum class_origin client_statistics close coalesce code collate collation collations column columns comment commit committed completion concurrent condition connection consistent constraint contains continue contributors convert cross current current_date current_time current_timestamp current_user cursor data database databases day_hour day_microsecond day_minute day_second deallocate dec declare default delay_key_write delayed delimiter des_key_file describe deterministic dev_pop dev_samp deviance diagnostics directory disable discard distinctrow div dual dumpfile each elseif enable enclosed end ends engine engines enum errors escape escaped even event events every execute exists exit explain extended fast fetch field fields first flush for force foreign found_rows full fulltext function general generated get global grant grants group groupby_concat handler hard hash help high_priority hosts hour_microsecond hour_minute hour_second if ignore ignore_server_ids import index index_statistics infile inner innodb inout insensitive insert_method install interval invoker isolation iterate key keys kill language last leading leave left level limit linear lines list load local localtime localtimestamp lock logs low_priority master master_heartbeat_period master_ssl_verify_server_cert masters match max max_rows maxvalue message_text middleint migrate min min_rows minute_microsecond minute_second mod mode modifies modify mutex mysql_errno natural next no no_write_to_binlog offline offset one online open optimize option optionally out outer outfile pack_keys parser partition partitions password persistent phase plugin plugins prepare preserve prev primary privileges procedure processlist profile profiles purge query quick range read read_write reads real rebuild recover references regexp relaylog release remove rename reorganize repair repeatable replace require resignal restrict resume return returns revoke right rlike rollback rollup row row_format rtree savepoint schedule schema schema_name schemas second_microsecond security sensitive separator serializable server session share show shutdown signal slave slow smallint snapshot soft soname spatial specific sql sql_big_result sql_buffer_result sql_cache sql_calc_found_rows sql_no_cache sql_small_result sqlexception sqlstate sqlwarning ssl start starting starts status std stddev stddev_pop stddev_samp storage straight_join subclass_origin sum suspend table_name table_statistics tables tablespace temporary terminated to trailing transaction trigger triggers truncate uncommitted undo uninstall unique unlock upgrade usage use use_frm user user_resources user_statistics using utc_date utc_time utc_timestamp value variables varying view views virtual warnings when while with work write xa xor year_month zerofill begin do then else loop repeat"),
++    keywords: set(sqlKeywords + "accessible action add after algorithm all always analyze asensitive at authors auto_increment autocommit avg avg_row_length before binary binlog both btree cache call cascade cascaded case catalog_name chain change changed character check checkpoint checksum class_origin client_statistics close coalesce code collate collation collations column columns comment commit committed completion concurrent condition connection consistent constraint contains continue contributors convert cross current current_date current_time current_timestamp current_user cursor data database databases day_hour day_microsecond day_minute day_second deallocate dec declare default delay_key_write delayed delimiter des_key_file describe deterministic dev_pop dev_samp deviance diagnostics directory disable discard distinctrow div dual dumpfile each elseif enable enclosed end ends engine engines enum errors escape escaped even event events every execute exists exit explain extended fast fetch field fields first flush for force foreign found_rows full fulltext function general generated get global grant grants group group_concat handler hard hash help high_priority hosts hour_microsecond hour_minute hour_second if ignore ignore_server_ids import index index_statistics infile inner innodb inout insensitive insert_method install interval invoker isolation iterate key keys kill language last leading leave left level limit linear lines list load local localtime localtimestamp lock logs low_priority master master_heartbeat_period master_ssl_verify_server_cert masters match max max_rows maxvalue message_text middleint migrate min min_rows minute_microsecond minute_second mod mode modifies modify mutex mysql_errno natural next no no_write_to_binlog offline offset one online open optimize option optionally out outer outfile pack_keys parser partition partitions password persistent phase plugin plugins prepare preserve prev primary privileges procedure processlist profile profiles purge query quick range read read_write reads real rebuild recover references regexp relaylog release remove rename reorganize repair repeatable replace require resignal restrict resume return returns revoke right rlike rollback rollup row row_format rtree savepoint schedule schema schema_name schemas second_microsecond security sensitive separator serializable server session share show shutdown signal slave slow smallint snapshot soft soname spatial specific sql sql_big_result sql_buffer_result sql_cache sql_calc_found_rows sql_no_cache sql_small_result sqlexception sqlstate sqlwarning ssl start starting starts status std stddev stddev_pop stddev_samp storage straight_join subclass_origin sum suspend table_name table_statistics tables tablespace temporary terminated to trailing transaction trigger triggers truncate uncommitted undo uninstall unique unlock upgrade usage use use_frm user user_resources user_statistics using utc_date utc_time utc_timestamp value variables varying view views virtual warnings when while with work write xa xor year_month zerofill begin do then else loop repeat"),
+     builtin: set("bool boolean bit blob decimal double float long longblob longtext medium mediumblob mediumint mediumtext time timestamp tinyblob tinyint tinytext text bigint int int1 int2 int3 int4 int8 integer float float4 float8 double char varbinary varchar varcharacter precision date datetime year unsigned signed numeric"),
+     atoms: set("false true null unknown"),
+     operatorChars: /^[*+\-%<>!=&|^]/,
+@@ -452,7 +452,7 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
+   CodeMirror.defineMIME("text/x-sparksql", {
+     name: "sql",
+     keywords: set("add after all alter analyze and anti archive array as asc at between bucket buckets by cache cascade case cast change clear cluster clustered codegen collection column columns comment commit compact compactions compute concatenate cost create cross cube current current_date current_timestamp database databases data dbproperties defined delete delimited deny desc describe dfs directories distinct distribute drop else end escaped except exchange exists explain export extended external false fields fileformat first following for format formatted from full function functions global grant group grouping having if ignore import in index indexes inner inpath inputformat insert intersect interval into is items join keys last lateral lazy left like limit lines list load local location lock locks logical macro map minus msck natural no not null nulls of on optimize option options or order out outer outputformat over overwrite partition partitioned partitions percent preceding principals purge range recordreader recordwriter recover reduce refresh regexp rename repair replace reset restrict revoke right rlike role roles rollback rollup row rows schema schemas select semi separated serde serdeproperties set sets show skewed sort sorted start statistics stored stratify struct table tables tablesample tblproperties temp temporary terminated then to touch transaction transactions transform true truncate unarchive unbounded uncache union unlock unset use using values view when where window with"),
+-    builtin: set("tinyint smallint int bigint boolean float double string binary timestamp decimal array map struct uniontype delimited serde sequencefile textfile rcfile inputformat outputformat"),
++    builtin: set("abs acos acosh add_months aggregate and any approx_count_distinct approx_percentile array array_contains array_distinct array_except array_intersect array_join array_max array_min array_position array_remove array_repeat array_sort array_union arrays_overlap arrays_zip ascii asin asinh assert_true atan atan2 atanh avg base64 between bigint bin binary bit_and bit_count bit_get bit_length bit_or bit_xor bool_and bool_or boolean bround btrim cardinality case cast cbrt ceil ceiling char char_length character_length chr coalesce collect_list collect_set concat concat_ws conv corr cos cosh cot count count_if count_min_sketch covar_pop covar_samp crc32 cume_dist current_catalog current_database current_date current_timestamp current_timezone current_user date date_add date_format date_from_unix_date date_part date_sub date_trunc datediff day dayofmonth dayofweek dayofyear decimal decode degrees delimited dense_rank div double e element_at elt encode every exists exp explode explode_outer expm1 extract factorial filter find_in_set first first_value flatten float floor forall format_number format_string from_csv from_json from_unixtime from_utc_timestamp get_json_object getbit greatest grouping grouping_id hash hex hour hypot if ifnull in initcap inline inline_outer input_file_block_length input_file_block_start input_file_name inputformat instr int isnan isnotnull isnull java_method json_array_length json_object_keys json_tuple kurtosis lag last last_day last_value lcase lead least left length levenshtein like ln locate log log10 log1p log2 lower lpad ltrim make_date make_dt_interval make_interval make_timestamp make_ym_interval map map_concat map_entries map_filter map_from_arrays map_from_entries map_keys map_values map_zip_with max max_by md5 mean min min_by minute mod monotonically_increasing_id month months_between named_struct nanvl negative next_day not now nth_value ntile nullif nvl nvl2 octet_length or outputformat overlay parse_url percent_rank percentile percentile_approx pi pmod posexplode posexplode_outer position positive pow power printf quarter radians raise_error rand randn random rank rcfile reflect regexp regexp_extract regexp_extract_all regexp_like regexp_replace repeat replace reverse right rint rlike round row_number rpad rtrim schema_of_csv schema_of_json second sentences sequence sequencefile serde session_window sha sha1 sha2 shiftleft shiftright shiftrightunsigned shuffle sign signum sin sinh size skewness slice smallint some sort_array soundex space spark_partition_id split sqrt stack std stddev stddev_pop stddev_samp str_to_map string struct substr substring substring_index sum tan tanh textfile timestamp timestamp_micros timestamp_millis timestamp_seconds tinyint to_csv to_date to_json to_timestamp to_unix_timestamp to_utc_timestamp transform transform_keys transform_values translate trim trunc try_add try_divide typeof ucase unbase64 unhex uniontype unix_date unix_micros unix_millis unix_seconds unix_timestamp upper uuid var_pop var_samp variance version weekday weekofyear when width_bucket window xpath xpath_boolean xpath_double xpath_float xpath_int xpath_long xpath_number xpath_short xpath_string xxhash64 year zip_with"),
+     atoms: set("false true null"),
+     operatorChars: /^[*\/+\-%<>!=~&|^]/,
+     dateSQL: set("date time timestamp"),
+diff --git a/mode/stylus/stylus.js b/mode/stylus/stylus.js
+index 5cddff03..978696bd 100644
+--- a/mode/stylus/stylus.js
++++ b/mode/stylus/stylus.js
+@@ -737,12 +737,12 @@
+   // Note, "url-prefix" should precede "url" in order to match correctly in documentTypesRegexp
+   var documentTypes_ = ["domain", "regexp", "url-prefix", "url"];
+   var mediaTypes_ = ["all","aural","braille","handheld","print","projection","screen","tty","tv","embossed"];
+-  var mediaFeatures_ = ["width","min-width","max-width","height","min-height","max-height","device-width","min-device-width","max-device-width","device-height","min-device-height","max-device-height","aspect-ratio","min-aspect-ratio","max-aspect-ratio","device-aspect-ratio","min-device-aspect-ratio","max-device-aspect-ratio","color","min-color","max-color","color-index","min-color-index","max-color-index","monochrome","min-monochrome","max-monochrome","resolution","min-resolution","max-resolution","scan","grid"];
++  var mediaFeatures_ = ["width","min-width","max-width","height","min-height","max-height","device-width","min-device-width","max-device-width","device-height","min-device-height","max-device-height","aspect-ratio","min-aspect-ratio","max-aspect-ratio","device-aspect-ratio","min-device-aspect-ratio","max-device-aspect-ratio","color","min-color","max-color","color-index","min-color-index","max-color-index","monochrome","min-monochrome","max-monochrome","resolution","min-resolution","max-resolution","scan","grid","dynamic-range","video-dynamic-range"];
+   var propertyKeywords_ = ["align-content","align-items","align-self","alignment-adjust","alignment-baseline","anchor-point","animation","animation-delay","animation-direction","animation-duration","animation-fill-mode","animation-iteration-count","animation-name","animation-play-state","animation-timing-function","appearance","azimuth","backface-visibility","background","background-attachment","background-clip","background-color","background-image","background-origin","background-position","background-repeat","background-size","baseline-shift","binding","bleed","bookmark-label","bookmark-level","bookmark-state","bookmark-target","border","border-bottom","border-bottom-color","border-bottom-left-radius","border-bottom-right-radius","border-bottom-style","border-bottom-width","border-collapse","border-color","border-image","border-image-outset","border-image-repeat","border-image-slice","border-image-source","border-image-width","border-left","border-left-color","border-left-style","border-left-width","border-radius","border-right","border-right-color","border-right-style","border-right-width","border-spacing","border-style","border-top","border-top-color","border-top-left-radius","border-top-right-radius","border-top-style","border-top-width","border-width","bottom","box-decoration-break","box-shadow","box-sizing","break-after","break-before","break-inside","caption-side","clear","clip","color","color-profile","column-count","column-fill","column-gap","column-rule","column-rule-color","column-rule-style","column-rule-width","column-span","column-width","columns","content","counter-increment","counter-reset","crop","cue","cue-after","cue-before","cursor","direction","display","dominant-baseline","drop-initial-after-adjust","drop-initial-after-align","drop-initial-before-adjust","drop-initial-before-align","drop-initial-size","drop-initial-value","elevation","empty-cells","fit","fit-position","flex","flex-basis","flex-direction","flex-flow","flex-grow","flex-shrink","flex-wrap","float","float-offset","flow-from","flow-into","font","font-feature-settings","font-family","font-kerning","font-language-override","font-size","font-size-adjust","font-stretch","font-style","font-synthesis","font-variant","font-variant-alternates","font-variant-caps","font-variant-east-asian","font-variant-ligatures","font-variant-numeric","font-variant-position","font-weight","grid","grid-area","grid-auto-columns","grid-auto-flow","grid-auto-position","grid-auto-rows","grid-column","grid-column-end","grid-column-start","grid-row","grid-row-end","grid-row-start","grid-template","grid-template-areas","grid-template-columns","grid-template-rows","hanging-punctuation","height","hyphens","icon","image-orientation","image-rendering","image-resolution","inline-box-align","justify-content","left","letter-spacing","line-break","line-height","line-stacking","line-stacking-ruby","line-stacking-shift","line-stacking-strategy","list-style","list-style-image","list-style-position","list-style-type","margin","margin-bottom","margin-left","margin-right","margin-top","marker-offset","marks","marquee-direction","marquee-loop","marquee-play-count","marquee-speed","marquee-style","max-height","max-width","min-height","min-width","move-to","nav-down","nav-index","nav-left","nav-right","nav-up","object-fit","object-position","opacity","order","orphans","outline","outline-color","outline-offset","outline-style","outline-width","overflow","overflow-style","overflow-wrap","overflow-x","overflow-y","padding","padding-bottom","padding-left","padding-right","padding-top","page","page-break-after","page-break-before","page-break-inside","page-policy","pause","pause-after","pause-before","perspective","perspective-origin","pitch","pitch-range","play-during","position","presentation-level","punctuation-trim","quotes","region-break-after","region-break-before","region-break-inside","region-fragment","rendering-intent","resize","rest","rest-after","rest-before","richness","right","rotation","rotation-point","ruby-align","ruby-overhang","ruby-position","ruby-span","shape-image-threshold","shape-inside","shape-margin","shape-outside","size","speak","speak-as","speak-header","speak-numeral","speak-punctuation","speech-rate","stress","string-set","tab-size","table-layout","target","target-name","target-new","target-position","text-align","text-align-last","text-decoration","text-decoration-color","text-decoration-line","text-decoration-skip","text-decoration-style","text-emphasis","text-emphasis-color","text-emphasis-position","text-emphasis-style","text-height","text-indent","text-justify","text-outline","text-overflow","text-shadow","text-size-adjust","text-space-collapse","text-transform","text-underline-position","text-wrap","top","transform","transform-origin","transform-style","transition","transition-delay","transition-duration","transition-property","transition-timing-function","unicode-bidi","vertical-align","visibility","voice-balance","voice-duration","voice-family","voice-pitch","voice-range","voice-rate","voice-stress","voice-volume","volume","white-space","widows","width","will-change","word-break","word-spacing","word-wrap","z-index","clip-path","clip-rule","mask","enable-background","filter","flood-color","flood-opacity","lighting-color","stop-color","stop-opacity","pointer-events","color-interpolation","color-interpolation-filters","color-rendering","fill","fill-opacity","fill-rule","image-rendering","marker","marker-end","marker-mid","marker-start","shape-rendering","stroke","stroke-dasharray","stroke-dashoffset","stroke-linecap","stroke-linejoin","stroke-miterlimit","stroke-opacity","stroke-width","text-rendering","baseline-shift","dominant-baseline","glyph-orientation-horizontal","glyph-orientation-vertical","text-anchor","writing-mode","font-smoothing","osx-font-smoothing"];
+   var nonStandardPropertyKeywords_ = ["scrollbar-arrow-color","scrollbar-base-color","scrollbar-dark-shadow-color","scrollbar-face-color","scrollbar-highlight-color","scrollbar-shadow-color","scrollbar-3d-light-color","scrollbar-track-color","shape-inside","searchfield-cancel-button","searchfield-decoration","searchfield-results-button","searchfield-results-decoration","zoom"];
+   var fontProperties_ = ["font-family","src","unicode-range","font-variant","font-feature-settings","font-stretch","font-weight","font-style"];
+   var colorKeywords_ = ["aliceblue","antiquewhite","aqua","aquamarine","azure","beige","bisque","black","blanchedalmond","blue","blueviolet","brown","burlywood","cadetblue","chartreuse","chocolate","coral","cornflowerblue","cornsilk","crimson","cyan","darkblue","darkcyan","darkgoldenrod","darkgray","darkgreen","darkkhaki","darkmagenta","darkolivegreen","darkorange","darkorchid","darkred","darksalmon","darkseagreen","darkslateblue","darkslategray","darkturquoise","darkviolet","deeppink","deepskyblue","dimgray","dodgerblue","firebrick","floralwhite","forestgreen","fuchsia","gainsboro","ghostwhite","gold","goldenrod","gray","grey","green","greenyellow","honeydew","hotpink","indianred","indigo","ivory","khaki","lavender","lavenderblush","lawngreen","lemonchiffon","lightblue","lightcoral","lightcyan","lightgoldenrodyellow","lightgray","lightgreen","lightpink","lightsalmon","lightseagreen","lightskyblue","lightslategray","lightsteelblue","lightyellow","lime","limegreen","linen","magenta","maroon","mediumaquamarine","mediumblue","mediumorchid","mediumpurple","mediumseagreen","mediumslateblue","mediumspringgreen","mediumturquoise","mediumvioletred","midnightblue","mintcream","mistyrose","moccasin","navajowhite","navy","oldlace","olive","olivedrab","orange","orangered","orchid","palegoldenrod","palegreen","paleturquoise","palevioletred","papayawhip","peachpuff","peru","pink","plum","powderblue","purple","rebeccapurple","red","rosybrown","royalblue","saddlebrown","salmon","sandybrown","seagreen","seashell","sienna","silver","skyblue","slateblue","slategray","snow","springgreen","steelblue","tan","teal","thistle","tomato","turquoise","violet","wheat","white","whitesmoke","yellow","yellowgreen"];
+-  var valueKeywords_ = ["above","absolute","activeborder","additive","activecaption","afar","after-white-space","ahead","alias","all","all-scroll","alphabetic","alternate","always","amharic","amharic-abegede","antialiased","appworkspace","arabic-indic","armenian","asterisks","attr","auto","avoid","avoid-column","avoid-page","avoid-region","background","backwards","baseline","below","bidi-override","binary","bengali","blink","block","block-axis","bold","bolder","border","border-box","both","bottom","break","break-all","break-word","bullets","button","button-bevel","buttonface","buttonhighlight","buttonshadow","buttontext","calc","cambodian","capitalize","caps-lock-indicator","caption","captiontext","caret","cell","center","checkbox","circle","cjk-decimal","cjk-earthly-branch","cjk-heavenly-stem","cjk-ideographic","clear","clip","close-quote","col-resize","collapse","column","compact","condensed","contain","content","contents","content-box","context-menu","continuous","copy","counter","counters","cover","crop","cross","crosshair","currentcolor","cursive","cyclic","dashed","decimal","decimal-leading-zero","default","default-button","destination-atop","destination-in","destination-out","destination-over","devanagari","disc","discard","disclosure-closed","disclosure-open","document","dot-dash","dot-dot-dash","dotted","double","down","e-resize","ease","ease-in","ease-in-out","ease-out","element","ellipse","ellipsis","embed","end","ethiopic","ethiopic-abegede","ethiopic-abegede-am-et","ethiopic-abegede-gez","ethiopic-abegede-ti-er","ethiopic-abegede-ti-et","ethiopic-halehame-aa-er","ethiopic-halehame-aa-et","ethiopic-halehame-am-et","ethiopic-halehame-gez","ethiopic-halehame-om-et","ethiopic-halehame-sid-et","ethiopic-halehame-so-et","ethiopic-halehame-ti-er","ethiopic-halehame-ti-et","ethiopic-halehame-tig","ethiopic-numeric","ew-resize","expanded","extends","extra-condensed","extra-expanded","fantasy","fast","fill","fixed","flat","flex","footnotes","forwards","from","geometricPrecision","georgian","graytext","groove","gujarati","gurmukhi","hand","hangul","hangul-consonant","hebrew","help","hidden","hide","higher","highlight","highlighttext","hiragana","hiragana-iroha","horizontal","hsl","hsla","icon","ignore","inactiveborder","inactivecaption","inactivecaptiontext","infinite","infobackground","infotext","inherit","initial","inline","inline-axis","inline-block","inline-flex","inline-table","inset","inside","intrinsic","invert","italic","japanese-formal","japanese-informal","justify","kannada","katakana","katakana-iroha","keep-all","khmer","korean-hangul-formal","korean-hanja-formal","korean-hanja-informal","landscape","lao","large","larger","left","level","lighter","line-through","linear","linear-gradient","lines","list-item","listbox","listitem","local","logical","loud","lower","lower-alpha","lower-armenian","lower-greek","lower-hexadecimal","lower-latin","lower-norwegian","lower-roman","lowercase","ltr","malayalam","match","matrix","matrix3d","media-controls-background","media-current-time-display","media-fullscreen-button","media-mute-button","media-play-button","media-return-to-realtime-button","media-rewind-button","media-seek-back-button","media-seek-forward-button","media-slider","media-sliderthumb","media-time-remaining-display","media-volume-slider","media-volume-slider-container","media-volume-sliderthumb","medium","menu","menulist","menulist-button","menulist-text","menulist-textfield","menutext","message-box","middle","min-intrinsic","mix","mongolian","monospace","move","multiple","myanmar","n-resize","narrower","ne-resize","nesw-resize","no-close-quote","no-drop","no-open-quote","no-repeat","none","normal","not-allowed","nowrap","ns-resize","numbers","numeric","nw-resize","nwse-resize","oblique","octal","open-quote","optimizeLegibility","optimizeSpeed","oriya","oromo","outset","outside","outside-shape","overlay","overline","padding","padding-box","painted","page","paused","persian","perspective","plus-darker","plus-lighter","pointer","polygon","portrait","pre","pre-line","pre-wrap","preserve-3d","progress","push-button","radial-gradient","radio","read-only","read-write","read-write-plaintext-only","rectangle","region","relative","repeat","repeating-linear-gradient","repeating-radial-gradient","repeat-x","repeat-y","reset","reverse","rgb","rgba","ridge","right","rotate","rotate3d","rotateX","rotateY","rotateZ","round","row-resize","rtl","run-in","running","s-resize","sans-serif","scale","scale3d","scaleX","scaleY","scaleZ","scroll","scrollbar","scroll-position","se-resize","searchfield","searchfield-cancel-button","searchfield-decoration","searchfield-results-button","searchfield-results-decoration","semi-condensed","semi-expanded","separate","serif","show","sidama","simp-chinese-formal","simp-chinese-informal","single","skew","skewX","skewY","skip-white-space","slide","slider-horizontal","slider-vertical","sliderthumb-horizontal","sliderthumb-vertical","slow","small","small-caps","small-caption","smaller","solid","somali","source-atop","source-in","source-out","source-over","space","spell-out","square","square-button","start","static","status-bar","stretch","stroke","sub","subpixel-antialiased","super","sw-resize","symbolic","symbols","table","table-caption","table-cell","table-column","table-column-group","table-footer-group","table-header-group","table-row","table-row-group","tamil","telugu","text","text-bottom","text-top","textarea","textfield","thai","thick","thin","threeddarkshadow","threedface","threedhighlight","threedlightshadow","threedshadow","tibetan","tigre","tigrinya-er","tigrinya-er-abegede","tigrinya-et","tigrinya-et-abegede","to","top","trad-chinese-formal","trad-chinese-informal","translate","translate3d","translateX","translateY","translateZ","transparent","ultra-condensed","ultra-expanded","underline","up","upper-alpha","upper-armenian","upper-greek","upper-hexadecimal","upper-latin","upper-norwegian","upper-roman","uppercase","urdu","url","var","vertical","vertical-text","visible","visibleFill","visiblePainted","visibleStroke","visual","w-resize","wait","wave","wider","window","windowframe","windowtext","words","x-large","x-small","xor","xx-large","xx-small","bicubic","optimizespeed","grayscale","row","row-reverse","wrap","wrap-reverse","column-reverse","flex-start","flex-end","space-between","space-around", "unset"];
++  var valueKeywords_ = ["above","absolute","activeborder","additive","activecaption","afar","after-white-space","ahead","alias","all","all-scroll","alphabetic","alternate","always","amharic","amharic-abegede","antialiased","appworkspace","arabic-indic","armenian","asterisks","attr","auto","avoid","avoid-column","avoid-page","avoid-region","background","backwards","baseline","below","bidi-override","binary","bengali","blink","block","block-axis","bold","bolder","border","border-box","both","bottom","break","break-all","break-word","bullets","button","button-bevel","buttonface","buttonhighlight","buttonshadow","buttontext","calc","cambodian","capitalize","caps-lock-indicator","caption","captiontext","caret","cell","center","checkbox","circle","cjk-decimal","cjk-earthly-branch","cjk-heavenly-stem","cjk-ideographic","clear","clip","close-quote","col-resize","collapse","column","compact","condensed","conic-gradient","contain","content","contents","content-box","context-menu","continuous","copy","counter","counters","cover","crop","cross","crosshair","currentcolor","cursive","cyclic","dashed","decimal","decimal-leading-zero","default","default-button","destination-atop","destination-in","destination-out","destination-over","devanagari","disc","discard","disclosure-closed","disclosure-open","document","dot-dash","dot-dot-dash","dotted","double","down","e-resize","ease","ease-in","ease-in-out","ease-out","element","ellipse","ellipsis","embed","end","ethiopic","ethiopic-abegede","ethiopic-abegede-am-et","ethiopic-abegede-gez","ethiopic-abegede-ti-er","ethiopic-abegede-ti-et","ethiopic-halehame-aa-er","ethiopic-halehame-aa-et","ethiopic-halehame-am-et","ethiopic-halehame-gez","ethiopic-halehame-om-et","ethiopic-halehame-sid-et","ethiopic-halehame-so-et","ethiopic-halehame-ti-er","ethiopic-halehame-ti-et","ethiopic-halehame-tig","ethiopic-numeric","ew-resize","expanded","extends","extra-condensed","extra-expanded","fantasy","fast","fill","fixed","flat","flex","footnotes","forwards","from","geometricPrecision","georgian","graytext","groove","gujarati","gurmukhi","hand","hangul","hangul-consonant","hebrew","help","hidden","hide","high","higher","highlight","highlighttext","hiragana","hiragana-iroha","horizontal","hsl","hsla","icon","ignore","inactiveborder","inactivecaption","inactivecaptiontext","infinite","infobackground","infotext","inherit","initial","inline","inline-axis","inline-block","inline-flex","inline-table","inset","inside","intrinsic","invert","italic","japanese-formal","japanese-informal","justify","kannada","katakana","katakana-iroha","keep-all","khmer","korean-hangul-formal","korean-hanja-formal","korean-hanja-informal","landscape","lao","large","larger","left","level","lighter","line-through","linear","linear-gradient","lines","list-item","listbox","listitem","local","logical","loud","lower","lower-alpha","lower-armenian","lower-greek","lower-hexadecimal","lower-latin","lower-norwegian","lower-roman","lowercase","ltr","malayalam","match","matrix","matrix3d","media-controls-background","media-current-time-display","media-fullscreen-button","media-mute-button","media-play-button","media-return-to-realtime-button","media-rewind-button","media-seek-back-button","media-seek-forward-button","media-slider","media-sliderthumb","media-time-remaining-display","media-volume-slider","media-volume-slider-container","media-volume-sliderthumb","medium","menu","menulist","menulist-button","menulist-text","menulist-textfield","menutext","message-box","middle","min-intrinsic","mix","mongolian","monospace","move","multiple","myanmar","n-resize","narrower","ne-resize","nesw-resize","no-close-quote","no-drop","no-open-quote","no-repeat","none","normal","not-allowed","nowrap","ns-resize","numbers","numeric","nw-resize","nwse-resize","oblique","octal","open-quote","optimizeLegibility","optimizeSpeed","oriya","oromo","outset","outside","outside-shape","overlay","overline","padding","padding-box","painted","page","paused","persian","perspective","plus-darker","plus-lighter","pointer","polygon","portrait","pre","pre-line","pre-wrap","preserve-3d","progress","push-button","radial-gradient","radio","read-only","read-write","read-write-plaintext-only","rectangle","region","relative","repeat","repeating-linear-gradient","repeating-radial-gradient","repeating-conic-gradient","repeat-x","repeat-y","reset","reverse","rgb","rgba","ridge","right","rotate","rotate3d","rotateX","rotateY","rotateZ","round","row-resize","rtl","run-in","running","s-resize","sans-serif","scale","scale3d","scaleX","scaleY","scaleZ","scroll","scrollbar","scroll-position","se-resize","searchfield","searchfield-cancel-button","searchfield-decoration","searchfield-results-button","searchfield-results-decoration","semi-condensed","semi-expanded","separate","serif","show","sidama","simp-chinese-formal","simp-chinese-informal","single","skew","skewX","skewY","skip-white-space","slide","slider-horizontal","slider-vertical","sliderthumb-horizontal","sliderthumb-vertical","slow","small","small-caps","small-caption","smaller","solid","somali","source-atop","source-in","source-out","source-over","space","spell-out","square","square-button","standard","start","static","status-bar","stretch","stroke","sub","subpixel-antialiased","super","sw-resize","symbolic","symbols","table","table-caption","table-cell","table-column","table-column-group","table-footer-group","table-header-group","table-row","table-row-group","tamil","telugu","text","text-bottom","text-top","textarea","textfield","thai","thick","thin","threeddarkshadow","threedface","threedhighlight","threedlightshadow","threedshadow","tibetan","tigre","tigrinya-er","tigrinya-er-abegede","tigrinya-et","tigrinya-et-abegede","to","top","trad-chinese-formal","trad-chinese-informal","translate","translate3d","translateX","translateY","translateZ","transparent","ultra-condensed","ultra-expanded","underline","up","upper-alpha","upper-armenian","upper-greek","upper-hexadecimal","upper-latin","upper-norwegian","upper-roman","uppercase","urdu","url","var","vertical","vertical-text","visible","visibleFill","visiblePainted","visibleStroke","visual","w-resize","wait","wave","wider","window","windowframe","windowtext","words","x-large","x-small","xor","xx-large","xx-small","bicubic","optimizespeed","grayscale","row","row-reverse","wrap","wrap-reverse","column-reverse","flex-start","flex-end","space-between","space-around", "unset"];
+ 
+   var wordOperatorKeywords_ = ["in","and","or","not","is not","is a","is","isnt","defined","if unless"],
+       blockKeywords_ = ["for","if","else","unless", "from", "to"],
+diff --git a/mode/xml/xml.js b/mode/xml/xml.js
+index 46806ac4..4e36106b 100644
+--- a/mode/xml/xml.js
++++ b/mode/xml/xml.js
+@@ -187,6 +187,10 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
+     };
+   }
+ 
++  function lower(tagName) {
++    return tagName && tagName.toLowerCase();
++  }
++
+   function Context(state, tagName, startOfLine) {
+     this.prev = state.context;
+     this.tagName = tagName || "";
+@@ -205,8 +209,8 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
+         return;
+       }
+       parentTagName = state.context.tagName;
+-      if (!config.contextGrabbers.hasOwnProperty(parentTagName) ||
+-          !config.contextGrabbers[parentTagName].hasOwnProperty(nextTagName)) {
++      if (!config.contextGrabbers.hasOwnProperty(lower(parentTagName)) ||
++          !config.contextGrabbers[lower(parentTagName)].hasOwnProperty(lower(nextTagName))) {
+         return;
+       }
+       popContext(state);
+@@ -240,7 +244,7 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
+     if (type == "word") {
+       var tagName = stream.current();
+       if (state.context && state.context.tagName != tagName &&
+-          config.implicitlyClosed.hasOwnProperty(state.context.tagName))
++          config.implicitlyClosed.hasOwnProperty(lower(state.context.tagName)))
+         popContext(state);
+       if ((state.context && state.context.tagName == tagName) || config.matchClosing === false) {
+         setStyle = "tag";
+@@ -279,7 +283,7 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
+       var tagName = state.tagName, tagStart = state.tagStart;
+       state.tagName = state.tagStart = null;
+       if (type == "selfcloseTag" ||
+-          config.autoSelfClosers.hasOwnProperty(tagName)) {
++          config.autoSelfClosers.hasOwnProperty(lower(tagName))) {
+         maybePopContext(state, tagName);
+       } else {
+         maybePopContext(state, tagName);
+@@ -359,7 +363,7 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
+           if (context.tagName == tagAfter[2]) {
+             context = context.prev;
+             break;
+-          } else if (config.implicitlyClosed.hasOwnProperty(context.tagName)) {
++          } else if (config.implicitlyClosed.hasOwnProperty(lower(context.tagName))) {
+             context = context.prev;
+           } else {
+             break;
+@@ -367,8 +371,8 @@ CodeMirror.defineMode("xml", function(editorConf, config_) {
+         }
+       } else if (tagAfter) { // Opening tag spotted
+         while (context) {
+-          var grabbers = config.contextGrabbers[context.tagName];
+-          if (grabbers && grabbers.hasOwnProperty(tagAfter[2]))
++          var grabbers = config.contextGrabbers[lower(context.tagName)];
++          if (grabbers && grabbers.hasOwnProperty(lower(tagAfter[2])))
+             context = context.prev;
+           else
+             break;
+diff --git a/mode/yaml-frontmatter/yaml-frontmatter.js b/mode/yaml-frontmatter/yaml-frontmatter.js
+index 88c845e2..5c6175e4 100644
+--- a/mode/yaml-frontmatter/yaml-frontmatter.js
++++ b/mode/yaml-frontmatter/yaml-frontmatter.js
+@@ -17,55 +17,55 @@
+     var yamlMode = CodeMirror.getMode(config, "yaml")
+     var innerMode = CodeMirror.getMode(config, parserConfig && parserConfig.base || "gfm")
+ 
+-    function curMode(state) {
+-      return state.state == BODY ? innerMode : yamlMode
++    function localMode(state) {
++      return state.state == FRONTMATTER ? {mode: yamlMode, state: state.yaml} : {mode: innerMode, state: state.inner}
+     }
+ 
+     return {
+       startState: function () {
+         return {
+           state: START,
+-          inner: CodeMirror.startState(yamlMode)
++          yaml: null,
++          inner: CodeMirror.startState(innerMode)
+         }
+       },
+       copyState: function (state) {
+         return {
+           state: state.state,
+-          inner: CodeMirror.copyState(curMode(state), state.inner)
++          yaml: state.yaml && CodeMirror.copyState(yamlMode, state.yaml),
++          inner: CodeMirror.copyState(innerMode, state.inner)
+         }
+       },
+       token: function (stream, state) {
+         if (state.state == START) {
+           if (stream.match('---', false)) {
+             state.state = FRONTMATTER
+-            return yamlMode.token(stream, state.inner)
++            state.yaml = CodeMirror.startState(yamlMode)
++            return yamlMode.token(stream, state.yaml)
+           } else {
+             state.state = BODY
+-            state.inner = CodeMirror.startState(innerMode)
+             return innerMode.token(stream, state.inner)
+           }
+         } else if (state.state == FRONTMATTER) {
+           var end = stream.sol() && stream.match(/(---|\.\.\.)/, false)
+-          var style = yamlMode.token(stream, state.inner)
++          var style = yamlMode.token(stream, state.yaml)
+           if (end) {
+             state.state = BODY
+-            state.inner = CodeMirror.startState(innerMode)
++            state.yaml = null
+           }
+           return style
+         } else {
+           return innerMode.token(stream, state.inner)
+         }
+       },
+-      innerMode: function (state) {
+-        return {mode: curMode(state), state: state.inner}
+-      },
++      innerMode: localMode,
+       indent: function(state, a, b) {
+-        var mode = curMode(state)
+-        return mode.indent ? mode.indent(state.inner, a, b) : CodeMirror.Pass
++        var m = localMode(state)
++        return m.mode.indent ? m.mode.indent(m.state, a, b) : CodeMirror.Pass
+       },
+       blankLine: function (state) {
+-        var mode = curMode(state)
+-        if (mode.blankLine) return mode.blankLine(state.inner)
++        var m = localMode(state)
++        if (m.mode.blankLine) return m.mode.blankLine(m.state)
+       }
+     }
+   })

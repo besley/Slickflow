@@ -1,0 +1,1 @@
+const express=require("express"),{createProxyMiddleware}=require("http-proxy-middleware"),app=express();app.use("/api",createProxyMiddleware({target:"http://localhost:5001",changeOrigin:!0,logLevel:"debug",pathRewrite:{"^/api":"http://localhost:5001/api"}})),app.listen(5e3);

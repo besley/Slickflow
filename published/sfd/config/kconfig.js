@@ -1,0 +1,1 @@
+const kconfig=function(){function o(){}return o.webApiUrl="http://yourwebsite.com/sfdapi/",o.webTestUrl="http://yourwebsite.com/sfw/",o}();export default kconfig;
