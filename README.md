@@ -10,7 +10,7 @@
 
 
 **A Quick Design and Testing Demo:**  
-![Large Order Demo](https://github.com/besley/besley.github.io/blob/master/Gif/slickflow-largeorder-andsplit-demo-en.gif)
+![And Split Demo](https://github.com/besley/besley.github.io/blob/master/Gif/slickflow-andsplit-demo.gif)
 
 **.NET/.NETCore Workflow Engine With Full Source Code** 
 1. **.NET, .NET CORE version both supported**  
