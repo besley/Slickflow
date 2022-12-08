@@ -1,0 +1,20 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = sfd
+build_property.RootNamespace = sfd
+build_property.ProjectDir = D:\Cloud365\GitHomeCore\SfBpmn\SfBpmn\sfd\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\Cloud365\GitHomeCore\SfBpmn\SfBpmn\sfd
+build_property._RazorSourceGeneratorDebug = 
+
+[D:/Cloud365/GitHomeCore/SfBpmn/SfBpmn/sfd/ClientApp/public/pages/model/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Q2xpZW50QXBwXHB1YmxpY1xwYWdlc1xtb2RlbFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 

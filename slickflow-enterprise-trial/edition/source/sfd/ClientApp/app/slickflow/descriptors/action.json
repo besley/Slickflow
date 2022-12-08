@@ -1,0 +1,45 @@
+﻿{
+  "action": [
+    {
+      "name": "Actions",
+      "superClass": [ "Element" ],
+      "properties": [
+        {
+          "name": "actions",
+          "isMany": true,
+          "type": "Action"
+        }
+      ]
+    },
+    {
+      "name": "Action",
+      "properties": [
+        {
+          "name": "fireType",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "methodType",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "subMethodType",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "argus",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "expression",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}

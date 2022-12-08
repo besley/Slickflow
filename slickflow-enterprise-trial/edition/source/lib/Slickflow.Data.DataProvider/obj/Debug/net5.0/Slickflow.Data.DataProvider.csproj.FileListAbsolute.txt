@@ -1,0 +1,17 @@
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\bin\Debug\net5.0\Slickflow.Data.DataProvider.deps.json
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\bin\Debug\net5.0\Slickflow.Data.DataProvider.dll
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\bin\Debug\net5.0\Slickflow.Data.DataProvider.pdb
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\bin\Debug\net5.0\Dapper.dll
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\bin\Debug\net5.0\Slickflow.Data.dll
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\bin\Debug\net5.0\Slickflow.Data.pdb
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\bin\Debug\net5.0\Dapper.pdb
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\obj\Debug\net5.0\Slickflow.Data.DataProvider.csproj.AssemblyReference.cache
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\obj\Debug\net5.0\Slickflow.Data.DataProvider.GeneratedMSBuildEditorConfig.editorconfig
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\obj\Debug\net5.0\Slickflow.Data.DataProvider.AssemblyInfoInputs.cache
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\obj\Debug\net5.0\Slickflow.Data.DataProvider.AssemblyInfo.cs
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\obj\Debug\net5.0\Slickflow.Data.DataProvider.csproj.CoreCompileInputs.cache
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\obj\Debug\net5.0\Slickflow.Data.DataProvider.csproj.CopyComplete
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\obj\Debug\net5.0\Slickflow.Data.DataProvider.dll
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\obj\Debug\net5.0\refint\Slickflow.Data.DataProvider.dll
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\obj\Debug\net5.0\Slickflow.Data.DataProvider.pdb
+D:\dell-tool\SlickflowCore-20211003-dell\Source\Slickflow.Data.DataProvider\obj\Debug\net5.0\ref\Slickflow.Data.DataProvider.dll

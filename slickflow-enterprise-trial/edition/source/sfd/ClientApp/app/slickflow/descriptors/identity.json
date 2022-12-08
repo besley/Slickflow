@@ -1,0 +1,25 @@
+{
+  "identity": {
+    "name": "Identity",
+    "extends": [
+      "bpmn:BaseElement"
+    ],
+    "properties": [
+      {
+        "name": "guid",
+        "isAttr": true,
+        "type": "String"
+      },
+      {
+        "name": "code",
+        "isAttr": true,
+        "type": "String"
+      },
+      {
+        "name": "url",
+        "isAttr": true,
+        "type": "String"
+      }
+    ]
+  }
+}

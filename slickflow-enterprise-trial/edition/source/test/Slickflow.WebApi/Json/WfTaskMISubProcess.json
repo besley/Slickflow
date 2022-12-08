@@ -1,0 +1,19 @@
+﻿ //会签流程测试 
+        //price.subprocess.multipleinstance.xml
+        //流程调用JSON格式说明：
+
+        //startup process:
+        //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
+
+        //run process app:
+        ////运行到会签节点
+        //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"fc8c71c5-8786-450e-af27-9f6a9de8560f":[{"UserID":10,"UserName":"Long"}, {"UserID":20,"UserName":"Meilinda"}]}}
+
+        //run process app:
+        //运行会签实例节点
+        //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"39c71004-d822-4c15-9ff2-94ca1068d745":[{"UserID":10,"UserName":"Long"}]}}
+        //运行串行的第二个任务
+        //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"20","UserName":"Meilinda","NextActivityPerformers":{"39c71004-d822-4c15-9ff2-94ca1068d745":[{"UserID":10,"UserName":"Long"}]}}
+
+        //结束节点(业务员->结束)
+        //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"b70e717a-08da-419f-b2eb-7a3d71f054de":[{"UserID":10,"UserName":"Long"}]}}

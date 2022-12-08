@@ -1,0 +1,30 @@
+{
+  "section": [
+    {
+      "name": "Sections",
+      "superClass": [ "Element" ],
+      "properties": [
+        {
+          "name": "sections",
+          "isMany": true,
+          "type": "Section"
+        }
+      ]
+    },
+    {
+      "name": "Section",
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "text",
+          "isBody": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}

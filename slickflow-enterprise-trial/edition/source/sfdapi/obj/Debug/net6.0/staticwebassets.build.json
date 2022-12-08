@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "ehB1MMa2EbyymQp8uBCNtYu6z4s1QRw2fu6GNoXyz2M=",
+  "Source": "sfdapi",
+  "BasePath": "_content/sfdapi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

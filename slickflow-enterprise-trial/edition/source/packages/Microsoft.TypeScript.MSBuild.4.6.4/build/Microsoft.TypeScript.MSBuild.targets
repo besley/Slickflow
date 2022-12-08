@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!--If the MSBuild is used on non-Windows OS (both Mac and Unix has the same $(OS) as Unix),
+        don't pass any toolExe so that VsTsc task will decide what to use between nodejs and node (priority is given to nodejs).
+        "nodejs" is what is called for the newer version of "node".
+        Also pass the tsc.js file to be run with nodejs. This Javascript file is installed by NuGet package -->
+    <TscToolExe Condition="'$(OS)' != 'Windows_NT'"></TscToolExe>
+    <TSJavaScriptFile Condition="'$(OS)' != 'Windows_NT'">$(MSBuildThisFileDirectory)../tools/tsc/tsc.js</TSJavaScriptFile>
+    <!-- Check the default folder for the nuget version of the installer first, if that exists we should use that. -->
+    <TscFolderPath Condition="'$(OS)' == 'Windows_NT'">$(MSBuildThisFileDirectory)..\tools\tsc</TscFolderPath>
+    <!-- MSBuildRuntimeType: The type of the runtime that is currently executing. Introduced in MSBuild 15. Value may be undefined (prior to MSBuild 15)
+          `Full` indicating that MSBuild is running on the desktop .NET Framework.
+          `Core` indicating that MSBuild is running on .NET Core.
+          `Mono` indicating that MSBuild is running on Mono.|Reserved| -->
+    <TypeScriptTaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netstandard1.3\TypeScript.Tasks.dll</TypeScriptTaskAssembly>
+    <TypeScriptTaskAssembly Condition="'$(TypeScriptTaskAssembly)' == ''">$(MSBuildThisFileDirectory)..\tools\net45\TypeScript.Tasks.dll</TypeScriptTaskAssembly>
+    <TSServerPath>$(MSBuildThisFileDirectory)..\tools\tsc\tsserver.js</TSServerPath>
+  </PropertyGroup>
+
+  <Import Project="..\tools\Microsoft.TypeScript.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.DotNetCore.targets"
+          Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.DotNetCore.targets')" />
+</Project>

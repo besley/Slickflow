@@ -1,0 +1,34 @@
+{
+  "gateway": {
+    "name": "GatewayDetail",
+    "superClass": [ "Element" ],
+    "extends": [
+      "bpmn:InclusiveGateway",
+      "bpmn:ExclusiveGateway",
+      "bpmn:ParallelGateway"
+    ],
+    "properties": [
+      {
+        "name": "extraSplitType",
+        "isMany": true,
+        "isAttr": true,
+        "type": "String"
+      },
+      {
+        "name": "extraJoinType",
+        "isMany": true,
+        "isAttr": true,
+        "type": "String"
+      },
+      {
+        "name": "joinPassType",
+        "isMany": true,
+        "isAttr": true,
+        "type": "String"
+      }
+    ]
+  }
+}
+
+
+

@@ -1,0 +1,10 @@
+{
+  "name": "Slickflow",
+  "prefix": "sf",
+  "uri": "http://www.slickflow.com/schema/sf",
+  "xml": {
+    "tagAlias": "lowerCase"
+  },
+  "types": [],
+  "associations": []
+}

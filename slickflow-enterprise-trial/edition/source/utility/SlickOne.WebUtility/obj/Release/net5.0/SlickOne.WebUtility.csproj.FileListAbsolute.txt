@@ -1,0 +1,12 @@
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\SlickOne.WebUtility\bin\Release\net5.0\SlickOne.WebUtility.deps.json
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\SlickOne.WebUtility\bin\Release\net5.0\SlickOne.WebUtility.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\SlickOne.WebUtility\bin\Release\net5.0\ref\SlickOne.WebUtility.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\SlickOne.WebUtility\bin\Release\net5.0\SlickOne.WebUtility.pdb
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\SlickOne.WebUtility\obj\Release\net5.0\SlickOne.WebUtility.GeneratedMSBuildEditorConfig.editorconfig
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\SlickOne.WebUtility\obj\Release\net5.0\SlickOne.WebUtility.AssemblyInfoInputs.cache
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\SlickOne.WebUtility\obj\Release\net5.0\SlickOne.WebUtility.AssemblyInfo.cs
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\SlickOne.WebUtility\obj\Release\net5.0\SlickOne.WebUtility.csproj.CoreCompileInputs.cache
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\SlickOne.WebUtility\obj\Release\net5.0\SlickOne.WebUtility.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\SlickOne.WebUtility\obj\Release\net5.0\ref\SlickOne.WebUtility.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\SlickOne.WebUtility\obj\Release\net5.0\SlickOne.WebUtility.pdb
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\SlickOne.WebUtility\obj\Release\net5.0\SlickOne.WebUtility.csproj.AssemblyReference.cache
