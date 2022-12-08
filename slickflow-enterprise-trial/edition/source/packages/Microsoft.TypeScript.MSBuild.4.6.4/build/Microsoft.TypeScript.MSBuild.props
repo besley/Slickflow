@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\tools\Microsoft.TypeScript.Default.props" />
+  <PropertyGroup>
+    <TypeScriptNuGetToolsVersion>4.6</TypeScriptNuGetToolsVersion>
+    <EnableTypeScriptNuGetTarget>true</EnableTypeScriptNuGetTarget>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Copied these properties from Microsoft.typescript.targets to workaround the bug in Azure publishing -->
+    <PublishPipelineCollectFilesCore>
+      $(PublishPipelineCollectFilesCore);
+      FindConfigFiles;
+      CompileTypeScript;
+      CompileTypeScriptWithTSConfig;
+    </PublishPipelineCollectFilesCore>
+  </PropertyGroup>
+
+  <!--The following properties and items help to exclude TS files from the None and Content Item groups added by the .Net Core SDK
+      and to put them in the correct TypeScriptCompile item group-->
+  <PropertyGroup>
+    <DefaultTypeScriptIncludePattern>**\*.ts;**\*.tsx</DefaultTypeScriptIncludePattern>
+    <EnableDefaultTypeScriptItems Condition=" '$(EnableDefaultTypeScriptItems)' == '' ">true</EnableDefaultTypeScriptItems>
+  </PropertyGroup>
+
+  <!-- Include the TS files in the DefaultItemExcludes property so that they are not considered as None/Content items-->
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(DefaultTypeScriptIncludePattern)</DefaultItemExcludes>
+  </PropertyGroup>
+  
+  <!--We need to add the TS files in the TypeScriptCompile item group.
+      MSBuild follows a multi-phase evaluation and the properties get evaluated before items. So at the time of evaluation of TypeScriptCompile item,
+      the DefaultItemExcludes property would also have the TS files since we added them earlier.
+      Hence we need to exclude the TS files from it again-->
+  <ItemGroup Condition="'$(EnableDefaultItems)' == 'true' AND '$(EnableDefaultTypeScriptItems)' == 'true'">
+    <TypeScriptCompile Include="$(DefaultTypeScriptIncludePattern)" Exclude="$(DefaultItemExcludes.Replace('$(DefaultTypeScriptIncludePattern)', ''));$(DefaultExcludesInProjectFolder)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TypeScriptNuGet" />
+  </ItemGroup>
+</Project>

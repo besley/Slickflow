@@ -1,0 +1,12 @@
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\bin\Release\net5.0\Slickflow.Module.deps.json
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\bin\Release\net5.0\Slickflow.Module.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\bin\Release\net5.0\ref\Slickflow.Module.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\bin\Release\net5.0\Slickflow.Module.pdb
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\obj\Release\net5.0\Slickflow.Module.GeneratedMSBuildEditorConfig.editorconfig
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\obj\Release\net5.0\Slickflow.Module.AssemblyInfoInputs.cache
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\obj\Release\net5.0\Slickflow.Module.AssemblyInfo.cs
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\obj\Release\net5.0\Slickflow.Module.csproj.CoreCompileInputs.cache
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\obj\Release\net5.0\Slickflow.Module.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\obj\Release\net5.0\ref\Slickflow.Module.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\obj\Release\net5.0\Slickflow.Module.pdb
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\obj\Release\net5.0\Slickflow.Module.csproj.AssemblyReference.cache

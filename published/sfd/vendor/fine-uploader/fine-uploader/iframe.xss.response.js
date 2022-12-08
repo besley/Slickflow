@@ -1,1 +1,0 @@
-!function(){"use strict";var e=/(\{.*\})/.exec(document.body.innerHTML);e&&parent.postMessage(e[1],"*")}();

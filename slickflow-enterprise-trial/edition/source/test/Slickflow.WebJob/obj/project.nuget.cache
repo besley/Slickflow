@@ -1,0 +1,86 @@
+{
+  "version": 2,
+  "dgSpecHash": "2Lc9rMLfrU/RlU4o5QWGLS8xSxDJeODlVXEo4fxgKVO9+YixTEIQs4W+oecjx5iWTgHjvLZJkpWmWFkhlzF9cg==",
+  "success": false,
+  "projectFilePath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\test\\Slickflow.WebJob\\Slickflow.WebJob.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\lg\\.nuget\\packages\\hangfire\\1.7.23\\hangfire.1.7.23.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\hangfire.aspnetcore\\1.7.23\\hangfire.aspnetcore.1.7.23.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\hangfire.core\\1.7.23\\hangfire.core.1.7.23.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\hangfire.sqlserver\\1.7.23\\hangfire.sqlserver.1.7.23.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\5.0.0\\microsoft.aspnetcore.authentication.jwtbearer.5.0.0.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\microsoft.aspnetcore.authentication.openidconnect\\5.0.0\\microsoft.aspnetcore.authentication.openidconnect.5.0.0.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\6.7.1\\microsoft.identitymodel.jsonwebtokens.6.7.1.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\microsoft.identitymodel.logging\\6.7.1\\microsoft.identitymodel.logging.6.7.1.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\microsoft.identitymodel.protocols\\6.7.1\\microsoft.identitymodel.protocols.6.7.1.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\6.7.1\\microsoft.identitymodel.protocols.openidconnect.6.7.1.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\microsoft.identitymodel.tokens\\6.7.1\\microsoft.identitymodel.tokens.6.7.1.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\microsoft.netcore.platforms\\2.0.0\\microsoft.netcore.platforms.2.0.0.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\microsoft.win32.registry\\4.4.0\\microsoft.win32.registry.4.4.0.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\newtonsoft.json\\11.0.1\\newtonsoft.json.11.0.1.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\runtime.win-x64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-x64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\runtime.win-x86.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-x86.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\swashbuckle.aspnetcore\\5.6.3\\swashbuckle.aspnetcore.5.6.3.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\5.6.3\\swashbuckle.aspnetcore.swagger.5.6.3.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\5.6.3\\swashbuckle.aspnetcore.swaggergen.5.6.3.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\5.6.3\\swashbuckle.aspnetcore.swaggerui.5.6.3.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\system.data.sqlclient\\4.4.0\\system.data.sqlclient.4.4.0.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\system.identitymodel.tokens.jwt\\6.7.1\\system.identitymodel.tokens.jwt.6.7.1.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\system.security.accesscontrol\\4.4.0\\system.security.accesscontrol.4.4.0.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\system.security.cryptography.cng\\4.5.0\\system.security.cryptography.cng.4.5.0.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\system.security.principal.windows\\4.4.0\\system.security.principal.windows.4.4.0.nupkg.sha512",
+    "C:\\Users\\lg\\.nuget\\packages\\system.text.encoding.codepages\\4.4.0\\system.text.encoding.codepages.4.4.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\test\\Slickflow.Data\\Slickflow.Data.csproj'. Check that the project reference is valid and that the project file exists.",
+      "libraryId": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\test\\Slickflow.Data\\Slickflow.Data.csproj",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\test\\Slickflow.Engine\\Slickflow.Engine.csproj'. Check that the project reference is valid and that the project file exists.",
+      "libraryId": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\test\\Slickflow.Engine\\Slickflow.Engine.csproj",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\test\\Slickflow.Graph\\Slickflow.Graph.csproj'. Check that the project reference is valid and that the project file exists.",
+      "libraryId": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\test\\Slickflow.Graph\\Slickflow.Graph.csproj",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\test\\Slickflow.JobScheduler\\Slickflow.JobScheduler.csproj'. Check that the project reference is valid and that the project file exists.",
+      "libraryId": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\test\\Slickflow.JobScheduler\\Slickflow.JobScheduler.csproj",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\test\\Slickflow.QueryService\\Slickflow.QueryService.csproj'. Check that the project reference is valid and that the project file exists.",
+      "libraryId": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\test\\Slickflow.QueryService\\Slickflow.QueryService.csproj",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "@microsoft/typescript-etw",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">= 8.9.0"
+  },
+  "os": [
+    "win32"
+  ],
+  "description": "ETW logging native Node.js module for the TypeScript project",
+  "main": "index.js",
+  "files": [
+    "binding.gyp",
+    "index.js",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/typescript-etw.git"
+  },
+  "keywords": [
+    "etw",
+    "napi",
+    "node"
+  ],
+  "author": "Microsoft",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microsoft/typescript-etw/issues"
+  },
+  "homepage": "https://github.com/microsoft/typescript-etw"
+}

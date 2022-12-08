@@ -1,0 +1,35 @@
+{
+  "transition": {
+    "name": "GroupBehaviours",
+    "superClass": [ "Element" ],
+    "extends": [
+      "bpmn:SequenceFlow"
+    ],
+    "properties": [
+      {
+        "name": "priority",
+        "isMany": true,
+        "isAttr": true,
+        "type": "String"
+      },
+      {
+        "name": "forcedMerge",
+        "isMany": true,
+        "isAttr": true,
+        "type": "String"
+      },
+      {
+        "name": "approval",
+        "isMany": true,
+        "isAttr": true,
+        "type": "String"
+      },
+      {
+        "name": "recieverType",
+        "isMany": true,
+        "isAttr": true,
+        "type": "String"
+      }
+    ]
+  }
+}

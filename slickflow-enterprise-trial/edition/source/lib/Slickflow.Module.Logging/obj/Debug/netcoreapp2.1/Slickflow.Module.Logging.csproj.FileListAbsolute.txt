@@ -1,0 +1,16 @@
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\bin\Debug\netcoreapp2.1\Slickflow.Module.Logging.deps.json
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\bin\Debug\netcoreapp2.1\Slickflow.Module.Logging.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\bin\Debug\netcoreapp2.1\Slickflow.Module.Logging.pdb
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\bin\Debug\netcoreapp2.1\Dapper.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\bin\Debug\netcoreapp2.1\Slickflow.Data.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\bin\Debug\netcoreapp2.1\Slickflow.Module.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\bin\Debug\netcoreapp2.1\Slickflow.Data.pdb
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\bin\Debug\netcoreapp2.1\Slickflow.Module.pdb
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\bin\Debug\netcoreapp2.1\Dapper.pdb
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\obj\Debug\netcoreapp2.1\Slickflow.Module.Logging.csprojAssemblyReference.cache
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\obj\Debug\netcoreapp2.1\Slickflow.Module.Logging.csproj.CoreCompileInputs.cache
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\obj\Debug\netcoreapp2.1\Slickflow.Module.Logging.AssemblyInfoInputs.cache
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\obj\Debug\netcoreapp2.1\Slickflow.Module.Logging.AssemblyInfo.cs
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\obj\Debug\netcoreapp2.1\Slickflow.Module.Logging.csproj.CopyComplete
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\obj\Debug\netcoreapp2.1\Slickflow.Module.Logging.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module.Logging\obj\Debug\netcoreapp2.1\Slickflow.Module.Logging.pdb

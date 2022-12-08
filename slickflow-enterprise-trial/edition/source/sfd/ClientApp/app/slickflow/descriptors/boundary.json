@@ -1,0 +1,30 @@
+{
+  "boundary": [
+    {
+      "name": "Boundaries",
+      "superClass": [ "Element" ],
+      "properties": [
+        {
+          "name": "boundaries",
+          "isMany": true,
+          "type": "Boundary"
+        }
+      ]
+    },
+    {
+      "name": "Boundary",
+      "properties": [
+        {
+          "name": "event",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "expression",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}

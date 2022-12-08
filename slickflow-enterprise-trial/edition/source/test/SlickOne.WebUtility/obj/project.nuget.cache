@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "l4EX/xlLD3C4+pXxdCzaSpdNFgp44IG4aiaOH7gM8pDR1nynheBarB3so1VeAB06WdiipCVGXKj3wVhxwiaDhw==",
+  "success": true,
+  "projectFilePath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\test\\SlickOne.WebUtility\\SlickOne.WebUtility.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\lg\\.nuget\\packages\\newtonsoft.json\\12.0.1\\newtonsoft.json.12.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

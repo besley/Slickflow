@@ -1,0 +1,873 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\sfdapi\\sfdapi.csproj": {}
+  },
+  "projects": {
+    "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Dapper\\Dapper.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Dapper\\Dapper.csproj",
+        "projectName": "Dapper",
+        "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Dapper\\Dapper.csproj",
+        "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Dapper\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.6.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Data.DataProvider\\Slickflow.Data.DataProvider.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Data.DataProvider\\Slickflow.Data.DataProvider.csproj",
+        "projectName": "Slickflow.Data.DataProvider",
+        "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Data.DataProvider\\Slickflow.Data.DataProvider.csproj",
+        "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Data.DataProvider\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj",
+        "projectName": "Slickflow.Data",
+        "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj",
+        "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Dapper\\Dapper.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Dapper\\Dapper.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Npgsql": {
+              "target": "Package",
+              "version": "[5.0.3, )"
+            },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.6.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj": {
+      "version": "1.7.8.1",
+      "restore": {
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj",
+        "projectName": "Slickflow.Engine",
+        "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj",
+        "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Engine\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Data.DataProvider\\Slickflow.Data.DataProvider.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Data.DataProvider\\Slickflow.Data.DataProvider.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Essential\\Slickflow.Module.Essential.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Essential\\Slickflow.Module.Essential.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Devart.Data.Oracle.EFCore": {
+              "target": "Package",
+              "version": "[9.6.675, )"
+            },
+            "IronPython": {
+              "target": "Package",
+              "version": "[2.7.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[2.2.1, )"
+            },
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[2.1.4, )"
+            },
+            "ServiceStack": {
+              "target": "Package",
+              "version": "[5.4.0, )"
+            },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            },
+            "System.Reflection.Emit": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Graph\\Slickflow.Graph.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Graph\\Slickflow.Graph.csproj",
+        "projectName": "Slickflow.Graph",
+        "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Graph\\Slickflow.Graph.csproj",
+        "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Graph\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.CodeAnalysis.CSharp.Scripting": {
+              "target": "Package",
+              "version": "[3.3.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Essential\\Slickflow.Module.Essential.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Essential\\Slickflow.Module.Essential.csproj",
+        "projectName": "Slickflow.Module.Essential",
+        "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Essential\\Slickflow.Module.Essential.csproj",
+        "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Essential\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Logging\\Slickflow.Module.Logging.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Logging\\Slickflow.Module.Logging.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[5.1.2, )"
+            },
+            "ServiceStack.Text": {
+              "target": "Package",
+              "version": "[5.4.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj",
+        "projectName": "Slickflow.Module.Localize",
+        "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj",
+        "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Localize\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Logging\\Slickflow.Module.Logging.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Logging\\Slickflow.Module.Logging.csproj",
+        "projectName": "Slickflow.Module.Logging",
+        "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Logging\\Slickflow.Module.Logging.csproj",
+        "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Logging\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj",
+        "projectName": "Slickflow.Module.Resource",
+        "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj",
+        "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Resource\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Devart.Data.Oracle.EFCore": {
+              "target": "Package",
+              "version": "[9.5.399, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[2.0.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[2.0.1, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[2.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj",
+        "projectName": "Slickflow.Module",
+        "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj",
+        "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Module\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\sfdapi\\sfdapi.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\sfdapi\\sfdapi.csproj",
+        "projectName": "sfdapi",
+        "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\sfdapi\\sfdapi.csproj",
+        "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\sfdapi\\obj\\publish\\win-x64\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Dapper\\Dapper.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Dapper\\Dapper.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Graph\\Slickflow.Graph.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Graph\\Slickflow.Graph.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Essential\\Slickflow.Module.Essential.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Essential\\Slickflow.Module.Essential.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Logging\\Slickflow.Module.Logging.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Logging\\Slickflow.Module.Logging.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\lib\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj"
+              },
+              "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore\\SfBpmn\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.OpenApi": {
+              "target": "Package",
+              "version": "[1.3.1, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

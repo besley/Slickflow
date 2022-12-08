@@ -1,0 +1,22 @@
+﻿ //加签流程测试
+    //price.task.multipleinstance.jiaqian.xml
+    //流程调用JSON格式说明
+
+    //startup process:
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"1019","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
+
+    //run process app:
+    ////运行到板房签字节点
+    //{"AppName":"SamplePrice","AppInstanceID":"1019","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"fc8c71c5-8786-450e-af27-9f6a9de8560f":[{"UserID":10,"UserName":"Long"}, {"UserID":20,"UserName":"Meilinda"}]}}
+
+    //signforward process
+    //需要动态增加要加签的人
+    //{"AppName":"SamplePrice","AppInstanceID":"1019","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","DynamicVariables":{"SignForwardType":"SignForwardBehind"}, "NextActivityPerformers":{"fc8c71c5-8786-450e-af27-9f6a9de8560f":[{"UserID":30,"UserName":"Alice"}]}}
+
+    //run process app:
+    //运行加签实例节点的第一个任务
+    //{"AppName":"SamplePrice","AppInstanceID":"1019","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"39c71004-d822-4c15-9ff2-94ca1068d745":[{"UserID":40,"UserName":"FangFang"}]}}
+    //运行串行加签的第二个任务
+    //{"AppName":"SamplePrice","AppInstanceID":"1019","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"30","UserName":"Alice","NextActivityPerformers":{"39c71004-d822-4c15-9ff2-94ca1068d745":[{"UserID":40,"UserName":"FangFang"}]}}
+
+    //加签之后的节点之后

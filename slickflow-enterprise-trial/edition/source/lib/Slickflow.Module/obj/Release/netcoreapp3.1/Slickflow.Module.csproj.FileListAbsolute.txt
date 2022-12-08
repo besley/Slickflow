@@ -1,0 +1,17 @@
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module\bin\Release\netcoreapp3.1\Slickflow.Module.deps.json
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module\bin\Release\netcoreapp3.1\Slickflow.Module.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module\bin\Release\netcoreapp3.1\Slickflow.Module.pdb
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module\obj\Release\netcoreapp3.1\Slickflow.Module.csprojAssemblyReference.cache
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module\obj\Release\netcoreapp3.1\Slickflow.Module.AssemblyInfoInputs.cache
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module\obj\Release\netcoreapp3.1\Slickflow.Module.AssemblyInfo.cs
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module\obj\Release\netcoreapp3.1\Slickflow.Module.csproj.CoreCompileInputs.cache
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module\obj\Release\netcoreapp3.1\Slickflow.Module.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Dapper\Slickflow\Source\Slickflow.Module\obj\Release\netcoreapp3.1\Slickflow.Module.pdb
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\bin\Release\netcoreapp3.1\Slickflow.Module.deps.json
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\bin\Release\netcoreapp3.1\Slickflow.Module.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\bin\Release\netcoreapp3.1\Slickflow.Module.pdb
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\obj\Release\netcoreapp3.1\Slickflow.Module.AssemblyInfoInputs.cache
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\obj\Release\netcoreapp3.1\Slickflow.Module.AssemblyInfo.cs
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\obj\Release\netcoreapp3.1\Slickflow.Module.csproj.CoreCompileInputs.cache
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\obj\Release\netcoreapp3.1\Slickflow.Module.dll
+D:\Cloud365\GitHomeCore\SlickflowCore\Source\Slickflow.Module\obj\Release\netcoreapp3.1\Slickflow.Module.pdb

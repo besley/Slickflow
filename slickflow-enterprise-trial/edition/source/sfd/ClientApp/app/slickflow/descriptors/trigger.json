@@ -1,0 +1,27 @@
+{
+  "trigger": {
+    "name": "TriggerDetail",
+    "superClass": [ "Element" ],
+    "extends": [
+      "bpmn:StartEvent",
+      "bpmn:IntermediateCatchEvent"
+    ],
+    "properties": [
+      {
+        "name": "trigger",
+        "isMany": true,
+        "isAttr": true,
+        "type": "String"
+      },
+      {
+        "name": "expression",
+        "isMany": true,
+        "isAttr": true,
+        "type": "String"
+      }
+    ]
+  }
+}
+
+
+

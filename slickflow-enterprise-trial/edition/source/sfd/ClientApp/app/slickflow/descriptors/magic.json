@@ -1,0 +1,31 @@
+{
+  "name": "Magic",
+  "prefix": "magic",
+  "uri": "http://magic",
+  "xml": {
+    "tagAlias": "lowerCase"
+  },
+  "associations": [],
+  "types": [
+    {
+      "name": "BewitchedStartEvent",
+      "extends": [
+        "bpmn:StartEvent",
+        "bpmn:EndEvent",
+        "bpmn:Task"
+      ],
+      "properties": [
+        {
+          "name": "pen",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "spell",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}
