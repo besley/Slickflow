@@ -131,13 +131,17 @@
 **QQ(Author): 47743901**
 
 **Quick Start Tutorial:**  
-1) setting webapi in kcofnig.js
+1). In the command console, using the command **npm install** to download the node package.
 
-kconfig.webApiUrl = "http://localhost/sfdapi/"           //your sfd webapi url
+   please notice to run the command, the directory location is in the **ClientApp** path.
 
-2) run this command in sfd project"
+2). Set up the **sfdapi** project which is an asp.net webapi type project.(IIS is a choice)
+3). Setting webapi variable in the **kcofnig.js** file
 
-npm run dev
+    kconfig.webApiUrl = "http://localhost/sfdapic/" //your sfd webapi backend service url
+
+4). In the command console, using the command **npm run dev** to the the project
+5). Access the web project in the browser by **http://localhost:5000**
 
 **Wiki Page:**  
 https://github.com/besley/Slickflow/wiki  
