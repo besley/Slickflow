@@ -12,10 +12,10 @@
 **A Quick Design and Testing Demo:**  
 ![And Split Demo](https://github.com/besley/besley.github.io/blob/master/Gif/slickflow-andsplit-demo.gif)
 
-**Quick Start Tutorial:**  
+**Quick Start Tutorial for Designer Project:**  
 1). In the command console, using the command **npm install** to download the node package.
 
-   please notice to run the command, the directory location is in the **ClientApp** path.
+   please notice to run the command, the directory location is in the **ClientApp** path of the **sfd** project.
 
 2). Set up the **sfdapi** project which is an asp.net webapi type project.(IIS is a choice)
 
@@ -27,7 +27,7 @@
 
 5). Access the web project in the browser by 
 
-    **http://localhost:5000**
+    ** http://localhost:5000 **
 
 **.NET/.NETCore Workflow Engine With Full Source Code** 
 1. **.NET, .NET CORE version both supported**  
