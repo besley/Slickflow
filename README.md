@@ -147,6 +147,8 @@
 **Email: sales@ruochisoft.com**  
 **QQ(Author): 47743901**
 
+**Document:**  
+http://doc.slickflow.net  
 **Wiki Page:**  
 https://github.com/besley/Slickflow/wiki  
 **CodeProject Articles:**  
@@ -163,8 +165,6 @@ http://demo.slickflow.com/sfd/
 https://github.com/besley/Slickflow/wiki/Slickflow-Quick-Start-Tutorial  
 **Modeler Demo:**  
 http://demo.slickflow.com/sfd/model  
-**Document:**  
-http://www.slickflow.com/wiki/index  
 **Quasar Form Builder**  
 The online dynamic form demo:http://demo.slickflow.com/sqd/   
 The SlickQua project:http://github.com/besley/slickqua/   
@@ -434,6 +434,6 @@ http://www.slickflow.com
 **DEMO:**  
 http://www.slickflow.com/demo/index  
 **文档:**  
-http://www.slickflow.com/wiki/index  
+http://doc.slickflow.com
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](william.ligong@yahoo.com)
