@@ -1,0 +1,12 @@
+D:\GitHub\Slickflow\community\source\lib\Dapper\bin\Debug\net6.0\Dapper.deps.json
+D:\GitHub\Slickflow\community\source\lib\Dapper\bin\Debug\net6.0\Dapper.dll
+D:\GitHub\Slickflow\community\source\lib\Dapper\bin\Debug\net6.0\Dapper.pdb
+D:\GitHub\Slickflow\community\source\lib\Dapper\obj\Debug\net6.0\Dapper.csproj.AssemblyReference.cache
+D:\GitHub\Slickflow\community\source\lib\Dapper\obj\Debug\net6.0\Dapper.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\Slickflow\community\source\lib\Dapper\obj\Debug\net6.0\Dapper.AssemblyInfoInputs.cache
+D:\GitHub\Slickflow\community\source\lib\Dapper\obj\Debug\net6.0\Dapper.AssemblyInfo.cs
+D:\GitHub\Slickflow\community\source\lib\Dapper\obj\Debug\net6.0\Dapper.csproj.CoreCompileInputs.cache
+D:\GitHub\Slickflow\community\source\lib\Dapper\obj\Debug\net6.0\Dapper.dll
+D:\GitHub\Slickflow\community\source\lib\Dapper\obj\Debug\net6.0\refint\Dapper.dll
+D:\GitHub\Slickflow\community\source\lib\Dapper\obj\Debug\net6.0\Dapper.pdb
+D:\GitHub\Slickflow\community\source\lib\Dapper\obj\Debug\net6.0\ref\Dapper.dll

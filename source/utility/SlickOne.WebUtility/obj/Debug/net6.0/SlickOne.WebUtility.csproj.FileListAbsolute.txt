@@ -1,0 +1,12 @@
+D:\GitHub\Slickflow\community\source\utility\SlickOne.WebUtility\bin\Debug\net6.0\SlickOne.WebUtility.deps.json
+D:\GitHub\Slickflow\community\source\utility\SlickOne.WebUtility\bin\Debug\net6.0\SlickOne.WebUtility.dll
+D:\GitHub\Slickflow\community\source\utility\SlickOne.WebUtility\bin\Debug\net6.0\SlickOne.WebUtility.pdb
+D:\GitHub\Slickflow\community\source\utility\SlickOne.WebUtility\obj\Debug\net6.0\SlickOne.WebUtility.csproj.AssemblyReference.cache
+D:\GitHub\Slickflow\community\source\utility\SlickOne.WebUtility\obj\Debug\net6.0\SlickOne.WebUtility.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\Slickflow\community\source\utility\SlickOne.WebUtility\obj\Debug\net6.0\SlickOne.WebUtility.AssemblyInfoInputs.cache
+D:\GitHub\Slickflow\community\source\utility\SlickOne.WebUtility\obj\Debug\net6.0\SlickOne.WebUtility.AssemblyInfo.cs
+D:\GitHub\Slickflow\community\source\utility\SlickOne.WebUtility\obj\Debug\net6.0\SlickOne.WebUtility.csproj.CoreCompileInputs.cache
+D:\GitHub\Slickflow\community\source\utility\SlickOne.WebUtility\obj\Debug\net6.0\SlickOne.WebUtility.dll
+D:\GitHub\Slickflow\community\source\utility\SlickOne.WebUtility\obj\Debug\net6.0\refint\SlickOne.WebUtility.dll
+D:\GitHub\Slickflow\community\source\utility\SlickOne.WebUtility\obj\Debug\net6.0\SlickOne.WebUtility.pdb
+D:\GitHub\Slickflow\community\source\utility\SlickOne.WebUtility\obj\Debug\net6.0\ref\SlickOne.WebUtility.dll

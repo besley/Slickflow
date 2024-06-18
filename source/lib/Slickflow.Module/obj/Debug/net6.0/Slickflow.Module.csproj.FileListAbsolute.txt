@@ -1,0 +1,17 @@
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\bin\Debug\net6.0\Slickflow.Module.deps.json
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\bin\Debug\net6.0\Slickflow.Module.dll
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\bin\Debug\net6.0\Slickflow.Module.pdb
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\bin\Debug\net6.0\Dapper.dll
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\bin\Debug\net6.0\Slickflow.Data.dll
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\bin\Debug\net6.0\Slickflow.Data.pdb
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\bin\Debug\net6.0\Dapper.pdb
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\obj\Debug\net6.0\Slickflow.Module.csproj.AssemblyReference.cache
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\obj\Debug\net6.0\Slickflow.Module.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\obj\Debug\net6.0\Slickflow.Module.AssemblyInfoInputs.cache
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\obj\Debug\net6.0\Slickflow.Module.AssemblyInfo.cs
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\obj\Debug\net6.0\Slickflow.Module.csproj.CoreCompileInputs.cache
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\obj\Debug\net6.0\Slickflow.Module.csproj.CopyComplete
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\obj\Debug\net6.0\Slickflow.Module.dll
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\obj\Debug\net6.0\refint\Slickflow.Module.dll
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\obj\Debug\net6.0\Slickflow.Module.pdb
+D:\GitHub\Slickflow\community\source\Lib\Slickflow.Module\obj\Debug\net6.0\ref\Slickflow.Module.dll

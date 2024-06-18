@@ -1,0 +1,17 @@
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\bin\Debug\net6.0\Slickflow.Data.DataProvider.deps.json
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\bin\Debug\net6.0\Slickflow.Data.DataProvider.dll
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\bin\Debug\net6.0\Slickflow.Data.DataProvider.pdb
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\bin\Debug\net6.0\Dapper.dll
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\bin\Debug\net6.0\Slickflow.Data.dll
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\bin\Debug\net6.0\Slickflow.Data.pdb
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\bin\Debug\net6.0\Dapper.pdb
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\obj\Debug\net6.0\Slickflow.Data.DataProvider.csproj.AssemblyReference.cache
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\obj\Debug\net6.0\Slickflow.Data.DataProvider.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\obj\Debug\net6.0\Slickflow.Data.DataProvider.AssemblyInfoInputs.cache
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\obj\Debug\net6.0\Slickflow.Data.DataProvider.AssemblyInfo.cs
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\obj\Debug\net6.0\Slickflow.Data.DataProvider.csproj.CoreCompileInputs.cache
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\obj\Debug\net6.0\Slickflow.Data.DataProvider.csproj.CopyComplete
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\obj\Debug\net6.0\Slickflow.Data.DataProvider.dll
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\obj\Debug\net6.0\refint\Slickflow.Data.DataProvider.dll
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\obj\Debug\net6.0\Slickflow.Data.DataProvider.pdb
+D:\GitHub\Slickflow\community\source\lib\Slickflow.Data.DataProvider\obj\Debug\net6.0\ref\Slickflow.Data.DataProvider.dll
