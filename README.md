@@ -179,32 +179,27 @@ The SlickQua project:http://github.com/besley/slickqua/
 3. 重写ProcessModelBPMN，适应BPMN2模型;
 4. 全部项目.NET6版本实现；
 5. 技术开发文档网站发布
-	http://doc.slickflow.com (中文)
-	http://doc.slickflow.net(English)
+	http://doc.slickflow.com (中文) 
+	http://doc.slickflow.net(English) 
 	
-6. ServiceTask节点类型实现;
-7. 引擎增加三种类型的中间事件(Intermediate)处理节点定时、消息和条件；
-8. 重新调整HangFire作业功能，检测流程实例活动实例的JobTimer数据；
-9. 简化并合并语言本地化项目，只保留Engine, Desiger和Web三种项目类型；
-10.完成动态表单设计器Quasar版，并发版；
 
 引擎功能各个版本描述见产品页面：
 
-http://www.slickflow.com/product/index
+http://www.slickflow.com/product/index 
 
 
 **EMail: sales@ruochisoft.com**  
 **QQ(Author): 47743901**
 
 **Slickflow 网站:**  
-http://www.slickflow.com  (中文)
-http://www.slickflow.net (English)
+http://www.slickflow.com  (中文) 
+http://www.slickflow.net (English) 
 
 **DEMO:**  
 http://www.slickflow.com/demo/index  
 
 **文档:**  
-http://doc.slickflow.com (中文)
-http://doc.slickflow.net(English)
+http://doc.slickflow.com (中文) 
+http://doc.slickflow.net(English) 
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](william.ligong@yahoo.com)
