@@ -1069,7 +1069,7 @@
           "bin/placeholder/Slickflow.Data.DataProvider.dll": {}
         }
       },
-      "Slickflow.Engine/2.0.0": {
+      "Slickflow.Engine/2.2.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
@@ -3147,7 +3147,7 @@
       "path": "../../lib/Slickflow.Data.DataProvider/Slickflow.Data.DataProvider.csproj",
       "msbuildProject": "../../lib/Slickflow.Data.DataProvider/Slickflow.Data.DataProvider.csproj"
     },
-    "Slickflow.Engine/2.0.0": {
+    "Slickflow.Engine/2.2.0": {
       "type": "project",
       "path": "../../Lib/Slickflow.Engine/Slickflow.Engine.csproj",
       "msbuildProject": "../../Lib/Slickflow.Engine/Slickflow.Engine.csproj"
@@ -3190,7 +3190,7 @@
       "Microsoft.Extensions.Caching.Memory >= 3.1.0",
       "SlickOne.WebUtility >= 1.0.0",
       "Slickflow.Data >= 1.0.0",
-      "Slickflow.Engine >= 2.0.0",
+      "Slickflow.Engine >= 2.2.0",
       "Swashbuckle.AspNetCore >= 5.6.3"
     ]
   },
