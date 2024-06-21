@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "aXRLpyn6gexZVJ1b/x73JO6iZVoJOeZv3p6tqn9qFy24fyy/Y8nt7+0yNNyMwZL1XBw/cALCnvDV8KdqpKqNPw==",
+  "dgSpecHash": "GxahIZaz19Q=",
   "success": true,
-  "projectFilePath": "D:\\GitHub\\Slickflow\\community\\source\\utility\\VueCliMiddleware\\VueCliMiddleware.csproj",
+  "projectFilePath": "D:\\GitHub\\Slickflow\\source\\utility\\VueCliMiddleware\\VueCliMiddleware.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lg\\.nuget\\packages\\microsoft.aspnetcore.nodeservices\\3.1.0\\microsoft.aspnetcore.nodeservices.3.1.0.nupkg.sha512",
     "C:\\Users\\lg\\.nuget\\packages\\microsoft.aspnetcore.spaservices\\3.1.0\\microsoft.aspnetcore.spaservices.3.1.0.nupkg.sha512",

@@ -1,0 +1,13 @@
+D:\GitHub\Slickflow\source\lib\Slickflow.Module.Localize\bin\Debug\net8.0\Slickflow.Module.Localize.deps.json
+D:\GitHub\Slickflow\source\lib\Slickflow.Module.Localize\bin\Debug\net8.0\Slickflow.Module.Localize.dll
+D:\GitHub\Slickflow\source\lib\Slickflow.Module.Localize\bin\Debug\net8.0\Slickflow.Module.Localize.pdb
+D:\GitHub\Slickflow\source\lib\Slickflow.Module.Localize\obj\Debug\net8.0\Slickflow.Module.Localize.csproj.AssemblyReference.cache
+D:\GitHub\Slickflow\source\lib\Slickflow.Module.Localize\obj\Debug\net8.0\Slickflow.Module.Localize.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\Slickflow\source\lib\Slickflow.Module.Localize\obj\Debug\net8.0\Slickflow.Module.Localize.AssemblyInfoInputs.cache
+D:\GitHub\Slickflow\source\lib\Slickflow.Module.Localize\obj\Debug\net8.0\Slickflow.Module.Localize.AssemblyInfo.cs
+D:\GitHub\Slickflow\source\lib\Slickflow.Module.Localize\obj\Debug\net8.0\Slickflow.Module.Localize.csproj.CoreCompileInputs.cache
+D:\GitHub\Slickflow\source\lib\Slickflow.Module.Localize\obj\Debug\net8.0\Slickflow.Module.Localize.sourcelink.json
+D:\GitHub\Slickflow\source\lib\Slickflow.Module.Localize\obj\Debug\net8.0\Slickflow.Module.Localize.dll
+D:\GitHub\Slickflow\source\lib\Slickflow.Module.Localize\obj\Debug\net8.0\refint\Slickflow.Module.Localize.dll
+D:\GitHub\Slickflow\source\lib\Slickflow.Module.Localize\obj\Debug\net8.0\Slickflow.Module.Localize.pdb
+D:\GitHub\Slickflow\source\lib\Slickflow.Module.Localize\obj\Debug\net8.0\ref\Slickflow.Module.Localize.dll

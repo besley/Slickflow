@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GitHub\\Slickflow\\community\\source\\utility\\VueCliMiddleware\\VueCliMiddleware.csproj": {}
+    "D:\\GitHub\\Slickflow\\source\\utility\\VueCliMiddleware\\VueCliMiddleware.csproj": {}
   },
   "projects": {
-    "D:\\GitHub\\Slickflow\\community\\source\\utility\\VueCliMiddleware\\VueCliMiddleware.csproj": {
+    "D:\\GitHub\\Slickflow\\source\\utility\\VueCliMiddleware\\VueCliMiddleware.csproj": {
       "version": "6.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\community\\source\\utility\\VueCliMiddleware\\VueCliMiddleware.csproj",
+        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\utility\\VueCliMiddleware\\VueCliMiddleware.csproj",
         "projectName": "VueCliMiddleware",
-        "projectPath": "D:\\GitHub\\Slickflow\\community\\source\\utility\\VueCliMiddleware\\VueCliMiddleware.csproj",
+        "projectPath": "D:\\GitHub\\Slickflow\\source\\utility\\VueCliMiddleware\\VueCliMiddleware.csproj",
         "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\community\\source\\utility\\VueCliMiddleware\\obj\\",
+        "outputPath": "D:\\GitHub\\Slickflow\\source\\utility\\VueCliMiddleware\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "configFilePaths": [
@@ -25,6 +25,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -45,6 +46,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -84,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
         },
         "net5.0": {
           "targetAlias": "net5.0",
@@ -122,7 +128,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
         },
         "net6.0": {
           "targetAlias": "net6.0",
@@ -160,7 +166,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }

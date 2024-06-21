@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "hGMsuaywpZcbLGkX6Oi3zmJslTELR2SzcQLNPXCd3WhnwbxTbUyVnwO62zK7LaW0fHDkJ1eavyt92dewtE+pvQ==",
+  "dgSpecHash": "Jev+GYXnoLI=",
   "success": true,
-  "projectFilePath": "D:\\GitHub\\Slickflow\\community\\source\\demo\\Slickflow.HrsService\\Slickflow.HrsService.csproj",
+  "projectFilePath": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.HrsService\\Slickflow.HrsService.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lg\\.nuget\\packages\\devart.data\\5.0.2099\\devart.data.5.0.2099.nupkg.sha512",
     "C:\\Users\\lg\\.nuget\\packages\\devart.data.oracle\\9.6.675\\devart.data.oracle.9.6.675.nupkg.sha512",

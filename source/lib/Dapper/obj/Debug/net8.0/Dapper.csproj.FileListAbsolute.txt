@@ -1,0 +1,13 @@
+D:\GitHub\Slickflow\source\lib\Dapper\bin\Debug\net8.0\Dapper.deps.json
+D:\GitHub\Slickflow\source\lib\Dapper\bin\Debug\net8.0\Dapper.dll
+D:\GitHub\Slickflow\source\lib\Dapper\bin\Debug\net8.0\Dapper.pdb
+D:\GitHub\Slickflow\source\lib\Dapper\obj\Debug\net8.0\Dapper.csproj.AssemblyReference.cache
+D:\GitHub\Slickflow\source\lib\Dapper\obj\Debug\net8.0\Dapper.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\Slickflow\source\lib\Dapper\obj\Debug\net8.0\Dapper.AssemblyInfoInputs.cache
+D:\GitHub\Slickflow\source\lib\Dapper\obj\Debug\net8.0\Dapper.AssemblyInfo.cs
+D:\GitHub\Slickflow\source\lib\Dapper\obj\Debug\net8.0\Dapper.csproj.CoreCompileInputs.cache
+D:\GitHub\Slickflow\source\lib\Dapper\obj\Debug\net8.0\Dapper.sourcelink.json
+D:\GitHub\Slickflow\source\lib\Dapper\obj\Debug\net8.0\Dapper.dll
+D:\GitHub\Slickflow\source\lib\Dapper\obj\Debug\net8.0\refint\Dapper.dll
+D:\GitHub\Slickflow\source\lib\Dapper\obj\Debug\net8.0\Dapper.pdb
+D:\GitHub\Slickflow\source\lib\Dapper\obj\Debug\net8.0\ref\Dapper.dll

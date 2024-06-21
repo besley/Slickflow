@@ -1,0 +1,16 @@
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\bin\Debug\net8.0\Slickflow.Data.deps.json
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\bin\Debug\net8.0\Slickflow.Data.dll
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\bin\Debug\net8.0\Slickflow.Data.pdb
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\bin\Debug\net8.0\Dapper.dll
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\bin\Debug\net8.0\Dapper.pdb
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\obj\Debug\net8.0\Slickflow.Data.csproj.AssemblyReference.cache
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\obj\Debug\net8.0\Slickflow.Data.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\obj\Debug\net8.0\Slickflow.Data.AssemblyInfoInputs.cache
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\obj\Debug\net8.0\Slickflow.Data.AssemblyInfo.cs
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\obj\Debug\net8.0\Slickflow.Data.csproj.CoreCompileInputs.cache
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\obj\Debug\net8.0\Slickflow.Data.sourcelink.json
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\obj\Debug\net8.0\Slickflo.BDEC4638.Up2Date
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\obj\Debug\net8.0\Slickflow.Data.dll
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\obj\Debug\net8.0\refint\Slickflow.Data.dll
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\obj\Debug\net8.0\Slickflow.Data.pdb
+D:\GitHub\Slickflow\source\Lib\Slickflow.Data\obj\Debug\net8.0\ref\Slickflow.Data.dll

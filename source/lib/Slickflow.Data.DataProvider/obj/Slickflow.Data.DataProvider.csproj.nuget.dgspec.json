@@ -1,32 +1,33 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GitHub\\Slickflow\\community\\source\\lib\\Slickflow.Data.DataProvider\\Slickflow.Data.DataProvider.csproj": {}
+    "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data.DataProvider\\Slickflow.Data.DataProvider.csproj": {}
   },
   "projects": {
-    "D:\\GitHub\\Slickflow\\community\\source\\lib\\Dapper\\Dapper.csproj": {
+    "D:\\GitHub\\Slickflow\\source\\lib\\Dapper\\Dapper.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\community\\source\\lib\\Dapper\\Dapper.csproj",
+        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\lib\\Dapper\\Dapper.csproj",
         "projectName": "Dapper",
-        "projectPath": "D:\\GitHub\\Slickflow\\community\\source\\lib\\Dapper\\Dapper.csproj",
+        "projectPath": "D:\\GitHub\\Slickflow\\source\\lib\\Dapper\\Dapper.csproj",
         "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\community\\source\\lib\\Dapper\\obj\\",
+        "outputPath": "D:\\GitHub\\Slickflow\\source\\lib\\Dapper\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0"
+          "net8.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0": {
-            "targetAlias": "net6.0",
+          "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {}
           }
         },
@@ -34,15 +35,24 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            },
             "System.Data.SqlClient": {
               "target": "Package",
-              "version": "[4.6.1, )"
+              "version": "[4.8.6, )"
             }
           },
           "imports": [
@@ -61,36 +71,37 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\GitHub\\Slickflow\\community\\source\\lib\\Slickflow.Data.DataProvider\\Slickflow.Data.DataProvider.csproj": {
+    "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data.DataProvider\\Slickflow.Data.DataProvider.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\community\\source\\lib\\Slickflow.Data.DataProvider\\Slickflow.Data.DataProvider.csproj",
+        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data.DataProvider\\Slickflow.Data.DataProvider.csproj",
         "projectName": "Slickflow.Data.DataProvider",
-        "projectPath": "D:\\GitHub\\Slickflow\\community\\source\\lib\\Slickflow.Data.DataProvider\\Slickflow.Data.DataProvider.csproj",
+        "projectPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data.DataProvider\\Slickflow.Data.DataProvider.csproj",
         "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\community\\source\\lib\\Slickflow.Data.DataProvider\\obj\\",
+        "outputPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data.DataProvider\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0"
+          "net8.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0": {
-            "targetAlias": "net6.0",
+          "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\GitHub\\Slickflow\\community\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\community\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj"
+              "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj": {
+                "projectPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj"
               }
             }
           }
@@ -99,11 +110,22 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -120,36 +142,37 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\GitHub\\Slickflow\\community\\source\\Lib\\Slickflow.Data\\Slickflow.Data.csproj": {
+    "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Data\\Slickflow.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\community\\source\\Lib\\Slickflow.Data\\Slickflow.Data.csproj",
+        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Data\\Slickflow.Data.csproj",
         "projectName": "Slickflow.Data",
-        "projectPath": "D:\\GitHub\\Slickflow\\community\\source\\Lib\\Slickflow.Data\\Slickflow.Data.csproj",
+        "projectPath": "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Data\\Slickflow.Data.csproj",
         "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\community\\source\\Lib\\Slickflow.Data\\obj\\",
+        "outputPath": "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Data\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0"
+          "net8.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0": {
-            "targetAlias": "net6.0",
+          "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\GitHub\\Slickflow\\community\\source\\Lib\\Dapper\\Dapper.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\community\\source\\Lib\\Dapper\\Dapper.csproj"
+              "D:\\GitHub\\Slickflow\\source\\Lib\\Dapper\\Dapper.csproj": {
+                "projectPath": "D:\\GitHub\\Slickflow\\source\\Lib\\Dapper\\Dapper.csproj"
               }
             }
           }
@@ -158,15 +181,20 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "dependencies": {
-            "Npgsql": {
+            "Microsoft.Extensions.Caching.Memory": {
               "target": "Package",
-              "version": "[5.0.3, )"
+              "version": "[3.1.0, )"
             },
             "System.Configuration.ConfigurationManager": {
               "target": "Package",
@@ -174,7 +202,7 @@
             },
             "System.Data.SqlClient": {
               "target": "Package",
-              "version": "[4.6.1, )"
+              "version": "[4.8.6, )"
             }
           },
           "imports": [
@@ -193,7 +221,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

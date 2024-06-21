@@ -1,0 +1,13 @@
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\bin\Debug\net6.0\VueCliMiddleware.deps.json
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\bin\Debug\net6.0\VueCliMiddleware.dll
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\bin\Debug\net6.0\VueCliMiddleware.pdb
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\net6.0\VueCliMiddleware.csproj.AssemblyReference.cache
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\net6.0\VueCliMiddleware.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\net6.0\VueCliMiddleware.AssemblyInfoInputs.cache
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\net6.0\VueCliMiddleware.AssemblyInfo.cs
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\net6.0\VueCliMiddleware.csproj.CoreCompileInputs.cache
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\net6.0\VueCliMiddleware.sourcelink.json
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\net6.0\VueCliMiddleware.dll
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\net6.0\refint\VueCliMiddleware.dll
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\net6.0\VueCliMiddleware.pdb
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\net6.0\ref\VueCliMiddleware.dll

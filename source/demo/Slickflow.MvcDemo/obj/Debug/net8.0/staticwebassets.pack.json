@@ -1,0 +1,1233 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\bootstrap\\bootstrap-3.3.7.min.css",
+      "PackagePath": "staticwebassets\\Content\\bootstrap\\bootstrap-3.3.7.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\bootstrap\\bootstrap-datetimepicker.css",
+      "PackagePath": "staticwebassets\\Content\\bootstrap\\bootstrap-datetimepicker.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\bootstrap\\bootstrap-datetimepicker.min.css",
+      "PackagePath": "staticwebassets\\Content\\bootstrap\\bootstrap-datetimepicker.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\bootstrap\\bootstrap-dialog.min.css",
+      "PackagePath": "staticwebassets\\Content\\bootstrap\\bootstrap-dialog.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\bootstrap\\bootstrap-progressbar-2.3.1.min.css",
+      "PackagePath": "staticwebassets\\Content\\bootstrap\\bootstrap-progressbar-2.3.1.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\bootstrap\\bootstrap-progressbar-3.3.4.css",
+      "PackagePath": "staticwebassets\\Content\\bootstrap\\bootstrap-progressbar-3.3.4.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\bootstrap\\bootstrap-progressbar-3.3.4.min.css",
+      "PackagePath": "staticwebassets\\Content\\bootstrap\\bootstrap-progressbar-3.3.4.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\bootstrap\\bootstrap-theme-3.3.7.min.css",
+      "PackagePath": "staticwebassets\\Content\\bootstrap\\bootstrap-theme-3.3.7.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\bootstrap\\bootstrap-theme.min.css",
+      "PackagePath": "staticwebassets\\Content\\bootstrap\\bootstrap-theme.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\bootstrap\\bootstrap.css",
+      "PackagePath": "staticwebassets\\Content\\bootstrap\\bootstrap.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\Content\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\flatlab\\bootstrap-reset.css",
+      "PackagePath": "staticwebassets\\Content\\flatlab\\bootstrap-reset.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\flatlab\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\Content\\flatlab\\bootstrap.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\flatlab\\style-responsive.css",
+      "PackagePath": "staticwebassets\\Content\\flatlab\\style-responsive.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\flatlab\\style.css",
+      "PackagePath": "staticwebassets\\Content\\flatlab\\style.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\flowchart.css",
+      "PackagePath": "staticwebassets\\Content\\flowchart.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\graphCanvas.css",
+      "PackagePath": "staticwebassets\\Content\\graphCanvas.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\images\\ajax-loader.gif",
+      "PackagePath": "staticwebassets\\Content\\images\\ajax-loader.gif"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\images\\delete.png",
+      "PackagePath": "staticwebassets\\Content\\images\\delete.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\images\\jsplumb-grid.png",
+      "PackagePath": "staticwebassets\\Content\\images\\jsplumb-grid.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\images\\sprite.png",
+      "PackagePath": "staticwebassets\\Content\\images\\sprite.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\img\\avatar1_small.jpg",
+      "PackagePath": "staticwebassets\\Content\\img\\avatar1_small.jpg"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\img\\glyphicons-halflings-white.png",
+      "PackagePath": "staticwebassets\\Content\\img\\glyphicons-halflings-white.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\img\\glyphicons-halflings.png",
+      "PackagePath": "staticwebassets\\Content\\img\\glyphicons-halflings.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\2.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\2.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\Batch-1_01.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\Batch-1_01.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\Batch-1_03.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\Batch-1_03.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\Batch-1_05.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\Batch-1_05.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\Batch-1_07.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\Batch-1_07.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ajax-loader.gif",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ajax-loader.gif"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\alert.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\alert.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\arrow.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\arrow.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\arrowex.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\arrowex.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\blue.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\blue.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\buttonicon.gif",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\buttonicon.gif"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\calendar.gif",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\calendar.gif"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\chosebtn.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\chosebtn.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\chosedialog1_03.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\chosedialog1_03.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\confirm.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\confirm.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\datagrid_title_bg.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\datagrid_title_bg.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\dd.html",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\dd.html"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\empty.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\empty.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\error.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\error.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\exit.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\exit.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\exit1.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\exit1.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\expend.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\expend.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\fieldset.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\fieldset.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\fieldset1.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\fieldset1.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\gray.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\gray.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\hightlight.jpg",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\hightlight.jpg"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\info.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\info.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\jiantou.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\jiantou.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\jsplumb-grid.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\jsplumb-grid.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\listicon.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\listicon.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\listicon1.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\listicon1.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\liulan_03.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\liulan_03.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\liulan_05.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\liulan_05.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\logo.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\logo.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\message.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\message.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\message1.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\message1.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\msgBoxBackGround.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\msgBoxBackGround.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\myui-header.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\myui-header.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\openfile.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\openfile.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\relogin.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\relogin.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\relogin1.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\relogin1.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\search.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\search.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\tick.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\tick.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\tick2.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\tick2.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\toolbarwin7.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\toolbarwin7.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-bg_diagonals-thick_90_eeeeee_40x40.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-bg_diagonals-thick_90_eeeeee_40x40.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-bg_flat_0_aaaaaa_40x100.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-bg_flat_0_aaaaaa_40x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-bg_flat_15_cd0a0a_40x100.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-bg_flat_15_cd0a0a_40x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-bg_glass_100_e4f1fb_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-bg_glass_100_e4f1fb_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-bg_glass_50_3baae3_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-bg_glass_50_3baae3_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-bg_glass_80_d7ebf9_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-bg_glass_80_d7ebf9_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-bg_highlight-hard_100_f2f5f7_1x100.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-bg_highlight-hard_100_f2f5f7_1x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-bg_highlight-hard_70_000000_1x100.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-bg_highlight-hard_70_000000_1x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-bg_highlight-soft_100_deedf7_1x100.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-bg_highlight-soft_100_deedf7_1x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-bg_highlight-soft_25_ffef8f_1x100.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-bg_highlight-soft_25_ffef8f_1x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-icons_222222_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-icons_222222_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-icons_2694e8_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-icons_2694e8_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-icons_2e83ff_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-icons_2e83ff_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-icons_3d80b3_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-icons_3d80b3_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-icons_454545_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-icons_454545_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-icons_72a7cf_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-icons_72a7cf_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-icons_888888_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-icons_888888_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\ui-icons_ffffff_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\ui-icons_ffffff_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\upload.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\upload.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\user.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\user.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\user1.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\user1.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\user2.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\user2.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\user_online.gif",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\user_online.gif"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\web_ui_lanrensc_01_03.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\web_ui_lanrensc_01_03.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\images\\web_ui_lanrensc_03.png",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\images\\web_ui_lanrensc_03.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\jquery-ui-1.8.16.custom.css",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\jquery-ui-1.8.16.custom.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jquery-ui\\jquery-ui.css",
+      "PackagePath": "staticwebassets\\Content\\jquery-ui\\jquery-ui.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\default\\30px.png",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\default\\30px.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\default\\32px.png",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\default\\32px.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\default\\40px.png",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\default\\40px.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\default\\style.css",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\default\\style.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\default\\style.min.css",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\default\\style.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\default\\throbber.gif",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\default\\throbber.gif"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\docs.css",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\docs.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\30px.png",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\30px.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\32px.png",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\32px.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-bold-webfont.eot",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-bold-webfont.eot"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-bold-webfont.svg",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-bold-webfont.svg"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-bold-webfont.ttf",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-bold-webfont.ttf"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-bold-webfont.woff",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-bold-webfont.woff"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-extralight-webfont.eot",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-extralight-webfont.eot"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-extralight-webfont.svg",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-extralight-webfont.svg"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-extralight-webfont.ttf",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-extralight-webfont.ttf"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-extralight-webfont.woff",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-extralight-webfont.woff"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-regular-webfont.eot",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-regular-webfont.eot"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-regular-webfont.svg",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-regular-webfont.svg"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-regular-webfont.ttf",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-regular-webfont.ttf"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-regular-webfont.woff",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\fonts\\titillium\\titilliumweb-regular-webfont.woff"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\style.css",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\style.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\style.min.css",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\style.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\jstree\\themes\\proton\\throbber.gif",
+      "PackagePath": "staticwebassets\\Content\\jstree\\themes\\proton\\throbber.gif"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\master.css",
+      "PackagePath": "staticwebassets\\Content\\master.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\msgBoxLight.css",
+      "PackagePath": "staticwebassets\\Content\\msgBoxLight.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\slickgrid\\slick.grid.css",
+      "PackagePath": "staticwebassets\\Content\\slickgrid\\slick.grid.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\slickgrid\\slickgrid-bootstrap.css",
+      "PackagePath": "staticwebassets\\Content\\slickgrid\\slickgrid-bootstrap.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\slickgrid\\slickgrid-example.css",
+      "PackagePath": "staticwebassets\\Content\\slickgrid\\slickgrid-example.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\splitter.css",
+      "PackagePath": "staticwebassets\\Content\\splitter.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\style.css",
+      "PackagePath": "staticwebassets\\Content\\style.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\superfish.css",
+      "PackagePath": "staticwebassets\\Content\\superfish.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\images\\animated-overlay.gif",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\images\\animated-overlay.gif"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\images\\ui-bg_flat_0_aaaaaa_40x100.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\images\\ui-bg_flat_0_aaaaaa_40x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\images\\ui-bg_flat_75_ffffff_40x100.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\images\\ui-bg_flat_75_ffffff_40x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\images\\ui-bg_glass_55_fbf9ee_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\images\\ui-bg_glass_55_fbf9ee_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\images\\ui-bg_glass_65_ffffff_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\images\\ui-bg_glass_65_ffffff_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\images\\ui-bg_glass_75_dadada_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\images\\ui-bg_glass_75_dadada_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\images\\ui-bg_glass_75_e6e6e6_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\images\\ui-bg_glass_75_e6e6e6_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\images\\ui-bg_glass_95_fef1ec_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\images\\ui-bg_glass_95_fef1ec_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\images\\ui-bg_highlight-soft_75_cccccc_1x100.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\images\\ui-bg_highlight-soft_75_cccccc_1x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\images\\ui-icons_222222_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\images\\ui-icons_222222_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\images\\ui-icons_2e83ff_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\images\\ui-icons_2e83ff_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\images\\ui-icons_454545_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\images\\ui-icons_454545_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\images\\ui-icons_888888_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\images\\ui-icons_888888_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\images\\ui-icons_cd0a0a_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\images\\ui-icons_cd0a0a_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery-ui.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery-ui.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.accordion.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.accordion.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.all.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.all.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.autocomplete.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.autocomplete.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.base.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.base.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.button.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.button.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.core.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.core.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.datepicker.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.datepicker.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.dialog.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.dialog.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.menu.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.menu.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.progressbar.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.progressbar.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.resizable.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.resizable.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.selectable.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.selectable.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.slider.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.slider.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.spinner.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.spinner.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.tabs.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.tabs.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.theme.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.theme.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\jquery.ui.tooltip.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\jquery.ui.tooltip.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\images\\animated-overlay.gif",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\images\\animated-overlay.gif"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\images\\ui-bg_flat_0_aaaaaa_40x100.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\images\\ui-bg_flat_0_aaaaaa_40x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\images\\ui-bg_flat_75_ffffff_40x100.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\images\\ui-bg_flat_75_ffffff_40x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\images\\ui-bg_glass_55_fbf9ee_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\images\\ui-bg_glass_55_fbf9ee_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\images\\ui-bg_glass_65_ffffff_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\images\\ui-bg_glass_65_ffffff_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\images\\ui-bg_glass_75_dadada_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\images\\ui-bg_glass_75_dadada_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\images\\ui-bg_glass_75_e6e6e6_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\images\\ui-bg_glass_75_e6e6e6_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\images\\ui-bg_glass_95_fef1ec_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\images\\ui-bg_glass_95_fef1ec_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\images\\ui-bg_highlight-soft_75_cccccc_1x100.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\images\\ui-bg_highlight-soft_75_cccccc_1x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\images\\ui-icons_222222_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\images\\ui-icons_222222_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\images\\ui-icons_2e83ff_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\images\\ui-icons_2e83ff_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\images\\ui-icons_454545_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\images\\ui-icons_454545_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\images\\ui-icons_888888_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\images\\ui-icons_888888_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\images\\ui-icons_cd0a0a_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\images\\ui-icons_cd0a0a_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery-ui.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery-ui.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery.ui.accordion.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery.ui.accordion.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery.ui.autocomplete.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery.ui.autocomplete.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery.ui.button.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery.ui.button.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery.ui.core.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery.ui.core.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery.ui.datepicker.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery.ui.datepicker.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery.ui.dialog.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery.ui.dialog.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery.ui.menu.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery.ui.menu.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery.ui.progressbar.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery.ui.progressbar.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery.ui.resizable.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery.ui.resizable.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery.ui.selectable.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery.ui.selectable.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery.ui.slider.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery.ui.slider.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery.ui.spinner.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery.ui.spinner.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery.ui.tabs.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery.ui.tabs.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery.ui.theme.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery.ui.theme.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\themes\\base\\minified\\jquery.ui.tooltip.min.css",
+      "PackagePath": "staticwebassets\\Content\\themes\\base\\minified\\jquery.ui.tooltip.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\images\\ui-bg_diagonals-thick_90_eeeeee_40x40.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\images\\ui-bg_diagonals-thick_90_eeeeee_40x40.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\images\\ui-bg_flat_0_aaaaaa_40x100.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\images\\ui-bg_flat_0_aaaaaa_40x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\images\\ui-bg_flat_15_cd0a0a_40x100.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\images\\ui-bg_flat_15_cd0a0a_40x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\images\\ui-bg_glass_100_e4f1fb_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\images\\ui-bg_glass_100_e4f1fb_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\images\\ui-bg_glass_50_3baae3_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\images\\ui-bg_glass_50_3baae3_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\images\\ui-bg_glass_80_d7ebf9_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\images\\ui-bg_glass_80_d7ebf9_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\images\\ui-bg_highlight-hard_100_f2f5f7_1x100.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\images\\ui-bg_highlight-hard_100_f2f5f7_1x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\images\\ui-bg_highlight-hard_70_000000_1x100.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\images\\ui-bg_highlight-hard_70_000000_1x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\images\\ui-bg_highlight-soft_100_deedf7_1x100.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\images\\ui-bg_highlight-soft_100_deedf7_1x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\images\\ui-bg_highlight-soft_25_ffef8f_1x100.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\images\\ui-bg_highlight-soft_25_ffef8f_1x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\images\\ui-icons_2694e8_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\images\\ui-icons_2694e8_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\images\\ui-icons_2e83ff_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\images\\ui-icons_2e83ff_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\images\\ui-icons_3d80b3_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\images\\ui-icons_3d80b3_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\images\\ui-icons_72a7cf_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\images\\ui-icons_72a7cf_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\images\\ui-icons_ffffff_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\images\\ui-icons_ffffff_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\jquery-ui.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\jquery-ui.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\images\\ui-bg_diagonals-thick_90_eeeeee_40x40.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\images\\ui-bg_diagonals-thick_90_eeeeee_40x40.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\images\\ui-bg_flat_15_cd0a0a_40x100.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\images\\ui-bg_flat_15_cd0a0a_40x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\images\\ui-bg_glass_100_e4f1fb_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\images\\ui-bg_glass_100_e4f1fb_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\images\\ui-bg_glass_50_3baae3_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\images\\ui-bg_glass_50_3baae3_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\images\\ui-bg_glass_80_d7ebf9_1x400.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\images\\ui-bg_glass_80_d7ebf9_1x400.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\images\\ui-bg_highlight-hard_100_f2f5f7_1x100.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\images\\ui-bg_highlight-hard_100_f2f5f7_1x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\images\\ui-bg_highlight-hard_70_000000_1x100.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\images\\ui-bg_highlight-hard_70_000000_1x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\images\\ui-bg_highlight-soft_100_deedf7_1x100.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\images\\ui-bg_highlight-soft_100_deedf7_1x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\images\\ui-bg_highlight-soft_25_ffef8f_1x100.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\images\\ui-bg_highlight-soft_25_ffef8f_1x100.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\images\\ui-icons_2694e8_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\images\\ui-icons_2694e8_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\images\\ui-icons_2e83ff_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\images\\ui-icons_2e83ff_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\images\\ui-icons_3d80b3_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\images\\ui-icons_3d80b3_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\images\\ui-icons_72a7cf_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\images\\ui-icons_72a7cf_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\images\\ui-icons_ffffff_256x240.png",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\images\\ui-icons_ffffff_256x240.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery-ui.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery-ui.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery.ui.accordion.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery.ui.accordion.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery.ui.autocomplete.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery.ui.autocomplete.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery.ui.button.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery.ui.button.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery.ui.core.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery.ui.core.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery.ui.datepicker.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery.ui.datepicker.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery.ui.dialog.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery.ui.dialog.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery.ui.menu.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery.ui.menu.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery.ui.progressbar.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery.ui.progressbar.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery.ui.resizable.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery.ui.resizable.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery.ui.selectable.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery.ui.selectable.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery.ui.slider.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery.ui.slider.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery.ui.spinner.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery.ui.spinner.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery.ui.tabs.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery.ui.tabs.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery.ui.theme.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery.ui.theme.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ui\\minified\\jquery.ui.tooltip.min.css",
+      "PackagePath": "staticwebassets\\Content\\ui\\minified\\jquery.ui.tooltip.min.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\img\\diy\\1_close.png",
+      "PackagePath": "staticwebassets\\Content\\ztree\\img\\diy\\1_close.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\img\\diy\\1_open.png",
+      "PackagePath": "staticwebassets\\Content\\ztree\\img\\diy\\1_open.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\img\\diy\\2.png",
+      "PackagePath": "staticwebassets\\Content\\ztree\\img\\diy\\2.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\img\\diy\\3.png",
+      "PackagePath": "staticwebassets\\Content\\ztree\\img\\diy\\3.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\img\\diy\\4.png",
+      "PackagePath": "staticwebassets\\Content\\ztree\\img\\diy\\4.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\img\\diy\\5.png",
+      "PackagePath": "staticwebassets\\Content\\ztree\\img\\diy\\5.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\img\\diy\\6.png",
+      "PackagePath": "staticwebassets\\Content\\ztree\\img\\diy\\6.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\img\\diy\\7.png",
+      "PackagePath": "staticwebassets\\Content\\ztree\\img\\diy\\7.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\img\\diy\\8.png",
+      "PackagePath": "staticwebassets\\Content\\ztree\\img\\diy\\8.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\img\\diy\\9.png",
+      "PackagePath": "staticwebassets\\Content\\ztree\\img\\diy\\9.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\img\\line_conn.gif",
+      "PackagePath": "staticwebassets\\Content\\ztree\\img\\line_conn.gif"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\img\\line_conn.png",
+      "PackagePath": "staticwebassets\\Content\\ztree\\img\\line_conn.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\img\\loading.gif",
+      "PackagePath": "staticwebassets\\Content\\ztree\\img\\loading.gif"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\img\\metro.gif",
+      "PackagePath": "staticwebassets\\Content\\ztree\\img\\metro.gif"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\img\\metro.png",
+      "PackagePath": "staticwebassets\\Content\\ztree\\img\\metro.png"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Content\\ztree\\metro.css",
+      "PackagePath": "staticwebassets\\Content\\ztree\\metro.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\XMLWriter-1.0.0-min.js",
+      "PackagePath": "staticwebassets\\Scripts\\XMLWriter-1.0.0-min.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\_references.js",
+      "PackagePath": "staticwebassets\\Scripts\\_references.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\bootstrap\\bootbox.min.js",
+      "PackagePath": "staticwebassets\\Scripts\\bootstrap\\bootbox.min.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\bootstrap\\bootstrap-datetimepicker.js",
+      "PackagePath": "staticwebassets\\Scripts\\bootstrap\\bootstrap-datetimepicker.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\bootstrap\\bootstrap-datetimepicker.min.js",
+      "PackagePath": "staticwebassets\\Scripts\\bootstrap\\bootstrap-datetimepicker.min.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\bootstrap\\bootstrap-datetimepicker.zh-CN.js",
+      "PackagePath": "staticwebassets\\Scripts\\bootstrap\\bootstrap-datetimepicker.zh-CN.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\bootstrap\\bootstrap-progressbar.min.js",
+      "PackagePath": "staticwebassets\\Scripts\\bootstrap\\bootstrap-progressbar.min.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\bootstrap\\bootstrap.js",
+      "PackagePath": "staticwebassets\\Scripts\\bootstrap\\bootstrap.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\bootstrap\\bootstrap.min.js",
+      "PackagePath": "staticwebassets\\Scripts\\bootstrap\\bootstrap.min.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\handlebars.js",
+      "PackagePath": "staticwebassets\\Scripts\\handlebars.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\jquery-1.10.2.intellisense.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\jquery-1.10.2.intellisense.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\jquery-1.10.2.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\jquery-1.10.2.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\jquery-1.10.2.min.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\jquery-1.10.2.min.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\jquery-1.10.2.min.map",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\jquery-1.10.2.min.map"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\jquery-1.8.3.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\jquery-1.8.3.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\jquery-ui-1.10.3.min.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\jquery-ui-1.10.3.min.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\jquery.event.drag-2.2.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\jquery.event.drag-2.2.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\jquery.msgBox.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\jquery.msgBox.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\jquery.validate-vsdoc.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\jquery.validate-vsdoc.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\jquery.validate.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\jquery.validate.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\jquery.validate.min.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\jquery.validate.min.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\jquery.validate.unobtrusive.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\jquery.validate.unobtrusive.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\jquery.validate.unobtrusive.min.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\jquery.validate.unobtrusive.min.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\jquery.ztree.all-3.5.min.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\jquery.ztree.all-3.5.min.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\jstree.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\jstree.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\ui\\jquery-ui-1.8.16.custom.min.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\ui\\jquery-ui-1.8.16.custom.min.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\ui\\jquery.ui.core.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\ui\\jquery.ui.core.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\ui\\jquery.ui.mouse.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\ui\\jquery.ui.mouse.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\ui\\jquery.ui.resizable.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\ui\\jquery.ui.resizable.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\ui\\jquery.ui.sortable.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\ui\\jquery.ui.sortable.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jquery\\ui\\jquery.ui.widget.js",
+      "PackagePath": "staticwebassets\\Scripts\\jquery\\ui\\jquery.ui.widget.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jshelper.js",
+      "PackagePath": "staticwebassets\\Scripts\\jshelper.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\jsrender.js",
+      "PackagePath": "staticwebassets\\Scripts\\jsrender.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\localhelper.js",
+      "PackagePath": "staticwebassets\\Scripts\\localhelper.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\slick.event.js",
+      "PackagePath": "staticwebassets\\Scripts\\slick.event.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\slickgrid\\lib\\jquery.event.drag-2.0.min.js",
+      "PackagePath": "staticwebassets\\Scripts\\slickgrid\\lib\\jquery.event.drag-2.0.min.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\slickgrid\\plugins\\slick.checkboxselectcolumn.js",
+      "PackagePath": "staticwebassets\\Scripts\\slickgrid\\plugins\\slick.checkboxselectcolumn.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\slickgrid\\plugins\\slick.rowselectionmodel.js",
+      "PackagePath": "staticwebassets\\Scripts\\slickgrid\\plugins\\slick.rowselectionmodel.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\slickgrid\\slick.core.js",
+      "PackagePath": "staticwebassets\\Scripts\\slickgrid\\slick.core.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\slickgrid\\slick.dataview.js",
+      "PackagePath": "staticwebassets\\Scripts\\slickgrid\\slick.dataview.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\slickgrid\\slick.formatters.js",
+      "PackagePath": "staticwebassets\\Scripts\\slickgrid\\slick.formatters.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\slickgrid\\slick.grid.css",
+      "PackagePath": "staticwebassets\\Scripts\\slickgrid\\slick.grid.css"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\slickgrid\\slick.grid.js",
+      "PackagePath": "staticwebassets\\Scripts\\slickgrid\\slick.grid.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\slickgrid\\slickgrid.min.js",
+      "PackagePath": "staticwebassets\\Scripts\\slickgrid\\slickgrid.min.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\Scripts\\xmlhelper.js",
+      "PackagePath": "staticwebassets\\Scripts\\xmlhelper.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\ViewJS\\accountmanager.js",
+      "PackagePath": "staticwebassets\\ViewJS\\accountmanager.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\ViewJS\\config.js",
+      "PackagePath": "staticwebassets\\ViewJS\\config.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\ViewJS\\nextactivitytree.js",
+      "PackagePath": "staticwebassets\\ViewJS\\nextactivitytree.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\ViewJS\\pordermanager.js",
+      "PackagePath": "staticwebassets\\ViewJS\\pordermanager.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\ViewJS\\sfmain.js",
+      "PackagePath": "staticwebassets\\ViewJS\\sfmain.js"
+    },
+    {
+      "Id": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\favicon.ico",
+      "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Slickflow.MvcDemo.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.Slickflow.MvcDemo.props",
+      "PackagePath": "build\\Slickflow.MvcDemo.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.Slickflow.MvcDemo.props",
+      "PackagePath": "buildMultiTargeting\\Slickflow.MvcDemo.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.Slickflow.MvcDemo.props",
+      "PackagePath": "buildTransitive\\Slickflow.MvcDemo.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
