@@ -1,3 +1,5 @@
 is_global = true
 build_property.RootNamespace = VueCliMiddleware
-build_property.ProjectDir = D:\GitHub\Slickflow\community\source\utility\VueCliMiddleware\
+build_property.ProjectDir = D:\GitHub\Slickflow\source\utility\VueCliMiddleware\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 

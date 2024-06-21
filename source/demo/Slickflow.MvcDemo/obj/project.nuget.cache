@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "D/QHQXtieeAlrD8QLvAPeB1M+ZqkJtt6gVxxB5U12/6mYE10Wrc91o1MZLy8b6y0Ep5DR/XR3bZF5p5r2kaXTA==",
+  "dgSpecHash": "DKe73m3nb4Q=",
   "success": true,
-  "projectFilePath": "D:\\GitHub\\Slickflow\\community\\source\\demo\\Slickflow.MvcDemo\\Slickflow.MvcDemo.csproj",
+  "projectFilePath": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\Slickflow.MvcDemo.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lg\\.nuget\\packages\\devart.data\\5.0.2099\\devart.data.5.0.2099.nupkg.sha512",
     "C:\\Users\\lg\\.nuget\\packages\\devart.data.oracle\\9.6.675\\devart.data.oracle.9.6.675.nupkg.sha512",
@@ -171,5 +171,26 @@
     "C:\\Users\\lg\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
     "C:\\Users\\lg\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.AspNetCore.Authentication.JwtBearer' 5.0.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-q7cg-43mg-qp69",
+      "libraryId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Newtonsoft.Json' 12.0.3 has a known high severity vulnerability, https://github.com/advisories/GHSA-5crp-9r3c-p9vr",
+      "libraryId": "Newtonsoft.Json",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

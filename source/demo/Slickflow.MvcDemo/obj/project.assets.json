@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {
+    "net8.0": {
       "Devart.Data/5.0.2099": {
         "type": "package",
         "dependencies": {
@@ -2792,7 +2792,7 @@
       },
       "Dapper/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "System.Data.SqlClient": "4.6.1"
         },
@@ -2805,7 +2805,7 @@
       },
       "Slickflow.BizAppService/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "SlickOne.WebUtility": "1.0.0",
           "Slickflow.Engine": "2.0.0"
@@ -2819,7 +2819,7 @@
       },
       "Slickflow.Data/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "Dapper": "1.0.0",
           "Npgsql": "5.0.3",
@@ -2835,7 +2835,7 @@
       },
       "Slickflow.Data.DataProvider/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "Slickflow.Data": "1.0.0"
         },
@@ -2848,7 +2848,7 @@
       },
       "Slickflow.Engine/2.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "Devart.Data.Oracle.EFCore": "9.6.675",
           "IronPython": "2.7.9",
@@ -2875,7 +2875,7 @@
       },
       "Slickflow.Module/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "Slickflow.Data": "1.0.0"
         },
@@ -2888,7 +2888,7 @@
       },
       "Slickflow.Module.Essential/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "Newtonsoft.Json": "12.0.1",
           "RabbitMQ.Client": "5.1.2",
@@ -2906,7 +2906,7 @@
       },
       "Slickflow.Module.Localize/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "Microsoft.Extensions.Caching.Memory": "2.2.0",
           "Newtonsoft.Json": "12.0.1"
@@ -2920,7 +2920,7 @@
       },
       "Slickflow.Module.Logging/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "Slickflow.Data": "1.0.0",
           "Slickflow.Module": "1.0.0"
@@ -2934,7 +2934,7 @@
       },
       "Slickflow.Module.Resource/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "Devart.Data.Oracle.EFCore": "9.5.399",
           "Microsoft.EntityFrameworkCore": "2.0.1",
@@ -2952,7 +2952,7 @@
       },
       "SlickOne.WebUtility/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "Newtonsoft.Json": "12.0.1"
         },
@@ -8603,7 +8603,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net6.0": [
+    "net8.0": [
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 5.0.0",
       "Microsoft.AspNetCore.Authentication.OpenIdConnect >= 5.0.0",
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson >= 5.0.0",
@@ -8623,44 +8623,45 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\GitHub\\Slickflow\\community\\source\\demo\\Slickflow.MvcDemo\\Slickflow.MvcDemo.csproj",
+      "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\Slickflow.MvcDemo.csproj",
       "projectName": "Slickflow.MvcDemo",
-      "projectPath": "D:\\GitHub\\Slickflow\\community\\source\\demo\\Slickflow.MvcDemo\\Slickflow.MvcDemo.csproj",
+      "projectPath": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\Slickflow.MvcDemo.csproj",
       "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-      "outputPath": "D:\\GitHub\\Slickflow\\community\\source\\demo\\Slickflow.MvcDemo\\obj\\",
+      "outputPath": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net6.0"
+        "net8.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\GitHub\\Slickflow\\community\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj": {
-              "projectPath": "D:\\GitHub\\Slickflow\\community\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj"
+            "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj": {
+              "projectPath": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj"
             },
-            "D:\\GitHub\\Slickflow\\community\\source\\Lib\\Slickflow.Data\\Slickflow.Data.csproj": {
-              "projectPath": "D:\\GitHub\\Slickflow\\community\\source\\Lib\\Slickflow.Data\\Slickflow.Data.csproj"
+            "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Data\\Slickflow.Data.csproj": {
+              "projectPath": "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Data\\Slickflow.Data.csproj"
             },
-            "D:\\GitHub\\Slickflow\\community\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj": {
-              "projectPath": "D:\\GitHub\\Slickflow\\community\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj"
+            "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj": {
+              "projectPath": "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj"
             },
-            "D:\\GitHub\\Slickflow\\community\\source\\lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj": {
-              "projectPath": "D:\\GitHub\\Slickflow\\community\\source\\lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj"
+            "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj": {
+              "projectPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj"
             },
-            "D:\\GitHub\\Slickflow\\community\\source\\lib\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj": {
-              "projectPath": "D:\\GitHub\\Slickflow\\community\\source\\lib\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj"
+            "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj": {
+              "projectPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj"
             },
-            "D:\\GitHub\\Slickflow\\community\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj": {
-              "projectPath": "D:\\GitHub\\Slickflow\\community\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj"
+            "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj": {
+              "projectPath": "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Module\\Slickflow.Module.csproj"
             }
           }
         }
@@ -8669,11 +8670,16 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
-      "net6.0": {
-        "targetAlias": "net6.0",
+      "net8.0": {
+        "targetAlias": "net8.0",
         "dependencies": {
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",
@@ -8721,8 +8727,30 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.AspNetCore.Authentication.JwtBearer' 5.0.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-q7cg-43mg-qp69",
+      "libraryId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Newtonsoft.Json' 12.0.3 has a known high severity vulnerability, https://github.com/advisories/GHSA-5crp-9r3c-p9vr",
+      "libraryId": "Newtonsoft.Json",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

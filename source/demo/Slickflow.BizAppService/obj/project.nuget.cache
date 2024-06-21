@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "twEbrVZYcBRdpPIh32fVBIGKht6a/iFKNhP/JpeKHcyHoZZL9x4PaI4eGMYxMtIAWg2bfHV09Q0Wcvzy0lABrQ==",
+  "dgSpecHash": "R+XDP6FBTa8=",
   "success": true,
-  "projectFilePath": "D:\\GitHub\\Slickflow\\community\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj",
+  "projectFilePath": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lg\\.nuget\\packages\\devart.data\\5.0.2099\\devart.data.5.0.2099.nupkg.sha512",
     "C:\\Users\\lg\\.nuget\\packages\\devart.data.oracle\\9.6.675\\devart.data.oracle.9.6.675.nupkg.sha512",

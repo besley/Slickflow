@@ -1,0 +1,67 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = Slickflow.MvcDemo
+build_property.RootNamespace = Slickflow.MvcDemo
+build_property.ProjectDir = D:\GitHub\Slickflow\source\demo\Slickflow.MvcDemo\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\GitHub\Slickflow\source\demo\Slickflow.MvcDemo
+build_property._RazorSourceGeneratorDebug = 
+
+[D:/GitHub/Slickflow/source/demo/Slickflow.MvcDemo/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GitHub/Slickflow/source/demo/Slickflow.MvcDemo/Views/Demo/Dialog.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVtb1xEaWFsb2cuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GitHub/Slickflow/source/demo/Slickflow.MvcDemo/Views/Demo/JsTree.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVtb1xKc1RyZWUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GitHub/Slickflow/source/demo/Slickflow.MvcDemo/Views/Demo/NextStep.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVtb1xOZXh0U3RlcC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GitHub/Slickflow/source/demo/Slickflow.MvcDemo/Views/Demo/ZTree.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVtb1xaVHJlZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GitHub/Slickflow/source/demo/Slickflow.MvcDemo/Views/Home/About.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxBYm91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GitHub/Slickflow/source/demo/Slickflow.MvcDemo/Views/Home/Contact.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb250YWN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GitHub/Slickflow/source/demo/Slickflow.MvcDemo/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GitHub/Slickflow/source/demo/Slickflow.MvcDemo/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GitHub/Slickflow/source/demo/Slickflow.MvcDemo/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GitHub/Slickflow/source/demo/Slickflow.MvcDemo/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/GitHub/Slickflow/source/demo/Slickflow.MvcDemo/Views/Test/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVzdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 

@@ -1,0 +1,11 @@
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\bin\Debug\netcoreapp3.1\VueCliMiddleware.deps.json
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\bin\Debug\netcoreapp3.1\VueCliMiddleware.dll
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\bin\Debug\netcoreapp3.1\VueCliMiddleware.pdb
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\netcoreapp3.1\VueCliMiddleware.csproj.AssemblyReference.cache
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\netcoreapp3.1\VueCliMiddleware.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\netcoreapp3.1\VueCliMiddleware.AssemblyInfoInputs.cache
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\netcoreapp3.1\VueCliMiddleware.AssemblyInfo.cs
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\netcoreapp3.1\VueCliMiddleware.csproj.CoreCompileInputs.cache
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\netcoreapp3.1\VueCliMiddleware.sourcelink.json
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\netcoreapp3.1\VueCliMiddleware.dll
+D:\GitHub\Slickflow\source\utility\VueCliMiddleware\obj\Debug\netcoreapp3.1\VueCliMiddleware.pdb
