@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\GitHub\\Slickflow\\source\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{1B28181E-6355-4B89-9B05-04FC7641582C}|Lib\\Slickflow.Engine\\Slickflow.Engine.csproj|d:\\github\\slickflow\\source\\lib\\slickflow.engine\\slickflow.engine.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{1B28181E-6355-4B89-9B05-04FC7641582C}|Lib\\Slickflow.Engine\\Slickflow.Engine.csproj|solutionrelative:lib\\slickflow.engine\\slickflow.engine.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{56C199E4-7F68-4DB5-A4CB-D7C745F286BE}|Lib\\Slickflow.Data\\Slickflow.Data.csproj|d:\\github\\slickflow\\source\\lib\\slickflow.data\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{56C199E4-7F68-4DB5-A4CB-D7C745F286BE}|Lib\\Slickflow.Data\\Slickflow.Data.csproj|solutionrelative:lib\\slickflow.data\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -30,8 +34,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Slickflow.Engine",
+              "DocumentMoniker": "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj",
+              "RelativeDocumentMoniker": "Lib\\Slickflow.Engine\\Slickflow.Engine.csproj",
+              "ToolTip": "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj",
+              "RelativeToolTip": "Lib\\Slickflow.Engine\\Slickflow.Engine.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-06-21T08:22:34.51Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
@@ -54,7 +71,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Repository.cs",
               "DocumentMoniker": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data\\Repository.cs",
               "RelativeDocumentMoniker": "lib\\Slickflow.Data\\Repository.cs",
@@ -67,7 +84,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "IRepository.cs",
               "DocumentMoniker": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data\\IRepository.cs",
               "RelativeDocumentMoniker": "lib\\Slickflow.Data\\IRepository.cs",
@@ -75,12 +92,11 @@
               "RelativeToolTip": "lib\\Slickflow.Data\\IRepository.cs",
               "ViewState": "AQIAAAwAAAAAAAAAAAAAACEAAAAbAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-21T03:28:19.37Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-21T03:28:19.37Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "ManagerBase.cs",
               "DocumentMoniker": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data\\ManagerBase.cs",
               "RelativeDocumentMoniker": "lib\\Slickflow.Data\\ManagerBase.cs",
@@ -88,12 +104,11 @@
               "RelativeToolTip": "lib\\Slickflow.Data\\ManagerBase.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-21T03:28:17.424Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-21T03:28:17.424Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "ServiceBase.cs",
               "DocumentMoniker": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data\\ServiceBase.cs",
               "RelativeDocumentMoniker": "lib\\Slickflow.Data\\ServiceBase.cs",
@@ -101,12 +116,11 @@
               "RelativeToolTip": "lib\\Slickflow.Data\\ServiceBase.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-21T03:28:13.356Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-21T03:28:13.356Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "SessionFactory.cs",
               "DocumentMoniker": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data\\SessionFactory.cs",
               "RelativeDocumentMoniker": "lib\\Slickflow.Data\\SessionFactory.cs",
@@ -114,8 +128,7 @@
               "RelativeToolTip": "lib\\Slickflow.Data\\SessionFactory.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-21T03:28:08.329Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-21T03:28:08.329Z"
             }
           ]
         }

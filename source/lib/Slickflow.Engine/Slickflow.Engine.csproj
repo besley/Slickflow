@@ -5,11 +5,11 @@
     <Authors>Besley</Authors>
     <Company>Hangzhou, Ligong</Company>
     <Product>Slickflow.NET</Product>
-    <Copyright>@2014-2021</Copyright>
-    <AssemblyVersion>1.7.6.2</AssemblyVersion>
-    <FileVersion>1.7.6.2</FileVersion>
+    <Copyright>@2014-2024</Copyright>
+    <AssemblyVersion>2.2.0.0</AssemblyVersion>
+    <FileVersion>2.2.0.0</FileVersion>
     <Description>Open Source Workflow Engine based on .NET5</Description>
-    <Version>2.0.0.0</Version>
+    <Version>2.2.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

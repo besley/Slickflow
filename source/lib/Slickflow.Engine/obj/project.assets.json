@@ -2598,7 +2598,7 @@
     "C:\\Users\\lg\\.nuget\\packages\\": {}
   },
   "project": {
-    "version": "2.0.0",
+    "version": "2.2.0",
     "restore": {
       "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj",
       "projectName": "Slickflow.Engine",
