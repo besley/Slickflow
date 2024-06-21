@@ -189,8 +189,9 @@ http://www.slickflow.com/product/index
 
 
 **EMail: sales@ruochisoft.com**  
-**QQ(Author): 47743901** 
-**WeChat(Author): besley2008** 
+**QQ(Author): 47743901**  
+**WeChat(Author): besley2008**  
+
 
 **Slickflow 网站:**  
 http://www.slickflow.com  (中文) 
