@@ -27,7 +27,7 @@
 
 5). Access the web project in the browser by 
 
-    ** http://localhost:5000 **
+    **http://localhost:5000**
 
 **.NET/.NETCore Workflow Engine With Full Source Code** 
 1. **.NET, .NET CORE version both supported**  
@@ -177,7 +177,7 @@ The SlickQua project:http://github.com/besley/slickqua/
 1. 集成BpmnJS 设计器，XML模式转换为BPMN2;
 2. 重构Slickflow.Engine项目;
 3. 重写ProcessModelBPMN，适应BPMN2模型;
-4. 全部项目.NET6版本实现；
+4. 全部项目 .NET8 版本实现；
 5. 技术开发文档网站发布
 	http://doc.slickflow.com (中文) 
 	http://doc.slickflow.net(English) 
