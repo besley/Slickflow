@@ -10,7 +10,7 @@
         "dependencies": {
           "Microsoft.AspNetCore.SpaServices.Extensions": "5.0.1",
           "Microsoft.Extensions.Logging": "5.0.0",
-          "Microsoft.SourceLink.GitHub": "1.0.0"
+          "Microsoft.SourceLink.GitHub": "8.0.0"
         },
         "runtime": {
           "VueCliMiddleware.dll": {}
@@ -27,7 +27,7 @@
           }
         }
       },
-      "Microsoft.Build.Tasks.Git/1.0.0": {},
+      "Microsoft.Build.Tasks.Git/8.0.0": {},
       "Microsoft.Extensions.DependencyInjection/5.0.0": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "5.0.0"
@@ -63,11 +63,11 @@
         }
       },
       "Microsoft.Extensions.Primitives/5.0.0": {},
-      "Microsoft.SourceLink.Common/1.0.0": {},
-      "Microsoft.SourceLink.GitHub/1.0.0": {
+      "Microsoft.SourceLink.Common/8.0.0": {},
+      "Microsoft.SourceLink.GitHub/8.0.0": {
         "dependencies": {
-          "Microsoft.Build.Tasks.Git": "1.0.0",
-          "Microsoft.SourceLink.Common": "1.0.0"
+          "Microsoft.Build.Tasks.Git": "8.0.0",
+          "Microsoft.SourceLink.Common": "8.0.0"
         }
       }
     }
@@ -85,12 +85,12 @@
       "path": "microsoft.aspnetcore.spaservices.extensions/5.0.1",
       "hashPath": "microsoft.aspnetcore.spaservices.extensions.5.0.1.nupkg.sha512"
     },
-    "Microsoft.Build.Tasks.Git/1.0.0": {
+    "Microsoft.Build.Tasks.Git/8.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-z2fpmmt+1Jfl+ZnBki9nSP08S1/tbEOxFdsK1rSR+LBehIJz1Xv9/6qOOoGNqlwnAGGVGis1Oj6S8Kt9COEYlQ==",
-      "path": "microsoft.build.tasks.git/1.0.0",
-      "hashPath": "microsoft.build.tasks.git.1.0.0.nupkg.sha512"
+      "sha512": "sha512-bZKfSIKJRXLTuSzLudMFte/8CempWjVamNUR5eHJizsy+iuOuO/k2gnh7W0dHJmYY0tBf+gUErfluCv5mySAOQ==",
+      "path": "microsoft.build.tasks.git/8.0.0",
+      "hashPath": "microsoft.build.tasks.git.8.0.0.nupkg.sha512"
     },
     "Microsoft.Extensions.DependencyInjection/5.0.0": {
       "type": "package",
@@ -155,19 +155,19 @@
       "path": "microsoft.extensions.primitives/5.0.0",
       "hashPath": "microsoft.extensions.primitives.5.0.0.nupkg.sha512"
     },
-    "Microsoft.SourceLink.Common/1.0.0": {
+    "Microsoft.SourceLink.Common/8.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-G8DuQY8/DK5NN+3jm5wcMcd9QYD90UV7MiLmdljSJixi3U/vNaeBKmmXUqI4DJCOeWizIUEh4ALhSt58mR+5eg==",
-      "path": "microsoft.sourcelink.common/1.0.0",
-      "hashPath": "microsoft.sourcelink.common.1.0.0.nupkg.sha512"
+      "sha512": "sha512-dk9JPxTCIevS75HyEQ0E4OVAFhB2N+V9ShCXf8Q6FkUQZDkgLI12y679Nym1YqsiSysuQskT7Z+6nUf3yab6Vw==",
+      "path": "microsoft.sourcelink.common/8.0.0",
+      "hashPath": "microsoft.sourcelink.common.8.0.0.nupkg.sha512"
     },
-    "Microsoft.SourceLink.GitHub/1.0.0": {
+    "Microsoft.SourceLink.GitHub/8.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-aZyGyGg2nFSxix+xMkPmlmZSsnGQ3w+mIG23LTxJZHN+GPwTQ5FpPgDo7RMOq+Kcf5D4hFWfXkGhoGstawX13Q==",
-      "path": "microsoft.sourcelink.github/1.0.0",
-      "hashPath": "microsoft.sourcelink.github.1.0.0.nupkg.sha512"
+      "sha512": "sha512-G5q7OqtwIyGTkeIOAc3u2ZuV/kicQaec5EaRnc0pIeSnh9LUjj+PYQrJYBURvDt7twGl2PKA7nSN0kz1Zw5bnQ==",
+      "path": "microsoft.sourcelink.github/8.0.0",
+      "hashPath": "microsoft.sourcelink.github.8.0.0.nupkg.sha512"
     }
   }
 }
