@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Slickflow.Module.Logging")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+42bfa06cd3750d18e9d0242c5fb35772d62c977a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+443680af8947a148a9588343ffd3df2985fd8448")]
 [assembly: System.Reflection.AssemblyProductAttribute("Slickflow.Module.Logging")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Slickflow.Module.Logging")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

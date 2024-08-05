@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Slickflow.WebApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+73679d81bf980571d9246a08444fb62f6e145c02")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+443680af8947a148a9588343ffd3df2985fd8448")]
 [assembly: System.Reflection.AssemblyProductAttribute("Slickflow.WebApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Slickflow.WebApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
