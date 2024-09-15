@@ -67,7 +67,11 @@ namespace Slickflow.Module.Essential.Message
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += (model, ea) =>
             {
+<<<<<<< HEAD
                 var body = ea.Body;
+=======
+                var body = ea.Body.ToArray();
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
                 var line = Encoding.UTF8.GetString(body);
                 var msgMediator = new MessageMediator();
                 msgMediator.InvokeFromMessage(ConsumeMessageFunction, topic, line);

@@ -48,7 +48,11 @@
           "dependencies": {
             "Microsoft.Extensions.Caching.Memory": {
               "target": "Package",
+<<<<<<< HEAD
               "version": "[3.1.0, )"
+=======
+              "version": "[8.0.0, )"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             },
             "System.Data.SqlClient": {
               "target": "Package",
@@ -71,7 +75,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -123,11 +131,19 @@
           "dependencies": {
             "Microsoft.Extensions.Caching.Memory": {
               "target": "Package",
+<<<<<<< HEAD
               "version": "[3.1.0, )"
             },
             "System.Configuration.ConfigurationManager": {
               "target": "Package",
               "version": "[4.5.0, )"
+=======
+              "version": "[8.0.0, )"
+            },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             },
             "System.Data.SqlClient": {
               "target": "Package",
@@ -150,7 +166,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -205,7 +225,11 @@
           "dependencies": {
             "Microsoft.Extensions.Caching.Memory": {
               "target": "Package",
+<<<<<<< HEAD
               "version": "[3.1.0, )"
+=======
+              "version": "[8.0.0, )"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -224,7 +248,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -276,7 +304,11 @@
           "dependencies": {
             "Microsoft.Extensions.Caching.Memory": {
               "target": "Package",
+<<<<<<< HEAD
               "version": "[3.1.0, )"
+=======
+              "version": "[8.0.0, )"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -295,7 +327,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     }
