@@ -5,7 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.0" />
+=======
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
   </ItemGroup>
 
   <ItemGroup>

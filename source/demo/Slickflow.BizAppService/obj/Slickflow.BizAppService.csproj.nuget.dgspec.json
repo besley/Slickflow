@@ -68,7 +68,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -114,9 +118,19 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+<<<<<<< HEAD
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.6.1, )"
+=======
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.6, )"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -135,7 +149,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -184,6 +202,15 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+<<<<<<< HEAD
+=======
+          "dependencies": {
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
           "imports": [
             "net461",
             "net462",
@@ -200,7 +227,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -250,6 +281,7 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+<<<<<<< HEAD
             "Npgsql": {
               "target": "Package",
               "version": "[5.0.3, )"
@@ -261,6 +293,19 @@
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.6.1, )"
+=======
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.6, )"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -279,12 +324,20 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
     "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj": {
+<<<<<<< HEAD
       "version": "2.0.0",
+=======
+      "version": "2.2.0",
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj",
         "projectName": "Slickflow.Engine",
@@ -344,6 +397,7 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+<<<<<<< HEAD
             "Devart.Data.Oracle.EFCore": {
               "target": "Package",
               "version": "[9.6.675, )"
@@ -379,6 +433,31 @@
             "System.Reflection.Emit": {
               "target": "Package",
               "version": "[4.3.0, )"
+=======
+            "IronPython": {
+              "target": "Package",
+              "version": "[3.4.1, )"
+            },
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "ServiceStack": {
+              "target": "Package",
+              "version": "[8.3.0, )"
+            },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "System.Reflection.Emit": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -397,7 +476,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -453,6 +536,7 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+<<<<<<< HEAD
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[12.0.1, )"
@@ -464,6 +548,23 @@
             "ServiceStack.Text": {
               "target": "Package",
               "version": "[5.4.0, )"
+=======
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[6.8.1, )"
+            },
+            "ServiceStack.Text": {
+              "target": "Package",
+              "version": "[8.3.0, )"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -482,7 +583,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -530,11 +635,19 @@
           "dependencies": {
             "Microsoft.Extensions.Caching.Memory": {
               "target": "Package",
+<<<<<<< HEAD
               "version": "[2.2.0, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[12.0.1, )"
+=======
+              "version": "[8.0.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -553,7 +666,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -605,6 +722,15 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+<<<<<<< HEAD
+=======
+          "dependencies": {
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
           "imports": [
             "net461",
             "net462",
@@ -621,7 +747,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -674,6 +804,7 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+<<<<<<< HEAD
             "Devart.Data.Oracle.EFCore": {
               "target": "Package",
               "version": "[9.5.399, )"
@@ -689,6 +820,11 @@
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
               "version": "[2.0.1, )"
+=======
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -707,7 +843,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -756,6 +896,15 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+<<<<<<< HEAD
+=======
+          "dependencies": {
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
           "imports": [
             "net461",
             "net462",
@@ -772,7 +921,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -818,9 +971,19 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+<<<<<<< HEAD
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[12.0.1, )"
+=======
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -839,7 +1002,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     }

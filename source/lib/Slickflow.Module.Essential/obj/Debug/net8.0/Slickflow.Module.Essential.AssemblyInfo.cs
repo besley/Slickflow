@@ -14,7 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Slickflow.Module.Essential")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+48e3188b586bd5bb54a7961a2139e9ef71ad511b")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+443680af8947a148a9588343ffd3df2985fd8448")]
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
 [assembly: System.Reflection.AssemblyProductAttribute("Slickflow.Module.Essential")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Slickflow.Module.Essential")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

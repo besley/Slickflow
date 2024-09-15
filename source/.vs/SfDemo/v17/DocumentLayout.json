@@ -1,18 +1,23 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\GitHub\\Slickflow\\source\\",
+<<<<<<< HEAD
   "Documents": [
     {
       "AbsoluteMoniker": "D:0:0:{C80C5D9D-11F5-4229-B93B-1819F8F98A86}|demo\\Slickflow.MvcDemo\\Slickflow.MvcDemo.csproj|d:\\github\\slickflow\\source\\demo\\slickflow.mvcdemo\\slickflow.mvcdemo.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
       "RelativeMoniker": "D:0:0:{C80C5D9D-11F5-4229-B93B-1819F8F98A86}|demo\\Slickflow.MvcDemo\\Slickflow.MvcDemo.csproj|solutionrelative:demo\\slickflow.mvcdemo\\slickflow.mvcdemo.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     }
   ],
+=======
+  "Documents": [],
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
+<<<<<<< HEAD
           "DockedWidth": 200,
           "SelectedChildIndex": 5,
           "Children": [
@@ -47,6 +52,32 @@
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2024-06-21T02:59:26.002Z",
               "EditorCaption": ""
+=======
+          "DockedWidth": 971,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{a80febb4-e7e0-4147-b476-21aaf2453969}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 971,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           ]
         }

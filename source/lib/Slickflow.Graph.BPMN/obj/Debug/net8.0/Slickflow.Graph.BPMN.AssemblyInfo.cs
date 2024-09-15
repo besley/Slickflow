@@ -14,7 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Slickflow.Graph.BPMN")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+04376c5d241af5bee7128f47e85d969cbeff30f5")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+443680af8947a148a9588343ffd3df2985fd8448")]
+>>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
 [assembly: System.Reflection.AssemblyProductAttribute("Slickflow.Graph.BPMN")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Slickflow.Graph.BPMN")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
