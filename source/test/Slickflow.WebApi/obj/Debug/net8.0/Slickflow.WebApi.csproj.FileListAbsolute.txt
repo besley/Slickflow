@@ -21,28 +21,10 @@ D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Microsoft.Scri
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Microsoft.Scripting.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\IronPython.Modules.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\IronPython.SQLite.dll
-<<<<<<< HEAD
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\IronPython.dll
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.OpenIdConnect.dll
-=======
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\IronPython.Wpf.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\IronPython.dll
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.OpenIdConnect.dll
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Microsoft.OpenApi.dll
-<<<<<<< HEAD
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
-=======
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Mono.Unix.dll
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Newtonsoft.Json.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\RabbitMQ.Client.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\ServiceStack.dll
@@ -56,14 +38,6 @@ D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Swashbuckle.As
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\System.CodeDom.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\System.Data.SqlClient.dll
-<<<<<<< HEAD
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\System.Drawing.Common.dll
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\System.Security.Cryptography.ProtectedData.dll
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\System.Security.Permissions.dll
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
-=======
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\System.Security.Cryptography.ProtectedData.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\runtimes\android-arm\native\libMono.Unix.so
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\runtimes\android-arm64\native\libMono.Unix.so
@@ -83,18 +57,11 @@ D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\runtimes\osx-a
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\runtimes\osx-x64\native\libMono.Unix.dylib
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\runtimes\tvos-arm64\native\libMono.Unix.a
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\runtimes\tvossimulator-x64\native\libMono.Unix.a
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\runtimes\win-arm64\native\sni.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\runtimes\win-x64\native\sni.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\runtimes\win-x86\native\sni.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
-<<<<<<< HEAD
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
-D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
-=======
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Dapper.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Slickflow.Data.DataProvider.dll
 D:\GitHub\Slickflow\source\test\Slickflow.WebApi\bin\Debug\net8.0\Slickflow.Data.dll

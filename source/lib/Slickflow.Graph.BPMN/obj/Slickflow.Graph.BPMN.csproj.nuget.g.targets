@@ -1,7 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<<<<<<< HEAD
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" />
-=======
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <Import Project="$(NuGetPackageRoot)microsoft.extensions.options\8.0.0\buildTransitive\net6.0\Microsoft.Extensions.Options.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.extensions.options\8.0.0\buildTransitive\net6.0\Microsoft.Extensions.Options.targets')" />
@@ -9,4 +6,3 @@
     <Import Project="$(NuGetPackageRoot)microsoft.extensions.configuration.binder\8.0.0\buildTransitive\netstandard2.0\Microsoft.Extensions.Configuration.Binder.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.extensions.configuration.binder\8.0.0\buildTransitive\netstandard2.0\Microsoft.Extensions.Configuration.Binder.targets')" />
   </ImportGroup>
 </Project>
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
