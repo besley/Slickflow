@@ -8,10 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Slickflow.Data.DataProvider
-<<<<<<< HEAD
-build_property.ProjectDir = D:\GitHub\Slickflow\source\Lib\Slickflow.Data.DataProvider\
-=======
 build_property.ProjectDir = D:\GitHub\Slickflow\source\lib\Slickflow.Data.DataProvider\
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
