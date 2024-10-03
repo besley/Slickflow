@@ -161,13 +161,11 @@ http://www.slickflow.com
 http://www.slickflow.com/demo/index  
 **Designer Demo:**  
 http://demo.slickflow.com/sfd/  
-**Modeler Start Tutorial:**  
-https://github.com/besley/Slickflow/wiki/Slickflow-Quick-Start-Tutorial  
-**Modeler Demo:**  
-http://demo.slickflow.com/sfd/model  
-**Quasar Form Builder**  
-The online dynamic form demo:http://demo.slickflow.com/sqd/   
-The SlickQua project:http://github.com/besley/slickqua/   
+**Form Builder**  
+The online dynamic form demo:http://demo.slickflow.com/fbd/   
+The formbuilder project:http://github.com/besley/formbuilder/   
+**YouTube Workflow Pattern Video**
+https://www.youtube.com/@besley7836
 
 ![AskForLeave Form Approval](https://github.com/besley/besley.github.io/blob/master/Gif/SlickQua-Ask4Leave-Demo.gif)  
 
