@@ -5,33 +5,23 @@ using System.Reflection;
 namespace Slickflow.Engine.Config
 {
     /// <summary>
-    /// 流程参数配置列表
+    /// Workflow Configuration
     /// </summary>
     internal class WfConfig
     {
-        private static readonly int _expiredDays = 1;
-        private static readonly string _externalServiceFile = "Plugin\\Slickflow.Module.External.dll";
+        /// <summary>
+        /// BPMN file cache expired days
+        /// </summary>
+        internal static readonly int EXPIRED_DAYS = 1;
 
         /// <summary>
-        /// 获取过期时间设置参数
+        /// BPMN file cache enabled true/false
         /// </summary>
-        /// <returns></returns>
-        internal static int GetDefaultExpiredDays()
-        {
-            return _expiredDays;
-        }
+        internal static readonly bool EXPIRED_DAYS_ENABLED = false;
 
         /// <summary>
-        /// 获取外部服务文件，加载
+        /// Local Service File Path
         /// </summary>
-        /// <returns></returns>
-        internal static Assembly LoadExternalServiceFile()
-        {
-            var directory = AppDomain.CurrentDomain.BaseDirectory;
-            var serviceFile = Path.Combine(directory, _externalServiceFile);
-            var assembly = Assembly.LoadFrom(serviceFile);
-
-            return assembly;
-        }
+        internal static readonly string EXTERNAL_SERVICE_FILE_PATH = "Plugin\\Slickflow.Module.External.dll";
     }
 }
