@@ -15,6 +15,7 @@ using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Xpdl.Schedule;
 using Slickflow.Engine.Xpdl.Node;
+using Slickflow.Engine.Config;
 
 namespace Slickflow.Engine.Xpdl
 {
@@ -34,12 +35,22 @@ namespace Slickflow.Engine.Xpdl
                 var processGUID = ProcessEntity.ProcessGUID;
                 var version = ProcessEntity.Version;
 
-                if (XPDLMemoryCachedHelper.GetXpdlCache(processGUID, version) == null)
+                if (WfConfig.EXPIRED_DAYS_ENABLED == true)
                 {
-                    var process = ConvertProcessModelFromXML(ProcessEntity);
-                    XPDLMemoryCachedHelper.SetXpdlCache(processGUID, version, process);
+                    //Get Process content from cache
+                    if (XPDLMemoryCachedHelper.GetXpdlCache(processGUID, version) == null)
+                    {
+                        var process = ConvertProcessModelFromXML(ProcessEntity);
+                        XPDLMemoryCachedHelper.SetXpdlCache(processGUID, version, process);
+                    }
+                    return XPDLMemoryCachedHelper.GetXpdlCache(processGUID, version);
                 }
-                return XPDLMemoryCachedHelper.GetXpdlCache(processGUID, version);
+                else
+                {
+                    //Get Process content from database
+                    var processDB = ConvertProcessModelFromXML(ProcessEntity);
+                    return processDB;
+                }
             }
         }
         /// <summary>

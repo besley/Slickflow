@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Slickflow.Engine.Config;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Xpdl.Entity;
 
@@ -18,7 +19,7 @@ namespace Slickflow.Engine.Xpdl
         static XPDLMemoryCachedHelper()
         {
             var cacheOptions = new MemoryCacheOptions();
-            cacheOptions.ExpirationScanFrequency = TimeSpan.FromDays(1);
+            cacheOptions.ExpirationScanFrequency = TimeSpan.FromDays(WfConfig.EXPIRED_DAYS);        //default days is 1
             _xpdlCache = new MemoryCache(cacheOptions);
         }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Slickflow.Module.Localize;
 using Slickflow.Engine.Config;
+using System.IO;
 
 namespace Slickflow.Engine.Utility
 {
@@ -20,7 +21,10 @@ namespace Slickflow.Engine.Utility
         /// <returns>实例</returns>
         public static T GetSpecialInstance<T>(string fullName) where T : class
         {
-            var assembly = WfConfig.LoadExternalServiceFile();
+            var directory = AppDomain.CurrentDomain.BaseDirectory;
+            var serviceFile = Path.Combine(directory, WfConfig.EXTERNAL_SERVICE_FILE_PATH);
+            var assembly = Assembly.LoadFrom(serviceFile);
+
             var list = assembly.GetTypes().Where(x => typeof(T).IsAssignableFrom(x)
                         && !x.IsInterface
                         && !x.IsAbstract
