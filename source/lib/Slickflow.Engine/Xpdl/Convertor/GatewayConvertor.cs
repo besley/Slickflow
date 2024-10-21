@@ -40,15 +40,15 @@ namespace Slickflow.Engine.Xpdl.Convertor
                 gatewayDetail.SplitJoinType = GatewaySplitJoinTypeEnum.Split;
                 if (XPDLHelper.IsOrGateway(gatewayNode))
                 {
+                    gatewayDetail.DirectionType = GatewayDirectionEnum.OrSplit;
                     var strExtraSplitType = XMLHelper.GetXmlAttribute(gatewatDetailNode, "extraSplitType");
                     if (!string.IsNullOrEmpty(strExtraSplitType))
                     {
                         var extraSplitType = EnumHelper.TryParseEnum<GatewayDirectionEnum>(strExtraSplitType);
-                        gatewayDetail.DirectionType = extraSplitType;
-                    }
-                    else
-                    {
-                        gatewayDetail.DirectionType = GatewayDirectionEnum.OrSplit;
+                        if (extraSplitType != GatewayDirectionEnum.None)
+                        {
+                            gatewayDetail.DirectionType = extraSplitType;
+                        }
                     }
                 }
                 else if (XPDLHelper.IsXOrGateway(gatewayNode))
@@ -71,20 +71,20 @@ namespace Slickflow.Engine.Xpdl.Convertor
                 gatewayDetail.SplitJoinType = GatewaySplitJoinTypeEnum.Join;
                 if (XPDLHelper.IsOrGateway(gatewayNode))
                 {
+                    gatewayDetail.DirectionType = GatewayDirectionEnum.OrJoin;
                     var strExtraJoinType = XMLHelper.GetXmlAttribute(gatewatDetailNode, "extraJoinType");
                     if (!string.IsNullOrEmpty(strExtraJoinType))
                     {
                         var extraJoinType = EnumHelper.TryParseEnum<GatewayDirectionEnum>(strExtraJoinType);
-                        gatewayDetail.DirectionType = extraJoinType;
-                        if (extraJoinType == GatewayDirectionEnum.EOrJoin)
+                        if (extraJoinType != GatewayDirectionEnum.None) 
                         {
-                            var strJoinPassType = XMLHelper.GetXmlAttribute(gatewatDetailNode, "joinPassType");
-                            var joinPassType = EnumHelper.TryParseEnum<GatewayJoinPassEnum>(strJoinPassType);
-                            gatewayDetail.JoinPassType = joinPassType;
-                        }
-                        else
-                        {
-                            throw new WfXpdlException(string.Format("GatewayConvertor:Unsupport gateway type:{0}", extraJoinType.ToString()));
+                            gatewayDetail.DirectionType = extraJoinType;
+                            if (extraJoinType == GatewayDirectionEnum.EOrJoin)
+                            {
+                                var strJoinPassType = XMLHelper.GetXmlAttribute(gatewatDetailNode, "joinPassType");
+                                var joinPassType = EnumHelper.TryParseEnum<GatewayJoinPassEnum>(strJoinPassType);
+                                gatewayDetail.JoinPassType = joinPassType;
+                            }
                         }
                     }
                     else

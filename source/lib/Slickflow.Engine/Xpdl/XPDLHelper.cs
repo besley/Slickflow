@@ -132,63 +132,49 @@ namespace Slickflow.Engine.Xpdl
             xmlDoc.LoadXml(processEntity.XmlContent);
             var xnpmgr = XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc);
 
-            var packageNode = xmlDoc.DocumentElement;
-            var messagesNode = packageNode.SelectSingleNode("Layout/Messages");
-            var messageNode = messagesNode.SelectSingleNode(string.Format("Message[@from='{0}']", throwActivity.ActivityGUID));
-            var catchActivityGUID = XMLHelper.GetXmlAttribute(messageNode, "to");
+            var root = xmlDoc.DocumentElement;
+            var xmlNodeCollaboration = root.SelectSingleNode(XPDLDefinition.BPMN2_StrXmlPath_Collaboration,
+                XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
 
-            var catchActivityNode = packageNode.SelectSingleNode(string.Format("WorkflowProcesses/Process/Activities/Activity[@id='{0}']", catchActivityGUID));
-            var catchProcessNode = catchActivityNode.ParentNode.ParentNode;
+            var strFromPath = string.Format("{0}[@sf:from='{1}']", XPDLDefinition.BPMN2_StrXmlPath_MessageFlow, throwActivity.ActivityGUID);
+            var xmlMessageFlow = xmlNodeCollaboration.SelectSingleNode(strFromPath, XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
+
+            var catchActivityGUID = XMLHelper.GetXmlAttribute(xmlMessageFlow, "sf:to");
+            var strXmlActivityPath = string.Format("//*[@sf:guid='{0}']", catchActivityGUID);
+
+            var catchActivityNode = xmlNodeCollaboration.SelectSingleNode(strXmlActivityPath, XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
+            var catchProcessNode = catchActivityNode.ParentNode;
 
             catchProcessEntity = new ProcessEntity();
-            catchProcessEntity.ProcessGUID = XMLHelper.GetXmlAttribute(catchProcessNode, "id");
-            catchProcessEntity.Version = XMLHelper.GetXmlAttribute(catchProcessNode, "version");
             catchProcessEntity.ProcessName = XMLHelper.GetXmlAttribute(catchProcessNode, "name");
-            catchProcessEntity.ProcessCode = XMLHelper.GetXmlAttribute(catchProcessNode, "code");
+            catchProcessEntity.ProcessGUID = XMLHelper.GetXmlAttribute(catchProcessNode, "sf:guid");
+            catchProcessEntity.Version = processInstance.Version;
+            catchProcessEntity.ProcessCode = XMLHelper.GetXmlAttribute(catchProcessNode, "sf:code");
 
             catchActivity = ConvertHelper.ConvertXmlActivityNodeToActivityEntity(catchActivityNode, xnpmgr, catchProcessEntity.ProcessGUID);
 
             return catchActivity;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="document"></param>
-        /// <param name="space"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private static XmlNamespaceManager CreateXmlNameSpace(XmlDocument document, string space, string value)
-        {
-            var nsmgr = new XmlNamespaceManager(document.NameTable);
-            nsmgr.AddNamespace(space, value);
-            return nsmgr;
-        }
-
-        /// <summary>
-        /// 获取BPMN命名空间
-        /// </summary>
-        /// <param name="document">xml文档</param>
-        /// <returns>命名空间管理器</returns>
-        public static XmlNamespaceManager GetBPMN2XmlNamespaceManager(XmlDocument document)
-        {
-            var nsmgr = CreateXmlNameSpace(document, XPDLDefinition.BPMN2_NameSpacePrefix, XPDLDefinition.BPMN2_NameSpacePrefix_Value);
-            return nsmgr;
-        }
 
         /// <summary>
         /// 添加XML文档的命名空间
         /// </summary>
         /// <param name="document">XML文档</param>
+        /// <param name="isBPMNDIContained">是否包含Shape节点</param>
         /// <returns>XML命名空间管理</returns>
-        public static XmlNamespaceManager GetSlickflowXmlNamespaceManager(XmlDocument document)
+        public static XmlNamespaceManager GetSlickflowXmlNamespaceManager(XmlDocument document, Boolean isBPMNDIContained = false)
         {
             var nsmgr = new XmlNamespaceManager(document.NameTable);
             nsmgr.AddNamespace(XPDLDefinition.BPMN2_NameSpacePrefix, XPDLDefinition.BPMN2_NameSpacePrefix_Value);
             nsmgr.AddNamespace(XPDLDefinition.Sf_NameSpacePrefix, XPDLDefinition.Sf_NameSpacePrefix_Value);
+
+            if (isBPMNDIContained)
+            {
+                nsmgr.AddNamespace(XPDLDefinition.BPMNDI_NameSpacePrefix, XPDLDefinition.BPMNDI_NameSpacePrefix_Value);
+            }
             return nsmgr;
         }
-
 
         /// <summary>
         /// 获取流程节点的查找路径

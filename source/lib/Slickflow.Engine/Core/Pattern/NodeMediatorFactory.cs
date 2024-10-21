@@ -1,25 +1,4 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-* 
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
+﻿
 using System;
 using Slickflow.Engine.Common;
 using Slickflow.Data;
@@ -28,7 +7,13 @@ using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Core.Pattern.Event;
+using Slickflow.Engine.Core.Pattern.Event.Timer;
+using Slickflow.Engine.Core.Pattern.Event.Message;
+using Slickflow.Engine.Core.Pattern.Event.Conditional;
+using Slickflow.Engine.Core.Pattern.Event.Signal;
 using Slickflow.Engine.Core.Pattern.Gateway;
+using Slickflow.Engine.Business.Manager;
+using Slickflow.Engine.Xpdl.Node;
 
 namespace Slickflow.Engine.Core.Pattern
 {
@@ -73,23 +58,41 @@ namespace Slickflow.Engine.Core.Pattern
                     }
                     else
                     {
-                        throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.uncertain.warn",
-                            string.Format("ActivityType:{0},trigger:{1}", forwardContext.Activity.ActivityType.ToString(),
-                                                             forwardContext.Activity.TriggerDetail.TriggerType)
-                        ));
+                        ThrowUncerternXmlNodeTypeException(forwardContext.Activity.ActivityType.ToString(), 
+                            forwardContext.Activity.TriggerDetail.TriggerType.ToString(),
+                            forwardContext.Activity.TriggerDetail.MessageDirection.ToString());
+                        return null;
+                    }
+                }
+                else if (forwardContext.Activity.TriggerDetail.TriggerType == TriggerTypeEnum.Signal)
+                {
+                    if (forwardContext.Activity.TriggerDetail.MessageDirection == MessageDirectionEnum.Catch)
+                    {
+                        return new NodeMediatorStartSignalCatch(forwardContext, session);
+                    }
+                    else if (forwardContext.Activity.TriggerDetail.MessageDirection == MessageDirectionEnum.Throw)
+                    {
+                        return new NodeMediatorStartSignalThrow(forwardContext, session);
+                    }
+                    else
+                    {
+                        ThrowUncerternXmlNodeTypeException(forwardContext.Activity.ActivityType.ToString(),
+                            forwardContext.Activity.TriggerDetail.TriggerType.ToString(),
+                            forwardContext.Activity.TriggerDetail.MessageDirection.ToString());
+                        return null;
                     }
                 }
                 else
                 {
-                    throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.uncertain.warn",
-                        string.Format("ActivityType:{0},trigger:{1}", forwardContext.Activity.ActivityType.ToString(),
-                                                         forwardContext.Activity.TriggerDetail.TriggerType)
-                    ));
+                    ThrowUncerternXmlNodeTypeException(forwardContext.Activity.ActivityType.ToString(),
+                        forwardContext.Activity.TriggerDetail.TriggerType.ToString());
+                    return null;
                 }
             }
             else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.EndNode)
             {
-                if (forwardContext.Activity.TriggerDetail.TriggerType == TriggerTypeEnum.None)
+                if (forwardContext.Activity.TriggerDetail == null || 
+                    forwardContext.Activity.TriggerDetail.TriggerType == TriggerTypeEnum.None)
                 {
                     return new NodeMediatorEnd(forwardContext, session);
                 }
@@ -109,18 +112,35 @@ namespace Slickflow.Engine.Core.Pattern
                     }
                     else
                     {
-                        throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.uncertain.warn",
-                            string.Format("ActivityType:{0},trigger:{1}", forwardContext.Activity.ActivityType.ToString(),
-                                                             forwardContext.Activity.TriggerDetail.TriggerType)
-                        ));
+                        ThrowUncerternXmlNodeTypeException(forwardContext.Activity.ActivityType.ToString(),
+                            forwardContext.Activity.TriggerDetail.TriggerType.ToString(),
+                            forwardContext.Activity.TriggerDetail.MessageDirection.ToString());
+                        return null;
+                    }
+                }
+                else if (forwardContext.Activity.TriggerDetail.TriggerType == TriggerTypeEnum.Signal)
+                {
+                    if (forwardContext.Activity.TriggerDetail.MessageDirection == MessageDirectionEnum.Catch)
+                    {
+                        return new NodeMediatorEndSignalCatch(forwardContext, session);
+                    }
+                    else if (forwardContext.Activity.TriggerDetail.MessageDirection == MessageDirectionEnum.Throw)
+                    {
+                        return new NodeMediatorEndSignalThrow(forwardContext, session);
+                    }
+                    else
+                    {
+                        ThrowUncerternXmlNodeTypeException(forwardContext.Activity.ActivityType.ToString(),
+                            forwardContext.Activity.TriggerDetail.TriggerType.ToString(),
+                            forwardContext.Activity.TriggerDetail.MessageDirection.ToString());
+                        return null;
                     }
                 }
                 else
                 {
-                    throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.uncertain.warn",
-                        string.Format("ActivityType:{0},trigger:{1}", forwardContext.Activity.ActivityType.ToString(),
-                                                         forwardContext.Activity.TriggerDetail.TriggerType)
-                    ));
+                    ThrowUncerternXmlNodeTypeException(forwardContext.Activity.ActivityType.ToString(),
+                        forwardContext.Activity.TriggerDetail.TriggerType.ToString());
+                    return null;
                 }
             }
             else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.IntermediateNode)
@@ -145,23 +165,62 @@ namespace Slickflow.Engine.Core.Pattern
                     }
                     else
                     {
-                        throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.uncertain.warn",
-                            string.Format("ActivityType:{0},trigger:{1}", forwardContext.Activity.ActivityType.ToString(),
-                                                             forwardContext.Activity.TriggerDetail.TriggerType)
-                        ));
+                        ThrowUncerternXmlNodeTypeException(forwardContext.Activity.ActivityType.ToString(),
+                            forwardContext.Activity.TriggerDetail.TriggerType.ToString(),
+                            forwardContext.Activity.TriggerDetail.MessageDirection.ToString());
+                        return null;
+                    }
+                }
+                else if (forwardContext.Activity.TriggerDetail.TriggerType == TriggerTypeEnum.Signal)
+                {
+                    if (forwardContext.Activity.TriggerDetail.MessageDirection == MessageDirectionEnum.Catch)
+                    {
+                        return new NodeMediatorInterSignalCatchContinue(forwardContext, session);
+                    }
+                    else if (forwardContext.Activity.TriggerDetail.MessageDirection == MessageDirectionEnum.Throw)
+                    {
+                        return new NodeMediatorInterSignalThrow(forwardContext, session);
+                    }
+                    else
+                    {
+                        ThrowUncerternXmlNodeTypeException(forwardContext.Activity.ActivityType.ToString(),
+                            forwardContext.Activity.TriggerDetail.TriggerType.ToString(),
+                            forwardContext.Activity.TriggerDetail.MessageDirection.ToString());
+                        return null;
                     }
                 }
                 else
                 {
-                    throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.uncertain.warn",
-                        string.Format("ActivityType:{0},trigger:{1}", forwardContext.Activity.ActivityType.ToString(),
-                                                         forwardContext.Activity.TriggerDetail.TriggerType)
-                    ));
+                    ThrowUncerternXmlNodeTypeException(forwardContext.Activity.ActivityType.ToString(),
+                        forwardContext.Activity.TriggerDetail.TriggerType.ToString());
+                    return null;
                 }
             }
             else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.TaskNode)         //任务节点
             {
-                return new NodeMediatorTask(forwardContext, session);
+                //普通任务节点，运行时临时加签变为多实例节点
+                var controlParamSheet = forwardContext.ActivityResource.AppRunner.ControlParameterSheet;
+                if (controlParamSheet != null)
+                {
+                    if (!string.IsNullOrEmpty(controlParamSheet.SignForwardType)
+                        && controlParamSheet.SignForwardType.ToUpper() != "NONE")
+                    {
+                        return new NodeMediatorSignForward(forwardContext, session);
+                    }
+                    else
+                    {
+                        return new NodeMediatorTask(forwardContext, session);
+                    }
+                }
+                else if(forwardContext.FromActivityInstance.MIHostActivityInstanceID != null)
+                {
+                    //加签子实例
+                    return new NodeMediatorMultiSignForward(forwardContext, session);
+                }
+                else
+                {
+                    return new NodeMediatorTask(forwardContext, session);
+                } 
             }
             else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.ServiceNode)      //自动服务节点
             {
@@ -188,26 +247,39 @@ namespace Slickflow.Engine.Core.Pattern
                         throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.error"));
                     }
                 }
-                else if (forwardContext.FromActivityInstance.MIHostActivityInstanceID == null
-                    && forwardContext.Activity.MultiSignDetail.ComplexType == ComplexTypeEnum.SignForward)        //加签主节点的分发操作
+                else if (forwardContext.FromActivityInstance.MIHostActivityInstanceID == null)        
                 {
-                    //加签的动态变量传入
-                    var controlParamSheet = forwardContext.ActivityResource.AppRunner.ControlParameterSheet;
-                    if (controlParamSheet != null)
+                    //加签主节点的分发操作
+                    if (forwardContext.Activity.MultiSignDetail.ComplexType == ComplexTypeEnum.SignForward)
                     {
-                        if (!string.IsNullOrEmpty(controlParamSheet.SignForwardType)
-                            && controlParamSheet.SignForwardType.ToUpper() != "NONE")
+                        var aim = new ActivityInstanceManager();
+                        var miChildList = aim.GetActivityMulitipleInstanceWithState(forwardContext.FromActivityInstance.ID, forwardContext.FromActivityInstance.ProcessInstanceID);
+                        //加签的动态变量传入
+                        var controlParamSheet = forwardContext.ActivityResource.AppRunner.ControlParameterSheet;
+                        if (controlParamSheet != null)
                         {
-                            return new NodeMediatorSignForward(forwardContext, session);
+                            if (!string.IsNullOrEmpty(controlParamSheet.SignForwardType)
+                                && controlParamSheet.SignForwardType.ToUpper() != "NONE")
+                            {
+                                return new NodeMediatorSignForward(forwardContext, session);
+                            }
+                            else
+                            {
+                                return new NodeMediatorTask(forwardContext, session);
+                            }
+                        }
+                        else if (miChildList.Count == 0)
+                        {
+                            return new NodeMediatorTask(forwardContext, session);
                         }
                         else
                         {
-                            return new NodeMediatorTask(forwardContext, session);
+                            throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.warn"));
                         }
                     }
                     else
                     {
-                        throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.warn"));
+                        throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.error"));
                     }
                 }
                 else
@@ -217,12 +289,36 @@ namespace Slickflow.Engine.Core.Pattern
             }
             else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.SubProcessNode)
             {
-                return new NodeMediatorSubProcess(forwardContext, session);
+                var nodeMediatorSubProcess = NodeMediatorFactory.CreateNodeMediatorSubProcess(forwardContext, forwardContext.Activity, session);
+                return nodeMediatorSubProcess;
             }
             else
             {
                 throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.uncertain.warn", 
                     forwardContext.Activity.ActivityType.ToString()));
+            }
+        }
+
+        /// <summary>
+        /// 抛出异常信息
+        /// </summary>
+        /// <param name="activityType">活动类型</param>
+        /// <param name="triggerType">触发类型</param>
+        /// <param name="throwCatchDirection">throw/catch类型</param>
+        /// <exception cref="ApplicationException"></exception>
+        private static void ThrowUncerternXmlNodeTypeException(string activityType, string triggerType, string throwCatchDirection = null)
+        {
+            if (!string.IsNullOrEmpty(throwCatchDirection))
+            {
+                throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.uncertain.warn",
+                    string.Format("ActivityType:{0},trigger:{1},direction:{2}", activityType, triggerType, throwCatchDirection)
+                ));
+            }
+            else
+            {
+                throw new ApplicationException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediator.uncertain.warn",
+                    string.Format("ActivityType:{0},trigger:{1}", activityType, triggerType)
+                ));
             }
         }
 
@@ -334,6 +430,22 @@ namespace Slickflow.Engine.Core.Pattern
                             eventActivity.TriggerDetail.MessageDirection.ToString()));
                     }
                 }
+                else if (eventActivity.TriggerDetail.TriggerType == TriggerTypeEnum.Signal)
+                {
+                    if (eventActivity.TriggerDetail.MessageDirection == MessageDirectionEnum.Catch)
+                    {
+                        nodeMediator = new NodeMediatorInterSignalCatch(forwardContext, session);
+                    }
+                    else if (eventActivity.TriggerDetail.MessageDirection == MessageDirectionEnum.Throw)
+                    {
+                        nodeMediator = new NodeMediatorInterSignalThrow(forwardContext, session);
+                    }
+                    else
+                    {
+                        throw new XmlDefinitionException(LocalizeHelper.GetEngineMessage("nodemediatorfactory.CreateNodeMediatorEvent.uncertain.warn",
+                            eventActivity.TriggerDetail.MessageDirection.ToString()));
+                    }
+                }
                 else
                 {
                     nodeMediator = new NodeMediatorIntermediate(forwardContext, session);
@@ -402,6 +514,48 @@ namespace Slickflow.Engine.Core.Pattern
                     string.Format("ActivityType:{0},trigger:{1}", endActivity.ActivityType.ToString(),
                                                         endActivity.TriggerDetail.TriggerType)
                 ));
+            }
+        }
+
+        /// <summary>
+        /// 创建子流程节点处理类实例
+        /// </summary>
+        /// <param name="forwardContext">活动上下文</param>
+        /// <param name="activity">活动节点</param>
+        /// <param name="session">会话</param>
+        /// <returns>节点处理实例</returns>
+        internal static NodeMediator CreateNodeMediatorSubProcess(ActivityForwardContext forwardContext,
+            Activity activity,
+            IDbSession session)
+        {
+            var subProcessNode = (SubProcessNode)activity.Node;
+            if (subProcessNode.SubProcessNested != null)
+            {
+                return new NodeMediatorSubProcessNested(forwardContext, session);
+            }
+            else
+            {
+                return new NodeMediatorSubProcess(forwardContext, session);
+            }
+        }
+
+        /// <summary>
+        /// 创建子流程节点处理类实例
+        /// </summary>
+        /// <param name="activity">活动节点</param>
+        /// <param name="session">会话</param>
+        /// <returns>节点处理实例</returns>
+        internal static NodeMediator CreateNodeMediatorSubProcess(Activity activity,
+            IDbSession session)
+        {
+            var subProcessNode = (SubProcessNode)activity.Node;
+            if (subProcessNode.SubProcessNested != null)
+            {
+                return new NodeMediatorSubProcessNested(session);
+            }
+            else
+            {
+                return new NodeMediatorSubProcess(session);
             }
         }
     }

@@ -1,25 +1,4 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-* 
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +11,7 @@ using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Slickflow.Engine.Business.Manager
 {
@@ -339,6 +319,40 @@ namespace Slickflow.Engine.Business.Manager
             if (list.Count > 0) activityInstance = list[0];
 
             return activityInstance;
+        }
+
+        /// <summary>
+        /// 获取最近的节点实例
+        /// </summary>
+        /// <param name="processGUID">流程GUID</param>
+        /// <param name="version">流程版本</param>
+        /// <param name="activityGUID">活动GUID</param>
+        /// <returns>活动实例</returns>
+        internal List<ActivityInstanceEntity> GetActivityInstanceList(string processGUID,
+            string version,
+            string activityGUID)
+        {
+            ActivityInstanceEntity activityInstance = null;
+            var sql = @"SELECT 
+                                AI.* 
+                            FROM WfActivityInstance AI
+                            INNER JOIN WfProcessInstance PI 
+                                ON AI.ProcessInstanceID = PI.ID
+                            WHERE PI.ProcessState = 2 
+                                AND PI.ProcessGUID = @processGUID
+                                AND PI.Version=@version
+                                AND AI.ActivityGUID = @activityGUID
+                                AND (AI.ActivityState=1 OR AI.ActivityState=2)";
+            var list = Repository.Query<ActivityInstanceEntity>(
+                sql,
+                new
+                {
+                    processGUID = processGUID,
+                    version = version,
+                    activityGUID = activityGUID
+                }).ToList();
+
+            return list;
         }
 
         /// <summary>
@@ -1158,6 +1172,7 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="appInstanceID">应用实例ID</param>
         /// <param name="appInstanceCode">应用实例代码</param>
         /// <param name="processInstanceID">流程实例ID</param>
+        /// <param name="processGUID">流程GUID</param>
         /// <param name="activity">活动</param>
         /// <param name="backwardType">退回类型</param>
         /// <param name="backSrcActivityInstanceID">退回源活动实例ID</param>
@@ -1168,6 +1183,7 @@ namespace Slickflow.Engine.Business.Manager
             string appInstanceID,
             string appInstanceCode,
             int processInstanceID,
+            string processGUID,
             Activity activity,
             BackwardTypeEnum backwardType,
             int backSrcActivityInstanceID,
@@ -1181,7 +1197,7 @@ namespace Slickflow.Engine.Business.Manager
             instance.ActivityType = (short)activity.ActivityType;
             instance.WorkItemType = (short)activity.WorkItemType;
             instance.GatewayDirectionTypeID = activity.GatewayDetail != null ? (short)activity.GatewayDetail.DirectionType : null;
-            instance.ProcessGUID = activity.ProcessGUID;
+            instance.ProcessGUID = processGUID;
             instance.AppName = appName;
             instance.AppInstanceID = appInstanceID;
             instance.AppInstanceCode = appInstanceCode;
@@ -1526,6 +1542,18 @@ namespace Slickflow.Engine.Business.Manager
         internal void Resuspend(int activityInstanceID, IDbSession session, WfAppRunner runner)
         {
             SetActivityState(activityInstanceID, ActivityStateEnum.Suspended, runner, session);
+        }
+
+        /// <summary>
+        /// 重新使节点处于挂起状态
+        /// 说明：会签最后一个子节点撤销时候用到
+        /// </summary>
+        /// <param name="activityInstanceID">活动实例节点ID</param>
+        /// <param name="session">会话</param>
+        /// <param name="runner">执行者</param>
+        internal void Rerun(int activityInstanceID, IDbSession session, WfAppRunner runner)
+        {
+            SetActivityState(activityInstanceID, ActivityStateEnum.Running, runner, session);
         }
 
         /// <summary>

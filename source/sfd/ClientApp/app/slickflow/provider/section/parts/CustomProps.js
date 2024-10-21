@@ -56,6 +56,12 @@ function Custom(props) {
             sectionElement = moddle.create('sf:Section');
             sectionElement.name = "myProperties";
             sectionsElement.get('sections').push(sectionElement);
+        } else {
+            sectionElement = sectionsElement.get('sections')[0];
+            if (!sectionElement) {
+                sectionElement = moddle.create('sf:Section');
+                sectionsElement.get('sections').push(sectionElement);
+            }
         }
         if (sectionElement) sectionElement.text = value;
         //update condition properties

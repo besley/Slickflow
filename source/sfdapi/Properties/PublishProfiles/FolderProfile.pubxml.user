@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\website-publish\slickflow\sfdapi</_PublishTargetUrl>
+    <History>True|2024-09-01T13:13:00.5039671Z||;False|2024-09-01T21:10:53.1339454+08:00||;True|2024-04-21T21:03:07.0478719+08:00||;True|2024-04-21T17:14:05.7590190+08:00||;True|2024-04-14T10:42:47.0349744+08:00||;True|2024-02-21T20:17:30.6701434+08:00||;True|2024-02-21T20:00:23.4798884+08:00||;True|2023-11-09T13:55:42.9955332+08:00||;True|2023-11-09T12:26:05.0593398+08:00||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

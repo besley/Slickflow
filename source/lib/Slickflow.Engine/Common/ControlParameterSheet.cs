@@ -18,6 +18,8 @@ namespace Slickflow.Engine.Common
         public string SignForwardType { get; set; }
         public string SignForwardCompareType { get; set; }
         public float SignForwardCompleteOrder { get; set; }
+        //返送为会签节点，重新运行的情况处理
+        public byte RecreatedMultipleInstanceWhenResending { get; set; }
 
         //增强合并控制变量
         public int EOrJoinTokenPassCount { get; set; }

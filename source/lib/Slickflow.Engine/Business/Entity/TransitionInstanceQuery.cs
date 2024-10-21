@@ -13,5 +13,6 @@ namespace Slickflow.Engine.Business.Entity
     {
         public string AppInstanceID { get; set; }
         public string ProcessGUID { get; set; }
+        public string Version { get; set; }
     }
 }

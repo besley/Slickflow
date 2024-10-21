@@ -1,26 +1,4 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-* 
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,12 +8,12 @@ using Slickflow.Data;
 using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
-
+using Slickflow.Engine.Utility;
 
 namespace Slickflow.Engine.Core.Pattern
 {
     /// <summary>
-    /// 加签节点执行器
+    /// 加签主节点执行器
     /// </summary>
     internal class NodeMediatorSignForward : NodeMediator
     {
@@ -54,28 +32,27 @@ namespace Slickflow.Engine.Core.Pattern
         {
             try
             {
-                //判断当前节点是否是加签节点
-                if (base.ActivityForwardContext.Activity.MultiSignDetail.ComplexType == ComplexTypeEnum.SignForward)
+                //读取加签控制参数
+                //记录加签通过类型和通过率
+                var controlParamSheet = base.ActivityForwardContext.ActivityResource.AppRunner.ControlParameterSheet;
+                if (controlParamSheet != null
+                    && controlParamSheet.SignForwardCompareType.ToUpper() == "COUNT")
                 {
-                    //记录加签通过类型和通过率
-                    var controlParamSheet = base.ActivityForwardContext.ActivityResource.AppRunner.ControlParameterSheet;
-                    if (controlParamSheet.SignForwardCompareType.ToUpper() == "COUNT")
-                    {
-                        base.ActivityForwardContext.FromActivityInstance.CompareType = (short)CompareTypeEnum.Count;
-                        base.ActivityForwardContext.FromActivityInstance.CompleteOrder = controlParamSheet.SignForwardCompleteOrder;
-                    }
-                    else
-                    {
-                        base.ActivityForwardContext.FromActivityInstance.CompareType = (short)CompareTypeEnum.Percentage;
-                        base.ActivityForwardContext.FromActivityInstance.CompleteOrder = 1;
-                    }
-
-                    //更新当前实例节点为主节点，并且置当前节点为挂起状态
-                    UpgradeToMainSignForwardNode(base.ActivityForwardContext.FromActivityInstance);
-
-                    //产生加签记录，即要发送给加签人的活动实例记录
-                    CreateSignForwardTasks(ActivityForwardContext.ActivityResource);
+                    base.ActivityForwardContext.FromActivityInstance.CompareType = (short)CompareTypeEnum.Count;
+                    base.ActivityForwardContext.FromActivityInstance.CompleteOrder = controlParamSheet.SignForwardCompleteOrder;
                 }
+                else
+                {
+                    base.ActivityForwardContext.FromActivityInstance.CompareType = (short)CompareTypeEnum.Percentage;
+                    base.ActivityForwardContext.FromActivityInstance.CompleteOrder = 1;
+                }
+
+                //更新当前实例节点为主节点，并且置当前节点为挂起状态
+                var signForwardType = EnumHelper.ParseEnum<SignForwardTypeEnum>(controlParamSheet.SignForwardType);
+                UpgradeToMainSignForwardNode(base.ActivityForwardContext.FromActivityInstance, signForwardType);
+
+                //产生加签记录，即要发送给加签人的活动实例记录
+                CreateSignForwardTasks(ActivityForwardContext.ActivityResource);
             }
             catch (System.Exception ex)
             {
@@ -86,10 +63,21 @@ namespace Slickflow.Engine.Core.Pattern
         /// <summary>
         /// 升级当前节点为加签主节点
         /// </summary>
-        /// <param name="currentActivityInstance"></param>
-        private void UpgradeToMainSignForwardNode(ActivityInstanceEntity currentActivityInstance)
+        /// <param name="currentActivityInstance">当前活动实例</param>
+        /// <param name="signForwardType">加签类型</param>
+        private void UpgradeToMainSignForwardNode(ActivityInstanceEntity currentActivityInstance,
+            SignForwardTypeEnum signForwardType)
         {
             currentActivityInstance.ComplexType = (short)ComplexTypeEnum.SignForward;
+            if (signForwardType == SignForwardTypeEnum.SignForwardBefore 
+                || signForwardType == SignForwardTypeEnum.SignForwardBehind)
+            {
+                currentActivityInstance.MergeType = (short)MergeTypeEnum.Sequence;
+            }
+            else
+            {
+                currentActivityInstance.MergeType = (short)MergeTypeEnum.Parallel;
+            }
             currentActivityInstance.ActivityState = (short)ActivityStateEnum.Suspended;
             
             base.ActivityInstanceManager.Update(currentActivityInstance, base.Session);
@@ -160,7 +148,7 @@ namespace Slickflow.Engine.Core.Pattern
                 signforwardActivityInstance.AssignedToUserIDs = plist[i].UserID;
                 signforwardActivityInstance.AssignedToUserNames = plist[i].UserName;
                 signforwardActivityInstance.MIHostActivityInstanceID = base.ActivityForwardContext.FromActivityInstance.ID;
-
+                
                 if (signForwardType == SignForwardTypeEnum.SignForwardBefore)
                 {
                     signforwardActivityInstance.CompleteOrder = (short)(i + 1);

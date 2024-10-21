@@ -1,26 +1,4 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-* 
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -30,7 +8,7 @@ using Slickflow.Engine.Delegate;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Xpdl.Entity;
-
+using Slickflow.Engine.Xpdl.Common;
 
 namespace Slickflow.Engine.Service
 {
@@ -59,6 +37,7 @@ namespace Slickflow.Engine.Service
         IList<NodeView> GetFirstActivityRoleUserTree(WfAppRunner runner, IDictionary<string, string> condition = null);
         IList<NodeView> GetPreviousActivityTree(WfAppRunner runner);
         PreviousStepInfo GetPreviousStepInfo(WfAppRunner runner);
+        SignForwardStepInfo GetSignForwardStepInfo(WfAppRunner runner);
 
         Task<IList<NodeView>> GetNextActivityTreeAsync(int taskID, IDictionary<string, string> condition = null);
         Task<IList<NodeView>> GetNextActivityTreeAsync(WfAppRunner runner, IDictionary<string, string> condition = null);
@@ -96,6 +75,12 @@ namespace Slickflow.Engine.Service
         Task<WfExecutedResult> RunProcessAsync(WfAppRunner runner);
         Task<WfExecutedResult> RunProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
 
+        //自动运行流程
+        WfExecutedResult RunProcessAuto(WfAppRunner runner);
+        WfExecutedResult RunProcessAuto(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+        Task<WfExecutedResult> RunProcessAutoAsync(WfAppRunner runner);
+        Task<WfExecutedResult> RunProcessAutoAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+
         //撤销流程
         WfExecutedResult WithdrawProcess(WfAppRunner runner);
         WfExecutedResult WithdrawProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
@@ -107,6 +92,30 @@ namespace Slickflow.Engine.Service
         WfExecutedResult SendBackProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
         Task<WfExecutedResult> SendBackProcessAsync(WfAppRunner runner);
         Task<WfExecutedResult> SendBackProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+
+        //返送流程
+        WfExecutedResult ResendProcess(WfAppRunner runner);
+        WfExecutedResult ResendProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+        Task<WfExecutedResult> ResendProcessAsync(WfAppRunner runner);
+        Task<WfExecutedResult> ResendProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+
+        //修订流程
+        WfExecutedResult ReviseProcess(WfAppRunner runner);
+        WfExecutedResult ReviseProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+        Task<WfExecutedResult> ReviseProcessAsync(WfAppRunner runner);
+        Task<WfExecutedResult> ReviseProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+
+        //驳回流程
+        WfExecutedResult RejectProcess(WfAppRunner runner);
+        WfExecutedResult RejectProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+        Task<WfExecutedResult> RejectProcessAsync(WfAppRunner runner);
+        Task<WfExecutedResult> RejectProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+
+        //关闭流程
+        WfExecutedResult CloseProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+        WfExecutedResult CloseProcess(WfAppRunner runner);
+        Task<WfExecutedResult> CloseProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+        Task<WfExecutedResult> CloseProcessAsync(WfAppRunner runner);
 
         //返签流程
         WfExecutedResult ReverseProcess(WfAppRunner runner);
@@ -121,6 +130,12 @@ namespace Slickflow.Engine.Service
         Task<WfExecutedResult> JumpProcessAsync(WfAppRunner runner, JumpOptionEnum jumpOption = JumpOptionEnum.Default);
         Task<WfExecutedResult> JumpProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans, 
             JumpOptionEnum jumpOption = JumpOptionEnum.Default);
+
+        //加签流程
+        WfExecutedResult SignForwardProcess(WfAppRunner runner);
+        WfExecutedResult SignForwardProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
+        Task<WfExecutedResult> SignForwardProcessAsync(WfAppRunner runner);
+        Task<WfExecutedResult> SignForwardProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
 
         //审批决策
         void AgreeTask(int taskID);
@@ -139,6 +154,7 @@ namespace Slickflow.Engine.Service
         Boolean SetProcessOverdue(int processInstanceID, DateTime overdueDateTime, WfAppRunner runner);
         void SetActivityJobTimerCompleted(IDbConnection conn, int activityInstanceID, IDbTransaction trans);
         void SetProcessJobTimerCompleted(IDbConnection conn, int processInstanceID, IDbTransaction trans);
+        void SetProcessTimerType(string processGUID, string version);
         int SaveProcessVariable(ProcessVariableEntity entity);
         
         IList<NodeImage> GetActivityInstanceCompleted(int taskID);
@@ -149,6 +165,7 @@ namespace Slickflow.Engine.Service
         IList<ActivityInstanceEntity> GetRunningActivityInstance(TaskQuery query);
         TaskViewEntity GetTaskView(int taskID);
         TaskViewEntity GetTaskView(int processInstanceID, int activityInstanceID);
+        TaskViewEntity GetTaskView(IDbConnection conn, string appInstanceID, string processGUID, string userID, IDbTransaction trans);
         IList<TaskViewEntity> GetRunningTasks(TaskQuery query);
         IList<TaskViewEntity> GetReadyTasks(TaskQuery query);
         IList<TaskViewEntity> GetCompletedTasks(TaskQuery query);
@@ -182,24 +199,25 @@ namespace Slickflow.Engine.Service
         ProcessFileEntity GetProcessFile(string processGUID, string version);
         ProcessFileEntity GetProcessFileByID(int id);
         void SaveProcessFile(ProcessFileEntity entity);
-        void SaveProcessFilePool(ProcessFilePool entity);
 
         int CreateProcess(ProcessEntity entity);
         int CreateProcessVersion(ProcessEntity entity);
         int InsertProcess(ProcessEntity entity);
         void UpdateProcess(ProcessEntity entity);
+        void UpdateProcessUsingState(string processGUID, string version, byte usingState);
         void UpgradeProcess(string processGUID, string version, string newVersion);
         void DeleteProcess(string processGUID, string version);
 		void DeleteProcess(string processGUID);
         bool DeleteInstanceInt(string processGUID, string version);
-        int ImportProcess(ProcessEntity entity);
-        ProcessValidateResult ValidateProcess(ProcessValidate processValidateEntity);
+        void ImportProcess(string xmlContent);
+        ProcessValidateResult ValidateProcess(ProcessEntity processValidateEntity);
         
 
         //资源接口
         IList<Role> GetRoleAll();
         IList<Role> GetRoleByProcess(string processGUID, string version);
         IList<Role> GetRoleUserListByProcess(string processGUId, string version);
+        IList<User> GetUserAll();
         IList<User> GetUserListByRole(string roleID);
         PerformerList GetPerformerList(NodeView nextNode);
         IList<ProcessVariableEntity> GetProcessVariableList(ProcessVariableQuery query);
@@ -238,10 +256,20 @@ namespace Slickflow.Engine.Service
         WfExecutedResult Withdraw(IDbConnection conn, IDbTransaction trans);
         WfExecutedResult SendBack();
         WfExecutedResult SendBack(IDbConnection conn, IDbTransaction trans);
+        WfExecutedResult Resend();
+        WfExecutedResult Resend(IDbConnection conn, IDbTransaction trans);
+        WfExecutedResult Revise();
+        WfExecutedResult Revise(IDbConnection conn, IDbTransaction trans);
         WfExecutedResult Jump(JumpOptionEnum jumpOption = JumpOptionEnum.Default);
         WfExecutedResult Jump(IDbConnection conn, IDbTransaction trans, JumpOptionEnum jumpOption = JumpOptionEnum.Default);
         WfExecutedResult Reverse();
         WfExecutedResult Reverse(IDbConnection conn, IDbTransaction trans);
+        WfExecutedResult Reject();
+        WfExecutedResult Reject(IDbConnection conn, IDbTransaction trans);
+        WfExecutedResult Close();
+        WfExecutedResult Close(IDbConnection conn, IDbTransaction trans);
+        WfExecutedResult SignForward();
+        WfExecutedResult SignForward(IDbConnection conn, IDbTransaction trans);
         #endregion
     }
 }

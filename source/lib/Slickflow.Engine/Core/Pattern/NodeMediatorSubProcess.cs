@@ -1,33 +1,9 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-* 
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using ServiceStack.Text;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Utility;
 using Slickflow.Data;
 using Slickflow.Module.Localize;
 using Slickflow.Engine.Xpdl;
@@ -215,7 +191,7 @@ namespace Slickflow.Engine.Core.Pattern
             Boolean isParallel = false;
             if (fromActivityInstance.ActivityType == (short)ActivityTypeEnum.GatewayNode)
             {
-                var processModel = ProcessModelFactory.Create(processInstance.ProcessGUID, processInstance.Version);
+                var processModel = ProcessModelFactory.CreateByProcessInstance(session.Connection, processInstance, session.Transaction);
                 var activityNode = processModel.GetActivity(fromActivityInstance.ActivityGUID);
                 isParallel = processModel.IsAndSplitMI(activityNode);
             }
@@ -317,7 +293,6 @@ namespace Slickflow.Engine.Core.Pattern
             {
                 subRunner = CreateSubProcessRunner(activityResource.AppRunner,
                     new Performer(performer.UserID, performer.UserName),
-                    subProcessNode,
                     session);
                 performerList.Add(performer);
             }
@@ -325,7 +300,6 @@ namespace Slickflow.Engine.Core.Pattern
             {
                 subRunner = CreateSubProcessRunner(activityResource.AppRunner,
                    new Performer(activityResource.AppRunner.UserID, activityResource.AppRunner.UserName),
-                   subProcessNode,
                    session);
                 performerList = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
             }
@@ -421,7 +395,6 @@ namespace Slickflow.Engine.Core.Pattern
                 subProcessNode.ActivityInstance = entity;   //在流程实例表中记录激活子流程的活动节点ID
                 WfAppRunner subRunner = CreateSubProcessRunner(activityResource.AppRunner, 
                     plist[i],
-                    subProcessNode,
                     session);
 
                 WfExecutedResult startedResult = WfExecutedResult.Default();
@@ -451,12 +424,10 @@ namespace Slickflow.Engine.Core.Pattern
         /// </summary>
         /// <param name="runner">运行者</param>
         /// <param name="performer">下一步执行者</param>
-        /// <param name="subProcessNode">子流程节点</param>
         /// <param name="session">会话</param>
         /// <returns></returns>
         private WfAppRunner CreateSubProcessRunner(WfAppRunner runner, 
             Performer performer,
-            SubProcessNode subProcessNode,
             IDbSession session)
         {
             WfAppRunner subRunner = new WfAppRunner();
@@ -468,43 +439,45 @@ namespace Slickflow.Engine.Core.Pattern
             subRunner.UserID = performer.UserID;
             subRunner.UserName = performer.UserName;
 
+            #region 动态子流程调用
             //如果是动态调用子流程，则需要获取具体子流程实体对象
-            var isSubProcessNotExisted = false;
-            if (subProcessNode.SubProcessType == SubProcessTypeEnum.Dynamic)
-            {
-                var subProcessId = runner.DynamicVariables[subProcessNode.SubVarName];
-                if (!string.IsNullOrEmpty(subProcessId))
-                {
-                    int processID = 0;
-                    int.TryParse(subProcessId, out processID);
-                    if (processID > 0)
-                    {
-                        var pm = new ProcessManager();
-                        var process = pm.GetByID(session.Connection, processID, session.Transaction);
-                        if (process != null)
-                        {
-                            subProcessNode.SubProcessGUID = process.ProcessGUID;
-                        }
-                        else
-                        {
-                            isSubProcessNotExisted = true;
-                        }
-                    }
-                    else
-                    {
-                        isSubProcessNotExisted = true;
-                    }
-                }
-                else
-                {
-                    isSubProcessNotExisted = true;
-                }
-            }
+            //var isSubProcessNotExisted = false;
+            //if (subProcessNode.SubProcessType == SubProcessTypeEnum.Dynamic)
+            //{
+            //    var subProcessId = runner.DynamicVariables[subProcessNode.SubVarName];
+            //    if (!string.IsNullOrEmpty(subProcessId))
+            //    {
+            //        int processID = 0;
+            //        int.TryParse(subProcessId, out processID);
+            //        if (processID > 0)
+            //        {
+            //            var pm = new ProcessManager();
+            //            var process = pm.GetByID(session.Connection, processID, session.Transaction);
+            //            if (process != null)
+            //            {
+            //                subProcessNode.SubProcessGUID = process.ProcessGUID;
+            //            }
+            //            else
+            //            {
+            //                isSubProcessNotExisted = true;
+            //            }
+            //        }
+            //        else
+            //        {
+            //            isSubProcessNotExisted = true;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        isSubProcessNotExisted = true;
+            //    }
+            //}
 
-            if (isSubProcessNotExisted == true)
-            {
-                throw new WfRuntimeException(LocalizeHelper.GetEngineMessage("nodemediatorsubprocess.CreateSubProcessRunner.nonevariableparamsvalue.warn"));
-            }
+            //if (isSubProcessNotExisted == true)
+            //{
+            //    throw new WfRuntimeException(LocalizeHelper.GetEngineMessage("nodemediatorsubprocess.CreateSubProcessRunner.nonevariableparamsvalue.warn"));
+            //}
+            #endregion
 
             return subRunner;
         }

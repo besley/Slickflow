@@ -113,6 +113,16 @@ namespace Slickflow.Engine.Xpdl.Convertor
             var scriptsNode = XMLNode.SelectSingleNode(XPDLDefinition.Sf_StrXmlPath_Scripts, XMLNamespaceManager);
             return scriptsNode;
         }
+
+        /// <summary>
+        /// 获取Notifications的XML节点
+        /// </summary>
+        /// <returns></returns>
+        protected XmlNode GetNotificationsNode()
+        {
+            var notificationsNode = XMLNode.SelectSingleNode(XPDLDefinition.Sf_StrXmlPath_Notifications, XMLNamespaceManager);
+            return notificationsNode;
+        }
         #endregion
 
         #region 转变方法
@@ -144,7 +154,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
-        /// 转换Action
+        /// 转换Action节点
         /// </summary>
         /// <returns></returns>
         public ConvertorBuilder ConvertActions()
@@ -164,7 +174,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
-        /// 转换Boundaries
+        /// 转换Boundaries节点
         /// </summary>
         /// <returns></returns>
         public ConvertorBuilder ConvertBoundires()
@@ -184,28 +194,28 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
-        /// 转换Performers
+        /// 转换Performers节点
         /// </summary>
         /// <returns></returns>
-        public ConvertorBuilder ConvertParticipants()
+        public ConvertorBuilder ConvertPartakers()
         {
             var performersNode = GetPerformersNode();
             if (performersNode != null)
             {
                 XmlNodeList xmlPerformerList = performersNode.ChildNodes;
-                List<Participant>  participantList = new List<Participant>();
+                List<Partaker>  partakerList = new List<Partaker>();
                 foreach (XmlNode element in xmlPerformerList)
                 {
-                    participantList.Add(ConvertXmlPerformerNodeToParticipantEntity(element));
+                    partakerList.Add(ConvertXmlPerformerNodeToPartakerEntity(element));
                 }
-                mActivityEntity.ParticipantList = participantList;
+                mActivityEntity.PartakerList = partakerList;
             }
 
             return this;
         }
 
         /// <summary>
-        /// 转换Services
+        /// 转换Services节点
         /// </summary>
         /// <returns></returns>
         public ConvertorBuilder ConvertServices()
@@ -225,7 +235,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
-        /// 转换Scripts
+        /// 转换Scripts节点
         /// </summary>
         /// <returns></returns>
         public ConvertorBuilder ConvertScripts()
@@ -245,7 +255,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
-        /// 转换Sections
+        /// 转换Sections节点
         /// </summary>
         /// <returns></returns>
         public ConvertorBuilder ConvertSections()
@@ -261,6 +271,27 @@ namespace Slickflow.Engine.Xpdl.Convertor
                 }
                 mActivityEntity.SectionList = sectionList;
             }
+            return this;
+        }
+
+        /// <summary>
+        /// 转换Notificaitons节点
+        /// </summary>
+        /// <returns></returns>
+        public ConvertorBuilder ConvertNotifications()
+        {
+            var notificationsNode = GetNotificationsNode();
+            if (notificationsNode != null)
+            {
+                XmlNodeList xmlNotificationList = notificationsNode.ChildNodes;
+                List<Partaker> partakerList = new List<Partaker>();
+                foreach (XmlNode element in xmlNotificationList)
+                {
+                    partakerList.Add(ConvertXmlNotificationNodeToPartakerEntity(element));
+                }
+                mActivityEntity.NotificationList = partakerList;
+            }
+
             return this;
         }
 
@@ -375,20 +406,20 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
-        /// 转换Participant节点
+        /// 转换Partaker节点
         /// </summary>
         /// <param name="node">xml节点</param>
         /// <returns>实体对象</returns>
-        private Participant ConvertXmlPerformerNodeToParticipantEntity(XmlNode node)
+        private Partaker ConvertXmlPerformerNodeToPartakerEntity(XmlNode node)
         {
-            Participant participant = new Participant();
+            Partaker partaker = new Partaker();
             var type = XMLHelper.GetXmlAttribute(node, "outerType");
-            participant.OuterType = type;
-            participant.OuterID = XMLHelper.GetXmlAttribute(node, "outerId");
-            participant.Name = XMLHelper.GetXmlAttribute(node, "name");
-            participant.OuterCode = XMLHelper.GetXmlAttribute(node, "outerCode");
+            partaker.OuterType = type;
+            partaker.OuterID = XMLHelper.GetXmlAttribute(node, "outerId");
+            partaker.Name = XMLHelper.GetXmlAttribute(node, "name");
+            partaker.OuterCode = XMLHelper.GetXmlAttribute(node, "outerCode");
 
-            return participant;
+            return partaker;
         }
 
         /// <summary>
@@ -421,6 +452,23 @@ namespace Slickflow.Engine.Xpdl.Convertor
             section.Value = node.InnerText;
 
             return section;
+        }
+
+        /// <summary>
+        /// 转换Partaker节点
+        /// </summary>
+        /// <param name="node">xml节点</param>
+        /// <returns>实体对象</returns>
+        private Partaker ConvertXmlNotificationNodeToPartakerEntity(XmlNode node)
+        {
+            Partaker partaker = new Partaker();
+            var type = XMLHelper.GetXmlAttribute(node, "outerType");
+            partaker.OuterType = type;
+            partaker.OuterID = XMLHelper.GetXmlAttribute(node, "outerId");
+            partaker.Name = XMLHelper.GetXmlAttribute(node, "name");
+            partaker.OuterCode = XMLHelper.GetXmlAttribute(node, "outerCode");
+
+            return partaker;
         }
         #endregion
 

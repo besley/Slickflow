@@ -23,10 +23,7 @@ namespace Slickflow.Engine.Xpdl
     public interface IProcessModel 
     {
         Process Process { get; }
-
         ProcessEntity ProcessEntity { get; set; }
-        public string SubProcessGUID { get; set; }
-
         //方法列表
         Entity.Activity GetStartActivity();
         Entity.Activity GetFirstActivity();
@@ -73,6 +70,7 @@ namespace Slickflow.Engine.Xpdl
         Boolean IsMIParallel(Entity.Activity activity);
         Boolean IsMISequence(Entity.Activity activity);
         Boolean IsMINode(Entity.Activity activity);
+        Boolean IsMINode(ActivityInstanceEntity activityInstance);
         Boolean IsTaskNode(Entity.Activity activity);
         Boolean IsTaskNode(ActivityInstanceEntity activityInstance);
         Boolean IsAndSplitMI(Entity.Activity activity);
@@ -82,5 +80,8 @@ namespace Slickflow.Engine.Xpdl
         IList<Role> GetActivityRoles(string activityGUID);
         IDictionary<string, PerformerList> GetActivityPerformers(string activityGUID);
         IDictionary<string, PerformerList> GetActivityPerformers(IList<NodeView> nextActivityTree);
+
+        //通知
+        IList<User> GetActivityNotifications(string activityGUID);
     }
 }

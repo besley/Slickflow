@@ -19,7 +19,8 @@ namespace Slickflow.Engine.Business.Entity
         public string AppInstanceID { get; set; }
         public string AppInstanceCode { get; set; }
         public short ProcessState { get; set; }
-        public DateTime CreatedDateTime { get; set; }
+        public Nullable<short> SubProcessType { get; set; }
+        public int SubProcessID { get; set; }
         public string SubProcessGUID { get; set; }
         public int InvokedActivityInstanceID { get; set; }
         public string InvokedActivityGUID { get; set; }
@@ -28,6 +29,7 @@ namespace Slickflow.Engine.Business.Entity
         public string TriggerExpression { get; set; }
         public Nullable<DateTime> OverdueDateTime { get; set; }
         public Nullable<DateTime> JobTimerTreatedDateTime { get; set; }
+        public DateTime CreatedDateTime { get; set; }
         public string CreatedByUserID { get; set; }
         public string CreatedByUserName { get; set; }
         public Nullable<DateTime> LastUpdatedDateTime { get; set; }

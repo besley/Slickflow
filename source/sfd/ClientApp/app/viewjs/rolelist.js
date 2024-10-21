@@ -3,10 +3,10 @@
 const rolelist = (function () {
     function rolelist() {
     }
-    rolelist.afterParticipantSelected = new slick.Event();
+    rolelist.afterPartakerSelected = new slick.Event();
 
-    var pselectedParticipantType = "";
-    var pselectedParticipantItem = null;
+    var pselectedPartakerType = "";
+    var pselectedPartakerItem = null;
 
     rolelist.mxElement = null;
     rolelist.mxBpmnFactory = null;
@@ -34,8 +34,8 @@ const rolelist = (function () {
         		function onSelectionChanged() {
         			var selectedRows = gridOptions.api.getSelectedRows();
         			selectedRows.forEach(function (selectedRow, index) {
-        				pselectedParticipantType = "Role";
-        				pselectedParticipantItem = selectedRow;
+        				pselectedPartakerType = "Role";
+        				pselectedPartakerItem = selectedRow;
         			});
                 }
 
@@ -47,11 +47,11 @@ const rolelist = (function () {
     }
 
     rolelist.sure = function () {
-        if (pselectedParticipantType != ""
-            && pselectedParticipantItem != null) {
-            slick.trigger(rolelist.afterParticipantSelected, {
-                "ParticipantType": pselectedParticipantType,
-                "ParticipantItem": pselectedParticipantItem
+        if (pselectedPartakerType != ""
+            && pselectedPartakerItem != null) {
+            slick.trigger(rolelist.afterPartakerSelected, {
+                "PartakerType": pselectedPartakerType,
+                "PartakerItem": pselectedPartakerItem
             });
         } else {
             kmsgbox.warn(kresource.getItem('rolelistselectwarnmsg'));

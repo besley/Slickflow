@@ -1,23 +1,4 @@
-﻿/*
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
-using System;
+﻿using System;
 using System.IO;
 using System.Xml;
 using System.Collections.Generic;
@@ -50,12 +31,12 @@ namespace Slickflow.Engine.Xpdl
         {
             get
             {
-                var processGUID = string.IsNullOrEmpty(this.SubProcessGUID) ? ProcessEntity.ProcessGUID : this.SubProcessGUID;
+                var processGUID = ProcessEntity.ProcessGUID;
                 var version = ProcessEntity.Version;
 
                 if (XPDLMemoryCachedHelper.GetXpdlCache(processGUID, version) == null)
                 {
-                    var process = ConvertProcessModelFromXML();
+                    var process = ConvertProcessModelFromXML(ProcessEntity);
                     XPDLMemoryCachedHelper.SetXpdlCache(processGUID, version, process);
                 }
                 return XPDLMemoryCachedHelper.GetXpdlCache(processGUID, version);
@@ -65,37 +46,44 @@ namespace Slickflow.Engine.Xpdl
         /// 流程实体
         /// </summary>
         public ProcessEntity ProcessEntity { get; set; }
-
-        /// <summary>
-        /// 子流程ID
-        /// </summary>
-        public string SubProcessGUID { get; set; }
-        
+       
         /// <summary>
         /// 从XML转换流程实体
         /// </summary>
         /// <returns></returns>
-        private Process ConvertProcessModelFromXML()
+        private Process ConvertProcessModelFromXML(ProcessEntity processEntity)
         {
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(this.ProcessEntity.XmlContent);
             var root = xmlDoc.DocumentElement;
 
             //按照是否有子流程来构建流程模型
-            Process process = null;
-            if (!string.IsNullOrEmpty(this.SubProcessGUID))
+            XmlNode xmlNodeProcess = null;
+            if (root.Name == XPDLDefinition.BPMN2_ElementName_Definitions)
             {
-                var xmlNodeSubProcess = XMLHelper.GetXmlNodeByXpath(xmlDoc,
-                    string.Format("{0}[@sf:guid='" + this.SubProcessGUID + "']", XPDLDefinition.BPMN2_StrXmlPath_Process_Sub), 
-                    XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
-                process = ProcessModelConvertor.ConvertProcessModelFromXML(xmlNodeSubProcess);
+                if (processEntity.PackageType == null)
+                {
+                    //单一流程
+                    xmlNodeProcess = root.SelectSingleNode(XPDLDefinition.BPMN2_StrXmlPath_Process, 
+                        XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
+                }
+                else
+                {
+                    //泳道流程
+                    var xPath = string.Format("{0}[@sf:guid='{1}']", XPDLDefinition.BPMN2_StrXmlPath_Process, processEntity.ProcessGUID);
+                    xmlNodeProcess = root.SelectSingleNode(xPath, XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
+                }
+            }
+            else if (root.Name == XPDLDefinition.BPMN2_ElementName_SubProcess)
+            {
+                //子流程
+                xmlNodeProcess = root;
             }
             else
             {
-                var xmlNodeProcess = root.SelectSingleNode(XPDLDefinition.BPMN2_StrXmlPath_Process,
-                    XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
-                process = ProcessModelConvertor.ConvertProcessModelFromXML(xmlNodeProcess);
+                throw new NotImplementedException("NOT supported process xml content");
             }
+            Process process = ProcessModelConvertor.ConvertProcessModelFromXML(xmlNodeProcess);
             return process;
         }
 
@@ -109,72 +97,6 @@ namespace Slickflow.Engine.Xpdl
         }
         #endregion
 
-        #region Get Activity from XML
-        /// <summary>
-        /// 获取XML的节点信息
-        /// </summary>
-        /// <param name="activityGUID">节点GUID</param>
-        /// <returns>Xml节点</returns>
-        //private XmlNode GetXmlActivityNodeFromXmlFile(string activityGUID)
-        //{
-        //    var xmlNode = ConvertHelper.GetXmlActivityNodeFromXmlFile(XMLProcessDefinition,
-        //        XMLProcessNamespaceManager,
-        //        activityGUID,
-        //        this.IsSubProcess);
-        //    return xmlNode;
-        //}
-
-        /// <summary>
-        /// 获取活动节点的类型信息
-        /// </summary>
-        /// <param name="nodeType">节点类型</param>
-        /// <returns>Xml节点</returns>
-        //private XmlNode GetXmlActivityTypeSingleNodeFromXmlFile(ActivityTypeEnum nodeType)
-        //{
-        //    var xmlDoc = XMLProcessDefinition;
-        //    XmlNode typeNode = null;
-        //    if (nodeType == ActivityTypeEnum.StartNode)
-        //    {
-        //        typeNode = XMLHelper.GetXmlNodeByXpath(xmlDoc, XPDLHelper.GetXmlPathByActivityType(ActivityTypeEnum.StartNode, this.IsSubProcess),
-        //            XMLProcessNamespaceManager);
-        //    }
-        //    else if (nodeType == ActivityTypeEnum.EndNode)
-        //    {
-        //        typeNode = XMLHelper.GetXmlNodeByXpath(xmlDoc, XPDLHelper.GetXmlPathByActivityType(ActivityTypeEnum.EndNode, this.IsSubProcess),
-        //            XMLProcessNamespaceManager);
-        //    }
-        //    else
-        //    {
-        //        throw new ApplicationException(String.Format("Not supported node type:{0}", nodeType.ToString()));
-        //    }
-        //    return typeNode;
-        //}
-
-        ///// <summary>
-        ///// 获取特定类型的活动节点
-        ///// </summary>
-        ///// <param name="nodeType">节点类型</param>
-        ///// <returns>Xml节点列表</returns>
-        //private XmlNodeList GetXmlActivityListByTypeFromXmlFile(ActivityTypeEnum nodeType)
-        //{
-        //    XmlNodeList nodeList = XMLHelper.GetXmlNodeListByXpath(XMLProcessDefinition,
-        //        string.Format("{0}/ActivityType[@type='" + nodeType.ToString() + "']", XPDLDefinition.StrXmlActivityPath));
-        //    return nodeList;
-        //}
-
-        ///// <summary>
-        ///// 获取参与者信息
-        ///// </summary>
-        ///// <param name="participantGUID">参与者GUID</param>
-        ///// <returns>XML节点</returns>
-        //private XmlNode GetXmlParticipantNodeFromXmlFile(string participantGUID)
-        //{
-        //    XmlNode participantNode = XMLHelper.GetXmlNodeByXpath(XMLProcessDefinition,
-        //        string.Format("{0}[@id='" + participantGUID + "']", XPDLDefinition.StrXmlSingleParticipantPath));
-        //    return participantNode;
-        //}
-        #endregion
-
         /// <summary>
         /// 获取当前节点信息
         /// </summary>
@@ -186,6 +108,10 @@ namespace Slickflow.Engine.Xpdl
             return activity;
         }
 
+        /// <summary>
+        /// 获得活动列表
+        /// </summary>
+        /// <returns>活动列表</returns>
         public IList<Activity> GetActivityList()
         {
             List<Activity> activityList = new List<Activity>();
@@ -209,8 +135,12 @@ namespace Slickflow.Engine.Xpdl
             var transitionList = GetForwardTransitionList(fromActivityGUID);
             foreach (var transition in transitionList)
             {
-                AppendActivity(activityList, transition.ToActivity);
-                if (toActivity.ActivityType == ActivityTypeEnum.EndNode)
+                toActivity = transition.ToActivity;
+                if (toActivity != null)
+                {
+                    AppendActivity(activityList, toActivity);
+                }
+                else
                 {
                     break;
                 }
@@ -509,6 +439,13 @@ namespace Slickflow.Engine.Xpdl
             }
         }
 
+        /// <summary>
+        /// 获取下一步活动节点树，供流转界面使用
+        /// </summary>
+        /// <param name="startActivity">起始节点</param>
+        /// <param name="conditions">条件参数</param>
+        /// <param name="session">数据会话</param>
+        /// <returns>下一步列表</returns>
         private NextActivityTreeResult GetFirstActivityTree(Activity startActivity,
             IDictionary<string, string> conditions,
             IDbSession session)
@@ -535,7 +472,7 @@ namespace Slickflow.Engine.Xpdl
                         MyProperties = child.Activity.MyProperties,
                         ActivityType = child.Activity.ActivityType,
                         Roles = GetActivityRoles(child.Activity.ActivityGUID),
-                        Participants = GetActivityParticipants(child.Activity.ActivityGUID),
+                        Partakers = GetActivityPartakers(child.Activity.ActivityGUID),
                         ReceiverType = child.Transition.Receiver != null ? child.Transition.Receiver.ReceiverType
                         : ReceiverTypeEnum.Default
                     });
@@ -679,8 +616,7 @@ namespace Slickflow.Engine.Xpdl
             var currentActivity = GetActivity(currentActivityGUID);
 
             //判断有没有指定的跳转节点信息
-            if (currentActivity.ActivityTypeDetail != null 
-                && currentActivity.SkipDetail != null
+            if (currentActivity.SkipDetail != null
                 && currentActivity.SkipDetail.IsSkip == true)
             {
                 //获取跳转节点信息
@@ -696,7 +632,7 @@ namespace Slickflow.Engine.Xpdl
                     MyProperties = skiptoActivity.MyProperties,
                     ActivityType = skiptoActivity.ActivityType,
                     Roles = GetActivityRoles(skiptoActivity.ActivityGUID),
-                    Participants = GetActivityParticipants(skiptoActivity.ActivityGUID),
+                    Partakers = GetActivityPartakers(skiptoActivity.ActivityGUID),
                     IsSkipTo = true
                 });
             }
@@ -723,7 +659,7 @@ namespace Slickflow.Engine.Xpdl
                             MyProperties = child.Activity.MyProperties,
                             ActivityType = child.Activity.ActivityType,
                             Roles = GetActivityRoles(child.Activity.ActivityGUID),
-                            Participants = GetActivityParticipants(child.Activity.ActivityGUID),
+                            Partakers = GetActivityPartakers(child.Activity.ActivityGUID),
                             ReceiverType = child.Transition.Receiver != null ? child.Transition.Receiver.ReceiverType
                             : ReceiverTypeEnum.Default
                         });
@@ -1211,14 +1147,14 @@ namespace Slickflow.Engine.Xpdl
         {
             IList<Role> roles = new List<Role>();
             var activity = ProcessModelHelper.GetActivity(this.Process, activityGUID);
-            var participantList = activity.ParticipantList;
-            if (participantList != null)
+            var partakerList = activity.PartakerList;
+            if (partakerList != null)
             {
-                foreach (var participant in participantList)
+                foreach (var partaker in partakerList)
                 {
-                    if (participant.OuterType == ParticipantTypeEnum.Role.ToString())
+                    if (partaker.OuterType == PartakerTypeEnum.Role.ToString())
                     {
-                        var role = new Role { ID = participant.OuterID, RoleCode = participant.OuterCode, RoleName = participant.Name };
+                        var role = new Role { ID = partaker.OuterID, RoleCode = partaker.OuterCode, RoleName = partaker.Name };
                         roles.Add(role);
                     }
                 }
@@ -1231,10 +1167,10 @@ namespace Slickflow.Engine.Xpdl
         /// </summary>
         /// <param name="activityGUID">活动GUID</param>
         /// <returns>参与者列表</returns>
-        internal IList<Participant> GetActivityParticipants(string activityGUID)
+        internal IList<Partaker> GetActivityPartakers(string activityGUID)
         {
             var activity = ProcessModelHelper.GetActivity(this.Process, activityGUID);
-            return activity.ParticipantList;
+            return activity.PartakerList;
         }
         #endregion
 
@@ -1248,14 +1184,14 @@ namespace Slickflow.Engine.Xpdl
             var activityList = GetAllTaskActivityList();
             foreach (var activity in activityList)
             {
-                var participantList = activity.ParticipantList;
-                foreach (var participant in participantList)
+                var partakerList = activity.PartakerList;
+                foreach (var partaker in partakerList)
                 {
-                    if (participant.OuterType == ParticipantTypeEnum.Role.ToString())
+                    if (partaker.OuterType == PartakerTypeEnum.Role.ToString())
                     {
-                        if (roles.Find(role => role.ID == participant.OuterID) == null)
+                        if (roles.Find(role => role.ID == partaker.OuterID) == null)
                         {
-                            var role = new Role { ID = participant.OuterID, RoleCode = participant.OuterCode, RoleName = participant.Name };
+                            var role = new Role { ID = partaker.OuterID, RoleCode = partaker.OuterCode, RoleName = partaker.Name };
                             roles.Add(role);
                         }
                     }
@@ -1264,22 +1200,31 @@ namespace Slickflow.Engine.Xpdl
             return roles;
         }
 
-
+        #region 获取节点上的通知信息
         /// <summary>
-        /// 根据流程GUID读取单一流程记录
+        /// 获取节点上定义的通知用户列表
         /// </summary>
-        /// <param name="xmlContent">XML内容</param>
-        /// <param name="processGUID">流程实体</param>
-        /// <returns>XML文档对象</returns>
-        private XmlDocument GetXmlDocumentByProcess(string xmlContent, string processGUID)
+        /// <param name="activityGUID">活动GUID</param>
+        /// <returns>通知用户列表</returns>
+        public IList<User> GetActivityNotifications(string activityGUID)
         {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(xmlContent);
-            var processNodeList = xmlDoc.DocumentElement.SelectNodes(XPDLDefinition.BPMN2_ElementName_Process,
-                XPDLHelper.GetBPMN2XmlNamespaceManager(xmlDoc));
-
-            return xmlDoc;
+            IList<User> users = new List<User>();
+            var activity = ProcessModelHelper.GetActivity(this.Process, activityGUID);
+            var partakerList = activity.NotificationList;
+            if (partakerList != null)
+            {
+                foreach (var partaker in partakerList)
+                {
+                    if (partaker.OuterType == PartakerTypeEnum.User.ToString())
+                    {
+                        var user = new User { UserID = partaker.OuterID, UserName = partaker.Name };
+                        users.Add(user);
+                    }
+                }
+            }
+            return users;
         }
+        #endregion
 
         #region 解析条件表达式
         /// <summary>
@@ -1387,6 +1332,21 @@ namespace Slickflow.Engine.Xpdl
         {
             var isMI = false;
             if (activity.ActivityType == ActivityTypeEnum.MultiSignNode)
+            {
+                isMI = true;
+            }
+            return isMI;
+        }
+
+        /// <summary>
+        /// 判断是否会签节点
+        /// </summary>
+        /// <param name="activityInstance">活动实例</param>
+        /// <returns>是否会签</returns>
+        public Boolean IsMINode(ActivityInstanceEntity activityInstance)
+        {
+            var isMI = false;
+            if (activityInstance.ActivityType == (short)ActivityTypeEnum.MultiSignNode)
             {
                 isMI = true;
             }

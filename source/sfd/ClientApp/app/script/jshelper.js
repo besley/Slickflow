@@ -204,7 +204,7 @@
         var t = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
             a = t.length,
             n = "";
-        for (i = 0; i < len; i++) n += t.charAt(Math.floor(Math.random() * a));
+        for (var i = 0; i < len; i++) n += t.charAt(Math.floor(Math.random() * a));
         return n
     }
 

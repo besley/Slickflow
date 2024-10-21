@@ -10,13 +10,13 @@ namespace Slickflow.Engine.Common
     public enum PackageTypeEnum
     {
         /// <summary>
-        /// 主流程
+        /// 协作流程包 Collaboration Package
         /// </summary>
-        MainProcess = 1,
+        Package = 1,
 
         /// <summary>
-        /// 泳道流程
+        /// 泳道流程 Pool Process
         /// </summary>
-        PoolProcess = 2
+        Pool = 2
     }
 }

@@ -30,6 +30,21 @@ class SfCommandInterceptor extends CommandInterceptor {
                 })
             }
         });
+        this.postExecuted(["connection.reconnect"], ({ context }) => {
+            var source = context.newSource;
+            var target = context.newTarget;
+            var from = source.businessObject.guid;
+            var to = target.businessObject.guid;
+
+            var businessObject = context.connection.businessObject;
+            if (businessObject.guid !== undefined) {
+                modeling.updateProperties(context.connection, {
+                    guid: jshelper.getUUID(),
+                    'sf:from': from,
+                    'sf:to': to
+                })
+            }
+        });
     }
 }
 

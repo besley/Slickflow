@@ -57,9 +57,12 @@
     "bpmn-js": "^9.0.3",
     "bpmn-js-properties-panel": "^1.0.0-alpha.5",
     "codemirror": "^5.65.3",
+    "cron-expression-input": "^1.2.7",
     "fine-uploader": "^5.16.2",
     "jquery": "^3.5.1",
     "min-dash": "^3.7.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "vue": "^3.2.38",
+    "vue-cron-editor-buefy": "^0.2.17"
   }
 }

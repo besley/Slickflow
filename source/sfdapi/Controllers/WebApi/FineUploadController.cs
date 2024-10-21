@@ -1,26 +1,4 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-*  
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
-using System;
+﻿using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -111,45 +89,10 @@ namespace Slickflow.Designer.Controllers.WebApi
             if (!string.IsNullOrEmpty(xmlContent) 
                 && xmlDocument.DocumentElement != null)
             {
-                var nsmgr = new XmlNamespaceManager(xmlDocument.NameTable);
-                nsmgr.AddNamespace("bpmn2", "http://www.omg.org/spec/BPMN/20100524/MODEL");
-
-                var processNode = xmlDocument.DocumentElement.SelectSingleNode("bpmn2:process", nsmgr);
-                if (processNode != null)
-                {
-                    var processName = XMLHelper.GetXmlAttribute(processNode, "id");
-                    var processGUID = Guid.NewGuid().ToString();
-                    var processCode = XMLHelper.GetXmlAttribute(processNode, "id");
-                    //获取8位随机字符串和数字序列作为ProcessCode，保证唯一性
-                    if (string.IsNullOrEmpty(processCode)) processCode = (new RandomSequenceGenerator()).GetRandomSequece();
-
-                    if (!string.IsNullOrEmpty(processName) && !string.IsNullOrEmpty(processGUID))
-                    {
-                        var processEntity = new ProcessEntity
-                        {
-                            ProcessGUID = processGUID,
-                            ProcessName = processName,
-                            ProcessCode = processCode,
-                            Version = "1",
-                            IsUsing = 1,
-                            XmlContent = xmlContent,
-                            CreatedDateTime = System.DateTime.Now
-                        };
-
-                        var wfService = new WorkflowService();
-                        wfService.ImportProcess(processEntity);
-                        isUploaded = true;
-                        message = LocalizeHelper.GetDesignerMessage("fineuploadcontroller.importprocess.success");
-                    }
-                    else
-                    {
-                        message = LocalizeHelper.GetDesignerMessage("fineuploadcontroller.createnewprocess.warning");
-                    }
-                }
-                else
-                {
-                    message = LocalizeHelper.GetDesignerMessage("fineuploadcontroller.createnewprocess.noxmlnode.warning");
-                }
+                var wfService = new WorkflowService();
+                wfService.ImportProcess(xmlContent);
+                isUploaded = true;
+                message = LocalizeHelper.GetDesignerMessage("fineuploadcontroller.importprocess.success");
             }
             else
             {

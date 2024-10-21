@@ -4,6 +4,7 @@
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
-    <ActiveDebugProfile>IISExpress</ActiveDebugProfile>
+    <ActiveDebugProfile>IIS</ActiveDebugProfile>
+    <NameOfLastUsedPublishProfile>D:\Cloud365\GitHomeCore\SfBpmn2\source\sfdapi\Properties\PublishProfiles\FolderProfile.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

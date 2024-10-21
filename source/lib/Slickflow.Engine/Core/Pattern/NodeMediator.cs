@@ -1,25 +1,4 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-* 
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +16,10 @@ using Slickflow.Engine.Core.Runtime;
 using Slickflow.Engine.Core.Pattern.Event;
 using Slickflow.Engine.Core.Pattern.Gateway;
 using Slickflow.Engine.Delegate;
+using Slickflow.Engine.Core.Pattern.Event.Message;
+using Slickflow.Engine.Core.Pattern.Event.Timer;
+using Slickflow.Engine.Core.Pattern.Event.Conditional;
+using Slickflow.Engine.Core.Pattern.Event.Signal;
 
 namespace Slickflow.Engine.Core.Pattern
 {
@@ -291,7 +274,13 @@ namespace Slickflow.Engine.Core.Pattern
         /// <returns>判断结果</returns>
         private bool IsNotNodeMediatorStart(NodeMediator nodeMediator)
         {
-            if (!(nodeMediator is NodeMediatorStart))
+            if (!(nodeMediator is NodeMediatorStart)
+                && !(nodeMediator is NodeMediatorStartMsgCatch)
+                && !(nodeMediator is NodeMediatorStartMsgThrow)
+                && !(nodeMediator is NodeMediatorStartSignalCatch)
+                && !(nodeMediator is NodeMediatorStartSignalThrow)
+                && !(nodeMediator is NodeMediatorStartTimer)
+                && !(nodeMediator is NodeMediatorStartConditional))
             {
                 return true;
             }
@@ -324,7 +313,7 @@ namespace Slickflow.Engine.Core.Pattern
         protected void OnAfterExecuteWorkItem()
         {
             var delegateService = GetDelegateService();
-            var actionList = ((this is NodeMediatorEnd)) ? LinkContext.ToActivity.ActionList : LinkContext.FromActivity.ActionList;
+            var actionList = ((this is NodeMediatorEnd) || (this is NodeMediatorIntermediate)) ? LinkContext.ToActivity.ActionList : LinkContext.FromActivity.ActionList;
             ActionExecutor.ExecteActionListAfter(actionList, delegateService as IDelegateService);
 
             //----> 节点流转完成后，调用活动完成执行的委托事件
@@ -689,6 +678,69 @@ namespace Slickflow.Engine.Core.Pattern
                             new WfRuntimeException(scriptExecutedResult.Status.ToString()));
                     }
                 }
+                else if (comp.Activity.ActivityType == ActivityTypeEnum.MultiSignNode)       //多实例会签节点
+                {
+                    //此节点类型为任务节点：根据fromActivityInstance的类型判断是否可以创建任务
+                    if (fromActivityInstance.ActivityState == (short)ActivityStateEnum.Completed)
+                    {
+                        //创建新多实例节点
+                        NodeMediator mediatorMICreator = new NodeMediatorMultiSignCreator(Session);
+                        mediatorMICreator.CreateActivityTaskTransitionInstance(comp.Activity,
+                            ActivityForwardContext.ProcessInstance,
+                            fromActivityInstance,
+                            comp.Transition.TransitionGUID,
+                            comp.Transition.DirectionType == TransitionDirectionTypeEnum.Loop ?
+                                TransitionTypeEnum.Loop : TransitionTypeEnum.Forward, //根据Direction方向确定是否是自身循环
+                            isNotParsedForward == true ?
+                                TransitionFlyingTypeEnum.ForwardFlying : TransitionFlyingTypeEnum.NotFlying,
+                            ActivityForwardContext.ActivityResource,
+                            Session);
+                    }
+                    else
+                    {
+                        //下一步的任务节点没有创建，需给出提示信息
+                        if (IsWaitingOneOfJoin(fromActivity.GatewayDetail) == true)
+                        {
+                            mediatorResult.Add(WfNodeMediatedResult.CreateNodeMediatedResultWithException(
+                                WfNodeMediatedFeedback.NeedOtherGatewayBranchesToJoin));
+                            LogManager.RecordLog("ContinueForwardCurrentNodeRecurisivlyExeception",
+                                LogEventType.Exception,
+                                LogPriority.Normal,
+                                null,
+                                new WfRuntimeException(LocalizeHelper.GetEngineMessage("nodemediator.ContinueForwardCurrentNodeRecurisivly.waitingothers.warn"))
+                                );
+                        }
+                        else
+                        {
+                            mediatorResult.Add(WfNodeMediatedResult.CreateNodeMediatedResultWithException(
+                                WfNodeMediatedFeedback.OtherUnknownReasonToDebug));
+                            LogManager.RecordLog("ContinueForwardCurrentNodeRecurisivlyExeception",
+                                LogEventType.Exception,
+                                LogPriority.Normal,
+                                null,
+                                new WfRuntimeException(LocalizeHelper.GetEngineMessage("nodemediator.ContinueForwardCurrentNodeRecurisivly.otherreason.warn"))
+                                );
+                        }
+                    }
+                }
+                else if (comp.Activity.ActivityType == ActivityTypeEnum.SubProcessNode)         //子流程节点
+                {
+                    //节点类型为subprocessnode
+                    if (fromActivityInstance.ActivityState == (short)ActivityStateEnum.Completed)
+                    {
+                        //实例化subprocess节点数据
+                        var subNodeMediator = NodeMediatorFactory.CreateNodeMediatorSubProcess(comp.Activity, this.Session);
+                        subNodeMediator.CreateActivityTaskTransitionInstance(comp.Activity,
+                            ActivityForwardContext.ProcessInstance,
+                            fromActivityInstance,
+                            comp.Transition.TransitionGUID,
+                            comp.Transition.DirectionType == TransitionDirectionTypeEnum.Loop ?
+                                TransitionTypeEnum.Loop : TransitionTypeEnum.Forward,
+                            TransitionFlyingTypeEnum.NotFlying,
+                            ActivityForwardContext.ActivityResource,
+                            Session);
+                    }
+                }
                 else if (comp.Activity.ActivityType == ActivityTypeEnum.EndNode)        //结束节点
                 {
                     if (fromActivityInstance.ActivityState == (short)ActivityStateEnum.Completed)
@@ -972,6 +1024,7 @@ namespace Slickflow.Engine.Core.Pattern
                 processInstance.AppInstanceID,
                 processInstance.AppInstanceCode,
                 processInstance.ID,
+                processInstance.ProcessGUID,
                 this.BackwardContext.BackwardToTaskActivity,
                 backwardType,
                 backSrcActivityInstanceID,

@@ -1,4 +1,4 @@
-﻿import kconfig from '../../config/kconfig.js'
+﻿import kconfig from '../config/kconfig.js'
 import jshelper from '../script/jshelper.js'
 
 const kdiagram = (function () {

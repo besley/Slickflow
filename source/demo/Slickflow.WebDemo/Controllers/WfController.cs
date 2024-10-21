@@ -247,5 +247,35 @@ namespace Slickflow.WebDemo.Controllers
             }
             return result;
         }
+
+        /// <summary>
+        /// 驳回流程
+        /// </summary>
+        /// <param name="runner">执行用户</param>
+        /// <returns>执行结果</returns>
+        [HttpPost]
+        public ResponseResult RejectProcess([FromBody] WfAppRunner runner)
+        {
+            var result = ResponseResult.Default();
+            var wfService = new WorkflowService();
+
+            try
+            {
+                var wfResult = wfService.RejectProcess(runner);
+                if (wfResult.Status == WfExecutedStatus.Success)
+                {
+                    result = ResponseResult.Success(wfResult.Message);
+                }
+                else
+                {
+                    result = ResponseResult.Error(wfResult.Message);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult.Error(ex.Message);
+            }
+            return result;
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace Slickflow.Module.Localize
         {
             var cacheOptions = new MemoryCacheOptions();
             //cacheOptions.ExpirationScanFrequency = TimeSpan.FromSeconds(300);
-            cacheOptions.ExpirationScanFrequency = TimeSpan.MaxValue;
+            cacheOptions.ExpirationScanFrequency = TimeSpan.FromDays(1);
             _languageCache = new MemoryCache(cacheOptions);
         }
 

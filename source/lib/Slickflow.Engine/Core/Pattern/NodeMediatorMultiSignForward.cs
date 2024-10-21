@@ -1,26 +1,4 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-* 
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -112,75 +90,66 @@ namespace Slickflow.Engine.Core.Pattern
             //多实例会签和加签处理
             //先判断是否是会签和加签类型
             //主节点不为空时不发起加签可以正常运行
-            var complexType = base.LinkContext.FromActivity.MultiSignDetail.ComplexType;
-            if (complexType == ComplexTypeEnum.SignTogether
-                || complexType == ComplexTypeEnum.SignForward && base.LinkContext.FromActivityInstance.MIHostActivityInstanceID != null)
+            var signforwardType = (SignForwardTypeEnum)Enum.Parse(typeof(SignForwardTypeEnum),
+                base.ActivityForwardContext.FromActivityInstance.SignForwardType.Value.ToString());
+            if (base.LinkContext.FromActivityInstance.MIHostActivityInstanceID != null
+                && signforwardType != SignForwardTypeEnum.None)
             {
                 //取出主节点信息
                 var mainNodeIndex = base.LinkContext.FromActivityInstance.MIHostActivityInstanceID.Value;
                 var mainActivityInstance = base.ActivityInstanceManager.GetById(mainNodeIndex);
 
-                if (complexType == ComplexTypeEnum.SignForward)                            //加签的处理
+                //判断加签是否全部完成，如果是，则流转到下一步，否则不能流转
+                if (signforwardType == SignForwardTypeEnum.SignForwardBehind
+                    || signforwardType == SignForwardTypeEnum.SignForwardBefore)
                 {
+                    //取出处于多实例节点列表
+                    var sqList = base.ActivityInstanceManager.GetActivityMulitipleInstanceWithState(
+                        mainNodeIndex,
+                        base.LinkContext.FromActivityInstance.ProcessInstanceID,
+                        (short)ActivityStateEnum.Suspended,
+                        session).ToList<ActivityInstanceEntity>();
 
-                    //判断加签是否全部完成，如果是，则流转到下一步，否则不能流转
-                    var signforwardType = (SignForwardTypeEnum)Enum.Parse(typeof(SignForwardTypeEnum),
-                        base.ActivityForwardContext.FromActivityInstance.SignForwardType.Value.ToString());
-
-                    if (signforwardType == SignForwardTypeEnum.SignForwardBehind
-                        || signforwardType == SignForwardTypeEnum.SignForwardBefore)
+                    short maxOrder = 0;
+                    if (sqList != null && sqList.Count > 0)
                     {
-                        //取出处于多实例节点列表
-                        var sqList = base.ActivityInstanceManager.GetActivityMulitipleInstanceWithState(
-                            mainNodeIndex,
-                            base.LinkContext.FromActivityInstance.ProcessInstanceID,
-                            (short)ActivityStateEnum.Suspended,
-                            session).ToList<ActivityInstanceEntity>();
+                        //取出最大执行节点
+                        maxOrder = (short)sqList.Max<ActivityInstanceEntity>(t => t.CompleteOrder.Value);
+                    }
+                    else
+                    {
+                        //最后一个执行节点
+                        maxOrder = (short)base.LinkContext.FromActivityInstance.CompleteOrder.Value;
+                    }
 
-                        short maxOrder = 0;
-                        if (sqList != null && sqList.Count > 0)
+                    if (mainActivityInstance.CompareType == (short)CompareTypeEnum.Count || mainActivityInstance.CompareType == null)
+                    {
+                        //加签通过率
+                        if (mainActivityInstance.CompleteOrder != null && mainActivityInstance.CompleteOrder <= maxOrder)
                         {
-                            //取出最大执行节点
-                            maxOrder = (short)sqList.Max<ActivityInstanceEntity>(t => t.CompleteOrder.Value);
+                            maxOrder = (short)mainActivityInstance.CompleteOrder;
                         }
-                        else
-                        {
-                            //最后一个执行节点
-                            maxOrder = (short)base.LinkContext.FromActivityInstance.CompleteOrder.Value;
-                        }
-                        if (mainActivityInstance.CompareType == (short)CompareTypeEnum.Count || mainActivityInstance.CompareType == null)
-                        {
-                            //加签通过率
-                            if (mainActivityInstance.CompleteOrder != null && mainActivityInstance.CompleteOrder <= maxOrder)
-                            {
-                                maxOrder = (short)mainActivityInstance.CompleteOrder;
-                            }
 
-                            if (base.LinkContext.FromActivityInstance.CompleteOrder < maxOrder)
-                            {
-                                //设置下一个节点进入等待办理状态
-                                var currentNodeIndex = (short)base.LinkContext.FromActivityInstance.CompleteOrder.Value;
-                                var nextActivityInstance = sqList[0];
-                                nextActivityInstance.ActivityState = (short)ActivityStateEnum.Ready;
-                                base.ActivityInstanceManager.Update(nextActivityInstance, session);
-
-                                canContinueForwardCurrentNode = false;
-                                base.WfNodeMediatedResult.Feedback = WfNodeMediatedFeedback.ForwardToNextSequenceTask;
-                            }
-                            else if (base.LinkContext.FromActivityInstance.CompleteOrder == maxOrder)
-                            {
-                                //最后一个节点执行完，主节点进入完成状态，整个流程向下执行
-                                mainActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
-                                base.ActivityInstanceManager.Update(mainActivityInstance, session);
-                                //更新未办理完成节点状态为取消状态
-                                base.ActivityInstanceManager.CancelUnCompletedMultipleInstance(mainActivityInstance.ID, session, runner);
-                            }
-                        }
-                        else
+                        if (base.LinkContext.FromActivityInstance.CompleteOrder < maxOrder)
                         {
-                            if (mainActivityInstance.CompleteOrder == null || mainActivityInstance.CompleteOrder > 1)//并行加签未设置通过率的判断
-                                mainActivityInstance.CompleteOrder = 1;
-                            if ((base.LinkContext.FromActivityInstance.CompleteOrder * 0.01) / (maxOrder * 0.01) >= mainActivityInstance.CompleteOrder)
+                            //设置下一个节点进入等待办理状态
+                            var currentNodeIndex = (short)base.LinkContext.FromActivityInstance.CompleteOrder.Value;
+                            var nextActivityInstance = sqList[0];
+                            nextActivityInstance.ActivityState = (short)ActivityStateEnum.Ready;
+                            base.ActivityInstanceManager.Update(nextActivityInstance, session);
+
+                            //更新主节点的执行人员列表
+                            mainActivityInstance.NextStepPerformers = NextStepUtility.SerializeNextStepPerformers(
+                                base.ActivityForwardContext.ActivityResource.AppRunner.NextActivityPerformers);
+                            base.ActivityInstanceManager.Update(mainActivityInstance, session);
+                            canContinueForwardCurrentNode = false;
+                            base.WfNodeMediatedResult.Feedback = WfNodeMediatedFeedback.ForwardToNextSequenceTask;
+                        }
+                        else if (base.LinkContext.FromActivityInstance.CompleteOrder == maxOrder)
+                        {
+                            var passed = base.ActivityInstanceManager.GetMiApprovalThresholdStatus(base.LinkContext.FromActivityInstance,
+                                    mainActivityInstance, session);
+                            if (passed)
                             {
                                 //最后一个节点执行完，主节点进入完成状态，整个流程向下执行
                                 mainActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
@@ -190,36 +159,119 @@ namespace Slickflow.Engine.Core.Pattern
                             }
                             else
                             {
-                                //设置下一个节点进入等待办理状态
-                                var currentNodeIndex = (short)base.LinkContext.FromActivityInstance.CompleteOrder.Value;
-                                var nextActivityInstance = sqList[0];
+                                canContinueForwardCurrentNode = false;
+                                base.WfNodeMediatedResult.Feedback = WfNodeMediatedFeedback.NotEnoughApprovalBranchesCount;
+                            }
+                        }
+                        else
+                        {
+                            if (mainActivityInstance.CompleteOrder == null || mainActivityInstance.CompleteOrder > 1)//串行会签未设置通过率的判断
+                                mainActivityInstance.CompleteOrder = 1;
+
+                            if ((base.LinkContext.FromActivityInstance.CompleteOrder * 0.01) / (maxOrder * 0.01) >= mainActivityInstance.CompleteOrder)
+                            {
+                                var passed = base.ActivityInstanceManager.GetMiApprovalThresholdStatus(base.LinkContext.FromActivityInstance,
+                                    mainActivityInstance, session);
+                                if (passed)
+                                {
+                                    //完成最后一个会签任务，会签主节点状态由挂起设置为完成状态
+                                    mainActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
+                                    base.ActivityInstanceManager.Update(mainActivityInstance, session);
+                                    //更新未办理完成节点状态为取消状态
+                                    base.ActivityInstanceManager.CancelUnCompletedMultipleInstance(mainActivityInstance.ID, session, runner);
+                                }
+                                else
+                                {
+                                    canContinueForwardCurrentNode = false;
+                                    base.WfNodeMediatedResult.Feedback = WfNodeMediatedFeedback.NotEnoughApprovalBranchesCount;
+                                }
+                            }
+                            else
+                            {
+                                //设置下一个任务进入准备状态
+                                var nextActivityInstance = sqList[0];     //始终取第一条挂起实例
                                 nextActivityInstance.ActivityState = (short)ActivityStateEnum.Ready;
                                 base.ActivityInstanceManager.Update(nextActivityInstance, session);
 
+                                //更新主节点的执行人员列表
+                                mainActivityInstance.NextStepPerformers = NextStepUtility.SerializeNextStepPerformers(
+                                    base.ActivityForwardContext.ActivityResource.AppRunner.NextActivityPerformers);
+                                base.ActivityInstanceManager.Update(mainActivityInstance, session);
                                 canContinueForwardCurrentNode = false;
                                 base.WfNodeMediatedResult.Feedback = WfNodeMediatedFeedback.ForwardToNextSequenceTask;
                             }
                         }
                     }
-                    else if (signforwardType == SignForwardTypeEnum.SignForwardParallel)
-                    {
-                        //取出处于多实例节点列表
-                        var sqList = base.ActivityInstanceManager.GetActivityMulitipleInstanceWithState(
-                            mainNodeIndex,
-                            base.LinkContext.FromActivityInstance.ProcessInstanceID,
-                            null,
-                            session).ToList<ActivityInstanceEntity>();
+                }
+                else if (signforwardType == SignForwardTypeEnum.SignForwardParallel)
+                {
+                    //取出处于多实例节点列表
+                    var sqList = base.ActivityInstanceManager.GetActivityMulitipleInstanceWithState(
+                        mainNodeIndex,
+                        base.LinkContext.FromActivityInstance.ProcessInstanceID,
+                        null,
+                        session).ToList<ActivityInstanceEntity>();
 
-                        //并行加签，按照通过率来决定是否标识当前节点完成
-                        var allCount = sqList.Where(x => x.ActivityState != (short)ActivityStateEnum.Withdrawed).ToList().Count();
-                        var completedCount = sqList.Where<ActivityInstanceEntity>(w => w.ActivityState == (short)ActivityStateEnum.Completed)
-                            .ToList<ActivityInstanceEntity>()
-                            .Count();
-                        if (mainActivityInstance.CompareType == null || mainActivityInstance.CompareType == (short)CompareTypeEnum.Percentage)
+                    //并行加签，按照通过率来决定是否标识当前节点完成
+                    var allCount = sqList.Where(x => x.ActivityState != (short)ActivityStateEnum.Withdrawed).ToList().Count();
+                    var completedCount = sqList.Where<ActivityInstanceEntity>(w => w.ActivityState == (short)ActivityStateEnum.Completed)
+                        .ToList<ActivityInstanceEntity>()
+                        .Count();
+                    if (mainActivityInstance.CompareType == null || mainActivityInstance.CompareType == (short)CompareTypeEnum.Percentage)
+                    {
+                        if (mainActivityInstance.CompleteOrder > 1)//并行加签通过率的判断
+                            mainActivityInstance.CompleteOrder = 1;
+
+                        if ((completedCount * 0.01) / (allCount * 0.01) >= mainActivityInstance.CompleteOrder)
                         {
-                            if (mainActivityInstance.CompleteOrder > 1)//并行加签通过率的判断
-                                mainActivityInstance.CompleteOrder = 1;
-                            if ((completedCount * 0.01) / (allCount * 0.01) >= mainActivityInstance.CompleteOrder)
+                            var passed = base.ActivityInstanceManager.GetMiApprovalThresholdStatus(base.LinkContext.FromActivityInstance,
+                                    mainActivityInstance, session);
+                            if (passed)
+                            {
+                                base.ActivityForwardContext.FromActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
+                                mainActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
+                                base.ActivityInstanceManager.Update(mainActivityInstance, session);
+                                //更新未办理完成节点状态为取消状态
+                                base.ActivityInstanceManager.CancelUnCompletedMultipleInstance(mainActivityInstance.ID, session, runner);
+                            }
+                            else
+                            {
+                                canContinueForwardCurrentNode = false;
+                                base.WfNodeMediatedResult.Feedback = WfNodeMediatedFeedback.NotEnoughApprovalBranchesCount;
+                            }
+                        }
+                        else
+                        {
+                            //更新主节点的执行人员列表
+                            mainActivityInstance.NextStepPerformers = NextStepUtility.SerializeNextStepPerformers(
+                                base.ActivityForwardContext.ActivityResource.AppRunner.NextActivityPerformers);
+                            base.ActivityInstanceManager.Update(mainActivityInstance, session);
+                            canContinueForwardCurrentNode = false;
+                            base.WfNodeMediatedResult.Feedback = WfNodeMediatedFeedback.WaitingForCompletedMore;
+                        }
+                    }
+                    else
+                    {
+                        //串行加签通过率（按人数判断）
+                        if (mainActivityInstance.CompleteOrder != null && mainActivityInstance.CompleteOrder > allCount)
+                        {
+                            mainActivityInstance.CompleteOrder = allCount;
+                        }
+
+                        if (mainActivityInstance.CompleteOrder > completedCount)
+                        {
+                            //更新主节点的执行人员列表
+                            mainActivityInstance.NextStepPerformers = NextStepUtility.SerializeNextStepPerformers(
+                                base.ActivityForwardContext.ActivityResource.AppRunner.NextActivityPerformers);
+                            base.ActivityInstanceManager.Update(mainActivityInstance, session);
+                            canContinueForwardCurrentNode = false;
+                            base.WfNodeMediatedResult.Feedback = WfNodeMediatedFeedback.WaitingForCompletedMore;
+                        }
+                        else if (mainActivityInstance.CompleteOrder == completedCount)
+                        {
+                            var passed = base.ActivityInstanceManager.GetMiApprovalThresholdStatus(base.LinkContext.FromActivityInstance,
+                                    mainActivityInstance, session);
+                            if (passed)
                             {
                                 base.ActivityForwardContext.FromActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
                                 mainActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
@@ -230,29 +282,7 @@ namespace Slickflow.Engine.Core.Pattern
                             else
                             {
                                 canContinueForwardCurrentNode = false;
-                                base.WfNodeMediatedResult.Feedback = WfNodeMediatedFeedback.WaitingForCompletedMore;
-                            }
-                        }
-                        else
-                        {
-                            //串行加签通过率（按人数判断）
-                            if (mainActivityInstance.CompleteOrder != null && mainActivityInstance.CompleteOrder > allCount)
-                            {
-                                mainActivityInstance.CompleteOrder = allCount;
-                            }
-
-                            if (mainActivityInstance.CompleteOrder > completedCount)
-                            {
-                                canContinueForwardCurrentNode = false;
-                                base.WfNodeMediatedResult.Feedback = WfNodeMediatedFeedback.WaitingForCompletedMore;
-                            }
-                            else if (mainActivityInstance.CompleteOrder == completedCount)
-                            {
-                                base.ActivityForwardContext.FromActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
-                                mainActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
-                                base.ActivityInstanceManager.Update(mainActivityInstance, base.Session);
-                                //更新未办理完成节点状态为取消状态
-                                base.ActivityInstanceManager.CancelUnCompletedMultipleInstance(mainActivityInstance.ID, session, runner);
+                                base.WfNodeMediatedResult.Feedback = WfNodeMediatedFeedback.NotEnoughApprovalBranchesCount;
                             }
                         }
                     }

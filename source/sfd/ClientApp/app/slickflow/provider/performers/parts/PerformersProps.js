@@ -38,7 +38,7 @@ function addFactory({ element, bpmnFactory, commandStack }) {
         event.stopPropagation();
 
         if ("undefined" !== typeof rolelist) {
-            rolelist.afterParticipantSelected.subscribe(afterParticipantSelected);
+            rolelist.afterPartakerSelected.subscribe(afterPartakerSelected);
         }
 
         var BootstrapDialog = require('bootstrap5-dialog');
@@ -57,21 +57,21 @@ function addFactory({ element, bpmnFactory, commandStack }) {
     }
 }
 
-var mxParticipantSelected = null;
-var mxParticipantType = null;
+var mxPartakerSelected = null;
+var mxPartakerType = null;
 
-function afterParticipantSelected(evt, data) {
-    mxParticipantSelected = data.ParticipantItem;
-    mxParticipantType = data.ParticipantType;
+function afterPartakerSelected(evt, data) {
+    mxPartakerSelected = data.PartakerItem;
+    mxPartakerType = data.PartakerType;
 }
 
-function isParticipantExisted(element) {
+function isPartakerExisted(element) {
     var isExisted = false;
     const performers = getPerformers(element) || [];
-    const participant = mxParticipantSelected;
-    if (participant !== null) {
+    const partaker = mxPartakerSelected;
+    if (partaker !== null) {
         performers.forEach(function (item, index) {
-            if (item.outerId === participant.ID) {
+            if (item.outerId === partaker.ID) {
                 isExisted = true;
             }
         })
@@ -80,8 +80,8 @@ function isParticipantExisted(element) {
 }
 
 function executeMultiCommad(element, bpmnFactory, commandStack) {
-    //check the participant whether exist
-    if (isParticipantExisted(element) === true) {
+    //check the partaker whether exist
+    if (isPartakerExisted(element) === true) {
         return;
     }
 
@@ -128,25 +128,26 @@ function executeMultiCommad(element, bpmnFactory, commandStack) {
         });
     }
 
-    const newPerformer = createElement('sf:Performer', {
-        name: mxParticipantSelected.RoleName,
-        outerId: mxParticipantSelected.ID,
-        outerCode: mxParticipantSelected.RoleCode,
-        outerType: mxParticipantType    //role
-    }, extension, bpmnFactory);
+    if (mxPartakerSelected !== null) {
+        const newPerformer = createElement('sf:Performer', {
+            name: mxPartakerSelected.RoleName,
+            outerId: mxPartakerSelected.ID,
+            outerCode: mxPartakerSelected.RoleCode,
+            outerType: mxPartakerType    //role
+        }, extension, bpmnFactory);
 
-    commands.push({
-        cmd: 'element.updateModdleProperties',
-        context: {
-            element,
-            moddleElement: extension,
-            properties: {
-                values: [...extension.get('values'), newPerformer]
+        commands.push({
+            cmd: 'element.updateModdleProperties',
+            context: {
+                element,
+                moddleElement: extension,
+                properties: {
+                    values: [...extension.get('values'), newPerformer]
+                }
             }
-        }
-    });
-
-    commandStack.execute('properties-panel.multi-command-executor', commands);
+        });
+        commandStack.execute('properties-panel.multi-command-executor', commands);
+    } 
 }
 
 function removeFactory({ commandStack, element, performer }) {

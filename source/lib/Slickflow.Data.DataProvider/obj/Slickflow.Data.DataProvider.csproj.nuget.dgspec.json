@@ -46,10 +46,6 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Microsoft.Extensions.Caching.Memory": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.8.6, )"
@@ -120,12 +116,6 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "dependencies": {
-            "Microsoft.Extensions.Caching.Memory": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
@@ -192,9 +182,13 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Microsoft.Extensions.Caching.Memory": {
+            "MongoDB.Driver": {
               "target": "Package",
-              "version": "[8.0.0, )"
+              "version": "[2.28.0, )"
+            },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[8.0.3, )"
             },
             "System.Configuration.ConfigurationManager": {
               "target": "Package",

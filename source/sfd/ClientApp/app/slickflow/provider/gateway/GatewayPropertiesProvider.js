@@ -27,11 +27,11 @@ GatewayPropertiesProvider.$inject = [ 'propertiesPanel', 'translate' ];
 
 function createGatewayTypeGroup(element, translate) {
     var entries = [];
-    if (sfModelUtility.isSplit(element)) {
-        entries.push(splitTypeProps(element))
+    if (sfModelUtility.isSplitSource(element)){
+       entries.push(splitTypeProps(element))
     }
 
-    if (sfModelUtility.isJoin(element)) {
+    if (sfModelUtility.isJoinTarget(element)) {
         entries.push(joinTypeProps(element));
         entries.push(passTypeProps(element));
     }

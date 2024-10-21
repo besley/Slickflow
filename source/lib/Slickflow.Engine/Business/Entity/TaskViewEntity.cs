@@ -28,6 +28,8 @@ namespace Slickflow.Engine.Business.Entity
         public short ActivityType { get; set; }
         public short WorkItemType { get; set; }
         public short TaskType { get; set; }
+        public Nullable<short> SubProcessType { get; set; }
+        public int SubProcessID { get; set; }
         public string SubProcessGUID { get; set; }
         public Nullable<int> EntrustedTaskID { get; set; }        //被委托任务ID
         public Nullable<int> MIHostActivityInstanceID { get; set; }

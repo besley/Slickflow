@@ -1,26 +1,4 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-*  
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
@@ -32,8 +10,11 @@ using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Service;
-using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Utility;
+using Slickflow.Graph;
+using Slickflow.Graph.Roslyn;
+using Slickflow.Engine.Xpdl.Common;
+using Slickflow.Graph.Common;
 
 namespace Slickflow.Designer.Controllers.WebApi
 {
@@ -101,6 +82,271 @@ namespace Slickflow.Designer.Controllers.WebApi
             var result = string.Format("runner:{0}, role:{1}", runner, role);
             return result;
         }
+        #endregion
+
+        #region 流程定义数据
+        /// <summary>
+        /// 创建流程定义
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult<ProcessEntity> CreateProcess([FromBody] ProcessFileEntity fileEntity)
+        {
+            var result = ResponseResult<ProcessEntity>.Default();
+            try
+            {
+                if (string.IsNullOrEmpty(fileEntity.ProcessName.Trim())
+                    || string.IsNullOrEmpty(fileEntity.ProcessCode.Trim())
+                    || string.IsNullOrEmpty(fileEntity.Version.Trim()))
+                {
+                    result = ResponseResult<ProcessEntity>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.crateprocess.warning"));
+                    return result;
+                }
+
+                //创建新流程,ProcessGUID默认赋值
+                if (string.IsNullOrEmpty(fileEntity.ProcessGUID))
+                {
+                    fileEntity.ProcessGUID = Guid.NewGuid().ToString();
+                }
+
+                if (string.IsNullOrEmpty(fileEntity.Version))
+                {
+                    fileEntity.Version = "1";
+                }
+
+                //根据模板类型来创建流程
+                ProcessEntity entity = new ProcessEntity
+                {
+                    ProcessGUID = fileEntity.ProcessGUID,
+                    ProcessName = fileEntity.ProcessName,
+                    ProcessCode = fileEntity.ProcessCode,
+                    Version = fileEntity.Version,
+                    IsUsing = fileEntity.IsUsing,
+                    Description = fileEntity.Description,
+                };
+
+                //生成XML内容
+                fileEntity = ProcessXmlBuilder.InitNewBPMNFileBlank(fileEntity);
+                entity.XmlContent = fileEntity.XmlContent;
+
+                //插入XML文档
+                var wfService = new WorkflowService();
+                var processID = wfService.CreateProcess(entity);
+                entity.ID = processID;
+
+                result = ResponseResult<ProcessEntity>.Success(entity,
+                    LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.crateprocess.success")
+                );
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<ProcessEntity>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.crateprocess.error", ex.Message));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 根据业务模板名称, 创建流程定义
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult<ProcessEntity> CreateProcessByTemplateName([FromBody] ProcessTemplate processTemplate)
+        {
+            var result = ResponseResult<ProcessEntity>.Default();
+            try
+            {
+                if (string.IsNullOrEmpty(processTemplate.TemplateName.Trim()))
+                {
+                    result = ResponseResult<ProcessEntity>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.crateprocess.warning"));
+                    return result;
+                }
+
+                var entity = ProcessFactory.CreateProcessByTemplateName(processTemplate);
+                result = ResponseResult<ProcessEntity>.Success(entity,
+                    LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.crateprocess.success")
+                );
+            }
+            catch(System.Exception ex)
+            {
+                result = ResponseResult<ProcessEntity>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.crateprocess.error", ex.Message));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 代码创建流程图
+        /// </summary>
+        /// <param name="graph">代码文本</param>
+        /// <returns>创建结果</returns>
+        [HttpPost]
+        public ResponseResult<ProcessEntity> ExecuteProcessGraph([FromBody] ProcessGraph graph)
+        {
+            var result = ResponseResult<ProcessEntity>.Default();
+            try
+            {
+                var roslynBuilder = new RoslynBuilder();
+                var roslynResult = roslynBuilder.Execute(graph);
+                if (roslynResult.Status == 1)
+                {
+                    result = ResponseResult<ProcessEntity>.Success(roslynResult.Process,
+                        LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.executeprocessgraph.success")
+                    );
+                }
+                else
+                {
+                    result = ResponseResult<ProcessEntity>.Error(roslynResult.Message);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<ProcessEntity>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.executeprocessgraph.error", ex.Message));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 更新流程数据
+        /// </summary>
+        /// <param name="entity">流程实体</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult UpdateProcess([FromBody] ProcessEntity entity)
+        {
+            var result = ResponseResult.Default();
+            try
+            {
+                var wfService = new WorkflowService();
+                var processEntity = wfService.GetProcessByVersion(entity.ProcessGUID, entity.Version);
+                processEntity.ProcessName = entity.ProcessName;
+                processEntity.ProcessCode = entity.ProcessCode;
+                processEntity.XmlFileName = entity.XmlFileName;
+                processEntity.AppType = entity.AppType;
+                processEntity.Description = entity.Description;
+                processEntity.IsUsing = entity.IsUsing;
+                if (!string.IsNullOrEmpty(entity.XmlContent))
+                {
+                    processEntity.XmlContent = PaddingContentWithRightSpace(entity.XmlContent);
+                }
+                wfService.UpdateProcess(processEntity);
+
+                result = ResponseResult.Success(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.updateprocess.success")
+                );
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.updateprocess.error", ex.Message));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 更新流程使用状态
+        /// </summary>
+        /// <param name="entity">流程实体</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult UpdateProcessUsingState([FromBody] ProcessEntity entity)
+        {
+            var result = ResponseResult.Default();
+            try
+            {
+                var wfService = new WorkflowService();
+                wfService.UpdateProcessUsingState(entity.ProcessGUID, entity.Version, entity.IsUsing);
+
+                result = ResponseResult.Success(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.updateprocessusingstate.success")
+                );
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.updateprocessusingstate.error", ex.Message));
+            }
+            return result;
+        }
+
+
+
+        /// <summary>
+        /// 更新流程数据
+        /// </summary>
+        /// <param name="entity">流程实体</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult UpgradeProcess([FromBody] ProcessEntity entity)
+        {
+            var result = ResponseResult.Default();
+            try
+            {
+                var wfService = new WorkflowService();
+                var process = wfService.GetProcessByID(entity.ID);
+                int newVersion = 1;
+                var parsed = int.TryParse(process.Version, out newVersion);
+                if (parsed == true) newVersion = newVersion + 1;
+                wfService.UpgradeProcess(process.ProcessGUID, process.Version, newVersion.ToString());
+               
+                result = ResponseResult.Success(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.upgradeprocess.success"));
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.upgradeprocess.error", ex.Message));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 删除琉璃厂数据
+        /// </summary>
+        /// <param name="entity">流程实体</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult DeleteProcess([FromBody] ProcessEntity entity)
+        {
+            var result = ResponseResult.Default();
+            try
+            {
+                var wfService = new WorkflowService();
+                wfService.DeleteProcess(entity.ProcessGUID, entity.Version);
+
+                result = ResponseResult.Success(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.deleteprocess.success")
+                );
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.deleteprocess.error", ex.Message));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 加载流程模板
+        /// </summary>
+        /// <param name="id">模板类型</param>
+        /// <returns>模板内容</returns>
+        [HttpGet]
+        public ResponseResult<ProcessTemplate> LoadProcessTemplate(string id)
+        {
+            var result = ResponseResult<ProcessTemplate>.Default();
+            try
+            {
+                ProcessTemplate entity = null;
+                ProcessTemplateType templateType = ProcessTemplateType.Blank;
+                var isOK = Enum.TryParse<ProcessTemplateType>(id, out templateType);
+                if (isOK)
+                {
+                    entity = ProcessTemplateFactory.LoadTemplateContent(templateType);
+                }
+                result = ResponseResult<ProcessTemplate>.Success(entity, LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.loadProcesstemplate.success")
+                );
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<ProcessTemplate>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.loadProcesstemplate.error", ex.Message)
+                );
+            }
+            return result;
+        }
+        
         #endregion
 
         #region 读取流程XML文件数据处理
@@ -280,7 +526,7 @@ namespace Slickflow.Designer.Controllers.WebApi
             var result = new ResponseResult<ProcessFileEntity>();
             try
             {
-                var entity = Slickflow.Graph.BPMN.ProcessXmlBuilder.InitNewBPMNFile();
+                var entity = ProcessXmlBuilder.InitNewBPMNFile();
                 result = ResponseResult<ProcessFileEntity>.Success(entity);
             }
             catch (System.Exception ex)
@@ -316,31 +562,6 @@ namespace Slickflow.Designer.Controllers.WebApi
 
 
         /// <summary>
-        /// 保存多泳道流程图形
-        /// WfProcess表中通过PackageProcessID来关联
-        /// </summary>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public ResponseResult SaveProcessFilePool([FromBody] ProcessFilePool entity)
-        {
-            var result = ResponseResult.Default();
-            try
-            {
-                var wfService = new WorkflowService();
-                entity.XmlContent = PaddingContentWithRightSpace(entity.XmlContent);
-                wfService.SaveProcessFilePool(entity);
-
-                result = ResponseResult.Success(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.saveprocessfile.success"));
-            }
-            catch(System.Exception ex)
-            {
-                result = ResponseResult.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.saveprocessfile.error", ex.Message));
-            }
-            return result;
-        }
-
-        /// <summary>
         /// 补足XmlContent内容（Oracle-01483-error）
         /// ORA-01483: invalid length for DATE or NUMBER
         /// </summary>
@@ -363,7 +584,7 @@ namespace Slickflow.Designer.Controllers.WebApi
         /// <param name="entity">校验实体</param>
         /// <returns>校验结果对象</returns>
         [HttpPost]
-        public ResponseResult<ProcessValidateResult> ValidateProcess([FromBody] ProcessValidate entity)
+        public ResponseResult<ProcessValidateResult> ValidateProcess([FromBody] ProcessEntity entity)
         {
             var result = ResponseResult<ProcessValidateResult>.Default();
             try
@@ -521,6 +742,28 @@ namespace Slickflow.Designer.Controllers.WebApi
                 result = ResponseResult<List<Role>>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.getroleall.error", ex.Message));
             }
             return result;
+        }
+
+        /// <summary>
+        /// 获取所有用户数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult<List<User>> GetUserAll()
+        {
+            var result = ResponseResult<List<User>>.Default();
+            try
+            {
+                var wfService = new WorkflowService();
+                var entity = wfService.GetUserAll().ToList();
+
+                result = ResponseResult<List<User>>.Success(entity);
+            }
+            catch (System.Exception ex)
+            {
+                result = ResponseResult<List<User>>.Error(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.getuserall.error", ex.Message));
+            }
+            return result; 
         }
         #endregion
     }

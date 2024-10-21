@@ -15,6 +15,8 @@
     <None Remove="Designer\zh.json" />
     <None Remove="Engine\en.json" />
     <None Remove="Engine\zh.json" />
+    <None Remove="Job\en.json" />
+    <None Remove="Job\zh.json" />
     <None Remove="Web\en.json" />
     <None Remove="Web\zh.json" />
   </ItemGroup>
@@ -24,6 +26,8 @@
     <EmbeddedResource Include="Designer\zh.json" />
     <EmbeddedResource Include="Engine\en.json" />
     <EmbeddedResource Include="Engine\zh.json" />
+    <EmbeddedResource Include="Job\en.json" />
+    <EmbeddedResource Include="Job\zh.json" />
     <EmbeddedResource Include="Web\en.json" />
     <EmbeddedResource Include="Web\zh.json" />
   </ItemGroup>

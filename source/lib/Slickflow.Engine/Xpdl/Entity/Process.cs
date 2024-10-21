@@ -15,6 +15,7 @@ namespace Slickflow.Engine.Xpdl.Entity
         public string ProcessGUID { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
+        public string XmlContent { get; set; }
 
         private IList<Activity> activityList = new List<Activity>();
         public IList<Activity> ActivityList { 

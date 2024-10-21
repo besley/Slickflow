@@ -18,6 +18,58 @@
             <a href="#" class="btn btn-info" id="btnCreateProcess"><span class="bi bi-file-earmark lang" as="new"> </span> </a>
             <a href="#" class="btn btn-info" id="btnOpenProcess"><span class="bi bi-folder lang" as="open"> </span></a>
             <a href="#" class="btn btn-info" id="btnSaveProcess"><span class="bi bi-check-lg lang" as="save"> </span></a>
+            <a href="#" class="btn btn-info" id="btnOpenTemplateGallery"><span class="bi bi-boxes lang" as="modeling"> </span></a>
+        </div>
+        <div class="dropdown" style="float:left;margin-left:5px;">
+            <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLinkOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="bi bi-shuffle lang" as="test"> </span><span class="caret"></span>
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLinkOptions">
+                <!--<a class="dropdown-item" href="#"><span class="lang" as="simutest" onclick="kmain.simuTest();"></span></a>
+                <li class="divider">&nbsp</li>-->
+                <li>
+                    <a class="dropdown-item" href="#">
+                        <span class="lang" as="slickflowdemo"></span> &raquo;
+                    </a>
+                    <ul class="dropdown-menu dropdown-submenu">
+                        <li>
+                            <a class="dropdown-item" href="#" onclick="kmain.openDemo('sequence');"><span class="lang" as="wf-sequence"></span></a>
+                        </li>
+                        <li class="divider">&nbsp</li>
+                        <li>
+                            <a class="dropdown-item" href="#" onclick="kmain.openDemo('andsplit');"><span class="lang" as="wf-andsplit"></span></a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#" onclick="kmain.openDemo('orsplit');"><span class="lang" as="wf-orsplit"></span></a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#" onclick="kmain.openDemo('xorsplit');"><span class="lang" as="wf-xorsplit"></span></a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#" onclick="kmain.openDemo('approvalorsplit');"><span class="lang" as="wf-approvalorsplit"></span></a>
+                        </li>
+                        <li class="divider">&nbsp</li>
+                        <li>
+                            <a class="dropdown-item" href="#" onclick="kmain.openDemo('eorjoinbranchcount');"><span class="lang" as="wf-eorjoinbranchcount"></span></a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#" onclick="kmain.openDemo('eorjoinbranchforced');"><span class="lang" as="wf-eorjoinbranchforced"></span></a>
+                        </li>
+                        <li class="divider">&nbsp</li>
+                        <li>
+                            <a class="dropdown-item" href="#" onclick="kmain.openDemo('startconditional');"><span class="lang" as="wf-startconditional"></span></a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#" onclick="kmain.openDemo('startsplit');"><span class="lang" as="wf-startsplit"></span></a>
+                        </li>
+                        <li class="divider">&nbsp</li>
+                        <li>
+                            <a class="dropdown-item" href="#" onclick="kmain.openDemo('misequence');"><span class="lang" as="wf-misequence"></span></a>
+                        </li>
+                    </ul>
+                </li>
+            </div>
         </div>
         <div class="dropdown" style="float:left;margin-left: 5px;">
             <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLinkTool" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -25,31 +77,33 @@
             </a>
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLinkTool">
+                <a class="dropdown-item" href="#"><span class="lang" as="importxml" onclick="kmain.importDiagram();"></span></a>
+                <a class="dropdown-item" href="#"><span class="lang" as="importmxgraphxml" onclick="kmain.importMxGraphDiagram();"></span></a>
+                <li class="divider">&nbsp</li>
                 <a class="dropdown-item" href="#"><span class="lang" as="content" onclick="kmain.previewXml();"></span></a>
+                <li class="divider">&nbsp</li>
+                <a class="dropdown-item" href="#" id="btnValidateProcess"><span class="lang" as="validate"></span></a>
                 <li class="divider">&nbsp</li>
                 <a class="dropdown-item download" href="#" id="js-download-diagram"><span class="lang" as="downgram" onclick="kmain.downloadXml();"></span></a>
                 <a class="dropdown-item download" href="#" id="js-download-svg"><span class="lang" as="downsvg" onclick="kmain.downloadSvg();"></span></a>
-                <li class="divider">&nbsp</li>
-                <!--<a class="dropdown-item" href="#"><span class="lang" as="validate" onclick="kmain.validateProcess();"></span></a>-->
-                <a class="dropdown-item" href="#"><span class="lang" as="importxml" onclick="kmain.importDiagram();"></span></a>
-                <li class="divider">&nbsp</li>
-                <!--<a class="dropdown-item" href="#"><span class="lang" as="codestudio" onclick="kmain.codeStudio();"></span></a>-->
-                <a class="dropdown-item" href="#"><span class="lang" as="simutest" onclick="kmain.simuTest();"></span></a>
-                <!--<li class="divider">&nbsp</li>
-    <a class="dropdown-item" href="#"><span class="lang" as="adminboard" onclick="kmain.webJob();"></span></a>-->
+
+                <!--
+            <a class="dropdown-item" href="#"><span class="lang" as="adminboard" onclick="kmain.webJob();"></span></a>-->
             </div>
         </div>
         <div class="dropdown" style="float:left;margin-left: 5px;">
             <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLinkOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="bi bi-wrench lang" as="options"> </span><span class="caret"></span>
+                <span class="bi bi-grid lang" as="options"> </span><span class="caret"></span>
             </a>
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLinkOptions">
-                <a class="dropdown-item" href="#"><span class="lang" as="slickflowgraphtutorial" onclick="kmain.gotoTutorial();"></span></a>
-                <li class="divider">&nbsp</li>
                 <a class="dropdown-item" href="#"><span class="lang" as="en" onclick="kmain.changeLang('en');"></span></a>
+                <li class="divider">&nbsp</li>
                 <a class="dropdown-item" href="#"><span class="lang" as="zh" onclick="kmain.changeLang('zh');"></span></a>
             </div>
+        </div>
+        <div style="float:left;margin-left: 5px;">
+            <a href="#" class="btn btn-info" id="btnHelp"><span class="bi bi-info-circle lang" as="help"> </span> </a>
         </div>
     </div>
 
@@ -84,29 +138,14 @@
         <div id="js-properties-panel"></div>
     </div>
 
-    <!--<ul class="buttons">
-        <li>
-            download
-        </li>
-        <li>
-            <a id="js-download-diagram" href title="download BPMN diagram">
-                BPMN diagram
-            </a>
-        </li>
-        <li>
-            <a id="js-download-svg" href title="download as SVG image">
-                SVG image
-            </a>
-        </li>
-    </ul>-->
-
     <script type="module">
         import kconfig from './config/kconfig.js'
         window.kconfig = kconfig;
     </script>
 
     <script type="text/javascript" src="index.js"></script>
-    
+    <script type="text/javascript" src="vendor/codemirror/lib/codemirror.js"></script>
+
     <script type="text/javascript">
         $(function () {
             kresource.localize();

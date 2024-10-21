@@ -64,14 +64,14 @@ namespace Slickflow.Engine.Core.Parser
 
             //获取前置节点列表
             var processInstance = (new ProcessInstanceManager()).GetById(runningNode.ProcessInstanceID);
-            var processModel = ProcessModelFactory.Create(processInstance.ProcessGUID, processInstance.Version);
+            var processModel = ProcessModelFactory.CreateByProcessInstance(processInstance);
             var previousActivityList = GetPreviousActivityList(runningNode, processModel, out hasGatewayPassed);
 
             //封装返回结果集合
             var nodeList = new List<NodeView>();
             foreach (var activity in previousActivityList)
             {
-                //判断是否是会签节点
+                //判断上一步是否是会签节点
                 if (processModel.IsMINode(activity) == true)
                 {
                     //获取上一步节点的运行记录
@@ -86,9 +86,9 @@ namespace Slickflow.Engine.Core.Parser
                     }
                     else if (processModel.IsMISequence(activity) == true)
                     {
-                        if (processModel.IsTaskNode(runningNode) == true)
+                        //是两个不同节点之间的退回处理，取前一节点的最后一个完成的多实例节点
+                        if (activity.ActivityGUID != runningNode.ActivityGUID)
                         {
-                            //当前节点是任务节点
                             //退回到会签节点的最后一步
                             var activityInstance = aim.GetPreviousActivityInstanceSimple(runningNode, activity.ActivityGUID);
                             if (activityInstance != null)
@@ -96,8 +96,9 @@ namespace Slickflow.Engine.Core.Parser
                                 AppendNodeViewList(nodeList, activity, activityInstance.EndedByUserID, activityInstance.EndedByUserName);
                             }
                         }
-                        else if (processModel.IsMISequence(activity) == true)
+                        else
                         {
+                            //多实例节点的内部退回处理
                             //串行会签节点按照CompleteOrder顺序递减读取上一步
                             var previousAdjacentBrotherNode = GetPreviousOfMultipleInstanceNode(
                                 runningNode.MIHostActivityInstanceID.Value,

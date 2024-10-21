@@ -8,6 +8,8 @@ using System.Xml;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Xpdl.Common;
+using IronPython.Compiler.Ast;
+using System.Xml.Linq;
 
 namespace Slickflow.Engine.Xpdl.Convertor
 {
@@ -31,13 +33,61 @@ namespace Slickflow.Engine.Xpdl.Convertor
                 //trigger资料节点
                 var triggerDetail = new TriggerDetail();
                 triggerDetail.TriggerType = triggerType;
-                triggerDetail.Expression = eventDefinitionNode.InnerText;
-
+                if (triggerType == TriggerTypeEnum.Conditional)
+                {
+                    triggerDetail.Expression = eventDefinitionNode.InnerText;
+                }
+                else if (triggerType == TriggerTypeEnum.Message)
+                {
+                    //消息触发类型Message Trigger Type
+                    var messageRef = XMLHelper.GetXmlAttribute(eventDefinitionNode, "messageRef");
+                    if (!string.IsNullOrEmpty(messageRef)) 
+                    {
+                        //获取消息Throw/Catch
+                        triggerDetail.MessageDirection = GetMessageDirectionFromEventNode(eventNode);
+                        //获取Message主题
+                        var xmlDoc = eventDefinitionNode.OwnerDocument;
+                        var root = xmlDoc.DocumentElement;
+                        var strMessagePath = string.Format("{0}[@id='{1}']", XPDLDefinition.BPMN2_StrXmlPath_Message, messageRef);
+                        var xmlMessageNode = root.SelectSingleNode(strMessagePath, XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
+                        if (xmlMessageNode != null) 
+                        {
+                            var strMessageName = XMLHelper.GetXmlAttribute(xmlMessageNode, "name");
+                            triggerDetail.Expression = strMessageName; 
+                        }
+                    }
+                }
+                else if (triggerType == TriggerTypeEnum.Signal)
+                {
+                    //信号触发类型Signal Trigger Type
+                    var signalRef = XMLHelper.GetXmlAttribute(eventDefinitionNode, "signalRef");
+                    if (!string.IsNullOrEmpty(signalRef))
+                    {
+                        //获取消息Throw/Catch
+                        triggerDetail.MessageDirection = GetMessageDirectionFromEventNode(eventNode);
+                        //获取Message主题
+                        var xmlDoc = eventDefinitionNode.OwnerDocument;
+                        var root = xmlDoc.DocumentElement;
+                        var strSignalPath = string.Format("{0}[@id='{1}']", XPDLDefinition.BPMN2_StrXmlPath_Signal, signalRef);
+                        var xmlSignalNode = root.SelectSingleNode(strSignalPath, XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
+                        if (xmlSignalNode != null)
+                        {
+                            var strSignalName = XMLHelper.GetXmlAttribute(xmlSignalNode, "name");
+                            triggerDetail.Expression = strSignalName;
+                        }
+                    }
+                }
                 entity.TriggerDetail = triggerDetail;
             }
             return entity;
         }
 
+        /// <summary>
+        /// 获得事件定义节点
+        /// </summary>
+        /// <param name="eventNode">事件街道</param>
+        /// <param name="triggerType">触发类型</param>
+        /// <returns></returns>
         private XmlNode GetEventDefinitionNode(XmlNode eventNode, out TriggerTypeEnum triggerType)
         {
             XmlNode definitionNode = null;
@@ -62,8 +112,42 @@ namespace Slickflow.Engine.Xpdl.Convertor
                     triggerType = TriggerTypeEnum.Timer;
                     break;
                 }
+                else if (child.Name == XPDLDefinition.BPMN2_ElementName_EventDefinition_Signal)
+                {
+                    definitionNode = child;
+                    triggerType = TriggerTypeEnum.Signal;
+                    break;
+                }
             }
             return definitionNode;
+        }
+
+        /// <summary>
+        /// 获取消息Throw/Catch 类型
+        /// </summary>
+        /// <param name="eventNode"></param>
+        /// <returns></returns>
+        private MessageDirectionEnum GetMessageDirectionFromEventNode(XmlNode eventNode)
+        {
+            var messageDirection = MessageDirectionEnum.None;
+            var nodeName = eventNode.Name;
+            if (nodeName == XPDLDefinition.BPMN2_ElementName_IntermediateEvent_Throw)
+            {
+                messageDirection = MessageDirectionEnum.Throw;
+            }
+            else if (nodeName == XPDLDefinition.BPMN2_ElementName_IntermediateEvent_Catch)
+            {
+                messageDirection = MessageDirectionEnum.Catch;
+            }
+            else if (nodeName == XPDLDefinition.BPMN2_ElementName_StartEvent)
+            {
+                messageDirection = MessageDirectionEnum.Catch;
+            }
+            else if (nodeName == XPDLDefinition.BPMN2_ElementName_EndEvent)
+            {
+                messageDirection = MessageDirectionEnum.Throw;
+            }
+            return messageDirection;
         }
 
     }

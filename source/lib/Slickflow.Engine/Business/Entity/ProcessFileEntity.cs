@@ -22,7 +22,6 @@ namespace Slickflow.Engine.Business.Entity
         public String EndExpression { get; set; }
         public String Description { get; set; }
         public String XmlContent { get; set; }
-        public ProcessTemplateType TemplateType { get; set; }
     }
 
     /// <summary>

@@ -14,6 +14,7 @@ namespace Slickflow.Module.Resource
         IList<Role> GetRoleAll();
         IList<User> GetUserListByRoles(string[] roleIDs);
         IList<Role> FillUsersIntoRoles(string[] roleIDs);
+        IList<User> GetUserAll();
         IList<User> GetUserListByRole(string roleID);
         IList<User> GetUserListByRoleCode(string roleCode);
         IList<User> GetUserListByRoleReceiverType(string[] roleIDs, string curUserID, int receiverType);

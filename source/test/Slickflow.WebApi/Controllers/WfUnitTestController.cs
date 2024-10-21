@@ -1,26 +1,4 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-*  
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -31,6 +9,9 @@ using Slickflow.Engine.Common;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Service;
+using static IronPython.Modules._ast;
+using System.Threading.Tasks;
+using RabbitMQ.Client.Impl;
 
 namespace Slickflow.WebApi.Controllers
 {
@@ -68,6 +49,36 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
+        ///  启动流程测试
+        /// </summary>
+        /// <param name="runner">运行者</param>
+        /// <returns>执行结果</returns>
+        [HttpPost]
+        public ResponseResult StartProcessParallel([FromBody] WfAppRunner runner)
+        {
+            var result = WfExecutedResult.Default();
+            var pResult = Parallel.For(0, 2, i =>
+            {
+                using (var session = SessionFactory.CreateSession())
+                {
+                    var transaction = session.BeginTrans();
+                    var wfService = new WorkflowService();
+
+                    result = wfService.StartProcess(session.Connection, runner, session.Transaction);
+                    if (result.Status == WfExecutedStatus.Success)
+                    {
+                        transaction.Commit();
+                    }
+                    else
+                    {
+                        transaction.Rollback();
+                    }
+                }
+            });
+            return ResponseResult.Default(result.Message);
+        }
+
+        /// <summary>
         ///  运行流程测试
         /// </summary>
         /// <param name="runner">运行者</param>
@@ -80,6 +91,123 @@ namespace Slickflow.WebApi.Controllers
                 var transaction = session.BeginTrans();
                 var wfService = new WorkflowService();
                 var result = wfService.RunProcessApp(session.Connection, runner, session.Transaction);
+
+                if (result.Status == WfExecutedStatus.Success)
+                {
+                    transaction.Commit();
+                    return ResponseResult.Success();
+                }
+                else
+                {
+                    transaction.Rollback();
+                    return ResponseResult.Error(result.Message);
+                }
+            }
+        }
+
+        /// <summary>
+        ///  运行流程(连续运行模式)
+        /// </summary>
+        /// <param name="runner">运行者</param>
+        /// <returns>执行结果</returns>
+        [HttpPost]
+        public ResponseResult RunProcessContinue([FromBody] WfAppRunner runner)
+        {
+            var wfService = new WorkflowService();
+
+            //运行当前任务
+            var isContinued = false;
+            using (var session = SessionFactory.CreateSession())
+            {
+                var transaction = session.BeginTrans();
+                var result = wfService.RunProcessApp(session.Connection, runner, session.Transaction);
+
+                if (result.Status == WfExecutedStatus.Success)
+                {
+                    transaction.Commit();
+                    //确认是否继续执行
+                    isContinued = true;
+                }
+                else
+                {
+                    transaction.Rollback();
+                    return ResponseResult.Error(result.Message);
+                }
+            }
+
+            //继续重复执行流程
+            if (isContinued)
+            {
+                using (var session = SessionFactory.CreateSession())
+                {
+                    //检查待办任务，满足以下条件，继续默认执行流程
+                    //1) 如果有当前用户的待办任务
+                    //2) 流程只执行一次，不再循环调用
+                    var transactionContinue = session.BeginTrans();
+                    var myTask = wfService.GetTaskView(session.Connection, runner.AppInstanceID, runner.ProcessGUID, runner.UserID, session.Transaction);
+                    if (myTask != null)
+                    {
+                        //构造执行用户信息
+                        var runnerContinue = new WfAppRunner
+                        {
+                            AppInstanceID = runner.AppInstanceID,
+                            AppName = runner.AppName,
+                            ProcessGUID = runner.ProcessGUID,
+                            Version = runner.Version,
+                            TaskID = myTask.TaskID,
+                            UserID = runner.UserID,
+                            UserName = runner.UserName
+                        };
+
+                        //获取下一步的步骤信息
+                        Dictionary<string, PerformerList> nextActivityPerformers = new Dictionary<string, PerformerList>();
+
+                        var nextActivityRoleUserTree = wfService.GetNextActivityRoleUserTree(runner, runner.Conditions);
+                        foreach (var nodeview in nextActivityRoleUserTree)
+                        {
+                            var performerList = new PerformerList();
+                            foreach (var user in nodeview.Users)
+                            {
+                                var performer = new Performer(user.UserID, user.UserName);
+                                performerList.Add(performer);
+                            }
+                            nextActivityPerformers.Add(nodeview.ActivityGUID, performerList);
+                        }
+
+                        runnerContinue.NextActivityPerformers = nextActivityPerformers;
+
+                        //继续运行流程
+                        var result = wfService.RunProcessApp(session.Connection, runnerContinue, session.Transaction);
+
+                        if (result.Status == WfExecutedStatus.Success)
+                        {
+                            transactionContinue.Commit();
+                            return ResponseResult.Success("根据下一步的待办人是当前在办人，流程可以继续向前运行，流程已经成功连续运行！");
+                        }
+                        else
+                        {
+                            transactionContinue.Rollback();
+                            return ResponseResult.Error(result.Message);
+                        }
+                    }
+                }
+            }
+            return ResponseResult.Default("流程仅完成当前步骤的运行!");
+        }
+
+        /// <summary>
+        ///  加签流程测试
+        /// </summary>
+        /// <param name="runner">运行者</param>
+        /// <returns>执行结果</returns>
+        [HttpPost]
+        public ResponseResult SignForwardProcess([FromBody] WfAppRunner runner)
+        {
+            using (var session = SessionFactory.CreateSession())
+            {
+                var transaction = session.BeginTrans();
+                var wfService = new WorkflowService();
+                var result = wfService.SignForwardProcess(session.Connection, runner, session.Transaction);
 
                 if (result.Status == WfExecutedStatus.Success)
                 {
@@ -312,6 +440,42 @@ namespace Slickflow.WebApi.Controllers
                 );
             }
             return result;
+        }
+        #endregion
+
+        #region 任务处理接口
+        /// <summary>
+        /// 任务委托方法
+        /// 测试脚本：
+        /// 1) 启动流程
+        /// http://localhost/sfapi2/api/wfunittest/startprocess
+        /// {"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
+        /// 
+        /// 2) 运行流程
+        /// http://localhost/sfapi2/api/wfunittest/runprocessapp
+        /// {"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"eb833577-abb5-4239-875a-5f2e2fcb6d57":[{"UserID":"20","UserName":"Jack"},{"UserID":"30","UserName":"Smith"},{"UserID":"40","UserName":"Tom"}]}}
+        /// 
+        /// 3) 委托任务
+        /// http://localhost/sfapi2/api/wfunittest/entrust
+        /// {"TaskID":"210","RunnerID":"40","RunnerName":"Tom","EntrustToUserID":"30","EntrustToUserName":"smith"}
+        /// 
+        /// </summary>
+        /// <param name="runner"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ResponseResult Entrust([FromBody] TaskEntrustedEntity task)
+        {
+            var wfService = new WorkflowService();
+            var isEntrusted = wfService.EntrustTask(task, true);
+
+            if (isEntrusted)
+            {
+                return ResponseResult.Success();
+            }
+            else
+            {
+                return ResponseResult.Error("Entrust task failture...");
+            }
         }
         #endregion
     }

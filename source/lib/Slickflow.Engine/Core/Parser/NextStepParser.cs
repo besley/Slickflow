@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ServiceStack.Text;
 using Slickflow.Data;
 using Slickflow.Module.Localize;
 using Slickflow.Module.Resource;
@@ -63,9 +62,8 @@ namespace Slickflow.Engine.Core.Parser
             }
 
             //获取下一步信息
-            IProcessModel processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version, taskView.SubProcessGUID);
+            var processModel = ProcessModelFactory.CreateByTask(taskView);
             var nextActivity = processModel.GetNextActivity(taskView.ActivityGUID);
-
             if (nextActivity != null)
             {
                 if (nextActivity.ActivityType == ActivityTypeEnum.GatewayNode)
@@ -121,20 +119,35 @@ namespace Slickflow.Engine.Core.Parser
 
             using (var session = SessionFactory.CreateSession())
             {
+                TaskViewEntity taskView = null;
+                var tm = new TaskManager();
+                ProcessInstanceEntity processInstance = null;
                 var pim = new ProcessInstanceManager();
-                var processInstanceList = pim.GetProcessInstance(session.Connection, 
-                    runner.AppInstanceID, 
-                    runner.ProcessGUID,
-                    session.Transaction).ToList();
-                var processInstanceEntity = EnumHelper.GetFirst<ProcessInstanceEntity>(processInstanceList);
+                if (runner.TaskID != null)
+                {
+                    //运行中的流程
+                    taskView = tm.GetTaskView(runner.TaskID.Value);
+                    processInstance = pim.GetById(taskView.ProcessInstanceID);
+                }
+                else
+                {
+                    var processInstanceList = pim.GetProcessInstance(session.Connection,
+                        runner.AppInstanceID,
+                        runner.ProcessGUID,
+                        runner.Version,
+                        session.Transaction).ToList();
+                    processInstance = EnumHelper.GetFirst<ProcessInstanceEntity>(processInstanceList);
+                }
 
                 //判断流程是否创建还是已经运行
-                if (processInstanceEntity != null
-                    && processInstanceEntity.ProcessState == (short)ProcessStateEnum.Running)
+                if (processInstance != null
+                    && processInstance.ProcessState == (short)ProcessStateEnum.Running)
                 {
                     //运行状态的流程实例
-                    var tm = new TaskManager();
-                    TaskViewEntity taskView = tm.GetTaskOfMine(session.Connection, runner, session.Transaction);
+                    if (taskView == null)
+                    {
+                        taskView = tm.GetTaskOfMine(session.Connection, runner, session.Transaction);
+                    }
 
                     var isRunningTask = tm.CheckTaskStateInRunningState(taskView);
                     if (isRunningTask == false)
@@ -143,14 +156,7 @@ namespace Slickflow.Engine.Core.Parser
                     }
 
                     //获取下一步列表
-                    if (!string.IsNullOrEmpty(taskView.SubProcessGUID))
-                    {
-                        processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version, taskView.SubProcessGUID);
-                    }
-                    else
-                    {
-                        processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
-                    }
+                    processModel = ProcessModelFactory.CreateByTask(session.Connection, taskView, session.Transaction);
                     nextTreeResult = processModel.GetNextActivityTree(taskView.ActivityGUID, taskView.TaskID, condition, session);
                     
                     foreach (var ns in nextTreeResult.StepList)
@@ -174,7 +180,7 @@ namespace Slickflow.Engine.Core.Parser
                 else
                 {
                     //流程准备启动，获取第一个办理节点的用户列表
-                    processModel = ProcessModelFactory.Create(runner.ProcessGUID, runner.Version);
+                    processModel = ProcessModelFactory.CreateByProcess(runner.ProcessGUID, runner.Version);
                     var firstActivity = processModel.GetFirstActivity();
                     nextTreeResult = processModel.GetNextActivityTree(firstActivity.ActivityGUID,
                         null,
@@ -222,7 +228,7 @@ namespace Slickflow.Engine.Core.Parser
 
             foreach (var user in newUserList)
             {
-                if (existUserList.Select(r => r.UserName == user.UserID).ToList() != null)
+                if (existUserList.Select(r => r.UserID == user.UserID).ToList() == null)
                 {
                     existUserList.Add(new User { UserID = user.UserID, UserName = user.UserName });
                 }
