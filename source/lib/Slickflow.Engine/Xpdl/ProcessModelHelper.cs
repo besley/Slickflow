@@ -18,6 +18,7 @@ namespace Slickflow.Engine.Xpdl
     /// </summary>
     public class ProcessModelHelper
     {
+        #region 活动视图转换
         /// <summary>
         /// 获取开始节点
         /// </summary>
@@ -88,6 +89,29 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// 从活动节点转换为活动视图
+        /// </summary>
+        /// <param name="entity">活动实体</param>
+        /// <returns>活动视图</returns>
+        public static ActivityView ConvertFromActivityEntity(Activity entity)
+        {
+            var view = new ActivityView();
+            view.ActivityGUID = entity.ActivityGUID;
+            view.ActivityName = entity.ActivityName;
+            view.ActivityCode = entity.ActivityCode;
+            view.ActivityType = entity.ActivityType.ToString();
+            if (entity.TriggerDetail != null)
+            {
+                view.TriggerType = entity.TriggerDetail.TriggerType.ToString();
+                view.MessageDirection = entity.TriggerDetail.MessageDirection.ToString();
+                view.Expression = entity.TriggerDetail.Expression;
+            }
+            return view;
+        }
+        #endregion
+
+        #region 连线实体转换
+        /// <summary>
         /// 获取连线列表
         /// </summary>
         /// <param name="process">流程</param>
@@ -95,7 +119,7 @@ namespace Slickflow.Engine.Xpdl
         /// <returns>连线列表</returns>
         public static IList<Transition> GetForwardTransitionList(Process process, string fromActivityGUID)
         {
-            var transitionList = process.TransitionList.Where<Transition>(t=> t.FromActivityGUID == fromActivityGUID).ToList();
+            var transitionList = process.TransitionList.Where<Transition>(t => t.FromActivityGUID == fromActivityGUID).ToList();
             return transitionList;
         }
 
@@ -124,27 +148,38 @@ namespace Slickflow.Engine.Xpdl
             var transitionList = process.TransitionList.Where<Transition>(t => t.ToActivityGUID == toActivityGUID).ToList();
             return transitionList;
         }
+        #endregion
 
-        #region 活动视图转换
+        #region 转换流程实体基本属性
         /// <summary>
-        /// 从活动节点转换为活动视图
+        /// 转换流程基本实体
         /// </summary>
-        /// <param name="entity">活动实体</param>
-        /// <returns>活动视图</returns>
-        public static ActivityView ConvertFromActivityEntity(Activity entity)
+        /// <param name="xmlNodeProcess">流程XML节点</param>
+        /// <returns>流程实体</returns>
+        public static ProcessFileEntity ConvertFromXmlNodeProcess(XmlNode xmlNodeProcess)
         {
-            var view = new ActivityView();
-            view.ActivityGUID = entity.ActivityGUID;
-            view.ActivityName = entity.ActivityName;
-            view.ActivityCode = entity.ActivityCode;
-            view.ActivityType = entity.ActivityType.ToString();
-            if (entity.TriggerDetail != null)
-            {
-                view.TriggerType = entity.TriggerDetail.TriggerType.ToString();
-                view.MessageDirection = entity.TriggerDetail.MessageDirection.ToString();
-                view.Expression = entity.TriggerDetail.Expression;
-            }
-            return view;
+            var process = new ProcessFileEntity();
+            process.ProcessGUID = XMLHelper.GetXmlAttribute(xmlNodeProcess, "sf:guid");
+            process.ProcessName = XMLHelper.GetXmlAttribute(xmlNodeProcess, "name");
+            process.ProcessCode = XMLHelper.GetXmlAttribute(xmlNodeProcess, "sf:code");
+            process.Version = "1";
+            process.IsUsing = 1;
+
+            return process;
+        }
+
+        /// <summary>
+        /// 校验时，转换流程实体对象
+        /// </summary>
+        /// <param name="xmlDoc">xml文档</param>
+        /// <returns></returns>
+        public static Xpdl.Entity.Process ConvertToXPDLProcess(XmlDocument xmlDoc)
+        {
+            var root = xmlDoc.DocumentElement;
+            var xmlNodeProcess = root.SelectSingleNode(XPDLDefinition.BPMN2_StrXmlPath_Process,
+                    XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
+            var process = ProcessModelConvertor.ConvertProcessModelFromXML(xmlNodeProcess);
+            return process;
         }
         #endregion
     }

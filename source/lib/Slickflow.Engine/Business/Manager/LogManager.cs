@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using ServiceStack.Text;
+using Newtonsoft.Json;
 using Slickflow.Engine.Common;
 using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
@@ -77,7 +77,7 @@ namespace Slickflow.Engine.Business.Manager
 
                 if (extraObject != null)
                 {
-                    var jsonData = JsonSerializer.SerializeToString(extraObject);
+                    var jsonData = JsonConvert.SerializeObject(extraObject);
                     log.RequestData = jsonData.Length > 2000 ? jsonData.Substring(0, 2000) : jsonData;
                 }
 

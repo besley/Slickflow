@@ -15,5 +15,6 @@ namespace Slickflow.Module.Resource
     {
         public string UserID { get; set; }
         public string UserName { get; set; }
+        public string EMail { get; set; }
     }
 }

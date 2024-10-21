@@ -49,11 +49,12 @@ namespace Slickflow.Engine.Xpdl.Convertor
             var activity = new Activity();
             var convertorBuilder = ConvertorBuilder.Create(XMLNode, XMLNamespaceManager, activity);
             convertorBuilder.ConvertGeneral()
-                .ConvertParticipants()
+                .ConvertPartakers()
                 .ConvertActions()
                 .ConvertSections()
                 .ConvertServices()
-                .ConvertBoundires();
+                .ConvertBoundires()
+                .ConvertNotifications();
 
             ConvertElementDetail(activity);
             return activity;

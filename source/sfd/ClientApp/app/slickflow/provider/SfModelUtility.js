@@ -5,7 +5,7 @@ export default class sfModelUtility {
 
     }
 
-    static isSplit(gateway) {
+    static isSplitSource(gateway) {
         var incomingCount = gateway.incoming.length;
         var outgoingCount = gateway.outgoing.length;
 
@@ -13,7 +13,7 @@ export default class sfModelUtility {
         else return false;
     }
 
-    static isJoin(gateway) {
+    static isJoinTarget(gateway) {
         var incomingCount = gateway.incoming.length;
         var outgoingCount = gateway.outgoing.length;
 
@@ -21,6 +21,15 @@ export default class sfModelUtility {
         else return false;
     }
 
+    static isGateway(gateway) {
+        if (gateway.type === 'bpmn:InclusiveGateway'
+            || gateway.type === 'bpmn:ExclusiveGateway'
+            || gateway.type === 'bpmn:ParallelGateway') {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     static isOrGateway(gateway) {
         if (gateway.type === 'bpmn:InclusiveGateway') return true;
@@ -37,18 +46,30 @@ export default class sfModelUtility {
         else return false;
     }
 
+    static isOrSplit(gateway) {
+        if (this.isOrGateway(gateway) && this.isSplitSource(gateway)) return true;
+        else return false;
+    }
+
+    static isOrJoin(gateway) {
+        if (this.isOrGateway(gateway) && this.isJoinTarget(gateway)) return true;
+        else return false;
+    }
+
     static isXOrSplit(gateway) {
-        if (this.isXOrGateway(gateway) && this.isSplit(gateway)) return true;
+        if (this.isXOrGateway(gateway) && this.isSplitSource(gateway)) return true;
         else return false;
     }
 
     static isXOrJoin(gateway) {
-        if (this.isXOrGateway(gateway) && this.isJoin(gateway)) return true;
+        if (this.isXOrGateway(gateway) && this.isJoinTarget(gateway)) return true;
         else return false;
     }
 
     static isApprovalOrSplit(gateway) {
         var activityTypeDetail = this.getGatewayDetail(gateway);
+        console.log(activityTypeDetail);
+
         if (activityTypeDetail) {
             var extraSplitType = activityTypeDetail.extraSplitType;
             if (extraSplitType === 'ApprovalOrSplit') return true;

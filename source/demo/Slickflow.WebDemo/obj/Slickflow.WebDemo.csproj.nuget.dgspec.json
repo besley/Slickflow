@@ -71,11 +71,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -148,24 +144,6 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "dependencies": {
-            "Newtonsoft.Json": {
-              "target": "Package",
-<<<<<<< HEAD
-              "version": "[12.0.3, )"
-            },
-            "System.Data.SqlClient": {
-              "target": "Package",
-              "version": "[4.8.2, )"
-=======
-              "version": "[13.0.3, )"
-            },
-            "System.Data.SqlClient": {
-              "target": "Package",
-              "version": "[4.8.6, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
-            }
-          },
           "imports": [
             "net461",
             "net462",
@@ -185,11 +163,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -235,19 +209,9 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-<<<<<<< HEAD
-            "System.Data.SqlClient": {
-              "target": "Package",
-              "version": "[4.6.1, )"
-=======
-            "Microsoft.Extensions.Caching.Memory": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.8.6, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -266,11 +230,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -319,15 +279,6 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-<<<<<<< HEAD
-=======
-          "dependencies": {
-            "Microsoft.Extensions.Caching.Memory": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            }
-          },
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
           "imports": [
             "net461",
             "net462",
@@ -344,11 +295,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -398,22 +345,13 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-<<<<<<< HEAD
+            "MongoDB.Driver": {
+              "target": "Package",
+              "version": "[2.28.0, )"
+            },
             "Npgsql": {
               "target": "Package",
-              "version": "[5.0.3, )"
-            },
-            "System.Configuration.ConfigurationManager": {
-              "target": "Package",
-              "version": "[4.5.0, )"
-            },
-            "System.Data.SqlClient": {
-              "target": "Package",
-              "version": "[4.6.1, )"
-=======
-            "Microsoft.Extensions.Caching.Memory": {
-              "target": "Package",
-              "version": "[8.0.0, )"
+              "version": "[8.0.3, )"
             },
             "System.Configuration.ConfigurationManager": {
               "target": "Package",
@@ -422,7 +360,6 @@
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.8.6, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -441,20 +378,12 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
     "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj": {
-<<<<<<< HEAD
-      "version": "2.0.0",
-=======
-      "version": "2.2.0",
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
+      "version": "2.3.0",
       "restore": {
         "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj",
         "projectName": "Slickflow.Engine",
@@ -484,9 +413,6 @@
               "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Data\\Slickflow.Data.csproj": {
                 "projectPath": "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Data\\Slickflow.Data.csproj"
               },
-              "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Module.Essential\\Slickflow.Module.Essential.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Module.Essential\\Slickflow.Module.Essential.csproj"
-              },
               "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj": {
                 "projectPath": "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj"
               },
@@ -514,43 +440,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-<<<<<<< HEAD
             "Devart.Data.Oracle.EFCore": {
               "target": "Package",
-              "version": "[9.6.675, )"
+              "version": "[10.3.21.8, )"
             },
-            "IronPython": {
-              "target": "Package",
-              "version": "[2.7.9, )"
-            },
-            "Microsoft.EntityFrameworkCore.SqlServer": {
-              "target": "Package",
-              "version": "[2.2.1, )"
-            },
-            "Microsoft.Extensions.Caching.Memory": {
-              "target": "Package",
-              "version": "[2.2.0, )"
-            },
-            "Newtonsoft.Json": {
-              "target": "Package",
-              "version": "[12.0.1, )"
-            },
-            "Pomelo.EntityFrameworkCore.MySql": {
-              "target": "Package",
-              "version": "[2.1.4, )"
-            },
-            "ServiceStack": {
-              "target": "Package",
-              "version": "[5.4.0, )"
-            },
-            "System.Configuration.ConfigurationManager": {
-              "target": "Package",
-              "version": "[4.5.0, )"
-            },
-            "System.Reflection.Emit": {
-              "target": "Package",
-              "version": "[4.3.0, )"
-=======
             "IronPython": {
               "target": "Package",
               "version": "[3.4.1, )"
@@ -563,9 +456,9 @@
               "target": "Package",
               "version": "[13.0.3, )"
             },
-            "ServiceStack": {
+            "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
-              "version": "[8.3.0, )"
+              "version": "[8.0.2, )"
             },
             "System.Configuration.ConfigurationManager": {
               "target": "Package",
@@ -574,7 +467,6 @@
             "System.Reflection.Emit": {
               "target": "Package",
               "version": "[4.7.0, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -593,118 +485,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
-        }
-      }
-    },
-    "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Essential\\Slickflow.Module.Essential.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Essential\\Slickflow.Module.Essential.csproj",
-        "projectName": "Slickflow.Module.Essential",
-        "projectPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Essential\\Slickflow.Module.Essential.csproj",
-        "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Essential\\obj\\",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "net8.0"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net8.0": {
-            "targetAlias": "net8.0",
-            "projectReferences": {
-              "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj"
-              },
-              "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Logging\\Slickflow.Module.Logging.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Logging\\Slickflow.Module.Logging.csproj"
-              },
-              "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module\\Slickflow.Module.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module\\Slickflow.Module.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        }
-      },
-      "frameworks": {
-        "net8.0": {
-          "targetAlias": "net8.0",
-          "dependencies": {
-<<<<<<< HEAD
-            "Newtonsoft.Json": {
-              "target": "Package",
-              "version": "[12.0.1, )"
-            },
-            "RabbitMQ.Client": {
-              "target": "Package",
-              "version": "[5.1.2, )"
-            },
-            "ServiceStack.Text": {
-              "target": "Package",
-              "version": "[5.4.0, )"
-=======
-            "Microsoft.Extensions.Caching.Memory": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "Newtonsoft.Json": {
-              "target": "Package",
-              "version": "[13.0.3, )"
-            },
-            "RabbitMQ.Client": {
-              "target": "Package",
-              "version": "[6.8.1, )"
-            },
-            "ServiceStack.Text": {
-              "target": "Package",
-              "version": "[8.3.0, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-<<<<<<< HEAD
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -752,19 +533,11 @@
           "dependencies": {
             "Microsoft.Extensions.Caching.Memory": {
               "target": "Package",
-<<<<<<< HEAD
-              "version": "[2.2.0, )"
-            },
-            "Newtonsoft.Json": {
-              "target": "Package",
-              "version": "[12.0.1, )"
-=======
               "version": "[8.0.0, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -783,92 +556,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
-        }
-      }
-    },
-    "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Logging\\Slickflow.Module.Logging.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Logging\\Slickflow.Module.Logging.csproj",
-        "projectName": "Slickflow.Module.Logging",
-        "projectPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Logging\\Slickflow.Module.Logging.csproj",
-        "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Logging\\obj\\",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "C:\\Users\\lg\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "net8.0"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net8.0": {
-            "targetAlias": "net8.0",
-            "projectReferences": {
-              "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Data\\Slickflow.Data.csproj"
-              },
-              "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module\\Slickflow.Module.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module\\Slickflow.Module.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        }
-      },
-      "frameworks": {
-        "net8.0": {
-          "targetAlias": "net8.0",
-<<<<<<< HEAD
-=======
-          "dependencies": {
-            "Microsoft.Extensions.Caching.Memory": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            }
-          },
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-<<<<<<< HEAD
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -921,27 +609,13 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-<<<<<<< HEAD
             "Devart.Data.Oracle.EFCore": {
               "target": "Package",
               "version": "[9.5.399, )"
             },
-            "Microsoft.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[2.0.1, )"
-            },
-            "Microsoft.EntityFrameworkCore.SqlServer": {
-              "target": "Package",
-              "version": "[2.0.1, )"
-            },
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
               "version": "[2.0.1, )"
-=======
-            "Microsoft.Extensions.Caching.Memory": {
-              "target": "Package",
-              "version": "[8.0.0, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -960,11 +634,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -1013,15 +683,16 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-<<<<<<< HEAD
-=======
           "dependencies": {
-            "Microsoft.Extensions.Caching.Memory": {
+            "MailKit": {
               "target": "Package",
-              "version": "[8.0.0, )"
+              "version": "[4.8.0, )"
+            },
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[6.8.1, )"
             }
           },
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
           "imports": [
             "net461",
             "net462",
@@ -1038,11 +709,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -1088,19 +755,9 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-<<<<<<< HEAD
-            "Newtonsoft.Json": {
-              "target": "Package",
-              "version": "[12.0.1, )"
-=======
-            "Microsoft.Extensions.Caching.Memory": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -1119,11 +776,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     },
@@ -1182,28 +835,16 @@
           "dependencies": {
             "Microsoft.AspNetCore.SpaServices.Extensions": {
               "target": "Package",
-<<<<<<< HEAD
               "version": "[3.1.0, 4.0.0)"
             },
             "Microsoft.Extensions.Logging": {
               "target": "Package",
               "version": "[3.1.0, 4.0.0)"
-=======
-              "version": "[3.1.32, )"
-            },
-            "Microsoft.Extensions.Logging": {
-              "target": "Package",
-              "version": "[8.0.0, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             },
             "Microsoft.SourceLink.GitHub": {
               "suppressParent": "All",
               "target": "Package",
-<<<<<<< HEAD
               "version": "[1.0.0, )"
-=======
-              "version": "[8.0.0, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -1225,11 +866,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         },
         "net5.0": {
           "targetAlias": "net5.0",
@@ -1245,11 +882,7 @@
             "Microsoft.SourceLink.GitHub": {
               "suppressParent": "All",
               "target": "Package",
-<<<<<<< HEAD
               "version": "[1.0.0, )"
-=======
-              "version": "[8.0.0, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -1271,11 +904,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         },
         "net6.0": {
           "targetAlias": "net6.0",
@@ -1291,11 +920,7 @@
             "Microsoft.SourceLink.GitHub": {
               "suppressParent": "All",
               "target": "Package",
-<<<<<<< HEAD
               "version": "[1.0.0, )"
-=======
-              "version": "[8.0.0, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -1317,11 +942,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     }

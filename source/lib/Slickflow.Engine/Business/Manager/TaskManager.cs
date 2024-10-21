@@ -1,25 +1,4 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-* 
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -537,7 +516,11 @@ namespace Slickflow.Engine.Business.Manager
             parameters.Add("@activityState", activityState);
 
             var sqlBuilder = new StringSQLBuilder(sql);
-            if (activityState == 1) sqlBuilder.And("MiHostState", Data.Operator.Nq, 4);
+            if (activityState == 1)
+            {
+                sqlBuilder.And("MiHostState", Data.Operator.Nq, 4);
+            }
+
             if (!string.IsNullOrEmpty(query.AppInstanceID))
             {
                 sqlBuilder.And("AppInstanceID", Data.Operator.Eq, "@appInstanceID");
@@ -548,6 +531,12 @@ namespace Slickflow.Engine.Business.Manager
             {
                 sqlBuilder.And("ProcessGUID", Data.Operator.Eq, "@processGUID");
                 parameters.Add("@processGUID", query.ProcessGUID);
+            }
+
+            if (!string.IsNullOrEmpty(query.Version))
+            {
+                sqlBuilder.And("Version", Data.Operator.Eq, "@version");
+                parameters.Add("@version", query.Version);
             }
 
             if (!string.IsNullOrEmpty(query.UserID))
@@ -710,6 +699,68 @@ namespace Slickflow.Engine.Business.Manager
                 throw new WorkflowException(
                     string.Format("{0}，ActivityInstanceID: {1}", message, activityInstanceID.ToString())
                 );
+            }
+            else if (list.Count > 1)
+            {
+                throw new WorkflowException(LocalizeHelper.GetEngineMessage("taskmanager.gettaskofmine.toomoretasks.error"));
+            }
+            else
+            {
+                var taskView = list[0];
+                return taskView;
+            }
+        }
+
+        /// <summary>
+        /// 获取我的任务
+        /// </summary>
+        /// <param name="conn">数据库链接</param>
+        /// <param name="activityInstanceID">活动实例ID</param>
+        /// <param name="userID">用户ID</param>
+        /// <param name="notThrowException">是否抛出异常</param>
+        /// <param name="trans">数据库事务</param>
+        /// <returns>任务视图实体</returns>
+        internal TaskViewEntity GetTaskOfMine(IDbConnection conn,
+            int activityInstanceID,
+            string userID,
+            bool notThrowException,
+            IDbTransaction trans)
+        {
+            //processState:2 -running 流程处于运行状态
+            //activityType:4 -表示“任务”类型的节点
+            //activityState: 1-ready（准备）, 2-running（）运行；
+            string sql = @"SELECT 
+                                TOP 1 *
+                            FROM vwWfActivityInstanceTasks 
+                            WHERE ActivityInstanceID=@activityInstanceID 
+                                AND AssignedToUserID=@userID 
+                                AND ProcessState=2 
+                                AND (ActivityType=4 OR ActivityType=5 OR ActivityType=6) 
+                                AND (ActivityState=1 OR ActivityState=2) 
+                            ORDER BY TASKID DESC";
+            sql = SqlDataProviderFactory.GetSqlTaskOfMineByAtcitivityInstance(sql);
+            var list = Repository.Query<TaskViewEntity>(conn, sql,
+               new
+               {
+                   activityInstanceID = activityInstanceID,
+                   userID = userID
+               },
+               trans).ToList();
+
+
+            if (list.Count == 0)
+            {
+                if (notThrowException)
+                {
+                    return null;
+                }
+                else
+                {
+                    var message = LocalizeHelper.GetEngineMessage("taskmanager.gettaskofmine.error");
+                    throw new WorkflowException(
+                        string.Format("{0}，ActivityInstanceID: {1}", message, activityInstanceID.ToString())
+                    );
+                }
             }
             else if (list.Count > 1)
             {
@@ -1281,9 +1332,25 @@ namespace Slickflow.Engine.Business.Manager
                     Update(task, session);
                 }
 
-                //插入委托任务
-                Insert(activityInstance, entity.EntrustToUserID, entity.EntrustToUserName,
-                    entity.RunnerID, entity.RunnerName, session, entity.TaskID);
+
+                //查询被委托人是否已经有待办任务存在
+                var todoTask = GetTaskOfMine(session.Connection, activityInstance.ID, entity.EntrustToUserID, true, session.Transaction);
+                if (todoTask != null)
+                {
+                    //更新委托用户信息
+                    var originalTask = GetTask(todoTask.TaskID);
+                    originalTask.EntrustedTaskID = entity.TaskID;
+                    originalTask.LastUpdatedByUserID = entity.RunnerID;
+                    originalTask.LastUpdatedByUserName = entity.RunnerName;
+                    originalTask.LastUpdatedDateTime = DateTime.Now;
+                    Update(originalTask, session);
+                }
+                else
+                {
+                    //插入委托任务
+                    Insert(activityInstance, entity.EntrustToUserID, entity.EntrustToUserName,
+                        entity.RunnerID, entity.RunnerName, session, entity.TaskID);
+                }
 
                 session.Commit();
 

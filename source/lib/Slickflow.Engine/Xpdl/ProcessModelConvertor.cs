@@ -84,9 +84,6 @@ namespace Slickflow.Engine.Xpdl
                 subProcessActivity.ActivityType = subProcessActivityType;
                 subProcessActivity.ProcessGUID = process.ProcessGUID;
 
-                var subProcess = ConvertSubProcess(node);
-                subProcessActivity.SubProcess = subProcess;
-
                 //添加子流程节点到节点列表
                 process.ActivityList.Add(subProcessActivity);
             }
@@ -96,7 +93,8 @@ namespace Slickflow.Engine.Xpdl
                 process.TransitionList.Add(transition);
             }
             else if(node.Name == XPDLDefinition.BPMN2_StrXmlPath_Incoming
-                || node.Name == XPDLDefinition.BPMN2_StrXmlPath_Outgoing)
+                || node.Name == XPDLDefinition.BPMN2_StrXmlPath_Outgoing
+                || node.Name == XPDLDefinition.BPMN2_StrXmlPath_LaneSet)
             {
                 ;
             }
@@ -132,7 +130,12 @@ namespace Slickflow.Engine.Xpdl
             return workItemType;
         }
 
-        private static Process ConvertSubProcess(XmlNode node)
+        /// <summary>
+        /// 转换子流程节点
+        /// </summary>
+        /// <param name="node">子流程节点</param>
+        /// <returns>流程实体</returns>
+        public static Process ConvertSubProcess(XmlNode node)
         {
             //子流程
             var subProcess = ConvertProcessAttribute(node);
@@ -167,6 +170,7 @@ namespace Slickflow.Engine.Xpdl
         public static Transition ConvertTransition(XmlNode node, Process process)
         {
             Transition transition = new Transition();
+            transition.ID = XMLHelper.GetXmlAttribute(node, "id");
             transition.TransitionGUID = XMLHelper.GetXmlAttribute(node, "sf:guid");
             transition.FromActivityGUID = XMLHelper.GetXmlAttribute(node, "sf:from");
             transition.ToActivityGUID = XMLHelper.GetXmlAttribute(node, "sf:to");

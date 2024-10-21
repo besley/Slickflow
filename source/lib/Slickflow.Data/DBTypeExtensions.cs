@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 //using Oracle.ManagedDataAccess.Client;
 //using MySql.Data.MySqlClient;
 //using Npgsql;
+//using MongoDB;
 
 namespace Slickflow.Data
 {
@@ -39,7 +40,12 @@ namespace Slickflow.Data
         /// <summary>
         /// KINGBASE
         /// </summary>
-        KINGBASE = 5
+        KINGBASE = 5,
+
+        /// <summary>
+        /// MongoDB
+        /// </summary>
+        MONGODB = 21,
     }
     #endregion
 
@@ -88,6 +94,8 @@ namespace Slickflow.Data
             //SetDBType(DBTypeEnum.MYSQL);
 
             //SetDBType(DBTypeEnum.PGSQL);
+
+            //SetDBType(DBTypeEnum.MONGODB);
         }
 
         /// <summary>
@@ -119,6 +127,10 @@ namespace Slickflow.Data
             else if (DBTypeExtenstions.DBType == DBTypeEnum.PGSQL)
             {
                 //conn = new NpgsqlConnection(ConnectionString);
+            }
+            else if (DBTypeExtenstions.DBType == DBTypeEnum.MONGODB)
+            {
+                //conn = new MongoDB.Driver.MongoClient(ConnectionString);
             }
             return conn;
         }

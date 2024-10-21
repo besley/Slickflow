@@ -1,35 +1,14 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-* 
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
-using System;
+﻿using System;
+using System.Xml;
 using System.Collections.Generic;
 using Slickflow.Data;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Storage;
 using Slickflow.Engine.Xpdl;
-using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Utility;
+using Slickflow.Engine.Xpdl.Common;
 
 namespace Slickflow.Engine.Service
 {
@@ -163,17 +142,7 @@ namespace Slickflow.Engine.Service
         public void SaveProcessFile(ProcessFileEntity entity)
         {
             var pm = new ProcessManager();
-            pm.SaveProcessFile(entity, XPDLStorageFactory.CreateXPDLStorage());
-        }
-
-        /// <summary>
-        /// 保存泳道流程XML文件
-        /// </summary>
-        /// <param name="entity">泳道实体列表</param>
-        public void SaveProcessFilePool(ProcessFilePool entity)
-        {
-            var pm = new ProcessManager();
-            pm.SaveProcessFilePool(entity);
+            pm.SaveProcessFile(entity);
         }
 
         /// <summary>
@@ -197,7 +166,7 @@ namespace Slickflow.Engine.Service
         public int CreateProcess(ProcessEntity entity)
         {
             var pm = new ProcessManager();
-            var processID = pm.CreateProcess(entity, XPDLStorageFactory.CreateXPDLStorage());
+            var processID = pm.CreateProcess(entity);
 
             return processID;
         }
@@ -228,6 +197,20 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// 更新流程使用状态
+        /// </summary>
+        /// <param name="processGUID">流程GUID</param>
+        /// <param name="version">版本</param>
+        /// <param name="usingState">使用状态</param>
+        public void UpdateProcessUsingState(string processGUID,
+            string version,
+            byte usingState)
+        {
+            var processManager = new ProcessManager();
+            processManager.UpdateUsingState(processGUID, version, usingState);
+        }
+
+        /// <summary>
         /// 升级流程记录
         /// </summary>
         /// <param name="processGUID">流程GUID</param>
@@ -247,7 +230,7 @@ namespace Slickflow.Engine.Service
         public void DeleteProcess(string processGUID, string version)
         {
             var pm = new ProcessManager();
-            pm.DeleteProcess(processGUID, version, XPDLStorageFactory.CreateXPDLStorage());
+            pm.DeleteProcess(processGUID, version);
         }
 
         /// <summary>
@@ -290,25 +273,12 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// 导入流程XML文件，并生成新流程
         /// </summary>
-        /// <param name="entity">流程实体</param>
+        /// <param name="xmlContent">流程XML文档</param>
         /// <returns>新流程ID</returns>
-        public int ImportProcess(ProcessEntity entity)
+        public void ImportProcess(string xmlContent)
         {
-            string xmlContent = entity.XmlContent;
-
             var pm = new ProcessManager();
-            var processID = pm.CreateProcess(entity);
-
-            var fileEntity = new ProcessFileEntity
-            {
-                ProcessGUID = entity.ProcessGUID,
-                Version = entity.Version,
-                ProcessName = entity.ProcessName,
-                XmlContent = xmlContent
-            };
-            pm.SaveProcessFile(fileEntity);
-
-            return processID;
+            pm.ImportProcess(xmlContent);
         }
 
         /// <summary>
@@ -316,7 +286,7 @@ namespace Slickflow.Engine.Service
         /// </summary>
         /// <param name="entity">流程校验实体</param>
         /// <returns>流程校验结果</returns>
-        public ProcessValidateResult ValidateProcess(ProcessValidate entity)
+        public ProcessValidateResult ValidateProcess(ProcessEntity entity)
         {
             var result = ProcessValidator.Validate(entity);
             return result;
@@ -341,6 +311,12 @@ namespace Slickflow.Engine.Service
             //    XPDLMemoryCachedHelper.TryUpdate(procesEntity.ProcessGUID, procesEntity.Version, process);
             //}
             throw new NotImplementedException();
+        }
+
+        public void SetProcessTimerType(string processGUID, string version)
+        {
+            var pm = new ProcessManager();
+            
         }
 
         #endregion

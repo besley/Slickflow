@@ -43,6 +43,13 @@ namespace Slickflow.Engine.Core.SendBack
                 TransitionFlyingTypeEnum.NotFlying,
                 base.SendBackOperation.ActivityResource,
                 base.Session);
+
+            //如果上一步节点也是会签节点，更新主节点状态为运行状态
+            if (previousActivityInstance.ActivityType == (short)ActivityTypeEnum.MultiSignNode)
+            {
+                base.ActivityInstanceManager.Rerun(previousActivityInstance.MIHostActivityInstanceID.Value,
+                    base.Session, runner);
+            }
         }
 
         /// <summary>

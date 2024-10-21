@@ -19,7 +19,6 @@ function ForcedMerge(props) {
     const { element, id } = props;
     const moddle = useService('moddle');
     const modeling = useService('modeling');
-    const translate = useService('translate');
     const debounce = useService('debounceInput');
 
     const getValue = () => {
@@ -69,8 +68,8 @@ function ForcedMerge(props) {
     return <CheckboxEntry
         id={id}
         element={element}
-        description={translate('when the orjoin type is EOrJoin, this options can be configured.')}
-        label={kresource.getItem('mergeoptions')}
+        description={kresource.getItem('forcedmergebranchdesc')}
+        label={kresource.getItem('forcedmergebranch')}
         getValue={getValue}
         setValue={setValue}
         debounce={debounce}

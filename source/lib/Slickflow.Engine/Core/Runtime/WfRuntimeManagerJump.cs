@@ -1,26 +1,4 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-* 
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
-using System.Linq;
+﻿using System.Linq;
 using Slickflow.Data;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Common;
@@ -43,6 +21,47 @@ namespace Slickflow.Engine.Core.Runtime
         {
             WfExecutedResult result = base.WfExecutedResult;
 
+            //设置当前活动实例为完成状态
+            var aim = new ActivityInstanceManager();
+            aim.Complete(base.RunningActivityInstance.ID, this.AppRunner, session);
+
+            // 构建跳转上下文
+            var jumpActivityGUID = base.AppRunner.NextActivityPerformers.First().Key;
+            var jumpforwardActivity = base.ProcessModel.GetActivity(jumpActivityGUID);
+            var processInstance = (new ProcessInstanceManager()).GetById(base.RunningActivityInstance.ProcessInstanceID);
+
+            var jumpforwardExecutionContext = ActivityForwardContext.CreateRunningContextByTask(base.TaskView,
+                    base.ProcessModel,
+                    base.ActivityResource,
+                    true,
+                    session);
+            jumpforwardExecutionContext.TaskID = this.TaskView.TaskID;
+            jumpforwardExecutionContext.FromActivityInstance = base.RunningActivityInstance;
+
+            NodeMediator mediator = NodeMediatorFactory.CreateNodeMediator(jumpforwardExecutionContext, session);
+            mediator.LinkContext.FromActivityInstance = base.RunningActivityInstance;
+            mediator.LinkContext.ToActivity = jumpforwardActivity;
+
+            if (mediator is NodeMediatorEnd)
+            {
+                //结束节点的连线转移
+                mediator.CreateActivityTaskTransitionInstance(jumpforwardActivity,
+                    processInstance,
+                    base.RunningActivityInstance,
+                    WfDefine.WF_XPDL_JUMP_BYPASS_GUID,
+                    TransitionTypeEnum.Forward,
+                    TransitionFlyingTypeEnum.ForwardFlying,
+                    base.ActivityResource,
+                    session);
+            }
+            mediator.ExecuteWorkItem();
+
+            result.Status = WfExecutedStatus.Success;
+            result.Message = mediator.GetNodeMediatedMessage();
+
+            #region 考虑回退方式的跳转，代码暂时保留 2023-02-14 besley
+            /*
+            // 
             //回跳类型的处理
             if (base.IsBackward == true)
             {
@@ -74,6 +93,7 @@ namespace Slickflow.Engine.Core.Runtime
                 var processInstance = (new ProcessInstanceManager()).GetById(base.RunningActivityInstance.ProcessInstanceID);
                 var jumpforwardExecutionContext = ActivityForwardContext.CreateJumpforwardContext(jumpforwardActivity,
                     base.ProcessModel, processInstance, base.ActivityResource);
+                jumpforwardExecutionContext.TaskID = this.TaskView.TaskID;
                 jumpforwardExecutionContext.FromActivityInstance = base.RunningActivityInstance;
 
                 NodeMediator mediator = NodeMediatorFactory.CreateNodeMediator(jumpforwardExecutionContext, session);
@@ -97,6 +117,8 @@ namespace Slickflow.Engine.Core.Runtime
                 result.Status = WfExecutedStatus.Success;
                 result.Message = mediator.GetNodeMediatedMessage();
             }
+            */
+            #endregion
         }
     }
 }

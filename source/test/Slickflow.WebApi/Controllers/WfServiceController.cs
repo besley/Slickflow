@@ -1,26 +1,4 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-*  
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -109,6 +87,35 @@ namespace Slickflow.WebApi.Controllers
                 var transaction = session.BeginTrans();
                 var wfService = new WorkflowService();
                 var wfResult = wfService.RunProcess(session.Connection, runner, session.Transaction);
+
+                if (wfResult.Status == WfExecutedStatus.Success)
+                {
+                    transaction.Commit();
+                    result = ResponseResult<WfExecutedResult>.Success(wfResult);
+                }
+                else
+                {
+                    transaction.Rollback();
+                    result = ResponseResult<WfExecutedResult>.Error(wfResult.Message);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        ///  加签流程
+        /// </summary>
+        /// <param name="runner">运行者</param>
+        /// <returns>执行结果</returns>
+        [HttpPost]
+        public ResponseResult<WfExecutedResult> SignForwardProcess([FromBody] WfAppRunner runner)
+        {
+            var result = ResponseResult<WfExecutedResult>.Default();
+            using (var session = SessionFactory.CreateSession())
+            {
+                var transaction = session.BeginTrans();
+                var wfService = new WorkflowService();
+                var wfResult = wfService.SignForwardProcess(session.Connection, runner, session.Transaction);
 
                 if (wfResult.Status == WfExecutedStatus.Success)
                 {
@@ -217,6 +224,35 @@ namespace Slickflow.WebApi.Controllers
         /// <param name="runner">运行者</param>
         /// <returns>执行结果</returns>
         [HttpPost]
+        public ResponseResult<WfExecutedResult> RejectProcess([FromBody] WfAppRunner runner)
+        {
+            var result = ResponseResult<WfExecutedResult>.Default();
+            using (var session = SessionFactory.CreateSession())
+            {
+                var transaction = session.BeginTrans();
+                var wfService = new WorkflowService();
+                var wfResult = wfService.RejectProcess(session.Connection, runner, session.Transaction);
+
+                if (wfResult.Status == WfExecutedStatus.Success)
+                {
+                    transaction.Commit();
+                    result = ResponseResult<WfExecutedResult>.Success(wfResult);
+                }
+                else
+                {
+                    transaction.Rollback();
+                    result = ResponseResult<WfExecutedResult>.Error(wfResult.Message);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 跳转流程
+        /// </summary>
+        /// <param name="runner">运行者</param>
+        /// <returns>执行结果</returns>
+        [HttpPost]
         public ResponseResult<WfExecutedResult> JumpProcess([FromBody] WfAppRunner runner)
         {
             var result = ResponseResult<WfExecutedResult>.Default();
@@ -225,6 +261,64 @@ namespace Slickflow.WebApi.Controllers
                 var transaction = session.BeginTrans();
                 var wfService = new WorkflowService();
                 var wfResult = wfService.JumpProcess(session.Connection, runner, session.Transaction);
+
+                if (wfResult.Status == WfExecutedStatus.Success)
+                {
+                    transaction.Commit();
+                    result = ResponseResult<WfExecutedResult>.Success(wfResult);
+                }
+                else
+                {
+                    transaction.Rollback();
+                    result = ResponseResult<WfExecutedResult>.Error(wfResult.Message);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 关闭流程
+        /// </summary>
+        /// <param name="runner">运行者</param>
+        /// <returns>执行结果</returns>
+        [HttpPost]
+        public ResponseResult<WfExecutedResult> CloseProcess([FromBody] WfAppRunner runner)
+        {
+            var result = ResponseResult<WfExecutedResult>.Default();
+            using (var session = SessionFactory.CreateSession())
+            {
+                var transaction = session.BeginTrans();
+                var wfService = new WorkflowService();
+                var wfResult = wfService.CloseProcess(session.Connection, runner, session.Transaction);
+
+                if (wfResult.Status == WfExecutedStatus.Success)
+                {
+                    transaction.Commit();
+                    result = ResponseResult<WfExecutedResult>.Success(wfResult);
+                }
+                else
+                {
+                    transaction.Rollback();
+                    result = ResponseResult<WfExecutedResult>.Error(wfResult.Message);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 修订流程
+        /// </summary>
+        /// <param name="runner">运行者</param>
+        /// <returns>执行结果</returns>
+        [HttpPost]
+        public ResponseResult<WfExecutedResult> ReviseProcess([FromBody] WfAppRunner runner)
+        {
+            var result = ResponseResult<WfExecutedResult>.Default();
+            using (var session = SessionFactory.CreateSession())
+            {
+                var transaction = session.BeginTrans();
+                var wfService = new WorkflowService();
+                var wfResult = wfService.ReviseProcess(session.Connection, runner, session.Transaction);
 
                 if (wfResult.Status == WfExecutedStatus.Success)
                 {
@@ -374,8 +468,8 @@ namespace Slickflow.WebApi.Controllers
             try
             {
                 var wfService = new WorkflowService();
-                int newProcessID = wfService.ImportProcess(entity);
-                result = ResponseResult.Success(newProcessID);
+                wfService.ImportProcess(entity.XmlContent);
+                result = ResponseResult.Success("Importing process diagram succussed");
             }
             catch(System.Exception ex)
             {

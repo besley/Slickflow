@@ -14,4 +14,10 @@
     <ProjectReference Include="..\..\utility\SlickOne.WebUtility\SlickOne.WebUtility.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Slickflow.Graph">
+      <HintPath>..\..\lib\References\Slickflow.Graph.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

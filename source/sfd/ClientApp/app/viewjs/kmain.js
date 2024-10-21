@@ -14,6 +14,9 @@ window.processlist = processlist;
 import rolelist from '../viewjs/rolelist.js'
 window.rolelist = rolelist;
 
+import userlist from '../viewjs/userlist.js'
+window.userlist = userlist;
+
 import kresource from '../viewjs/kresource.js'
 window.kresource = kresource;
 
@@ -33,6 +36,7 @@ const kmain = (function () {
     kmain.mProcessVersion = '';
     kmain.mBpmnModeler = null;
     kmain.mxSelectedProcessEntity = null;
+    kmain.mxImageUrl = {};
 
     kmain.init = function (modeler) {
         //waiting...
@@ -64,6 +68,17 @@ const kmain = (function () {
 
     var initializeGlobalVariables = function () {
         kmain.mxSelectedProcessEntity = null;
+
+        kmain.mxImageUrl['sequence'] = 'slickflow-sequence-dailywork-demo.gif';
+        kmain.mxImageUrl['andsplit'] = 'slickflow-andsplit-demo.gif';
+        kmain.mxImageUrl['orsplit'] = 'slickflow-orsplit-ordervip-demo.gif';
+        kmain.mxImageUrl['xorsplit'] = 'slickflow-xorsplit-askforleave-demo.gif';
+        kmain.mxImageUrl['approvalorsplit'] = 'slickflow-approvalorsplit-vacation-demo.gif';
+        kmain.mxImageUrl['eorjoinbranchcount'] = 'slickflow-eorjoin-branchcount-demo.gif';
+        kmain.mxImageUrl['eorjoinbranchforced'] = 'slickflow-eorjoin-branchforced-demo.gif';
+        kmain.mxImageUrl['misequence'] = 'slickflow-multiple-sequence-demo.gif';
+        kmain.mxImageUrl['startconditional'] = 'slickflow-start-conditionial-demo.gif';
+        kmain.mxImageUrl['startsplit'] = 'slickflow-start-split-demo.gif';
     }
 
 
@@ -121,7 +136,10 @@ const kmain = (function () {
         const processName = rootElement.businessObject.name;
         const processCode = rootElement.businessObject.code;
 
-        if (processName !== processEntity.ProcessName) {
+        //need to be sure wether the sub process node modifed
+        if (rootElement.type !== "bpmn:SubProcess"
+            && processName !== processEntity.ProcessName) {
+            //the main process info is modified, need to be saved
             var content = kresource.getItem('processnamechangedconfirmmsg');
             kmsgbox.confirm(content, function () {
                 var entity = {
@@ -203,8 +221,10 @@ const kmain = (function () {
             if (result.Status === 1) {
                 //bpmnjs load xml
                 var entity = result.Entity;
+                kmain.mxSelectedProcessEntity = entity;
+                processlist.mxSelectedProcessEntity = entity;
+                //open diagram
                 openDiagram(entity.XmlContent);
-                kmain.mxSelectedProcessEntity =entity;
             } else {
                 kmsgbox.error(kresource.getItem('processopenerrormsg'), result.Message);
             }
@@ -231,9 +251,6 @@ const kmain = (function () {
             'data:application/bpmn20-xml;charset=UTF-8,'
             + encodeURIComponent(data));
         element.setAttribute('download', name);
-
-        // Above code is equivalent to
-        // <a href="path of file" download="file name">
 
         document.body.appendChild(element);
 
@@ -284,10 +301,45 @@ const kmain = (function () {
         });
     }
 
-    kmain.validateProcess = function () {
-        console.log('validate process...')
+    kmain.importMxGraphDiagram = function () {
+        var BootstrapDialog = require('bootstrap5-dialog');
+        BootstrapDialog.show({
+            message: $('<div id="popupImportMxGraphXml"></div>'),
+            title: kresource.getItem("importmxgraphxml"),
+            onshown: function () {
+                $("#popupImportMxGraphXml").load('pages/process/importmxgraph.html')
+            },
+            draggable: true
+        });
     }
 
+    kmain.validateProcess = function (entity, xml) {
+        var vEntity = {
+            "ProcessGUID": entity.ProcessGUID,
+            "Version": entity.Version,
+            "XmlContent": xml
+        };
+
+        jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/ValidateProcess', JSON.stringify(vEntity), function (result) {
+            if (result.Status === 1) {
+                var validateResult = result.Entity;
+                var resultType = validateResult.ProcessValidatedResultType;
+                if (resultType === "None") {
+                    kmsgbox.info(kresource.getItem('processvalidateokmsg'));
+                } else if (resultType === "Successed") {
+                    kmsgbox.info(kresource.getItem('processvalidateresult_type_successed'));
+                } else if (resultType === "WithoutStartEvent") {
+                    kmsgbox.warn(kresource.getItem('processvalidateresult_type_withoutstartevent'));
+                } else if (resultType === "WithoutEndEvent") {
+                    kmsgbox.warn(kresource.getItem('processvalidateresult_type_withoutendevent'));
+                } else if (resultType === "WithoutStartEndPath") {
+                    kmsgbox.warn(kresource.getItem('processvalidateresult_type_withoutstartendpath'));
+                } 
+            } else {
+                kmsgbox.error(kresource.getItem('processvalidateexceptionmsg'), result.Message);
+            }
+        });
+    }
 
     //#region domain lang and step test
     kmain.codeStudio = function () {
@@ -295,12 +347,34 @@ const kmain = (function () {
         win.focus();
     }
 
+    kmain.createByTemplate = function () {
+        var BootstrapDialog = require('bootstrap5-dialog');
+        kmain.templateDialog = BootstrapDialog.show({
+            size: BootstrapDialog.SIZE_LARGE,
+            closable: true,
+            message: $('<div id="openTemplateGallery"></div>'),
+            title: kresource.getItem("templategallery"),
+            onshown: function () {
+                $("#openTemplateGallery").load('pages/template/index.html')
+            },
+            draggable: true
+        });
+    }
+
     kmain.gotoTutorial = function () {
-        processmodel.gotoTutorial();
+        var lang = kresource.getLang();
+        var url = (lang === "zh") ? "https://www.cnblogs.com/slickflow/p/11936786.html"
+            : "https://www.codeproject.com/Articles/5252483/Slickflow-Coding-Graphic-Model-User-Manual";
+        window.open(url, "_blank");
     }
 
     kmain.simuTest = function () {
-        var win = window.open("http://localhost/sfw2/", '_blank');
+        var win = window.open(kconfig.webTestUrl, '_blank');
+        win.focus();
+    }
+
+    kmain.openDemo = function (pattern) {
+        var win = window.open(kconfig.demoUrl + '/demo/' + kmain.mxImageUrl[pattern], '_blank');
         win.focus();
     }
 
@@ -312,6 +386,17 @@ const kmain = (function () {
     kmain.changeLang = function (lang) {
         kresource.setLang(lang);
         window.location.reload();
+    }
+
+    kmain.openHelpPage = function () {
+        var win = null;
+        var lang = kresource.getLang();
+        if (lang === 'zh') {
+            win = window.open("http://doc.slickflow.com/", '_blank');
+        } else {
+            win = window.open("http://doc.slickflow.net/", '_blank');
+        }
+        win.focus();
     }
 
     function setMxGraphLang(lang) {

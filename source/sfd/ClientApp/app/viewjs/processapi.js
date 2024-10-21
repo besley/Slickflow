@@ -1,5 +1,6 @@
 ﻿import jshelper from '../script/jshelper.js'
 import kconfig from '../config/kconfig.js'
+import kmsgbox from '../script/kmsgbox.js';
 
 //process api
 const processapi = (function () {
@@ -27,7 +28,7 @@ const processapi = (function () {
             JSON.stringify(entity),
             function (result) {
                 if (result.Status === 1) {
-                    kmsgbox.info(result.Message);
+                    //kmsgbox.info(result.Message);
                     callback(result.Entity);
                 } else {
                     kmsgbox.warn(result.Message);
@@ -48,8 +49,21 @@ const processapi = (function () {
     }
 
     processapi.upgrade = function (entity) {
-        //delete the selected row
         jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/UpgradeProcess',
+            JSON.stringify(entity),
+            function (result) {
+                if (result.Status === 1) {
+                    kmsgbox.info(result.Message);
+                    //refresh
+                    processlist.getProcessList();
+                } else {
+                    kmsgbox.error(result.Message);
+                }
+            });
+    }
+
+    processapi.updateUsingState = function (entity) {
+        jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/UpdateProcessUsingState',
             JSON.stringify(entity),
             function (result) {
                 if (result.Status === 1) {
@@ -68,7 +82,7 @@ const processapi = (function () {
             JSON.stringify(entity),
             function (result) {
                 if (result.Status === 1) {
-                    kmsgbox.info(result.Message);
+                    //kmsgbox.info(result.Message);
                     //refresh
                     processlist.getProcessList();
                 } else {
@@ -118,31 +132,28 @@ const processapi = (function () {
         });
     }
 
-    processapi.saveProcessFilePool = function (entity) {
-        jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/SaveProcessFilePool', JSON.stringify(entity), function (result) {
-            if (result.Status === 1) {
-                kmsgbox.info(result.Message);
-            } else {
-                kmsgbox.error(result.Message);
-            }
-        });
+    processapi.createByTemplate = function (entity, isPopupMessage, callback) {
+        jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/CreateProcessByTemplateName',
+            JSON.stringify(entity),
+            function (result) {
+                if (result.Status === 1) {
+                    if (isPopupMessage === true) {
+                        //kmsgbox.info(result.Message);
+                    } else {
+                        kmsgbox.error(result.Message);
+                    }
+                }
+                //execute render in processlist
+                callback(result);
+            });
     }
 
-    processapi.loadTemplate = function (option) {
-        var content = processmodel.mprocessTemplate[option];
-
-        if (content !== undefined && content !== "") {
-            processmodel.mcodemirrorEditor.setValue(content);
-            //$("#txtCode").val(content);
-            return;
-        }
-
+    processapi.loadTemplate = function (option, callback) {
         jshelper.ajaxGet(kconfig.webApiUrl + 'api/Wf2Xml/LoadProcessTemplate/' + option, null, function (result) {
             if (result.Status === 1) {
                 var template = result.Entity;
-                //$("#txtCode").val(template.Content);
-                processmodel.mcodemirrorEditor.setValue(template.Content);
-                processmodel.mprocessTemplate[option] = template.Content;
+                //callback function
+                callback(template);
             } else {
                 kmsgbox.warn(result.Message);
             }

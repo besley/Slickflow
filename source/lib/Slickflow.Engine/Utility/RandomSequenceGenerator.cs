@@ -10,7 +10,7 @@ namespace Slickflow.Engine.Utility
     /// </summary>
     public class RandomSequenceGenerator
     {
-        private readonly Random random = new Random();
+        private static readonly Random random = new Random();
 
         /// <summary>
         /// 获取随机数字
@@ -18,9 +18,20 @@ namespace Slickflow.Engine.Utility
         /// <param name="min"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public int GetRandomNumber(int min, int max)
+        public static int GetRandomNumber(int min, int max)
         {
             return random.Next(min, max);
+        }
+
+        /// <summary>
+        /// 获得随机整数，默认4位整数
+        /// </summary>
+        /// <returns></returns>
+        public static int GetRandomInt4()
+        {
+            Random r = new Random();
+            int value = r.Next(1000, 9999);
+            return value;
         }
 
         /// <summary>
@@ -29,7 +40,7 @@ namespace Slickflow.Engine.Utility
         /// <param name="size"></param>
         /// <param name="lowerCase"></param>
         /// <returns></returns>
-        public string GetRandomString(int size, bool lowerCase = false)
+        public static string GetRandomString(int size, bool lowerCase = false)
         {
             var builder = new StringBuilder(1024);
             char offset = lowerCase ? 'a' : 'A';
@@ -48,7 +59,7 @@ namespace Slickflow.Engine.Utility
         /// 获取字符串和数字的混合序列
         /// </summary>
         /// <returns></returns>
-        public string GetRandomSequece()
+        public static string GetRandomSequece()
         {
             var passwordBuilder = new StringBuilder();
 

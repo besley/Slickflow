@@ -22,6 +22,7 @@
   "activityinstancemanager.getrunningnode.unique.error": "There are multiple running nodes, but without taskid parameter!",
   "activityinstancemanager.CheckPassRateMatchedInfo.UnknownCompareTypeValue": "Unknown compare type, not count/percentage type",
   "activityinstancemanager.CheckPassRateMatchedInfo.UnknownMergeTypeValue": "Unknown merge type, not sequence/parallel type",
+  "processinstancemanager.insert.error": "Process can not be inserted as another one already exist!",
   "processinstancemanager.complete.error": "Process can not be completed as not in running status!",
   "processinstancemanager.suspend.error": "Process can not be suspended as not in running status!",
   "processinstancemanager.resume.error": "Process can not be resumed as not in suspended status!",
@@ -39,6 +40,10 @@
   "processmanager.getbyversion.error": "No such process record in database",
   "processmanager.getbyversioninternal.error": "There are duplicated process recored exist!",
   "processmanager.insert.error": "There is a process with same processguid and version!",
+  "processmanager.saveprocessfile.noprocessname.error": "An error occurred when saving process file as empty process name!",
+  "processmanager.import.emptyprocessnode.error": "An error occurred when importing process diagram as process xml node empty!",
+  "processmanager.import.sameprocessexist.error": "An error occurred when importing process diagram as process with same version existed!",
+  "processmanager.setprocesstimertype.error": "An error occurred when setting process timer type!detial",
   "processmanager.upgrade.error": "The version field can not be null!",
   "processmanager.getsinglebyapptype.error": "An error occurred when reading single process by apptype, none or too many record exist!",
   "processvariablemanager.savevariable.error": "AppInstanceID and ProcessInstanceID can not be null!",
@@ -171,6 +176,5 @@
   "graph.pmb.GetBuilder.error": "The activity isn't exist! activity code:",
   "graph.pmb.CreateProcess.error": "The process with the same process code and version is already exist!",
   "graph.pmb.LoadProcess.error": "There isn't a process with this process code and version!",
-  "graph.pxb.Serialize.error": "The process diagram can't be null,please check its content firstly!",
-  "graph.ptf.CreateProcessByTemplateType.exception": "When creating new process, the processguid can't be null!"
+  "graph.pxb.Serialize.error": "The process diagram can't be null,please check its content firstly!"
 }

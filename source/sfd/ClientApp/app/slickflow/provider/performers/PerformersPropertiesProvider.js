@@ -10,7 +10,7 @@ export default function PerformersPropertiesProvider(propertiesPanel, injector, 
         return function (groups) {
             if (is(element, 'bpmn:Task')
                 || is(element, 'bpmn:UserTask')) {
-
+                
                 groups.push(createPerformersGroup(element, injector, translate));
             }
             return groups;

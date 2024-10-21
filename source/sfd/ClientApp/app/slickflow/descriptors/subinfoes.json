@@ -1,0 +1,45 @@
+{
+  "subinfoes": [
+    {
+      "name": "SubInfoes",
+      "superClass": [ "Element" ],
+      "properties": [
+        {
+          "name": "values",
+          "isMany": true,
+          "type": "SubInfo"
+        }
+      ]
+    },
+    {
+      "name": "SubInfo",
+      "properties": [
+        {
+          "name": "subId",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "subProcessGUID",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "subProcessName",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "subType",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "subVar",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}

@@ -26,6 +26,25 @@ namespace Slickflow.Engine.Utility
         /// </summary>
         /// <param name="xmlDoc">XML文档</param>
         /// <param name="xpath">要匹配的XPath表达式(例如:"//节点名//子节点名")</param>
+        /// <returns>返回XmlNode</returns>
+        public static XmlNode GetXmlNodeByXpath(XmlDocument xmlDoc, string xpath)
+        {
+            try
+            {
+                XmlNode xmlNode = xmlDoc.DocumentElement.SelectSingleNode(xpath);
+                return xmlNode;
+            }
+            catch (System.Exception ex)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 选择匹配XPath表达式的第一个节点XmlNode.
+        /// </summary>
+        /// <param name="xmlDoc">XML文档</param>
+        /// <param name="xpath">要匹配的XPath表达式(例如:"//节点名//子节点名")</param>
         /// <param name="nsmgr">命名空间</param>
         /// <returns>返回XmlNode</returns>
         public static XmlNode GetXmlNodeByXpath(XmlDocument xmlDoc, string xpath, XmlNamespaceManager nsmgr)

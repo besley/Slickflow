@@ -74,6 +74,7 @@ namespace Slickflow.Engine.Core.SendBack
                 processInstance.AppInstanceID,
                 processInstance.AppInstanceCode,
                 processInstance.ID,
+                processInstance.ProcessGUID,
                 this.SendBackOperation.BackwardToTaskActivity,
                 backwardType,
                 fromActivityInstance.ID,

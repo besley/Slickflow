@@ -19,6 +19,12 @@
         "type": "String"
       },
       {
+        "name": "defaultBranch",
+        "isMany": true,
+        "isAttr": true,
+        "type": "String"
+      },
+      {
         "name": "approval",
         "isMany": true,
         "isAttr": true,

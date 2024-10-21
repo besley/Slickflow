@@ -11,8 +11,24 @@ namespace Slickflow.Module.Localize
     /// </summary>
     public enum ProjectTypeEnum
     {
+        /// <summary>
+        /// Engine Project
+        /// </summary>
         Engine = 0,
+
+        /// <summary>
+        /// Designer Project
+        /// </summary>
         Designer = 1,
-        Web = 3
+
+        /// <summary>
+        /// WebTest Project
+        /// </summary>
+        Web = 3,
+
+        /// <summary>
+        /// Insight WebJob Project
+        /// </summary>
+        Job = 5
     }
 }

@@ -1,25 +1,4 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-* 
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
+﻿
 using System;
 using System.IO;
 using System.Data;
@@ -91,7 +70,7 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="throwException">抛出异常</param>
         /// <param name="trans">交易</param>
         /// <returns>流程实体</returns>
-        internal ProcessEntity GetByVersion(IDbConnection conn, 
+        public ProcessEntity GetByVersion(IDbConnection conn, 
             string processGUID, 
             string version, 
             bool throwException = true,
@@ -132,12 +111,13 @@ namespace Slickflow.Engine.Business.Manager
         /// 获取当前使用的流程版本
         /// </summary>
         /// <param name="processGUID">流程GUID</param>
+        /// <param name="isNotThrownException">是否抛出异常</param>
         /// <returns>流程实体</returns>
-        public ProcessEntity GetVersionUsing(string processGUID)
+        public ProcessEntity GetVersionUsing(string processGUID, bool isNotThrownException = true)
         {
             using (var session = SessionFactory.CreateSession())
             {
-                return GetVersionUsing(session.Connection, processGUID, session.Transaction);
+                return GetVersionUsing(session.Connection, processGUID, isNotThrownException, session.Transaction);
             }
         }
 
@@ -146,9 +126,13 @@ namespace Slickflow.Engine.Business.Manager
         /// </summary>
         /// <param name="conn">数据库连接</param>
         /// <param name="processGUID">流程GUID</param>
+        /// <param name="isNotThrownException">是否抛出异常</param>
         /// <param name="trans">事务</param>
         /// <returns>流程实体</returns>
-        public ProcessEntity GetVersionUsing(IDbConnection conn, string processGUID, IDbTransaction trans)
+        public ProcessEntity GetVersionUsing(IDbConnection conn, 
+            string processGUID, 
+            bool isNotThrownException,
+            IDbTransaction trans)
         {
             ProcessEntity entity = null;
             var sql = @"SELECT 
@@ -172,9 +156,12 @@ namespace Slickflow.Engine.Business.Manager
             }
             else
             {
-                throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.getbyversion.error",
-                    string.Format("ProcessGUID: {0}", processGUID)
-                ));
+                if (isNotThrownException == false)
+                {
+                    throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.getbyversion.error",
+                        string.Format("ProcessGUID: {0}", processGUID)
+));
+                }
             }
             return entity;
         }
@@ -259,10 +246,15 @@ namespace Slickflow.Engine.Business.Manager
         /// <summary>
         /// 按照版本获取流程记录
         /// </summary>
+        /// <param name="conn">链接</param>
         /// <param name="processGUID">流程GUID</param>
         /// <param name="version">版本</param>
+        /// <param name="trans">事务</param>
         /// <returns>流程实体</returns>
-        internal ProcessEntity GetByVersionInternal(string processGUID, string version)
+        internal ProcessEntity GetByVersionInternal(IDbConnection conn,
+            string processGUID, 
+            string version,
+            IDbTransaction trans)
         {
             ProcessEntity entity = null;
             string sql = @"SELECT 
@@ -270,11 +262,13 @@ namespace Slickflow.Engine.Business.Manager
                         FROM WfProcess 
                         WHERE ProcessGUID=@processGUID 
                             AND VERSION=@version";
-            var list = Repository.Query<ProcessEntity>(sql, 
+            var list = Repository.Query<ProcessEntity>(conn,
+                sql, 
                 new { 
                     processGUID = processGUID, 
                     version = version 
-                })
+                },
+                trans)
                 .ToList<ProcessEntity>();
 
             if (list.Count() > 1)
@@ -377,7 +371,7 @@ namespace Slickflow.Engine.Business.Manager
                         IsUsing,
                         AppType,
                         PackageType,
-                        PackageProcessID,
+                        PackageID,
                         PageUrl,
                         StartType,
                         StartExpression,
@@ -426,7 +420,7 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="trans"></param>
         public int Insert(IDbConnection conn, ProcessEntity entity, IDbTransaction trans)
         {
-            var entityExisted = GetByVersionInternal(entity.ProcessGUID, entity.Version);
+            var entityExisted = GetByVersionInternal(conn, entity.ProcessGUID, entity.Version, trans);
             if (entityExisted != null)
             {
                 throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.insert.error"));
@@ -447,15 +441,15 @@ namespace Slickflow.Engine.Business.Manager
             try
             {
                 session.BeginTrans();
-                if (entityDB.PackageType == (short)PackageTypeEnum.MainProcess)
+                if (entityDB.PackageType == (short)PackageTypeEnum.Package)
                 {
                     //更新主流程泳道流程的使用状态信息
                     var sql = @"UPDATE WfProcess
                                 SET IsUsing=@isUsing
-                                WHERE PackageProcessID=@packageProcessID";
+                                WHERE PackageID=@packageID";
                     Repository.Execute(session.Connection,
                         sql, 
-                        new { isUsing = entity.IsUsing, packageProcessID = entity.ID },
+                        new { isUsing = entity.IsUsing, packageID = entity.ID },
                         session.Transaction);
 
                 }
@@ -488,22 +482,36 @@ namespace Slickflow.Engine.Business.Manager
         /// <summary>
         /// 更新流程版本IsUsing=0
         /// </summary>
-        /// <param name="conn">链接</param>
         /// <param name="processGUID">流程GUID</param>
         /// <param name="version">版本</param>
-        /// <param name="trans">事务</param>
-        public void UpdateUsingState(IDbConnection conn, 
-            string processGUID, 
+        /// <param name="usingState">是否启用1-using;0-unusing</param>
+        internal void UpdateUsingState(string processGUID, 
             string version,
-            IDbTransaction trans)
+            byte usingState)
         {
-            //string strSql = @"UPDATE WfProcess 
-            //                  SET IsUsing=0 
-            //                  WHERE  ProcessGUID=@processGUID";
-            //Repository.Execute(conn, strSql, new { processGUID = processGUID }, trans);
-            var entity = GetByVersion(conn, processGUID, version, true, trans);
-            entity.IsUsing = 0;
-            Repository.Update<ProcessEntity>(conn, entity, trans);
+            var session = SessionFactory.CreateSession();
+
+            try
+            {
+                //string strSql = @"UPDATE WfProcess 
+                //                  SET IsUsing=0 
+                //                  WHERE  ProcessGUID=@processGUID";
+                //Repository.Execute(conn, strSql, new { processGUID = processGUID }, trans);
+                session.BeginTrans();
+                var entity = GetByVersion(session.Connection, processGUID, version, true, session.Transaction);
+                entity.IsUsing = usingState;
+                Repository.Update<ProcessEntity>(session.Connection, entity, session.Transaction);
+                session.Commit();
+            }
+            catch (System.Exception)
+            {
+                session.Rollback();
+                throw;
+            }
+            finally
+            {
+                session.Dispose();
+            }
         }
 
         /// <summary>
@@ -533,7 +541,7 @@ namespace Slickflow.Engine.Business.Manager
                 //升级主流程版本
                 newProcessID = Repository.Insert<ProcessEntity>(session.Connection, entity, session.Transaction);
 
-                if (entity.PackageType == (short)PackageTypeEnum.MainProcess)
+                if (entity.PackageType == (short)PackageTypeEnum.Package)
                 {
                     //升级泳道流程版本
                     UpgradePoolProcess(session.Connection, originProcessID, newProcessID, newVersion, session.Transaction);
@@ -569,10 +577,10 @@ namespace Slickflow.Engine.Business.Manager
             //升级泳道流程的使用状态信息
             var selSql = @"SELECT * FROM WfProcess
                         WHERE PackageType = 2
-                            AND PackageProcessID=@packageProcessID";
+                            AND PackageID=@packageID";
             var list = Repository.Query<ProcessEntity>(conn,
                 selSql,
-                new { packageProcessID = originProcessID },
+                new { packageID = originProcessID },
                 trans);
         }
 
@@ -620,22 +628,21 @@ namespace Slickflow.Engine.Business.Manager
         /// </summary>
         /// <param name="processGUID">流程定义GUID</param>
         /// <param name="version">版本</param>
-        /// <param name="localStorage">本地存储</param>
-        public void DeleteProcess(string processGUID, string version, IXPDLStorage localStorage)
+        public void DeleteProcess(string processGUID, string version)
         {
             IDbSession session = SessionFactory.CreateSession();
             try
             {
                 session.BeginTrans();
                 var entity = GetByVersion(processGUID, version);
-                if (entity.PackageType == (short)PackageTypeEnum.MainProcess)
+                if (entity.PackageType == (short)PackageTypeEnum.Package)
                 {
                     //删除泳道流程
                     string strPoolSql = @"DELETE FROM WfProcess  
-                                WHERE  PackageProcessID=@packageProcessID";
+                                WHERE  PackageID=@packageID";
 
                     Repository.Execute(session.Connection, strPoolSql,
-                        new { packageProcessID = entity.ID },
+                        new { packageID = entity.ID },
                         session.Transaction);
 
                 }
@@ -648,14 +655,6 @@ namespace Slickflow.Engine.Business.Manager
                 Repository.Execute(session.Connection, strSql, 
                     new { processGUID = processGUID, version = version },  
                     session.Transaction);
-
-                if (localStorage != null)
-                {
-                    //delete the xml file
-                    var serverPath = ConfigHelper.GetAppSettingString("WorkflowFileServer");
-                    var physicalFileName = string.Format("{0}\\{1}", serverPath, entity.XmlFilePath);
-                    File.Delete(physicalFileName);
-                }
 
                 session.Commit();
             }
@@ -672,15 +671,12 @@ namespace Slickflow.Engine.Business.Manager
         #endregion
 
         #region 流程xml文件操作
-
-
         /// <summary>
         /// 流程定义的创建方法
         /// </summary>
         /// <param name="entity">实体</param>
-        /// <param name="extStorage">存储</param>
         /// <returns></returns>
-        internal int CreateProcess(ProcessEntity entity, IXPDLStorage extStorage = null)
+        internal int CreateProcess(ProcessEntity entity)
         {
             int processID = 0;
             var session = SessionFactory.CreateSession();
@@ -699,16 +695,7 @@ namespace Slickflow.Engine.Business.Manager
                 }
                 entity.IsUsing = 1;
                 entity.CreatedDateTime = DateTime.Now;
-                entity.XmlFilePath = string.Format("{0}\\{1}", entity.AppType, entity.XmlFileName);
-                XmlDocument xmlDoc = GenerateXmlContent(entity);
-                entity.XmlContent = xmlDoc.OuterXml;    //process xml file
-
                 processID = Insert(session.Connection, entity, session.Transaction);
-
-                if (extStorage != null)
-                {
-                    extStorage.Save(entity.XmlFilePath, xmlDoc);
-                }
                 session.Commit();
 
                 return processID;
@@ -724,45 +711,44 @@ namespace Slickflow.Engine.Business.Manager
             }
         }
 
+      
+
         /// <summary>
-        /// 生成基本XML文档
+        /// 保存XML文件
         /// </summary>
-        /// <param name="entity">流程定义实体</param>
-        /// <returns>XML文档</returns>
-        private XmlDocument GenerateXmlContent(ProcessEntity entity)
+        /// <param name="entity">实体</param>
+        internal void SaveProcessFile(ProcessFileEntity entity)
         {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml("<Package/>");
-            XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", null);
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(entity.XmlContent);
+            var root = xmlDoc.DocumentElement;
 
-            //Add the new node to the document.
-            XmlElement root = xmlDoc.DocumentElement;
-            xmlDoc.InsertBefore(xmldecl, root);
-
-            XmlElement workflowNode = xmlDoc.CreateElement("WorkflowProcesses");
-            XmlElement processNode = xmlDoc.CreateElement("Process");
-            processNode.SetAttribute("id", entity.ProcessGUID);
-            processNode.SetAttribute("name", entity.ProcessName);
-            processNode.SetAttribute("code", entity.ProcessCode);
-            processNode.SetAttribute("version", entity.Version);
-            
-            XmlElement descriptionNode = xmlDoc.CreateElement("Description");
-            descriptionNode.InnerText = entity.Description;
-            processNode.AppendChild(descriptionNode);
-
-            workflowNode.AppendChild(processNode);
-            root.AppendChild(workflowNode);
-
-            return xmlDoc;
+            var xmlNodeCollaboration = root.SelectSingleNode(XPDLDefinition.BPMN2_StrXmlPath_Collaboration,
+                XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
+            if (xmlNodeCollaboration == null)
+            {
+                //saving single process
+                SaveProcessFileSingle(entity);
+            }
+            else
+            {
+                //saving process by pool/swimlane
+                SaveProcessFileWithPool(entity, xmlDoc, xmlNodeCollaboration);
+            }
         }
 
         /// <summary>
         /// 保存XML文件
         /// </summary>
         /// <param name="entity">实体</param>
-        /// <param name="extStorage">存储</param>
-        internal void SaveProcessFile(ProcessFileEntity entity, IXPDLStorage extStorage = null)
+        internal void SaveProcessFileSingle(ProcessFileEntity entity)
         {
+            //检查流程名称是否为空
+            if (string.IsNullOrEmpty(entity.ProcessName))
+            {
+                throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.saveprocessfile.noprocessname.error"));
+            }
+
             //默认数据库存储
             var session = SessionFactory.CreateSession();
             try
@@ -772,13 +758,14 @@ namespace Slickflow.Engine.Business.Manager
                 var processEntity = GetByVersion(session.Connection, entity.ProcessGUID, entity.Version, false, session.Transaction);
                 if (processEntity != null)
                 {
+                    // 删除泳道流程
+                    DeletePoolProcess(session.Connection, processEntity.ID, session.Transaction);
+
+                    //更新主流程信息
                     processEntity.ProcessName = entity.ProcessName;
                     processEntity.ProcessCode = entity.ProcessCode;
                     processEntity.XmlContent = entity.XmlContent;
-
-                    //设置流程启动或者结束类型
-                    var processModel = ProcessModelFactory.Create(session.Connection, entity.ProcessGUID, entity.Version, null, session.Transaction);
-                    SetProcessStartEndType(processModel, processEntity, entity.XmlContent);
+                    processEntity.PackageType = null;
 
                     //数据库存储
                     processEntity.LastUpdatedDateTime = DateTime.Now;
@@ -797,18 +784,6 @@ namespace Slickflow.Engine.Business.Manager
 
                     //数据库存储
                     Repository.Insert<ProcessEntity>(session.Connection, processEntity, session.Transaction);
-                    //设置流程启动或者结束类型
-                    var existProcessModel = ProcessModelFactory.Create(session.Connection, entity.ProcessGUID, entity.Version, null, session.Transaction);
-                    SetProcessStartEndType(existProcessModel, processEntity, entity.XmlContent);
-                }
-
-                //本地存储
-                if (extStorage != null)
-                {
-                    var xmlDoc = new XmlDocument();
-                    xmlDoc.LoadXml(entity.XmlContent);
-
-                    extStorage.Save(processEntity.XmlFilePath, xmlDoc);
                 }
                 session.Commit();
             }
@@ -824,212 +799,161 @@ namespace Slickflow.Engine.Business.Manager
             }
         }
 
-
         /// <summary>
-        /// 设置流程的启动类型
+        /// 保存XML文件
         /// </summary>
-        /// <param name="processModel">流程模型</param>
-        /// <param name="entity">流程实体</param>
-        /// <param name="xmlConent">XML内容</param>
-        private void SetProcessStartEndType(IProcessModel processModel, ProcessEntity entity, string xmlConent)
+        /// <param name="entity">实体</param>
+        /// <param name="xmlDoc">流程XML文档</param>
+        /// <param name="xmlNodeCollaboration">xml节点</param>
+        internal void SaveProcessFileWithPool(ProcessFileEntity entity,
+            XmlDocument xmlDoc,
+            XmlNode xmlNodeCollaboration)
         {
-            //StartNode
-            var startNode = processModel.GetStartActivity();
-            if (startNode != null)
+            var packageClient = CollaborationModelHelper.ConvertCollaborationFromXml(xmlDoc, xmlNodeCollaboration);
+            //检查流程名称是否为空
+            if (string.IsNullOrEmpty(packageClient.Name))
             {
-                if (startNode.TriggerDetail != null)
-                {
-                    if (startNode.TriggerDetail.TriggerType == TriggerTypeEnum.Timer)
-                    {
-                        entity.StartType = (byte)ProcessStartTypeEnum.Timer;
-                        entity.StartExpression = startNode.TriggerDetail.Expression;
-                    }
-                    else if (startNode.TriggerDetail.TriggerType == TriggerTypeEnum.Message)
-                    {
-                        entity.StartType = (byte)ProcessStartTypeEnum.Message;
-                        entity.StartExpression = startNode.TriggerDetail.Expression;
-                    }
-                }
+                throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.saveprocessfile.noprocessname.error"));
             }
 
-            //EndNode
-            var endNode = processModel.GetEndActivity();
-            if (endNode != null)
-            {
-                if (endNode.TriggerDetail != null)
-                {
-                    if (endNode.TriggerDetail.TriggerType == TriggerTypeEnum.Timer)
-                    {
-                        entity.EndType = (byte)ProcessEndTypeEnum.Timer;
-                        entity.EndExpression = endNode.TriggerDetail.Expression;
-                    }
-                    else if (endNode.TriggerDetail.TriggerType == TriggerTypeEnum.Message)
-                    {
-                        entity.EndType = (byte)ProcessEndTypeEnum.Message;
-                        entity.EndExpression = endNode.TriggerDetail.Expression;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 或者主流程下的泳道流程列表
-        /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="packageProcessID">主图形GUID</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程实体列表</returns>
-        private List<ProcessEntity> GetPoolProcessList(IDbConnection conn, 
-            int packageProcessID, 
-            IDbTransaction trans)
-        {
-            string sql = @"SELECT 
-                            ID, ProcessGUID, Version, ProcessName, ProcessCode
-                        FROM WfProcess
-                        WHERE PackageProcessID=@packageProcessID";
-            var list = Repository.Query<ProcessEntity>(conn,
-                sql,
-                new
-                {
-                    packageProcessID = packageProcessID
-                },
-                trans).ToList();
-            return list;
-        }
-
-        /// <summary>
-        /// 删除泳道流程记录
-        /// </summary>
-        /// <param name="conn">数据库链接</param>
-        /// <param name="packageProcessID">主流程ID</param>
-        /// <param name="poolProcessIDs">泳道流程ID列表</param>
-        /// <param name="trans">交易</param>
-        private void DeletePoolProcess(IDbConnection conn, 
-            int packageProcessID, 
-            List<int> poolProcessIDs, 
-            IDbTransaction trans)
-        {
-            string sql = @"DELETE FROM WfProcess
-                            WHERE PackageProcessID=@packageProcessID 
-                                AND ID in @ids";
-            Repository.Execute(conn, sql,
-                new
-                {
-                    packageProcessID = packageProcessID,
-                    ids = poolProcessIDs
-                }, trans);
-        }
-
-        /// <summary>
-        /// 保存泳道流程
-        /// </summary>
-        /// <param name="file">泳道流程实体</param>
-        internal void SaveProcessFilePool(ProcessFilePool file)
-        {
-            var packageProcessClient = file.ProcessEntityList.Single(a=>a.PackageType.Value == (short)PackageTypeEnum.MainProcess);
-            var poolProcessListClient = file.ProcessEntityList.Where(a => a.PackageType.Value == (short)PackageTypeEnum.PoolProcess).ToList();
-            
+            var poolProcessListClient = packageClient.ParticipantList;
             var session = SessionFactory.CreateSession();
             try
             {
                 session.BeginTrans();
-                var packageProcessDB = GetByVersion(session.Connection, packageProcessClient.ProcessGUID, packageProcessClient.Version, 
-                    false, session.Transaction);
-                if (packageProcessDB == null)
+                var packageDB = GetByVersion(session.Connection, packageClient.CollaborationGUID, entity.Version, false, session.Transaction);
+                if (packageDB == null)
                 {
-                    //插入主流程，然后插入泳道流
-                    var packageGUID = Guid.NewGuid().ToString();
-                    packageProcessClient.XmlContent = file.XmlContent;
-                    packageProcessClient.CreatedDateTime = System.DateTime.Now;
-                    var processModelClient = ProcessModelFactory.Create(session.Connection, packageProcessClient.ProcessGUID, packageProcessClient.Version, null, session.Transaction);
-                    SetProcessStartEndType(processModelClient, packageProcessClient, file.XmlContent);
+                    var processCollaboration = new ProcessEntity();
+                    processCollaboration.ProcessName = packageClient.Name;
+                    processCollaboration.ProcessGUID = packageClient.CollaborationGUID;
+                    processCollaboration.ProcessCode = String.IsNullOrEmpty(packageClient.Code) ? string.Format("{0}_001", packageClient.Name)
+                        : packageClient.Code;
+                    processCollaboration.PackageType = (byte)PackageTypeEnum.Package;
+                    processCollaboration.Version = "1";         //default version
+                    processCollaboration.IsUsing = 1;
+                    processCollaboration.XmlContent = entity.XmlContent;
+                    processCollaboration.CreatedDateTime = DateTime.Now;
 
-                    var newPackageProcessID = Insert(session.Connection, packageProcessClient, session.Transaction);
+                    //插入Package流程
+                    var newPackageID = Insert(session.Connection, processCollaboration, session.Transaction);
+
+                    //插入泳道流程
                     foreach (var pool in poolProcessListClient)
                     {
-                        pool.PackageProcessID = newPackageProcessID;
-                        pool.XmlContent = file.XmlContent;
-                        var processModelPool = ProcessModelFactory.Create(session.Connection, pool.ProcessGUID, pool.Version, null, session.Transaction);
-                        SetProcessStartEndType(processModelPool, pool, file.XmlContent);
-                        Insert(session.Connection, pool, session.Transaction);
+                        var child = GetByVersion(session.Connection, pool.Process.ProcessGUID, entity.Version, false, session.Transaction);
+                        if (child == null)
+                        {
+                            var processParticipant = new ProcessEntity();
+                            processParticipant.PackageType = (byte)PackageTypeEnum.Pool;
+                            processParticipant.PackageID = newPackageID;
+                            processParticipant.ProcessName = pool.Name;
+                            processParticipant.ProcessCode = String.IsNullOrEmpty(pool.Code) ? string.Format("{0}_001", pool.Name)
+                                : pool.Code;
+                            processParticipant.ProcessGUID = pool.Process.ProcessGUID;
+                            processParticipant.ParticipantGUID = pool.ParticipantGUID;
+                            processParticipant.Version = "1";
+                            processParticipant.IsUsing = 1;
+                            processParticipant.XmlContent = entity.XmlContent;
+                            processParticipant.CreatedDateTime = DateTime.Now;
+                            Insert(session.Connection, processParticipant, session.Transaction);
+                        }
+                        else
+                        {
+                            child.PackageID = newPackageID;
+                            child.PackageType = (byte)PackageTypeEnum.Pool;
+                            child.ProcessGUID = pool.Process.ProcessGUID;
+                            child.ParticipantGUID = pool.ParticipantGUID;
+                            var childName = String.IsNullOrEmpty(pool.Name) ? pool.Process.Name : pool.Name;
+                            if (string.IsNullOrEmpty(childName))
+                            {
+                                childName = pool.Process.ID;
+                            }
+                            child.ProcessName = childName;
+                            child.ProcessCode = String.IsNullOrEmpty(pool.Code) ? string.Format("{0}_001", childName)
+                                : pool.Code;
+                            child.XmlContent = entity.XmlContent;
+                            child.LastUpdatedDateTime = DateTime.Now;
+                            Update(session.Connection, child, session.Transaction);
+                        }
                     }
                 }
                 else
                 {
-                    var poolProcessListDataBase = GetPoolProcessList(session.Connection, packageProcessDB.ID, session.Transaction);
+                    var poolProcessListDatabase = GetPoolProcessList(session.Connection, packageDB.ID, session.Transaction);
                     List<int> poolProcessIDs = new List<int>();
-                    foreach (var pool in poolProcessListDataBase)
+                    foreach (var pool in poolProcessListDatabase)
                     {
-                        //多泳道流程变为单一流程
                         if (poolProcessListClient.Count() == 0)
                         {
-                            //删除数据库中所有泳道流程
                             poolProcessIDs.Add(pool.ID);
                         }
                         else
                         {
-                            var item = poolProcessListClient.Find(a => a.ProcessGUID == pool.ProcessGUID && a.Version == pool.Version);
+                            var item = poolProcessListClient.Find(a=>a.ParticipantGUID == pool.ParticipantGUID);
                             if (item == null)
                             {
-                                //删除ID列表
                                 poolProcessIDs.Add(pool.ID);
                             }
                         }
                     }
 
-                    //删除图形中不含有的泳道流程
+                    //删除流程图中不含有的泳道流程
                     if (poolProcessIDs.Count() > 0)
                     {
-                        DeletePoolProcess(session.Connection, packageProcessDB.ID, poolProcessIDs, session.Transaction);
+                        DeletePoolProcess(session.Connection, packageDB.ID, poolProcessIDs, session.Transaction);
                     }
 
-                    //如果是泳道流程变为单一流程，更新PackageType和PackageProcessID
+                    //如果是泳道流程变为单一流程，更新PackageType和PackageID
                     if (poolProcessListClient.Count() == 0)
                     {
-                        packageProcessDB.PackageType = null;
-                        packageProcessDB.PackageProcessID = null;
+                        packageDB.PackageType = null;
+                        packageDB.PackageID = null;
                     }
 
                     //更新主流程，更新或插入泳道流
-                    packageProcessDB.PackageType = (byte)PackageTypeEnum.MainProcess;
-                    packageProcessDB.XmlContent = file.XmlContent;
-                    packageProcessDB.LastUpdatedDateTime = System.DateTime.Now;
-                    var processModelPackageDB = ProcessModelFactory.Create(session.Connection, packageProcessDB.ProcessGUID, packageProcessDB.Version, null, session.Transaction);
-                    SetProcessStartEndType(processModelPackageDB, packageProcessDB, file.XmlContent);
-                    Update(session.Connection, packageProcessDB, session.Transaction);
+                    packageDB.PackageType = (byte)PackageTypeEnum.Package;
+                    packageDB.ProcessName = entity.ProcessName;
+                    packageDB.XmlContent = entity.XmlContent;
+                    packageDB.LastUpdatedDateTime = DateTime.Now;
+                    Update(session.Connection, packageDB, session.Transaction);
 
                     foreach (var pool in poolProcessListClient)
                     {
-                        var child = GetByVersion(session.Connection, pool.ProcessGUID, pool.Version, false, session.Transaction);
+                        var child = GetByVersion(session.Connection, pool.Process.ProcessGUID, entity.Version, false, session.Transaction);
                         if (child == null)
                         {
-                            //新增泳道流程
-                            pool.PackageType = (byte)PackageTypeEnum.PoolProcess;
-                            pool.PackageProcessID = packageProcessDB.ID;
-                            pool.XmlContent = file.XmlContent;
-                            pool.CreatedDateTime = System.DateTime.Now;
-                            var processModelPoolA = ProcessModelFactory.Create(session.Connection, pool.ProcessGUID, pool.Version, null, session.Transaction);
-                            SetProcessStartEndType(processModelPoolA, pool, file.XmlContent);
-                            Insert(session.Connection, pool, session.Transaction);
+                            //插入泳道流程
+                            var processChild = new ProcessEntity();
+                            processChild.ProcessGUID = pool.Process.ProcessGUID;
+                            processChild.ParticipantGUID = pool.ParticipantGUID;
+                            processChild.PackageType = (byte)PackageTypeEnum.Pool;
+                            processChild.ProcessName = pool.Name;
+                            processChild.ProcessCode = String.IsNullOrEmpty(pool.Code) ? string.Format("{0}_001", pool.Name)
+                            : pool.Code;
+                            processChild.PackageID = packageDB.ID;
+                            processChild.Version = packageDB.Version;
+                            processChild.XmlContent = entity.XmlContent;
+                            processChild.CreatedDateTime = DateTime.Now;
+                            Insert(session.Connection, processChild, session.Transaction);
                         }
                         else
                         {
-                            //更新泳道流程
-                            child.ProcessName = pool.ProcessName;
-                            child.ProcessCode = pool.ProcessCode;
-                            child.Description = pool.Description;
-                            child.PackageType = (byte)PackageTypeEnum.PoolProcess;
-                            child.XmlContent = file.XmlContent;
-                            child.LastUpdatedDateTime = System.DateTime.Now;
-                            var processModelPoolChild = ProcessModelFactory.Create(session.Connection, child.ProcessGUID, child.Version, null, session.Transaction);
-                            SetProcessStartEndType(processModelPoolChild, child, file.XmlContent);
+                            child.ProcessGUID = pool.Process.ProcessGUID;
+                            child.ParticipantGUID = pool.ParticipantGUID;
+                            child.PackageType = (byte)PackageTypeEnum.Pool;
+                            child.ProcessName = pool.Name;
+                            child.ProcessCode = String.IsNullOrEmpty(pool.Code) ? string.Format("{0}_001", pool.Name)
+                                : pool.Code;
+                            child.XmlContent = entity.XmlContent;
+                            child.LastUpdatedDateTime = DateTime.Now;
                             Update(session.Connection, child, session.Transaction);
                         }
                     }
                 }
                 session.Commit();
             }
-            catch (System.Exception ex)
+            catch(System.Exception ex)
             {
                 session.Rollback();
                 throw;
@@ -1038,6 +962,200 @@ namespace Slickflow.Engine.Business.Manager
             {
                 session.Dispose();
             }
+        }
+
+       /// <summary>
+       /// 更新流程定时器信息
+       /// </summary>
+       /// <param name="processGUID">流程GUID</param>
+       /// <param name="version">流程版本</param>
+        internal void SetProcessTimerType(string processGUID, string version)
+        {
+            var session = SessionFactory.CreateSession();
+            try
+            {
+                session.BeginTrans();
+                var entity = GetByVersion(session.Connection, processGUID, version, true, session.Transaction);
+                var processModel = ProcessModelFactory.CreateByProcess(entity);
+
+                //StartNode
+                var startNode = processModel.GetStartActivity();
+                if (startNode != null)
+                {
+                    if (startNode.TriggerDetail != null)
+                    {
+                        if (startNode.TriggerDetail.TriggerType == TriggerTypeEnum.Timer)
+                        {
+                            entity.StartType = (byte)ProcessStartTypeEnum.Timer;
+                            entity.StartExpression = startNode.TriggerDetail.Expression;
+                        }
+                        else if (startNode.TriggerDetail.TriggerType == TriggerTypeEnum.Message)
+                        {
+                            entity.StartType = (byte)ProcessStartTypeEnum.Message;
+                            entity.StartExpression = startNode.TriggerDetail.Expression;
+                        }
+                    }
+                }
+
+                //EndNode
+                var endNode = processModel.GetEndActivity();
+                if (endNode != null)
+                {
+                    if (endNode.TriggerDetail != null)
+                    {
+                        if (endNode.TriggerDetail.TriggerType == TriggerTypeEnum.Timer)
+                        {
+                            entity.EndType = (byte)ProcessEndTypeEnum.Timer;
+                            entity.EndExpression = endNode.TriggerDetail.Expression;
+                        }
+                        else if (endNode.TriggerDetail.TriggerType == TriggerTypeEnum.Message)
+                        {
+                            entity.EndType = (byte)ProcessEndTypeEnum.Message;
+                            entity.EndExpression = endNode.TriggerDetail.Expression;
+                        }
+                    }
+                }
+
+                //更新流程定义实体
+                Update(session.Connection, entity, session.Transaction);
+                session.Commit();
+            }
+            catch (System.Exception ex)
+            {
+                session.Rollback();
+                throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.setprocesstimertype.error", ex.Message));
+            }
+            finally
+            {
+                session.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// 或者主流程下的泳道流程列表
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="packageID">主图形GUID</param>
+        /// <param name="trans">事务</param>
+        /// <returns>流程实体列表</returns>
+        private List<ProcessEntity> GetPoolProcessList(IDbConnection conn, 
+            int packageID, 
+            IDbTransaction trans)
+        {
+            string sql = @"SELECT 
+                            ID, ProcessGUID, Version, ProcessName, ProcessCode,  ParticipantGUID
+                        FROM WfProcess
+                        WHERE PackageID=@packageID";
+            var list = Repository.Query<ProcessEntity>(conn,
+                sql,
+                new
+                {
+                    packageID = packageID
+                },
+                trans).ToList();
+            return list;
+        }
+
+        /// <summary>
+        /// 导入XML文档生成流程记录
+        /// </summary>
+        /// <param name="xmlContent">XML文档</param>
+        /// <returns>新流程ID</returns>
+        internal void ImportProcess(string xmlContent)
+        {
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xmlContent);
+            var root = xmlDoc.DocumentElement;
+
+            var xmlNodeCollaboration = root.SelectSingleNode(XPDLDefinition.BPMN2_StrXmlPath_Collaboration,
+                XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
+            if (xmlNodeCollaboration != null)
+            {
+                var package = new ProcessFileEntity();
+                package.XmlContent = xmlContent;
+                package.Version = "1";
+                
+                package.ProcessGUID = XMLHelper.GetXmlAttribute(xmlNodeCollaboration, "sf:guid");
+                var packageDB = GetByVersion(package.ProcessGUID, package.Version);
+                if (packageDB != null)
+                {
+                    throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.import.sameprocessexist.error"));
+                }
+                else
+                {
+                    //saving process by pool/swimlane
+                    SaveProcessFileWithPool(package, xmlDoc, xmlNodeCollaboration);
+                }
+            }
+            else
+            {
+                //saving single process
+                var xmlNodeProcess = root.SelectSingleNode(XPDLDefinition.BPMN2_StrXmlPath_Process,
+                    XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
+                if (xmlNodeProcess != null)
+                {
+                    var process = ProcessModelHelper.ConvertFromXmlNodeProcess(xmlNodeProcess);
+                    process.XmlContent = xmlContent;
+                    process.Version = "1";
+                    var processDB = GetByVersion(process.ProcessGUID, process.Version, false);
+                    if (processDB != null)
+                    {
+                        throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.import.sameprocessexist.error"));
+                    }
+                    else
+                    {
+                        //saving single process file
+                        SaveProcessFileSingle(process);
+                    }
+                }
+                else
+                {
+                    throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.import.emptyprocessnode.error"));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 删除泳道流程记录
+        /// </summary>
+        /// <param name="conn">数据库链接</param>
+        /// <param name="packageID">主流程ID</param>
+        /// <param name="poolProcessIDs">泳道流程ID列表</param>
+        /// <param name="trans">交易</param>
+        private void DeletePoolProcess(IDbConnection conn, 
+            int packageID, 
+            List<int> poolProcessIDs, 
+            IDbTransaction trans)
+        {
+            string sql = @"DELETE FROM WfProcess
+                            WHERE PackageID=@packageID 
+                                AND ID in @ids";
+            Repository.Execute(conn, sql,
+                new
+                {
+                    packageID = packageID,
+                    ids = poolProcessIDs
+                }, trans);
+        }
+
+        /// <summary>
+        /// 删除泳道流程记录
+        /// </summary>
+        /// <param name="conn">数据库链接</param>
+        /// <param name="packageID">主流程ID</param>
+        /// <param name="trans">交易</param>
+        private void DeletePoolProcess(IDbConnection conn,
+            int packageID,
+            IDbTransaction trans)
+        {
+            string sql = @"DELETE FROM WfProcess
+                            WHERE PackageID=@packageID
+                                AND PackageType=2";
+            Repository.Execute(conn, sql,
+                new
+                {
+                    packageID = packageID
+                }, trans);
         }
 
         /// <summary>

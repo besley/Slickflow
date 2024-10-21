@@ -32,6 +32,28 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// 获取所有用户数据
+        /// </summary>
+        /// <returns>用户列表</returns>
+        public IList<User> GetUserAll()
+        {
+            var um = new UserManager();
+            var itemList = um.GetAll();
+            IList<User> userList = new List<User>();    
+            foreach (var item in itemList)
+            {
+                var user = new User
+                {
+                    UserID = item.ID.ToString(),
+                    UserName = item.UserName,
+                    EMail = item.EMail
+                };
+                userList.Add(user);     
+            }
+            return userList;
+        }
+
+        /// <summary>
         /// 根据多个角色ID获取用户数据列表
         /// </summary>
         /// <param name="roleIDs">多个角色ID</param>

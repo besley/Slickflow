@@ -57,6 +57,7 @@ function RecieverType(props) {
 
     function getOptions() {
         var options = [
+            { "label": kresource.getItem("optiondefault"), "value": "0", "name": "Optiondefault" },
             { "label": kresource.getItem("superior"), "value": "1", "name": "Superior" },
             { "label": kresource.getItem("compeer"), "value": "2", "name": "Compeer" },
             { "label": kresource.getItem("subordinate"), "value": "3", "name": "Subordinate" }

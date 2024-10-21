@@ -23,13 +23,82 @@ namespace Slickflow.Engine.Xpdl.Convertor
 
         public override Activity ConvertElementDetail(Activity entity)
         {
-            var xmlSubProcessNode = base.XMLNode;
-            //子流程节点
-            var subProcessNode = new SubProcessNode(entity);
-            subProcessNode.SubProcessGUID = XMLHelper.GetXmlAttribute(xmlSubProcessNode, "sf:guid");
-            entity.Node = subProcessNode;
-
+            var subInfoList = ConvertSubInfoes();
+            if (subInfoList.Count > 0)
+            {
+                //外部子流程节点属性信息
+                var subProcessNode = new SubProcessNode(entity);
+                var subInfoNode = subInfoList[0];
+                subProcessNode.SubProcessID = int.Parse(subInfoNode.SubID);
+                subProcessNode.SubProcessGUID = subInfoNode.SubProcessGUID;
+                entity.Node = subProcessNode;
+            }
+            else
+            {
+                //内部子流程包括子节点信息
+                var subProcess = ProcessModelConvertor.ConvertSubProcess(this.XMLNode);
+                subProcess.XmlContent = this.XMLNode.OuterXml;
+                if (subProcess != null)
+                {
+                    var subProcessNode = new SubProcessNode(entity);
+                    subProcessNode.SubProcessGUID = subProcess.ProcessGUID;
+                    subProcessNode.SubProcessNested = subProcess;
+                    
+                    entity.Node = subProcessNode;
+                }
+                else
+                {
+                    throw new WfXpdlException("SubProcessCovnert:none sub process informtion");
+                }
+            }
             return entity;
+        }
+
+        /// <summary>
+        /// 转换子流程对象列表
+        /// </summary>
+        /// <returns></returns>
+        public List<SubInfo> ConvertSubInfoes()
+        {
+            List<SubInfo> subInfoList = new List<SubInfo>();
+            var subInfoesNode = GetSubInfoesNode();
+            if (subInfoesNode != null)
+            {
+                //指定外部子流程id信息
+                XmlNodeList xmlSubInfoList = subInfoesNode.ChildNodes;
+                foreach (XmlNode element in xmlSubInfoList)
+                {
+                    subInfoList.Add(ConvertXmlSubInfoNodeToSubInfoEntity(element));
+                }
+            }
+            return subInfoList;
+        }
+
+        /// <summary>
+        /// 获取SubInfo的XML节点
+        /// </summary>
+        /// <returns></returns>
+        protected XmlNode GetSubInfoesNode()
+        {
+            var subInfoesNode = XMLNode.SelectSingleNode(XPDLDefinition.Sf_StrXmlPath_SubInfoes, XMLNamespaceManager);
+            return subInfoesNode;
+        }
+
+        /// <summary>
+        /// 转换SubInfo节点
+        /// </summary>
+        /// <param name="node">xml节点</param>
+        /// <returns>实体对象</returns>
+        private SubInfo ConvertXmlSubInfoNodeToSubInfoEntity(XmlNode node)
+        {
+            SubInfo subInfo = new SubInfo();
+            subInfo.SubID = XMLHelper.GetXmlAttribute(node, "subId");
+            subInfo.SubProcessGUID = XMLHelper.GetXmlAttribute(node, "subProcessGUID");
+            subInfo.SubProcessName = XMLHelper.GetXmlAttribute(node, "subProcessName");
+            subInfo.SubType = XMLHelper.GetXmlAttribute(node, "subType");
+            subInfo.SubVar = XMLHelper.GetXmlAttribute(node, "subVar");
+
+            return subInfo;
         }
     }
 }

@@ -22,6 +22,7 @@
   "activityinstancemanager.getrunningnode.unique.error": "当前流程有多个运行节点,但没有TaskID传入,状态异常",
   "activityinstancemanager.CheckPassRateMatchedInfo.UnknownCompareTypeValue": "不明确的通过率设置类型,不是个数或百分比",
   "activityinstancemanager.CheckPassRateMatchedInfo.UnknownMergeTypeValue": "不明确的类型,不是串行或并行类型",
+  "processinstancemanager.insert.error": "流程实例不能直接插入,因为已经有相同实例处于运行状态!",
   "processinstancemanager.complete.error": "流程不在运行状态,不能被完成!",
   "processinstancemanager.suspend.error": "流程不在运行状态,不能被挂起!",
   "processinstancemanager.resume.error": "流程不在挂起状态,不能被重启!",
@@ -39,6 +40,10 @@
   "processmanager.getbyversion.error": "数据库没有对应的流程记录!",
   "processmanager.getbyversioninternal.error": "数据库有多条重复的流程记录存在!",
   "processmanager.insert.error": "相同版本的GUID标识的流程记录已经存在!",
+  "processmanager.saveprocessfile.noprocessname.error": "保存流程图形时发生错误!流程名称为空!",
+  "processmanager.import.emptyprocessnode.error": "导入流程图形出错!没有流程XML节点!",
+  "processmanager.import.sameprocessexist.error": "导入流程图形出错!相同版本的流程记录已经存在!",
+  "processmanager.setprocesstimertype.error": "设置流程定时器时发生错误!详细",
   "processmanager.upgrade.error": "新的版本号不能为空!",
   "processmanager.getsinglebyapptype.error": "根据AppType获取单条流程记录是失败，查询结果为空或者有多笔记录!",
   "processvariablemanager.savevariable.error": "插入流程变量时,应用实例AppInstanceID和流程实例ProcessInstanceID不能为空!",
@@ -104,7 +109,7 @@
   "wfruntimemanagerfactory.CreateRuntimeInstanceJump.back.error": "回跳到的节点不在完成状态,无法重新回跳!",
   "wfruntimemanagerfactory.CreateRuntimeInstanceReject.missing.error": "方法参数错误,无法运行流程!",
   "wfruntimemanagerfactory.CreateRuntimeInstanceReject.jump.error": "不能跳转到多个节点!节点数",
-  "wfruntimemanagerfactory.CreateRuntimeInstanceReject.back.error": "回跳到的节点不在完成状态,无法重新回跳!",
+  "wfruntimemanagerfactory.CreateRuntimeInstanceReject.back.error": "驳回的节点不在完成状态,无法驳回!",
   "wfruntimemanagerfactory.CreateRuntimeInstanceClose.missing.error": "方法参数错误,无法运行流程!",
   "wfruntimemanagerfactory.CreateRuntimeInstanceClose.jump.error": "不能跳转到多个节点!节点数",
   "wfruntimemanagerfactory.CreateRuntimeInstanceSendBack.null.error": "退回节点为空,请指定退回节点数据!",
@@ -169,6 +174,5 @@
   "graph.pmb.GetBuilder.error": "节点不存在!节点代码:",
   "graph.pmb.CreateProcess.error": "相同流程代码和版本的流程记录已经存在!",
   "graph.pmb.LoadProcess.error": "该代码和版本的流程不存在!",
-  "graph.pxb.Serialize.error": "流程图形对象不能为空,请确认是否有初始化!",
-  "graph.ptf.CreateProcessByTemplateType.exception": "模板创建新流程时,流程的GUID不能为空!"
+  "graph.pxb.Serialize.error": "流程图形对象不能为空,请确认是否有初始化!"
 }

@@ -1,0 +1,305 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Slickflow Template</title>
+    <meta http-equiv="Content-Type" content="text/html;width=device-width;charset=UTF-8" />
+    <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="vendor/bootstrap5-dialog/dist/css/bootstrap-dialog.css" />
+    <link rel="stylesheet" href="vendor/codemirror/lib/codemirror.css" />
+
+    <style type="text/css" media="screen">
+        .container {
+            margin-bottom: 20px;
+        }
+
+        .dc-image-content {
+            width: 240px;
+            height: 200px;
+            margin-right: 20px;
+            margin-bottom: 10px;
+            background-color: #f1f8fd;
+            border: .5px solid rgba(202,204,206,.5);
+            opacity: 1;
+            display: grid;
+            align-items: center;
+            justify-content: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .button {
+            font-size: 12px;
+            line-height: 1.8;
+            padding: 5px 10px;
+            transition: opacity .2s ease;
+            z-index: 999;
+            margin: 5px auto;
+            width: 136px;
+            background-color: cadetblue;
+            border-radius: 200px;
+        }
+
+        .middle {
+            transition: .5s ease;
+            opacity: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .dc-image-content:hover .img-fluid {
+            opacity: 0.3;
+        }
+
+        .dc-image-content:hover .middle {
+            opacity: 1;
+        }
+
+        .middle:hover {
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        .dc-community-templates .dc-sidebar {
+            padding: 24px 24px 0 24px;
+            width: 300px;
+            max-width: 300px;
+            border-right: 1px solid rgba(202,204,206,.5);
+            /*            position: fixed;*/
+            left: 0;
+            top: 0;
+            height: 100%;
+        }
+
+            .dc-community-templates .dc-sidebar h2 {
+                color: #27272a;
+                margin-bottom: 26px;
+            }
+
+            .dc-community-templates .dc-sidebar ul li {
+                margin-bottom: 0;
+                font-size: 14px;
+                line-height: 24px;
+                color: #4b5356;
+                padding: 5.2px 10px;
+                display: block;
+                cursor: pointer;
+                border: 1px solid transparent;
+                border-radius: 6px;
+            }
+
+                .dc-community-templates .dc-sidebar ul li:hover {
+                    font-weight: 500;
+                    font-size: 20px;
+                    line-height: 24px;
+                    color: #1381cd;
+                    background-color: #f1f8fd;
+                    border: 1px solid #fff;
+                }
+
+        .dc-diagram-name {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 24px;
+            height: 36px;
+            color: #27272a;
+            padding: 8px 0;
+            background: #fff;
+            position: relative;
+            transition: background-color .2s ease,color .3s ease;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-left: 25%;
+            margin-right: 25%;
+        }
+
+        .codeTextArea {
+            width: 800px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body style="padding: 20px;">
+    <!-- Modal -->
+    <div class="modal-body">
+        <div class="container  dc-community-templates">
+            <div class="columns is-mobile">
+                <div class="row">
+                    <div class="col-md-4 dc-sidebar">
+
+                        <h2 class="lang" as="templates"></h2>
+
+                        <ul class="dc-templates-menu">
+                            <li class="menuItemTemplate active lang" as="standardprocess" data-id="standard">
+                            </li>
+                            <li class="menuItemTemplate lang" as="businessprocess" data-id="business">
+                            </li>
+                            <li class="menuItemTemplate lang" as="codetextprocess" data-id="codetext">
+                            </li>
+                        </ul>
+
+                    </div>
+                    <div id="divStandardTemplate" class="col-md-8">
+                        <div class="row" style="margin-top:60px;margin-bottom:20px;">
+                            <div class="col-md-4">
+                                <div class="dc-image-content">
+                                    <img src="../../images/bpmn/bpmn-sequence.png" alt="Sequence" class="img-fluid">
+                                    <div class="middle">
+                                        <div class="button btnAddToWorkSpace lang" as="addtoworkspace" data-type="std" data-id="sequence"></div>
+                                    </div>
+                                </div>
+                                <div class="dc-diagram-name"><span class="lang" as="t-sequence"></span></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="dc-image-content">
+                                    <img src="../../images/bpmn/bpmn-gateway.png" alt="Gateway" class="img-fluid">
+                                    <div class="middle">
+                                        <div class="button btnAddToWorkSpace lang" as="addtoworkspace" data-type="std" data-id="gateway"></div>
+                                    </div>
+                                </div>
+                                <div class="dc-diagram-name"><span class="lang" as="t-gateway"></span></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="dc-image-content">
+                                    <img src="../../images/bpmn/bpmn-multipleinstance.png" alt="Multiple Instance" class="img-fluid">
+                                    <div class="middle">
+                                        <div class="button btnAddToWorkSpace lang" as="addtoworkspace" data-type="std" data-id="mi"></div>
+                                    </div>
+                                </div>
+                                <div class="dc-diagram-name"><span class="lang" as="t-mi"></span></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="dc-image-content">
+                                    <img src="../../images/bpmn/bpmn-subprocess.png" alt="SubProcess" class="img-fluid">
+                                    <div class="middle">
+                                        <div class="button btnAddToWorkSpace lang" as="addtoworkspace" data-type="std" data-id="subprocess"></div>
+                                    </div>
+                                </div>
+                                <div class="dc-diagram-name"><span class="lang" as="t-subprocess"></span></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="dc-image-content">
+                                    <img src="../../images/bpmn/bpmn-andsplitmi.png" alt="AndSplitMI" class="img-fluid">
+                                    <div class="middle">
+                                        <div class="button btnAddToWorkSpace lang" as="addtoworkspace" data-type="std" data-id="andsplitmi"></div>
+                                    </div>
+                                </div>
+                                <div class="dc-diagram-name"><span class="lang" as="t-andsplitmi"></span></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="dc-image-content">
+                                    <img src="../../images/bpmn/bpmn-complex.png" alt="Complex" class="img-fluid">
+                                    <div class="middle">
+                                        <div class="button btnAddToWorkSpace lang" as="addtoworkspace" data-type="std" data-id="complex"></div>
+                                    </div>
+                                </div>
+                                <div class="dc-diagram-name"><span class="lang" as="t-complex"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divBusinessTemplate" class="col-md-8" style="display:none;">
+                        <div class="row" style="margin-top:60px;margin-bottom:20px;">
+                            <div class="col-md-4">
+                                <div class="dc-image-content">
+                                    <img src="../../images/bpmn/bpmn-askforleave.png" alt="AskforLeave" class="img-fluid">
+                                    <div class="middle">
+                                        <div class="button btnAddToWorkSpace lang" as="addtoworkspace" data-type="biz" data-id="askforleave"></div>
+                                    </div>
+                                </div>
+                                <div class="dc-diagram-name"><span class="lang" as="wf-askforleave"></span></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="dc-image-content">
+                                    <img src="../../images/bpmn/bpmn-eorder.png" alt="EOrder" class="img-fluid">
+                                    <div class="middle">
+                                        <div class="button btnAddToWorkSpace lang" as="addtoworkspace" data-type="biz" data-id="eorder"></div>
+                                    </div>
+                                </div>
+                                <div class="dc-diagram-name"><span class="lang" as="wf-eorder"></span></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="dc-image-content">
+                                    <img src="../../images/bpmn/bpmn-reimbursement.png" alt="Reimbursement" class="img-fluid">
+                                    <div class="middle">
+                                        <div class="button btnAddToWorkSpace lang" as="addtoworkspace" data-type="biz" data-id="reimbursement"></div>
+                                    </div>
+                                </div>
+                                <div class="dc-diagram-name"><span class="lang" as="wf-reimbursement"></span></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="dc-image-content">
+                                    <img src="../../images/bpmn/bpmn-warehousing.png" alt="Warehousing" class="img-fluid">
+                                    <div class="middle">
+                                        <div class="button btnAddToWorkSpace lang" as="addtoworkspace" data-type="biz" data-id="warehousing"></div>
+                                    </div>
+                                </div>
+                                <div class="dc-diagram-name"><span class="lang" as="wf-warehousing"></span></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="dc-image-content">
+                                    <img src="../../images/bpmn/bpmn-officein.png" alt="OfficeIn" class="img-fluid">
+                                    <div class="middle">
+                                        <div class="button btnAddToWorkSpace lang" as="addtoworkspace" data-type="biz" data-id="officein"></div>
+                                    </div>
+                                </div>
+                                <div class="dc-diagram-name"><span class="lang" as="wf-officein"></span></div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="dc-image-content">
+                                    <img src="../../images/bpmn/bpmn-contract.png" alt="Contract" class="img-fluid">
+                                    <div class="middle">
+                                        <div class="button btnAddToWorkSpace lang" as="addtoworkspace" data-type="biz" data-id="contract"></div>
+                                    </div>
+                                </div>
+                                <div class="dc-diagram-name"><span class="lang" as="wf-contract"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divCodeTextTemplate" class="col-md-8" style="display:none;">
+                        <div class="row"  style="float:right">
+                            <span class="a_tit lang" as="templatetype"></span>
+                            <select id="ddlTemplateType" class="form-control" style="width:180px;">
+                                <option value="Default" class="lang" as="optiondefault"></option>
+                                <option value="Sequence" class="lang" as="templatesequence"></option>
+                                <option value="Parallel" class="lang" as="templateparallel"></option>
+                                <option value="Conditional" class="lang" as="templateconditional"></option>
+                                <option value="ProcessModify" class="lang" as="templateprocessmodify"></option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <button class="btn btn-primary lang" as="run" onclick="ktemplate.executeGraph();"></button>
+                        </div>
+                        <div class="row" style="margin-top:20px;margin-bottom:60px;border:1px solid black">
+                            <textarea id="txtCode" spellcheck="false" class="codeTextArea"></textarea>
+                        </div>
+                        <img src="../../images/ajax-loader.gif" id="loading-indicator" style="position: fixed; left: 40%; top: 40%; display: none;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class=" row">
+            <button type="button" class="btn btn-primary lang" as="close" data-dismiss="modal" aria-hidden="true"></button>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            kresource.localize();
+            ktemplate.init();
+        });
+    </script>
+</body>
+
+</html>

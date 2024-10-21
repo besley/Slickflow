@@ -1,0 +1,40 @@
+{
+  "notifications": [
+    {
+      "name": "Notifications",
+      "superClass": [ "Element" ],
+      "properties": [
+        {
+          "name": "values",
+          "isMany": true,
+          "type": "Notification"
+        }
+      ]
+    },
+    {
+      "name": "Notification",
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "outerId",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "outerCode",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "outerType",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}

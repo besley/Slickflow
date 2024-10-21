@@ -8,7 +8,7 @@ namespace Slickflow.Module.Logging
     /// <summary>
     /// Job Log Entity
     /// </summary>
-    [Table("WhJobLog")]
+    [Table("WfJobLog")]
     public class JobLogEntity
     {
         public int ID { get; set; }
@@ -20,6 +20,8 @@ namespace Slickflow.Module.Logging
         public short Status { get; set; }
         public string Message { get; set; }
         public string StackTrace { get; set; }
+        public string InnerStackTrace { get; set; }
+        public string RequestData { get; set; }
         public DateTime CreatedDateTime { get; set; }
         public string CreatedByUserID { get; set; }
         public string CreatedByUserName { get; set; }

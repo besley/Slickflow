@@ -1,0 +1,64 @@
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.csproj.AssemblyReference.cache
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.GeneratedMSBuildEditorConfig.editorconfig
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.AssemblyInfoInputs.cache
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.AssemblyInfo.cs
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.csproj.CoreCompileInputs.cache
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.HrsService.deps.json
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.HrsService.dll
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.HrsService.pdb
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Dapper.dll
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Data.DataProvider.dll
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Data.dll
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Engine.dll
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.dll
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Essential.dll
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Localize.dll
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Logging.dll
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Resource.dll
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Dapper.pdb
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Data.pdb
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Engine.pdb
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Engine.xml
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Data.DataProvider.pdb
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.pdb
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Essential.pdb
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Localize.pdb
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Logging.pdb
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Resource.pdb
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.csproj.CopyComplete
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.dll
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\obj\Debug\net6.0\refint\Slickflow.HrsService.dll
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.pdb
+D:\Cloud365\GitHomeCore\SfBpmn\source\demo\Slickflow.HrsService\obj\Debug\net6.0\ref\Slickflow.HrsService.dll
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.HrsService.deps.json
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.HrsService.dll
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.HrsService.pdb
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Dapper.dll
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Data.DataProvider.dll
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Data.dll
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Engine.dll
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.dll
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Essential.dll
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Localize.dll
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Logging.dll
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Resource.dll
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Dapper.pdb
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Data.pdb
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Engine.pdb
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Engine.xml
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Data.DataProvider.pdb
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.pdb
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Essential.pdb
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Localize.pdb
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Logging.pdb
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\bin\Debug\net6.0\Slickflow.Module.Resource.pdb
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.csproj.AssemblyReference.cache
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.GeneratedMSBuildEditorConfig.editorconfig
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.AssemblyInfoInputs.cache
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.AssemblyInfo.cs
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.csproj.CoreCompileInputs.cache
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.csproj.CopyComplete
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.dll
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\obj\Debug\net6.0\refint\Slickflow.HrsService.dll
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\obj\Debug\net6.0\Slickflow.HrsService.pdb
+D:\Cloud365\20240201\Slickflow-Package-Ultimate-2024(ETG)\Source Code\SfBpmn2\source\demo\Slickflow.HrsService\obj\Debug\net6.0\ref\Slickflow.HrsService.dll

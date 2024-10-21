@@ -17,18 +17,28 @@ namespace Slickflow.Engine.Xpdl.Common
         None = 0,
 
         /// <summary>
+        /// 邮件
+        /// </summary>
+        EMail = 1,
+
+        /// <summary>
         /// 定时器
         /// </summary>
-        Timer = 1,
+        Timer = 2,
 
         /// <summary>
         /// 消息
         /// </summary>
-        Message = 2,
+        Message = 3,
+
+        /// <summary>
+        /// 信号
+        /// </summary>
+        Signal = 4,
 
         /// <summary>
         /// 条件
         /// </summary>
-        Conditional = 3
+        Conditional = 5
     }
 }

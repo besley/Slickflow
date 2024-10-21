@@ -19,7 +19,12 @@ namespace Slickflow.Engine.Xpdl.Node
         /// <summary>
         /// 节点定义属性
         /// </summary>
-        private Activity _activity;
+        internal Activity Activity
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// 节点实例
         /// </summary>
@@ -36,7 +41,7 @@ namespace Slickflow.Engine.Xpdl.Node
         /// <param name="currentActivity"></param>
         public NodeBase(Activity currentActivity)
         {
-            _activity = currentActivity;
+            Activity = currentActivity;
         }
         #endregion
     }

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Slickflow.Data;
-using Slickflow.Engine.Common;
-using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Xpdl.Entity;
 
@@ -16,9 +14,9 @@ namespace Slickflow.Engine.Xpdl.Node
     public class SubProcessNode : NodeBase
     {
         /// <summary>
-        /// 子流程类型
+        /// 子流程ID
         /// </summary>
-        public SubProcessTypeEnum SubProcessType { get; set; }
+        public int SubProcessID { get; set; }
         /// <summary>
         /// 子流程节点GUID
         /// </summary>
@@ -27,6 +25,11 @@ namespace Slickflow.Engine.Xpdl.Node
         /// 子流程ID的动态绑定变量名称
         /// </summary>
         public string SubVarName { get; set; }
+
+        /// <summary>
+        /// 内嵌子流程
+        /// </summary>
+        public Process SubProcessNested { get; set; }
 
         internal SubProcessNode(Activity activity) :
             base(activity)

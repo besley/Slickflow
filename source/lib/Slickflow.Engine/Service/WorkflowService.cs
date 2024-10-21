@@ -1,26 +1,4 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-* 
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -73,7 +51,7 @@ namespace Slickflow.Engine.Service
         /// <returns>活动</returns>
         public Activity GetFirstActivity(string processGUID, string version)
         {
-            var processModel = ProcessModelFactory.Create(processGUID, version);
+            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
             var firstActivity = processModel.GetFirstActivity();
             return firstActivity;
         }
@@ -86,7 +64,7 @@ namespace Slickflow.Engine.Service
         /// <returns>活动列表</returns>
         public IList<Activity> GetTaskActivityList(string processGUID, string version)
         {
-            var processModel = ProcessModelFactory.Create(processGUID, version);
+            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
             var activityList = processModel.GetTaskActivityList();
 
             return activityList;
@@ -101,7 +79,7 @@ namespace Slickflow.Engine.Service
         {
             var pm = new ProcessManager();
             var entity = pm.GetByID(processID);
-            var processModel = ProcessModelFactory.Create(entity.ProcessGUID, entity.Version);
+            var processModel = ProcessModelFactory.CreateByProcess(entity);
             var activityList = processModel.GetTaskActivityList();
 
             return activityList;
@@ -115,7 +93,7 @@ namespace Slickflow.Engine.Service
         /// <returns>活动列表</returns>
         public IList<Activity> GetAllTaskActivityList(string processGUID, string version)
         {
-            var processModel = ProcessModelFactory.Create(processGUID, version);
+            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
             var activityList = processModel.GetAllTaskActivityList();
 
             return activityList;
@@ -132,7 +110,7 @@ namespace Slickflow.Engine.Service
             string version, 
             string activityGUID)
         {
-            var processModel = ProcessModelFactory.Create(processGUID, version);
+            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
             var nextActivity = processModel.GetNextActivity(activityGUID);
             return nextActivity;
         }
@@ -150,7 +128,7 @@ namespace Slickflow.Engine.Service
             String activityGUID,
             IDictionary<string, string> condition)
         {
-            var processModel = ProcessModelFactory.Create(processGUID, version);
+            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
             using (var session = SessionFactory.CreateSession())
             {
                 var nextResult = processModel.GetNextActivityTree(activityGUID, null, condition, session);
@@ -252,7 +230,7 @@ namespace Slickflow.Engine.Service
                 {
                     taskView = tm.GetTaskOfMine(session.Connection, runner.AppInstanceID, runner.ProcessGUID, runner.UserID, session.Transaction);
                 }
-                var processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
+                var processModel = ProcessModelFactory.CreateByTask(session.Connection, taskView, session.Transaction);
                 var nextResult = processModel.GetNextActivityTree(taskView.ActivityGUID,
                     taskView.TaskID,
                     condition,
@@ -294,7 +272,7 @@ namespace Slickflow.Engine.Service
             using (var session = SessionFactory.CreateSession())
             {
                 var taskView = (new TaskManager()).GetTaskView(session.Connection, taskID, session.Transaction);
-                var processModel = ProcessModelFactory.Create(taskView.ProcessGUID, taskView.Version);
+                var processModel = ProcessModelFactory.CreateByTask(session.Connection, taskView, session.Transaction);
                 var nextResult = processModel.GetNextActivityTree(taskView.ActivityGUID,
                     taskView.TaskID,
                     condition,
@@ -396,7 +374,7 @@ namespace Slickflow.Engine.Service
         {
             using (var session = SessionFactory.CreateSession())
             {
-                var processModel = ProcessModelFactory.Create(runner.ProcessGUID, runner.Version);
+                var processModel = ProcessModelFactory.CreateByProcess(runner.ProcessGUID, runner.Version);
                 var firstActivity = processModel.GetFirstActivity();
                 var nextResult = processModel.GetNextActivityTree(firstActivity.ActivityGUID,
                     null,
@@ -486,7 +464,7 @@ namespace Slickflow.Engine.Service
         {
             IList<TransitionImage> imageList = new List<TransitionImage>();
             var tm = new TransitionInstanceManager();
-            var list = tm.GetTransitionInstanceList(query.AppInstanceID, query.ProcessGUID).ToList();
+            var list = tm.GetTransitionInstanceList(query.AppInstanceID, query.ProcessGUID, query.Version).ToList();
 
             foreach (TransitionInstanceEntity t in list)
             {
@@ -509,7 +487,7 @@ namespace Slickflow.Engine.Service
         /// <returns>活动</returns>
         public Activity GetActivityEntity(string processGUID, string version, string activityGUID)
         {
-            var processModel = ProcessModelFactory.Create(processGUID, version);
+            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
             return processModel.GetActivity(activityGUID);
         }
 
@@ -522,7 +500,7 @@ namespace Slickflow.Engine.Service
         /// <returns>角色列表</returns>
         public IList<Role> GetActivityRoles(string processGUID, string version, string activityGUID)
         {
-            var processModel = ProcessModelFactory.Create(processGUID, version);
+            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
             return processModel.GetActivityRoles(activityGUID);
         }
         #endregion
@@ -588,6 +566,21 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
+        #region 获取加签步骤列表
+        /// <summary>
+        /// 获取加签步骤人员信息
+        /// </summary>
+        /// <param name="runner">运行者</param>
+        /// <returns>加签步骤信息</returns>
+        public SignForwardStepInfo GetSignForwardStepInfo(WfAppRunner runner)
+        {
+            var ssp = new SignForwardStepMaker();
+            var stepInfo = ssp.GetSignForwardStepInfo(runner);
+
+            return stepInfo;
+        }
+        #endregion
+
         #region 流程启动
         /// <summary>
         /// 流程启动
@@ -629,6 +622,12 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// 锁对象
+        /// </summary>
+        private static readonly object startLock = new object();
+        private static readonly object runLock = new object();
+
+        /// <summary>
         /// 启动流程
         /// 编码示例：
         /// var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
@@ -650,20 +649,23 @@ namespace Slickflow.Engine.Service
             IDbSession session = null;
             try
             {
-                session = SessionFactory.CreateSession(conn, trans);
-                runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceStartup(runner, ref startedResult);
-
-                if (startedResult.Status == WfExecutedStatus.Exception)
+                lock (startLock)
                 {
-                    return startedResult;
+                    session = SessionFactory.CreateSession(conn, trans);
+                    runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceStartup(runner, ref startedResult);
+
+                    if (startedResult.Status == WfExecutedStatus.Exception)
+                    {
+                        return startedResult;
+                    }
+
+                    //绑定事件
+                    WfRuntimeManagerFactory.RegisterEvent(runtimeInstance,
+                        runtimeInstance_OnWfProcessStarting,
+                        runtimeInstance_OnWfProcessStarted);
+
+                    bool isStarted = runtimeInstance.Execute(session);
                 }
-
-                //绑定事件
-                WfRuntimeManagerFactory.RegisterEvent(runtimeInstance, 
-                    runtimeInstance_OnWfProcessStarting, 
-                    runtimeInstance_OnWfProcessStarted);
-                bool isStarted = runtimeInstance.Execute(session);
-
                 //do some thing else here...
                 //...
                 waitHandler.WaitOne();
@@ -940,22 +942,23 @@ namespace Slickflow.Engine.Service
             IDbSession session = null;
             try
             {
-                session = SessionFactory.CreateSession(conn, trans);
-                runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceAppRunning(runner, session, ref runAppResult);
-                if (runAppResult.Status == WfExecutedStatus.Exception)
+                lock (runLock)
                 {
-                    return runAppResult;
+                    session = SessionFactory.CreateSession(conn, trans);
+                    runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceAppRunning(runner, session, ref runAppResult);
+                    if (runAppResult.Status == WfExecutedStatus.Exception)
+                    {
+                        return runAppResult;
+                    }
+
+                    //注册事件并运行
+                    WfRuntimeManagerFactory.RegisterEvent(runtimeInstance,
+                        runtimeInstance_OnWfProcessRunning,
+                        runtimeInstance_OnWfProcessContinued);
+                    bool isRun = runtimeInstance.Execute(session);
                 }
-
-                //注册事件并运行
-                WfRuntimeManagerFactory.RegisterEvent(runtimeInstance, 
-                    runtimeInstance_OnWfProcessRunning,
-                    runtimeInstance_OnWfProcessContinued);
-                bool isRun = runtimeInstance.Execute(session);
-
                 //do some thing else here...
                 //...
-
                 waitHandler.WaitOne();
             }
             catch (System.Exception e)
@@ -1079,6 +1082,172 @@ namespace Slickflow.Engine.Service
             var task = await Task.Run<WfExecutedResult>(() =>
             {
                 return RunProcessApp(conn, runner, trans);
+            });
+            return task;
+        }
+        #endregion
+
+        #region 流程自动运行
+        /// <summary>
+        /// 运行流程(业务处理)
+        /// </summary>
+        /// <returns>运行结果</returns>
+        public WfExecutedResult RunAuto()
+        {
+            IDbConnection conn = SessionFactory.CreateConnection();
+            IDbTransaction trans = null;
+            try
+            {
+                trans = conn.BeginTransaction();
+                var result = RunAuto(conn, trans);
+                if (result.Status == WfExecutedStatus.Success)
+                    trans.Commit();
+                else
+                    trans.Rollback();
+
+                return result;
+            }
+            catch
+            {
+                trans.Rollback();
+                throw;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+            }
+        }
+
+        /// <summary>
+        /// 运行自动流程
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="trans">事务</param>
+        /// <returns>运行结果</returns>
+        public WfExecutedResult RunAuto(IDbConnection conn,
+            IDbTransaction trans)
+        {
+            var runner = _wfAppRunner;
+            WfExecutedResult runAppResult = WfExecutedResult.Default();
+            AutoResetEvent waitHandler = new AutoResetEvent(false);
+
+            //运行方法开始执行
+            WfRuntimeManager runtimeInstance = null;
+            IDbSession session = null;
+            try
+            {
+                lock (runLock)
+                {
+                    session = SessionFactory.CreateSession(conn, trans);
+                    runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceRunAuto(runner, session, ref runAppResult);
+                    if (runAppResult.Status == WfExecutedStatus.Exception)
+                    {
+                        return runAppResult;
+                    }
+
+                    //注册事件并运行
+                    WfRuntimeManagerFactory.RegisterEvent(runtimeInstance,
+                        runtimeInstance_OnWfProcessRunning,
+                        runtimeInstance_OnWfProcessContinued);
+                    bool isRun = runtimeInstance.Execute(session);
+                }
+                //do some thing else here...
+                //...
+                waitHandler.WaitOne();
+            }
+            catch (System.Exception e)
+            {
+                runAppResult.Status = WfExecutedStatus.Failed;
+                var error = e.InnerException != null ? e.InnerException.Message : e.Message;
+                runAppResult.Message = LocalizeHelper.GetEngineMessage("workflowservice.runprocess.error", error);
+                LogManager.RecordLog(WfDefine.WF_PROCESS_RUN_ERROR, LogEventType.Error, LogPriority.High, runner, e);
+            }
+            finally
+            {
+                //卸载事件
+                WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance,
+                    runtimeInstance_OnWfProcessRunning,
+                    runtimeInstance_OnWfProcessContinued);
+                waitHandler.Dispose();
+            }
+            return runAppResult;
+
+            void runtimeInstance_OnWfProcessRunning(object sender, WfEventArgs args)
+            {
+                Delegate.DelegateExecutor.InvokeExternalDelegate(session,
+                    Delegate.EventFireTypeEnum.OnProcessRunning,
+                    runner.DelegateEventList,
+                    runtimeInstance.ProcessInstanceID);
+            }
+
+            void runtimeInstance_OnWfProcessContinued(object sender, WfEventArgs args)
+            {
+                runAppResult = args.WfExecutedResult;
+                if (runAppResult.Status == WfExecutedStatus.Success)
+                {
+                    Delegate.DelegateExecutor.InvokeExternalDelegate(session,
+                        Delegate.EventFireTypeEnum.OnProcessContinued,
+                        runner.DelegateEventList,
+                        runtimeInstance.ProcessInstanceID);
+                }
+                waitHandler.Set();
+            }
+        }
+
+        /// <summary>
+        /// 流程流转
+        /// </summary>
+        /// <returns>执行结果</returns>
+        public WfExecutedResult RunProcessAuto(WfAppRunner runner)
+        {
+            _wfAppRunner = runner;
+            var result = RunAuto();
+
+            return result;
+        }
+
+        /// <summary>
+        /// 异步执行流程
+        /// </summary>
+        /// <param name="runner">执行人</param>
+        /// <returns>执行结果</returns>
+        public async Task<WfExecutedResult> RunProcessAutoAsync(WfAppRunner runner)
+        {
+            var task = await Task.Run<WfExecutedResult>(() =>
+            {
+                return RunProcessAuto(runner);
+            });
+            return task;
+        }
+
+        /// <summary>
+        /// 流程流转
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="runner">运行人</param>
+        /// <param name="trans">事务</param>
+        /// <returns>执行结果</returns>
+        public WfExecutedResult RunProcessAuto(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
+        {
+            _wfAppRunner = runner;
+            var result = RunAuto(conn, trans);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 异步流程流转
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="runner">运行人</param>
+        /// <param name="trans">事务</param>
+        /// <returns>执行结果</returns>
+        public async Task<WfExecutedResult> RunProcessAutoAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
+        {
+            var task = await Task.Run<WfExecutedResult>(() =>
+            {
+                return RunProcessAuto(conn, runner, trans);
             });
             return task;
         }
@@ -1417,6 +1586,333 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
+        #region 流程返送
+        /// <summary>
+        /// 流程返送
+        /// </summary>
+        /// <returns>执行结果</returns>
+        public WfExecutedResult Resend()
+        {
+            IDbConnection conn = SessionFactory.CreateConnection();
+            IDbTransaction trans = null;
+            try
+            {
+                trans = conn.BeginTransaction();
+                var result = Resend(conn, trans);
+                if (result.Status == WfExecutedStatus.Success)
+                    trans.Commit();
+                else
+                    trans.Rollback();
+
+                return result;
+            }
+            catch
+            {
+                trans.Rollback();
+                throw;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+            }
+        }
+
+        /// <summary>
+        /// 流程返送
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="trans">事务</param>
+        /// <returns>执行结果</returns>
+        public WfExecutedResult Resend(IDbConnection conn, 
+            IDbTransaction trans)
+        {
+            var runner = _wfAppRunner;
+            WfExecutedResult resendResult = WfExecutedResult.Default();
+            AutoResetEvent waitHandler = new AutoResetEvent(false);
+
+            //返送方法开始执行
+            WfRuntimeManager runtimeInstance = null;
+            IDbSession session = null;
+            try
+            {
+                session = SessionFactory.CreateSession(conn, trans);
+                runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceResend(runner, ref resendResult);
+
+                if (resendResult.Status == WfExecutedStatus.Exception)
+                {
+                    return resendResult;
+                }
+
+                //注册事件并运行
+                WfRuntimeManagerFactory.RegisterEvent(runtimeInstance, 
+                    runtimeInstance_OnWfProcessResending,
+                    runtimeInstance_OnWfProcessResent);
+                bool isResent = runtimeInstance.Execute(session);
+
+                waitHandler.WaitOne();
+            }
+            catch (System.Exception e)
+            {
+                resendResult.Status = WfExecutedStatus.Failed;
+                var error = e.InnerException != null ? e.InnerException.Message : e.Message;
+                resendResult.Message = LocalizeHelper.GetEngineMessage("workflowservice.resendprocess.error", error);
+                LogManager.RecordLog(WfDefine.WF_PROCESS_RESEND_ERROR, LogEventType.Error, LogPriority.High, runner, e);
+            }
+            finally
+            {
+                //卸载事件
+                WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance, 
+                    runtimeInstance_OnWfProcessResending,
+                    runtimeInstance_OnWfProcessResent);
+                waitHandler.Dispose();
+            }
+            return resendResult;
+
+            void runtimeInstance_OnWfProcessResending(object sender, WfEventArgs args)
+            {
+                Delegate.DelegateExecutor.InvokeExternalDelegate(session,
+                    Delegate.EventFireTypeEnum.OnProcessResending,
+                    runner.DelegateEventList,
+                    runtimeInstance.ProcessInstanceID);
+            }
+
+            void runtimeInstance_OnWfProcessResent(object sender, WfEventArgs args)
+            {
+                resendResult = args.WfExecutedResult;
+                if (resendResult.Status == WfExecutedStatus.Success)
+                {
+                    Delegate.DelegateExecutor.InvokeExternalDelegate(session,
+                        Delegate.EventFireTypeEnum.OnProcessResent,
+                        runner.DelegateEventList,
+                        runtimeInstance.ProcessInstanceID);
+                }
+                waitHandler.Set();
+            }
+        }
+
+        /// <summary>
+        /// 从新返送(来自sendback的节点)
+        /// </summary>
+        /// <param name="runner">运行者</param>
+        /// <returns>返送结果</returns>
+        public WfExecutedResult ResendProcess(WfAppRunner runner)
+        {
+            _wfAppRunner = runner;
+            var result = Resend();
+
+            return result;
+        }
+
+        /// <summary>
+        /// 异步返送流程
+        /// </summary>
+        /// <param name="runner">执行人</param>
+        /// <returns>执行结果</returns>
+        public async Task<WfExecutedResult> ResendProcessAsync(WfAppRunner runner)
+        {
+            var task = await Task.Run<WfExecutedResult>(() =>
+            {
+                return ResendProcess(runner);
+            });
+            return task;
+        }
+
+        /// <summary>
+        /// 从新返送(来自sendback的节点)
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="runner">运行者</param>
+        /// <param name="trans">事务</param>
+        /// <returns>返送结果</returns>
+        public WfExecutedResult ResendProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
+        {
+            _wfAppRunner = runner;
+            var result = Resend(conn, trans);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 异步返送流程
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="runner">运行人</param>
+        /// <param name="trans">事务</param>
+        /// <returns>执行结果</returns>
+        public async Task<WfExecutedResult> ResendProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
+        {
+            var task = await Task.Run<WfExecutedResult>(() =>
+            {
+                return ResendProcess(conn, runner, trans);
+            });
+            return task;
+        }
+        #endregion
+
+        #region 流程修正（退回后的节点重新指派任务）
+        /// <summary>
+        /// 流程修订
+        /// </summary>
+        /// <returns>执行结果</returns>
+        public WfExecutedResult Revise()
+        {
+            IDbConnection conn = SessionFactory.CreateConnection();
+            IDbTransaction trans = null;
+            try
+            {
+                trans = conn.BeginTransaction();
+                var result = Revise(conn, trans);
+                if (result.Status == WfExecutedStatus.Success)
+                    trans.Commit();
+                else
+                    trans.Rollback();
+                return result;
+            }
+            catch
+            {
+                trans.Rollback();
+                throw;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+            }
+        }
+
+        /// <summary>
+        /// 流程修订
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="trans">事务</param>
+        /// <returns>执行结果</returns>
+        public WfExecutedResult Revise(IDbConnection conn,
+            IDbTransaction trans)
+        {
+            var runner = _wfAppRunner;
+            WfExecutedResult reviseResult = WfExecutedResult.Default();
+            AutoResetEvent waitHandler = new AutoResetEvent(false);
+
+            //修订方法开始执行
+            WfRuntimeManager runtimeInstance = null;
+            IDbSession session = null;
+            try
+            {
+                session = SessionFactory.CreateSession(conn, trans);
+                runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceRevise(runner, ref reviseResult);
+
+                if (reviseResult.Status == WfExecutedStatus.Success)
+                {
+                    return reviseResult;
+                }
+
+                //注册事件并运行
+                WfRuntimeManagerFactory.RegisterEvent(runtimeInstance, 
+                    runtimeInstance_OnWfProcessRevising,
+                    runtimeInstance_OnWfProcessRevised);
+                bool isRevised = runtimeInstance.Execute(session);
+
+                waitHandler.WaitOne();
+            }
+            catch(System.Exception e)
+            {
+                reviseResult.Status = WfExecutedStatus.Failed;
+                var error = e.InnerException != null ? e.InnerException.Message : e.Message;
+                reviseResult.Message = LocalizeHelper.GetEngineMessage("workflowservice.reviseprocess.error", error);
+                LogManager.RecordLog(WfDefine.WF_PROCESS_REVISE_ERROR, LogEventType.Error, LogPriority.High, runner, e);
+            }
+            finally
+            {
+                //注销事件
+                WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance, 
+                    runtimeInstance_OnWfProcessRevising,
+                    runtimeInstance_OnWfProcessRevised);
+                waitHandler.Dispose();
+            }
+            return reviseResult;
+
+            void runtimeInstance_OnWfProcessRevising(object sender, WfEventArgs args)
+            {
+                Delegate.DelegateExecutor.InvokeExternalDelegate(session,
+                    Delegate.EventFireTypeEnum.OnProcessRevising,
+                    runner.DelegateEventList,
+                    runtimeInstance.ProcessInstanceID);
+            }
+
+            void runtimeInstance_OnWfProcessRevised(object sendder, WfEventArgs args)
+            {
+                reviseResult = args.WfExecutedResult;
+                if (reviseResult.Status == WfExecutedStatus.Success)
+                {
+                    Delegate.DelegateExecutor.InvokeExternalDelegate(session,
+                        Delegate.EventFireTypeEnum.OnProcessRevised,
+                        runner.DelegateEventList,
+                        runtimeInstance.ProcessInstanceID);
+                }
+                waitHandler.Set();
+            }
+        }
+
+        /// <summary>
+        /// 从新修订(来自sendback的节点)
+        /// </summary>
+        /// <param name="runner">运行者</param>
+        /// <returns>返送结果</returns>
+        public WfExecutedResult ReviseProcess(WfAppRunner runner)
+        {
+            _wfAppRunner = runner;
+            var result = Revise();
+
+            return result;
+        }
+
+        /// <summary>
+        /// 异步修订流程
+        /// </summary>
+        /// <param name="runner">执行人</param>
+        /// <returns>执行结果</returns>
+        public async Task<WfExecutedResult> ReviseProcessAsync(WfAppRunner runner)
+        {
+            var task = await Task.Run<WfExecutedResult>(() =>
+            {
+                return ReviseProcess(runner);
+            });
+            return task;
+        }
+
+        /// <summary>
+        /// 从新修订(来自sendback的节点)
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="runner">运行者</param>
+        /// <param name="trans">事务</param>
+        /// <returns>返送结果</returns>
+        public WfExecutedResult ReviseProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
+        {
+            _wfAppRunner = runner;
+            var result = Revise(conn, trans);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 异步修订流程
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="runner">运行人</param>
+        /// <param name="trans">事务</param>
+        /// <returns>执行结果</returns>
+        public async Task<WfExecutedResult> ReviseProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
+        {
+            var task = await Task.Run<WfExecutedResult>(() =>
+            {
+                return ReviseProcess(conn, runner, trans);
+            });
+            return task;
+        }
+        #endregion
+
         #region 流程返签(已经结束的流程可以被复活）
         /// <summary>
         /// 流程返签
@@ -1577,6 +2073,337 @@ namespace Slickflow.Engine.Service
             var task = await Task.Run<WfExecutedResult>(() =>
             {
                 return ReverseProcess(conn, runner, trans);
+            });
+            return task;
+        }
+        #endregion
+
+        #region 流程驳回
+        /// <summary>
+        /// 流程驳回
+        /// </summary>
+        /// <returns>驳回结果</returns>
+        public WfExecutedResult Reject()
+        {
+            IDbConnection conn = SessionFactory.CreateConnection();
+            IDbTransaction trans = null;
+            try
+            {
+                trans = conn.BeginTransaction();
+                var result = Reject(conn, trans);
+                if (result.Status == WfExecutedStatus.Success)
+                    trans.Commit();
+                else
+                    trans.Rollback();
+                return result;
+            }
+            catch
+            {
+                trans.Rollback();
+                throw;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+            }
+        }
+
+        /// <summary>
+        /// 流程驳回
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="trans">事务</param>
+        /// <returns>驳回结果</returns>
+        public WfExecutedResult Reject(IDbConnection conn, 
+            IDbTransaction trans)
+        {
+            var runner = _wfAppRunner;
+            
+
+            WfExecutedResult rejectedResult = WfExecutedResult.Default();
+            AutoResetEvent waitHandler = new AutoResetEvent(false);
+
+            //驳回方法开始执行
+            WfRuntimeManager runtimeInstance = null;
+            IDbSession session = null;
+            try
+            {
+                runner.NextActivityPerformers = FillNextActivityPerforms(runner, JumpOptionEnum.Startup);
+                session = SessionFactory.CreateSession(conn, trans);
+                runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceReject(runner, ref rejectedResult);
+                if (rejectedResult.Status == WfExecutedStatus.Exception)
+                {
+                    return rejectedResult;
+                }
+
+                //注册事件并运行
+                WfRuntimeManagerFactory.RegisterEvent(runtimeInstance,
+                    runtimeInstance_OnWfProcessRejecting,
+                    runtimeInstance_OnWfProcessRejected);
+                bool isRejected = runtimeInstance.Execute(session);
+
+                waitHandler.WaitOne();
+            }
+            catch (System.Exception e)
+            {
+                rejectedResult.Status = WfExecutedStatus.Failed;
+                var error = e.InnerException != null ? e.InnerException.Message : e.Message;
+                rejectedResult.Message = LocalizeHelper.GetEngineMessage("workflowservice.rejectprocess.error", error);
+                LogManager.RecordLog(WfDefine.WF_PROCESS_REJECT_ERROR, LogEventType.Error, LogPriority.High, runner, e);
+            }
+            finally
+            {
+                //卸载事件
+                WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance,
+                    runtimeInstance_OnWfProcessRejecting,
+                    runtimeInstance_OnWfProcessRejected);
+                waitHandler.Dispose();
+            }
+            return rejectedResult;
+
+            void runtimeInstance_OnWfProcessRejecting(object sender, WfEventArgs args)
+            {
+                Delegate.DelegateExecutor.InvokeExternalDelegate(session,
+                    Delegate.EventFireTypeEnum.OnProcessRejecting,
+                    runner.DelegateEventList,
+                    runtimeInstance.ProcessInstanceID);
+            }
+
+            void runtimeInstance_OnWfProcessRejected(object sender, WfEventArgs args)
+            {
+                rejectedResult = args.WfExecutedResult;
+                if (rejectedResult.Status == WfExecutedStatus.Success)
+                {
+                    Delegate.DelegateExecutor.InvokeExternalDelegate(session,
+                        Delegate.EventFireTypeEnum.OnProcessRejected,
+                        runner.DelegateEventList,
+                        runtimeInstance.ProcessInstanceID);
+                }
+                waitHandler.Set();
+            }
+        }
+
+        /// <summary>
+        /// 流程驳回
+        /// </summary>
+        /// <param name="runner">执行操作人</param>
+        /// <returns>驳回结果</returns>
+        public WfExecutedResult RejectProcess(WfAppRunner runner)
+        {
+            _wfAppRunner = runner;
+            var result = Reject();
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// 异步驳回流程
+        /// </summary>
+        /// <param name="runner">执行人</param>
+        /// <returns>执行结果</returns>
+        public async Task<WfExecutedResult> RejectProcessAsync(WfAppRunner runner)
+        {
+            var task = await Task.Run<WfExecutedResult>(() =>
+            {
+                return RejectProcess(runner);
+            });
+            return task;
+        }
+
+        /// <summary>
+        /// 流程驳回
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="runner">执行操作人</param>
+        /// <param name="trans">事务</param>
+        /// <returns>驳回结果</returns>
+        public WfExecutedResult RejectProcess(IDbConnection conn,
+            WfAppRunner runner,
+            IDbTransaction trans)
+        {
+            _wfAppRunner = runner;
+            var result = Reject(conn, trans);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 异步驳回流程
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="runner">运行人</param>
+        /// <param name="trans">事务</param>
+        /// <returns>执行结果</returns>
+        public async Task<WfExecutedResult> RejectProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
+        {
+            var task = await Task.Run<WfExecutedResult>(() =>
+            {
+                return RejectProcess(conn, runner, trans);
+            });
+            return task;
+        }
+        #endregion
+
+        #region 流程提前完成
+        /// <summary>
+        /// 流程关闭
+        /// </summary>
+        /// <returns>关闭结果</returns>
+        public WfExecutedResult Close()
+        {
+            IDbConnection conn = SessionFactory.CreateConnection();
+            IDbTransaction trans = null;
+            try
+            {
+                trans = conn.BeginTransaction();
+                var result = Close(conn, trans);
+                if (result.Status == WfExecutedStatus.Success)
+                    trans.Commit();
+                else
+                    trans.Rollback();
+                return result;
+            }
+            catch
+            {
+                trans.Rollback();
+                throw;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+            }
+        }
+
+        /// <summary>
+        /// 流程关闭
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="trans">事务</param>
+        /// <returns>关闭结果</returns>
+        public WfExecutedResult Close(IDbConnection conn, 
+            IDbTransaction trans)
+        {
+            var runner = _wfAppRunner;
+            WfExecutedResult closedResult = WfExecutedResult.Default();
+            AutoResetEvent waitHandler = new AutoResetEvent(false);
+
+            //关闭方法开始执行
+            WfRuntimeManager runtimeInstance = null;
+            IDbSession session = null;
+            try
+            {
+                runner.NextActivityPerformers = FillNextActivityPerforms(runner, JumpOptionEnum.End);
+                session = SessionFactory.CreateSession(conn, trans);
+                runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceClose(runner, ref closedResult);
+                if (closedResult.Status == WfExecutedStatus.Exception)
+                {
+                    return closedResult;
+                }
+
+                //注册事件并运行
+                WfRuntimeManagerFactory.RegisterEvent(runtimeInstance,
+                    runtimeInstance_OnWfProcessClosing,
+                    runtimeInstance_OnWfProcessClosed);
+                bool isRejected = runtimeInstance.Execute(session);
+            }
+            catch (System.Exception e)
+            {
+                closedResult.Status = WfExecutedStatus.Failed;
+                var error = e.InnerException != null ? e.InnerException.Message : e.Message;
+                closedResult.Message = LocalizeHelper.GetEngineMessage("workflowservice.closeprocess.error", error);
+                LogManager.RecordLog(WfDefine.WF_PROCESS_CLOSE_ERROR, LogEventType.Error, LogPriority.High, runner, e);
+            }
+            finally
+            {
+                //卸载事件
+                WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance,
+                    runtimeInstance_OnWfProcessClosing,
+                    runtimeInstance_OnWfProcessClosed);
+                waitHandler.Dispose();
+            }
+            return closedResult;
+
+            void runtimeInstance_OnWfProcessClosing(object sender, WfEventArgs args)
+            {
+                Delegate.DelegateExecutor.InvokeExternalDelegate(session,
+                    Delegate.EventFireTypeEnum.OnProcessClosing,
+                    runner.DelegateEventList,
+                    runtimeInstance.ProcessInstanceID);
+            }
+
+            void runtimeInstance_OnWfProcessClosed(object sender, WfEventArgs args)
+            {
+                closedResult = args.WfExecutedResult;
+                if (closedResult.Status == WfExecutedStatus.Success)
+                {
+                    Delegate.DelegateExecutor.InvokeExternalDelegate(session,
+                        Delegate.EventFireTypeEnum.OnProcessClosed,
+                        runner.DelegateEventList,
+                        runtimeInstance.ProcessInstanceID);
+                }
+                waitHandler.Set();
+            }
+        }
+
+        /// <summary>
+        /// 流程关闭
+        /// </summary>
+        /// <param name="runner">执行操作人</param>
+        /// <returns>关闭结果</returns>
+        public WfExecutedResult CloseProcess(WfAppRunner runner)
+        {
+            _wfAppRunner = runner;
+            var result = Close();
+
+            return result;
+        }
+
+        /// <summary>
+        /// 异步关闭流程
+        /// </summary>
+        /// <param name="runner">执行人</param>
+        /// <returns>执行结果</returns>
+        public async Task<WfExecutedResult> CloseProcessAsync(WfAppRunner runner)
+        {
+            var task = await Task.Run<WfExecutedResult>(() =>
+            {
+                return CloseProcess(runner);
+            });
+            return task;
+        }
+
+        /// <summary>
+        /// 流程关闭
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="runner">执行操作人</param>
+        /// <param name="trans">事务</param>
+        /// <returns>关闭结果</returns>
+        public WfExecutedResult CloseProcess(IDbConnection conn,
+            WfAppRunner runner,
+            IDbTransaction trans)
+        {
+            _wfAppRunner = runner;
+            var result = Close(conn, trans);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 异步关闭流程
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="runner">运行人</param>
+        /// <param name="trans">事务</param>
+        /// <returns>执行结果</returns>
+        public async Task<WfExecutedResult> CloseProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
+        {
+            var task = await Task.Run<WfExecutedResult>(() =>
+            {
+                return CloseProcess(conn, runner, trans);
             });
             return task;
         }
@@ -1768,7 +2595,7 @@ namespace Slickflow.Engine.Service
             JumpOptionEnum jumpOption)
         {
             IDictionary<string, PerformerList> nextActivityPerformers = null;
-            var pm = ProcessModelFactory.Create(runner.ProcessGUID, runner.Version);
+            var pm = ProcessModelFactory.CreateByProcess(runner.ProcessGUID, runner.Version);
             if (jumpOption == JumpOptionEnum.Default)
             {
                 nextActivityPerformers = runner.NextActivityPerformers;
@@ -1794,6 +2621,171 @@ namespace Slickflow.Engine.Service
                 nextActivityPerformers.Add(endActivity.ActivityGUID, performerList);
             }
             return nextActivityPerformers;
+        }
+        #endregion
+
+        #region 流程加签
+        /// <summary>
+        /// 流程加签
+        /// </summary>
+        /// <returns>加签结果</returns>
+        public WfExecutedResult SignForward()
+        {
+            IDbConnection conn = SessionFactory.CreateConnection();
+            IDbTransaction trans = null;
+
+            try
+            {
+                trans = conn.BeginTransaction();
+                var result = SignForward(conn, trans);
+
+                if (result.Status == WfExecutedStatus.Success)
+                    trans.Commit();
+                else
+                    trans.Rollback();
+
+                return result;
+            }
+            catch
+            {
+                trans.Rollback();
+                throw;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+            }
+        }
+
+        /// <summary>
+        /// 流程加签
+        /// </summary>
+        /// <param name="conn">链接</param>
+        /// <param name="trans">事务</param>
+        /// <returns>加签结果</returns>
+        public WfExecutedResult SignForward(IDbConnection conn, IDbTransaction trans)
+        {
+            var runner = _wfAppRunner;
+            WfExecutedResult signforwardResult = WfExecutedResult.Default();
+            AutoResetEvent waitHandler = new AutoResetEvent(false);
+
+            //加签方法开始执行
+            WfRuntimeManager runtimeInstance = null;
+            IDbSession session = null;
+            try
+            {
+                session = SessionFactory.CreateSession(conn, trans);
+                runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceSignForward(runner, ref signforwardResult);
+
+                if (signforwardResult.Status == WfExecutedStatus.Exception)
+                {
+                    return signforwardResult;
+                }
+                //注册事件并运行
+                WfRuntimeManagerFactory.RegisterEvent(runtimeInstance, 
+                    runtimeInstance_OnWfProcessSignForwarding,
+                    runtimeInstance_OnWfProcessSignForwarded);
+
+                bool isSignForwarding = runtimeInstance.Execute(session);
+
+                waitHandler.WaitOne();
+            }
+            catch (System.Exception e)
+            {
+                signforwardResult.Status = WfExecutedStatus.Failed;
+                var error = e.InnerException != null ? e.InnerException.Message : e.Message;
+                signforwardResult.Message = LocalizeHelper.GetEngineMessage("workflowservice.signforwardprocess.error", error);
+                LogManager.RecordLog(WfDefine.WF_PROCESS_SIGN_FORWARD_ERROR, LogEventType.Error, LogPriority.High, runner, e);
+            }
+            finally
+            {
+                //卸载事件
+                WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance, 
+                    runtimeInstance_OnWfProcessSignForwarding,
+                    runtimeInstance_OnWfProcessSignForwarded);
+                waitHandler.Dispose();
+            }
+            return signforwardResult;
+
+            void runtimeInstance_OnWfProcessSignForwarding(object sender, WfEventArgs args)
+            {
+                Delegate.DelegateExecutor.InvokeExternalDelegate(session,
+                    Delegate.EventFireTypeEnum.OnProcessSignForwarding,
+                    runner.DelegateEventList,
+                    runtimeInstance.ProcessInstanceID);
+            }
+
+            void runtimeInstance_OnWfProcessSignForwarded(object sender, WfEventArgs args)
+            {
+                signforwardResult = args.WfExecutedResult;
+                if (signforwardResult.Status == WfExecutedStatus.Success)
+                {
+                    Delegate.DelegateExecutor.InvokeExternalDelegate(session,
+                        Delegate.EventFireTypeEnum.OnProcessSignForwarded,
+                        runner.DelegateEventList,
+                        runtimeInstance.ProcessInstanceID);
+                }
+                waitHandler.Set();
+            }
+        }
+
+        /// <summary>
+        /// 加签
+        /// </summary>
+        /// <param name="runner">结束人</param>
+        /// <returns>加签结果</returns>
+        public WfExecutedResult SignForwardProcess(WfAppRunner runner)
+        {
+            _wfAppRunner = runner;
+            var result = SignForward();
+
+            return result;
+        }
+
+        /// <summary>
+        /// 异步流程加签
+        /// </summary>
+        /// <param name="runner">结束人</param>
+        /// <returns>加签结果</returns>
+        public async Task<WfExecutedResult> SignForwardProcessAsync(WfAppRunner runner)
+        {
+            var task = await Task.Run<WfExecutedResult>(() =>
+            {
+                return SignForwardProcess(runner);
+            });
+            return task;
+        }
+
+        /// <summary>
+        /// 流程加签
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="runner">结束人</param>
+        /// <param name="trans">事务</param>
+        /// <returns>加签结果</returns>
+        public WfExecutedResult SignForwardProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
+        {
+            _wfAppRunner = runner;
+            var result = SignForward(conn, trans);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 异步流程加签
+        /// </summary>
+        /// <param name="conn">连接</param>
+        /// <param name="runner">结束人</param>
+        /// <param name="trans">事务</param>
+        /// <returns>加签结果</returns>
+        public async Task<WfExecutedResult> SignForwardProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
+        {
+            var task = await Task.Run<WfExecutedResult>(() =>
+            {
+                return SignForwardProcess(conn, runner, trans);
+            });
+            return task;
         }
         #endregion
 
@@ -1979,6 +2971,22 @@ namespace Slickflow.Engine.Service
         {
             var tm = new TaskManager();
             var entity = tm.GetTaskViewByActivity(processInstanceID, activityInstanceID);
+            return entity;
+        }
+
+        /// <summary>
+        /// 获取任务视图
+        /// </summary>
+        /// <param name="conn">数据库连接</param>
+        /// <param name="appInstanceID">应用实例ID</param>
+        /// <param name="processGUID">流程GUID</param>
+        /// <param name="userID">用户ID</param>
+        /// <param name="trans">数据库事务</param>
+        /// <returns></returns>
+        public TaskViewEntity GetTaskView(IDbConnection conn, string appInstanceID, string processGUID, string userID, IDbTransaction trans)
+        {
+            var tm = new TaskManager();
+            var entity = tm.GetTaskOfMine(conn, appInstanceID, processGUID, userID, trans);
             return entity;
         }
 

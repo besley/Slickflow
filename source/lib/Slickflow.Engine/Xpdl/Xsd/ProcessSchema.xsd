@@ -14,7 +14,7 @@
                     <xs:element name="ActivityID" type="xs:unsignedByte" />
                     <xs:element name="ActivityCode" type="xs:string" />
                     <xs:element name="ActivityType" type="xs:unsignedByte" />
-                    <xs:element minOccurs="0" name="Participants">
+                    <xs:element minOccurs="0" name="Partakers">
                       <xs:complexType>
                         <xs:sequence>
                           <xs:element name="Roles">

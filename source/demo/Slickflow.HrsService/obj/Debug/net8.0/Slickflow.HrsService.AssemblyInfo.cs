@@ -14,11 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Slickflow.HrsService")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< HEAD
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+48e3188b586bd5bb54a7961a2139e9ef71ad511b")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+42bfa06cd3750d18e9d0242c5fb35772d62c977a")]
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f2545d58a7983d07c6923a05d19831fd735f9011")]
 [assembly: System.Reflection.AssemblyProductAttribute("Slickflow.HrsService")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Slickflow.HrsService")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

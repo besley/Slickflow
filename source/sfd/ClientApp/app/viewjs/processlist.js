@@ -14,6 +14,7 @@ const processlist = (function () {
     processlist.afterCreated = new slick.Event();
     processlist.afterOpened = new slick.Event();
     processlist.diagramCreated = new slick.Event();
+    processlist.afterSubProcessSelected = new slick.Event();
 
     processlist.getProcessList = function () {
         /* $('#loading-indicator').show();*/
@@ -24,13 +25,13 @@ const processlist = (function () {
 
                 var gridOptions = {
                     columnDefs: [
-                        { headerName: 'ID', field: 'ID', width: 50 },
+                        { headerName: 'ID', field: 'ID', width: 80 },
                         { headerName: kresource.getItem('processguid'), field: 'ProcessGUID', width: 120 },
                         { headerName: kresource.getItem('processname'), field: 'ProcessName', width: 200 },
                         { headerName: kresource.getItem('version'), field: 'Version', width: 80 },
                         { headerName: kresource.getItem('processcode'), field: 'ProcessCode', width: 200 },
                         { headerName: kresource.getItem('packagetype'), field: 'PackageType', width: 80, cellRenderer: onPackageTypeRenderer },
-                        { headerName: kresource.getItem('packageprocessid'), field: 'PackageProcessID', width: 80 },
+                        { headerName: kresource.getItem('packageid'), field: 'PackageID', width: 80 },
                         { headerName: kresource.getItem('status'), field: 'IsUsing', width: 80, cellRenderer: onIsUsingCellRenderer },
                         { headerName: kresource.getItem('starttype'), field: 'StartType', width: 80, cellRenderer: onStartTypeCellRenderer },
                         { headerName: kresource.getItem('startexpression'), field: 'StartExpression', width: 140 },
@@ -119,7 +120,8 @@ const processlist = (function () {
             $("#ddlIsUsing").val(entity.IsUsing);
             $("#txtDescription").val(entity.Description);
         } else {
-            $("#txtProcessGUID").val("");
+            var strProcessGUID = jshelper.getUUID();
+            $("#txtProcessGUID").val(strProcessGUID);
             $("#txtProcessName").val("");
             $("#txtProcessCode").val("");
             $("#txtVersion").val("1");
@@ -205,11 +207,39 @@ const processlist = (function () {
         }
     }
 
+    processlist.updateUsingState = function () {
+        var entity = processlist.pselectedProcessEntity;
+        if (entity === null) {
+            kmsgbox.warn(kresource.getItem('processselectedwarnmsg'));
+            return false;
+        } else {
+            var msgConfirm = '';
+            var usingState = 0;
+            if (processlist.pselectedProcessEntity.IsUsing === 0) {
+                usingState = 1;
+                msgConfirm = kresource.getItem('processusingenablemsg');
+            } else {
+                usingState = 0;
+                msgConfirm = kresource.getItem('processusingunablemsg');
+            }
+
+            kmsgbox.confirm(msgConfirm, function () {
+                var entity = {
+                    "ProcessGUID": processlist.pselectedProcessEntity.ProcessGUID,
+                    "Version": processlist.pselectedProcessEntity.Version,
+                    "IsUsing": usingState
+                };
+                processapi.updateUsingState(entity);
+                return;
+            });
+        }
+    }
+
     processlist.refreshProcess = function () {
         processlist.getProcessList();
     }
 
-    processlist.saveProcess = function () {
+    processlist.createFromTemplate = function () {
         if ($.trim($("#txtProcessName").val()) === ""
             || $.trim($("#txtProcessCode").val()) === ""
             || $.trim($("#txtVersion").val()) === "") {
@@ -237,12 +267,13 @@ const processlist = (function () {
                                 processlist.pselectedProcessEntity = result.Entity;
                                 kmain.mxSelectedProcessEntity = result.Entity;
                                 //render process into graph canvas
-                                if (processlist.afterCreated) {
-                                    slick.trigger(processlist.afterCreated, {
+                                if (processlist.afterOpened) {
+                                    slick.trigger(processlist.afterOpened, {
                                         "ProcessEntity": result.Entity
                                     });
                                 }
-                                if (processlist.mProcessEditDialog !== null) processlist.mProcessEditDialog.close();
+
+                                if (kmain.templateDialog !== undefined) kmain.templateDialog.close();
                             }
                         });
                     } else {
@@ -259,10 +290,11 @@ const processlist = (function () {
 
     processlist.deleteProcess = function () {
         var content = kresource.getItem('processdeletemsg');
-        //var process = processlist.pselectedProcessEntity;
-        //if (process.PackageType === 1) {
-        //    content = kresource.getItem('processpooldeletemsg');
-        //}
+        var process = processlist.pselectedProcessEntity;
+        if (process.PackageType === 1) {
+            content = kresource.getItem('processpooldeletemsg');
+        }
+
         kmsgbox.confirm(content, function () {
             var entity = {
                 "ProcessGUID": processlist.pselectedProcessEntity.ProcessGUID,
@@ -281,7 +313,19 @@ const processlist = (function () {
             if (process.PackageType === 2) {
                 kmsgbox.warn(kresource.getItem('processpoolopendiagramwarnmsg'));
             } else {
-                onDiagramOpen(processlist.pselectedProcessEntity);
+                onDiagramOpen(process);
+            }
+        }
+    }
+
+    //sub process selected
+    processlist.subSure = function () {
+        var process = processlist.pselectedProcessEntity;
+        if (process !== null) {
+            if (processlist.afterSubProcessSelected) {
+                slick.trigger(processlist.afterSubProcessSelected, {
+                    "ProcessEntity": process
+                });
             }
         }
     }
@@ -295,34 +339,8 @@ const processlist = (function () {
         }
     }
 
-    //open a diagram
-    processlist.openProcessDiagram = function (processID) {
-        var query = {
-            "ID": processID
-        };
-
-        processapi.queryProcessFileByID(query, function (result) {
-            if (result.Status === 1) {
-                var process = result.Entity;
-                //泳道流程只能用主流程编辑
-                if (process.PackageType === 2) {
-                    kmsgbox.warn(kresource.getItem('processpoolopendiagramwarnmsg'));
-                } else {
-                    if (processlist.afterOpened) {
-                        slick.trigger(processlist.afterOpened, {
-                            "ProcessEntity": process
-                        });
-                    }
-                }
-            } else {
-                kmsgbox.error(kresource.getItem('processopenerrormsg'), result.Message);
-            }
-        });
-    }
-
     //show process xml content
     processlist.showXmlContent = function () {
-
         kmain.mBpmnModeler.saveXML({ format: true }).then(function (result) {
             if (result && result.xml) {
                 var xmlContent = result.xml;
@@ -369,7 +387,43 @@ const processlist = (function () {
                 }
             },
             validation: {
-                allowedExtensions: ['xml', 'txt'],
+                allowedExtensions: ['xml', 'txt', 'bpmn', 'bpmn2', 'xpdl'],
+                itemLimit: 1,
+                sizeLimit: 102400 // 100 kB = 100 * 1024 bytes
+            },
+            callbacks: {
+                onComplete: function (id, fileName, result) {
+                    if (result.success === true) {
+                        kmsgbox.info(kresource.getItem("processxmlimportokmsg"));
+                    }
+                    else {
+                        kmsgbox.error(kresource.getItem("processxmlimporterrormsg"), result.Message);
+                    }
+                }
+            }
+        });
+    }
+
+    //import xml file
+    processlist.initMxGraphXmlImport = function () {
+        var restrictedUploader = new qq.FineUploader({
+            element: document.getElementById("fine-uploader-validation"),
+            template: 'qq-template-validation',
+            request: {
+                endpoint: kconfig.webApiUrl + 'api/FineUploadMxGrp/import',
+                params: {
+                    extraParam1: "1",
+                    extraParam2: "2"
+                }
+            },
+            thumbnails: {
+                placeholders: {
+                    waitingPath: 'vendor/fine-uploader/fine-uploader/placeholders/waiting-generic.png',
+                    notAvailablePath: 'vendor/fine-uploader/fine-uploader/placeholders/not_available-generic.png'
+                }
+            },
+            validation: {
+                allowedExtensions: ['xml', 'txt', 'bpmn', 'bpmn2', 'xpdl'],
                 itemLimit: 1,
                 sizeLimit: 102400 // 100 kB = 100 * 1024 bytes
             },

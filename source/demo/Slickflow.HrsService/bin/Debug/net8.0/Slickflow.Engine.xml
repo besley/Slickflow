@@ -9,6 +9,11 @@
             活动实例的实体对象
             </summary>
         </member>
+        <member name="T:Slickflow.Engine.Business.Entity.JobInfoEntity">
+            <summary>
+            作业信息
+            </summary>
+        </member>
         <member name="T:Slickflow.Engine.Business.Entity.LogEntity">
             <summary>
             日志记录实体
@@ -228,6 +233,15 @@
             </summary>
             <param name="appInstanceID">应用实例ID</param>
             <param name="processGUID">流程GUID</param>
+            <param name="activityGUID">活动GUID</param>
+            <returns>活动实例</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.GetActivityInstanceList(System.String,System.String,System.String)">
+            <summary>
+            获取最近的节点实例
+            </summary>
+            <param name="processGUID">流程GUID</param>
+            <param name="version">流程版本</param>
             <param name="activityGUID">活动GUID</param>
             <returns>活动实例</returns>
         </member>
@@ -476,7 +490,7 @@
             <param name="main">活动实例</param>
             <returns>活动实例</returns>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.CreateBackwardActivityInstanceObject(System.String,System.String,System.String,System.Int32,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Common.BackwardTypeEnum,System.Int32,System.Int32,Slickflow.Engine.Common.WfAppRunner)">
+        <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.CreateBackwardActivityInstanceObject(System.String,System.String,System.String,System.Int32,System.String,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Common.BackwardTypeEnum,System.Int32,System.Int32,Slickflow.Engine.Common.WfAppRunner)">
             <summary>
             创建活动实例的对象
             </summary>
@@ -484,6 +498,7 @@
             <param name="appInstanceID">应用实例ID</param>
             <param name="appInstanceCode">应用实例代码</param>
             <param name="processInstanceID">流程实例ID</param>
+            <param name="processGUID">流程GUID</param>
             <param name="activity">活动</param>
             <param name="backwardType">退回类型</param>
             <param name="backSrcActivityInstanceID">退回源活动实例ID</param>
@@ -637,6 +652,15 @@
             <param name="session">会话</param>
             <param name="runner">执行者</param>
         </member>
+        <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.Rerun(System.Int32,Slickflow.Data.IDbSession,Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            重新使节点处于挂起状态
+            说明：会签最后一个子节点撤销时候用到
+            </summary>
+            <param name="activityInstanceID">活动实例节点ID</param>
+            <param name="session">会话</param>
+            <param name="runner">执行者</param>
+        </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.Delete(System.Int32,Slickflow.Data.IDbSession)">
             <summary>
             删除活动实例
@@ -687,6 +711,18 @@
             流程定义数据库存储接口
             </summary>
         </member>
+        <member name="T:Slickflow.Engine.Business.Manager.JobInfoManager">
+            <summary>
+            作业数据管理器
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Business.Manager.JobInfoManager.GetJobSubscribedByTopic(System.String)">
+            <summary>
+            获取作业信息
+            </summary>
+            <param name="topic"></param>
+            <returns>作业实体</returns>
+        </member>
         <member name="T:Slickflow.Engine.Business.Manager.LogManager">
             <summary>
             日志处理记录类
@@ -728,21 +764,23 @@
             流程实例管理者类
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetProcessInstanceLatest(System.String,System.String)">
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetProcessInstanceLatest(System.String,System.String,System.String)">
             <summary>
             获取当前运行的流程实例
             </summary>
             <param name="appInstanceID">应用ID</param>
             <param name="processGUID">流程GUID</param>
+            <param name="version">流程版本</param>
             <returns>流程实例实体</returns>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetProcessInstanceLatest(System.Data.IDbConnection,System.String,System.String,System.Data.IDbTransaction)">
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetProcessInstanceLatest(System.Data.IDbConnection,System.String,System.String,System.String,System.Data.IDbTransaction)">
             <summary>
             获取当前运行的流程实例
             </summary>
             <param name="conn">链接</param>
             <param name="appInstanceID">应用ID</param>
             <param name="processGUID">流程GUID</param>
+            <param name="version">流程版本</param>
             <param name="trans">事务</param>
             <returns>流程实例实体</returns>
         </member>
@@ -802,21 +840,23 @@
             <param name="trans">事务</param>
             <returns>流程发起人</returns>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetProcessInstanceCurrent(System.String,System.String)">
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetProcessInstanceCurrent(System.String,System.String,System.String)">
             <summary>
             获取最近的流程运行实例
             </summary>
             <param name="appInstanceID">应用实例ID</param>
             <param name="processGUID">流程GUID</param>
+            <param name="version">版本</param>
             <returns>流程实例实体</returns>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetProcessInstanceCurrent(System.Data.IDbConnection,System.String,System.String,System.Data.IDbTransaction)">
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetProcessInstanceCurrent(System.Data.IDbConnection,System.String,System.String,System.String,System.Data.IDbTransaction)">
             <summary>
             获取最近的流程运行实例
             </summary>
             <param name="conn">链接</param>
             <param name="appInstanceID">应用实例ID</param>
             <param name="processGUID">流程GUID</param>
+            <param name="version">流程版本</param>
             <param name="trans">事务</param>
             <returns>流程实例实体</returns>
         </member>
@@ -828,13 +868,14 @@
             <param name="appInstanceID">应用实例ID</param>
             <returns>流程实例实体</returns>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetProcessInstance(System.Data.IDbConnection,System.String,System.String,System.Data.IDbTransaction)">
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetProcessInstance(System.Data.IDbConnection,System.String,System.String,System.String,System.Data.IDbTransaction)">
             <summary>
             根据流程完成状态获取流程实例数据
             </summary>
             <param name="conn">链接</param>
             <param name="appInstanceID"></param>
             <param name="processGUID"></param>
+            <param name="version">流程版本</param>
             <param name="trans">事务</param>
             <returns>流程实例列表</returns>
         </member>
@@ -1062,19 +1103,21 @@
             <param name="trans">交易</param>
             <returns>流程实体</returns>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetVersionUsing(System.String)">
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetVersionUsing(System.String,System.Boolean)">
             <summary>
             获取当前使用的流程版本
             </summary>
             <param name="processGUID">流程GUID</param>
+            <param name="isNotThrownException">是否抛出异常</param>
             <returns>流程实体</returns>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetVersionUsing(System.Data.IDbConnection,System.String,System.Data.IDbTransaction)">
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetVersionUsing(System.Data.IDbConnection,System.String,System.Boolean,System.Data.IDbTransaction)">
             <summary>
             获取当前使用的流程版本
             </summary>
             <param name="conn">数据库连接</param>
             <param name="processGUID">流程GUID</param>
+            <param name="isNotThrownException">是否抛出异常</param>
             <param name="trans">事务</param>
             <returns>流程实体</returns>
         </member>
@@ -1094,12 +1137,14 @@
             <param name="version">流程版本</param>
             <returns>流程实体</returns>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetByVersionInternal(System.String,System.String)">
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetByVersionInternal(System.Data.IDbConnection,System.String,System.String,System.Data.IDbTransaction)">
             <summary>
             按照版本获取流程记录
             </summary>
+            <param name="conn">链接</param>
             <param name="processGUID">流程GUID</param>
             <param name="version">版本</param>
+            <param name="trans">事务</param>
             <returns>流程实体</returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetByMessage(System.String)">
@@ -1157,14 +1202,13 @@
             <param name="entity">实体</param>
             <param name="trans">事务</param>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.UpdateUsingState(System.Data.IDbConnection,System.String,System.String,System.Data.IDbTransaction)">
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.UpdateUsingState(System.String,System.String,System.Byte)">
             <summary>
             更新流程版本IsUsing=0
             </summary>
-            <param name="conn">链接</param>
             <param name="processGUID">流程GUID</param>
             <param name="version">版本</param>
-            <param name="trans">事务</param>
+            <param name="usingState">是否启用1-using;0-unusing</param>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.Upgrade(System.String,System.String,System.String)">
             <summary>
@@ -1200,67 +1244,79 @@
             <param name="processGUID">流程GUID</param>
             <param name="trans">事务</param>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.DeleteProcess(System.String,System.String,Slickflow.Engine.Business.Manager.IXPDLStorage)">
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.DeleteProcess(System.String,System.String)">
             <summary>
             删除流程记录
             </summary>
             <param name="processGUID">流程定义GUID</param>
             <param name="version">版本</param>
-            <param name="localStorage">本地存储</param>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.CreateProcess(Slickflow.Engine.Business.Entity.ProcessEntity,Slickflow.Engine.Business.Manager.IXPDLStorage)">
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.CreateProcess(Slickflow.Engine.Business.Entity.ProcessEntity)">
             <summary>
             流程定义的创建方法
             </summary>
             <param name="entity">实体</param>
-            <param name="extStorage">存储</param>
             <returns></returns>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GenerateXmlContent(Slickflow.Engine.Business.Entity.ProcessEntity)">
-            <summary>
-            生成基本XML文档
-            </summary>
-            <param name="entity">流程定义实体</param>
-            <returns>XML文档</returns>
-        </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.SaveProcessFile(Slickflow.Engine.Business.Entity.ProcessFileEntity,Slickflow.Engine.Business.Manager.IXPDLStorage)">
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.SaveProcessFile(Slickflow.Engine.Business.Entity.ProcessFileEntity)">
             <summary>
             保存XML文件
             </summary>
             <param name="entity">实体</param>
-            <param name="extStorage">存储</param>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.SetProcessStartEndType(Slickflow.Engine.Xpdl.IProcessModel,Slickflow.Engine.Business.Entity.ProcessEntity,System.String)">
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.SaveProcessFileSingle(Slickflow.Engine.Business.Entity.ProcessFileEntity)">
             <summary>
-            设置流程的启动类型
+            保存XML文件
             </summary>
-            <param name="processModel">流程模型</param>
-            <param name="entity">流程实体</param>
-            <param name="xmlConent">XML内容</param>
+            <param name="entity">实体</param>
+        </member>
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.SaveProcessFileWithPool(Slickflow.Engine.Business.Entity.ProcessFileEntity,System.Xml.XmlDocument,System.Xml.XmlNode)">
+            <summary>
+            保存XML文件
+            </summary>
+            <param name="entity">实体</param>
+            <param name="xmlDoc">流程XML文档</param>
+            <param name="xmlNodeCollaboration">xml节点</param>
+        </member>
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.SetProcessTimerType(System.String,System.String)">
+            <summary>
+            更新流程定时器信息
+            </summary>
+            <param name="processGUID">流程GUID</param>
+            <param name="version">流程版本</param>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetPoolProcessList(System.Data.IDbConnection,System.Int32,System.Data.IDbTransaction)">
             <summary>
             或者主流程下的泳道流程列表
             </summary>
             <param name="conn">链接</param>
-            <param name="packageProcessID">主图形GUID</param>
+            <param name="packageID">主图形GUID</param>
             <param name="trans">事务</param>
             <returns>流程实体列表</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.ImportProcess(System.String)">
+            <summary>
+            导入XML文档生成流程记录
+            </summary>
+            <param name="xmlContent">XML文档</param>
+            <returns>新流程ID</returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.DeletePoolProcess(System.Data.IDbConnection,System.Int32,System.Collections.Generic.List{System.Int32},System.Data.IDbTransaction)">
             <summary>
             删除泳道流程记录
             </summary>
             <param name="conn">数据库链接</param>
-            <param name="packageProcessID">主流程ID</param>
+            <param name="packageID">主流程ID</param>
             <param name="poolProcessIDs">泳道流程ID列表</param>
             <param name="trans">交易</param>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.SaveProcessFilePool(Slickflow.Engine.Business.Entity.ProcessFilePool)">
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.DeletePoolProcess(System.Data.IDbConnection,System.Int32,System.Data.IDbTransaction)">
             <summary>
-            保存泳道流程
+            删除泳道流程记录
             </summary>
-            <param name="file">泳道流程实体</param>
+            <param name="conn">数据库链接</param>
+            <param name="packageID">主流程ID</param>
+            <param name="trans">交易</param>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetProcessFile(System.String,System.String,Slickflow.Engine.Business.Manager.IXPDLStorage)">
             <summary>
@@ -1574,6 +1630,17 @@
             <param name="trans">数据库事务</param>
             <returns>任务视图实体</returns>
         </member>
+        <member name="M:Slickflow.Engine.Business.Manager.TaskManager.GetTaskOfMine(System.Data.IDbConnection,System.Int32,System.String,System.Boolean,System.Data.IDbTransaction)">
+            <summary>
+            获取我的任务
+            </summary>
+            <param name="conn">数据库链接</param>
+            <param name="activityInstanceID">活动实例ID</param>
+            <param name="userID">用户ID</param>
+            <param name="notThrowException">是否抛出异常</param>
+            <param name="trans">数据库事务</param>
+            <returns>任务视图实体</returns>
+        </member>
         <member name="M:Slickflow.Engine.Business.Manager.TaskManager.GetTaskOfMine(System.String,System.String,System.String)">
             <summary>
             根据应用实例、流程GUID，办理用户Id获取任务列表
@@ -1877,12 +1944,13 @@
             <param name="toActivityType">到的活动节点类型</param>
             <returns>转移实体列表</returns>
         </member>
-        <member name="M:Slickflow.Engine.Business.Manager.TransitionInstanceManager.GetTransitionInstanceList(System.String,System.String)">
+        <member name="M:Slickflow.Engine.Business.Manager.TransitionInstanceManager.GetTransitionInstanceList(System.String,System.String,System.String)">
             <summary>
             获取转移数据列表
             </summary>
             <param name="appInstanceID">应用实例ID</param>
             <param name="processGUID">流程GUID</param>
+            <param name="version">流程版本</param>
             <returns>转移实例列表</returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.TransitionInstanceManager.GetTransitionInstanceList(System.String,System.String,System.Int32)">
@@ -2850,32 +2918,32 @@
             流程类型
             </summary>
         </member>
-        <member name="F:Slickflow.Engine.Common.PackageTypeEnum.MainProcess">
+        <member name="F:Slickflow.Engine.Common.PackageTypeEnum.Package">
             <summary>
-            主流程
+            协作流程包 Collaboration Package
             </summary>
         </member>
-        <member name="F:Slickflow.Engine.Common.PackageTypeEnum.PoolProcess">
+        <member name="F:Slickflow.Engine.Common.PackageTypeEnum.Pool">
             <summary>
-            泳道流程
+            泳道流程 Pool Process
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Common.Participant">
+        <member name="T:Slickflow.Engine.Common.Partaker">
             <summary>
-            participant entity
+            Partaker entity
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Common.ParticipantTypeEnum">
+        <member name="T:Slickflow.Engine.Common.PartakerTypeEnum">
             <summary>
-            Participant Type
+            Partaker Type
             </summary>
         </member>
-        <member name="F:Slickflow.Engine.Common.ParticipantTypeEnum.Role">
+        <member name="F:Slickflow.Engine.Common.PartakerTypeEnum.Role">
             <summary>
             角色
             </summary>
         </member>
-        <member name="F:Slickflow.Engine.Common.ParticipantTypeEnum.User">
+        <member name="F:Slickflow.Engine.Common.PartakerTypeEnum.User">
             <summary>
             用户
             </summary>
@@ -3024,66 +3092,6 @@
             自然终止（比如超期）
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Common.ProcessTemplateType">
-            <summary>
-            图形类型
-            </summary>
-        </member>
-        <member name="F:Slickflow.Engine.Common.ProcessTemplateType.Blank">
-            <summary>
-            空白
-            </summary>
-        </member>
-        <member name="F:Slickflow.Engine.Common.ProcessTemplateType.Simple">
-            <summary>
-            简单流程
-            </summary>
-        </member>
-        <member name="F:Slickflow.Engine.Common.ProcessTemplateType.Sequence">
-            <summary>
-            序列
-            </summary>
-        </member>
-        <member name="F:Slickflow.Engine.Common.ProcessTemplateType.Parallel">
-            <summary>
-            并行网关
-            </summary>
-        </member>
-        <member name="F:Slickflow.Engine.Common.ProcessTemplateType.MultipleInstance">
-            <summary>
-            会签
-            </summary>
-        </member>
-        <member name="F:Slickflow.Engine.Common.ProcessTemplateType.AndSplitMI">
-            <summary>
-            并行分支容器
-            </summary>
-        </member>
-        <member name="F:Slickflow.Engine.Common.ProcessTemplateType.SubProcess">
-            <summary>
-            子流程
-            </summary>
-        </member>
-        <member name="F:Slickflow.Engine.Common.ProcessTemplateType.Complex">
-            <summary>
-            复杂模式
-            </summary>
-        </member>
-        <member name="F:Slickflow.Engine.Common.ProcessTemplateType.Conditional">
-            <summary>
-            条件节点
-            </summary>
-        </member>
-        <member name="F:Slickflow.Engine.Common.ProcessTemplateType.BatchUpdate">
-            <summary>
-            批处理更新
-            </summary>
-        </member>
-        <member name="F:Slickflow.Engine.Common.ProcessTemplateType.RunProcess">
-            <summary>
-            Startup Process
-            </summary>
-        </member>
         <member name="T:Slickflow.Engine.Common.ProcessVariableTypeEnum">
             <summary>
             变量范围类型
@@ -3127,6 +3135,41 @@
         <member name="F:Slickflow.Engine.Common.ReceiverTypeEnum.ProcessInitiator">
             <summary>
             流程发起人
+            </summary>
+        </member>
+        <member name="T:Slickflow.Engine.Common.SignForwardStepInfo">
+            <summary>
+            上一步活动信息
+            </summary>
+        </member>
+        <member name="P:Slickflow.Engine.Common.SignForwardStepInfo.SignForwardRoleUserTree">
+            <summary>
+            下一步活动角色用户树
+            </summary>
+        </member>
+        <member name="T:Slickflow.Engine.Common.SubInfo">
+            <summary>
+            子流程对象
+            </summary>
+        </member>
+        <member name="T:Slickflow.Engine.Common.SubProcessTypeEnum">
+            <summary>
+            子流程类型
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Common.SubProcessTypeEnum.None">
+            <summary>
+            未指定类型
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Common.SubProcessTypeEnum.Nested">
+            <summary>
+            嵌入式类型
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Common.SubProcessTypeEnum.Referenced">
+            <summary>
+            外部引用类型
             </summary>
         </member>
         <member name="T:Slickflow.Engine.Common.TaskEMailSentStatusEnum">
@@ -3343,6 +3386,11 @@
             流程数据：待办任务ID
             </summary>
         </member>
+        <member name="P:Slickflow.Engine.Common.WfAppRunner.ActivityInstanceID">
+            <summary>
+            流程数据：活动实例ID
+            </summary>
+        </member>
         <member name="P:Slickflow.Engine.Common.WfAppRunner.ApprovalStatus">
             <summary>
             审批结果状态
@@ -3381,11 +3429,6 @@
         <member name="P:Slickflow.Engine.Common.WfAppRunner.MessageTopic">
             <summary>
             用于消息启动时的主题
-            </summary>
-        </member>
-        <member name="P:Slickflow.Engine.Common.WfAppRunner.FileProcessID">
-            <summary>
-            泳道流程GUID标识，用于流程XML
             </summary>
         </member>
         <member name="T:Slickflow.Engine.Common.WfBackwardTaskReceiver">
@@ -3677,6 +3720,25 @@
             <param name="toActivityInstanceID">流转到的活动实例ID</param>
             <param name="previousActivityInstanceList">前节点实例列表</param>
         </member>
+        <member name="T:Slickflow.Engine.Core.Parser.SignForwardStepMaker">
+            <summary>
+            上一步活动节点检查器
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Parser.SignForwardStepMaker.GetSignForwardStepInfo(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            流程下一步信息获取
+            </summary>
+            <param name="runner">当前运行用户</param>
+            <returns>下一步信息</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Parser.SignForwardStepMaker.GetSignForwardRoleUserTree(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            根据应用获取流程下一步节点列表，包含角色用户
+            </summary>
+            <param name="runner">应用执行人</param>
+            <returns>节点列表</returns>
+        </member>
         <member name="T:Slickflow.Engine.Core.Pattern.ActionExecutor">
             <summary>
             Action 执行器类
@@ -3794,6 +3856,313 @@
             <param name="delegateService">委托服务</param>
             <returns>参数列表</returns>
         </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Conditional.NodeMediatorInterConditional">
+            <summary>
+            中间事件节点(条件)处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Conditional.NodeMediatorInterConditional.ExecuteWorkItem">
+            <summary>
+            执行方法
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Conditional.NodeMediatorInterConditional.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.String,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Common.WfAppRunner,Slickflow.Data.IDbSession)">
+            <summary>
+            自动完成
+            </summary>
+            <param name="processInstance">流程实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="fromActivity">起始活动</param>
+            <param name="fromActivityInstance">起始活动实例</param>
+            <param name="toActivity">目标活动</param>
+            <param name="runner">运行者</param>
+            <param name="session">会话</param>
+            <returns>网关执行结果</returns>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Conditional.NodeMediatorInterConditionalGo">
+            <summary>
+            中间事件节点处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Conditional.NodeMediatorInterConditionalGo.ExecuteWorkItem">
+            <summary>
+            执行方法
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Conditional.NodeMediatorInterConditionalGo.CheckBeingExecutedInfo(Slickflow.Data.IDbSession)">
+            <summary>
+            检查节点运行条件是否满足
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Conditional.NodeMediatorInterConditionalGo.CompleteWorkItem(System.Nullable{System.Int32},Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            完成任务实例
+            </summary>
+            <param name="taskID">任务视图</param>
+            <param name="activityResource">活动资源</param>
+            <param name="session">会话</param>        
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Conditional.NodeMediatorInterConditionalGo.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            创建活动任务转移实例数据
+            </summary>
+            <param name="toActivity">活动</param>
+            <param name="processInstance">流程实例</param>
+            <param name="fromActivityInstance">开始活动实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="transitionType">转移类型</param>
+            <param name="flyingType">跳跃类型</param>
+            <param name="activityResource">活动资源</param>
+            <param name="session">会话</param>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Conditional.NodeMediatorStartConditional">
+            <summary>
+            开始节点执行器
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Conditional.NodeMediatorStartConditional.ExecuteWorkItem">
+            <summary>
+            执行开始节点
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Conditional.NodeMediatorStartConditional.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            置开始节点为结束状态
+            </summary>
+            <param name="processInstance"></param>
+            <param name="activityResource"></param>
+            <param name="session"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgCatch">
+            <summary>
+            结束节点处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgCatch.ExecuteWorkItem">
+            <summary>
+            节点内部业务逻辑执行
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgCatch.ContinueMainProcessRunning(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Data.IDbSession)">
+            <summary>
+            继续执行主流程
+            </summary>
+            <param name="processInstance">子流程实例</param>
+            <param name="session">数据库会话</param>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgCatch.FillNextActivityPerformersByRoleList(System.Int32,System.String,Slickflow.Data.IDbSession)">
+            <summary>
+            使用流程定义资源添加角色用户
+            </summary>
+            <param name="mainActivityInstanceID">主流程节点实例ID</param>
+            <param name="mainActivityGUID">主流程节点GUID</param>
+            <param name="session">数据库会话</param>
+            <returns>执行用户</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgCatch.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            结束节点活动及转移实例化，没有任务数据
+            </summary>
+            <param name="toActivity">当前Activity</param>
+            <param name="processInstance">流程实例</param>
+            <param name="fromActivityInstance">起始活动实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="transitionType">转移类型</param>
+            <param name="flyingType">跳跃类型</param>
+            <param name="activityResource">活动资源</param>
+            <param name="session">Session</param>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgThrow">
+            <summary>
+            结束节点处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgThrow.ExecuteWorkItem">
+            <summary>
+            节点内部业务逻辑执行
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgThrow.ContinueMainProcessRunning(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Data.IDbSession)">
+            <summary>
+            继续执行主流程
+            </summary>
+            <param name="processInstance">子流程实例</param>
+            <param name="session">数据库会话</param>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgThrow.FillNextActivityPerformersByRoleList(System.Int32,System.String,Slickflow.Data.IDbSession)">
+            <summary>
+            使用流程定义资源添加角色用户
+            </summary>
+            <param name="mainActivityInstanceID">主流程节点实例ID</param>
+            <param name="mainActivityGUID">主流程节点GUID</param>
+            <param name="session">数据库会话</param>
+            <returns>执行用户</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgThrow.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            结束节点活动及转移实例化，没有任务数据
+            </summary>
+            <param name="toActivity">当前Activity</param>
+            <param name="processInstance">流程实例</param>
+            <param name="fromActivityInstance">起始活动实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="transitionType">转移类型</param>
+            <param name="flyingType">跳跃类型</param>
+            <param name="activityResource">活动资源</param>
+            <param name="session">Session</param>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorInterMessageGo">
+            <summary>
+            中间事件节点处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorInterMessageGo.ExecuteWorkItem">
+            <summary>
+            执行方法
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorInterMessageGo.CompleteWorkItem(System.Nullable{System.Int32},Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            完成任务实例
+            </summary>
+            <param name="taskID">任务视图</param>
+            <param name="activityResource">活动资源</param>
+            <param name="session">会话</param>        
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorInterMessageGo.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            创建活动任务转移实例数据
+            </summary>
+            <param name="toActivity">活动</param>
+            <param name="processInstance">流程实例</param>
+            <param name="fromActivityInstance">开始活动实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="transitionType">转移类型</param>
+            <param name="flyingType">跳跃类型</param>
+            <param name="activityResource">活动资源</param>
+            <param name="session">会话</param>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorInterMsgCatch">
+            <summary>
+            中间事件节点处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorInterMsgCatch.ExecuteWorkItem">
+            <summary>
+            执行方法
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorInterMsgCatch.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.String,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Common.WfAppRunner,Slickflow.Data.IDbSession)">
+            <summary>
+            自动完成
+            </summary>
+            <param name="processInstance">流程实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="fromActivity">起始活动</param>
+            <param name="fromActivityInstance">起始活动实例</param>
+            <param name="toActivity">目标活动</param>
+            <param name="runner">运行者</param>
+            <param name="session">会话</param>
+            <returns>网关执行结果</returns>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorInterMsgCatchContinue">
+            <summary>
+            中间事件节点处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorInterMsgCatchContinue.ExecuteWorkItem">
+            <summary>
+            执行方法
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorInterMsgCatchContinue.CompleteWorkItem(Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            完成节点实例
+            </summary>
+            <param name="activityResource">活动资源</param>
+            <param name="session">会话</param>        
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorInterMsgThrow">
+            <summary>
+            中间事件节点处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorInterMsgThrow.ExecuteWorkItem">
+            <summary>
+            执行方法
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorInterMsgThrow.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.String,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Common.WfAppRunner,Slickflow.Data.IDbSession)">
+            <summary>
+            自动完成
+            </summary>
+            <param name="processInstance">流程实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="fromActivity">起始活动</param>
+            <param name="fromActivityInstance">起始活动实例</param>
+            <param name="toActivity">目标活动</param>
+            <param name="runner">运行者</param>
+            <param name="session">会话</param>
+            <returns>网关执行结果</returns>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorStartMsgCatch">
+            <summary>
+            开始节点执行器
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorStartMsgCatch.ExecuteWorkItem">
+            <summary>
+            执行开始节点
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorStartMsgCatch.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            置开始节点为结束状态
+            </summary>
+            <param name="processInstance"></param>
+            <param name="activityResource"></param>
+            <param name="session"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorStartMsgThrow">
+            <summary>
+            开始节点执行器
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorStartMsgThrow.ExecuteWorkItem">
+            <summary>
+            执行开始节点
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorStartMsgThrow.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            置开始节点为结束状态
+            </summary>
+            <param name="processInstance"></param>
+            <param name="activityResource"></param>
+            <param name="session"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorStartSignalCatch">
+            <summary>
+            开始节点执行器
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorStartSignalCatch.ExecuteWorkItem">
+            <summary>
+            执行开始节点
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorStartSignalCatch.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            置开始节点为结束状态
+            </summary>
+            <param name="processInstance"></param>
+            <param name="activityResource"></param>
+            <param name="session"></param>
+            <returns></returns>
+        </member>
         <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEnd">
             <summary>
             结束节点处理类
@@ -3821,123 +4190,6 @@
             <returns>执行用户</returns>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEnd.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
-            <summary>
-            结束节点活动及转移实例化，没有任务数据
-            </summary>
-            <param name="toActivity">当前Activity</param>
-            <param name="processInstance">流程实例</param>
-            <param name="fromActivityInstance">起始活动实例</param>
-            <param name="transitionGUID">转移GUID</param>
-            <param name="transitionType">转移类型</param>
-            <param name="flyingType">跳跃类型</param>
-            <param name="activityResource">活动资源</param>
-            <param name="session">Session</param>
-        </member>
-        <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEndMsgCatch">
-            <summary>
-            结束节点处理类
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEndMsgCatch.ExecuteWorkItem">
-            <summary>
-            节点内部业务逻辑执行
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEndMsgCatch.ContinueMainProcessRunning(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Data.IDbSession)">
-            <summary>
-            继续执行主流程
-            </summary>
-            <param name="processInstance">子流程实例</param>
-            <param name="session">数据库会话</param>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEndMsgCatch.FillNextActivityPerformersByRoleList(System.Int32,System.String,Slickflow.Data.IDbSession)">
-            <summary>
-            使用流程定义资源添加角色用户
-            </summary>
-            <param name="mainActivityInstanceID">主流程节点实例ID</param>
-            <param name="mainActivityGUID">主流程节点GUID</param>
-            <param name="session">数据库会话</param>
-            <returns>执行用户</returns>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEndMsgCatch.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
-            <summary>
-            结束节点活动及转移实例化，没有任务数据
-            </summary>
-            <param name="toActivity">当前Activity</param>
-            <param name="processInstance">流程实例</param>
-            <param name="fromActivityInstance">起始活动实例</param>
-            <param name="transitionGUID">转移GUID</param>
-            <param name="transitionType">转移类型</param>
-            <param name="flyingType">跳跃类型</param>
-            <param name="activityResource">活动资源</param>
-            <param name="session">Session</param>
-        </member>
-        <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEndMsgThrow">
-            <summary>
-            结束节点处理类
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEndMsgThrow.ExecuteWorkItem">
-            <summary>
-            节点内部业务逻辑执行
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEndMsgThrow.ContinueMainProcessRunning(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Data.IDbSession)">
-            <summary>
-            继续执行主流程
-            </summary>
-            <param name="processInstance">子流程实例</param>
-            <param name="session">数据库会话</param>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEndMsgThrow.FillNextActivityPerformersByRoleList(System.Int32,System.String,Slickflow.Data.IDbSession)">
-            <summary>
-            使用流程定义资源添加角色用户
-            </summary>
-            <param name="mainActivityInstanceID">主流程节点实例ID</param>
-            <param name="mainActivityGUID">主流程节点GUID</param>
-            <param name="session">数据库会话</param>
-            <returns>执行用户</returns>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEndMsgThrow.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
-            <summary>
-            结束节点活动及转移实例化，没有任务数据
-            </summary>
-            <param name="toActivity">当前Activity</param>
-            <param name="processInstance">流程实例</param>
-            <param name="fromActivityInstance">起始活动实例</param>
-            <param name="transitionGUID">转移GUID</param>
-            <param name="transitionType">转移类型</param>
-            <param name="flyingType">跳跃类型</param>
-            <param name="activityResource">活动资源</param>
-            <param name="session">Session</param>
-        </member>
-        <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEndTimer">
-            <summary>
-            结束节点处理类
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEndTimer.ExecuteWorkItem">
-            <summary>
-            节点内部业务逻辑执行
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEndTimer.ContinueMainProcessRunning(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Data.IDbSession)">
-            <summary>
-            继续执行主流程
-            </summary>
-            <param name="processInstance">子流程实例</param>
-            <param name="session">数据库会话</param>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEndTimer.FillNextActivityPerformersByRoleList(System.Int32,System.String,Slickflow.Data.IDbSession)">
-            <summary>
-            使用流程定义资源添加角色用户
-            </summary>
-            <param name="mainActivityInstanceID">主流程节点实例ID</param>
-            <param name="mainActivityGUID">主流程节点GUID</param>
-            <param name="session">数据库会话</param>
-            <returns>执行用户</returns>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEndTimer.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
             <summary>
             结束节点活动及转移实例化，没有任务数据
             </summary>
@@ -4084,65 +4336,6 @@
             <param name="runner">运行者</param>
             <param name="session">会话</param>
         </member>
-        <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterConditional">
-            <summary>
-            中间事件节点(条件)处理类
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterConditional.ExecuteWorkItem">
-            <summary>
-            执行方法
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterConditional.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.String,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Common.WfAppRunner,Slickflow.Data.IDbSession)">
-            <summary>
-            自动完成
-            </summary>
-            <param name="processInstance">流程实例</param>
-            <param name="transitionGUID">转移GUID</param>
-            <param name="fromActivity">起始活动</param>
-            <param name="fromActivityInstance">起始活动实例</param>
-            <param name="toActivity">目标活动</param>
-            <param name="runner">运行者</param>
-            <param name="session">会话</param>
-            <returns>网关执行结果</returns>
-        </member>
-        <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterConditionalGo">
-            <summary>
-            中间事件节点处理类
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterConditionalGo.ExecuteWorkItem">
-            <summary>
-            执行方法
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterConditionalGo.CheckBeingExecutedInfo(Slickflow.Data.IDbSession)">
-            <summary>
-            检查节点运行条件是否满足
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterConditionalGo.CompleteWorkItem(System.Nullable{System.Int32},Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
-            <summary>
-            完成任务实例
-            </summary>
-            <param name="taskID">任务视图</param>
-            <param name="activityResource">活动资源</param>
-            <param name="session">会话</param>        
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterConditionalGo.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
-            <summary>
-            创建活动任务转移实例数据
-            </summary>
-            <param name="toActivity">活动</param>
-            <param name="processInstance">流程实例</param>
-            <param name="fromActivityInstance">开始活动实例</param>
-            <param name="transitionGUID">转移GUID</param>
-            <param name="transitionType">转移类型</param>
-            <param name="flyingType">跳跃类型</param>
-            <param name="activityResource">活动资源</param>
-            <param name="session">会话</param>
-        </member>
         <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorIntermediate">
             <summary>
             中间事件节点处理类
@@ -4165,166 +4358,6 @@
             <param name="runner">运行者</param>
             <param name="session">会话</param>
             <returns>网关执行结果</returns>
-        </member>
-        <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterMessageGo">
-            <summary>
-            中间事件节点处理类
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterMessageGo.ExecuteWorkItem">
-            <summary>
-            执行方法
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterMessageGo.CompleteWorkItem(System.Nullable{System.Int32},Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
-            <summary>
-            完成任务实例
-            </summary>
-            <param name="taskID">任务视图</param>
-            <param name="activityResource">活动资源</param>
-            <param name="session">会话</param>        
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterMessageGo.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
-            <summary>
-            创建活动任务转移实例数据
-            </summary>
-            <param name="toActivity">活动</param>
-            <param name="processInstance">流程实例</param>
-            <param name="fromActivityInstance">开始活动实例</param>
-            <param name="transitionGUID">转移GUID</param>
-            <param name="transitionType">转移类型</param>
-            <param name="flyingType">跳跃类型</param>
-            <param name="activityResource">活动资源</param>
-            <param name="session">会话</param>
-        </member>
-        <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterMsgCatch">
-            <summary>
-            中间事件节点处理类
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterMsgCatch.ExecuteWorkItem">
-            <summary>
-            执行方法
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterMsgCatch.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.String,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Common.WfAppRunner,Slickflow.Data.IDbSession)">
-            <summary>
-            自动完成
-            </summary>
-            <param name="processInstance">流程实例</param>
-            <param name="transitionGUID">转移GUID</param>
-            <param name="fromActivity">起始活动</param>
-            <param name="fromActivityInstance">起始活动实例</param>
-            <param name="toActivity">目标活动</param>
-            <param name="runner">运行者</param>
-            <param name="session">会话</param>
-            <returns>网关执行结果</returns>
-        </member>
-        <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterMsgCatchContinue">
-            <summary>
-            中间事件节点处理类
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterMsgCatchContinue.ExecuteWorkItem">
-            <summary>
-            执行方法
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterMsgCatchContinue.CompleteWorkItem(Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
-            <summary>
-            完成节点实例
-            </summary>
-            <param name="activityResource">活动资源</param>
-            <param name="session">会话</param>        
-        </member>
-        <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterMsgThrow">
-            <summary>
-            中间事件节点处理类
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterMsgThrow.ExecuteWorkItem">
-            <summary>
-            执行方法
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterMsgThrow.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.String,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Common.WfAppRunner,Slickflow.Data.IDbSession)">
-            <summary>
-            自动完成
-            </summary>
-            <param name="processInstance">流程实例</param>
-            <param name="transitionGUID">转移GUID</param>
-            <param name="fromActivity">起始活动</param>
-            <param name="fromActivityInstance">起始活动实例</param>
-            <param name="toActivity">目标活动</param>
-            <param name="runner">运行者</param>
-            <param name="session">会话</param>
-            <returns>网关执行结果</returns>
-        </member>
-        <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterTimer">
-            <summary>
-            中间事件节点处理类
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterTimer.ExecuteWorkItem">
-            <summary>
-            执行方法
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterTimer.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.String,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Common.WfAppRunner,Slickflow.Data.IDbSession)">
-            <summary>
-            自动完成
-            </summary>
-            <param name="processInstance">流程实例</param>
-            <param name="transitionGUID">转移GUID</param>
-            <param name="fromActivity">起始活动</param>
-            <param name="fromActivityInstance">起始活动实例</param>
-            <param name="toActivity">目标活动</param>
-            <param name="runner">运行者</param>
-            <param name="session">会话</param>
-            <returns>网关执行结果</returns>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterTimer.CalcDataTimeFromVariable(Slickflow.Engine.Xpdl.Entity.Activity)">
-            <summary>
-            计算延迟时间
-            </summary>
-            <param name="timerActivity">活动</param>
-            <returns>延迟时间</returns>
-        </member>
-        <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterTimerGo">
-            <summary>
-            中间事件节点处理类
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterTimerGo.ExecuteWorkItem">
-            <summary>
-            执行方法
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterTimerGo.CheckBeingExecutedInfo">
-            <summary>
-            检查节点运行条件是否满足
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterTimerGo.CompleteWorkItem(System.Nullable{System.Int32},Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
-            <summary>
-            完成任务实例
-            </summary>
-            <param name="taskID">任务视图</param>
-            <param name="activityResource">活动资源</param>
-            <param name="session">会话</param>        
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorInterTimerGo.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
-            <summary>
-            创建活动任务转移实例数据
-            </summary>
-            <param name="toActivity">活动</param>
-            <param name="processInstance">流程实例</param>
-            <param name="fromActivityInstance">开始活动实例</param>
-            <param name="transitionGUID">转移GUID</param>
-            <param name="transitionType">转移类型</param>
-            <param name="flyingType">跳跃类型</param>
-            <param name="activityResource">活动资源</param>
-            <param name="session">会话</param>
         </member>
         <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorScript">
             <summary>
@@ -4393,17 +4426,113 @@
             <param name="session"></param>
             <returns></returns>
         </member>
-        <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorStartConditional">
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorEndSignalCatch">
+            <summary>
+            信号结束节点的Catch类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorEndSignalCatch.ExecuteWorkItem">
+            <summary>
+            节点内部业务逻辑执行
+            </summary>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorEndSignalThrow">
+            <summary>
+            结束节点处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorEndSignalThrow.ExecuteWorkItem">
+            <summary>
+            节点内部业务逻辑执行
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorEndSignalThrow.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            结束节点活动及转移实例化，没有任务数据
+            </summary>
+            <param name="toActivity">当前Activity</param>
+            <param name="processInstance">流程实例</param>
+            <param name="fromActivityInstance">起始活动实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="transitionType">转移类型</param>
+            <param name="flyingType">跳跃类型</param>
+            <param name="activityResource">活动资源</param>
+            <param name="session">Session</param>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorInterSignalCatch">
+            <summary>
+            中间事件节点处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorInterSignalCatch.ExecuteWorkItem">
+            <summary>
+            执行方法
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorInterSignalCatch.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.String,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Common.WfAppRunner,Slickflow.Data.IDbSession)">
+            <summary>
+            自动完成
+            </summary>
+            <param name="processInstance">流程实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="fromActivity">起始活动</param>
+            <param name="fromActivityInstance">起始活动实例</param>
+            <param name="toActivity">目标活动</param>
+            <param name="runner">运行者</param>
+            <param name="session">会话</param>
+            <returns>网关执行结果</returns>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorInterSignalCatchContinue">
+            <summary>
+            中间事件节点处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorInterSignalCatchContinue.ExecuteWorkItem">
+            <summary>
+            执行方法
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorInterSignalCatchContinue.CompleteWorkItem(Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            完成节点实例
+            </summary>
+            <param name="activityResource">活动资源</param>
+            <param name="session">会话</param>        
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorInterSignalThrow">
+            <summary>
+            中间事件节点处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorInterSignalThrow.ExecuteWorkItem">
+            <summary>
+            执行方法
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorInterSignalThrow.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.String,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Common.WfAppRunner,Slickflow.Data.IDbSession)">
+            <summary>
+            自动完成
+            </summary>
+            <param name="processInstance">流程实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="fromActivity">起始活动</param>
+            <param name="fromActivityInstance">起始活动实例</param>
+            <param name="toActivity">目标活动</param>
+            <param name="runner">运行者</param>
+            <param name="session">会话</param>
+            <returns>网关执行结果</returns>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorStartSignalThrow">
             <summary>
             开始节点执行器
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorStartConditional.ExecuteWorkItem">
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorStartSignalThrow.ExecuteWorkItem">
             <summary>
             执行开始节点
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorStartConditional.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Signal.NodeMediatorStartSignalThrow.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
             <summary>
             置开始节点为结束状态
             </summary>
@@ -4412,55 +4541,122 @@
             <param name="session"></param>
             <returns></returns>
         </member>
-        <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorStartMsgCatch">
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorEndTimer">
+            <summary>
+            结束节点处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorEndTimer.ExecuteWorkItem">
+            <summary>
+            节点内部业务逻辑执行
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorEndTimer.ContinueMainProcessRunning(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Data.IDbSession)">
+            <summary>
+            继续执行主流程
+            </summary>
+            <param name="processInstance">子流程实例</param>
+            <param name="session">数据库会话</param>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorEndTimer.FillNextActivityPerformersByRoleList(System.Int32,System.String,Slickflow.Data.IDbSession)">
+            <summary>
+            使用流程定义资源添加角色用户
+            </summary>
+            <param name="mainActivityInstanceID">主流程节点实例ID</param>
+            <param name="mainActivityGUID">主流程节点GUID</param>
+            <param name="session">数据库会话</param>
+            <returns>执行用户</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorEndTimer.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            结束节点活动及转移实例化，没有任务数据
+            </summary>
+            <param name="toActivity">当前Activity</param>
+            <param name="processInstance">流程实例</param>
+            <param name="fromActivityInstance">起始活动实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="transitionType">转移类型</param>
+            <param name="flyingType">跳跃类型</param>
+            <param name="activityResource">活动资源</param>
+            <param name="session">Session</param>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorInterTimer">
+            <summary>
+            中间事件节点处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorInterTimer.ExecuteWorkItem">
+            <summary>
+            执行方法
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorInterTimer.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.String,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Common.WfAppRunner,Slickflow.Data.IDbSession)">
+            <summary>
+            自动完成
+            </summary>
+            <param name="processInstance">流程实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="fromActivity">起始活动</param>
+            <param name="fromActivityInstance">起始活动实例</param>
+            <param name="toActivity">目标活动</param>
+            <param name="runner">运行者</param>
+            <param name="session">会话</param>
+            <returns>网关执行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorInterTimer.CalcDataTimeFromVariable(Slickflow.Engine.Xpdl.Entity.Activity)">
+            <summary>
+            计算延迟时间
+            </summary>
+            <param name="timerActivity">活动</param>
+            <returns>延迟时间</returns>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorInterTimerGo">
+            <summary>
+            中间事件节点处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorInterTimerGo.ExecuteWorkItem">
+            <summary>
+            执行方法
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorInterTimerGo.CheckBeingExecutedInfo">
+            <summary>
+            检查节点运行条件是否满足
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorInterTimerGo.CompleteWorkItem(System.Nullable{System.Int32},Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            完成任务实例
+            </summary>
+            <param name="taskID">任务视图</param>
+            <param name="activityResource">活动资源</param>
+            <param name="session">会话</param>        
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorInterTimerGo.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            创建活动任务转移实例数据
+            </summary>
+            <param name="toActivity">活动</param>
+            <param name="processInstance">流程实例</param>
+            <param name="fromActivityInstance">开始活动实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="transitionType">转移类型</param>
+            <param name="flyingType">跳跃类型</param>
+            <param name="activityResource">活动资源</param>
+            <param name="session">会话</param>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorStartTimer">
             <summary>
             开始节点执行器
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorStartMsgCatch.ExecuteWorkItem">
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorStartTimer.ExecuteWorkItem">
             <summary>
             执行开始节点
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorStartMsgCatch.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
-            <summary>
-            置开始节点为结束状态
-            </summary>
-            <param name="processInstance"></param>
-            <param name="activityResource"></param>
-            <param name="session"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorStartMsgThrow">
-            <summary>
-            开始节点执行器
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorStartMsgThrow.ExecuteWorkItem">
-            <summary>
-            执行开始节点
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorStartMsgThrow.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
-            <summary>
-            置开始节点为结束状态
-            </summary>
-            <param name="processInstance"></param>
-            <param name="activityResource"></param>
-            <param name="session"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Slickflow.Engine.Core.Pattern.Event.NodeMediatorStartTimer">
-            <summary>
-            开始节点执行器
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorStartTimer.ExecuteWorkItem">
-            <summary>
-            执行开始节点
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorStartTimer.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorStartTimer.CompleteAutomaticlly(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
             <summary>
             置开始节点为结束状态
             </summary>
@@ -5189,6 +5385,15 @@
             <param name="session">会话</param>
             <returns></returns>
         </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorFactory.ThrowUncerternXmlNodeTypeException(System.String,System.String,System.String)">
+            <summary>
+            抛出异常信息
+            </summary>
+            <param name="activityType">活动类型</param>
+            <param name="triggerType">触发类型</param>
+            <param name="throwCatchDirection">throw/catch类型</param>
+            <exception cref="T:System.ApplicationException"></exception>
+        </member>
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorFactory.CreateNodeMediatorGateway(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Xpdl.IProcessModel,Slickflow.Data.IDbSession)">
             <summary>
             创建Gateway节点处理类实例
@@ -5214,6 +5419,23 @@
             </summary>
             <param name="forwardContext">活动上下文</param>
             <param name="endActivity">节点</param>
+            <param name="session">会话</param>
+            <returns>节点处理实例</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorFactory.CreateNodeMediatorSubProcess(Slickflow.Engine.Core.ActivityForwardContext,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Data.IDbSession)">
+            <summary>
+            创建子流程节点处理类实例
+            </summary>
+            <param name="forwardContext">活动上下文</param>
+            <param name="activity">活动节点</param>
+            <param name="session">会话</param>
+            <returns>节点处理实例</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorFactory.CreateNodeMediatorSubProcess(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Data.IDbSession)">
+            <summary>
+            创建子流程节点处理类实例
+            </summary>
+            <param name="activity">活动节点</param>
             <param name="session">会话</param>
             <returns>节点处理实例</returns>
         </member>
@@ -5282,9 +5504,55 @@
             <param name="activityResource">活动资源</param>
             <param name="session">会话</param>        
         </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.NodeMediatorRevise">
+            <summary>
+            流程修订的具体执行类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorRevise.ExecuteWorkItem">
+            <summary>
+            执行普通任务节点
+            1. 当设置任务完成时，同时设置活动完成
+            2. 当实例化活动数据时，产生新的任务数据
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorRevise.CompleteWorkItem(System.Nullable{System.Int32},Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            完成任务实例
+            </summary>
+            <param name="taskID">任务视图</param>
+            <param name="activityResource">活动资源</param>
+            <param name="session">会话</param>        
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorRevise.CloneChildNodeOfMI(Slickflow.Engine.Common.PerformerList,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Data.IDbSession)">
+            <summary>
+            复制多实例子节点数据
+            </summary>
+            <param name="plist">执行人员列表</param>
+            <param name="mainActivityInstance">主节点</param>
+            <param name="session">数据会话</param>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorRevise.IsTaskExisted(System.Collections.Generic.List{Slickflow.Engine.Business.Entity.ActivityInstanceEntity},System.String)">
+            <summary>
+            判断活动实例是否已经存在
+            </summary>
+            <param name="childNodeOfMI">活动实例列表</param>
+            <param name="userID">用户ID</param>
+            <returns>存在标记</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorRevise.CloneChildNodeOfAndSplitMI(Slickflow.Engine.Common.PerformerList,System.String,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Data.IDbSession)">
+            <summary>
+            复制并行分支多实例节点数据
+            </summary>
+            <param name="plist">执行人员列表</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="gatewayActivityInstance">网关活动实例</param>
+            <param name="toActivityInstance">多实例分支节点</param>
+            <param name="session">数据会话</param>
+        </member>
         <member name="T:Slickflow.Engine.Core.Pattern.NodeMediatorSignForward">
             <summary>
-            加签节点执行器
+            加签主节点执行器
             </summary>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorSignForward.ExecuteWorkItem">
@@ -5294,11 +5562,12 @@
             加签主节点及其加签实例子节点记录生成
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorSignForward.UpgradeToMainSignForwardNode(Slickflow.Engine.Business.Entity.ActivityInstanceEntity)">
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorSignForward.UpgradeToMainSignForwardNode(Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Common.SignForwardTypeEnum)">
             <summary>
             升级当前节点为加签主节点
             </summary>
-            <param name="currentActivityInstance"></param>
+            <param name="currentActivityInstance">当前活动实例</param>
+            <param name="signForwardType">加签类型</param>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorSignForward.CreateSignForwardTasks(Slickflow.Engine.Common.ActivityResource)">
             <summary>
@@ -5364,13 +5633,79 @@
             <param name="activityResource">活动资源</param>
             <param name="session">会话</param>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorSubProcess.CreateSubProcessRunner(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Common.Performer,Slickflow.Engine.Xpdl.Node.SubProcessNode,Slickflow.Data.IDbSession)">
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorSubProcess.CreateSubProcessRunner(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Common.Performer,Slickflow.Data.IDbSession)">
             <summary>
             创建子流程时，重新生成runner信息
             </summary>
             <param name="runner">运行者</param>
             <param name="performer">下一步执行者</param>
-            <param name="subProcessNode">子流程节点</param>
+            <param name="session">会话</param>
+            <returns></returns>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Pattern.NodeMediatorSubProcessNested">
+            <summary>
+            子流程节点执行器
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorSubProcessNested.ExecuteWorkItem">
+            <summary>
+            执行子流程节点
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorSubProcessNested.CompleteWorkItem(System.Nullable{System.Int32},Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            完成任务实例
+            </summary>
+            <param name="taskID">任务ID</param>
+            <param name="activityResource">活动资源</param>
+            <param name="session">会话</param>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorSubProcessNested.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            创建活动任务转移数据
+            </summary>
+            <param name="toActivity">目的活动</param>
+            <param name="processInstance">流程实例</param>
+            <param name="fromActivityInstance">来源活动实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="transitionType">转移类型</param>
+            <param name="flyingType">飞跃类型</param>
+            <param name="activityResource">活动资源</param>
+            <param name="session">会话</param>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorSubProcessNested.CreateSubProcessNode(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Engine.Common.Performer,Slickflow.Data.IDbSession)">
+            <summary>
+            创建子流程节点数据以及子流程记录
+            </summary>
+            <param name="toActivity">目的活动</param>
+            <param name="processInstance">流程实例</param>
+            <param name="fromActivityInstance">来源活动实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="transitionType">转移类型</param>
+            <param name="flyingType">飞跃类型</param>
+            <param name="activityResource">活动资源</param>
+            <param name="performer">执行者</param>
+            <param name="session">会话</param>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorSubProcessNested.CreateMultipleInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
+            <summary>
+            会签类型的主节点, 多实例节点处理
+            </summary>
+            <param name="toActivity">目的活动</param>
+            <param name="processInstance">流程实例</param>
+            <param name="fromActivityInstance">来源活动实例</param>
+            <param name="transitionGUID">转移GUID</param>
+            <param name="transitionType">转移类型</param>
+            <param name="flyingType">飞跃类型</param>
+            <param name="activityResource">活动资源</param>
+            <param name="session">会话</param>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorSubProcessNested.CreateSubProcessRunner(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Common.Performer,Slickflow.Data.IDbSession)">
+            <summary>
+            创建子流程时，重新生成runner信息
+            </summary>
+            <param name="runner">运行者</param>
+            <param name="performer">下一步执行者</param>
             <param name="session">会话</param>
             <returns></returns>
         </member>
@@ -5636,6 +5971,17 @@
             <param name="executing">执行事件</param>
             <param name="executed">执行完成事件</param>
         </member>
+        <member name="T:Slickflow.Engine.Core.Runtime.WfRuntimeManagerClose">
+            <summary>
+            跳转方式的处理
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerClose.ExecuteInstanceImp(Slickflow.Data.IDbSession)">
+            <summary>
+            跳转执行方法
+            </summary>
+            <param name="session">会话</param>
+        </member>
         <member name="T:Slickflow.Engine.Core.Runtime.WfRuntimeManagerFactory">
             <summary>
             运行时的创建类
@@ -5671,6 +6017,15 @@
             <param name="result">结果对象</param>
             <returns>运行时实例对象</returns>
         </member>
+        <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerFactory.CreateRuntimeInstanceRunAuto(Slickflow.Engine.Common.WfAppRunner,Slickflow.Data.IDbSession,Slickflow.Engine.Core.Result.WfExecutedResult@)">
+            <summary>
+            创建运行时实例对象
+            </summary>
+            <param name="runner">执行者</param>
+            <param name="session">数据库会话</param>
+            <param name="result">结果对象</param>
+            <returns>运行时实例对象</returns>
+        </member>
         <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerFactory.CreateRuntimeInstanceJump(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Core.Result.WfExecutedResult@)">
             <summary>
             创建跳转实例信息
@@ -5678,6 +6033,22 @@
             <param name="runner">执行者</param>
             <param name="result">结果对象</param>
             <returns>运行时实例对象</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerFactory.CreateRuntimeInstanceReject(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Core.Result.WfExecutedResult@)">
+            <summary>
+            跳转到流程发起节点
+            </summary>
+            <param name="runner">当前运行用户</param>
+            <param name="result">运行结果</param>
+            <returns>运行时对象</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerFactory.CreateRuntimeInstanceClose(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Core.Result.WfExecutedResult@)">
+            <summary>
+            跳转到结束节点
+            </summary>
+            <param name="runner">当前运行用户</param>
+            <param name="result">运行结果</param>
+            <returns>运行时对象</returns>
         </member>
         <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerFactory.CreateRuntimeInstanceSendBack(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Core.Result.WfExecutedResult@)">
             <summary>
@@ -5713,9 +6084,33 @@
             <param name="result">创建结果</param>
             <returns>运行时管理器</returns>
         </member>
+        <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerFactory.CreateRuntimeInstanceResend(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Core.Result.WfExecutedResult@)">
+            <summary>
+            返送操作
+            </summary>
+            <param name="runner">执行者</param>
+            <param name="result">结果对象</param>
+            <returns>运行时实例对象</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerFactory.CreateRuntimeInstanceRevise(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Core.Result.WfExecutedResult@)">
+            <summary>
+            修订操作
+            </summary>
+            <param name="runner">执行者</param>
+            <param name="result">结果对象</param>
+            <returns>运行时实例对象</returns>
+        </member>
         <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerFactory.CreateRuntimeInstanceReverse(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Core.Result.WfExecutedResult@)">
             <summary>
             流程返签，先检查约束条件，然后调用wfruntimeinstance执行
+            </summary>
+            <param name="runner">执行者</param>
+            <param name="result">结果对象</param>
+            <returns>运行时实例对象</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerFactory.CreateRuntimeInstanceSignForward(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Core.Result.WfExecutedResult@)">
+            <summary>
+            加签操作
             </summary>
             <param name="runner">执行者</param>
             <param name="result">结果对象</param>
@@ -5748,6 +6143,28 @@
             </summary>
             <param name="session">会话</param>
         </member>
+        <member name="T:Slickflow.Engine.Core.Runtime.WfRuntimeManagerReject">
+            <summary>
+            驳回处理
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerReject.ExecuteInstanceImp(Slickflow.Data.IDbSession)">
+            <summary>
+            跳转执行方法
+            </summary>
+            <param name="session">会话</param>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Runtime.WfRuntimeManagerResend">
+            <summary>
+            返送回的处理
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerResend.ExecuteInstanceImp(Slickflow.Data.IDbSession)">
+            <summary>
+            退回操作的处理逻辑
+            </summary>
+            <param name="session">会话</param>
+        </member>
         <member name="T:Slickflow.Engine.Core.Runtime.WfRuntimeManagerReverse">
             <summary>
             流程返签时的运行时
@@ -5756,6 +6173,17 @@
         <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerReverse.ExecuteInstanceImp(Slickflow.Data.IDbSession)">
             <summary>
             返签执行方法
+            </summary>
+            <param name="session">会话</param>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Runtime.WfRuntimeManagerRevise">
+            <summary>
+            流程重新修订处理类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerRevise.ExecuteInstanceImp(Slickflow.Data.IDbSession)">
+            <summary>
+            修订操作的处理逻辑
             </summary>
             <param name="session">会话</param>
         </member>
@@ -5804,6 +6232,17 @@
         <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerSendBack.SetRunningNodeSendBack(Slickflow.Data.IDbSession)">
             <summary>
             更新当前运行节点状态为退回状态
+            </summary>
+            <param name="session">会话</param>
+        </member>
+        <member name="T:Slickflow.Engine.Core.Runtime.WfRuntimeManagerSignForward">
+            <summary>
+            加签执行运行时
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Core.Runtime.WfRuntimeManagerSignForward.ExecuteInstanceImp(Slickflow.Data.IDbSession)">
+            <summary>
+            加签执行方法
             </summary>
             <param name="session">会话</param>
         </member>
@@ -6477,62 +6916,151 @@
             <param name="id">实体主键ID</param>
             <returns>实体</returns>
         </member>
-        <member name="T:Slickflow.Engine.Essential.Job.JobDelegateService">
-            <summary>
-            作业代理服务
-            </summary>
-        </member>
-        <member name="T:Slickflow.Engine.Essential.Message.MessageDelegateService">
+        <member name="T:Slickflow.Engine.Essential.MessageDelegateService">
             <summary>
             消息队列中的消息委托函数
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Essential.Message.MessageDelegateService.PublishMessage(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity)">
+        <member name="M:Slickflow.Engine.Essential.MessageDelegateService.PublishMessage(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity)">
             <summary>
-            消息发布方法
+            构建要发布的消息
             </summary>
             <param name="processInstance">流程实例</param>
             <param name="throwActivity">消息活动</param>
             <param name="throwActivityInstance">消息活动实例</param>
         </member>
-        <member name="M:Slickflow.Engine.Essential.Message.MessageDelegateService.ConsumeMessage(Slickflow.Module.Essential.Message.MessageEntity)">
+        <member name="M:Slickflow.Engine.Essential.MessageDelegateService.ConsumeMessage(Slickflow.Module.Essential.Entity.MessageEntity)">
             <summary>
             消息消费函数
             </summary>
             <param name="entity">消息实体对象</param>
             <returns>消费结果</returns>
         </member>
-        <member name="M:Slickflow.Engine.Essential.Message.MessageDelegateService.GetRunnerFromMessagExchange(Slickflow.Engine.Essential.Message.MessageRunnerView)">
+        <member name="M:Slickflow.Engine.Essential.MessageDelegateService.GetRunnerFromMessagExchange(Slickflow.Engine.Essential.MessageRunnerView)">
             <summary>
             从消息视图中封装运行者对象
             </summary>
             <param name="msgRunnerView">消息视图</param>
             <returns>运行者对象</returns>
         </member>
-        <member name="T:Slickflow.Engine.Essential.Message.MessageRunnerView">
+        <member name="T:Slickflow.Engine.Essential.MessageRunnerView">
             <summary>
             消息运行者对象视图
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Essential.Message.MessageRunnerView.ProcessEntity">
+        <member name="P:Slickflow.Engine.Essential.MessageRunnerView.ProcessEntity">
             <summary>
             目标流程实体
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Essential.Message.MessageRunnerView.ActivityEntity">
+        <member name="P:Slickflow.Engine.Essential.MessageRunnerView.ActivityEntity">
             <summary>
             目标节点实体
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Essential.Message.MessageRunnerView.WfAppRunner">
+        <member name="P:Slickflow.Engine.Essential.MessageRunnerView.WfAppRunner">
             <summary>
             当前运行者身份
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Essential.Message.WfMessageDelegationException">
+        <member name="T:Slickflow.Engine.Essential.SignalDelegateService">
             <summary>
-            流程运行时异常类
+            消息队列中的信号委托函数
             </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Essential.SignalDelegateService.PublishSignal(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity)">
+            <summary>
+            构建要发布的消息
+            </summary>
+            <param name="processInstance">流程实例</param>
+            <param name="throwActivity">消息活动</param>
+            <param name="throwActivityInstance">消息活动实例</param>
+        </member>
+        <member name="M:Slickflow.Engine.Essential.SignalDelegateService.ConsumeSignal(Slickflow.Module.Essential.Entity.SignalEntity)">
+            <summary>
+            消息消费函数
+            </summary>
+            <param name="entity">消息实体对象</param>
+            <returns>消费结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Essential.SignalDelegateService.GetStartRunnerFromSignalExchange(Slickflow.Engine.Essential.SignalRunnerView,Slickflow.Engine.Business.Entity.JobInfoEntity)">
+            <summary>
+            开始开始节点的运行者信息
+            </summary>
+            <param name="msgRunnerView">消息视图</param>
+            <param name="jobInfo">作业信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Essential.SignalDelegateService.RunProcessSignalCatchEventOneByOne(Slickflow.Engine.Essential.SignalRunnerView,Slickflow.Engine.Business.Entity.JobInfoEntity)">
+            <summary>
+            运行属于SignalCatch节点的流程
+            </summary>
+            <param name="signalRunner"></param>
+            <param name="jobInfo"></param>
+        </member>
+        <member name="M:Slickflow.Engine.Essential.SignalDelegateService.GetRunnerFromActivityInstance(Slickflow.Engine.Essential.SignalRunnerView,Slickflow.Engine.Business.Entity.JobInfoEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity)">
+            <summary>
+            开始开始节点的运行者信息
+            </summary>
+            <param name="signalRunner">消息视图</param>
+            <param name="jobInfo">作业信息</param>
+            <returns></returns>
+        </member>
+        <member name="T:Slickflow.Engine.Essential.SignalRunnerView">
+            <summary>
+            信号运行者对象视图
+            </summary>
+        </member>
+        <member name="P:Slickflow.Engine.Essential.SignalRunnerView.ProcessEntity">
+            <summary>
+            目标流程实体
+            </summary>
+        </member>
+        <member name="P:Slickflow.Engine.Essential.SignalRunnerView.ActivityEntity">
+            <summary>
+            目标节点实体
+            </summary>
+        </member>
+        <member name="P:Slickflow.Engine.Essential.SignalRunnerView.WfAppRunner">
+            <summary>
+            当前运行者身份
+            </summary>
+        </member>
+        <member name="T:Slickflow.Engine.Essential.WfMessageDelegationException">
+            <summary>
+            消息代理服务异常类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Essential.WfMessageDelegationException.#ctor(System.String)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Slickflow.Engine.Essential.WfMessageDelegationException.#ctor(System.String,System.Exception)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="message">消息</param>
+            <param name="ex">异常</param>
+        </member>
+        <member name="T:Slickflow.Engine.Essential.WfSignalDelegationException">
+            <summary>
+            消息代理服务异常类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Essential.WfSignalDelegationException.#ctor(System.String)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="message">消息</param>
+        </member>
+        <member name="M:Slickflow.Engine.Essential.WfSignalDelegationException.#ctor(System.String,System.Exception)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="message">消息</param>
+            <param name="ex">异常</param>
         </member>
         <member name="T:Slickflow.Engine.Service.IWorkflowService">
             <summary>
@@ -6801,6 +7329,13 @@
             <param name="runner">运行者</param>
             <returns>上一步信息</returns>
         </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetSignForwardStepInfo(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            获取加签步骤人员信息
+            </summary>
+            <param name="runner">运行者</param>
+            <returns>加签步骤信息</returns>
+        </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.Start">
             <summary>
             流程启动
@@ -6811,6 +7346,11 @@
                             .Start();
             </summary>
             <returns>执行结果</returns>
+        </member>
+        <member name="F:Slickflow.Engine.Service.WorkflowService.startLock">
+            <summary>
+            锁对象
+            </summary>
         </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.Start(System.Data.IDbConnection,System.Data.IDbTransaction)">
             <summary>
@@ -6975,6 +7515,51 @@
             <param name="trans">事务</param>
             <returns>执行结果</returns>
         </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunAuto">
+            <summary>
+            运行流程(业务处理)
+            </summary>
+            <returns>运行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunAuto(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            运行自动流程
+            </summary>
+            <param name="conn">连接</param>
+            <param name="trans">事务</param>
+            <returns>运行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAuto(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            流程流转
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAutoAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            异步执行流程
+            </summary>
+            <param name="runner">执行人</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAuto(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            流程流转
+            </summary>
+            <param name="conn">连接</param>
+            <param name="runner">运行人</param>
+            <param name="trans">事务</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAutoAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            异步流程流转
+            </summary>
+            <param name="conn">连接</param>
+            <param name="runner">运行人</param>
+            <param name="trans">事务</param>
+            <returns>执行结果</returns>
+        </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.Withdraw">
             <summary>
             流程撤销
@@ -7067,6 +7652,98 @@
             <param name="trans">事务</param>
             <returns>执行结果</returns>
         </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Resend">
+            <summary>
+            流程返送
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Resend(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            流程返送
+            </summary>
+            <param name="conn">连接</param>
+            <param name="trans">事务</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ResendProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            从新返送(来自sendback的节点)
+            </summary>
+            <param name="runner">运行者</param>
+            <returns>返送结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ResendProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            异步返送流程
+            </summary>
+            <param name="runner">执行人</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ResendProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            从新返送(来自sendback的节点)
+            </summary>
+            <param name="conn">链接</param>
+            <param name="runner">运行者</param>
+            <param name="trans">事务</param>
+            <returns>返送结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ResendProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            异步返送流程
+            </summary>
+            <param name="conn">连接</param>
+            <param name="runner">运行人</param>
+            <param name="trans">事务</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Revise">
+            <summary>
+            流程修订
+            </summary>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Revise(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            流程修订
+            </summary>
+            <param name="conn">连接</param>
+            <param name="trans">事务</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ReviseProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            从新修订(来自sendback的节点)
+            </summary>
+            <param name="runner">运行者</param>
+            <returns>返送结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ReviseProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            异步修订流程
+            </summary>
+            <param name="runner">执行人</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ReviseProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            从新修订(来自sendback的节点)
+            </summary>
+            <param name="conn">链接</param>
+            <param name="runner">运行者</param>
+            <param name="trans">事务</param>
+            <returns>返送结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ReviseProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            异步修订流程
+            </summary>
+            <param name="conn">连接</param>
+            <param name="runner">运行人</param>
+            <param name="trans">事务</param>
+            <returns>执行结果</returns>
+        </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.Reverse">
             <summary>
             流程返签
@@ -7107,6 +7784,98 @@
         <member name="M:Slickflow.Engine.Service.WorkflowService.ReverseProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
             <summary>
             异步返签流程
+            </summary>
+            <param name="conn">连接</param>
+            <param name="runner">运行人</param>
+            <param name="trans">事务</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Reject">
+            <summary>
+            流程驳回
+            </summary>
+            <returns>驳回结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Reject(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            流程驳回
+            </summary>
+            <param name="conn">连接</param>
+            <param name="trans">事务</param>
+            <returns>驳回结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RejectProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            流程驳回
+            </summary>
+            <param name="runner">执行操作人</param>
+            <returns>驳回结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RejectProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            异步驳回流程
+            </summary>
+            <param name="runner">执行人</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RejectProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            流程驳回
+            </summary>
+            <param name="conn">连接</param>
+            <param name="runner">执行操作人</param>
+            <param name="trans">事务</param>
+            <returns>驳回结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RejectProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            异步驳回流程
+            </summary>
+            <param name="conn">连接</param>
+            <param name="runner">运行人</param>
+            <param name="trans">事务</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Close">
+            <summary>
+            流程关闭
+            </summary>
+            <returns>关闭结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Close(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            流程关闭
+            </summary>
+            <param name="conn">连接</param>
+            <param name="trans">事务</param>
+            <returns>关闭结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.CloseProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            流程关闭
+            </summary>
+            <param name="runner">执行操作人</param>
+            <returns>关闭结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.CloseProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            异步关闭流程
+            </summary>
+            <param name="runner">执行人</param>
+            <returns>执行结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.CloseProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            流程关闭
+            </summary>
+            <param name="conn">连接</param>
+            <param name="runner">执行操作人</param>
+            <param name="trans">事务</param>
+            <returns>关闭结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.CloseProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            异步关闭流程
             </summary>
             <param name="conn">连接</param>
             <param name="runner">运行人</param>
@@ -7172,6 +7941,52 @@
             <param name="runner">当前运行用户</param>
             <param name="jumpOption">跳转选项</param>
             <returns>执行人员列表</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForward">
+            <summary>
+            流程加签
+            </summary>
+            <returns>加签结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForward(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            流程加签
+            </summary>
+            <param name="conn">链接</param>
+            <param name="trans">事务</param>
+            <returns>加签结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForwardProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            加签
+            </summary>
+            <param name="runner">结束人</param>
+            <returns>加签结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForwardProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            异步流程加签
+            </summary>
+            <param name="runner">结束人</param>
+            <returns>加签结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForwardProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            流程加签
+            </summary>
+            <param name="conn">连接</param>
+            <param name="runner">结束人</param>
+            <param name="trans">事务</param>
+            <returns>加签结果</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForwardProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            异步流程加签
+            </summary>
+            <param name="conn">连接</param>
+            <param name="runner">结束人</param>
+            <param name="trans">事务</param>
+            <returns>加签结果</returns>
         </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.ResumeProcess(System.Int32,Slickflow.Engine.Common.WfAppRunner)">
             <summary>
@@ -7259,6 +8074,17 @@
             </summary>
             <param name="processInstanceID">流程实例ID</param>
             <param name="activityInstanceID">活动实例ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetTaskView(System.Data.IDbConnection,System.String,System.String,System.String,System.Data.IDbTransaction)">
+            <summary>
+            获取任务视图
+            </summary>
+            <param name="conn">数据库连接</param>
+            <param name="appInstanceID">应用实例ID</param>
+            <param name="processGUID">流程GUID</param>
+            <param name="userID">用户ID</param>
+            <param name="trans">数据库事务</param>
             <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.GetRunningTasks(Slickflow.Engine.Business.Entity.TaskQuery)">
@@ -7366,12 +8192,6 @@
             </summary>
             <param name="entity">流程文件实体</param>
         </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SaveProcessFilePool(Slickflow.Engine.Business.Entity.ProcessFilePool)">
-            <summary>
-            保存泳道流程XML文件
-            </summary>
-            <param name="entity">泳道实体列表</param>
-        </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.InsertProcess(Slickflow.Engine.Business.Entity.ProcessEntity)">
             <summary>
             创建流程定义记录
@@ -7397,6 +8217,14 @@
             更新流程定义记录
             </summary>
             <param name="entity">流程</param>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.UpdateProcessUsingState(System.String,System.String,System.Byte)">
+            <summary>
+            更新流程使用状态
+            </summary>
+            <param name="processGUID">流程GUID</param>
+            <param name="version">版本</param>
+            <param name="usingState">使用状态</param>
         </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.UpgradeProcess(System.String,System.String,System.String)">
             <summary>
@@ -7427,14 +8255,14 @@
             <param name="version">版本</param>
             <returns>是否删除</returns>
         </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.ImportProcess(Slickflow.Engine.Business.Entity.ProcessEntity)">
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ImportProcess(System.String)">
             <summary>
             导入流程XML文件，并生成新流程
             </summary>
-            <param name="entity">流程实体</param>
+            <param name="xmlContent">流程XML文档</param>
             <returns>新流程ID</returns>
         </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.ValidateProcess(Slickflow.Engine.Xpdl.Entity.ProcessValidate)">
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ValidateProcess(Slickflow.Engine.Business.Entity.ProcessEntity)">
             <summary>
             流程校验
             </summary>
@@ -7667,6 +8495,12 @@
             <param name="processGUID">流程定义GUID</param>
             <param name="version">版本</param>
             <returns>角色列表</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetUserAll">
+            <summary>
+            获取所有用户数据
+            </summary>
+            <returns>用户列表</returns>
         </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.GetUserListByRole(System.String)">
             <summary>
@@ -8150,6 +8984,12 @@
             <param name="max"></param>
             <returns></returns>
         </member>
+        <member name="M:Slickflow.Engine.Utility.RandomSequenceGenerator.GetRandomInt4">
+            <summary>
+            获得随机整数，默认4位整数
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Slickflow.Engine.Utility.RandomSequenceGenerator.GetRandomString(System.Int32,System.Boolean)">
             <summary>
             获取随机字符串
@@ -8336,6 +9176,14 @@
             XMLHelper XML文档操作管理器
             </summary>
         </member>
+        <member name="M:Slickflow.Engine.Utility.XMLHelper.GetXmlNodeByXpath(System.Xml.XmlDocument,System.String)">
+            <summary>
+            选择匹配XPath表达式的第一个节点XmlNode.
+            </summary>
+            <param name="xmlDoc">XML文档</param>
+            <param name="xpath">要匹配的XPath表达式(例如:"//节点名//子节点名")</param>
+            <returns>返回XmlNode</returns>
+        </member>
         <member name="M:Slickflow.Engine.Utility.XMLHelper.GetXmlNodeByXpath(System.Xml.XmlDocument,System.String,System.Xml.XmlNamespaceManager)">
             <summary>
             选择匹配XPath表达式的第一个节点XmlNode.
@@ -8454,6 +9302,40 @@
             <param name="xmlFileName">XML文档完全文件名(包含物理路径)</param>
             <param name="xpath">要匹配的XPath表达式(例如:"//节点名//子节点名</param>
             <returns>成功返回true,失败返回false</returns>
+        </member>
+        <member name="T:Slickflow.Engine.Xpdl.CollaborationModelHelper">
+            <summary>
+            协作模型转换成实体
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.CollaborationModelHelper.ConvertCollaborationFromXml(System.Xml.XmlDocument,System.Xml.XmlNode)">
+            <summary>
+            转换为Collaboration实体
+            </summary>
+            <param name="xmlDoc">XML文档</param>
+            <param name="xmlNodeCollaboration">协作节点</param>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.CollaborationModelHelper.ConvertCollaboration(System.Xml.XmlNode)">
+            <summary>
+            转换协作节点
+            </summary>
+            <param name="xmlNodeCollaboration">XML协作节点</param>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.CollaborationModelHelper.ConvertParticipant(System.Xml.XmlNode)">
+            <summary>
+            转换参与者节点
+            </summary>
+            <param name="xmlNodeParticipant">XML参与者节点</param>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.CollaborationModelHelper.ConvertProcess(System.Xml.XmlNode)">
+            <summary>
+            转换流程节点
+            </summary>
+            <param name="xmlProcess">XML流程节点</param>
+            <returns></returns>
         </member>
         <member name="T:Slickflow.Engine.Xpdl.Common.ActionMethodEnum">
             <summary>
@@ -8615,6 +9497,46 @@
             并行
             </summary>
         </member>
+        <member name="T:Slickflow.Engine.Xpdl.Common.ProcessValidateResult">
+            <summary>
+            流程校验结果
+            </summary>
+        </member>
+        <member name="P:Slickflow.Engine.Xpdl.Common.ProcessValidateResult.ProcessValidatedResultType">
+            <summary>
+            流程校验结果类型
+            </summary>
+        </member>
+        <member name="T:Slickflow.Engine.Xpdl.Common.ProcessValidateResultTypeEnum">
+            <summary>
+            流程校验错误类型
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Xpdl.Common.ProcessValidateResultTypeEnum.None">
+            <summary>
+            默认没有校验错误
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Xpdl.Common.ProcessValidateResultTypeEnum.Successed">
+            <summary>
+            校验成功
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Xpdl.Common.ProcessValidateResultTypeEnum.WithoutStartEvent">
+            <summary>
+            没有开始节点
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Xpdl.Common.ProcessValidateResultTypeEnum.WithoutEndEvent">
+            <summary>
+            没有结束节点
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Xpdl.Common.ProcessValidateResultTypeEnum.WithoutStartEndPath">
+            <summary>
+            存在孤立活动
+            </summary>
+        </member>
         <member name="T:Slickflow.Engine.Xpdl.Common.ScriptMethodEnum">
             <summary>
             操作方法类型
@@ -8695,21 +9617,6 @@
             并行加签
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Xpdl.Common.SubProcessTypeEnum">
-            <summary>
-            子流程调用类型
-            </summary>
-        </member>
-        <member name="F:Slickflow.Engine.Xpdl.Common.SubProcessTypeEnum.Fixed">
-            <summary>
-            固定
-            </summary>
-        </member>
-        <member name="F:Slickflow.Engine.Xpdl.Common.SubProcessTypeEnum.Dynamic">
-            <summary>
-            动态
-            </summary>
-        </member>
         <member name="T:Slickflow.Engine.Xpdl.Common.TriggerTypeEnum">
             <summary>
             触发器类型
@@ -8718,6 +9625,11 @@
         <member name="F:Slickflow.Engine.Xpdl.Common.TriggerTypeEnum.None">
             <summary>
             默认是没有定时器
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Xpdl.Common.TriggerTypeEnum.EMail">
+            <summary>
+            邮件
             </summary>
         </member>
         <member name="F:Slickflow.Engine.Xpdl.Common.TriggerTypeEnum.Timer">
@@ -8730,6 +9642,11 @@
             消息
             </summary>
         </member>
+        <member name="F:Slickflow.Engine.Xpdl.Common.TriggerTypeEnum.Signal">
+            <summary>
+            信号
+            </summary>
+        </member>
         <member name="F:Slickflow.Engine.Xpdl.Common.TriggerTypeEnum.Conditional">
             <summary>
             条件
@@ -8740,27 +9657,6 @@
             XML节点转为为活动实体对象
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Xpdl.ConvertHelper.GetActivity(System.Xml.XmlDocument,System.Xml.XmlNamespaceManager,System.String,System.String,System.Boolean)">
-            <summary>
-            获取活动节点
-            </summary>
-            <param name="xmlDoc">XML文档</param>
-            <param name="xnpmgr">XML命名空间管理</param>
-            <param name="activityGUID">活动节点GUID</param>
-            <param name="processGUID">流程节点GUID</param>
-            <param name="isSubProcess">是否子流程</param>
-            <returns>活动实体</returns>
-        </member>
-        <member name="M:Slickflow.Engine.Xpdl.ConvertHelper.GetXmlActivityNodeFromXmlFile(System.Xml.XmlDocument,System.Xml.XmlNamespaceManager,System.String,System.Boolean)">
-            <summary>
-            获取XML的节点信息
-            </summary>
-            <param name="xmlDoc">xml文档</param>
-            <param name="activityGUID">节点GUID</param>
-            <param name="xnpmgr">xml命名空间</param>
-            <param name="isSubProcess">是否子流程</param>
-            <returns>Xml节点</returns>
-        </member>
         <member name="M:Slickflow.Engine.Xpdl.ConvertHelper.ConvertXmlActivityNodeToActivityEntity(System.Xml.XmlNode,System.Xml.XmlNamespaceManager,System.String)">
             <summary>
             Convert XmlNode to Activity Entity
@@ -8769,17 +9665,6 @@
             <param name="xnpmgr">XML命名空间管理</param>
             <param name="processGUID">ProcessGUID</param>
             <returns>Activity Entity</returns>
-        </member>
-        <member name="M:Slickflow.Engine.Xpdl.ConvertHelper.ConvertXmlTransitionNodeToTransitionEntity(System.Xml.XmlDocument,System.Xml.XmlNamespaceManager,System.Xml.XmlNode,System.String,System.Boolean)">
-            <summary>
-            把XML节点转换为ActivityEntity实体对象
-            </summary>
-            <param name="xmlDoc">xml文档</param>
-            <param name="xnmgr">XML命名空间管理</param>
-            <param name="node">节点</param>
-            <param name="processGUID">流程GUID</param>
-            <param name="isSubProcess">是否子流程</param>
-            <returns>转移对象</returns>
         </member>
         <member name="T:Slickflow.Engine.Xpdl.ConvertorFactory">
             <summary>
@@ -8850,6 +9735,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Slickflow.Engine.Xpdl.Convertor.ConvertorBuilder.GetNotificationsNode">
+            <summary>
+            获取Notifications的XML节点
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Slickflow.Engine.Xpdl.Convertor.ConvertorBuilder.ConvertGeneral">
             <summary>
             转换通用属性
@@ -8858,37 +9749,43 @@
         </member>
         <member name="M:Slickflow.Engine.Xpdl.Convertor.ConvertorBuilder.ConvertActions">
             <summary>
-            转换Action
+            转换Action节点
             </summary>
             <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Xpdl.Convertor.ConvertorBuilder.ConvertBoundires">
             <summary>
-            转换Boundaries
+            转换Boundaries节点
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Slickflow.Engine.Xpdl.Convertor.ConvertorBuilder.ConvertParticipants">
+        <member name="M:Slickflow.Engine.Xpdl.Convertor.ConvertorBuilder.ConvertPartakers">
             <summary>
-            转换Performers
+            转换Performers节点
             </summary>
             <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Xpdl.Convertor.ConvertorBuilder.ConvertServices">
             <summary>
-            转换Services
+            转换Services节点
             </summary>
             <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Xpdl.Convertor.ConvertorBuilder.ConvertScripts">
             <summary>
-            转换Scripts
+            转换Scripts节点
             </summary>
             <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Xpdl.Convertor.ConvertorBuilder.ConvertSections">
             <summary>
-            转换Sections
+            转换Sections节点
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.Convertor.ConvertorBuilder.ConvertNotifications">
+            <summary>
+            转换Notificaitons节点
             </summary>
             <returns></returns>
         </member>
@@ -8913,9 +9810,9 @@
             <param name="node">XML节点</param>
             <returns>脚本对象</returns>
         </member>
-        <member name="M:Slickflow.Engine.Xpdl.Convertor.ConvertorBuilder.ConvertXmlPerformerNodeToParticipantEntity(System.Xml.XmlNode)">
+        <member name="M:Slickflow.Engine.Xpdl.Convertor.ConvertorBuilder.ConvertXmlPerformerNodeToPartakerEntity(System.Xml.XmlNode)">
             <summary>
-            转换Participant节点
+            转换Partaker节点
             </summary>
             <param name="node">xml节点</param>
             <returns>实体对象</returns>
@@ -8930,6 +9827,13 @@
         <member name="M:Slickflow.Engine.Xpdl.Convertor.ConvertorBuilder.ConvertXmlSectionNodeToSectionEntity(System.Xml.XmlNode)">
             <summary>
             转换Section节点
+            </summary>
+            <param name="node">xml节点</param>
+            <returns>实体对象</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.Convertor.ConvertorBuilder.ConvertXmlNotificationNodeToPartakerEntity(System.Xml.XmlNode)">
+            <summary>
+            转换Partaker节点
             </summary>
             <param name="node">xml节点</param>
             <returns>实体对象</returns>
@@ -8953,6 +9857,21 @@
             <summary>
             事件节点转换器
             </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.Convertor.EventConvertor.GetEventDefinitionNode(System.Xml.XmlNode,Slickflow.Engine.Xpdl.Common.TriggerTypeEnum@)">
+            <summary>
+            获得事件定义节点
+            </summary>
+            <param name="eventNode">事件街道</param>
+            <param name="triggerType">触发类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.Convertor.EventConvertor.GetMessageDirectionFromEventNode(System.Xml.XmlNode)">
+            <summary>
+            获取消息Throw/Catch 类型
+            </summary>
+            <param name="eventNode"></param>
+            <returns></returns>
         </member>
         <member name="T:Slickflow.Engine.Xpdl.Convertor.GatewayConvertor">
             <summary>
@@ -8980,6 +9899,25 @@
             <summary>
             子流程转换器
             </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.Convertor.SubProcessConvertor.ConvertSubInfoes">
+            <summary>
+            转换子流程对象列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.Convertor.SubProcessConvertor.GetSubInfoesNode">
+            <summary>
+            获取SubInfo的XML节点
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.Convertor.SubProcessConvertor.ConvertXmlSubInfoNodeToSubInfoEntity(System.Xml.XmlNode)">
+            <summary>
+            转换SubInfo节点
+            </summary>
+            <param name="node">xml节点</param>
+            <returns>实体对象</returns>
         </member>
         <member name="T:Slickflow.Engine.Xpdl.Entity.Action">
             <summary>
@@ -9111,19 +10049,9 @@
             活动类型
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.SubProcess">
-            <summary>
-            子流程节点
-            </summary>
-        </member>
         <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.WorkItemType">
             <summary>
             工作项类型
-            </summary>
-        </member>
-        <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.ActivityTypeDetail">
-            <summary>
-            活动类型Detail
             </summary>
         </member>
         <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.TriggerDetail">
@@ -9139,11 +10067,6 @@
         <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.MultiSignDetail">
             <summary>
             会签类型Detail
-            </summary>
-        </member>
-        <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.SubProcessDetail">
-            <summary>
-            子流程Detail
             </summary>
         </member>
         <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.SkipDetail">
@@ -9187,19 +10110,14 @@
             边界列表
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.ParticipantList">
+        <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.PartakerList">
             <summary>
             参与者列表
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Xpdl.Entity.ActivityTypeDetail">
+        <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.NotificationList">
             <summary>
-            节点类型详细信息
-            </summary>
-        </member>
-        <member name="P:Slickflow.Engine.Xpdl.Entity.ActivityTypeDetail.ActivityType">
-            <summary>
-            节点类型
+            通知用户列表
             </summary>
         </member>
         <member name="T:Slickflow.Engine.Xpdl.Entity.ActivityView">
@@ -9210,6 +10128,11 @@
         <member name="T:Slickflow.Engine.Xpdl.Entity.Boundary">
             <summary>
             边界实体对象
+            </summary>
+        </member>
+        <member name="T:Slickflow.Engine.Xpdl.Entity.Collaboration">
+            <summary>
+            协作流程总图
             </summary>
         </member>
         <member name="T:Slickflow.Engine.Xpdl.Entity.ConditionDetail">
@@ -9302,19 +10225,14 @@
             加签类型
             </summary>
         </member>
+        <member name="T:Slickflow.Engine.Xpdl.Entity.Participant">
+            <summary>
+            参与者流程
+            </summary>
+        </member>
         <member name="T:Slickflow.Engine.Xpdl.Entity.Process">
             <summary>
             流程对象
-            </summary>
-        </member>
-        <member name="T:Slickflow.Engine.Xpdl.Entity.ProcessValidate">
-            <summary>
-            Process Validate Entity
-            </summary>
-        </member>
-        <member name="T:Slickflow.Engine.Xpdl.Entity.ProcessValidateResult">
-            <summary>
-            Process Validate Result
             </summary>
         </member>
         <member name="T:Slickflow.Engine.Xpdl.Entity.Receiver">
@@ -9367,26 +10285,6 @@
             跳转到的节点
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Xpdl.Entity.SubProcessDetail">
-            <summary>
-            子流程属性配置详细
-            </summary>
-        </member>
-        <member name="P:Slickflow.Engine.Xpdl.Entity.SubProcessDetail.SubProcessType">
-            <summary>
-            子流程调用类型
-            </summary>
-        </member>
-        <member name="P:Slickflow.Engine.Xpdl.Entity.SubProcessDetail.SubProcessGUID">
-            <summary>
-            子流程信息
-            </summary>
-        </member>
-        <member name="P:Slickflow.Engine.Xpdl.Entity.SubProcessDetail.SubVariableName">
-            <summary>
-            子流程动态指定查询
-            </summary>
-        </member>
         <member name="T:Slickflow.Engine.Xpdl.Entity.TaskImplementDetail">
             <summary>
             任务实现详细类
@@ -9400,6 +10298,11 @@
         <member name="T:Slickflow.Engine.Xpdl.Entity.Transition">
             <summary>
             转移定义
+            </summary>
+        </member>
+        <member name="P:Slickflow.Engine.Xpdl.Entity.Transition.ID">
+            <summary>
+            SequenceFlow ID
             </summary>
         </member>
         <member name="P:Slickflow.Engine.Xpdl.Entity.Transition.TransitionGUID">
@@ -9550,7 +10453,7 @@
             节点的基类
             </summary>
         </member>
-        <member name="F:Slickflow.Engine.Xpdl.Node.NodeBase._activity">
+        <member name="P:Slickflow.Engine.Xpdl.Node.NodeBase.Activity">
             <summary>
             节点定义属性
             </summary>
@@ -9571,9 +10474,9 @@
             子流程节点
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Xpdl.Node.SubProcessNode.SubProcessType">
+        <member name="P:Slickflow.Engine.Xpdl.Node.SubProcessNode.SubProcessID">
             <summary>
-            子流程类型
+            子流程ID
             </summary>
         </member>
         <member name="P:Slickflow.Engine.Xpdl.Node.SubProcessNode.SubProcessGUID">
@@ -9584,6 +10487,11 @@
         <member name="P:Slickflow.Engine.Xpdl.Node.SubProcessNode.SubVarName">
             <summary>
             子流程ID的动态绑定变量名称
+            </summary>
+        </member>
+        <member name="P:Slickflow.Engine.Xpdl.Node.SubProcessNode.SubProcessNested">
+            <summary>
+            内嵌子流程
             </summary>
         </member>
         <member name="T:Slickflow.Engine.Xpdl.ProcessModelBPMN">
@@ -9601,12 +10509,7 @@
             流程实体
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Xpdl.ProcessModelBPMN.SubProcessGUID">
-            <summary>
-            子流程ID
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Xpdl.ProcessModelBPMN.ConvertProcessModelFromXML">
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelBPMN.ConvertProcessModelFromXML(Slickflow.Engine.Business.Entity.ProcessEntity)">
             <summary>
             从XML转换流程实体
             </summary>
@@ -9624,6 +10527,12 @@
             </summary>
             <param name="activityGUID">活动节点GUID</param>
             <returns>活动实体</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelBPMN.GetActivityList">
+            <summary>
+            获得活动列表
+            </summary>
+            <returns>活动列表</returns>
         </member>
         <member name="M:Slickflow.Engine.Xpdl.ProcessModelBPMN.TranverseTransitionList(System.Collections.Generic.List{Slickflow.Engine.Xpdl.Entity.Activity},System.String)">
             <summary>
@@ -9755,6 +10664,15 @@
             </summary>
             <param name="startActivity">起始节点</param>
             <param name="conditions">条件参数</param>
+            <returns>下一步列表</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelBPMN.GetFirstActivityTree(Slickflow.Engine.Xpdl.Entity.Activity,System.Collections.Generic.IDictionary{System.String,System.String},Slickflow.Data.IDbSession)">
+            <summary>
+            获取下一步活动节点树，供流转界面使用
+            </summary>
+            <param name="startActivity">起始节点</param>
+            <param name="conditions">条件参数</param>
+            <param name="session">数据会话</param>
             <returns>下一步列表</returns>
         </member>
         <member name="M:Slickflow.Engine.Xpdl.ProcessModelBPMN.GetFirstActivityList(Slickflow.Engine.Xpdl.Entity.Activity,System.Collections.Generic.IDictionary{System.String,System.String},Slickflow.Data.IDbSession)">
@@ -9911,7 +10829,7 @@
             <param name="activityGUID">活动GUID</param>
             <returns>角色列表</returns>
         </member>
-        <member name="M:Slickflow.Engine.Xpdl.ProcessModelBPMN.GetActivityParticipants(System.String)">
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelBPMN.GetActivityPartakers(System.String)">
             <summary>
             获取节点上定义的角色及人员集合
             </summary>
@@ -9924,13 +10842,12 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Slickflow.Engine.Xpdl.ProcessModelBPMN.GetXmlDocumentByProcess(System.String,System.String)">
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelBPMN.GetActivityNotifications(System.String)">
             <summary>
-            根据流程GUID读取单一流程记录
+            获取节点上定义的通知用户列表
             </summary>
-            <param name="xmlContent">XML内容</param>
-            <param name="processGUID">流程实体</param>
-            <returns>XML文档对象</returns>
+            <param name="activityGUID">活动GUID</param>
+            <returns>通知用户列表</returns>
         </member>
         <member name="M:Slickflow.Engine.Xpdl.ProcessModelBPMN.ParseCondition(Slickflow.Engine.Xpdl.Entity.Transition,System.Collections.Generic.IDictionary{System.String,System.String})">
             <summary>
@@ -9967,6 +10884,13 @@
             判断是否会签节点
             </summary>
             <param name="activity">节点</param>
+            <returns>是否会签</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelBPMN.IsMINode(Slickflow.Engine.Business.Entity.ActivityInstanceEntity)">
+            <summary>
+            判断是否会签节点
+            </summary>
+            <param name="activityInstance">活动实例</param>
             <returns>是否会签</returns>
         </member>
         <member name="M:Slickflow.Engine.Xpdl.ProcessModelBPMN.IsTaskNode(Slickflow.Engine.Xpdl.Entity.Activity)">
@@ -10069,6 +10993,13 @@
             <param name="activityType">活动类型</param>
             <returns>工作项类型</returns>
         </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelConvertor.ConvertSubProcess(System.Xml.XmlNode)">
+            <summary>
+            转换子流程节点
+            </summary>
+            <param name="node">子流程节点</param>
+            <returns>流程实体</returns>
+        </member>
         <member name="M:Slickflow.Engine.Xpdl.ProcessModelConvertor.ConvertTransition(System.Xml.XmlNode,Slickflow.Engine.Xpdl.Entity.Process)">
             <summary>
             从XML节点转换为转移节点
@@ -10080,25 +11011,111 @@
         <member name="T:Slickflow.Engine.Xpdl.ProcessModelFactory">
             <summary>
             流程模型工厂类
+            1. 流程模型创建的4种类型(按流程, 按流程实例, 按任务视图, 按子流程节点)
+            2. 区分出子流程的创建模式(子流程嵌入到主流程里面的情况处理)
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Xpdl.ProcessModelFactory.Create(System.String,System.String,System.String)">
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelFactory.CreateByProcess(Slickflow.Engine.Business.Entity.ProcessEntity)">
+            <summary>
+            创建流程模型实例
+            </summary>
+            <param name="entity">流程实体</param>
+            <returns>流程模型</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelFactory.CreateByProcess(System.String,System.String)">
             <summary>
             创建流程模型实例
             </summary>
             <param name="processGUID">流程GUID</param>
             <param name="version">版本</param>
-            <param name="subProcessGUID">子流程GUID</param>
             <returns>流程模型</returns>
         </member>
-        <member name="M:Slickflow.Engine.Xpdl.ProcessModelFactory.Create(System.Data.IDbConnection,System.String,System.String,System.String,System.Data.IDbTransaction)">
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelFactory.CreateByProcess(System.Data.IDbConnection,System.String,System.String,System.Data.IDbTransaction)">
             <summary>
             创建流程模型实例
             </summary>
             <param name="conn">链接</param>
             <param name="processGUID">流程GUID</param>
             <param name="version">版本</param>
+            <param name="trans">事务</param>
+            <returns>流程模型</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelFactory.CreateByProcessInstance(Slickflow.Engine.Business.Entity.ProcessInstanceEntity)">
+            <summary>
+            创建流程模型实例
+            </summary>
+            <param name="processInstance">流程实例</param>
+            <returns>流程模型</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelFactory.CreateByProcessInstance(System.Data.IDbConnection,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.Data.IDbTransaction)">
+            <summary>
+            创建流程模型
+            </summary>
+            <param name="conn">数据库链接</param>
+            <param name="processInstance">流程实例</param>
+            <param name="trans">事务</param>
+            <returns>流程模型</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelFactory.CreateByTask(Slickflow.Engine.Business.Entity.TaskViewEntity)">
+            <summary>
+            创建流程模型实例
+            </summary>
+            <param name="taskView">任务视图</param>
+            <returns>流程模型</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelFactory.CreateByTask(System.Data.IDbConnection,Slickflow.Engine.Business.Entity.TaskViewEntity,System.Data.IDbTransaction)">
+            <summary>
+            创建流程模型
+            </summary>
+            <param name="conn">数据库链接</param>
+            <param name="taskView">任务视图</param>
+            <param name="trans">事务</param>
+            <returns>流程模型</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelFactory.CreateSubByNode(System.Data.IDbConnection,Slickflow.Engine.Xpdl.Node.SubProcessNode,System.Data.IDbTransaction)">
+            <summary>
+            创建流程模型实例
+            </summary>
+            <param name="conn">链接</param>
+            <param name="subProcessNode">子流程节点</param>
+            <param name="trans">事务</param>
+            <returns>流程模型</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelFactory.BuildProcessEntityFromXpdl(Slickflow.Engine.Xpdl.Entity.Process)">
+            <summary>
+            构建内嵌子流程的流程对象
+            </summary>
+            <param name="subProcess">子流程</param>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelFactory.CreateSubByProcessInstance(System.Data.IDbConnection,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.Data.IDbTransaction)">
+            <summary>
+            创建流程模型实例
+            </summary>
+            <param name="conn">数据库链接</param>
+            <param name="processInstance">流程实例</param>
+            <param name="trans">数据库交易</param>
+            <returns>流程模型</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelFactory.CreateSubByTask(System.Data.IDbConnection,Slickflow.Engine.Business.Entity.TaskViewEntity,System.Data.IDbTransaction)">
+            <summary>
+            创建流程模型实例
+            </summary>
+            <param name="conn">数据库链接</param>
+            <param name="taskView">任务视图</param>
+            <param name="trans">数据库交易</param>
+            <returns>流程模型</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelFactory.CreateSubInternal(System.Data.IDbConnection,System.String,System.String,System.Nullable{Slickflow.Engine.Common.SubProcessTypeEnum},System.Int32,System.String,System.Data.IDbTransaction)">
+            <summary>
+            创建流程模型实例
+            </summary>
+            <param name="conn">链接</param>
+            <param name="processGUID">流程GUID</param>
+            <param name="version">版本</param>
+            <param name="subProcessID">子流程ID</param>
             <param name="subProcessGUID">子流程GUID</param>
+            <param name="subProcessType">子流程类型</param>
             <param name="trans">事务</param>
             <returns>流程模型</returns>
         </member>
@@ -10144,6 +11161,13 @@
             <param name="fromActivityGUID">起始活动节点</param>
             <returns>下一步节点</returns>
         </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelHelper.ConvertFromActivityEntity(Slickflow.Engine.Xpdl.Entity.Activity)">
+            <summary>
+            从活动节点转换为活动视图
+            </summary>
+            <param name="entity">活动实体</param>
+            <returns>活动视图</returns>
+        </member>
         <member name="M:Slickflow.Engine.Xpdl.ProcessModelHelper.GetForwardTransitionList(Slickflow.Engine.Xpdl.Entity.Process,System.String)">
             <summary>
             获取连线列表
@@ -10169,33 +11193,41 @@
             <param name="toActivityGUID">活动GUID</param>
             <returns>连线列表</returns>
         </member>
-        <member name="M:Slickflow.Engine.Xpdl.ProcessModelHelper.ConvertFromActivityEntity(Slickflow.Engine.Xpdl.Entity.Activity)">
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelHelper.ConvertFromXmlNodeProcess(System.Xml.XmlNode)">
             <summary>
-            从活动节点转换为活动视图
+            转换流程基本实体
             </summary>
-            <param name="entity">活动实体</param>
-            <returns>活动视图</returns>
+            <param name="xmlNodeProcess">流程XML节点</param>
+            <returns>流程实体</returns>
+        </member>
+        <member name="M:Slickflow.Engine.Xpdl.ProcessModelHelper.ConvertToXPDLProcess(System.Xml.XmlDocument)">
+            <summary>
+            校验时，转换流程实体对象
+            </summary>
+            <param name="xmlDoc">xml文档</param>
+            <returns></returns>
         </member>
         <member name="T:Slickflow.Engine.Xpdl.ProcessValidator">
             <summary>
             流程校验器
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Xpdl.ProcessValidator.Validate(Slickflow.Engine.Xpdl.Entity.ProcessValidate)">
+        <member name="M:Slickflow.Engine.Xpdl.ProcessValidator.Validate(Slickflow.Engine.Business.Entity.ProcessEntity)">
             <summary>
             校验方法
             </summary>
             <param name="entity">实体</param>
             <returns>校验结果</returns>
         </member>
-        <member name="M:Slickflow.Engine.Xpdl.ProcessValidator.TranverseTransitonList(System.Collections.Generic.IList{Slickflow.Engine.Xpdl.Entity.Activity},System.Collections.Generic.IList{Slickflow.Engine.Xpdl.Entity.Transition},System.String)">
+        <member name="M:Slickflow.Engine.Xpdl.ProcessValidator.TranverseTransitonList(Slickflow.Engine.Xpdl.Entity.Process,System.Collections.Generic.IList{Slickflow.Engine.Xpdl.Entity.Activity},System.Collections.Generic.IList{Slickflow.Engine.Xpdl.Entity.Transition},System.String)">
             <summary>
             迭代验证方法
             </summary>
+            <param name="process">流程实体</param>
             <param name="activityList">活动列表</param>
             <param name="transitionList">转移列表</param>
             <param name="activityGUID">活动GUID</param>
-            <returns>孤立活动列表</returns>
+            <returns>是否存在关键路径</returns>
         </member>
         <member name="T:Slickflow.Engine.Xpdl.Schedule.ApprovedTransitionValidatedTypeEnum">
             <summary>
@@ -10726,27 +11758,12 @@
             <param name="catchProcessEntity">消息捕获流程实体对象</param>
             <returns>消息接收节点实体</returns>
         </member>
-        <member name="M:Slickflow.Engine.Xpdl.XPDLHelper.CreateXmlNameSpace(System.Xml.XmlDocument,System.String,System.String)">
-            <summary>
-            
-            </summary>
-            <param name="document"></param>
-            <param name="space"></param>
-            <param name="value"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Slickflow.Engine.Xpdl.XPDLHelper.GetBPMN2XmlNamespaceManager(System.Xml.XmlDocument)">
-            <summary>
-            获取BPMN命名空间
-            </summary>
-            <param name="document">xml文档</param>
-            <returns>命名空间管理器</returns>
-        </member>
-        <member name="M:Slickflow.Engine.Xpdl.XPDLHelper.GetSlickflowXmlNamespaceManager(System.Xml.XmlDocument)">
+        <member name="M:Slickflow.Engine.Xpdl.XPDLHelper.GetSlickflowXmlNamespaceManager(System.Xml.XmlDocument,System.Boolean)">
             <summary>
             添加XML文档的命名空间
             </summary>
             <param name="document">XML文档</param>
+            <param name="isBPMNDIContained">是否包含Shape节点</param>
             <returns>XML命名空间管理</returns>
         </member>
         <member name="M:Slickflow.Engine.Xpdl.XPDLHelper.GetXmlPathOfProcess(System.Boolean)">

@@ -60,6 +60,7 @@ function PassType(props) {
     function getOptions() {
         //合并通过类型
         var options = [
+            { "label": kresource.getItem("optiondefault"), "value": "0", "name": "Optiondefault" },
             { "label": kresource.getItem("branchcount"), "value": "1", "name": "Count" },
             { "label": kresource.getItem("branchforced"), "value": "2", "name": "Forced" }
         ];

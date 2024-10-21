@@ -60,6 +60,7 @@ function SplitType(props) {
     function getOptions() {
         //扩展分支类型
         var options = [
+            { "label": kresource.getItem("optiondefault"), "value": "0", "name": "Optiondefault" },
             { "label": kresource.getItem("approvalorsplit"), "value": "1", "name": "ApprovalOrSplit" },
             { "label": kresource.getItem("andsplitmi"), "value": "2", "name": "AndSplitMI" }
         ];
@@ -101,7 +102,7 @@ function SplitType(props) {
     return <SelectEntry
         id={id}
         element={element}
-        label={kresource('extrasplittype')}
+        label={kresource.getItem('extrasplittype')}
         getValue={getValue}
         setValue={setValue}
         getOptions={getOptions}

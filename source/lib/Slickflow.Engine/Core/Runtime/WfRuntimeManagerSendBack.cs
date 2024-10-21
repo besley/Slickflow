@@ -1,26 +1,4 @@
-﻿/*
-* Slickflow 工作流引擎遵循LGPL协议，也可联系作者商业授权并获取技术支持；
-* 除此之外的使用则视为不正当使用，请您务必避免由此带来的商业版权纠纷。
-* 
-The Slickflow project.
-Copyright (C) 2014  .NET Workflow Engine Library
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, you can access the official
-web page about lgpl: https://www.gnu.org/licenses/lgpl.html
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Slickflow.Data;
 using Slickflow.Module.Localize;
@@ -65,17 +43,27 @@ namespace Slickflow.Engine.Core.Runtime
                     }
                     else if (this.ProcessModel.IsMINode(prevActivity) == true)
                     {
-                        if (this.ProcessModel.IsMISequence(prevActivity) == true)
+                        var aim = new ActivityInstanceManager();
+                        var prevActivityInstance = aim.GetActivityInstanceLatest(runningNode.ProcessInstanceID, prevActivityGUID, session);
+                        if (prevActivityInstance.MIHostActivityInstanceID == null)
                         {
-                            //退回到会签节点
-                            //模式：串行会签的最后一步
-                            sendbackOperation.PreviousNodeOperationType = SendBackOperationTypeEnum.MISPreviousIsLastOne;
+                            //虽然流程定义是加签节点，但是运行时没有加签实例，就当做普通任务节点处理
+                            sendbackOperation.PreviousNodeOperationType = SendBackOperationTypeEnum.Normal;
                         }
                         else
                         {
-                            //退回到会签节点
-                            //模式：并行会签节点
-                            sendbackOperation.PreviousNodeOperationType = SendBackOperationTypeEnum.MIPAllIsInCompletedState;
+                            if (this.ProcessModel.IsMISequence(prevActivity) == true)
+                            {
+                                //退回到会签节点
+                                //模式：串行会签的最后一步
+                                sendbackOperation.PreviousNodeOperationType = SendBackOperationTypeEnum.MISPreviousIsLastOne;
+                            }
+                            else
+                            {
+                                //退回到会签节点
+                                //模式：并行会签节点
+                                sendbackOperation.PreviousNodeOperationType = SendBackOperationTypeEnum.MIPAllIsInCompletedState;
+                            }
                         }
                     }
                     else

@@ -2,6 +2,7 @@
 import recieverTypeProps from './parts/RecieverTypeProps';
 import priorityProps from './parts/PriorityProps';
 import forcedMergeProps from './parts/ForcedMergeProps';
+import defaultBranchProps from './parts/DefaultBranchProps';
 import approvalOptionsProps from './parts/ApprovalOptionsProps';
 
 import { is } from 'bpmn-js/lib/util/ModelUtil';
@@ -34,6 +35,8 @@ function createTransitionGroup(element, translate) {
         entries.push(approvalOptionsProps(element));
     } else if (sfModelUtility.isXOrSplit(source)) {
         entries.push(priorityProps(element));
+    } else if (sfModelUtility.isOrSplit(source)) {
+        entries.push(defaultBranchProps(element))
     } else if (sfModelUtility.isEOrJoin(target)) {
         entries.push(forcedMergeProps(element));
     }

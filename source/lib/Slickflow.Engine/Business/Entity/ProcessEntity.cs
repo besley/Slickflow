@@ -19,7 +19,8 @@ namespace Slickflow.Engine.Business.Entity
         public byte IsUsing { get; set; }
         public string AppType { get; set; }
         public Nullable<byte> PackageType { get; set; }
-        public Nullable<int> PackageProcessID { get; set; }
+        public Nullable<int> PackageID { get; set; }
+        public string ParticipantGUID { get; set; }
         public string PageUrl { get; set; }
         public string XmlFileName { get; set; }
         public string XmlFilePath { get; set; }

@@ -59,28 +59,16 @@
           "dependencies": {
             "Microsoft.AspNetCore.SpaServices.Extensions": {
               "target": "Package",
-<<<<<<< HEAD
               "version": "[3.1.0, 4.0.0)"
             },
             "Microsoft.Extensions.Logging": {
               "target": "Package",
               "version": "[3.1.0, 4.0.0)"
-=======
-              "version": "[3.1.32, )"
-            },
-            "Microsoft.Extensions.Logging": {
-              "target": "Package",
-              "version": "[8.0.0, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             },
             "Microsoft.SourceLink.GitHub": {
               "suppressParent": "All",
               "target": "Package",
-<<<<<<< HEAD
               "version": "[1.0.0, )"
-=======
-              "version": "[8.0.0, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -102,11 +90,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         },
         "net5.0": {
           "targetAlias": "net5.0",
@@ -122,11 +106,7 @@
             "Microsoft.SourceLink.GitHub": {
               "suppressParent": "All",
               "target": "Package",
-<<<<<<< HEAD
               "version": "[1.0.0, )"
-=======
-              "version": "[8.0.0, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -148,11 +128,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         },
         "net6.0": {
           "targetAlias": "net6.0",
@@ -168,11 +144,7 @@
             "Microsoft.SourceLink.GitHub": {
               "suppressParent": "All",
               "target": "Package",
-<<<<<<< HEAD
               "version": "[1.0.0, )"
-=======
-              "version": "[8.0.0, )"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
             }
           },
           "imports": [
@@ -194,11 +166,7 @@
               "privateAssets": "all"
             }
           },
-<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
->>>>>>> ea3ab11ad6cdd0c3f0d8363c5bd187796b9abcc5
         }
       }
     }

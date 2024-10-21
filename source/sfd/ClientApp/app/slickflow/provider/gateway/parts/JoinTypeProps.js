@@ -60,6 +60,7 @@ function JoinType(props) {
     function getOptions() {
         //扩展合并类型
         var options = [
+            { "label": kresource.getItem("optiondefault"), "value": "0", "name": "Optiondefault" },
             { "label": kresource.getItem("eorjoin"), "value": "1", "name": "EOrJoin" },
             { "label": kresource.getItem("andjoinmi"), "value": "2", "name": "AndJoinMI" }
         ];
