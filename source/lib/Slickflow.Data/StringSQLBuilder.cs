@@ -75,7 +75,7 @@ namespace Slickflow.Data
             }
             else
             {
-                string.Format(" AND {0} {1} %{2}% ", field, strOperator, variable);
+                condition = string.Format(" AND {0} {1} {2}", field, strOperator, variable);
             }
             
             stringSQLBuilder.Append(condition);

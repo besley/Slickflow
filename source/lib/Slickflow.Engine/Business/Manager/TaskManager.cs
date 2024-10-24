@@ -554,7 +554,7 @@ namespace Slickflow.Engine.Business.Manager
             if (!string.IsNullOrEmpty(query.AppName))
             {
                 sqlBuilder.And("AppName", Data.Operator.Like, "@appName");
-                parameters.Add("@appName", query.AppName);
+                parameters.Add("@appName", string.Format("%{0}%", query.AppName));
             }
             sqlBuilder.OrderBy("TaskID", true);
 
