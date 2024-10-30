@@ -1,13 +1,3 @@
-Slickflow specific license agreement
-
-Slickflow specific license agreement imposes source code distribution restrictions on the following product scope
-1. Slickflow.Graph: The Graph project library source code is restricted by this protocol, which allows for secondary distribution of compiled components, but does not allow direct secondary distribution of source code;
-2. Slickflow.WebTest: The WebTest project library source code is restricted by this protocol, which allows for secondary distribution of compiled components, but does not allow direct secondary distribution of source code;
-3. Slickflow.Insight: The source code of the Insight (SfInsight) project library is restricted by this protocol, which allows for secondary distribution of compiled components, but does not allow direct secondary distribution of source code;
-
-Slickflow has a unique license agreement that imposes restrictions on Enterprise, Ultimate, and Universe customers. For secondary distribution beyond these conditions, please contact the sales personnel of Slickflow products: sales@ruochisoft.com
-
-
 MIT License
 
 Slickflow Community Edition is allowed to use MIT License.
@@ -31,3 +21,14 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Slickflow Specific License Agreement
+
+Slickflow Enterprise, Ultimate and Universe Edition is allowed to use Slickflow Specific License Agreement.
+
+Slickflow specific license agreement imposes source code distribution restrictions on the following product scope
+1. Slickflow.Graph: The Graph project library source code is restricted by this protocol, which allows for secondary distribution of compiled components, but does not allow direct secondary distribution of source code;
+2. Slickflow.WebTest: The WebTest project library source code is restricted by this protocol, which allows for secondary distribution of compiled components, but does not allow direct secondary distribution of source code;
+3. Slickflow.Insight: The source code of the Insight (SfInsight) project library is restricted by this protocol, which allows for secondary distribution of compiled components, but does not allow direct secondary distribution of source code;
+
+Slickflow has a unique license agreement that imposes restrictions on Enterprise, Ultimate, and Universe customers. For secondary distribution beyond these conditions, please contact the sales personnel of Slickflow products: sales@ruochisoft.com
