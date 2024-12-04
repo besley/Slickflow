@@ -364,7 +364,6 @@ D:\GitHub\Slickflow\source\sfdapi\bin\Debug\net8.0\Dapper.pdb
 D:\GitHub\Slickflow\source\sfdapi\bin\Debug\net8.0\Slickflow.Data.pdb
 D:\GitHub\Slickflow\source\sfdapi\bin\Debug\net8.0\Slickflow.Engine.pdb
 D:\GitHub\Slickflow\source\sfdapi\bin\Debug\net8.0\Slickflow.Engine.xml
-D:\GitHub\Slickflow\source\sfdapi\bin\Debug\net8.0\Slickflow.Module.Localize.pdb
 D:\GitHub\Slickflow\source\sfdapi\bin\Debug\net8.0\Slickflow.Module.Resource.pdb
 D:\GitHub\Slickflow\source\sfdapi\bin\Debug\net8.0\Slickflow.Module.pdb
 D:\GitHub\Slickflow\source\sfdapi\bin\Debug\net8.0\Slickflow.Data.DataProvider.pdb

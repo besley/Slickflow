@@ -21,7 +21,6 @@
     <ProjectReference Include="..\lib\Dapper\Dapper.csproj" />
     <ProjectReference Include="..\Lib\Slickflow.Data\Slickflow.Data.csproj" />
     <ProjectReference Include="..\Lib\Slickflow.Engine\Slickflow.Engine.csproj" />
-    <ProjectReference Include="..\lib\Slickflow.Module.Localize\Slickflow.Module.Localize.csproj" />
     <ProjectReference Include="..\lib\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj" />
     <ProjectReference Include="..\Lib\Slickflow.Module\Slickflow.Module.csproj" />
   </ItemGroup>
@@ -29,6 +28,9 @@
   <ItemGroup>
     <Reference Include="Slickflow.Graph">
       <HintPath>..\lib\References\Slickflow.Graph.dll</HintPath>
+    </Reference>
+    <Reference Include="Slickflow.Module.Localize">
+      <HintPath>..\lib\References\Slickflow.Module.Localize.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration.ConfigurationManager">
       <HintPath>..\DLL\System.Configuration.ConfigurationManager.dll</HintPath>
