@@ -3482,20 +3482,23 @@
         </member>
         <member name="T:Slickflow.Engine.Config.WfConfig">
             <summary>
-            流程参数配置列表
+            Workflow Configuration
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Config.WfConfig.GetDefaultExpiredDays">
+        <member name="F:Slickflow.Engine.Config.WfConfig.EXPIRED_DAYS">
             <summary>
-            获取过期时间设置参数
+            BPMN file cache expired days
             </summary>
-            <returns></returns>
         </member>
-        <member name="M:Slickflow.Engine.Config.WfConfig.LoadExternalServiceFile">
+        <member name="F:Slickflow.Engine.Config.WfConfig.EXPIRED_DAYS_ENABLED">
             <summary>
-            获取外部服务文件，加载
+            BPMN file cache enabled true/false
             </summary>
-            <returns></returns>
+        </member>
+        <member name="F:Slickflow.Engine.Config.WfConfig.EXTERNAL_SERVICE_FILE_PATH">
+            <summary>
+            Local Service File Path
+            </summary>
         </member>
         <member name="T:Slickflow.Engine.Core.ActivityForwardContext">
             <summary>

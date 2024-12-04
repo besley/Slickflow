@@ -43,7 +43,6 @@ D:\GitHub\Slickflow\source\demo\Slickflow.HrsService\bin\Debug\net8.0\Slickflow.
 D:\GitHub\Slickflow\source\demo\Slickflow.HrsService\bin\Debug\net8.0\Slickflow.Engine.xml
 D:\GitHub\Slickflow\source\demo\Slickflow.HrsService\bin\Debug\net8.0\Slickflow.Data.DataProvider.pdb
 D:\GitHub\Slickflow\source\demo\Slickflow.HrsService\bin\Debug\net8.0\Slickflow.Module.pdb
-D:\GitHub\Slickflow\source\demo\Slickflow.HrsService\bin\Debug\net8.0\Slickflow.Module.Localize.pdb
 D:\GitHub\Slickflow\source\demo\Slickflow.HrsService\bin\Debug\net8.0\Slickflow.Module.Resource.pdb
 D:\GitHub\Slickflow\source\demo\Slickflow.HrsService\obj\Debug\net8.0\Slickflow.HrsService.csproj.AssemblyReference.cache
 D:\GitHub\Slickflow\source\demo\Slickflow.HrsService\obj\Debug\net8.0\Slickflow.HrsService.GeneratedMSBuildEditorConfig.editorconfig

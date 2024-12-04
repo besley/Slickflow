@@ -23,12 +23,17 @@
     <ProjectReference Include="..\..\lib\Dapper\Dapper.csproj" />
     <ProjectReference Include="..\..\Lib\Slickflow.Data\Slickflow.Data.csproj" />
     <ProjectReference Include="..\..\Lib\Slickflow.Engine\Slickflow.Engine.csproj" />
-    <ProjectReference Include="..\..\lib\Slickflow.Module.Localize\Slickflow.Module.Localize.csproj" />
     <ProjectReference Include="..\..\lib\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj" />
     <ProjectReference Include="..\..\Lib\Slickflow.Module\Slickflow.Module.csproj" />
     <ProjectReference Include="..\..\utility\SlickOne.WebUtility\SlickOne.WebUtility.csproj" />
     <ProjectReference Include="..\..\utility\VueCliMiddleware\VueCliMiddleware.csproj" />
     <ProjectReference Include="..\Slickflow.HrsService\Slickflow.HrsService.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Slickflow.Module.Localize">
+      <HintPath>..\..\lib\References\Slickflow.Module.Localize.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

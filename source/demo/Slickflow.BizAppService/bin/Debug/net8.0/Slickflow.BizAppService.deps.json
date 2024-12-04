@@ -819,7 +819,6 @@
           "Slickflow.Data": "1.0.0",
           "Slickflow.Data.DataProvider": "1.0.0",
           "Slickflow.Module": "1.0.0",
-          "Slickflow.Module.Localize": "1.0.0",
           "Slickflow.Module.Resource": "1.0.0",
           "System.Configuration.ConfigurationManager": "8.0.0",
           "System.Reflection.Emit": "4.7.0"
@@ -836,15 +835,6 @@
         },
         "runtime": {
           "Slickflow.Module.dll": {}
-        }
-      },
-      "Slickflow.Module.Localize/1.0.0": {
-        "dependencies": {
-          "Microsoft.Extensions.Caching.Memory": "8.0.0",
-          "Newtonsoft.Json": "13.0.3"
-        },
-        "runtime": {
-          "Slickflow.Module.Localize.dll": {}
         }
       },
       "Slickflow.Module.Resource/1.0.0": {
@@ -864,6 +854,14 @@
         },
         "runtime": {
           "SlickOne.WebUtility.dll": {}
+        }
+      },
+      "Slickflow.Module.Localize/1.0.0.0": {
+        "runtime": {
+          "Slickflow.Module.Localize.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }
@@ -1368,11 +1366,6 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Slickflow.Module.Localize/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
     "Slickflow.Module.Resource/1.0.0": {
       "type": "project",
       "serviceable": false,
@@ -1380,6 +1373,11 @@
     },
     "SlickOne.WebUtility/1.0.0": {
       "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Slickflow.Module.Localize/1.0.0.0": {
+      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }

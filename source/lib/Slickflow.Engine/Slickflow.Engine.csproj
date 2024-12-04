@@ -29,9 +29,14 @@
   <ItemGroup>
     <ProjectReference Include="..\Slickflow.Data.DataProvider\Slickflow.Data.DataProvider.csproj" />
     <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj" />
-    <ProjectReference Include="..\Slickflow.Module.Localize\Slickflow.Module.Localize.csproj" />
     <ProjectReference Include="..\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj" />
     <ProjectReference Include="..\Slickflow.Module\Slickflow.Module.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Slickflow.Module.Localize">
+      <HintPath>..\References\Slickflow.Module.Localize.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

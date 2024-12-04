@@ -233,7 +233,6 @@ D:\GitHub\Slickflow\source\demo\Slickflow.MvcDemo\bin\Debug\net8.0\SlickOne.WebU
 D:\GitHub\Slickflow\source\demo\Slickflow.MvcDemo\bin\Debug\net8.0\Slickflow.Data.pdb
 D:\GitHub\Slickflow\source\demo\Slickflow.MvcDemo\bin\Debug\net8.0\Slickflow.Engine.pdb
 D:\GitHub\Slickflow\source\demo\Slickflow.MvcDemo\bin\Debug\net8.0\Slickflow.Engine.xml
-D:\GitHub\Slickflow\source\demo\Slickflow.MvcDemo\bin\Debug\net8.0\Slickflow.Module.Localize.pdb
 D:\GitHub\Slickflow\source\demo\Slickflow.MvcDemo\bin\Debug\net8.0\Slickflow.Module.Resource.pdb
 D:\GitHub\Slickflow\source\demo\Slickflow.MvcDemo\bin\Debug\net8.0\Slickflow.Module.pdb
 D:\GitHub\Slickflow\source\demo\Slickflow.MvcDemo\bin\Debug\net8.0\Slickflow.BizAppService.pdb

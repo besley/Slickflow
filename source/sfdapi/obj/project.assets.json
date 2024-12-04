@@ -1260,7 +1260,6 @@
           "Slickflow.Data": "1.0.0",
           "Slickflow.Data.DataProvider": "1.0.0",
           "Slickflow.Module": "1.0.0",
-          "Slickflow.Module.Localize": "1.0.0",
           "Slickflow.Module.Resource": "1.0.0",
           "System.Configuration.ConfigurationManager": "8.0.0",
           "System.Reflection.Emit": "4.7.0"
@@ -1285,20 +1284,6 @@
         },
         "runtime": {
           "bin/placeholder/Slickflow.Module.dll": {}
-        }
-      },
-      "Slickflow.Module.Localize/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "dependencies": {
-          "Microsoft.Extensions.Caching.Memory": "8.0.0",
-          "Newtonsoft.Json": "13.0.3"
-        },
-        "compile": {
-          "bin/placeholder/Slickflow.Module.Localize.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Slickflow.Module.Localize.dll": {}
         }
       },
       "Slickflow.Module.Resource/1.0.0": {
@@ -3649,11 +3634,6 @@
       "path": "../Lib/Slickflow.Module/Slickflow.Module.csproj",
       "msbuildProject": "../Lib/Slickflow.Module/Slickflow.Module.csproj"
     },
-    "Slickflow.Module.Localize/1.0.0": {
-      "type": "project",
-      "path": "../lib/Slickflow.Module.Localize/Slickflow.Module.Localize.csproj",
-      "msbuildProject": "../lib/Slickflow.Module.Localize/Slickflow.Module.Localize.csproj"
-    },
     "Slickflow.Module.Resource/1.0.0": {
       "type": "project",
       "path": "../lib/Slickflow.Module.Resource/Slickflow.Module.Resource.csproj",
@@ -3667,7 +3647,6 @@
       "Slickflow.Data >= 1.0.0",
       "Slickflow.Engine >= 2.3.0",
       "Slickflow.Module >= 1.0.0",
-      "Slickflow.Module.Localize >= 1.0.0",
       "Slickflow.Module.Resource >= 1.0.0"
     ]
   },
@@ -3707,9 +3686,6 @@
             },
             "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj": {
               "projectPath": "D:\\GitHub\\Slickflow\\source\\Lib\\Slickflow.Engine\\Slickflow.Engine.csproj"
-            },
-            "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj": {
-              "projectPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj"
             },
             "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj": {
               "projectPath": "D:\\GitHub\\Slickflow\\source\\lib\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj"
