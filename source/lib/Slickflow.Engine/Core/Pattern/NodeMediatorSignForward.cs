@@ -44,7 +44,10 @@ namespace Slickflow.Engine.Core.Pattern
                 else
                 {
                     base.ActivityForwardContext.FromActivityInstance.CompareType = (short)CompareTypeEnum.Percentage;
-                    base.ActivityForwardContext.FromActivityInstance.CompleteOrder = 1;
+                    if (controlParamSheet.SignForwardCompleteOrder != 0)
+                        base.ActivityForwardContext.FromActivityInstance.CompleteOrder = controlParamSheet.SignForwardCompleteOrder;
+                    else
+                        base.ActivityForwardContext.FromActivityInstance.CompleteOrder = 1;
                 }
 
                 //更新当前实例节点为主节点，并且置当前节点为挂起状态
