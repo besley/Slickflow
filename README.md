@@ -144,7 +144,7 @@
  
  if you have any further inquiry, please feel free to contact us:   
 
-**Email: sales@ruochisoft.com**  
+**Email: sales@ruochisoft.com, support@ruochisoft.com**  
 **QQ(Author): 47743901**
 
 **Document:**  
@@ -186,7 +186,7 @@ https://www.youtube.com/@besley7836
 http://www.slickflow.com/product/index 
 
 
-**EMail: sales@ruochisoft.com**  
+**Email: sales@ruochisoft.com, support@ruochisoft.com**  
 **QQ(Author): 47743901**  
 **WeChat(Author): besley2008**  
 
