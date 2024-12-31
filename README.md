@@ -144,7 +144,7 @@
  
  if you have any further inquiry, please feel free to contact us:   
 
-**Email: sales@ruochisoft.com, support@ruochisoft.com**  
+**Email: sales@ruochisoft.com**  
 **QQ(Author): 47743901**
 
 **Document:**  
@@ -186,7 +186,7 @@ https://www.youtube.com/@besley7836
 http://www.slickflow.com/product/index 
 
 
-**Email: sales@ruochisoft.com, support@ruochisoft.com**  
+**EMail: sales@ruochisoft.com**  
 **QQ(Author): 47743901**  
 **WeChat(Author): besley2008**  
 
@@ -202,4 +202,4 @@ http://www.slickflow.com/demo/index
 http://doc.slickflow.com (中文) 
 http://doc.slickflow.net(English) 
 
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](william.ligong@yahoo.com)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](william.ligong@hotmail.com)
