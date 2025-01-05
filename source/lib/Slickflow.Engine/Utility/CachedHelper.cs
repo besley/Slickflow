@@ -8,6 +8,7 @@ using System.Xml;
 namespace Slickflow.Engine.Utility
 {
     /// <summary>
+    /// Process definition file cache
     /// 流程定义文件Cache
     /// </summary>
     internal class CachedHelper
@@ -16,11 +17,8 @@ namespace Slickflow.Engine.Utility
         private static readonly ConcurrentDictionary<int, object> _fullEntityMapCache = new ConcurrentDictionary<int, object>();
 
         /// <summary>
-        /// 设置流程文件缓存
+        /// Set Xpdl Cache
         /// </summary>
-        /// <param name="processGUID"></param>
-        /// <param name="xmlDoc"></param>
-        /// <returns></returns>
         internal static XmlDocument SetXpdlCache(string processGUID, string version, XmlDocument xmlDoc)
         {
             var str = processGUID + version;
@@ -30,10 +28,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 读取流程文件的缓存
+        /// Read xpdl cache
         /// </summary>
-        /// <param name="processGUID"></param>
-        /// <returns></returns>
         internal static XmlDocument GetXpdlCache(string processGUID, string version)
         {
             XmlDocument xmlDoc = null;
@@ -48,12 +44,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 更新流程缓存
+        /// update cache
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="xmlDoc">xml文本</param>
-        /// <returns>更新状态</returns>
         internal static bool TryUpdate(string processGUID, string version, XmlDocument xmlDoc)
         {
             var str = processGUID + version;
@@ -71,23 +63,19 @@ namespace Slickflow.Engine.Utility
             return false;
         }
 
-
         /// <summary>
+        /// Cache the dynamic mapping method for entity Reader conversion
         /// 设置实体Reader转换的动态映射方法缓存
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         internal static object SetEntityCache(int id, object obj)
         {
             return _fullEntityMapCache.GetOrAdd(id, obj);
         }
 
         /// <summary>
+        /// Cache the dynamic mapping method for reading entity Reader conversion
         /// 读取实体Reader转换的动态映射方法缓存
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         internal static object GetEntityCache(int id)
         {
             object obj = null;

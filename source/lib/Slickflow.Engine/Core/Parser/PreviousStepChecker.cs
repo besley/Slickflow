@@ -14,21 +14,21 @@ using Slickflow.Engine.Business.Manager;
 namespace Slickflow.Engine.Core.Parser
 {
     /// <summary>
-    /// 上一步活动节点检查器
+    /// Previous Activity Node Parser
+    /// 上一步活动节点解析器
     /// </summary>
     internal class PreviousStepChecker : ManagerBase
     {
-        #region 上一步解析
         /// <summary>
+        /// Retrieve the previous node tree
         /// 获取上一步节点树
         /// </summary>
-        /// <param name="taskID">任务ID</param>
-        /// <param name="hasGatewayPassed">是否经过网关</param>
-        /// <returns>上一步步骤列表</returns>
+        /// <param name="taskID"></param>
+        /// <param name="hasGatewayPassed"></param>
+        /// <returns></returns>
         internal IList<NodeView> GetPreviousActivityTree(int taskID, out Boolean hasGatewayPassed)
         {
             hasGatewayPassed = false;
-            //首先获取当前运行节点信息
             var aim = new ActivityInstanceManager();
             var runningNode = aim.GetByTask(taskID);
             var nodeList = GetPreviousActivityTree(runningNode, out hasGatewayPassed);
@@ -37,15 +37,15 @@ namespace Slickflow.Engine.Core.Parser
         }
 
         /// <summary>
+        /// Retrieve the previous node tree
         /// 获取上一步节点树
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <param name="hasGatewayPassed">是否经过网关</param>
-        /// <returns>上一步步骤列表</returns>
+        /// <param name="runner"></param>
+        /// <param name="hasGatewayPassed"></param>
+        /// <returns></returns>
         internal IList<NodeView> GetPreviousActivityTree(WfAppRunner runner, out Boolean hasGatewayPassed)
         {
             hasGatewayPassed = false;
-            //首先获取当前运行节点信息
             var aim = new ActivityInstanceManager();
             var runningNode = aim.GetRunningNode(runner);
             var nodeList = GetPreviousActivityTree(runningNode, out hasGatewayPassed);
@@ -53,31 +53,37 @@ namespace Slickflow.Engine.Core.Parser
         }
 
         /// <summary>
+        /// Retrieve the previous node tree
         /// 获取上一步节点树
         /// </summary>
-        /// <param name="runningNode">运行活动</param>
-        /// <param name="hasGatewayPassed">是否经过网关</param>
-        /// <returns>上一步步骤列表</returns>
+        /// <param name="runningNode"></param>
+        /// <param name="hasGatewayPassed"></param>
+        /// <returns></returns>
         private IList<NodeView> GetPreviousActivityTree(ActivityInstanceEntity runningNode, out Boolean hasGatewayPassed)
         {
             var aim = new ActivityInstanceManager();
 
             //获取前置节点列表
+            //Get the list of previous nodes
             var processInstance = (new ProcessInstanceManager()).GetById(runningNode.ProcessInstanceID);
             var processModel = ProcessModelFactory.CreateByProcessInstance(processInstance);
             var previousActivityList = GetPreviousActivityList(runningNode, processModel, out hasGatewayPassed);
 
             //封装返回结果集合
+            //Encapsulate the return result set
             var nodeList = new List<NodeView>();
             foreach (var activity in previousActivityList)
             {
                 //判断上一步是否是会签节点
+                //Determine whether the previous step was a signing together node
                 if (processModel.IsMINode(activity) == true)
                 {
                     //获取上一步节点的运行记录
+                    //Get the running record of the previous node
                     if (processModel.IsMIParallel(activity) == true)
                     {
                         //并行会签节点读取所有完成的子节点
+                        //Parallel row signing node reads all completed child nodes
                         var activityInstanceList = aim.GetPreviousParallelMultipleInstanceListCompleted(runningNode, activity.ActivityGUID);
                         foreach (var ai in activityInstanceList)
                         {
@@ -87,9 +93,11 @@ namespace Slickflow.Engine.Core.Parser
                     else if (processModel.IsMISequence(activity) == true)
                     {
                         //是两个不同节点之间的退回处理，取前一节点的最后一个完成的多实例节点
+                        //It is a return process between two different nodes, taking the last completed multi instance node from the previous node
                         if (activity.ActivityGUID != runningNode.ActivityGUID)
                         {
                             //退回到会签节点的最后一步
+                            //Return to the final step of the co signing node
                             var activityInstance = aim.GetPreviousActivityInstanceSimple(runningNode, activity.ActivityGUID);
                             if (activityInstance != null)
                             {
@@ -100,6 +108,8 @@ namespace Slickflow.Engine.Core.Parser
                         {
                             //多实例节点的内部退回处理
                             //串行会签节点按照CompleteOrder顺序递减读取上一步
+                            //Internal rollback processing of multiple instance nodes
+                            //Serial countersignature nodes read the previous step in descending order of Completed Order
                             var previousAdjacentBrotherNode = GetPreviousOfMultipleInstanceNode(
                                 runningNode.MIHostActivityInstanceID.Value,
                                 runningNode.ID,
@@ -116,6 +126,7 @@ namespace Slickflow.Engine.Core.Parser
                     if (hasGatewayPassed == true)
                     {
                         //跨越网关类型
+                        //Cross gateway type
                         var activityInstanceList = aim.GetActivityInstanceListCompletedSimple(runningNode.ProcessInstanceID, activity.ActivityGUID);
                         foreach (var a in activityInstanceList)
                         {
@@ -125,6 +136,7 @@ namespace Slickflow.Engine.Core.Parser
                     else
                     {
                         //普通任务节点
+                        //Normal task node
                         var activityInstance = aim.GetPreviousActivityInstanceSimple(runningNode, activity.ActivityGUID);
                         if (activityInstance != null)
                         {
@@ -137,12 +149,13 @@ namespace Slickflow.Engine.Core.Parser
         }
 
         /// <summary>
-        /// 封装节点列表
+        /// Append Node View List
+        /// 追加节点列表
         /// </summary>
-        /// <param name="nodeList">节点列表</param>
-        /// <param name="activity">活动</param>
-        /// <param name="userID">用户ID</param>
-        /// <param name="userName">用户名称</param>
+        /// <param name="nodeList"></param>
+        /// <param name="activity"></param>
+        /// <param name="userID"></param>
+        /// <param name="userName"></param>
         private void AppendNodeViewList(IList<NodeView> nodeList, 
             Activity activity, 
             string userID, 
@@ -169,6 +182,7 @@ namespace Slickflow.Engine.Core.Parser
             }
 
             //添加用户列表
+            //Append user list
             nodeView.Users = AppendUserList(nodeView.Users, new User
             {
                 UserID = userID,
@@ -177,11 +191,12 @@ namespace Slickflow.Engine.Core.Parser
         }
 
         /// <summary>
+        /// Append Single User
         /// 增加单个用户
         /// </summary>
-        /// <param name="existUserList">用户列表</param>
-        /// <param name="user">追加用户</param>
-        /// <returns>用户列表</returns>
+        /// <param name="existUserList"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         private IList<User> AppendUserList(IList<User> existUserList, User user)
         {
             if (existUserList == null)
@@ -190,6 +205,7 @@ namespace Slickflow.Engine.Core.Parser
             }
 
             //检验用户是否已经存在
+            //Verify if the user already exists
             if (existUserList.Any(u=>u.UserID == user.UserID) == false)
             {
                 existUserList.Add(new User { UserID = user.UserID, UserName = user.UserName });
@@ -198,16 +214,21 @@ namespace Slickflow.Engine.Core.Parser
         }
 
         /// <summary>
+        /// Retrieve the previous node list of the current running node
+        /// (including multiple instance node types)
+        ///  1.  Multiple instance nodes use a decreasing value of CompleteOrder internally;
+        /// (This involves the master node crossing mode with multiple instance nodes)
+        ///  2.  The normal node mode recursively backtracks based on whether there is a Gateway node;
         /// 获取当前运行节点的上一步节点列表
         /// （包括多实例节点类型）
         /// 1. 多实例节点内部使用CompleteOrder数值递减；
         ///    (其中涉及到多实例节点的主节点跨越模式)
         /// 2. 普通节点模式按照是否有Gateway节点递归回溯；
         /// </summary>
-        /// <param name="runningNode">运行节点</param>
-        /// <param name="processModel">流程模型</param>
-        /// <param name="hasGatewayPassed">是否经过网关节点</param>
-        /// <returns>上一步活动列表</returns>
+        /// <param name="runningNode"></param>
+        /// <param name="processModel"></param>
+        /// <param name="hasGatewayPassed"></param>
+        /// <returns></returns>
         internal IList<Activity> GetPreviousActivityList(ActivityInstanceEntity runningNode,
             IProcessModel processModel,
             out Boolean hasGatewayPassed)
@@ -216,11 +237,13 @@ namespace Slickflow.Engine.Core.Parser
 
             IList<Activity> activityList = new List<Activity>();
             //判断当前节点是否是多实例节点
+            //Determine whether the current node is a multi instance node
             if (runningNode.MIHostActivityInstanceID != null)
             {
                 if (runningNode.CompleteOrder > 1)
                 {
                     //多实例串行节点的中间节点，其上一步就是completeorder-1的节点
+                    //The intermediate node of a multi instance serial node, whose previous step is the node of compleorder-1
                     isOfMultipleInstanceNode = true;
                 }
                 else if (runningNode.CompleteOrder == 1
@@ -230,6 +253,10 @@ namespace Slickflow.Engine.Core.Parser
                     //串行模式多实例的第一个执行节点，此时可退回的节点是主节点的上一步
                     //第一种条件：只有并行模式下有CompleteOrder的值为 -1
                     //并行节点，此时可退回的节点是主节点的上一步
+                    //The first condition: Only in serial mode, there is a value of 1 for CompleteOrder
+                    //The first executing node of multiple instances in serial mode, and the node that can be returned at this time is the previous step of the master node
+                    //The first condition: Only in parallel mode, there is a value of -1 for CompleteOrder
+                    //Parallel nodes, the node that can be returned at this time is the previous step of the master node
                     ;
                 }
                 else
@@ -239,10 +266,12 @@ namespace Slickflow.Engine.Core.Parser
             }
 
             //返回前置节点列表
+            //Return the list of predecessor nodes
             hasGatewayPassed = false;
             if (isOfMultipleInstanceNode == true)
             {
                 //已经是中间节点，只能退回到上一步多实例子节点
+                //It is already an intermediate node and can only be reverted back to the previous step of the multi instance node
                 var entity = GetPreviousOfMultipleInstanceNode(runningNode.MIHostActivityInstanceID.Value,
                     runningNode.ID,
                     runningNode.CompleteOrder.Value);
@@ -258,12 +287,13 @@ namespace Slickflow.Engine.Core.Parser
         }
 
         /// <summary>
+        /// Query the predecessor nodes of the instance node
         /// 查询实例节点的前置节点
         /// </summary>
-        /// <param name="mainActivityInstanceID">主节点实例ID</param>
-        /// <param name="activityInstanceID">活动实例ID</param>
-        /// <param name="completeOrder">完成顺序</param>
-        /// <returns>活动实例</returns>
+        /// <param name="mainActivityInstanceID"></param>
+        /// <param name="activityInstanceID"></param>
+        /// <param name="completeOrder"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity GetPreviousOfMultipleInstanceNode(int mainActivityInstanceID,
             int activityInstanceID,
             float completeOrder)
@@ -287,12 +317,13 @@ namespace Slickflow.Engine.Core.Parser
         }
 
         /// <summary>
+        /// Read the previous node information of the node
         /// 读取节点的上一步节点信息
         /// </summary>
-        /// <param name="runningNode">当前节点</param>
-        /// <param name="isLookUpBackSource">是否退回</param>
-        /// <param name="hasPassedGatewayNode">是否经由路由节点</param>
-        /// <returns>活动实例列表</returns>
+        /// <param name="runningNode"></param>
+        /// <param name="isLookUpBackSource"></param>
+        /// <param name="hasPassedGatewayNode"></param>
+        /// <returns></returns>
         internal IList<ActivityInstanceEntity> GetPreviousActivityInstanceList(ActivityInstanceEntity runningNode,
             bool isLookUpBackSource,
             out bool hasPassedGatewayNode)
@@ -307,14 +338,18 @@ namespace Slickflow.Engine.Core.Parser
             if (isLookUpBackSource == true)
             {
                 //退回情况下的处理
+                //Handling in case of return
                 if (runningNode.MIHostActivityInstanceID != null && runningNode.CompleteOrder.Value == 1)
                 {
                     //多实例的第一个子节点，先找到主节点，再到transition记录表中找到上一步节点
+                    //The first child node of multiple instances, first find the main node,
+                    //and then find the previous node in the transition record table
                     backSrcActivityInstanceId = runningNode.MIHostActivityInstanceID.Value;
                 }
                 else if (runningNode.BackSrcActivityInstanceID != null)
                 {
                     //节点时曾经发生退回的节点
+                    //Nodes that have experienced a sendback in the past
                     backSrcActivityInstanceId = runningNode.BackSrcActivityInstanceID.Value;
                 }
                 else
@@ -335,7 +370,8 @@ namespace Slickflow.Engine.Core.Parser
             IList<ActivityInstanceEntity> previousActivityInstanceList = new List<ActivityInstanceEntity>();
             foreach (var entity in runningTransitionList)
             {
-                //如果是逻辑节点，则继续查找
+                //如果是网关节点，则继续查找
+                //If it is a gateway node, continue searching
                 if (entity.FromActivityType == (short)ActivityTypeEnum.GatewayNode)
                 {
                     GetPreviousOfGatewayActivityInstance(transitionList, entity.FromActivityInstanceID, previousActivityInstanceList);
@@ -350,11 +386,12 @@ namespace Slickflow.Engine.Core.Parser
         }
 
         /// <summary>
+        /// Obtain the nodes before the gateway node
         /// 获取网关节点前的节点
         /// </summary>
-        /// <param name="transitionList">转移列表</param>
-        /// <param name="toActivityInstanceID">流转到的活动实例ID</param>
-        /// <param name="previousActivityInstanceList">前节点实例列表</param>
+        /// <param name="transitionList"></param>
+        /// <param name="toActivityInstanceID"></param>
+        /// <param name="previousActivityInstanceList"></param>
         private void GetPreviousOfGatewayActivityInstance(IList<TransitionInstanceEntity> transitionList,
             int toActivityInstanceID,
             IList<ActivityInstanceEntity> previousActivityInstanceList)
@@ -377,6 +414,5 @@ namespace Slickflow.Engine.Core.Parser
                 }
             }
         }
-        #endregion
     }
 }

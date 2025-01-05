@@ -9,11 +9,12 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Xpdl.Schedule
 {
     /// <summary>
+    /// Next Activity Schedule
     /// 节点调度基类
     /// </summary>
     internal abstract class NextActivityScheduleBase
     {
-        #region 属性和构造函数
+        #region Property and Constructor
         internal IProcessModel _processModel;
         internal IProcessModel ProcessModel
         {
@@ -30,14 +31,9 @@ namespace Slickflow.Engine.Xpdl.Schedule
         #endregion
 
         /// <summary>
+        /// Abstract method for obtaining the next node list based on gateway type
         /// 根据网关类型获取下一步节点列表的抽象方法
         /// </summary>
-        /// <param name="fromTransition">转移</param>
-        /// <param name="currentGatewayActivity">活动</param>
-        /// <param name="conditionKeyValuePair">条件kv对</param>
-        /// <param name="session">会话</param>
-        /// <param name="resultType">匹配类型</param>
-        /// <returns></returns>
         internal abstract NextActivityComponent GetNextActivityListFromGateway(Transition fromTransition,
             Activity currentGatewayActivity,
             IDictionary<string, string> conditionKeyValuePair,
@@ -46,12 +42,9 @@ namespace Slickflow.Engine.Xpdl.Schedule
 
 
         /// <summary>
+        /// Obtain the next node list based on Transition
         /// 根据Transition，获取下一步节点列表
         /// </summary>
-        /// <param name="forwardTransition">转移实体</param>
-        /// <param name="conditionKeyValuePair">条件kv对</param>
-        /// <param name="session">会话</param>
-        /// <param name="resultType">结果类型</param>
         protected NextActivityComponent GetNextActivityListFromGatewayCore(Transition forwardTransition,
             IDictionary<string, string> conditionKeyValuePair,
             IDbSession session,
@@ -107,13 +100,10 @@ namespace Slickflow.Engine.Xpdl.Schedule
         }
 
         /// <summary>
+        /// Add child nodes to the gateway routing node, 
+        /// and process them based on whether the gateway node and child nodes are empty or not
         /// 把子节点添加到网关路由节点，根据网关节点和子节点是否为空处理
         /// </summary>
-        /// <param name="fromTransition">起始转移</param>
-        /// <param name="currentGatewayActivity">当前网关节点</param>
-        /// <param name="gatewayComponent">网关Component</param>
-        /// <param name="child">子节点</param>
-        /// <returns>下一步Component</returns>
         protected NextActivityComponent AddChildToGatewayComponent(Transition fromTransition,
             Activity currentGatewayActivity,
             NextActivityComponent gatewayComponent,
@@ -127,6 +117,5 @@ namespace Slickflow.Engine.Xpdl.Schedule
 
             return gatewayComponent;
         }
-
     }
 }

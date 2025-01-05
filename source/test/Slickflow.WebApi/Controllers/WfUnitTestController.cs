@@ -16,16 +16,15 @@ using RabbitMQ.Client.Impl;
 namespace Slickflow.WebApi.Controllers
 {
     /// <summary>
-    /// 引擎接口单元测试
+    /// Workflow Service Unit Test
+    /// 工作流服务单元测试
     /// </summary>
     public class WfUnitTestController : Controller
     {
-        #region Workflow Api访问操作
+        #region Workflow Api Test
         /// <summary>
-        ///  启动流程测试
+        /// Start Process
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult StartProcess([FromBody] WfAppRunner runner)
         {
@@ -49,10 +48,8 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  启动流程测试
+        /// Start Process Parallel
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult StartProcessParallel([FromBody] WfAppRunner runner)
         {
@@ -79,10 +76,8 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  运行流程测试
+        /// Run Process App
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult RunProcessApp([FromBody] WfAppRunner runner)
         {
@@ -106,16 +101,15 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  运行流程(连续运行模式)
+        /// Run Process Continue
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult RunProcessContinue([FromBody] WfAppRunner runner)
         {
             var wfService = new WorkflowService();
 
             //运行当前任务
+            //Run the current task
             var isContinued = false;
             using (var session = SessionFactory.CreateSession())
             {
@@ -126,6 +120,7 @@ namespace Slickflow.WebApi.Controllers
                 {
                     transaction.Commit();
                     //确认是否继续执行
+                    //Confirm whether to continue execution
                     isContinued = true;
                 }
                 else
@@ -136,6 +131,7 @@ namespace Slickflow.WebApi.Controllers
             }
 
             //继续重复执行流程
+            //Continue to repeat the process
             if (isContinued)
             {
                 using (var session = SessionFactory.CreateSession())
@@ -143,6 +139,9 @@ namespace Slickflow.WebApi.Controllers
                     //检查待办任务，满足以下条件，继续默认执行流程
                     //1) 如果有当前用户的待办任务
                     //2) 流程只执行一次，不再循环调用
+                    //Check the pending tasks, meet the following conditions, and continue with the default execution process
+                    //1) If there are pending tasks for the current user
+                    //2) The process is executed only once and will no longer be called in a loop
                     var transactionContinue = session.BeginTrans();
                     var myTask = wfService.GetTaskView(session.Connection, runner.AppInstanceID, runner.ProcessGUID, runner.UserID, session.Transaction);
                     if (myTask != null)
@@ -160,6 +159,7 @@ namespace Slickflow.WebApi.Controllers
                         };
 
                         //获取下一步的步骤信息
+                        //Obtain information on the next steps
                         Dictionary<string, PerformerList> nextActivityPerformers = new Dictionary<string, PerformerList>();
 
                         var nextActivityRoleUserTree = wfService.GetNextActivityRoleUserTree(runner, runner.Conditions);
@@ -177,12 +177,13 @@ namespace Slickflow.WebApi.Controllers
                         runnerContinue.NextActivityPerformers = nextActivityPerformers;
 
                         //继续运行流程
+                        //Continue running the process
                         var result = wfService.RunProcessApp(session.Connection, runnerContinue, session.Transaction);
 
                         if (result.Status == WfExecutedStatus.Success)
                         {
                             transactionContinue.Commit();
-                            return ResponseResult.Success("根据下一步的待办人是当前在办人，流程可以继续向前运行，流程已经成功连续运行！");
+                            return ResponseResult.Success("The process has been successfully running continuously！");
                         }
                         else
                         {
@@ -192,14 +193,13 @@ namespace Slickflow.WebApi.Controllers
                     }
                 }
             }
-            return ResponseResult.Default("流程仅完成当前步骤的运行!");
+            return ResponseResult.Default("The process only completes the execution of the current step!");
         }
 
         /// <summary>
+        /// Sign Forward Process
         ///  加签流程测试
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult SignForwardProcess([FromBody] WfAppRunner runner)
         {
@@ -223,10 +223,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  撤销流程测试
+        /// Withdraw Process
+        /// 撤销流程测试
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult WithdrawProcess([FromBody] WfAppRunner runner)
         {
@@ -250,10 +249,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  退回流程测试
+        /// Sendback process
+        /// 退回流程测试
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult SendBackProcess([FromBody] WfAppRunner runner)
         {
@@ -277,10 +275,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  返签流程测试
+        /// Reverse Process
+        /// 返签流程测试
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult ReverseProcess([FromBody] WfAppRunner runner)
         {
@@ -305,10 +302,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
+        /// Jump Process to Start Node
         /// 跳转流程测试
         /// </summary>
-        /// <param name="runner"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult JumpProcessStart([FromBody] WfAppRunner runner)
         {
@@ -333,10 +329,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
+        /// Jump Process
         /// 跳转流程测试
         /// </summary>
-        /// <param name="runner"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult JumpProcess([FromBody] WfAppRunner runner)
         {
@@ -361,10 +356,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
+        /// Jump Process to End Node
         /// 跳转流程测试
         /// </summary>
-        /// <param name="runner"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult JumpProcessEnd([FromBody] WfAppRunner runner)
         {
@@ -389,11 +383,11 @@ namespace Slickflow.WebApi.Controllers
         }
         #endregion
 
-        #region 获取流程数据列表
+        #region Get Process Data
         /// <summary>
+        /// Get Process List Simple
         /// 获取流程记录列表
         /// </summary>
-        /// <returns>流程列表</returns>
         [HttpGet]
         public ResponseResult<List<ProcessEntity>> GetProcessListSimple()
         {
@@ -408,13 +402,14 @@ namespace Slickflow.WebApi.Controllers
             catch (System.Exception ex)
             {
                 result = ResponseResult<List<ProcessEntity>>.Error(
-                    string.Format("获取流程基本信息失败！{0}", ex.Message)
+                    string.Format("Failed to obtain process information！{0}", ex.Message)
                 );
             }
             return result;
         }
 
         /// <summary>
+        /// Get Task Paged
         /// 获取流程记录列表
         /// </summary>
         /// <returns>流程列表</returns>
@@ -436,27 +431,27 @@ namespace Slickflow.WebApi.Controllers
             catch (System.Exception ex)
             {
                 result = ResponseResult<List<TaskViewEntity>>.Error(
-                    string.Format("获取任务信息失败！{0}", ex.Message)
+                    string.Format("Failed to obtain task information！{0}", ex.Message)
                 );
             }
             return result;
         }
         #endregion
 
-        #region 任务处理接口
+        #region Task Interface
         /// <summary>
-        /// 任务委托方法
-        /// 测试脚本：
-        /// 1) 启动流程
-        /// http://localhost/sfapi2/api/wfunittest/startprocess
+        ///Task delegation method
+        ///Test script:
+        ///1) Start the process
+        ///  http://localhost/sfapi2/api/wfunittest/startprocess
         /// {"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
         /// 
-        /// 2) 运行流程
-        /// http://localhost/sfapi2/api/wfunittest/runprocessapp
+        ///2) Operation process
+        ///  http://localhost/sfapi2/api/wfunittest/runprocessapp
         /// {"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"eb833577-abb5-4239-875a-5f2e2fcb6d57":[{"UserID":"20","UserName":"Jack"},{"UserID":"30","UserName":"Smith"},{"UserID":"40","UserName":"Tom"}]}}
         /// 
-        /// 3) 委托任务
-        /// http://localhost/sfapi2/api/wfunittest/entrust
+        ///3) Commissioned tasks
+        ///  http://localhost/sfapi2/api/wfunittest/entrust
         /// {"TaskID":"210","RunnerID":"40","RunnerName":"Tom","EntrustToUserID":"30","EntrustToUserName":"smith"}
         /// 
         /// </summary>

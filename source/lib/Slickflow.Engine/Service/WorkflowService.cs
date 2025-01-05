@@ -20,35 +20,32 @@ using Slickflow.Engine.Core.Parser;
 namespace Slickflow.Engine.Service
 {
     /// <summary>
+    /// Process operation flow service (execution part)
     /// 流程运行流转服务(执行部分)
     /// </summary>
     public partial class WorkflowService : IWorkflowService
     {
-        #region 基本属性
+        #region Property and Constructor
         /// <summary>
-        /// 资源服务接口
+        /// Role User Resource Service Interface
+        /// 角色用户资源服务接口
         /// </summary>
         protected IResourceService ResourceService { get; private set; }
-        #endregion
 
-        #region 构造方法
         /// <summary>
-        /// 构造方法
+        /// Constructor
         /// </summary>
         public WorkflowService()
         {
-            //资源接口组件
             ResourceService = ResourceServiceFactory.Create();
         }
         #endregion
 
-        #region 获取要运行节点(下一步)节点信息(正常流转运行)
+        #region Get Next Activity Info
         /// <summary>
+        /// Obtain the first feasible node of the process
         /// 获取流程的第一个可办理节点
         /// </summary>
-        /// <param name="processGUID">流程定义GUID</param>
-        /// <param name="version">版本</param>
-        /// <returns>活动</returns>
         public Activity GetFirstActivity(string processGUID, string version)
         {
             var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
@@ -57,11 +54,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get the node list of task types
         /// 获取任务类型的节点列表
         /// </summary>
-        /// <param name="processGUID">流程定义GUID</param>
-        /// <param name="version">版本</param>
-        /// <returns>活动列表</returns>
         public IList<Activity> GetTaskActivityList(string processGUID, string version)
         {
             var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
@@ -71,10 +66,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get the node list of task types
         /// 获取任务类型的节点列表
         /// </summary>
-        /// <param name="processID">流程主键ID</param>
-        /// <returns>活动列表</returns>
         public IList<Activity> GetTaskActivityList(int processID)
         {
             var pm = new ProcessManager();
@@ -86,11 +80,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get a list of nodes for all task types (including countersignature and subprocesses)
         /// 获取全部任务类型的节点列表（包含会签和子流程）
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <returns>活动列表</returns>
         public IList<Activity> GetAllTaskActivityList(string processGUID, string version)
         {
             var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
@@ -100,12 +92,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get the next node information of the current node
         /// 获取当前节点的下一个节点信息
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <returns>活动</returns>
         public Activity GetNextActivity(string processGUID, 
             string version, 
             string activityGUID)
@@ -116,13 +105,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get the next node information of the current node
         /// 获取当前节点的下一个节点信息
         /// </summary>
-        /// <param name="processGUID">流程定义GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="activityGUID">活动定义GUID</param>
-        /// <param name="condition">条件</param>
-        /// <returns>节点视图</returns>
         public IList<NodeView> GetNextActivity(String processGUID,
             String version,
             String activityGUID,
@@ -138,11 +123,10 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Simple mode: Obtain the next node of the process based on the application 
+        /// (without considering the situation of multiple subsequent nodes)
         /// 简单模式：根据应用获取流程下一步节点(不考虑有多个后续节点的情况）
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <param name="condition">条件</param>
-        /// <returns>节点视图</returns>
         public NodeView GetNextActivity(WfAppRunner runner,
             IDictionary<string, string> condition = null)
         {
@@ -156,11 +140,10 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Simple mode: Obtain the next node of the process based on the application 
+        /// (without considering the situation of multiple subsequent nodes)
         /// 简单模式：根据应用获取流程下一步节点(不考虑有多个后续节点的情况）
         /// </summary>
-        /// <param name="taskID">任务ID</param>
-        /// <param name="condition">条件</param>
-        /// <returns>获取下一步节点</returns>
         public NodeView GetNextActivity(int taskID,
             IDictionary<string, string> condition = null)
         {
@@ -174,11 +157,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Obtain the next node list according to the application process
         /// 根据应用获取流程下一步节点列表
         /// </summary>
-        /// <param name="runner">应用执行人</param>
-        /// <param name="condition">条件</param>
-        /// <returns>节点列表</returns>
         public IList<NodeView> GetNextActivityTree(WfAppRunner runner, 
             IDictionary<string, string> condition = null)
         {
@@ -189,11 +170,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Obtain the next node list according to the application process
         /// 根据应用获取流程下一步节点列表
         /// </summary>
-        /// <param name="runner">应用执行人</param>
-        /// <param name="condition">条件</param>
-        /// <returns>节点列表</returns>
         public async Task<IList<NodeView>> GetNextActivityTreeAsync(WfAppRunner runner, 
             IDictionary<string, string> condition = null)
         {
@@ -205,13 +184,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Obtain the next node list according to the application process
         /// 根据应用获取流程下一步节点列表
         /// </summary>
-        /// <param name="conn">数据库链接</param>
-        /// <param name="runner">应用执行人</param>
-        /// <param name="condition">条件</param>
-        /// <param name="trans">事务或交易</param>
-        /// <returns>节点列表</returns>
         public IList<NodeView> GetNextActivityTree(IDbConnection conn, 
             WfAppRunner runner,
             IDictionary<string, string> condition,
@@ -241,13 +216,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Obtain the next node list according to the application process
         /// 根据应用获取流程下一步节点列表
         /// </summary>
-        /// <param name="conn">数据库链接</param>
-        /// <param name="runner">应用执行人</param>
-        /// <param name="condition">条件</param>
-        /// <param name="trans">事务或交易</param>
-        /// <returns>节点列表</returns>
         public async Task<IList<NodeView>> GetNextActivityTreeAsync(IDbConnection conn, 
             WfAppRunner runner,
             IDictionary<string, string> condition, 
@@ -261,11 +232,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Obtain the next node list according to the application process
         /// 获取下一步活动列表树
         /// </summary>
-        /// <param name="taskID">任务ID</param>
-        /// <param name="condition">条件</param>
-        /// <returns>下一步列表</returns>
         public IList<NodeView> GetNextActivityTree(int taskID,
             IDictionary<string, string> condition = null)
         {
@@ -282,11 +251,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Obtain the next node list according to the application process
         /// 获取下一步活动列表树
         /// </summary>
-        /// <param name="taskID">任务ID</param>
-        /// <param name="condition">条件</param>
-        /// <returns>下一步列表</returns>
         public async Task<IList<NodeView>> GetNextActivityTreeAsync(int taskID, 
             IDictionary<string, string> condition = null)
         {
@@ -298,11 +265,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// According to the application, obtain the next node list of the process, including role users
         /// 根据应用获取流程下一步节点列表，包含角色用户
         /// </summary>
-        /// <param name="runner">应用执行人</param>
-        /// <param name="condition">条件</param>
-        /// <returns>节点列表</returns>
         public IList<NodeView> GetNextActivityRoleUserTree(WfAppRunner runner, 
             IDictionary<string, string> condition = null)
         {
@@ -313,11 +278,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// According to the application, obtain the next node list of the process, including role users
         /// 根据应用获取流程下一步节点列表，包含角色用户
         /// </summary>
-        /// <param name="runner">应用执行人</param>
-        /// <param name="condition">条件</param>
-        /// <returns>节点列表</returns>
         public async Task<IList<NodeView>> GetNextActivityRoleUserTreeAsync(WfAppRunner runner, 
             IDictionary<string, string> condition = null)
         {
@@ -329,14 +292,15 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// According to the application, obtain the next node list of the process, including role users
+        /// Includes:
+        /// 1) The next step for the gateway is to add a pre loaded user list of personnel;
+        /// 2) The next step in the co signing mode is to add a pre loaded user list of personnel;
         /// 根据应用获取流程下一步节点列表，包含角色用户
         /// 包含：
         /// 1) 网关下一步添加人员的预加载用户列表；
         /// 2) 会签模式的下一步添加人员的预加载用户列表；
         /// </summary>
-        /// <param name="runner">应用执行人</param>
-        /// <param name="condition">条件</param>
-        /// <returns>节点列表</returns>
         public NextStepInfo GetNextStepInfo(WfAppRunner runner, 
             IDictionary<string, string> condition = null)
         {
@@ -347,11 +311,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Asynchronous retrieval of next step list
         /// 异步获取下一步列表
         /// </summary>
-        /// <param name="runner">应用执行人</param>
-        /// <param name="condition">条件</param>
-        /// <returns>节点列表</returns>
         public async Task<NextStepInfo> GetNextStepInfoAsync(WfAppRunner runner, 
             IDictionary<string, string> condition = null)
         {
@@ -363,12 +325,11 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get the list of node roles and personnel for the next step of the starting node when the process starts
+        /// Unified integration into: GetNextActivityRoleUserTree()
         /// 流程启动时获取开始节点下一步的节点角色人员列表
         /// 统一整合到: GetNextActivityRoleUserTree()
         /// </summary>
-        /// <param name="runner">应用执行人</param>
-        /// <param name="condition">条件</param>
-        /// <returns>节点列表</returns>
         public IList<NodeView> GetFirstActivityRoleUserTree(WfAppRunner runner, 
             IDictionary<string, string> condition = null)
         {
@@ -391,12 +352,11 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get the list of node roles and personnel for the next step of the starting node when the process starts
+        /// Unified integration into: GetNextActivityRoleUserTree()
         /// 流程启动时获取开始节点下一步的节点角色人员列表
         /// 统一整合到: GetNextActivityRoleUserTree()
         /// </summary>
-        /// <param name="runner">应用执行人</param>
-        /// <param name="condition">条件</param>
-        /// <returns>节点列表</returns>
         public async Task<IList<NodeView>> GetFirstActivityRoleUserTreeAsync(WfAppRunner runner, 
             IDictionary<string, string> condition = null)
         {
@@ -408,10 +368,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get activity instance completed
         /// 获取已经完成的节点
         /// </summary>
-        /// <param name="taskID">任务ID</param>
-        /// <returns>节点列表</returns>
         public IList<NodeImage> GetActivityInstanceCompleted(int taskID)
         {
             IList<NodeImage> imageList = new List<NodeImage>();
@@ -434,10 +393,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get activity instance completed
         /// 获取已经完成的节点记录
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>节点列表</returns>
         public IList<NodeImage> GetActivityInstanceCompleted(WfAppRunner runner)
         {
             IList<NodeImage> imageList = new List<NodeImage>();
@@ -456,10 +414,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get transition instance list
         /// 获取转移实例记录
         /// </summary>
-        /// <param name="query">查询实体</param>
-        /// <returns>转移列表</returns>
         public IList<TransitionImage> GetTransitionInstanceList(TransitionInstanceQuery query)
         {
             IList<TransitionImage> imageList = new List<TransitionImage>();
@@ -479,12 +436,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get activity entity
         /// 获取当前活动实体
         /// </summary>
-        /// <param name="processGUID">流程定义GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <returns>活动</returns>
         public Activity GetActivityEntity(string processGUID, string version, string activityGUID)
         {
             var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
@@ -492,12 +446,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get activity roles
         /// 获取活动节点下的角色数据
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <returns>角色列表</returns>
         public IList<Role> GetActivityRoles(string processGUID, string version, string activityGUID)
         {
             var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
@@ -505,12 +456,11 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 获取要退回的(上一步)节点信息(退回模式)
+        #region Get Previous Activity Info
         /// <summary>
+        /// Get previous activity list
         /// 获取上一步节点信息
         /// </summary>
-        /// <param name="runner">当前运行用户</param>
-        /// <returns>上一步步骤列表</returns>
         public IList<NodeView> GetPreviousActivityTree(WfAppRunner runner)
         {
             var psc = new PreviousStepChecker();
@@ -521,10 +471,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get previous activity list
         /// 获取上一步节点信息
         /// </summary>
-        /// <param name="runner">当前运行用户</param>
-        /// <returns>上一步步骤列表</returns>
         public async Task<IList<NodeView>> GetPreviousActivityTreeAsync(WfAppRunner runner)
         {
             var task = await Task.Run<IList<NodeView>>(() =>
@@ -535,10 +484,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get previous activity list
         /// 获取上一步节点信息
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>上一步信息</returns>
         public PreviousStepInfo GetPreviousStepInfo(WfAppRunner runner)
         {             
             var hasGatewayPassed = false;
@@ -552,10 +500,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get previous activity list
         /// 异步获取上一步节点信息
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>上一步信息</returns>
         public async Task<PreviousStepInfo> GetPreviousStepInfoAsync(WfAppRunner runner)
         {
             var task = await Task.Run<PreviousStepInfo>(() =>
@@ -566,12 +513,11 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 获取加签步骤列表
+        #region Get Sign Froward Step Info
         /// <summary>
+        /// Obtain performer information for the signing process
         /// 获取加签步骤人员信息
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>加签步骤信息</returns>
         public SignForwardStepInfo GetSignForwardStepInfo(WfAppRunner runner)
         {
             var ssp = new SignForwardStepMaker();
@@ -581,16 +527,15 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 流程启动
+        #region Process Startup
         /// <summary>
-        /// 流程启动
-        /// 编码示例：
+        /// Process Startup
+        /// Coding Example：
         /// var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
         ///                 .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
         ///                 .UseProcess(runner.ProcessGUID, runner.Version)
         ///                 .Start();
         /// </summary>
-        /// <returns>执行结果</returns>
         public WfExecutedResult Start()
         {
             IDbConnection conn = SessionFactory.CreateConnection();
@@ -622,22 +567,19 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
-        /// 锁对象
+        /// Lock object
         /// </summary>
         private static readonly object startLock = new object();
         private static readonly object runLock = new object();
 
         /// <summary>
-        /// 启动流程
-        /// 编码示例：
+        /// Process Startup
+        /// Coding Example：
         /// var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
         ///                 .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
         ///                 .UseProcess(runner.ProcessGUID, runner.Version)
         ///                 .Start(conn, trans);
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="trans">事务</param>
-        /// <returns>启动结果</returns>
         public WfExecutedResult Start(IDbConnection conn, IDbTransaction trans)
         {
             var runner = _wfAppRunner;
@@ -645,6 +587,7 @@ namespace Slickflow.Engine.Service
             AutoResetEvent waitHandler = new AutoResetEvent(false);
 
             //启动方法执行
+            //Start method execution
             WfRuntimeManager runtimeInstance = null;
             IDbSession session = null;
             try
@@ -660,6 +603,7 @@ namespace Slickflow.Engine.Service
                     }
 
                     //绑定事件
+                    //Register event
                     WfRuntimeManagerFactory.RegisterEvent(runtimeInstance,
                         runtimeInstance_OnWfProcessStarting,
                         runtimeInstance_OnWfProcessStarted);
@@ -680,6 +624,7 @@ namespace Slickflow.Engine.Service
             finally
             {
                 //卸载事件
+                //Unregister event
                 WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance, 
                     runtimeInstance_OnWfProcessStarting, 
                    runtimeInstance_OnWfProcessStarted);
@@ -710,10 +655,8 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
-        /// 启动流程
+        /// Start process
         /// </summary>
-        /// <param name="runner">启动人</param>
-        /// <returns>启动结果</returns>
         public WfExecutedResult StartProcess(WfAppRunner runner)
         {
             _wfAppRunner = runner;
@@ -723,10 +666,8 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
-        /// 异步启动流程
+        /// Start process async
         /// </summary>
-        /// <param name="runner">启动人</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> StartProcessAsync(WfAppRunner runner)
         {
             var task = await Task.Run<WfExecutedResult>(() => 
@@ -737,12 +678,8 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
-        /// 流程启动
+        /// Start process
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">启动人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>启动结果</returns>
         public WfExecutedResult StartProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             _wfAppRunner = runner;
@@ -752,12 +689,8 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
-        /// 异步流程启动
+        /// Start process async
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">启动人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>启动结果</returns>
         public async Task<WfExecutedResult> StartProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -768,11 +701,11 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 消息启动流程
+        #region Process Startup by Message
         /// <summary>
+        /// Start by Message
         /// 消息启动流程
         /// </summary>
-        /// <returns></returns>
         public WfExecutedResult StartByMessage()
         {
             IDbConnection conn = SessionFactory.CreateConnection();
@@ -803,11 +736,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Start by Message
         /// 消息启动流程
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="trans">事务</param>
-        /// <returns>启动结果</returns>
         public WfExecutedResult StartByMessage(IDbConnection conn, IDbTransaction trans)
         {
             var pm = new ProcessManager();
@@ -816,7 +747,6 @@ namespace Slickflow.Engine.Service
             _wfAppRunner.ProcessCode = entity.ProcessCode;
             _wfAppRunner.Version = entity.Version;
 
-            //消息启动流程的初始设置
             _wfAppRunner.UserID = WfDefine.SYSTEM_INTERNAL_USER_ID;
             _wfAppRunner.UserName = WfDefine.SYSTEM_INTERNAL_USER_NAME;
 
@@ -825,10 +755,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Start by Message
         /// 启动流程
         /// </summary>
-        /// <param name="runner">启动人</param>
-        /// <returns>启动结果</returns>
         public WfExecutedResult StartProcessByMessage(WfAppRunner runner)
         {
             _wfAppRunner = runner;
@@ -837,10 +766,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Start by Message Async
         /// 异步消息启动流程
         /// </summary>
-        /// <param name="runner">启动人</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> StartProcessByMessageAsync(WfAppRunner runner)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -851,12 +779,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Start by Message
         /// 流程启动
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">启动人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>启动结果</returns>
         public WfExecutedResult StartProcessByMessage(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             _wfAppRunner = runner;
@@ -866,12 +791,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Start by Message Async
         /// 异步流程启动
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">启动人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>启动结果</returns>
         public async Task<WfExecutedResult> StartProcessByMessageAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -882,16 +804,15 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 运行流程
+        #region Process Run
         /// <summary>
-        /// 运行流程(业务处理)
-        /// 编码示例：
+        /// Running process
+        /// Coding example:
         /// var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
         ///                 .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
         ///                 .UseProcess(runner.ProcessGUID, runner.Version)
         ///                 .Run();
         /// </summary>
-        /// <returns>运行结果</returns>
         public WfExecutedResult Run()
         {
             IDbConnection conn = SessionFactory.CreateConnection();
@@ -920,16 +841,13 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
-        /// 运行流程
-        /// 编码示例：
+        /// Running process
+        /// Coding example:
         /// var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
         ///                 .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
         ///                 .UseProcess(runner.ProcessGUID, runner.Version)
         ///                 .Run(conn, trans);
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="trans">事务</param>
-        /// <returns>运行结果</returns>
         public WfExecutedResult Run(IDbConnection conn, 
             IDbTransaction trans)
         {
@@ -938,6 +856,7 @@ namespace Slickflow.Engine.Service
             AutoResetEvent waitHandler = new AutoResetEvent(false);
 
             //运行方法开始执行
+            //The running method starts executing
             WfRuntimeManager runtimeInstance = null;
             IDbSession session = null;
             try
@@ -952,6 +871,7 @@ namespace Slickflow.Engine.Service
                     }
 
                     //注册事件并运行
+                    //Register event
                     WfRuntimeManagerFactory.RegisterEvent(runtimeInstance,
                         runtimeInstance_OnWfProcessRunning,
                         runtimeInstance_OnWfProcessContinued);
@@ -971,6 +891,7 @@ namespace Slickflow.Engine.Service
             finally
             {
                 //卸载事件
+                //Unregister event
                 WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance, 
                     runtimeInstance_OnWfProcessRunning,
                     runtimeInstance_OnWfProcessContinued);
@@ -1001,10 +922,11 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Run
+        /// Explanation: The new method uniformly calls RunProcess()
         /// 流程流转
         /// 说明：新方法统一调用RunProcess()
         /// </summary>
-        /// <returns>执行结果</returns>
         public WfExecutedResult RunProcessApp(WfAppRunner runner)
         {
             _wfAppRunner = runner;
@@ -1014,13 +936,11 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Run
+        /// Explanation: The new method uniformly calls RunProcess()
         /// 流程流转
         /// 说明：新方法统一调用RunProcess()
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">运行人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public WfExecutedResult RunProcessApp(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             _wfAppRunner = runner;
@@ -1030,9 +950,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Run Process
         /// 流程流转
         /// </summary>
-        /// <returns>执行结果</returns>
         public WfExecutedResult RunProcess(WfAppRunner runner)
         {
             _wfAppRunner = runner;
@@ -1042,10 +962,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Run Process Async
         /// 异步执行流程
         /// </summary>
-        /// <param name="runner">执行人</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> RunProcessAsync(WfAppRunner runner)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -1056,12 +975,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Run Process
         /// 流程流转
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">运行人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public WfExecutedResult RunProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             _wfAppRunner = runner;
@@ -1071,12 +987,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Run Process Async
         /// 异步流程流转
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">运行人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> RunProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -1087,11 +1000,11 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 流程自动运行
+        #region Process Run Auto
         /// <summary>
-        /// 运行流程(业务处理)
+        /// Run Automatically
+        /// 自动运行
         /// </summary>
-        /// <returns>运行结果</returns>
         public WfExecutedResult RunAuto()
         {
             IDbConnection conn = SessionFactory.CreateConnection();
@@ -1120,11 +1033,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
-        /// 运行自动流程
+        /// Run Automatically
+        /// 自动运行
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="trans">事务</param>
-        /// <returns>运行结果</returns>
         public WfExecutedResult RunAuto(IDbConnection conn,
             IDbTransaction trans)
         {
@@ -1133,6 +1044,7 @@ namespace Slickflow.Engine.Service
             AutoResetEvent waitHandler = new AutoResetEvent(false);
 
             //运行方法开始执行
+            //The running method starts executing
             WfRuntimeManager runtimeInstance = null;
             IDbSession session = null;
             try
@@ -1147,6 +1059,7 @@ namespace Slickflow.Engine.Service
                     }
 
                     //注册事件并运行
+                    //Register event
                     WfRuntimeManagerFactory.RegisterEvent(runtimeInstance,
                         runtimeInstance_OnWfProcessRunning,
                         runtimeInstance_OnWfProcessContinued);
@@ -1166,6 +1079,7 @@ namespace Slickflow.Engine.Service
             finally
             {
                 //卸载事件
+                //Unregister event
                 WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance,
                     runtimeInstance_OnWfProcessRunning,
                     runtimeInstance_OnWfProcessContinued);
@@ -1196,9 +1110,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Run process auto
         /// 流程流转
         /// </summary>
-        /// <returns>执行结果</returns>
         public WfExecutedResult RunProcessAuto(WfAppRunner runner)
         {
             _wfAppRunner = runner;
@@ -1208,10 +1122,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Run process auto async
         /// 异步执行流程
         /// </summary>
-        /// <param name="runner">执行人</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> RunProcessAutoAsync(WfAppRunner runner)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -1222,12 +1135,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Run Process auto
         /// 流程流转
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">运行人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public WfExecutedResult RunProcessAuto(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             _wfAppRunner = runner;
@@ -1237,12 +1147,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Run process auto async
         /// 异步流程流转
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">运行人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> RunProcessAutoAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -1253,11 +1160,11 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 流程撤销
+        #region Process Withdraw
         /// <summary>
+        /// Process withdraw
         /// 流程撤销
         /// </summary>
-        /// <returns>执行结果</returns>
         public WfExecutedResult Withdraw()
         {
             IDbConnection conn = SessionFactory.CreateConnection();
@@ -1287,11 +1194,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process withdraw
         /// 流程撤销
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public WfExecutedResult Withdraw(IDbConnection conn, IDbTransaction trans)
         {
             var runner = _wfAppRunner;
@@ -1299,6 +1204,7 @@ namespace Slickflow.Engine.Service
             AutoResetEvent waitHandler = new AutoResetEvent(false);
 
             //撤销方法开始执行
+            //Withdraw method begins execution
             WfRuntimeManager runtimeInstance = null;
             IDbSession session = null;
             try
@@ -1307,11 +1213,13 @@ namespace Slickflow.Engine.Service
                 runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceWithdraw(runner, ref withdrawedResult);
 
                 //不满足撤销操作，返回异常结果信息
+                //Not satisfied with withdraw operation, return exception
                 if (withdrawedResult.Status == WfExecutedStatus.Exception)
                 {
                     return withdrawedResult;
                 }
                 //注册事件并运行
+                //Register event
                 WfRuntimeManagerFactory.RegisterEvent(runtimeInstance,
                     runtimeInstance_OnWfProcessWithdrawing,
                     runtimeInstance_OnWfProcessWithdrawn);
@@ -1329,6 +1237,7 @@ namespace Slickflow.Engine.Service
             finally
             {
                 //卸载事件
+                //Unregister event
                 WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance, 
                     runtimeInstance_OnWfProcessWithdrawing,
                     runtimeInstance_OnWfProcessWithdrawn);
@@ -1359,10 +1268,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process withdraw
         /// 流程撤销
         /// </summary>
-        /// <param name="runner">撤销人</param>
-        /// <returns>撤销结果</returns>
         public WfExecutedResult WithdrawProcess(WfAppRunner runner)
         {
             _wfAppRunner = runner;
@@ -1372,10 +1280,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process withdraw async
         /// 异步撤销流程
         /// </summary>
-        /// <param name="runner">执行人</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> WithdrawProcessAsync(WfAppRunner runner)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -1386,12 +1293,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process withdraw
         /// 撤销流程
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">撤销人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>撤销结果</returns>
         public WfExecutedResult WithdrawProcess(IDbConnection conn, 
             WfAppRunner runner, 
             IDbTransaction trans)
@@ -1403,12 +1307,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process withdraw async
         /// 异步撤销流程
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">运行人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> WithdrawProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -1419,11 +1320,11 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 流程回退
+        #region Process Sendback
         /// <summary>
+        /// Process sendback
         /// 流程退回
         /// </summary>
-        /// <returns>执行结果</returns>
         public WfExecutedResult SendBack()
         {
             IDbConnection conn = SessionFactory.CreateConnection();
@@ -1452,11 +1353,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process sendback
         /// 流程退回
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public WfExecutedResult SendBack(IDbConnection conn, 
             IDbTransaction trans)
         {
@@ -1465,6 +1364,7 @@ namespace Slickflow.Engine.Service
             AutoResetEvent waitHandler = new AutoResetEvent(false);
 
             //退回开始
+            //sendback operation
             WfRuntimeManager runtimeInstance = null;
             IDbSession session = null;
             try
@@ -1478,6 +1378,7 @@ namespace Slickflow.Engine.Service
                 }
 
                 //注册事件并运行
+                //Register event
                 WfRuntimeManagerFactory.RegisterEvent(runtimeInstance, 
                     runtimeInstance_OnWfProcessSendBacking,
                     runtimeInstance_OnWfProcessSendBacked);
@@ -1495,6 +1396,7 @@ namespace Slickflow.Engine.Service
             finally
             {
                 //卸载事件
+                //Unregister event
                 WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance, 
                     runtimeInstance_OnWfProcessSendBacking,
                     runtimeInstance_OnWfProcessSendBacked);
@@ -1526,10 +1428,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process sendback
         /// 退回到上一步
         /// </summary>
-        /// <param name="runner">退回操作人</param>
-        /// <returns>退回结果</returns>
         public WfExecutedResult SendBackProcess(WfAppRunner runner)
         {
             _wfAppRunner = runner;
@@ -1539,10 +1440,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process sendback async
         /// 异步退回流程
         /// </summary>
-        /// <param name="runner">执行人</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> SendBackProcessAsync(WfAppRunner runner)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -1553,12 +1453,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process sendback
         /// 退回到上一步
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">退回人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>退回结果</returns>
         public WfExecutedResult SendBackProcess(IDbConnection conn, 
             WfAppRunner runner, 
             IDbTransaction trans)
@@ -1570,12 +1467,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process sendback async
         /// 异步退回流程
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">运行人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> SendBackProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -1586,11 +1480,11 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 流程返送
+        #region Process Resend
         /// <summary>
+        /// Process Resend
         /// 流程返送
         /// </summary>
-        /// <returns>执行结果</returns>
         public WfExecutedResult Resend()
         {
             IDbConnection conn = SessionFactory.CreateConnection();
@@ -1619,11 +1513,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Resend
         /// 流程返送
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public WfExecutedResult Resend(IDbConnection conn, 
             IDbTransaction trans)
         {
@@ -1632,6 +1524,7 @@ namespace Slickflow.Engine.Service
             AutoResetEvent waitHandler = new AutoResetEvent(false);
 
             //返送方法开始执行
+            //Resend start to execute
             WfRuntimeManager runtimeInstance = null;
             IDbSession session = null;
             try
@@ -1645,6 +1538,7 @@ namespace Slickflow.Engine.Service
                 }
 
                 //注册事件并运行
+                //Register event
                 WfRuntimeManagerFactory.RegisterEvent(runtimeInstance, 
                     runtimeInstance_OnWfProcessResending,
                     runtimeInstance_OnWfProcessResent);
@@ -1662,6 +1556,7 @@ namespace Slickflow.Engine.Service
             finally
             {
                 //卸载事件
+                //Unregister event
                 WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance, 
                     runtimeInstance_OnWfProcessResending,
                     runtimeInstance_OnWfProcessResent);
@@ -1692,10 +1587,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Resend
         /// 从新返送(来自sendback的节点)
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>返送结果</returns>
         public WfExecutedResult ResendProcess(WfAppRunner runner)
         {
             _wfAppRunner = runner;
@@ -1705,10 +1599,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Resend Async
         /// 异步返送流程
         /// </summary>
-        /// <param name="runner">执行人</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> ResendProcessAsync(WfAppRunner runner)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -1719,12 +1612,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Resend
         /// 从新返送(来自sendback的节点)
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="trans">事务</param>
-        /// <returns>返送结果</returns>
         public WfExecutedResult ResendProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             _wfAppRunner = runner;
@@ -1734,12 +1624,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Resend Async
         /// 异步返送流程
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">运行人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> ResendProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -1750,11 +1637,13 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 流程修正（退回后的节点重新指派任务）
+        #region Process Revise
         /// <summary>
+        /// Process revise
+        /// (Reassignment of tasks to returned nodes)
         /// 流程修订
+        /// (退回后的节点重新指派任务)
         /// </summary>
-        /// <returns>执行结果</returns>
         public WfExecutedResult Revise()
         {
             IDbConnection conn = SessionFactory.CreateConnection();
@@ -1782,11 +1671,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process revise
         /// 流程修订
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public WfExecutedResult Revise(IDbConnection conn,
             IDbTransaction trans)
         {
@@ -1795,6 +1682,7 @@ namespace Slickflow.Engine.Service
             AutoResetEvent waitHandler = new AutoResetEvent(false);
 
             //修订方法开始执行
+            //Revise method start to execute
             WfRuntimeManager runtimeInstance = null;
             IDbSession session = null;
             try
@@ -1808,6 +1696,7 @@ namespace Slickflow.Engine.Service
                 }
 
                 //注册事件并运行
+                //Register event
                 WfRuntimeManagerFactory.RegisterEvent(runtimeInstance, 
                     runtimeInstance_OnWfProcessRevising,
                     runtimeInstance_OnWfProcessRevised);
@@ -1825,6 +1714,7 @@ namespace Slickflow.Engine.Service
             finally
             {
                 //注销事件
+                //Unregister event
                 WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance, 
                     runtimeInstance_OnWfProcessRevising,
                     runtimeInstance_OnWfProcessRevised);
@@ -1855,10 +1745,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process revise
         /// 从新修订(来自sendback的节点)
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>返送结果</returns>
         public WfExecutedResult ReviseProcess(WfAppRunner runner)
         {
             _wfAppRunner = runner;
@@ -1868,10 +1757,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process revise async
         /// 异步修订流程
         /// </summary>
-        /// <param name="runner">执行人</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> ReviseProcessAsync(WfAppRunner runner)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -1882,12 +1770,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process revise
         /// 从新修订(来自sendback的节点)
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="trans">事务</param>
-        /// <returns>返送结果</returns>
         public WfExecutedResult ReviseProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             _wfAppRunner = runner;
@@ -1897,12 +1782,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process revise async
         /// 异步修订流程
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">运行人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> ReviseProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -1913,11 +1795,13 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 流程返签(已经结束的流程可以被复活）
+        #region Process Reverse
         /// <summary>
+        /// Process reverse
+        /// (Completed processes can be reversed)
         /// 流程返签
+        /// (已经结束的流程可以被复活）
         /// </summary>
-        /// <returns>执行结果</returns>
         public WfExecutedResult Reverse()
         {
             IDbConnection conn = SessionFactory.CreateConnection();
@@ -1946,11 +1830,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process reverse
         /// 流程返签
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public WfExecutedResult Reverse(IDbConnection conn, IDbTransaction trans)
         {
             var runner = _wfAppRunner;
@@ -1958,6 +1840,7 @@ namespace Slickflow.Engine.Service
             AutoResetEvent waitHandler = new AutoResetEvent(false);
 
             //返签方法开始执行
+            //Reverse method start to execute
             WfRuntimeManager runtimeInstance = null;
             IDbSession session = null;
             try
@@ -1971,6 +1854,7 @@ namespace Slickflow.Engine.Service
                 }
 
                 //注册事件并运行
+                //Register event
                 WfRuntimeManagerFactory.RegisterEvent(runtimeInstance, 
                     runtimeInstance_OnWfProcessReversing,
                     runtimeInstance_OnWfProcessReversed);
@@ -1988,6 +1872,7 @@ namespace Slickflow.Engine.Service
             finally
             {
                 //卸载事件
+                //Unregister event
                 WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance, 
                     runtimeInstance_OnWfProcessReversing,
                     runtimeInstance_OnWfProcessReversed);
@@ -2018,10 +1903,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process reverse
         /// 流程返签
         /// </summary>
-        /// <param name="runner">结束人</param>
-        /// <returns>返签结果</returns>
         public WfExecutedResult ReverseProcess(WfAppRunner runner)
         {
             _wfAppRunner = runner;
@@ -2031,10 +1915,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process reverse async
         /// 异步返签流程
         /// </summary>
-        /// <param name="runner">执行人</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> ReverseProcessAsync(WfAppRunner runner)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -2045,12 +1928,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process reverse
         /// 流程返签
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">结束人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>返签结果</returns>
         public WfExecutedResult ReverseProcess(IDbConnection conn, 
             WfAppRunner runner, 
             IDbTransaction trans)
@@ -2062,12 +1942,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process reverse async
         /// 异步返签流程
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">运行人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> ReverseProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -2078,11 +1955,11 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 流程驳回
+        #region Process Reject
         /// <summary>
+        /// Process reject
         /// 流程驳回
         /// </summary>
-        /// <returns>驳回结果</returns>
         public WfExecutedResult Reject()
         {
             IDbConnection conn = SessionFactory.CreateConnection();
@@ -2110,11 +1987,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process reject
         /// 流程驳回
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="trans">事务</param>
-        /// <returns>驳回结果</returns>
         public WfExecutedResult Reject(IDbConnection conn, 
             IDbTransaction trans)
         {
@@ -2125,6 +2000,7 @@ namespace Slickflow.Engine.Service
             AutoResetEvent waitHandler = new AutoResetEvent(false);
 
             //驳回方法开始执行
+            //Reject method start to execute
             WfRuntimeManager runtimeInstance = null;
             IDbSession session = null;
             try
@@ -2138,6 +2014,7 @@ namespace Slickflow.Engine.Service
                 }
 
                 //注册事件并运行
+                //Register event
                 WfRuntimeManagerFactory.RegisterEvent(runtimeInstance,
                     runtimeInstance_OnWfProcessRejecting,
                     runtimeInstance_OnWfProcessRejected);
@@ -2155,6 +2032,7 @@ namespace Slickflow.Engine.Service
             finally
             {
                 //卸载事件
+                //Unregister event
                 WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance,
                     runtimeInstance_OnWfProcessRejecting,
                     runtimeInstance_OnWfProcessRejected);
@@ -2185,10 +2063,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process reject
         /// 流程驳回
         /// </summary>
-        /// <param name="runner">执行操作人</param>
-        /// <returns>驳回结果</returns>
         public WfExecutedResult RejectProcess(WfAppRunner runner)
         {
             _wfAppRunner = runner;
@@ -2199,10 +2076,9 @@ namespace Slickflow.Engine.Service
 
 
         /// <summary>
+        /// Process reject async
         /// 异步驳回流程
         /// </summary>
-        /// <param name="runner">执行人</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> RejectProcessAsync(WfAppRunner runner)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -2213,12 +2089,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process reject
         /// 流程驳回
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">执行操作人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>驳回结果</returns>
         public WfExecutedResult RejectProcess(IDbConnection conn,
             WfAppRunner runner,
             IDbTransaction trans)
@@ -2230,12 +2103,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process reject async
         /// 异步驳回流程
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">运行人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> RejectProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -2246,11 +2116,11 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 流程提前完成
+        #region Process Close
         /// <summary>
+        /// Process Close
         /// 流程关闭
         /// </summary>
-        /// <returns>关闭结果</returns>
         public WfExecutedResult Close()
         {
             IDbConnection conn = SessionFactory.CreateConnection();
@@ -2278,11 +2148,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        ///  Process Close
         /// 流程关闭
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="trans">事务</param>
-        /// <returns>关闭结果</returns>
         public WfExecutedResult Close(IDbConnection conn, 
             IDbTransaction trans)
         {
@@ -2291,6 +2159,7 @@ namespace Slickflow.Engine.Service
             AutoResetEvent waitHandler = new AutoResetEvent(false);
 
             //关闭方法开始执行
+            //Close method start to execute
             WfRuntimeManager runtimeInstance = null;
             IDbSession session = null;
             try
@@ -2304,6 +2173,7 @@ namespace Slickflow.Engine.Service
                 }
 
                 //注册事件并运行
+                //Register event
                 WfRuntimeManagerFactory.RegisterEvent(runtimeInstance,
                     runtimeInstance_OnWfProcessClosing,
                     runtimeInstance_OnWfProcessClosed);
@@ -2319,6 +2189,7 @@ namespace Slickflow.Engine.Service
             finally
             {
                 //卸载事件
+                //Unregister event
                 WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance,
                     runtimeInstance_OnWfProcessClosing,
                     runtimeInstance_OnWfProcessClosed);
@@ -2349,10 +2220,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        ///  Process Close
         /// 流程关闭
         /// </summary>
-        /// <param name="runner">执行操作人</param>
-        /// <returns>关闭结果</returns>
         public WfExecutedResult CloseProcess(WfAppRunner runner)
         {
             _wfAppRunner = runner;
@@ -2362,10 +2232,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        ///  Process Close Async
         /// 异步关闭流程
         /// </summary>
-        /// <param name="runner">执行人</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> CloseProcessAsync(WfAppRunner runner)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -2376,12 +2245,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        ///  Process Close
         /// 流程关闭
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">执行操作人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>关闭结果</returns>
         public WfExecutedResult CloseProcess(IDbConnection conn,
             WfAppRunner runner,
             IDbTransaction trans)
@@ -2393,12 +2259,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        ///  Process Close Async
         /// 异步关闭流程
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">运行人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>执行结果</returns>
         public async Task<WfExecutedResult> CloseProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -2409,12 +2272,11 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 流程跳转
+        #region Process Jump
         /// <summary>
+        /// Process Jump
         /// 流程跳转
         /// </summary>
-        /// <param name="jumpOption">跳转类型</param>
-        /// <returns>执行结果</returns>
         public WfExecutedResult Jump(JumpOptionEnum jumpOption = JumpOptionEnum.Default)
         {
             IDbConnection conn = SessionFactory.CreateConnection();
@@ -2443,12 +2305,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Jump
         /// 流程跳转
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="trans">事务</param>
-        /// <param name="jumpOption">跳转类型</param>
-        /// <returns>执行结果</returns>
         public WfExecutedResult Jump(IDbConnection conn,
             IDbTransaction trans,
             JumpOptionEnum jumpOption = JumpOptionEnum.Default)
@@ -2458,6 +2317,7 @@ namespace Slickflow.Engine.Service
             AutoResetEvent waitHandler = new AutoResetEvent(false);
 
             //跳转方法开始执行
+            //Jump method start to execute
             WfRuntimeManager runtimeInstance = null;
             IDbSession session = null;
             try
@@ -2472,6 +2332,7 @@ namespace Slickflow.Engine.Service
                 }
 
                 //注册事件并运行
+                //Register event
                 WfRuntimeManagerFactory.RegisterEvent(runtimeInstance, 
                     runtimeInstance_OnWfProcessJumping,
                     runtimeInstance_OnWfProcessJumped);          
@@ -2489,6 +2350,7 @@ namespace Slickflow.Engine.Service
             finally
             {
                 //卸载事件
+                //Unregister event
                 WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance, 
                     runtimeInstance_OnWfProcessJumping,
                     runtimeInstance_OnWfProcessJumped);
@@ -2519,11 +2381,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Jump
         /// 流程跳转
         /// </summary>
-        /// <param name="runner">执行操作人</param>
-        /// <param name="jumpOption">跳转选项</param>
-        /// <returns>跳转结果</returns>
         public WfExecutedResult JumpProcess(WfAppRunner runner, 
             JumpOptionEnum jumpOption = JumpOptionEnum.Default)
         {
@@ -2534,11 +2394,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Jump Async
         /// 异步流程跳转
         /// </summary>
-        /// <param name="runner">执行操作人</param>
-        /// <param name="jumpOption">跳转选项</param>
-        /// <returns>跳转结果</returns>
         public async Task<WfExecutedResult> JumpProcessAsync(WfAppRunner runner, JumpOptionEnum jumpOption = JumpOptionEnum.Default)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -2549,13 +2407,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Jump
         /// 流程跳转
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">执行操作人</param>
-        /// <param name="trans">事务</param>
-        /// <param name="jumpOption">跳转选项</param>
-        /// <returns>跳转结果</returns>
         public WfExecutedResult JumpProcess(IDbConnection conn,
             WfAppRunner runner,
             IDbTransaction trans,
@@ -2568,13 +2422,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Jump Async
         /// 异步流程跳转
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">执行操作人</param>
-        /// <param name="trans">事务</param>
-        /// <param name="jumpOption">跳转选项</param>
-        /// <returns>跳转结果</returns>
         public async Task<WfExecutedResult> JumpProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans,
             JumpOptionEnum jumpOption = JumpOptionEnum.Default)
         {
@@ -2586,11 +2436,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Regenerate the list of performers for the jump activity
         /// 重新生成跳转活动的执行人员列表
         /// </summary>
-        /// <param name="runner">当前运行用户</param>
-        /// <param name="jumpOption">跳转选项</param>
-        /// <returns>执行人员列表</returns>
         private IDictionary<string, PerformerList> FillNextActivityPerforms(WfAppRunner runner,
             JumpOptionEnum jumpOption)
         {
@@ -2624,11 +2472,11 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 流程加签
+        #region Process Signforward
         /// <summary>
+        /// Process Signforward
         /// 流程加签
         /// </summary>
-        /// <returns>加签结果</returns>
         public WfExecutedResult SignForward()
         {
             IDbConnection conn = SessionFactory.CreateConnection();
@@ -2659,11 +2507,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Signforward
         /// 流程加签
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="trans">事务</param>
-        /// <returns>加签结果</returns>
         public WfExecutedResult SignForward(IDbConnection conn, IDbTransaction trans)
         {
             var runner = _wfAppRunner;
@@ -2671,6 +2517,7 @@ namespace Slickflow.Engine.Service
             AutoResetEvent waitHandler = new AutoResetEvent(false);
 
             //加签方法开始执行
+            //Signforward start to execute
             WfRuntimeManager runtimeInstance = null;
             IDbSession session = null;
             try
@@ -2683,6 +2530,7 @@ namespace Slickflow.Engine.Service
                     return signforwardResult;
                 }
                 //注册事件并运行
+                //Register event
                 WfRuntimeManagerFactory.RegisterEvent(runtimeInstance, 
                     runtimeInstance_OnWfProcessSignForwarding,
                     runtimeInstance_OnWfProcessSignForwarded);
@@ -2701,6 +2549,7 @@ namespace Slickflow.Engine.Service
             finally
             {
                 //卸载事件
+                //Unregister event
                 WfRuntimeManagerFactory.UnregisterEvent(runtimeInstance, 
                     runtimeInstance_OnWfProcessSignForwarding,
                     runtimeInstance_OnWfProcessSignForwarded);
@@ -2731,10 +2580,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Signforward
         /// 加签
         /// </summary>
-        /// <param name="runner">结束人</param>
-        /// <returns>加签结果</returns>
         public WfExecutedResult SignForwardProcess(WfAppRunner runner)
         {
             _wfAppRunner = runner;
@@ -2744,10 +2592,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Signforward Async
         /// 异步流程加签
         /// </summary>
-        /// <param name="runner">结束人</param>
-        /// <returns>加签结果</returns>
         public async Task<WfExecutedResult> SignForwardProcessAsync(WfAppRunner runner)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -2758,12 +2605,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Signforward
         /// 流程加签
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">结束人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>加签结果</returns>
         public WfExecutedResult SignForwardProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             _wfAppRunner = runner;
@@ -2773,12 +2617,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Signforward Async
         /// 异步流程加签
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="runner">结束人</param>
-        /// <param name="trans">事务</param>
-        /// <returns>加签结果</returns>
         public async Task<WfExecutedResult> SignForwardProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans)
         {
             var task = await Task.Run<WfExecutedResult>(() =>
@@ -2789,13 +2630,13 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 挂起(恢复)流程成、取消(运行的)流程、废弃执行中或执行完的流程
+        #region Process Resume Suspend Cancel Discard Terminate
         /// <summary>
+        /// Resume process instance (only applicable to suspended operations)
+        /// Suspend (restore) processes, cancel (run) processes, discard processes in progress or completed
         /// 恢复流程实例(只针对挂起操作）
+        /// 挂起(恢复)流程成、取消(运行的)流程、废弃执行中或执行完的流程
         /// </summary>
-        /// <param name="processInstanceId">挂起操作的实例ID</param>
-        /// <param name="runner">执行者</param>
-        /// <returns></returns>
         public bool ResumeProcess(int processInstanceId, WfAppRunner runner)
         {
             bool result = true;
@@ -2811,11 +2652,9 @@ namespace Slickflow.Engine.Service
             return result;
         }
         /// <summary>
+        /// Process Suspend
         /// 挂起流程实例
         /// </summary>
-        /// <param name="taskId">任务ID</param>
-        /// <param name="runner">执行者</param>
-        /// <returns></returns>
         public bool SuspendProcess(int taskId, WfAppRunner runner)
         {
             bool result = true;
@@ -2834,10 +2673,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Cancel
         /// 取消流程
         /// </summary>
-        /// <param name="runner">执行操作的用户</param>
-        /// <returns>执行结果的标志</returns>
         public bool CancelProcess(WfAppRunner runner)
         {
             var pim = new ProcessInstanceManager();
@@ -2845,10 +2683,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Discard
         /// 废弃流程
         /// </summary>
-        /// <param name="runner">执行操作的用户</param>
-        /// <returns>执行结果的标志</returns>
         public bool DiscardProcess(WfAppRunner runner)
         {
             var pim = new ProcessInstanceManager();
@@ -2856,10 +2693,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Terminate
         /// 终结流程
         /// </summary>
-        /// <param name="runner">执行操作的用户</param>
-        /// <returns>执行结果的标志</returns>
         public bool TerminateProcess(WfAppRunner terminator)
         {
             var pim = new ProcessInstanceManager();
@@ -2867,14 +2703,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Process Terminate
         /// 终结流程实例
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="entity">流程实例</param>
-        /// <param name="userID">用户ID</param>
-        /// <param name="userName">用户名称</param>
-        /// <param name="trans">事务</param>
-        /// <returns></returns>
         public bool TerminateProcess(IDbConnection conn, ProcessInstanceEntity entity, string userID, string userName, IDbTransaction trans)
         {
             var pim = new ProcessInstanceManager();
@@ -2882,11 +2713,11 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 任务审批同意和拒绝
+        #region Task Approval Agree Refuse
         /// <summary>
+        /// Agree
         /// 同意
         /// </summary>
-        /// <param name="taskID">任务ID</param>
         public void AgreeTask(int taskID)
         {
             var aim = new ActivityInstanceManager();
@@ -2895,9 +2726,9 @@ namespace Slickflow.Engine.Service
 
 
         /// <summary>
+        /// Refuse
         /// 拒绝
         /// </summary>
-        /// <param name="taskID">任务ID</param>
         public void RefuseTask(int taskID)
         {
             var aim = new ActivityInstanceManager();
@@ -2905,12 +2736,11 @@ namespace Slickflow.Engine.Service
         }
         #endregion
 
-        #region 任务读取和处理
+        #region Task Read
         /// <summary>
+        /// Set task to read status (retrieve task based on task ID)
         /// 设置任务为已读状态(根据任务ID获取任务)
         /// </summary>
-        /// <param name="runner">执行人</param>
-        /// <returns>任务读取的标志</returns>
         public bool SetTaskRead(WfAppRunner runner)
         {
             bool isRead = false;
@@ -2929,9 +2759,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Set task email send status
         /// 更新任务邮件发送状态
         /// </summary>
-        /// <param name="taskID">任务ID</param>
         public Boolean SetTaskEMailSent(int taskID)
         {
             bool isSetOK = false;
@@ -2950,10 +2780,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get task view
         /// 获取任务视图
         /// </summary>
-        /// <param name="taskID">任务ID</param>
-        /// <returns>任务视图</returns>
         public TaskViewEntity GetTaskView(int taskID)
         {
             var tm = new TaskManager();
@@ -2962,11 +2791,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get task view
         /// 获取任务视图
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="activityInstanceID">活动实例ID</param>
-        /// <returns></returns>
         public TaskViewEntity GetTaskView(int processInstanceID, int activityInstanceID)
         {
             var tm = new TaskManager();
@@ -2975,14 +2802,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get task view
         /// 获取任务视图
         /// </summary>
-        /// <param name="conn">数据库连接</param>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="userID">用户ID</param>
-        /// <param name="trans">数据库事务</param>
-        /// <returns></returns>
         public TaskViewEntity GetTaskView(IDbConnection conn, string appInstanceID, string processGUID, string userID, IDbTransaction trans)
         {
             var tm = new TaskManager();
@@ -2991,10 +2813,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get running tasks
         /// 获取运行中的任务
         /// </summary>
-        /// <param name="query">查询实体</param>
-        /// <returns>任务列表</returns>
         public IList<TaskViewEntity> GetRunningTasks(TaskQuery query)
         {
             var taskManager = new TaskManager();
@@ -3006,10 +2827,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get first runnint task of activity instance
         /// 获取活动实例下的第一个任务记录
         /// </summary>
-        /// <param name="activityInstanceID">活动实例</param>
-        /// <returns>任务视图</returns>
         public TaskViewEntity GetFirstRunningTask(int activityInstanceID)
         {
             var taskManager = new TaskManager();
@@ -3018,10 +2838,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get tasks in ready status
         /// 获取待办任务
         /// </summary>
-        /// <param name="query">查询对象</param>
-        /// <returns>任务列表</returns>
         public IList<TaskViewEntity> GetReadyTasks(TaskQuery query)
         {
             var taskManager = new TaskManager();
@@ -3034,10 +2853,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get tasks in completed status
         /// 获取办结任务列表
         /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
         public IList<TaskViewEntity> GetCompletedTasks(TaskQuery query)
         {
             var taskManager = new TaskManager();
@@ -3050,9 +2868,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get task list about email unsent
         /// 获取未发送邮件通知的待办任务列表
         /// </summary>
-        /// <returns></returns>
         public IList<TaskViewEntity> GetTaskListEMailUnSent()
         {
             var taskManager = new TaskManager();

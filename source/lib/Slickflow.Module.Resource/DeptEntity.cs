@@ -2,6 +2,7 @@
 namespace Slickflow.Module.Resource
 {
     /// <summary>
+    /// Department Entity
     /// 部门实体对象
     /// </summary>
     [Table("SysDepartment")]

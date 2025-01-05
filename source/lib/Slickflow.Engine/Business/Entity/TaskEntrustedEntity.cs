@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Task Entrusted Entity
     /// 任务委托实体
     /// </summary>
     public class TaskEntrustedEntity

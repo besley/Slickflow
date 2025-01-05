@@ -17,16 +17,18 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Business.Manager
 {
     /// <summary>
+    /// Process Manager
     /// 流程定义管理类
     /// </summary>
     public class ProcessManager : ManagerBase
     {
-        #region 获取流程数据
+        #region Obtain process data 获取流程数据
         /// <summary>
+        /// Obtain process entity based on ID
         /// 根据ID获取流程实体
         /// </summary>
-        /// <param name="id">主键ID</param>
-        /// <returns>流程实体</returns>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ProcessEntity GetByID(int id)
         {
             var entity = Repository.GetById<ProcessEntity>(id);
@@ -34,12 +36,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain process entity based on ID
         /// 根据ID获取流程实体
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="id">主键ID</param>
-        /// <param name="trans">交易</param>
-        /// <returns>流程实体</returns>
+        /// <param name="conn"></param>
+        /// <param name="id"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         public ProcessEntity GetByID(IDbConnection conn, int id, IDbTransaction trans)
         {
             var entity = Repository.GetById<ProcessEntity>(conn, id, trans);
@@ -47,12 +50,15 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain the process based on the processGUID and version number
+        /// Notes: throwException means whether to throw an exception if the query cannot be found
         /// 根据流程GUID和版本标识获取流程
+        /// 说明:throwException 为如果查询不到，是否抛出异常
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">流程版本</param>
-        /// <param name="throwException">是否抛出异常</param>
-        /// <returns>流程实体</returns>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <param name="throwException"></param>
+        /// <returns></returns>
         public ProcessEntity GetByVersion(string processGUID, string version, bool throwException = true)
         {
             using (var session = SessionFactory.CreateSession())
@@ -62,14 +68,17 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 根据版本选择流程
+        /// Obtain the process based on the processGUID and version number
+        /// Notes: throwException means whether to throw an exception if the query cannot be found
+        /// 根据流程GUID和版本标识获取流程
+        /// 说明:throwException 为如果查询不到，是否抛出异常
         /// </summary>
-        /// <param name="conn">数据库链接</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="throwException">抛出异常</param>
-        /// <param name="trans">交易</param>
-        /// <returns>流程实体</returns>
+        /// <param name="conn"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <param name="throwException"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         public ProcessEntity GetByVersion(IDbConnection conn, 
             string processGUID, 
             string version, 
@@ -108,11 +117,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get the current version of the process being used
         /// 获取当前使用的流程版本
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="isNotThrownException">是否抛出异常</param>
-        /// <returns>流程实体</returns>
+        /// <param name="processGUID"></param>
+        /// <param name="isNotThrownException"></param>
+        /// <returns></returns>
         public ProcessEntity GetVersionUsing(string processGUID, bool isNotThrownException = true)
         {
             using (var session = SessionFactory.CreateSession())
@@ -122,13 +132,14 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get the current version of the process being used
         /// 获取当前使用的流程版本
         /// </summary>
-        /// <param name="conn">数据库连接</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="isNotThrownException">是否抛出异常</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程实体</returns>
+        /// <param name="conn"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="isNotThrownException"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         public ProcessEntity GetVersionUsing(IDbConnection conn, 
             string processGUID, 
             bool isNotThrownException,
@@ -167,11 +178,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain the process based on the process name and version identifier
         /// 根据流程名称和版本标识获取流程
         /// </summary>
-        /// <param name="processName">流程名称</param>
-        /// <param name="version">流程版本</param>
-        /// <returns>流程实体</returns>
+        /// <param name="processName"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         public ProcessEntity GetByName(string processName, string version = null)
         {
             ProcessEntity entity = null;
@@ -206,11 +218,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 根据流程名称和版本标识获取流程
+        /// Obtain the process based on the process code and version identifier
+        /// 根据流程代码和版本标识获取流程
         /// </summary>
-        /// <param name="processCode">流程代码</param>
-        /// <param name="version">流程版本</param>
-        /// <returns>流程实体</returns>
+        /// <param name="processCode"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         public ProcessEntity GetByCode(string processCode, string version = null)
         {
             ProcessEntity entity = null;
@@ -244,13 +257,14 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain process records according to version
         /// 按照版本获取流程记录
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程实体</returns>
+        /// <param name="conn"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         internal ProcessEntity GetByVersionInternal(IDbConnection conn,
             string processGUID, 
             string version,
@@ -283,10 +297,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain process based on message subject
         /// 根据消息主题获取流程
         /// </summary>
-        /// <param name="topic">消息表达式</param>
-        /// <returns>流程实体</returns>
+        /// <param name="topic"></param>
+        /// <returns></returns>
         public ProcessEntity GetByMessage(string topic)
         {
             ProcessEntity entity = null;
@@ -315,6 +330,7 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain process based on App type
         /// 根据AppType获取流程记录
         /// </summary>
         /// <param name="appType"></param>
@@ -347,6 +363,7 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get all process
         /// 获取所有流程记录
         /// </summary>
         /// <returns></returns>
@@ -357,6 +374,7 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// List of process definition records for obtaining basic attributes
         /// 获取基本属性的流程定义记录列表
         /// </summary>
         /// <returns></returns>
@@ -385,8 +403,9 @@ namespace Slickflow.Engine.Business.Manager
         }
         #endregion
 
-        #region 新增、更新和删除流程数据
+        #region Addition, deletion, modification, and search of process records 新增、更新和删除流程数据
         /// <summary>
+        /// Insert process
         /// 新增流程记录
         /// </summary>
         /// <param name="entity"></param>
@@ -413,6 +432,7 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Insert process
         /// 新增流程记录
         /// </summary>
         /// <param name="conn"></param>
@@ -430,9 +450,10 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Update process
         /// 更新流程记录
         /// </summary>
-        /// <param name="entity">实体</param>
+        /// <param name="entity"></param>
         public void Update(ProcessEntity entity)
         {
             var entityDB = GetByVersion(entity.ProcessGUID, entity.Version);
@@ -444,6 +465,7 @@ namespace Slickflow.Engine.Business.Manager
                 if (entityDB.PackageType == (short)PackageTypeEnum.Package)
                 {
                     //更新主流程泳道流程的使用状态信息
+                    //Update the usage status information of the main flow lane process
                     var sql = @"UPDATE WfProcess
                                 SET IsUsing=@isUsing
                                 WHERE PackageID=@packageID";
@@ -469,22 +491,24 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Update process
         /// 流程定义记录更新
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="entity">实体</param>
-        /// <param name="trans">事务</param>
+        /// <param name="conn"></param>
+        /// <param name="entity"></param>
+        /// <param name="trans"></param>
         public void Update(IDbConnection conn, ProcessEntity entity, IDbTransaction trans)
         {
             Repository.Update<ProcessEntity>(conn, entity, trans);
         }
 
         /// <summary>
+        /// Update process version IsUsing=0
         /// 更新流程版本IsUsing=0
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="usingState">是否启用1-using;0-unusing</param>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <param name="usingState"></param>
         internal void UpdateUsingState(string processGUID, 
             string version,
             byte usingState)
@@ -515,12 +539,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Upgrade process version
         /// 升级流程记录
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">流程版本</param>
-        /// <param name="newVersion">新版本编号</param>
-        /// <returns>新流程ID</returns>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <param name="newVersion"></param>
+        /// <returns></returns>
         public int Upgrade(string processGUID, string version, string newVersion)
         {
             int newProcessID = 0;
@@ -539,11 +564,13 @@ namespace Slickflow.Engine.Business.Manager
                 entity.Version = newVersion;
                 entity.CreatedDateTime = System.DateTime.Now;
                 //升级主流程版本
+                //Upgrade package process version
                 newProcessID = Repository.Insert<ProcessEntity>(session.Connection, entity, session.Transaction);
 
                 if (entity.PackageType == (short)PackageTypeEnum.Package)
                 {
                     //升级泳道流程版本
+                    //Upgrade pool process version
                     UpgradePoolProcess(session.Connection, originProcessID, newProcessID, newVersion, session.Transaction);
                 }
                 session.Commit();
@@ -561,13 +588,14 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Upgrade pool process
         /// 升级泳道流程记录
         /// </summary>
-        /// <param name="conn">数据库链接</param>
-        /// <param name="originProcessID">原流程ID</param>
-        /// <param name="newProcessID">新流程ID</param>
-        /// <param name="newVersion">新版本</param>
-        /// <param name="trans">事务</param>
+        /// <param name="conn"></param>
+        /// <param name="originProcessID"></param>
+        /// <param name="newProcessID"></param>
+        /// <param name="newVersion"></param>
+        /// <param name="trans"></param>
         public void UpgradePoolProcess(IDbConnection conn,
             int originProcessID,
             int newProcessID,
@@ -575,6 +603,7 @@ namespace Slickflow.Engine.Business.Manager
             IDbTransaction trans)
         {
             //升级泳道流程的使用状态信息
+            //Upgrade the usage status information of the lane process
             var selSql = @"SELECT * FROM WfProcess
                         WHERE PackageType = 2
                             AND PackageID=@packageID";
@@ -585,10 +614,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Delete process
         /// 删除流程记录
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
         public void Delete(string processGUID, string version)
         {
             IDbSession session = SessionFactory.CreateSession();
@@ -612,11 +642,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
 		/// <summary>
+        /// Delete process
         /// 删除流程记录
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="trans">事务</param>
+        /// <param name="conn"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="trans"></param>
         public void Delete(IDbConnection conn, string processGUID, IDbTransaction trans)
         {
             string strSql = "DELETE FROM WfProcess  WHERE  ProcessGUID=@processGUID";
@@ -624,10 +655,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Delete process
         /// 删除流程记录
         /// </summary>
-        /// <param name="processGUID">流程定义GUID</param>
-        /// <param name="version">版本</param>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
         public void DeleteProcess(string processGUID, string version)
         {
             IDbSession session = SessionFactory.CreateSession();
@@ -638,6 +670,7 @@ namespace Slickflow.Engine.Business.Manager
                 if (entity.PackageType == (short)PackageTypeEnum.Package)
                 {
                     //删除泳道流程
+                    //Delete pool process
                     string strPoolSql = @"DELETE FROM WfProcess  
                                 WHERE  PackageID=@packageID";
 
@@ -648,6 +681,7 @@ namespace Slickflow.Engine.Business.Manager
                 }
 
                 //删除主流程
+                //Delete package process
                 string strSql = @"DELETE FROM WfProcess  
                                 WHERE  ProcessGUID=@processGUID
                                     AND Version=@version";
@@ -670,11 +704,12 @@ namespace Slickflow.Engine.Business.Manager
         }
         #endregion
 
-        #region 流程xml文件操作
+        #region Process XML file operation 流程xml文件操作
         /// <summary>
+        /// Process XML file operation
         /// 流程定义的创建方法
         /// </summary>
-        /// <param name="entity">实体</param>
+        /// <param name="entity"></param>
         /// <returns></returns>
         internal int CreateProcess(ProcessEntity entity)
         {
@@ -714,9 +749,10 @@ namespace Slickflow.Engine.Business.Manager
       
 
         /// <summary>
+        /// Save process file
         /// 保存XML文件
         /// </summary>
-        /// <param name="entity">实体</param>
+        /// <param name="entity"></param>
         internal void SaveProcessFile(ProcessFileEntity entity)
         {
             var xmlDoc = new XmlDocument();
@@ -738,18 +774,19 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Save process file single
         /// 保存XML文件
         /// </summary>
-        /// <param name="entity">实体</param>
+        /// <param name="entity"></param>
         internal void SaveProcessFileSingle(ProcessFileEntity entity)
         {
             //检查流程名称是否为空
+            //Check if the process name is empty
             if (string.IsNullOrEmpty(entity.ProcessName))
             {
                 throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.saveprocessfile.noprocessname.error"));
             }
 
-            //默认数据库存储
             var session = SessionFactory.CreateSession();
             try
             {
@@ -758,16 +795,19 @@ namespace Slickflow.Engine.Business.Manager
                 var processEntity = GetByVersion(session.Connection, entity.ProcessGUID, entity.Version, false, session.Transaction);
                 if (processEntity != null)
                 {
-                    // 删除泳道流程
+                    //删除泳道流程
+                    //Delete pool process
                     DeletePoolProcess(session.Connection, processEntity.ID, session.Transaction);
 
                     //更新主流程信息
+                    //Update process info
                     processEntity.ProcessName = entity.ProcessName;
                     processEntity.ProcessCode = entity.ProcessCode;
                     processEntity.XmlContent = entity.XmlContent;
                     processEntity.PackageType = null;
 
                     //数据库存储
+                    //Update to database
                     processEntity.LastUpdatedDateTime = DateTime.Now;
                     Repository.Update<ProcessEntity>(session.Connection, processEntity, session.Transaction);
                 }
@@ -783,6 +823,7 @@ namespace Slickflow.Engine.Business.Manager
                     processEntity.CreatedDateTime = DateTime.Now;
 
                     //数据库存储
+                    //Insert into database
                     Repository.Insert<ProcessEntity>(session.Connection, processEntity, session.Transaction);
                 }
                 session.Commit();
@@ -800,17 +841,19 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Save process file with pool
         /// 保存XML文件
         /// </summary>
-        /// <param name="entity">实体</param>
-        /// <param name="xmlDoc">流程XML文档</param>
-        /// <param name="xmlNodeCollaboration">xml节点</param>
+        /// <param name="entity"></param>
+        /// <param name="xmlDoc"></param>
+        /// <param name="xmlNodeCollaboration"></param>
         internal void SaveProcessFileWithPool(ProcessFileEntity entity,
             XmlDocument xmlDoc,
             XmlNode xmlNodeCollaboration)
         {
             var packageClient = CollaborationModelHelper.ConvertCollaborationFromXml(xmlDoc, xmlNodeCollaboration);
             //检查流程名称是否为空
+            //Check if the process name is empty
             if (string.IsNullOrEmpty(packageClient.Name))
             {
                 throw new ApplicationException(LocalizeHelper.GetEngineMessage("processmanager.saveprocessfile.noprocessname.error"));
@@ -836,9 +879,11 @@ namespace Slickflow.Engine.Business.Manager
                     processCollaboration.CreatedDateTime = DateTime.Now;
 
                     //插入Package流程
+                    //Insert package process
                     var newPackageID = Insert(session.Connection, processCollaboration, session.Transaction);
 
                     //插入泳道流程
+                    //Insert pool process
                     foreach (var pool in poolProcessListClient)
                     {
                         var child = GetByVersion(session.Connection, pool.Process.ProcessGUID, entity.Version, false, session.Transaction);
@@ -899,12 +944,14 @@ namespace Slickflow.Engine.Business.Manager
                     }
 
                     //删除流程图中不含有的泳道流程
+                    //Delete lane processes that are not included in the flowchart
                     if (poolProcessIDs.Count() > 0)
                     {
                         DeletePoolProcess(session.Connection, packageDB.ID, poolProcessIDs, session.Transaction);
                     }
 
                     //如果是泳道流程变为单一流程，更新PackageType和PackageID
+                    //If the lane process becomes a single process, update the PackageType and PackageID
                     if (poolProcessListClient.Count() == 0)
                     {
                         packageDB.PackageType = null;
@@ -912,6 +959,7 @@ namespace Slickflow.Engine.Business.Manager
                     }
 
                     //更新主流程，更新或插入泳道流
+                    //Update the main process, update or insert lane flow
                     packageDB.PackageType = (byte)PackageTypeEnum.Package;
                     packageDB.ProcessName = entity.ProcessName;
                     packageDB.XmlContent = entity.XmlContent;
@@ -924,6 +972,7 @@ namespace Slickflow.Engine.Business.Manager
                         if (child == null)
                         {
                             //插入泳道流程
+                            //Insert pool process
                             var processChild = new ProcessEntity();
                             processChild.ProcessGUID = pool.Process.ProcessGUID;
                             processChild.ParticipantGUID = pool.ParticipantGUID;
@@ -965,10 +1014,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
        /// <summary>
+       /// Set process timer 
        /// 更新流程定时器信息
        /// </summary>
-       /// <param name="processGUID">流程GUID</param>
-       /// <param name="version">流程版本</param>
+       /// <param name="processGUID"></param>
+       /// <param name="version"></param>
         internal void SetProcessTimerType(string processGUID, string version)
         {
             var session = SessionFactory.CreateSession();
@@ -1017,6 +1067,7 @@ namespace Slickflow.Engine.Business.Manager
                 }
 
                 //更新流程定义实体
+                //Update process entity
                 Update(session.Connection, entity, session.Transaction);
                 session.Commit();
             }
@@ -1032,12 +1083,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 或者主流程下的泳道流程列表
+        /// Obtain the list of lane processes under the main flow
+        /// 获取主流程下的泳道流程列表
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="packageID">主图形GUID</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程实体列表</returns>
+        /// <param name="conn"></param>
+        /// <param name="packageID"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         private List<ProcessEntity> GetPoolProcessList(IDbConnection conn, 
             int packageID, 
             IDbTransaction trans)
@@ -1057,10 +1109,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Import XML document to generate process records
         /// 导入XML文档生成流程记录
         /// </summary>
-        /// <param name="xmlContent">XML文档</param>
-        /// <returns>新流程ID</returns>
+        /// <param name="xmlContent"></param>
+        /// <returns></returns>
         internal void ImportProcess(string xmlContent)
         {
             var xmlDoc = new XmlDocument();
@@ -1116,12 +1169,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Delete pool process
         /// 删除泳道流程记录
         /// </summary>
-        /// <param name="conn">数据库链接</param>
-        /// <param name="packageID">主流程ID</param>
-        /// <param name="poolProcessIDs">泳道流程ID列表</param>
-        /// <param name="trans">交易</param>
+        /// <param name="conn"></param>
+        /// <param name="packageID"></param>
+        /// <param name="poolProcessIDs"></param>
+        /// <param name="trans"></param>
         private void DeletePoolProcess(IDbConnection conn, 
             int packageID, 
             List<int> poolProcessIDs, 
@@ -1139,11 +1193,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Delete pool process by package id
         /// 删除泳道流程记录
         /// </summary>
-        /// <param name="conn">数据库链接</param>
-        /// <param name="packageID">主流程ID</param>
-        /// <param name="trans">交易</param>
+        /// <param name="conn"></param>
+        /// <param name="packageID"></param>
+        /// <param name="trans"></param>
         private void DeletePoolProcess(IDbConnection conn,
             int packageID,
             IDbTransaction trans)
@@ -1159,12 +1214,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Read the content of the process XML file
         /// 读取流程XML文件内容
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="extStorage">存储</param>
-        /// <returns>流程文件实体</returns>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <param name="extStorage"></param>
+        /// <returns></returns>
         internal ProcessFileEntity GetProcessFile(string processGUID, string version, IXPDLStorage extStorage = null)
         {
             var processEntity = GetByVersion(processGUID, version);
@@ -1173,10 +1229,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain process file entity based on ID
         /// 根据ID获取流程文件实体
         /// </summary>
-        /// <param name="id">流程ID</param>
-        /// <param name="extStorage">外部存储</param>
+        /// <param name="id"></param>
+        /// <param name="extStorage"></param>
         /// <returns></returns>
         internal ProcessFileEntity GetProcessFileByID(int id, IXPDLStorage extStorage = null)
         {
@@ -1186,14 +1243,16 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Convert process file entity
         /// 转换流程文件实体
         /// </summary>
-        /// <param name="processEntity">流程实体</param>
-        /// <param name="extStorage">外部存储</param>
+        /// <param name="processEntity"></param>
+        /// <param name="extStorage"></param>
         /// <returns></returns>
         private ProcessFileEntity FillProcessFileEntity(ProcessEntity processEntity, IXPDLStorage extStorage = null)
         {
             //流程文件实体
+            //Process file entity
             var processFileEntity = new ProcessFileEntity();
             processFileEntity.ProcessGUID = processEntity.ProcessGUID;
             processFileEntity.ProcessName = processEntity.ProcessName;
@@ -1206,6 +1265,7 @@ namespace Slickflow.Engine.Business.Manager
             if (extStorage != null)
             {
                 //扩展方式读取xml文件内容
+                //Extension method for reading XML file content
                 var xmlDoc = extStorage.Read(processEntity);
                 processFileEntity.XmlContent = xmlDoc.OuterXml;
             }
@@ -1218,12 +1278,13 @@ namespace Slickflow.Engine.Business.Manager
 
 
         /// <summary>
+        /// Read xml content
         /// 读取Xml文档
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="extStorage">存储</param>
-        /// <returns>Xml文档</returns>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <param name="extStorage"></param>
+        /// <returns></returns>
         internal XmlDocument GetProcessXmlDocument(string processGUID, string version, IXPDLStorage extStorage = null)
         {
             var processEntity = GetByVersion(processGUID, version);

@@ -15,36 +15,40 @@ using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Xpdl.Node;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
+using System.Text;
+using IronPython.Compiler.Ast;
+using static IronPython.Runtime.Profiler;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Threading.Tasks;
 
 namespace Slickflow.Engine.Core.Runtime
 {
     /// <summary>
+    /// Creating classes at runtime
+    /// Static method: Create a runtime object for executing an instance
     /// 运行时的创建类
     /// 静态方法：创建执行实例的运行者对象
     /// </summary>
     internal class WfRuntimeManagerFactory
     {
-        #region WfRuntimeManager 创建启动运行时对象
+        #region WfRuntimeManager Startup
         /// <summary>
+        /// Startup Process
         /// 启动流程
         /// </summary>
-        /// <param name="runner">执行者</param>
-        /// <param name="result">结果对象</param>
-        /// <returns>运行时实例对象</returns>
         public static WfRuntimeManager CreateRuntimeInstanceStartup(WfAppRunner runner,
             ref WfExecutedResult result)
         {
-            //检查流程是否可以被启动
             var rmins = new WfRuntimeManagerStartup();
             rmins.WfExecutedResult = result = new WfExecutedResult();
 
-            //正常流程启动
             var pim = new ProcessInstanceManager();
             ProcessInstanceEntity processInstance = pim.GetProcessInstanceCurrent(runner.AppInstanceID,
                 runner.ProcessGUID,
                 runner.Version);
 
             //不能同时启动多个主流程
+            //Cannot start multiple main processes simultaneously
             if (processInstance != null
                 && string.IsNullOrEmpty(processInstance.SubProcessGUID)
                 && processInstance.ProcessState == (short)ProcessStateEnum.Running)
@@ -58,11 +62,13 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.AppRunner = runner;
 
             //获取流程第一个可办理节点
+            //Obtain the first available processing node in the process
             rmins.ProcessModel = ProcessModelFactory.CreateByProcess(runner.ProcessGUID, runner.Version);
             var startActivity = rmins.ProcessModel.GetStartActivity();
             var nextActivityTree = rmins.ProcessModel.GetFirstActivityTree(startActivity, runner.Conditions);
 
             //开始节点之后可以有网关节点
+            //After starting the node, there can be a gateway node
             if (startActivity.TriggerDetail != null)
             {
                 if (startActivity.TriggerDetail.TriggerType == TriggerTypeEnum.Timer
@@ -88,43 +94,15 @@ namespace Slickflow.Engine.Core.Runtime
                     runner.UserID,
                     runner.UserName);
             }
-
-            //if (startActivity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.None)
-            //{
-            //    rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(nextActivityTree,
-            //        runner.UserID,
-            //        runner.UserName);
-            //}
-            //else if (startActivity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.Timer
-            //    || startActivity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.Message
-            //    || startActivity.ActivityTypeDetail.TriggerType == TriggerTypeEnum.Conditional)
-            //{
-            //    if (!string.IsNullOrEmpty(runner.UserID))
-            //    {
-            //        rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(nextActivityTree,
-            //            runner.UserID,
-            //            runner.UserName);
-            //    }
-            //    else
-            //    {
-            //        rmins.AppRunner.NextActivityPerformers = rmins.ProcessModel.GetActivityPerformers(nextActivityTree);
-            //    }
-            //}
             rmins.ActivityResource = new ActivityResource(runner, rmins.AppRunner.NextActivityPerformers, runner.Conditions);
 
             return rmins;
         }
 
         /// <summary>
+        /// Sub Process Startup
         /// 子流程启动
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <param name="processInstance">父流程</param>
-        /// <param name="subProcessNode">子流程节点</param>
-        /// <param name="performerList">执行者列表</param>
-        /// <param name="session">数据库会话</param>
-        /// <param name="result">运行结果</param>
-        /// <returns>运行时管理器</returns>
         public static WfRuntimeManager CreateRuntimeInstanceStartupSub(WfAppRunner runner,
             ProcessInstanceEntity processInstance,
             SubProcessNode subProcessNode,
@@ -132,7 +110,6 @@ namespace Slickflow.Engine.Core.Runtime
             IDbSession session,
             ref WfExecutedResult result)
         {
-            //检查流程是否可以被启动
             var rmins = new WfRuntimeManagerStartupSub();
             rmins.WfExecutedResult = result = new WfExecutedResult();
 
@@ -144,6 +121,7 @@ namespace Slickflow.Engine.Core.Runtime
                 session.Transaction);
 
             //不能同时启动多个主流程
+            //Cannot start multiple main processes simultaneously
             if (subProcessInstance != null
                 && subProcessInstance.ProcessState == (short)ProcessStateEnum.Running)
             {
@@ -153,16 +131,17 @@ namespace Slickflow.Engine.Core.Runtime
                 return rmins;
             }
 
-            //processInstance 为空，此时继续执行启动操作
             rmins.AppRunner = runner;
             rmins.ProcessInstance = subProcessInstance;
             rmins.InvokedSubProcessNode = subProcessNode;
             rmins.ProcessModel = ProcessModelFactory.CreateSubByNode(session.Connection, subProcessNode, session.Transaction);
 
             //获取流程第一个可办理节点
+            //Obtain the first available processing node in the process
             var subFirstActivity = rmins.ProcessModel.GetFirstActivity();
 
             //子流程自动获取第一个办理节点上的人员列表
+            //The subprocess automatically retrieves the list of performers on the first processing node
             rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(subFirstActivity.ActivityGUID, 
                 performerList);
             rmins.ActivityResource = new ActivityResource(runner, rmins.AppRunner.NextActivityPerformers);
@@ -171,23 +150,22 @@ namespace Slickflow.Engine.Core.Runtime
         }
         #endregion
 
-        #region WfRuntimeManager 创建应用执行运行时对象
+        #region WfRuntimeManager Running
         /// <summary>
+        /// Create a runtime instance object
         /// 创建运行时实例对象
         /// </summary>
-        /// <param name="runner">执行者</param>
-        /// <param name="session">数据库会话</param>
-        /// <param name="result">结果对象</param>
-        /// <returns>运行时实例对象</returns>
         public static WfRuntimeManager CreateRuntimeInstanceAppRunning(WfAppRunner runner,
             IDbSession session,
             ref WfExecutedResult result)
         {
-            //检查传人参数是否有效
             var rmins = new WfRuntimeManagerRun();
             rmins.WfExecutedResult = result = new WfExecutedResult();
+
+            //检查传入参数是否有效
+            //Check if the incoming parameters are valid
             if (string.IsNullOrEmpty(runner.AppName)
-                || String.IsNullOrEmpty(runner.AppInstanceID)
+                || string.IsNullOrEmpty(runner.AppInstanceID)
                 || runner.ProcessGUID == null)
             {
                 result.Status = WfExecutedStatus.Exception;
@@ -195,15 +173,14 @@ namespace Slickflow.Engine.Core.Runtime
                 result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceAppRunning.missing.error");
                 return rmins;
             }
-
-            //传递runner变量
             rmins.AppRunner = runner;
 
             var aim = new ActivityInstanceManager();
             TaskViewEntity taskView = null;
             var runningNode = aim.GetRunningNode(runner, session, out taskView);
 
-            //判断是否是当前登录用户的任务
+            //判断是否是当前登录用户的任务 
+            //Determine whether it is the task of the currently logged in user
             if (!string.IsNullOrEmpty(runningNode.AssignedToUserIDs)
                 && runningNode.AssignedToUserIDs.Contains(runner.UserID.ToString()) == false)
             {
@@ -223,6 +200,7 @@ namespace Slickflow.Engine.Core.Runtime
             }
 
             //用于流程注册事件时的流程实例ID提供
+            //Provide process instance ID for process registration events
             var processInstance = (new ProcessInstanceManager()).GetById(session.Connection, runningNode.ProcessInstanceID, session.Transaction);
             rmins.ProcessInstanceID = runningNode.ProcessInstanceID;
             var processModel = ProcessModelFactory.CreateByTask(session.Connection, taskView, session.Transaction);
@@ -239,23 +217,21 @@ namespace Slickflow.Engine.Core.Runtime
         }
         #endregion
 
-        #region WfRuntimeManager 创建应用自动执行运行时对象
+        #region WfRuntimeManager Run Automatically
         /// <summary>
+        /// Create a runtime instance object
         /// 创建运行时实例对象
         /// </summary>
-        /// <param name="runner">执行者</param>
-        /// <param name="session">数据库会话</param>
-        /// <param name="result">结果对象</param>
-        /// <returns>运行时实例对象</returns>
         public static WfRuntimeManager CreateRuntimeInstanceRunAuto(WfAppRunner runner,
             IDbSession session,
             ref WfExecutedResult result)
         {
-            //检查传人参数是否有效
+            //检查传入参数是否有效
+            //Check if the incoming parameters are valid
             var rmins = new WfRuntimeManagerRun();
             rmins.WfExecutedResult = result = new WfExecutedResult();
             if (string.IsNullOrEmpty(runner.AppName)
-                || String.IsNullOrEmpty(runner.AppInstanceID)
+                || string.IsNullOrEmpty(runner.AppInstanceID)
                 || runner.ProcessGUID == null)
             {
                 result.Status = WfExecutedStatus.Exception;
@@ -263,14 +239,13 @@ namespace Slickflow.Engine.Core.Runtime
                 result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceAppRunning.missing.error");
                 return rmins;
             }
-
-            //传递runner变量
             rmins.AppRunner = runner;
 
             var aim = new ActivityInstanceManager();
             var runningNode = aim.GetById(runner.ActivityInstanceID.Value);
-            
+
             //用于流程注册事件时的流程实例ID提供
+            //Provide process instance ID for process registration events
             var processInstance = (new ProcessInstanceManager()).GetById(session.Connection, runningNode.ProcessInstanceID, session.Transaction);
             rmins.ProcessInstanceID = runningNode.ProcessInstanceID;
             var processModel = ProcessModelFactory.CreateByProcess(processInstance.ProcessGUID, processInstance.Version);
@@ -286,25 +261,24 @@ namespace Slickflow.Engine.Core.Runtime
         }
         #endregion
 
-        #region WfRuntimeManager 创建跳转运行时对象
+        #region WfRuntimeManager Jump
         /// <summary>
+        /// Create a runtime instance object
         /// 创建跳转实例信息
         /// </summary>
-        /// <param name="runner">执行者</param>
-        /// <param name="result">结果对象</param>
-        /// <returns>运行时实例对象</returns>
         public static WfRuntimeManager CreateRuntimeInstanceJump(WfAppRunner runner,
             ref WfExecutedResult result)
         {
             var rmins = new WfRuntimeManagerJump();
             rmins.WfExecutedResult = result = new WfExecutedResult();
 
+            //检查传入参数是否有效
+            //Check if the incoming parameters are valid
             if (string.IsNullOrEmpty(runner.AppName)
-               || String.IsNullOrEmpty(runner.AppInstanceID)
+               || string.IsNullOrEmpty(runner.AppInstanceID)
                || runner.ProcessGUID == null
                || runner.NextActivityPerformers == null)
             {
-                //缺失方法参数
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.Jump_ErrorArguments;
                 result.Message = LocalizeHelper.GetEngineMessage("wfruntimemanagerfactory.CreateRuntimeInstanceJump.missing.error");
@@ -312,6 +286,7 @@ namespace Slickflow.Engine.Core.Runtime
             }
 
             //流程跳转时，只能跳转到一个节点
+            //When a process jumps, it can only jump to one node
             if (runner.NextActivityPerformers.Count() > 1)
             {
                 result.Status = WfExecutedStatus.Exception;
@@ -321,12 +296,10 @@ namespace Slickflow.Engine.Core.Runtime
                 return rmins;
             }
 
-            //获取当前运行节点信息
             var aim = new ActivityInstanceManager();
             TaskViewEntity taskView = null;
             var runningNode = aim.GetRunningNode(runner, out taskView);
 
-            //传递runner变量
             rmins.TaskView = taskView;
             rmins.AppRunner.AppName = runner.AppName;
             rmins.AppRunner.AppInstanceID = runner.AppInstanceID;
@@ -336,6 +309,7 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.AppRunner.NextActivityPerformers = runner.NextActivityPerformers;
 
             //用于流程注册时间调用时候的流程实例ID提供
+            //Provide process instance ID for process registration events
             rmins.ProcessInstanceID = runningNode.ProcessInstanceID;
             rmins.RunningActivityInstance = runningNode;
             rmins.ActivityResource = new ActivityResource(runner, rmins.AppRunner.NextActivityPerformers);
@@ -347,21 +321,21 @@ namespace Slickflow.Engine.Core.Runtime
         }
         #endregion
 
-        #region WfRuntimeManager 创建驳回运行时对象
+        #region WfRuntimeManager Reject
         /// <summary>
-        /// 跳转到流程发起节点
+        /// Create a runtime instance object
+        /// 创建运行时实例对象
         /// </summary>
-        /// <param name="runner">当前运行用户</param>
-        /// <param name="result">运行结果</param>
-        /// <returns>运行时对象</returns>
         public static WfRuntimeManager CreateRuntimeInstanceReject(WfAppRunner runner,
             ref WfExecutedResult result)
         {
             var rmins = new WfRuntimeManagerReject();
             rmins.WfExecutedResult = result = new WfExecutedResult();
 
+            //检查传入参数是否有效
+            //Check if the incoming parameters are valid
             if (string.IsNullOrEmpty(runner.AppName)
-               || String.IsNullOrEmpty(runner.AppInstanceID)
+               || string.IsNullOrEmpty(runner.AppInstanceID)
                || runner.ProcessGUID == null
                || runner.NextActivityPerformers == null)
             {
@@ -371,7 +345,6 @@ namespace Slickflow.Engine.Core.Runtime
                 return rmins;
             }
 
-            //流程跳转时，只能跳转到一个节点
             if (runner.NextActivityPerformers.Count() > 1)
             {
                 result.Status = WfExecutedStatus.Exception;
@@ -381,12 +354,10 @@ namespace Slickflow.Engine.Core.Runtime
                 return rmins;
             }
 
-            //获取当前运行节点信息
             var aim = new ActivityInstanceManager();
             TaskViewEntity taskView = null;
             var runningNode = aim.GetRunningNode(runner, out taskView);
 
-            //传递runner变量
             rmins.TaskView = taskView;
             rmins.AppRunner = runner;
             rmins.AppRunner.AppName = runner.AppName;
@@ -395,23 +366,25 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.AppRunner.UserID = runner.UserID;
             rmins.AppRunner.UserName = runner.UserName;
 
-            //用于流程注册时间调用时候的流程实例ID提供
             rmins.ProcessInstanceID = runningNode.ProcessInstanceID;
 
             var processModel = ProcessModelFactory.CreateByTask(taskView);
             rmins.ProcessModel = processModel;
 
             //获取跳转节点信息
+            //Obtain jump node information
             var jumpBackActivityGUID = runner.NextActivityPerformers.First().Key;
             var jumpBackActivityInstance = aim.GetActivityInstanceLatest(runningNode.ProcessInstanceID, jumpBackActivityGUID);
 
 
             //跳转到曾经执行过的节点上,可以作为跳回方式处理
+            //Jumping to a node that has been executed before can be handled as a bounce back method
             rmins.IsBackward = true;
             rmins.BackwardContext.ProcessInstance = (new ProcessInstanceManager()).GetById(runningNode.ProcessInstanceID);
             rmins.BackwardContext.BackwardToTaskActivity = processModel.GetActivity(jumpBackActivityGUID);
 
             //获取当前运行节点的上一步节点
+            //Retrieve the previous node of the current running node
             bool hasGatewayNode = false;
             var tim = new TransitionInstanceManager();
             var lastTaskTransitionInstance = tim.GetLastTaskTransition(runner.AppName,
@@ -423,6 +396,7 @@ namespace Slickflow.Engine.Core.Runtime
             var previousActivityInstance = (previousActivityInstanceList.Count > 0) ? previousActivityInstanceList[0] : null;
 
             //仅仅是回跳到上一步节点，即按SendBack方式处理
+            //Just jump back to the previous node and process it according to the SendBack method
             if (previousActivityInstance != null && previousActivityInstance.ActivityGUID == jumpBackActivityGUID)
             {
                 rmins.BackwardContext.BackwardToTaskActivityInstance = previousActivityInstance;
@@ -444,6 +418,7 @@ namespace Slickflow.Engine.Core.Runtime
             else
             {
                 //回跳到早前节点
+                //Jump back to the previous node
                 if (jumpBackActivityInstance.ActivityState != (short)ActivityStateEnum.Completed)
                 {
                     result.Status = WfExecutedStatus.Exception;
@@ -456,6 +431,7 @@ namespace Slickflow.Engine.Core.Runtime
                 rmins.BackwardContext.BackwardToTaskActivityInstance = jumpBackActivityInstance;
 
                 //判断两个节点是否有Transition的定义存在
+                //Determine whether there is a definition of transition between two nodes
                 var transition = processModel.GetForwardTransition(runningNode.ActivityGUID, jumpBackActivityGUID);
                 rmins.BackwardContext.BackwardToTargetTransitionGUID = transition != null ? transition.TransitionGUID : WfDefine.WF_XPDL_GATEWAY_BYPASS_GUID;
 
@@ -472,7 +448,6 @@ namespace Slickflow.Engine.Core.Runtime
                     jumpBackActivityInstance.EndedByUserName);
             }
 
-            //获取资源数据
             var activityResourceBack = new ActivityResource(rmins.AppRunner,
                 rmins.AppRunner.NextActivityPerformers,
                 runner.Conditions);
@@ -482,21 +457,21 @@ namespace Slickflow.Engine.Core.Runtime
         }
         #endregion
 
-        #region WfRuntimeManager 创建关闭运行时对象
+        #region WfRuntimeManager Close
         /// <summary>
-        /// 跳转到结束节点
+        /// Create a runtime instance object
+        /// 创建运行时实例对象
         /// </summary>
-        /// <param name="runner">当前运行用户</param>
-        /// <param name="result">运行结果</param>
-        /// <returns>运行时对象</returns>
         public static WfRuntimeManager CreateRuntimeInstanceClose(WfAppRunner runner,
             ref WfExecutedResult result)
         {
             var rmins = new WfRuntimeManagerClose();
             rmins.WfExecutedResult = result = new WfExecutedResult();
 
+            //检查传入参数是否有效
+            //Check if the incoming parameters are valid
             if (string.IsNullOrEmpty(runner.AppName)
-               || String.IsNullOrEmpty(runner.AppInstanceID)
+               || string.IsNullOrEmpty(runner.AppInstanceID)
                || runner.ProcessGUID == null
                || runner.NextActivityPerformers == null)
             {
@@ -507,6 +482,7 @@ namespace Slickflow.Engine.Core.Runtime
             }
 
             //流程跳转时，只能跳转到一个节点
+            //When a process jumps, it can only jump to one node
             if (runner.NextActivityPerformers.Count() > 1)
             {
                 result.Status = WfExecutedStatus.Exception;
@@ -516,12 +492,10 @@ namespace Slickflow.Engine.Core.Runtime
                 return rmins;
             }
 
-            //获取当前运行节点信息
             var aim = new ActivityInstanceManager();
             TaskViewEntity taskView = null;
             var runningNode = aim.GetRunningNode(runner, out taskView);
 
-            //传递runner变量
             rmins.TaskView = taskView;
             rmins.AppRunner = runner;
             rmins.AppRunner.AppName = runner.AppName;
@@ -531,6 +505,7 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.AppRunner.UserName = runner.UserName;
 
             //用于流程注册时间调用时候的流程实例ID提供
+            //Provide process instance ID for process registration time call
             rmins.ProcessInstanceID = runningNode.ProcessInstanceID;
 
             var processModel = ProcessModelFactory.CreateByTask(taskView);
@@ -545,13 +520,11 @@ namespace Slickflow.Engine.Core.Runtime
         }
         #endregion
 
-        #region WfRuntimeManager 创建退回运行时对象
+        #region WfRuntimeManager SendBack
         /// <summary>
-        /// 退回操作
+        /// Create a runtime instance object
+        /// 创建运行时实例对象
         /// </summary>
-        /// <param name="runner">执行者</param>
-        /// <param name="result">结果对象</param>
-        /// <returns>运行时实例对象</returns>
         internal static WfRuntimeManager CreateRuntimeInstanceSendBack(WfAppRunner runner,
             ref WfExecutedResult result)
         {
@@ -559,6 +532,7 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.WfExecutedResult = result = new WfExecutedResult();
 
             //没有指定退回节点信息
+            //No sendback node information specified
             if (runner.NextPerformerType != NextPerformerIntTypeEnum.Traced
                 && (runner.NextActivityPerformers == null || runner.NextActivityPerformers.Count == 0))
             {
@@ -570,6 +544,7 @@ namespace Slickflow.Engine.Core.Runtime
             }
 
             //先查找当前用户正在办理的运行节点
+            //First, search for the running node that the current user is currently processing
             var aim = new ActivityInstanceManager();
             TaskViewEntity taskView = null;
             var runningNode = aim.GetRunningNode(runner, out taskView);
@@ -603,6 +578,7 @@ namespace Slickflow.Engine.Core.Runtime
             }
 
             //获取上一步节点信息
+            //Obtain the previous node information
             var hasGatewayPassed = false;
             var processInstance = (new ProcessInstanceManager()).GetById(runningNode.ProcessInstanceID);
             var processModel = ProcessModelFactory.CreateByProcessInstance(processInstance);
@@ -610,6 +586,7 @@ namespace Slickflow.Engine.Core.Runtime
             var previousActivityList = previousStepChecker.GetPreviousActivityList(runningNode, processModel, out hasGatewayPassed);
 
             //判断退回是否有效
+            //Determine if the return is valid
             if (previousActivityList == null || previousActivityList.Count == 0)
             {
                 result.Status = WfExecutedStatus.Exception;
@@ -619,6 +596,7 @@ namespace Slickflow.Engine.Core.Runtime
             }
 
             //前端用户指定退回步骤的模式
+            //Front end user specifies the mode of return steps
             if (runner.NextPerformerType != NextPerformerIntTypeEnum.Traced)
             {
                 if (runner.NextActivityPerformers == null || runner.NextActivityPerformers.Count == 0)
@@ -631,6 +609,7 @@ namespace Slickflow.Engine.Core.Runtime
                 }
 
                 //检查节点是否一致
+                //Check if the nodes are consistent
                 if (previousActivityList.Count == 1)
                 {
                     var onlyActivityGUID = previousActivityList[0].ActivityGUID;
@@ -645,6 +624,7 @@ namespace Slickflow.Engine.Core.Runtime
                     }
 
                     //存在不一致的退回节点
+                    //There are inconsistent return nodes
                     if (isOnly == false)
                     {
                         result.Status = WfExecutedStatus.Exception;
@@ -658,12 +638,12 @@ namespace Slickflow.Engine.Core.Runtime
             else
             {
                 //Traced 用于直接返回上一步使用，测试模式
+                //Traced is used to directly return to the previous step for testing mode
                 var prevActivity = previousActivityList[0];
                 var performerList = PerformerBuilder.CreatePerformerList(runningNode.CreatedByUserID, runningNode.CreatedByUserName);
                 runner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(prevActivity.ActivityGUID, performerList);
             }
 
-            //创建运行时
             rmins.TaskView = taskView;
             rmins.RunningActivityInstance = runningNode;
             rmins.ProcessInstanceID = runningNode.ProcessInstanceID;
@@ -677,6 +657,7 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.AppRunner.NextActivityPerformers = runner.NextActivityPerformers;
 
             //设置退回选项类
+            //Set sendback options
             var sendbackOperation = new SendBackOperation();
             sendbackOperation.BackwardType = BackwardTypeEnum.Sendback;
             sendbackOperation.ProcessInstance = processInstance;
@@ -693,13 +674,10 @@ namespace Slickflow.Engine.Core.Runtime
         }
 
         /// <summary>
+        /// Determine whether the steps passed are in the list
         /// 判断传递的步骤是否在列表中
         /// </summary>
-        /// <param name="previousActivityList">步骤列表</param>
-        /// <param name="steps">要检查的步骤</param>
-        /// <param name="sendbackPreviousActivityList">要退回的节点列表</param>
-        /// <returns>是否没有包含</returns>
-        private static Boolean IsInvalidStepsInPrevousActivityList(IList<Activity> previousActivityList, 
+        private static bool IsInvalidStepsInPrevousActivityList(IList<Activity> previousActivityList, 
             IDictionary<string, PerformerList> steps,
             IList<Activity> sendbackPreviousActivityList)
         {
@@ -727,12 +705,9 @@ namespace Slickflow.Engine.Core.Runtime
 
 
         /// <summary>
+        /// Filter pre nodes
         /// 过滤前置节点
-        /// 流转历史数据
         /// </summary>
-        /// <param name="previousActivityList">解析出的前置节点列表</param>
-        /// <param name="previousActivityInstanceList">实际流转的前置节点列表</param>
-        /// <returns>过滤后的节点列表</returns>
         private static IList<Activity> FilterPreviousActivityList(IList<Activity> previousActivityList,
             IList<ActivityInstanceEntity> previousActivityInstanceList)
         {
@@ -749,13 +724,11 @@ namespace Slickflow.Engine.Core.Runtime
         }
         #endregion
 
-        #region WfRuntimeManager 创建撤销处理的退回运行时对象
+        #region WfRuntimeManager Withdraw
         /// <summary>
-        /// 创建撤销处理运行时
+        /// Create a runtime instance object
+        /// 创建运行时实例对象
         /// </summary>
-        /// <param name="runner">撤销人</param>
-        /// <param name="result">创建结果</param>
-        /// <returns>运行时管理器</returns>
         internal static WfRuntimeManager CreateRuntimeInstanceWithdraw(WfAppRunner runner,
            ref WfExecutedResult result)
         {
@@ -770,6 +743,7 @@ namespace Slickflow.Engine.Core.Runtime
                 return rmins;
             }
             //获取已经完成任务的信息
+            //Retrieve information on completed tasks
             var tm = new TaskManager();
             var taskDone = tm.GetTaskView(runner.TaskID.Value);
 
@@ -781,11 +755,11 @@ namespace Slickflow.Engine.Core.Runtime
                 return rmins;
             }
 
-            //赋值下一步办理列表
             runner.NextActivityPerformers = NextStepUtility.CreateNextStepPerformerList(taskDone.ActivityGUID,
                 taskDone.AssignedToUserID, taskDone.AssignedToUserName);
 
             //没有指定退回节点信息
+            //No return node information specified
             if (runner.NextActivityPerformers == null || runner.NextActivityPerformers.Count == 0)
             {
                 result.Status = WfExecutedStatus.Exception;
@@ -796,6 +770,7 @@ namespace Slickflow.Engine.Core.Runtime
             }
 
             //获取待办任务
+            //Get todo tasks
             var tim = new TransitionInstanceManager();
             var nextStepList = tim.GetTargetActivityInstanceList(taskDone.ActivityInstanceID).ToList();
             
@@ -830,12 +805,12 @@ namespace Slickflow.Engine.Core.Runtime
                 return rmins;
             }
 
-            //获取待办任务(模拟待办任务用户做退回处理)
             var taskToDo = tm.GetTaskViewByActivity(runningNode.ProcessInstanceID, runningNode.ID);
             runner.UserID = taskToDo.AssignedToUserID;
             runner.UserName = taskToDo.AssignedToUserName;
 
             //获取上一步节点信息
+            //Obtain the previous node information
             var hasGatewayPassed = false;
             var processInstance = (new ProcessInstanceManager()).GetById(runningNode.ProcessInstanceID);
             
@@ -844,6 +819,7 @@ namespace Slickflow.Engine.Core.Runtime
             var previousActivityList = previousStepChecker.GetPreviousActivityList(runningNode, processModel, out hasGatewayPassed);
 
             //判断退回是否有效
+            //Determine if the return is valid
             if (previousActivityList == null || previousActivityList.Count == 0)
             {
                 result.Status = WfExecutedStatus.Exception;
@@ -853,6 +829,7 @@ namespace Slickflow.Engine.Core.Runtime
             }
 
             //检查节点是否一致
+            //Check if the nodes are consistent
             if (previousActivityList.Count == 1)
             {
                 var onlyActivityGUID = previousActivityList[0].ActivityGUID;
@@ -867,6 +844,7 @@ namespace Slickflow.Engine.Core.Runtime
                 }
 
                 //存在不一致的退回节点
+                //There are inconsistent return nodes
                 if (isOnly == false)
                 {
                     result.Status = WfExecutedStatus.Exception;
@@ -877,7 +855,6 @@ namespace Slickflow.Engine.Core.Runtime
                 }
             }
 
-            //创建运行时
             rmins.TaskView = taskToDo;
             rmins.RunningActivityInstance = runningNode;
             rmins.ProcessInstanceID = runningNode.ProcessInstanceID;
@@ -891,6 +868,7 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.AppRunner.NextActivityPerformers = runner.NextActivityPerformers;
 
             //设置退回选项类
+            //Set return option class
             var sendbackOperation = new SendBackOperation();
             sendbackOperation.BackwardType = BackwardTypeEnum.Withdrawed;
             sendbackOperation.ProcessInstance = processInstance;
@@ -898,7 +876,10 @@ namespace Slickflow.Engine.Core.Runtime
             sendbackOperation.HasGatewayPassed = hasGatewayPassed;
             sendbackOperation.ActivityResource = new ActivityResource(runner, rmins.AppRunner.NextActivityPerformers);
             sendbackOperation.ProcessModel = processModel;
-            sendbackOperation.IsCancellingBrothersNode = true;          //撤销时默认撤销各个并行分支
+
+            //撤销时默认撤销各个并行分支
+            //Default revocation of each parallel branch during revocation
+            sendbackOperation.IsCancellingBrothersNode = true;          
 
             rmins.SendBackOperation = sendbackOperation;
 
@@ -906,13 +887,11 @@ namespace Slickflow.Engine.Core.Runtime
         }
         #endregion
 
-        #region WfRuntimeManager 创建返送运行时对象
+        #region WfRuntimeManager Resend
         /// <summary>
-        /// 返送操作
+        /// Create a runtime instance object
+        /// 创建运行时实例对象
         /// </summary>
-        /// <param name="runner">执行者</param>
-        /// <param name="result">结果对象</param>
-        /// <returns>运行时实例对象</returns>
         internal static WfRuntimeManager CreateRuntimeInstanceResend(WfAppRunner runner,
             ref WfExecutedResult result)
         {
@@ -929,6 +908,7 @@ namespace Slickflow.Engine.Core.Runtime
             }
 
             //获取退回源活动实例数据
+            //Retrieve the data of the returned source activity instance
             var tm = new TaskManager();
             var taskView = tm.GetTaskView(runner.TaskID.Value);
 
@@ -944,7 +924,6 @@ namespace Slickflow.Engine.Core.Runtime
             }
             var backSrcActivityInstance = aim.GetById(runningActivityInstance.BackSrcActivityInstanceID.Value);
 
-            //封装AppUser对象
             rmins.TaskView = taskView;
             rmins.RunningActivityInstance = aim.GetById(taskView.ActivityInstanceID);
             rmins.ProcessModel = ProcessModelFactory.CreateByTask(taskView);
@@ -970,19 +949,18 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.ActivityResource = new ActivityResource(runner, rmins.AppRunner.NextActivityPerformers);
 
             //用于流程注册事件时的流程实例ID提供
+            //Provide process instance ID for process registration events
             rmins.ProcessInstanceID = runningActivityInstance.ProcessInstanceID;
 
             return rmins;
         }
         #endregion
 
-        #region WfRuntimerManager 创建修订运行时对象
+        #region WfRuntimerManager Revise
         /// <summary>
-        /// 修订操作
+        /// Create a runtime instance object
+        /// 创建运行时实例对象
         /// </summary>
-        /// <param name="runner">执行者</param>
-        /// <param name="result">结果对象</param>
-        /// <returns>运行时实例对象</returns>
         public static WfRuntimeManager CreateRuntimeInstanceRevise(WfAppRunner runner,
             ref WfExecutedResult result)
         {
@@ -999,12 +977,12 @@ namespace Slickflow.Engine.Core.Runtime
             }
 
             //获取退回源活动实例数据
+            //Retrieve the data of the returned source activity instance
             var tm = new TaskManager();
             var taskView = tm.GetTaskView(runner.TaskID.Value);
 
             var aim = new ActivityInstanceManager();
 
-            //封装AppUser对象
             rmins.TaskView = taskView;
             rmins.RunningActivityInstance = aim.GetById(taskView.ActivityInstanceID);
             rmins.ProcessModel = ProcessModelFactory.CreateByTask(taskView);
@@ -1017,19 +995,18 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.ActivityResource = new ActivityResource(runner, rmins.AppRunner.NextActivityPerformers);
 
             //用于流程注册事件时的流程实例ID提供
+            //Provide process instance ID for process registration events
             rmins.ProcessInstanceID = taskView.ProcessInstanceID;
 
             return rmins;
         }
         #endregion
 
-        #region WfRuntimeManager 创建返签运行时对象
+        #region WfRuntimeManager Reverse
         /// <summary>
-        /// 流程返签，先检查约束条件，然后调用wfruntimeinstance执行
+        /// Create a runtime instance object
+        /// 创建运行时实例对象
         /// </summary>
-        /// <param name="runner">执行者</param>
-        /// <param name="result">结果对象</param>
-        /// <returns>运行时实例对象</returns>
         public static WfRuntimeManager CreateRuntimeInstanceReverse(WfAppRunner runner,
             ref WfExecutedResult result)
         {
@@ -1046,6 +1023,7 @@ namespace Slickflow.Engine.Core.Runtime
             }
 
             //用于注册事件时候的流程ID
+            //Process ID used for registering events
             rmins.ProcessInstanceID = processInstance.ID;
 
             var tim = new TransitionInstanceManager();
@@ -1064,6 +1042,7 @@ namespace Slickflow.Engine.Core.Runtime
             var lastTaskActivity = processModel.GetActivity(lastTaskActivityInstance.ActivityGUID);
 
             //封装返签结束点之前办理节点的任务接收人
+            //The recipient of the task to handle the node before the end point of the encapsulated return signature
             rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(lastTaskActivityInstance.ActivityGUID,
                 lastTaskActivityInstance.EndedByUserID,
                 lastTaskActivityInstance.EndedByUserName);
@@ -1079,7 +1058,7 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.BackwardContext.BackwardToTaskActivity = lastTaskActivity;
             rmins.BackwardContext.BackwardToTaskActivityInstance = lastTaskActivityInstance;
             rmins.BackwardContext.BackwardToTargetTransitionGUID =
-                hasGatewayNode == false ? endTransitionInstance.TransitionGUID : String.Empty;
+                hasGatewayNode == false ? endTransitionInstance.TransitionGUID : string.Empty;
             rmins.BackwardContext.BackwardFromActivity = endActivity;
             rmins.BackwardContext.BackwardFromActivityInstance = endActivityInstance;
             rmins.BackwardContext.BackwardTaskReceiver = WfBackwardTaskReceiver.Instance(lastTaskActivityInstance.ActivityName,
@@ -1091,13 +1070,11 @@ namespace Slickflow.Engine.Core.Runtime
         }
         #endregion
 
-        #region WfRuntimeManager 创建加签运行时对象
+        #region WfRuntimeManager SignForward
         /// <summary>
-        /// 加签操作
+        /// Create a runtime instance object
+        /// 创建运行时实例对象
         /// </summary>
-        /// <param name="runner">执行者</param>
-        /// <param name="result">结果对象</param>
-        /// <returns>运行时实例对象</returns>
         public static WfRuntimeManager CreateRuntimeInstanceSignForward(WfAppRunner runner,
             ref WfExecutedResult result)
         {
@@ -1105,7 +1082,7 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.WfExecutedResult = result = new WfExecutedResult();
 
             if (string.IsNullOrEmpty(runner.AppName)
-                || String.IsNullOrEmpty(runner.AppInstanceID)
+                || string.IsNullOrEmpty(runner.AppInstanceID)
                 || runner.ProcessGUID == null
                 || runner.NextActivityPerformers == null)
             {
@@ -1130,6 +1107,7 @@ namespace Slickflow.Engine.Core.Runtime
             var runningNode = aim.GetRunningNode(runner, out taskView);
 
             //判断是否是当前登录用户的任务
+            //Determine whether it is the task of the currently logged in user
             if (runningNode.AssignedToUserIDs.Contains(runner.UserID.ToString()) == false)
             {
                 result.Status = WfExecutedStatus.Exception;
@@ -1139,6 +1117,7 @@ namespace Slickflow.Engine.Core.Runtime
             }
 
             //用于注册事件时候的流程ID
+            //Process ID used for registering events
             rmins.ProcessInstanceID = runningNode.ProcessInstanceID;
 
             var processModel = ProcessModelFactory.CreateByTask(taskView);
@@ -1156,13 +1135,13 @@ namespace Slickflow.Engine.Core.Runtime
         }
         #endregion
 
-        #region WfRuntimeManager 事件注册及注销
+        #region WfRuntimeManager Register Event
         /// <summary>
-        /// 事件注册
+        /// Regiester Event
         /// </summary>
-        /// <param name="runtimeInstance">运行时</param>
-        /// <param name="executing">执行事件</param>
-        /// <param name="executed">完成事件</param>
+        /// <param name="runtimeInstance"></param>
+        /// <param name="executing"></param>
+        /// <param name="executed"></param>
         internal static void RegisterEvent(WfRuntimeManager runtimeInstance,
             EventHandler<WfEventArgs> executing, 
             EventHandler<WfEventArgs> executed)
@@ -1174,11 +1153,12 @@ namespace Slickflow.Engine.Core.Runtime
         }
 
         /// <summary>
+        /// Unregister Event
         /// 事件注销
         /// </summary>
-        /// <param name="runtimeInstance">运行时</param>
-        /// <param name="executing">执行事件</param>
-        /// <param name="executed">完成事件</param>
+        /// <param name="runtimeInstance"></param>
+        /// <param name="executing"></param>
+        /// <param name="executed"></param>
         internal static void UnregisterEvent(WfRuntimeManager runtimeInstance, 
             EventHandler<WfEventArgs> executing, 
             EventHandler<WfEventArgs> executed)

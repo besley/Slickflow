@@ -13,46 +13,44 @@ using Slickflow.Engine.Service;
 
 namespace Slickflow.WebApi.Controllers
 {
-    //分支流程基本测试
-    //流程调用JSON格式说明：
-    //流程记录ID：205
-    //流程名称：并行流程
-    //GUID: 0eb141e3-cd17-4def-aa70-98ae654351a3
+    //Basic testing of branch processes
+    //Process call JSON format description:
+    //Process record ID: 205
+    //Process Name: Parallel Process
+    //GUID:  0eb141e3-cd17-4def-aa70-98ae654351a3
     //startup process:
     //{"UserID":"10","UserName":"Long","AppName":"OfficeIn","AppInstanceID":"123","ProcessGUID":"0eb141e3-cd17-4def-aa70-98ae654351a3"}
 
-    //3个并行分支实例化
+    //Instantiation of 3 parallel branches
     //{"AppName":"OfficeIn","AppInstanceID":"123","ProcessGUID":"0eb141e3-cd17-4def-aa70-98ae654351a3","UserID":"10","UserName":"Long", "NextActivityPerformers":{"01a79ac7-af2f-49e3-fc23-bc8ad13483cc":[{"UserID":10,"UserName":"Long"}], "f32fd26e-626b-4613-9715-8a60964eddf9":[{"UserID":20,"UserName":"Jack"}], "f186d8c5-859d-4edb-a392-034dadfd2395":[{"UserID":30,"UserName":"Melinda"}]}}
 
-    //第一个并行节点执行
+    //The first parallel node executes
     //{"AppName":"OfficeIn","AppInstanceID":"123","ProcessGUID":"0eb141e3-cd17-4def-aa70-98ae654351a3","UserID":"10","UserName":"Long", "NextActivityPerformers":{"0ae0c551-0b8b-42f2-ad34-133543beed33":[{"UserID":40,"UserName":"Smith"}]}}
 
-    //第二个并行节点执行
+    //The second parallel node executes
     //{"AppName":"OfficeIn","AppInstanceID":"123","ProcessGUID":"0eb141e3-cd17-4def-aa70-98ae654351a3","UserID":"20","UserName":"Jack", "NextActivityPerformers":{"0ae0c551-0b8b-42f2-ad34-133543beed33":[{"UserID":40,"UserName":"Smith"}]}}
 
 
-    //第三个并行节点执行
+    //Third parallel node execution
 
 
     //cross andjoin
-    //合并节点后的节点（总经理签字）执行
+    //Execution of nodes after merging (signed by the general manager)
     //{"AppName":"OfficeIn","AppInstanceID":"123","ProcessGUID":"0eb141e3-cd17-4def-aa70-98ae654351a3","UserID":"10","UserName":"Long", "NextActivityPerformers":{"0fdff3c0-be97-43d6-b4ff-90d52efb5d6f":[{"UserID":10,"UserName":"Long"}]}}
 
     //end node
-    //结束节点
+    //End Node
     //{"AppName":"OfficeIn","AppInstanceID":"123","ProcessGUID":"0eb141e3-cd17-4def-aa70-98ae654351a3","UserID":"10","UserName":"Long", "NextActivityPerformers":{"76f7ef75-b538-40c8-b529-0849ca777b94":[{"UserID":10,"UserName":"Long"}]}}
 
     /// <summary>
-    /// process test
+    /// Process test
+    /// 流程测试
     /// </summary>
     public class WfProcessTestController : Controller
     {
-       
         /// <summary>
-        ///  启动流程测试
+        ///  Start process
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult StartProcess([FromBody] WfAppRunner runner)
         {
@@ -85,10 +83,8 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  运行流程测试
+        /// Run process
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult RunProcessApp([FromBody] WfAppRunner runner)
         {

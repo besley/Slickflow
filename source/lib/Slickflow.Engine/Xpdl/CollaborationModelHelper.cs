@@ -11,16 +11,14 @@ using Slickflow.Engine.Utility;
 namespace Slickflow.Engine.Xpdl
 {
     /// <summary>
+    /// Convert collaborative models into entities
     /// 协作模型转换成实体
     /// </summary>
     public static class CollaborationModelHelper
     {
         /// <summary>
-        /// 转换为Collaboration实体
+        /// Convert to Collaboration from xml
         /// </summary>
-        /// <param name="xmlDoc">XML文档</param>
-        /// <param name="xmlNodeCollaboration">协作节点</param>
-        /// <returns></returns>
         public static Collaboration ConvertCollaborationFromXml(XmlDocument xmlDoc, 
             XmlNode xmlNodeCollaboration)
         {
@@ -40,10 +38,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 转换协作节点
+        /// Convert to Collaboration
         /// </summary>
-        /// <param name="xmlNodeCollaboration">XML协作节点</param>
-        /// <returns></returns>
         private static Collaboration ConvertCollaboration(XmlNode xmlNodeCollaboration)
         {
             var collaboration = new Collaboration();
@@ -56,10 +52,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 转换参与者节点
+        /// Convert Participant
         /// </summary>
-        /// <param name="xmlNodeParticipant">XML参与者节点</param>
-        /// <returns></returns>
         private static Participant ConvertParticipant(XmlNode xmlNodeParticipant)
         {
             var participant = new Participant();    
@@ -77,10 +71,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 转换流程节点
+        /// Convert Process
         /// </summary>
-        /// <param name="xmlProcess">XML流程节点</param>
-        /// <returns></returns>
         private static Process ConvertProcess(XmlNode xmlProcess)
         {
             Process process = new Process();
@@ -88,7 +80,6 @@ namespace Slickflow.Engine.Xpdl
             process.ProcessGUID = XMLHelper.GetXmlAttribute(xmlProcess, "sf:guid");
 
             return process;
-        }
-             
+        }     
     }
 }

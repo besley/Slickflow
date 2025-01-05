@@ -15,9 +15,24 @@ namespace Slickflow.Engine.Core.Result
         public WfExecutedStatus Status { get; set; }
         public String Message { get; set; }
         public String ExceptionType { get; set; }
-        public Int32 ProcessInstanceIDStarted { get; set; }     //流程启动返回的新实例ID
-        public WfBackwardTaskReceiver BackwardTaskReceiver { get; set; }    //流程做回退处理时，返回的任务接收人信息
-        public ReturnDataContext ReturnDataContext { get; set; }  //流程回退时返回参数
+
+        /// <summary>
+        /// New instance ID returned by process initiation
+        /// 流程启动返回的新实例ID
+        /// </summary>
+        public Int32 ProcessInstanceIDStarted { get; set; }
+
+        /// <summary>
+        /// When the process is rolled back, the recipient information of the returned task
+        /// 流程做回退处理时，返回的任务接收人信息
+        /// </summary>
+        public WfBackwardTaskReceiver BackwardTaskReceiver { get; set; }
+
+        /// <summary>
+        /// Return parameters during process rollback
+        /// 流程回退时返回参数
+        /// </summary>
+        public ReturnDataContext ReturnDataContext { get; set; }  
         public WfExecutedResult()
         {
             Status = WfExecutedStatus.Default;
@@ -25,6 +40,7 @@ namespace Slickflow.Engine.Core.Result
         }
 
         /// <summary>
+        /// Default
         /// 缺省方法
         /// </summary>
         /// <returns></returns>
@@ -35,53 +51,59 @@ namespace Slickflow.Engine.Core.Result
     }
 
     /// <summary>
+    /// Status execution enumeration type
     /// 状态执行枚举类型
     /// </summary>
     public enum WfExecutedStatus
     {
         /// <summary>
-        /// 缺省状态
+        /// Default
         /// </summary>
         Default = 0,
 
         /// <summary>
-        /// 成功状态
+        /// Success
         /// </summary>
         Success = 1,
 
         /// <summary>
-        /// 执行失败状态
+        /// Failed
         /// </summary>
         Failed = 2,
 
         /// <summary>
-        /// 异常状态
+        /// Exception
         /// </summary>
         Exception = 3
     }
 
     /// <summary>
+    /// Workflow Exception Type
     /// 异常类型类
     /// </summary>
     public class WfExceptionType
     {
         //流程启动异常信息
+        //Process startup exception information
         public const string Started_IsRunningAlready = "Started_IsRunningAlready";
         public const string Started_NoneExactlyProcessGUID = "Started_NoneExactlyProcessGUID";
 
         //流程运行异常信息
+        //Process running exception information
         public const string RunApp_ErrorArguments = "RunApp_ErrorArguments";
         public const string RunApp_HasNoTask = "RunApp_HasNoTask";
         public const string RunApp_OverTasks = "RunApp_OverTasks";
         public const string RunApp_RuntimeError = "RunApp_RuntimeError";
 
         //流程跳转异常信息
+        //Process jump execption information
         public const string Jump_ErrorArguments = "Jump_ErrorArguments";
         public const string Jump_OverOneStep = "Jump_OverOneStep";
         public const string Jump_NotActivityBackCompleted = "Jump_NotActivityBackCompleted";
         public const string Jump_OtherError = "Jump_OtherError";
 
         //流程撤销异常信息
+        //Process withdraw exception information
         public const string Withdraw_ErrorArguments = "Withdraw_ErrorArguments";
         public const string Withdraw_NotInReady = "Withdraw_NotInReady";
         public const string Withdraw_NotCreatedByMine = "Withdraw_NotCreatedByMine";
@@ -91,6 +113,7 @@ namespace Slickflow.Engine.Core.Result
         public const string Withdraw_IsLoopNode = "Withdraw_IsLoopNode";
         
         //流程退回异常信息
+        //Process sendback exception information
         public const string Sendback_NotTaskNode = "Sendback_NotTaskNode";
         public const string Sendback_IsLoopNode = "Sendback_IsLoopNode";
         public const string Sendback_NotInRunning = "Sendback_NotInRunning";
@@ -102,19 +125,19 @@ namespace Slickflow.Engine.Core.Result
         public const string Sendback_HasTooManyRunningParallel = "Sendback_HasTooManyRunningParallel";
 
         //流程返送异常信息
+        //Process resend exception information
         public const string Resend_NotTaskNode = "Resend_NotTaskNode";
         public const string Resend_WithoutBackSourceNode = "Resend_WithoutBackSourceNode";
 
         //流程返签异常信息
+        //Process reverse exception information
         public const string Reverse_NotInCompleted = "Reverse_NotInCompleted";
 
-
-
         //流程加签异常信息
+        //Process sign forward exception information
         public const string SignForward_ErrorArguments = "SignForward_ErrorArguments";
         public const string SignForward_NoneSigners = "SignForward_NoneSigners";
         public const string SignForward_RuntimeError = "SignForward_RuntimeError";
-
     }
 }
 

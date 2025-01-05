@@ -6,6 +6,7 @@ using Slickflow.Engine.Common;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Process Variable Task View
     /// 流程变量的任务视图
     /// </summary>
     public class ProcessVariableTaskView

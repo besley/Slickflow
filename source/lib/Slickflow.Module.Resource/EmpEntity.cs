@@ -2,6 +2,7 @@
 namespace Slickflow.Module.Resource
 {
     /// <summary>
+    /// Employee Entity
     /// 员工实体对象
     /// </summary>
     [Table("SysEmployee")]

@@ -7,6 +7,7 @@ using Slickflow.Engine.Common;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Process Variable Entity
     /// 流程实体类
     /// </summary>
     [Table("WfProcessVariable")]

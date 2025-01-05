@@ -11,23 +11,25 @@ using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using static IronPython.Modules._ast;
 
 namespace Slickflow.Engine.Business.Manager
 {
     /// <summary>
+    /// Activity Instance Manager
     /// 活动实例管理类
     /// </summary>
     internal class ActivityInstanceManager : ManagerBase
     {
-        #region 构造函数
+        #region Constructor 构造函数
         internal ActivityInstanceManager()
         {
         }
         #endregion
 
-        #region 活动实例数据获取
+        #region Activity instance data acquisition 活动实例数据获取
         /// <summary>
+        /// Retrieve activity instances based on ID
         /// 根据ID获取活动实例
         /// </summary>
         /// <param name="activityInstanceID"></param>
@@ -46,27 +48,30 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Retrieve activity instances based on ID
         /// 根据ID获取活动实例
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="activityInstanceID">活动实例ID</param>
-        /// <param name="trans">事务</param>
-        /// <returns>活动实例</returns>
+        /// <param name="conn"></param>
+        /// <param name="activityInstanceID"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity GetById(IDbConnection conn, int activityInstanceID, IDbTransaction trans)
         {
             return Repository.GetById<ActivityInstanceEntity>(conn, activityInstanceID, trans);
         }
 
         /// <summary>
+        /// Obtain the current running node information of the process
         /// 获取流程当前运行节点信息
         /// </summary>
-        /// <param name="runner">执行者</param>
+        /// <param name="runner"></param>
         /// <returns></returns>
         internal ActivityInstanceEntity GetRunningNode(WfAppRunner runner)
         {
             using (IDbSession session = SessionFactory.CreateSession())
             {
                 //如果流程在运行状态，则返回运行时信息
+                //If the process is in running state, return runtime information
                 TaskViewEntity task = null;
                 var entity = GetRunningNode(runner, session, out task);
 
@@ -75,11 +80,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain the current running node information of the process
         /// 获取流程当前运行节点信息
         /// </summary>
-        /// <param name="runner">执行者</param>
-        /// <param name="taskView">任务视图</param>
-        /// <returns>活动实例</returns>
+        /// <param name="runner"></param>
+        /// <param name="taskView"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity GetRunningNode(WfAppRunner runner,
             out TaskViewEntity taskView)
         {
@@ -92,12 +98,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain the current running node information of the process
         /// 获取流程当前运行节点信息
         /// </summary>
-        /// <param name="runner">执行者</param>
-        /// <param name="session">数据库会话</param>
-        /// <param name="taskView">任务视图</param>
-        /// <returns>活动实例</returns>
+        /// <param name="runner"></param>
+        /// <param name="session"></param>
+        /// <param name="taskView"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity GetRunningNode(WfAppRunner runner,
             IDbSession session,
             out TaskViewEntity taskView)
@@ -106,6 +113,7 @@ namespace Slickflow.Engine.Business.Manager
             taskView = null;    //default value;
 
             //根据TaskID获取
+            //Obtain based on TaskID
             var aim = new ActivityInstanceManager();
             var tm = new TaskManager();
 
@@ -118,10 +126,12 @@ namespace Slickflow.Engine.Business.Manager
             }
 
             //没有传递TaskID参数，进行查询
+            //No TaskID parameter passed for query
             var activityInstanceList = aim.GetRunningActivityInstanceList(runner.AppInstanceID, runner.ProcessGUID, runner.Version, session).ToList();
             if (activityInstanceList == null || activityInstanceList.Count == 0)
             {
                 //当前没有运行状态的节点存在，流程不存在，或者已经结束或取消
+                //There are currently no running nodes, processes that do not exist, or have already ended or been cancelled
                 var message = LocalizeHelper.GetEngineMessage("activityinstancemanager.getrunningnode.error");
                 var e = new WorkflowException(message);
                 LogManager.RecordLog(message, LogEventType.Exception, LogPriority.Normal, null, e);
@@ -137,6 +147,8 @@ namespace Slickflow.Engine.Business.Manager
             {
                 //并行模式处理
                 //根据当前执行者身份取出(他或她)要办理的活动实例（并行模式下有多个处于待办或运行状态的节点）
+                //Parallel mode processing
+                //Retrieve the activity instance to be processed based on the current executor's identity (there are multiple nodes in pending or running status in parallel mode)
                 foreach (var ai in activityInstanceList)
                 {
                     if (ai.AssignedToUserIDs == runner.UserID)
@@ -149,11 +161,13 @@ namespace Slickflow.Engine.Business.Manager
                 if (runningNode != null)
                 {
                     //获取taskview
+                    //Get TaskView
                     taskView = tm.GetTaskOfMine(session.Connection, runningNode.ID, runner.UserID, session.Transaction);
                 }
                 else
                 {
                     //当前用户的待办任务不唯一，抛出异常，需要TaskID唯一界定
+                    //The current user's pending tasks are not unique, and an exception is thrown. TaskID must be uniquely defined
                     var msgException = LocalizeHelper.GetEngineMessage("activityinstancemanager.getrunningnode.unique.error");
                     var e = new WorkflowException(msgException);
                     LogManager.RecordLog(LocalizeHelper.GetEngineMessage("activityinstancemanager.getrunningnode.error"),
@@ -165,10 +179,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get the instance of the return source activity
         /// 获取退回源活动实例
         /// </summary>
-        /// <param name="currentActivityInstanceID">当前活动实例</param>
-        /// <returns>退回源活动实例</returns>
+        /// <param name="currentActivityInstanceID"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity GetBackSrcActivityInstance(int currentActivityInstanceID)
         {
             var currentActivityInstance = GetById(currentActivityInstanceID);
@@ -178,6 +193,7 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Determine whether it is a processing task for a certain user
         /// 判断是否是某个用户的办理任务
         /// </summary>
         /// <param name="entity"></param>
@@ -191,10 +207,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Determine whether the node is in a running state
         /// 判断节点是否处于运行状态
         /// </summary>
-        /// <param name="activityInstance">活动实例</param>
-        /// <returns>是否标志</returns>
+        /// <param name="activityInstance"></param>
+        /// <returns></returns>
         internal Boolean IncludeRunningState(ActivityInstanceEntity activityInstance)
         {
             var isIncluded = false;
@@ -208,6 +225,7 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get Activity Instance
         /// 获取活动节点实例
         /// </summary>
         /// <param name="processInstanceID"></param>
@@ -231,11 +249,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get Activity Instance Latest
         /// 获取活动节点实例
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <returns>活动实例</returns>
+        /// <param name="processInstanceID"></param>
+        /// <param name="activityGUID"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity GetActivityInstanceLatest(int processInstanceID,
             string activityGUID)
         {
@@ -257,12 +276,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get Activity Instance Latest
         /// 获取最近的节点实例
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <param name="session">数据会话</param>
-        /// <returns>活动实例</returns>
+        /// <param name="processInstanceID"></param>
+        /// <param name="activityGUID"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity GetActivityInstanceLatest(int processInstanceID,
             string activityGUID,
             IDbSession session)
@@ -288,12 +308,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get Activity Instance Latest
         /// 获取最近的节点实例
         /// </summary>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <returns>活动实例</returns>
+        /// <param name="appInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="activityGUID"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity GetActivityInstanceLatest(string appInstanceID,
             string processGUID,
             string activityGUID)
@@ -322,12 +343,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get Activity Instance List Latest
         /// 获取最近的节点实例
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">流程版本</param>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <returns>活动实例</returns>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <param name="activityGUID"></param>
+        /// <returns></returns>
         internal List<ActivityInstanceEntity> GetActivityInstanceList(string processGUID,
             string version,
             string activityGUID)
@@ -356,12 +378,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get activity instances with running status
         /// 获取运行状态的活动实例
         /// </summary>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="session">会话</param>
-        /// <returns>活动实例实体</returns>
+        /// <param name="activityGUID"></param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity GetActivityRunning(int processInstanceID,
             string activityGUID,
             IDbSession session)
@@ -370,13 +393,14 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain activity instances based on states
         /// 根据状态获取活动实例
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <param name="activityState">活动状态</param>
-        /// <param name="session">会话</param>
-        /// <returns>活动实例</returns>
+        /// <param name="processInstanceID"></param>
+        /// <param name="activityGUID"></param>
+        /// <param name="activityState"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity GetActivityByState(int processInstanceID,
             string activityGUID,
             ActivityStateEnum activityState,
@@ -406,11 +430,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Retrieve nodes that have already completed running
         /// 获取已经运行完成的节点
         /// </summary>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <returns>活动列表</returns>
+        /// <param name="appInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <returns></returns>
         internal List<ActivityInstanceEntity> GetActivityInstanceListCompleted(string appInstanceID,
             string processGUID)
         {
@@ -436,11 +461,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain instances of activities that have already been completed in the previous step
         /// 获取上一步已经完成活动的实例
         /// </summary>
-        /// <param name="runningNode">运行节点</param>
-        /// <param name="previousActivityGUID">活动GUID</param>
-        /// <returns>活动实例实体</returns>
+        /// <param name="runningNode"></param>
+        /// <param name="previousActivityGUID"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity GetPreviousActivityInstanceSimple(ActivityInstanceEntity runningNode,
             string previousActivityGUID)
         {
@@ -460,12 +486,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain instances of activities that have already been completed in the previous step
         /// 获取上一步已经完成活动的实例
         /// </summary>
-        /// <param name="runningNode">运行节点</param>
-        /// <param name="previousActivityGUID">活动GUID</param>
-        /// <param name="session">数据会话</param>
-        /// <returns>活动实例实体</returns>
+        /// <param name="runningNode"></param>
+        /// <param name="previousActivityGUID">previous activity guid</param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity GetPreviousActivityInstanceSimple(ActivityInstanceEntity runningNode,
             string previousActivityGUID,
             IDbSession session)
@@ -474,10 +501,13 @@ namespace Slickflow.Engine.Business.Manager
             var processInstanceID = runningNode.ProcessInstanceID;
 
             //确定当前运行节点的初始信息
+            //Determine the initial information of the current running node
             if (runningNode.BackSrcActivityInstanceID != null)
             {
                 //*****注意：当前节点的类型已经是退回后生成的节点
                 //获取退回之前的初始节点创建人信息
+                //Note: The current node type is already a node generated after being returned
+                //Obtain the creator information of the initial node before returning it
                 originalRunningNode = GetById(session.Connection, runningNode.BackOrgActivityInstanceID.Value, session.Transaction);
             }
             else
@@ -486,11 +516,15 @@ namespace Slickflow.Engine.Business.Manager
             }
 
             //获取上一步节点列表
+            //Retrieve the previous node list
             var instanceList = GetActivityInstanceListCompletedSimple(processInstanceID, previousActivityGUID, session);
+
             //排除掉是包含已经退回过的非初始节点
+            //Excluding non initial nodes that have already been returned
             var withoutBackSrcInfoList = instanceList.Where(a => a.BackSrcActivityInstanceID == null);
 
             //上一步节点的完成人与当前运行节点的创建人匹配
+            //Match the person who completed the previous node with the person who created the current running node
             var previousList = withoutBackSrcInfoList.Where(a => a.EndedByUserID == originalRunningNode.CreatedByUserID).ToList();
             if (previousList.Count > 0)
             {
@@ -500,6 +534,9 @@ namespace Slickflow.Engine.Business.Manager
             {
                 //合并后的节点退回到某个分支，最后一个分支的完成人才是合并之后节点的创建人
                 //所以此时按照EndedByUserID和CreatedByUserID的比对是不靠谱的。
+
+                //The merged node is returned to a branch, and the person who completed the last branch is the creator of the merged node
+                //So at this point, comparing EndByUserID with CreatidByUserID is not reliable.
                 return withoutBackSrcInfoList.ToList()[0];
             }
             else
@@ -509,11 +546,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain activity instances with completion status
         /// 获取完成状态的活动实例
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <returns>活动实例实体</returns>
+        /// <param name="processInstanceID"></param>
+        /// <param name="activityGUID"></param>
+        /// <returns></returns>
         internal IList<ActivityInstanceEntity> GetActivityInstanceListCompletedSimple(int processInstanceID,
             string activityGUID)
         {
@@ -525,12 +563,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain activity instances with completion status
         /// 获取完成状态的活动实例
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <param name="session">数据会话</param>
-        /// <returns>活动实例实体</returns>
+        /// <param name="processInstanceID"></param>
+        /// <param name="activityGUID"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal IList<ActivityInstanceEntity> GetActivityInstanceListCompletedSimple(int processInstanceID,
             string activityGUID,
             IDbSession session)
@@ -555,11 +594,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Retrieve activity instance information from task ID
         /// 由任务ID获取活动实例信息
         /// </summary>
-        /// <param name="taskID">任务ID</param>
-        /// <param name="session">会话</param>
-        /// <returns>活动实例实体</returns>
+        /// <param name="taskID"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity GetByTask(int taskID,
             IDbSession session)
         {
@@ -585,10 +625,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Retrieve activity instance information from task ID
         /// 由任务ID获取活动实例信息
         /// </summary>
-        /// <param name="taskID">任务ID</param>
-        /// <returns>活动实例实体</returns>
+        /// <param name="taskID"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity GetByTask(int taskID)
         {
             using (IDbSession session = SessionFactory.CreateSession())
@@ -599,12 +640,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get the activity nodes running in the process instance
         /// 获取流程实例中运行的活动节点
         /// </summary>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <returns>活动实例列表</returns>
+        /// <param name="appInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         internal IEnumerable<ActivityInstanceEntity> GetRunningActivityInstanceList(string appInstanceID,
             string processGUID,
             string version = null)
@@ -616,13 +658,14 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get the activity nodes running in the process instance
         /// 获取流程实例中运行的活动节点
         /// </summary>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="session">数据库会话</param>
-        /// <returns>活动实例列表</returns>
+        /// <param name="appInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal IEnumerable<ActivityInstanceEntity> GetRunningActivityInstanceList(string appInstanceID,
             string processGUID,
             string version,
@@ -655,10 +698,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Retrieve the list of completed child nodes under the main node
         /// 获取主节点下已经完成的子节点列表
         /// </summary>
-        /// <param name="mainActivityInstanceID">主活动实例ID</param>
-        /// <returns>活动列表</returns>
+        /// <param name="mainActivityInstanceID"></param>
+        /// <returns></returns>
         internal List<ActivityInstanceEntity> GetMultipleInstanceListCompleted(int mainActivityInstanceID)
         {
             IDbSession session = SessionFactory.CreateSession();
@@ -677,11 +721,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Retrieve the list of completed child nodes under the main node
         /// 获取主节点下已经完成的子节点列表
         /// </summary>
-        /// <param name="mainActivityInstanceID">主活动实例ID</param>
-        /// <param name="session">数据会话</param>
-        /// <returns>活动列表</returns>
+        /// <param name="mainActivityInstanceID"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal List<ActivityInstanceEntity> GetMultipleInstanceListCompleted(int mainActivityInstanceID,
             IDbSession session)
         {
@@ -705,11 +750,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Retrieve completed multi instance nodes
         /// 获取已经完成的多实例子节点
         /// </summary>
-        /// <param name="runningNode">当前运行节点</param>
-        /// <param name="previousActivityGUID">前置活动GUID</param>
-        /// <returns>子节点列表</returns>
+        /// <param name="runningNode"></param>
+        /// <param name="previousActivityGUID"></param>
+        /// <returns></returns>
         internal List<ActivityInstanceEntity> GetPreviousParallelMultipleInstanceListCompleted(ActivityInstanceEntity runningNode,
             string previousActivityGUID)
         {
@@ -730,12 +776,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Retrieve completed multi instance nodes
         /// 获取已经完成的多实例子节点
         /// </summary>
-        /// <param name="runningNode">当前运行节点</param>
-        /// <param name="previousActivityGUID">前置活动GUID</param>
-        /// <param name="session">会话</param>
-        /// <returns>子节点列表</returns>
+        /// <param name="runningNode"></param>
+        /// <param name="previousActivityGUID"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal List<ActivityInstanceEntity> GetPreviousParallelMultipleInstanceListCompleted(ActivityInstanceEntity runningNode,
             string previousActivityGUID,
             IDbSession session)
@@ -743,10 +790,13 @@ namespace Slickflow.Engine.Business.Manager
             ActivityInstanceEntity originalRunningNode = null;
             var processInstanceID = runningNode.ProcessInstanceID;
             //确定当前运行节点的初始信息
+            //Determine the initial information of the current running node
             if (runningNode.BackSrcActivityInstanceID != null)
             {
                 //*****注意：当前节点的类型已经是退回后生成的节点
                 //获取退回之前的初始节点创建人信息
+                //Note: The current node type is already a node generated after being returned
+                //Obtain the creator information of the initial node before returning it
                 originalRunningNode = GetById(session.Connection, runningNode.BackOrgActivityInstanceID.Value, session.Transaction);
             }
             else
@@ -771,22 +821,27 @@ namespace Slickflow.Engine.Business.Manager
                 session.Transaction).ToList();
 
             //排除掉是包含已经退回过的非初始节点
+            //Excluding non initial nodes that have already been returned
             var withoutBackSrcInfoList = instanceList.Where(a => a.BackSrcActivityInstanceID == null).ToList();
 
             //上一步节点的完成人与当前运行节点的创建人匹配
+            //Match the person who completed the previous node with the person who created the current running node
             var firstMIChild = withoutBackSrcInfoList.First(a => a.EndedByUserID == originalRunningNode.CreatedByUserID);
+
             //根据主节点信息查询所有对应的子节点列表
+            //Retrieve a list of all corresponding child nodes based on the master node information
             var previousList = GetMultipleInstanceListCompleted(firstMIChild.MIHostActivityInstanceID.Value, session);
 
             return previousList;
         }
 
         /// <summary>
+        /// Determine whether the user is the assigned task user
         /// 判断用户是否是分配下来任务的用户
         /// </summary>
-        /// <param name="entity">实体</param>
-        /// <param name="userID">用户ID</param>
-        /// <returns>是否</returns>
+        /// <param name="entity"></param>
+        /// <param name="userID"></param>
+        /// <returns></returns>
         private bool IsAssignedUserInActivityInstance(ActivityInstanceEntity entity,
             int userID)
         {
@@ -800,26 +855,33 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 判断是否为会签实例节点
+        /// Determine whether it is a signing together instance node
+        /// 判断是否为会签实例节点 
         /// </summary>
-        /// <param name="child">活动实例</param>
-        /// <returns>是否结果</returns>
+        /// <param name="child"></param>
+        /// <returns></returns>
         internal Boolean IsMultipleInstanceChildren(ActivityInstanceEntity child)
         {
             return child.MIHostActivityInstanceID != null;
         }
 
         /// <summary>
+        /// Filter activity instance list
         /// 过滤活动实例列表
         /// </summary>
-        /// <param name="instanceList">实例列表</param>
-        /// <returns>同一批次的实例列表</returns>
+        /// <param name="instanceList"></param>
+        /// <returns></returns>
         private List<ActivityInstanceEntity> FilteredActivityInstanceInTheSameBatch(List<ActivityInstanceEntity> instanceList)
         {
             //如果有退回记录，则认为是同一批的运行模式，保证会签的通过率依然按照原来的CompleteOrder数值
             //否则，需要调用Resend()返送接口，而不用受到原来会签通过率CompleteOrder的限制。
             //此处以BackSrcActivityInstanceID作为监测点数据，就可以知道是否有退回批次
             //最后一次的退回批次BackSrcActivityInstanceID为最大值，如果没有退回则BackSrcActivityInstanceID为空
+
+            //If there is a return record, it is considered to be the same batch's operating mode, ensuring that the pass rate of the countersignature still follows the original CompleteOrder value
+            //Otherwise, the Resend() return interface needs to be called without being limited by the original pass rate of CompleteOrder.
+            //By using BackSrcActivityInstanceID as the monitoring point data here, we can determine whether there are any returned batches
+            //The BackSrcActivityInstanceID of the last batch returned is the maximum value. If there is no return, the BackSrcActivityInstanceID is empty
             var maxBackSrcActivityInstanceID = instanceList.Max<ActivityInstanceEntity>(a => a.BackSrcActivityInstanceID);
             if (maxBackSrcActivityInstanceID != null)
             {
@@ -833,12 +895,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 获取会签节点的多实例节点
+        /// Obtain multi instance nodes of signing together nodes based on activity status
+        /// 根据活动状态获取会签节点的多实例节点
         /// </summary>
-        /// <param name="mainActivityInstanceID">会签节点</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="activityState">活动状态</param>
-        /// <returns>活动实例列表</returns>
+        /// <param name="mainActivityInstanceID"></param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="activityState"></param>
+        /// <returns></returns>
         internal List<ActivityInstanceEntity> GetActivityMulitipleInstanceWithState(int mainActivityInstanceID,
             int processInstanceID,
             short? activityState = null)
@@ -862,20 +925,23 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Retrieve the list of child nodes under the same batch of master nodes
+        /// Including: filtering of rollback identification types that need to be filtered back and forth
         /// 获取同一批的主节点下的子节点列表记录
         /// 包括：需要过滤回退后的回退标识类型的过滤
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="mainActivityInstanceID">主节点ID</param>
-        /// <param name="activityState">活动类型</param>
-        /// <param name="session">数据会话</param>
-        /// <returns>节点列表</returns>
+        /// <param name="processInstanceID"></param>
+        /// <param name="mainActivityInstanceID"></param>
+        /// <param name="activityState"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal IList<ActivityInstanceEntity> GetActivityMulitipleInstanceWithStateBatch(int processInstanceID,
             int mainActivityInstanceID,
             short? activityState,
             IDbSession session)
         {
             //取出处于多实例节点列表
+            //Retrieve the list of nodes in multiple instances
             var instanceList = GetActivityMulitipleInstanceWithState(mainActivityInstanceID,
                 processInstanceID,
                 activityState,
@@ -886,7 +952,8 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 获取会签节点的多实例节点
+        /// Obtain multi instance nodes of signing together nodes based on activity status
+        /// 根据活动状态获取会签节点的多实例节点
         /// </summary>
         /// <param name="mainActivityInstanceID">会签节点</param>
         /// <param name="processInstanceID">流程实例ID</param>
@@ -925,13 +992,14 @@ namespace Slickflow.Engine.Business.Manager
 
 
         /// <summary>
+        /// Query the number of branch instances
         /// 查询分支实例的个数
         /// </summary>
-        /// <param name="splitActivityGUID">分支节点GUID</param>
-        /// <param name="splitActivityInstanceID">分支节点活动实例ID</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="session">会话</param>
-        /// <returns>有效分支转移个数</returns>
+        /// <param name="splitActivityGUID"></param>
+        /// <param name="splitActivityInstanceID"></param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal int GetGatewayInstanceCountByTransition(string splitActivityGUID,
             int splitActivityInstanceID,
             int processInstanceID,
@@ -955,12 +1023,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain the number of valid branches
         ///  获取有效的分支数目
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="splitGatewayInstanceID">Split网关实例ID</param>
-        /// <param name="session">会话</param>
-        /// <returns>活动实例列表</returns>
+        /// <param name="processInstanceID"></param>
+        /// <param name="splitGatewayInstanceID"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal List<ActivityInstanceEntity> GetValidSplitedActivityInstanceList(int processInstanceID, 
             int splitGatewayInstanceID, 
             IDbSession session)
@@ -988,11 +1057,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain the number of valid branches
         /// 获取有效的子节点列表
         /// </summary>
-        /// <param name="mainActivityInstanceID">主节点ID</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <returns>子节点列表</returns>
+        /// <param name="mainActivityInstanceID"></param>
+        /// <param name="processInstanceID"></param>
+        /// <returns></returns>
         internal List<ActivityInstanceEntity> GetValidActivityInstanceListOfMI(int mainActivityInstanceID,
             int processInstanceID)
         {
@@ -1003,12 +1073,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain the number of valid branches
         /// 获取有效的子节点列表
         /// </summary>
-        /// <param name="mainActivityInstanceID">主节点ID</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="session">数据会话</param>
-        /// <returns>子节点列表</returns>
+        /// <param name="mainActivityInstanceID"></param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal List<ActivityInstanceEntity> GetValidActivityInstanceListOfMI(int mainActivityInstanceID,
             int processInstanceID,
             IDbSession session)
@@ -1034,6 +1105,7 @@ namespace Slickflow.Engine.Business.Manager
                 session.Transaction).ToList();
 
             //去除掉有退回过的实例
+            //Remove instances that have been returned before
             var backList = new List<int>();
             foreach (var child in list)
             {
@@ -1055,6 +1127,7 @@ namespace Slickflow.Engine.Business.Manager
                 int[] backArray = backList.ToArray();
                 var validList = list.Where(a => !backArray.Contains(a.ID)).ToList();
                 //返回过滤掉退回节点的列表
+                //Return the list of filtered out return nodes
                 return validList;
             }
 
@@ -1062,18 +1135,19 @@ namespace Slickflow.Engine.Business.Manager
         }
         #endregion
 
-        #region 创建活动实例
+        #region Create activity instance 创建活动实例
         /// <summary>
+        /// Create activity instance
         /// 创建活动实例的对象
         /// </summary>
-        /// <param name="appName">应用名称</param>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="appInstanceCode">应用实例代码</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="activity">活动</param>
-        /// <param name="runner">运行者</param>
-        /// <returns>活动实例实体</returns>
+        /// <param name="appName"></param>
+        /// <param name="appInstanceID"></param>
+        /// <param name="appInstanceCode"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="activity"></param>
+        /// <param name="runner"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity CreateActivityInstanceObject(string appName,
             string appInstanceID,
             string appInstanceCode,
@@ -1107,13 +1181,14 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Calculate the expiration time of activity nodes
         /// 计算活动节点过期时间
         /// XmlConvert.ToTimeSpan()
         /// https://stackoverflow.com/questions/12466188/how-do-i-convert-an-iso8601-timespan-to-a-c-sharp-timespan
         /// </summary>
-        /// <param name="boundaryList">边界列表</param>
-        /// <param name="createdDateTime">活动创建时间</param>
-        /// <returns>过期时间</returns>
+        /// <param name="boundaryList"></param>
+        /// <param name="createdDateTime"></param>
+        /// <returns></returns>
         private Nullable<DateTime> CalculateActivityOverdueDateTime(IList<Boundary> boundaryList, 
             DateTime createdDateTime)
         {
@@ -1136,10 +1211,11 @@ namespace Slickflow.Engine.Business.Manager
 
 
         /// <summary>
+        /// Copy child nodes based on the master node
         /// 根据主节点复制子节点
         /// </summary>
-        /// <param name="main">活动实例</param>
-        /// <returns>活动实例</returns>
+        /// <param name="main"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity CreateActivityInstanceObject(ActivityInstanceEntity main)
         {
             ActivityInstanceEntity instance = new ActivityInstanceEntity();
@@ -1166,19 +1242,20 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Create an object for the activity instance
         /// 创建活动实例的对象
         /// </summary>
-        /// <param name="appName">应用名称</param>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="appInstanceCode">应用实例代码</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="activity">活动</param>
-        /// <param name="backwardType">退回类型</param>
-        /// <param name="backSrcActivityInstanceID">退回源活动实例ID</param>
-        /// <param name="backOrgActivityInstanceID">最初活动实例ID</param>
-        /// <param name="runner">执行者</param>
-        /// <returns>活动实例</returns>
+        /// <param name="appName"></param>
+        /// <param name="appInstanceID"></param>
+        /// <param name="appInstanceCode"></param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="activity"></param>
+        /// <param name="backwardType"></param>
+        /// <param name="backSrcActivityInstanceID"></param>
+        /// <param name="backOrgActivityInstanceID"></param>
+        /// <param name="runner"></param>
+        /// <returns></returns>
         internal ActivityInstanceEntity CreateBackwardActivityInstanceObject(string appName,
             string appInstanceID,
             string appInstanceCode,
@@ -1217,11 +1294,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Update the number of tokens for the activity node
         /// 更新活动节点的Token数目
         /// </summary>
-        /// <param name="activityInstanceID">活动实例ID</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
+        /// <param name="activityInstanceID"></param>
+        /// <param name="runner"></param>
+        /// <param name="session"></param>
         internal void IncreaseTokensHad(int activityInstanceID,
             WfAppRunner runner,
             IDbSession session)
@@ -1232,13 +1310,14 @@ namespace Slickflow.Engine.Business.Manager
         }
         #endregion
 
-        #region 活动实例状态设置
+        #region Activity instance status setting 活动实例状态设置
         /// <summary>
+        /// Activity instance read
         /// 活动实例被读取
         /// </summary>
-        /// <param name="activityInstanceID">活动实例ID</param>
-        /// <param name="runner">执行者</param>
-        /// <param name="session">会话</param>
+        /// <param name="activityInstanceID"></param>
+        /// <param name="runner"></param>
+        /// <param name="session"></param>
         internal void Read(int activityInstanceID,
             WfAppRunner runner,
             IDbSession session)
@@ -1247,12 +1326,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Set activity instance status
         /// 设置活动实例状态
         /// </summary>
-        /// <param name="activityInstanceID">活动实例ID</param>
-        /// <param name="activityState">活动状态</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
+        /// <param name="activityInstanceID"></param>
+        /// <param name="activityState"></param>
+        /// <param name="runner"></param>
+        /// <param name="session"></param>
         private void SetActivityState(int activityInstanceID,
             ActivityStateEnum activityState,
             WfAppRunner runner,
@@ -1267,11 +1347,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Withdraw activity instance
         /// 撤销活动实例
         /// </summary>
-        /// <param name="activityInstanceID">活动实例ID</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
+        /// <param name="activityInstanceID"></param>
+        /// <param name="runner"></param>
+        /// <param name="session"></param>
         internal void Withdraw(int activityInstanceID,
             WfAppRunner runner,
             IDbSession session)
@@ -1280,11 +1361,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Sendback activity instance
         /// 退回活动实例
         /// </summary>
-        /// <param name="activityInstanceID">活动实例ID</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
+        /// <param name="activityInstanceID"></param>
+        /// <param name="runner"></param>
+        /// <param name="session"></param>
         internal void SendBack(int activityInstanceID,
             WfAppRunner runner,
             IDbSession session)
@@ -1293,12 +1375,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Set the end status of the activity
         /// 设置活动结束状态
         /// </summary>
-        /// <param name="activityInstanceID">活动实例ID</param>
-        /// <param name="activityState">活动状态</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
+        /// <param name="activityInstanceID"></param>
+        /// <param name="activityState"></param>
+        /// <param name="runner"></param>
+        /// <param name="session"></param>
         private void EndActivityState(int activityInstanceID,
             ActivityStateEnum activityState,
             WfAppRunner runner,
@@ -1314,11 +1397,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Complete activity instance
         /// 活动实例完成
         /// </summary>
-        /// <param name="activityInstanceID">活动实例ID</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
+        /// <param name="activityInstanceID"></param>
+        /// <param name="runner"></param>
+        /// <param name="session"></param>
         internal void Complete(int activityInstanceID,
             WfAppRunner runner,
             IDbSession session)
@@ -1327,6 +1411,7 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Update approval status to agree
         /// 更新审批状态为同意
         /// </summary>
         /// <param name="activityInstanceID"></param>
@@ -1336,6 +1421,7 @@ namespace Slickflow.Engine.Business.Manager
         {
             var activityInstance = GetById(session.Connection, activityInstanceID, session.Transaction);
             //表示当前没有被审核过，才可以认为是审批同意状态
+            //It can only be considered as approved if it has not been reviewed before
             if (activityInstance.ApprovalStatus == (short)ApprovalStatusEnum.Null)
             {
                 activityInstance.ApprovalStatus = (short)ApprovalStatusEnum.Agreed;
@@ -1344,12 +1430,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Update the running nodes between branches and merges to block status
         /// 更新分支和合并之间的运行节点为阻止状态
         /// </summary>
-        /// <param name="gatewayActivity">网关(合并)节点</param>
-        /// <param name="gatewayInstance">网关(合并)实例</param>
-        /// <param name="processModel">流程模型</param>
-        /// <param name="session">数据会话</param>
+        /// <param name="gatewayActivity"></param>
+        /// <param name="gatewayInstance"></param>
+        /// <param name="processModel"></param>
+        /// <param name="session"></param>
         internal void UpdateActivityInstanceBlockedBetweenSplitJoin(Activity gatewayActivity, 
             ActivityInstanceEntity gatewayInstance,
             IProcessModel processModel,
@@ -1364,11 +1451,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Update the activities in the activity to block status
         /// 更新活动里面的活动为阻止状态
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="taskActivityList">任务节点列表</param>
-        /// <param name="session">数据会话</param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="taskActivityList"></param>
+        /// <param name="session"></param>
         private void UpdateActivityInstanceBlockedBetweenSplitJoin(int processInstanceID, 
             IList<Activity> taskActivityList,
             IDbSession session)
@@ -1390,13 +1478,14 @@ namespace Slickflow.Engine.Business.Manager
         }
         #endregion
 
-        #region 活动实例记录维护
+        #region Activity instance record maintenance 活动实例记录维护
         /// <summary>
+        /// Insert activity instance
         /// 插入活动实例
         /// </summary>
-        /// <param name="entity">实体</param>
-        /// <param name="session">会话</param>
-        /// <returns>新的自增长ID键值</returns>
+        /// <param name="entity"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal int Insert(ActivityInstanceEntity entity,
             IDbSession session)
         {
@@ -1414,10 +1503,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Update activity instance
         /// 更新活动实例
         /// </summary>
-        /// <param name="entity">活动实例实体</param>
-        /// <param name="session">会话</param>
+        /// <param name="entity"></param>
+        /// <param name="session"></param>
         internal void Update(ActivityInstanceEntity entity,
             IDbSession session)
         {
@@ -1425,22 +1515,24 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Update activity instance
         /// 更新活动实例
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="entity">实体</param>
-        /// <param name="trans">事务</param>
+        /// <param name="conn"></param>
+        /// <param name="entity"></param>
+        /// <param name="trans"></param>
         internal void Update(IDbConnection conn, ActivityInstanceEntity entity, IDbTransaction trans)
         {
             Repository.Update(conn, entity, trans);
         }
 
         /// <summary>
+        /// Cancel activity instance
         /// 取消节点运行
         /// </summary>
-        /// <param name="activityInstanceID">活动实例</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
+        /// <param name="activityInstanceID"></param>
+        /// <param name="runner"></param>
+        /// <param name="session"></param>
         internal void Cancel(int activityInstanceID,
             WfAppRunner runner,
             IDbSession session)
@@ -1464,11 +1556,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Update the status of unfinished nodes in the countersignature node
         /// 更新会签节点中未办理完成的节点状态
         /// </summary>
-        /// <param name="mainActivityInstanceID">主节点ID</param>
-        /// <param name="session">会话</param>
-        /// <param name="runner">执行者</param>
+        /// <param name="mainActivityInstanceID"></param>
+        /// <param name="session"></param>
+        /// <param name="runner"></param>
         internal void CancelUnCompletedMultipleInstance(int mainActivityInstanceID, IDbSession session, WfAppRunner runner)
         {
             var sql = @"UPDATE WfActivityInstance 
@@ -1491,26 +1584,32 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Withdraw the master node and its multiple instance nodes below it
         /// 撤销主节点及其下面的多实例子节点
         /// </summary>
-        /// <param name="mainActivityInstanceID">主节点ID</param>
-        /// <param name="session">会话</param>
-        /// <param name="runner">执行者</param>
+        /// <param name="mainActivityInstanceID"></param>
+        /// <param name="session"></param>
+        /// <param name="runner"></param>
         internal void WithdrawMainIncludedChildNodes(int mainActivityInstanceID, IDbSession session, WfAppRunner runner)
         {
             //先更新主节点状态为撤销状态
+            //Update the status of the main node to revoked first
             SetActivityState(mainActivityInstanceID, ActivityStateEnum.Withdrawed, runner, session);
 
             //再更新主节点下的多实例子节点状态为撤销状态
+            //Update the status of multiple instance nodes under the main node to withdrawn state again
             WithdrawMultipleInstance(mainActivityInstanceID, session, runner);
         }
 
         /// <summary>
+        /// Update the node status of the counter signature processing node
+        /// Notes:Nodes in a ready or suspended state can be withdrawn 
         /// 更新会签办理节点的节点状态
+        /// 备注:准备或挂起状态的节点可以撤销
         /// </summary>
-        /// <param name="mainActivityInstanceID">主节点ID</param>
-        /// <param name="session">会话</param>
-        /// <param name="runner">执行者</param>
+        /// <param name="mainActivityInstanceID"></param>
+        /// <param name="session"></param>
+        /// <param name="runner"></param>
         private void WithdrawMultipleInstance(int mainActivityInstanceID, IDbSession session, WfAppRunner runner)
         {
             var sql = @"UPDATE WfActivityInstance 
@@ -1519,7 +1618,7 @@ namespace Slickflow.Engine.Business.Manager
                         LastUpdatedByUserName=@lastUpdatedByUserName,
                         LastUpdatedDateTime=@lastUpdatedDateTime
                         WHERE MIHostActivityInstanceID=@mainActivityInstanceID
-                            AND (ActivityState=1 OR ActivityState=5)";      //准备或挂起状态的节点可以撤销
+                            AND (ActivityState=1 OR ActivityState=5)";      
 
             Repository.Execute(session.Connection, sql,
                 new
@@ -1533,34 +1632,39 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Put the node back in a suspended state
+        /// Notes: Used when revoking the last sub node of the co signature
         /// 重新使节点处于挂起状态
         /// 说明：会签最后一个子节点撤销时候用到
         /// </summary>
-        /// <param name="activityInstanceID">活动实例节点ID</param>
-        /// <param name="session">会话</param>
-        /// <param name="runner">执行者</param>
+        /// <param name="activityInstanceID"></param>
+        /// <param name="session"></param>
+        /// <param name="runner"></param>
         internal void Resuspend(int activityInstanceID, IDbSession session, WfAppRunner runner)
         {
             SetActivityState(activityInstanceID, ActivityStateEnum.Suspended, runner, session);
         }
 
         /// <summary>
+        /// Put the node back in a suspended state
+        /// Notes: Used when revoking the last sub node of the co signature
         /// 重新使节点处于挂起状态
         /// 说明：会签最后一个子节点撤销时候用到
         /// </summary>
-        /// <param name="activityInstanceID">活动实例节点ID</param>
-        /// <param name="session">会话</param>
-        /// <param name="runner">执行者</param>
+        /// <param name="activityInstanceID"></param>
+        /// <param name="session"></param>
+        /// <param name="runner"></param>
         internal void Rerun(int activityInstanceID, IDbSession session, WfAppRunner runner)
         {
             SetActivityState(activityInstanceID, ActivityStateEnum.Running, runner, session);
         }
 
         /// <summary>
+        /// Delete activity instance
         /// 删除活动实例
         /// </summary>
-        /// <param name="activityInstanceID">活动实例ID</param>
-        /// <param name="session">会话</param>
+        /// <param name="activityInstanceID"></param>
+        /// <param name="session"></param>
         internal void Delete(int activityInstanceID,
             IDbSession session = null)
         {
@@ -1570,11 +1674,12 @@ namespace Slickflow.Engine.Business.Manager
         }
         #endregion
 
-        #region 活动实例审批状态
+        #region Activity Instance Approval Status 活动实例审批状态
         /// <summary>
+        /// Agree
         /// 同意
         /// </summary>
-        /// <param name="taskID">任务ID</param>
+        /// <param name="taskID"></param>
         internal void Agree(int taskID)
         {
             var activityInstance = GetByTask(taskID);
@@ -1584,7 +1689,6 @@ namespace Slickflow.Engine.Business.Manager
             {
                 session.BeginTrans();
                 Update(activityInstance, session);
-                //更新提交
                 session.Commit();
             }
             catch(System.Exception ex)
@@ -1599,9 +1703,10 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Refuse
         /// 拒绝
         /// </summary>
-        /// <param name="taskID">任务ID</param>
+        /// <param name="taskID"></param>
         internal void Refuse(int taskID)
         {
             var activityInstance = GetByTask(taskID);
@@ -1611,7 +1716,6 @@ namespace Slickflow.Engine.Business.Manager
             {
                 session.BeginTrans();
                 Update(activityInstance, session);
-                //更新提交
                 session.Commit();
             }
             catch (System.Exception ex)
@@ -1624,13 +1728,14 @@ namespace Slickflow.Engine.Business.Manager
                 session.Dispose();
             }
         }
-       
+
         /// <summary>
+        /// Check the pass type of the current node
         ///  检查当前节点的通过类型
         /// </summary>
-        /// <param name="taskID">任务ID</param>
-        /// <param name="session">会话</param>
-        /// <returns>通过结果对象</returns>
+        /// <param name="taskID"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal NodePassedResult CheckActivityInstancePassedResult(Nullable<int> taskID,
             IDbSession session)
         {
@@ -1641,6 +1746,7 @@ namespace Slickflow.Engine.Business.Manager
                 if (IsMultipleInstanceChildren(activityInstance) == true)
                 {
                     //会签多实例情况下的是否通过判断
+                    //Whether the judgment is passed in the case of multiple instances of co signing
                     var mainActivityInstance = GetById(session.Connection, activityInstance.MIHostActivityInstanceID.Value, session.Transaction);
                     var nodePassedType = CheckMIPassRateInfo(activityInstance, mainActivityInstance, session);
                     result = NodePassedResult.Create(nodePassedType);
@@ -1654,12 +1760,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Check the satisfaction of the pass rate of the co signing nodes
         /// 检查会签节点通过率的满足情况
         /// </summary>
-        /// <param name="currentActivityInstance">当前审批节点</param>
-        /// <param name="mainActivityInstance">主节点ID</param>
-        /// <param name="session">会话</param>
-        /// <returns>检验结果</returns>
+        /// <param name="currentActivityInstance"></param>
+        /// <param name="mainActivityInstance"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal NodePassedTypeEnum CheckMIPassRateInfo(ActivityInstanceEntity currentActivityInstance,
             ActivityInstanceEntity mainActivityInstance,
             IDbSession session)
@@ -1669,6 +1776,7 @@ namespace Slickflow.Engine.Business.Manager
                 session);
 
             //参与通过率类型计算的数目列举
+            //List of numbers involved in the calculation of pass rate types
             var agreedCount = childActivityInstanceList.Where(a => a.ApprovalStatus == (short)ApprovalStatusEnum.Agreed).Count();
             var refusedCount = childActivityInstanceList.Where(a => a.ApprovalStatus == (short)ApprovalStatusEnum.Refused).Count();
 
@@ -1677,8 +1785,9 @@ namespace Slickflow.Engine.Business.Manager
                 if (mainActivityInstance.CompareType.Value == (short)CompareTypeEnum.Count)
                 {
                     //通过率类型为:个数
+                    //The pass rate type is: number
                     var thresholdCount = mainActivityInstance.CompleteOrder.Value;
-                    var allCount = childActivityInstanceList.Max(a => a.CompleteOrder).Value;       //总共审批数目
+                    var allCount = childActivityInstanceList.Max(a => a.CompleteOrder).Value;       //Total number of approvals 总共审批数目
                     var negativeCount = allCount - thresholdCount;
 
                     if (refusedCount > negativeCount)
@@ -1692,6 +1801,7 @@ namespace Slickflow.Engine.Business.Manager
                     else
                     {
                         //等待其他会签人员审批
+                        //Waiting for approval from other co signatories
                         passedType = NodePassedTypeEnum.NeedToBeMoreApproved;
                     }
                     return passedType;
@@ -1699,6 +1809,7 @@ namespace Slickflow.Engine.Business.Manager
                 else if (mainActivityInstance.CompareType.Value == (short)CompareTypeEnum.Percentage)
                 {
                     //按照百分比数目比较
+                    //Compare by percentage number
                     var thresholdPercentage = mainActivityInstance.CompleteOrder.Value;
                     var allCount = childActivityInstanceList.Count;
                     var negativePercentage = 1 - thresholdPercentage;
@@ -1728,6 +1839,7 @@ namespace Slickflow.Engine.Business.Manager
                 if (mainActivityInstance.CompareType.Value == (short)CompareTypeEnum.Count)
                 {
                     //通过率类型为:个数
+                    //The pass rate type is: number
                     var thresholdCount = mainActivityInstance.CompleteOrder.Value;
                     var allCount = childActivityInstanceList.Count;
                     var negativeCount = allCount - thresholdCount;
@@ -1743,6 +1855,7 @@ namespace Slickflow.Engine.Business.Manager
                     else
                     {
                         //等待其他会签人员审批
+                        //Waiting for approval from other co signatories
                         passedType = NodePassedTypeEnum.NeedToBeMoreApproved;
                     }
                     return passedType;
@@ -1750,6 +1863,7 @@ namespace Slickflow.Engine.Business.Manager
                 else if (mainActivityInstance.CompareType.Value == (short)CompareTypeEnum.Percentage)
                 {
                     //按照百分比数目比较
+                    //Compare by percentage number
                     var thresholdPercentage = mainActivityInstance.CompleteOrder.Value;
                     var allCount = childActivityInstanceList.Count;
                     var negativePercentage = 1 - thresholdPercentage;
@@ -1782,12 +1896,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain the approval rate type of the countersignature node
         /// 获取会签节点的审批通过率类型
         /// </summary>
-        /// <param name="currentActivityInstance">当前活动实例</param>
-        /// <param name="mainActivityInstance">主节点</param>
-        /// <param name="session">会话</param>
-        /// <returns>是否可以通过</returns>
+        /// <param name="currentActivityInstance"></param>
+        /// <param name="mainActivityInstance"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal Boolean GetMiApprovalThresholdStatus(ActivityInstanceEntity currentActivityInstance,
             ActivityInstanceEntity mainActivityInstance, 
             IDbSession session)

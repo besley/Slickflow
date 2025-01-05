@@ -7,6 +7,7 @@ using RabbitMQ.Client.Events;
 namespace Slickflow.Module.Essential.Common
 {
     /// <summary>
+    /// RabbitMQ client factory
     /// MQ 客户端创建类
     /// </summary>
     public class RabbitMQClientFactory
@@ -24,6 +25,7 @@ namespace Slickflow.Module.Essential.Common
         }
 
         /// <summary>
+        /// initialize server
         /// 初始化服务器
         /// </summary>
         private static void CreateMQServer()
@@ -38,9 +40,9 @@ namespace Slickflow.Module.Essential.Common
         }
 
         /// <summary>
+        /// Create a publishing client channel
         /// 创建发布客户端通道
         /// </summary>
-        /// <returns></returns>
         public static IModel CreatePublishChannel()
         {
             if (MQPublishConnection == null)
@@ -56,9 +58,9 @@ namespace Slickflow.Module.Essential.Common
         }
 
         /// <summary>
+        /// Create a receiving channel
         /// 创建接收端通道
         /// </summary>
-        /// <returns></returns>
         public static IModel CreateRecieveChannel()
         {
             if (MQRecieveConnection == null)

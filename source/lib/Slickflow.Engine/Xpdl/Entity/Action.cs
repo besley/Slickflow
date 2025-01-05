@@ -9,54 +9,25 @@ using Slickflow.Engine.Xpdl.Common;
 namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
+    /// Action
     /// 操作实体
     /// </summary>
     public class Action
     {
-        #region 属性列表
-        /// <summary>
-        /// 操作类型
-        /// </summary>
+        #region Property
         public ActionTypeEnum ActionType { get; set; }
-
-        /// <summary>
-        /// 事件触发类型
-        /// </summary>
         public FireTypeEnum FireType { get; set; }
-
-        /// <summary>
-        /// 方法类型
-        /// </summary>
         public ActionMethodEnum ActionMethod { get; set; }
-
-        /// <summary>
-        /// 子方法类型
-        /// </summary>
         public SubMethodEnum SubMethod { get; set; }
-
-        /// <summary>
-        /// 参数列表
-        /// </summary>
         public string Arguments { get; set; }
-
-        /// <summary>
-        /// 表达式
-        /// </summary>
         public string Expression { get; set; }
-
-        /// <summary>
-        /// 反射方法配置信息
-        /// </summary>
         public MethodInfo MethodInfo { get; set; }
-
-        /// <summary>
-        /// 文本脚本代码
-        /// </summary>
         public CodeInfo CodeInfo { get; set; }
         #endregion
     }
 
     /// <summary>
+    /// Reflection component method
     /// 反射组件方法
     /// </summary>
     public class MethodInfo

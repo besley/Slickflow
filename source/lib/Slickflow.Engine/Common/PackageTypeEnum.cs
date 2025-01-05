@@ -5,17 +5,20 @@ using System.Text;
 namespace Slickflow.Engine.Common
 {
     /// <summary>
+    /// Process Package Type
     /// 流程类型
     /// </summary>
     public enum PackageTypeEnum
     {
         /// <summary>
-        /// 协作流程包 Collaboration Package
+        /// Collaboration Package
+        /// 协作流程包 
         /// </summary>
         Package = 1,
 
         /// <summary>
-        /// 泳道流程 Pool Process
+        /// Pool Process
+        /// 泳道流程 
         /// </summary>
         Pool = 2
     }

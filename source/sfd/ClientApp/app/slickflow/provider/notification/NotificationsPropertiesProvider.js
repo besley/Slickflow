@@ -10,7 +10,6 @@ export default function NotificationsPropertiesProvider(propertiesPanel, injecto
         return function (groups) {
             if (is(element, 'bpmn:Task')
                 || is(element, 'bpmn:UserTask')) {
-                
                 groups.push(createNotificationsGroup(element, injector, translate));
             }
             return groups;

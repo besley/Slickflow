@@ -6,28 +6,32 @@ using System.Text;
 namespace Slickflow.Engine.Common
 {
     /// <summary>
-    /// 节点通过类型
+    /// Node approval passed result
+    /// 节点审批通过结果
     /// </summary>
     public class NodePassedResult
     {
         /// <summary>
-        /// 节点通过类型熟悉
+        /// Node approval passed type
+        /// 节点通过类型
         /// </summary>
         public NodePassedTypeEnum NodePassedType { get; set; }
 
         /// <summary>
+        /// Constructor
         /// 构造函数
         /// </summary>
-        /// <param name="passedType">通过类型</param>
+        /// <param name="passedType"></param>
         public NodePassedResult(NodePassedTypeEnum passedType)
         {
             this.NodePassedType = passedType;
         }
 
         /// <summary>
+        /// Create method
         /// 创建方法
         /// </summary>
-        /// <param name="passedType">通过类型</param>
+        /// <param name="passedType"></param>
         /// <returns></returns>
         public static NodePassedResult Create(NodePassedTypeEnum passedType)
         {
@@ -36,9 +40,10 @@ namespace Slickflow.Engine.Common
         }
 
         /// <summary>
+        /// Create result objects based on approval status
         /// 根据审批状态创建结果对象
         /// </summary>
-        /// <param name="approvalStatus">审批状态</param>
+        /// <param name="approvalStatus"></param>
         /// <returns></returns>
         public static NodePassedResult CreateByApprovalStatus(short approvalStatus)
         {

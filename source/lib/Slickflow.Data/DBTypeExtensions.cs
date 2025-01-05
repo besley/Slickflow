@@ -9,52 +9,13 @@ using System.Data.SqlClient;
 
 namespace Slickflow.Data
 {
-    #region 数据库类型
     /// <summary>
-    /// 数据库类型标识
-    /// </summary>
-    public enum DBTypeEnum
-    {
-        NONE = 0,
-
-        /// <summary>
-        /// Mcirosoft SQLSERVER
-        /// </summary>
-        SQLSERVER = 1,
-
-        /// <summary>
-        /// ORACLE
-        /// </summary>
-        ORACLE = 2,
-
-        /// <summary>
-        /// MYSQL
-        /// </summary>
-        MYSQL = 3,
-
-        /// <summary>
-        /// Postgrel
-        /// </summary>
-        PGSQL = 4,
-
-        /// <summary>
-        /// KINGBASE
-        /// </summary>
-        KINGBASE = 5,
-
-        /// <summary>
-        /// MongoDB
-        /// </summary>
-        MONGODB = 21,
-    }
-    #endregion
-
-    /// <summary>
-    /// 数据库类型的标识类
+    /// Database type extension class
+    /// 数据库类型扩展类
     /// </summary>
     public static class DBTypeExtenstions
     {
-        #region 属性和构造方法
+        #region Property and Constructor 属性和构造方法 
         private static DBTypeEnum _dbType = DBTypeEnum.NONE;
         private static DBTypeEnum DBType { get { return _dbType; } }
 
@@ -62,6 +23,7 @@ namespace Slickflow.Data
         private static string ConnectionString {  get { return _connectionString; } }
 
         /// <summary>
+        /// Static construction method
         /// 静态构造方法
         /// </summary>
         static DBTypeExtenstions()
@@ -73,22 +35,26 @@ namespace Slickflow.Data
             }
 
             //设置数据库类型
+            //Set database type
             SetYourDataBaseType();
         }
         #endregion
 
-        #region 自定义数据库类型：用户选择数据库或连接类型进行初始化
+        #region Custom database type 定义数据库类型 
         /// <summary>
+        /// Users select a database or connection type for initialization
         /// 选择自己的数据库类型
         /// </summary>
         private static void SetYourDataBaseType()
         {
             //备注：用户需要在此进行数据库类型的选择
-
             //根据不同的数据库类型创建
-            SetDBType(DBTypeEnum.SQLSERVER);        //默认SQL SERVER
+            //Note: Users need to select the database type here
+            //Create according to different database types
+            SetDBType(DBTypeEnum.SQLSERVER);        //Default is SQL SERVER
 
             //如果是Oracle数据库，请使用Oracle类型参数
+            //If it is an Oracle database, please use Oracle type parameters
             //SetDBType(DBTypeEnum.ORACLE);
 
             //SetDBType(DBTypeEnum.MYSQL);
@@ -99,14 +65,17 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Create a database connection based on the DBType type
+        /// Note: Users need to perform initialization operations on database connection objects here
+        /// Prerequisite: It is necessary to first reference the DLL file of the access component that selects the database
+        /// 
         /// 根据DBType类型，创建数据库连接
+        /// 备注：用户需要在此进行数据库连接对象的初始化操作
+        /// 前提：需要先引用选择数据库的访问组件dll文件
         /// </summary>
         /// <returns></returns>
         internal static IDbConnection CreateConnectionByDBType()
         {
-            //备注：用户需要在此进行数据库连接对象的初始化操作
-            //前提：需要先引用选择数据库的访问组件dll文件
-
             IDbConnection conn = null;
             if (DBTypeExtenstions.DBType == DBTypeEnum.SQLSERVER)
             {
@@ -136,58 +105,70 @@ namespace Slickflow.Data
         }
         #endregion
 
-        #region 数据库类型内部设置方法
+        #region Internal setting method for database type 数据库类型内部设置方法
         /// <summary>
+        /// Internal setting method for database type
         /// 获取数据类型
         /// </summary>
-        /// <returns>数据类型</returns>
+        /// <returns>Database Type</returns>
         public static DBTypeEnum GetDbType()
         {
             return _dbType;
         }
+
         /// <summary>
+        /// Set Database Type
         /// 设置数据库类型
         /// </summary>
-        /// <param name="type">数据库类型</param>
+        /// <param name="type">Database Type</param>
         public static void SetDBType(DBTypeEnum type)
         {
             // 设置数据库类型  
+            // Set Database Type
             _dbType = type;
 
             // 设置数据库Dialect
+            // Set Database Dialect
             if (type == DBTypeEnum.SQLSERVER)
             {
                 //默认实现为SQLSERVER
+                //Default is SQLSERVER
                 DapperExtensions.DapperExtensions.SqlDialect = new DapperExtensions.Sql.SqlServerDialect();
             }
             else if (type == DBTypeEnum.ORACLE)
             {
                 //Oracle 数据库
+                //Oracle Database
                 DapperExtensions.DapperExtensions.SqlDialect = new DapperExtensions.Sql.OracleDialect();
             }
             else if (type == DBTypeEnum.MYSQL)
             {
                 //MySQL 数据库
+                //MySQL Database
                 DapperExtensions.DapperExtensions.SqlDialect = new DapperExtensions.Sql.MySqlDialect();
             }
             else if (type == DBTypeEnum.PGSQL)
             {
                 //PgSQL 数据库
+                //PgSQL Database
                 DapperExtensions.DapperExtensions.SqlDialect = new DapperExtensions.Sql.PostgreSqlDialect();
             }
             else if (type == DBTypeEnum.KINGBASE)
             {
                 //KingBase 数据库
+                //KingBase Database
                 DapperExtensions.DapperExtensions.SqlDialect = new DapperExtensions.Sql.KingbaseSqlDialect();
             }
         }
         #endregion
 
-        #region 提供给.NETCore程序初始化数据库类型
+        #region Provide to Initialize database types for NET applications 提供给.NET应用程序初始化数据库类型 
         /// <summary>
+        /// Initialize database connection string
         /// 初始化连接串
         /// </summary>
-        /// <param name="strConn">连接串</param>
+        /// <param name="databaseType">Database Type</param>
+        /// <param name="strConn">Connection String</param>
         public static void InitConnectionString(string databaseType, string strConn)
         {
             DBTypeEnum dbType = (DBTypeEnum)Enum.Parse(typeof(DBTypeEnum), databaseType.ToUpper());
@@ -195,9 +176,11 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Initialize database connection string
         /// 初始化连接串
         /// </summary>
-        /// <param name="strConn">连接串</param>
+        /// <param name="databaseType">Database Type</param>
+        /// <param name="strConn">Connection String</param>
         private static void InitConnectionStringInt(DBTypeEnum databaseType, string strConn)
         {
             _dbType = databaseType;

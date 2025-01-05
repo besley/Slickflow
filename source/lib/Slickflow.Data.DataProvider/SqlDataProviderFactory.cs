@@ -8,11 +8,13 @@ namespace Slickflow.Data.DataProvider
 {
     /// <summary>
     /// 数据服务工厂类
+    /// Data service factory category
     /// </summary>
     public class SqlDataProviderFactory
     {
         /// <summary>
         /// 根据数据库类型获取DataProvider
+        /// Retrieve Data Provider based on database type
         /// </summary>
         /// <returns></returns>
         private static ISqlDataProvider GetSqlDataProvider()
@@ -31,9 +33,10 @@ namespace Slickflow.Data.DataProvider
         }
         /// <summary>
         /// 任务分页SQL语句
+        /// Task pagination SQL statement
         /// </summary>
-        /// <param name="sql">SQL语句</param>
-        /// <returns>SQL语句</returns>
+        /// <param name="sql"></param>
+        /// <returns></returns>
         public static string GetSqlTaskPaged(string sql)
         {
             var dataProvider = GetSqlDataProvider();
@@ -49,6 +52,7 @@ namespace Slickflow.Data.DataProvider
 
         /// <summary>
         /// 根据活动实例获取个人任务SQL
+        /// Obtain personal task SQL based on activity instances
         /// </summary>
         /// <param name="sql">SQL</param>
         /// <returns>SQL</returns>
@@ -67,6 +71,7 @@ namespace Slickflow.Data.DataProvider
 
         /// <summary>
         /// 根据应用实例获取个人任务SQL
+        /// Obtain personal task SQL based on activity instances
         /// </summary>
         /// <param name="sql">SQL</param>
         /// <returns>SQL</returns>

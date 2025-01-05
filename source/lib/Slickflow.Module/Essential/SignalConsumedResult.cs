@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.Module.Essential
 {
     /// <summary>
+    /// Signal consumed result
     /// 信号消费结果
     /// </summary>
     public class SignalConsumedResult
@@ -23,7 +24,7 @@ namespace Slickflow.Module.Essential
         }
 
         /// <summary>
-        /// 缺省方法
+        /// Default
         /// </summary>
         /// <returns></returns>
         public static SignalConsumedResult Default()

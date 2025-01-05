@@ -13,26 +13,24 @@ using Slickflow.Engine.Service;
 
 namespace Slickflow.WebApi.Controllers
 {
-
     //webapi: http://localhost/sfapi/api/wfevent/
-    //数据库表: WfProcess
-    //流程记录ID：219
-    //流程名称：事件测试交互流程
-    //GUID: 4be58a96-926c-4aff-a383-fe71185572e5
+    //Database table: WfProcess
+    //Process record ID: 219
+    //Process Name: Event Testing Interaction Process
+    //GUID:  4be58a96-926c-4aff-a383-fe71185572e5
     //startup process:
     //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"4be58a96-926c-4aff-a383-fe71185572e5"}
 
     //run process app:
-    ////订单处理节点：
-    ////下一步是结束节点
+    ////Order processing node:
+    ////The next step is to end the node
     //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"4be58a96-926c-4aff-a383-fe71185572e5","UserID":"10","UserName":"Long","NextActivityPerformers":{"de50335a-034c-4c58-db72-ddd00c1aebfe":[{"UserID":10,"UserName":"Long"}]}}
 
     /// <summary>
-    /// 事件控制器
+    /// Event Controller
     /// </summary>
     public class WfEventController : Controller
     {
-        #region Workflow Api访问操作
         [HttpPost]
         public ResponseResult Start([FromBody] WfAppRunner runner)
         {
@@ -160,7 +158,6 @@ namespace Slickflow.WebApi.Controllers
             }
             return result;
         }
-        #endregion
     }
 }
 

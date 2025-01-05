@@ -5,6 +5,7 @@ using System.Text;
 namespace Slickflow.Module.Logging
 {
     /// <summary>
+    /// Job Type 
     /// 作业事件类型
     /// </summary>
     public enum JobTypeEnum

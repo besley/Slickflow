@@ -1,3 +1,4 @@
 ﻿<Project>
+  <Import Project="Microsoft.AspNetCore.StaticWebAssetEndpoints.props" />
   <Import Project="Microsoft.AspNetCore.StaticWebAssets.props" />
 </Project>

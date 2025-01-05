@@ -11,6 +11,7 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Core.Pattern.Gateway
 {
     /// <summary>
+    /// XOrSplit Node Mediator
     /// XOrSplit 节点处理类
     /// </summary>
     internal class NodeMediatorXOrSplit : NodeMediatorGateway, ICompleteGatewayAutomaticlly
@@ -21,17 +22,9 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
 
         }
 
-        #region ICompleteAutomaticlly 成员
         /// <summary>
-        /// 自动完成
+        /// Complete automatically
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="fromActivity">起始活动</param>
-        /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
-        /// <returns>网关执行结果</returns>
         public NodeAutoExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
             string transitionGUID,
             Activity fromActivity,
@@ -53,7 +46,6 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             gatewayActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
             base.GatewayActivityInstance = gatewayActivityInstance;
             
-            //写节点转移实例数据
             base.InsertTransitionInstance(processInstance,
                 transitionGUID,
                 fromActivityInstance,
@@ -66,7 +58,5 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             NodeAutoExecutedResult result = NodeAutoExecutedResult.CreateGatewayExecutedResult(NodeAutoExecutedStatus.Successed);
             return result;
         }
-
-        #endregion
     }
 }

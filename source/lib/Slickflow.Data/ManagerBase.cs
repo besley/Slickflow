@@ -4,6 +4,10 @@ using System.Linq;
 
 namespace Slickflow.Data
 {
+    /// <summary>
+    /// Manager Abstract Class
+    /// 管理抽象类
+    /// </summary>
     public abstract class ManagerBase
     {
         private IRepository _repository;

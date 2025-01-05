@@ -8,7 +8,8 @@ using Slickflow.Data;
 namespace Slickflow.Data.DataProvider
 {
     /// <summary>
-    /// ORACLE SQL 特定语句
+    /// MySQL 特定语句
+    /// MySQL Specific Statements
     /// </summary>
     internal class MySqlDataProvider : ISqlDataProvider
     {

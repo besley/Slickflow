@@ -7,17 +7,18 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Xpdl.Common
 {
     /// <summary>
-    /// 节点的其它附属类型
+    /// Mutiple instance sign togerthe and sign forward
+    /// 会加签类型
     /// </summary>
     public enum ComplexTypeEnum
     {
         /// <summary>
-        /// 多实例-会签节点
+        /// Sign together
         /// </summary>
         SignTogether = 1,
 
         /// <summary>
-        /// 多实例-加签节点
+        /// Sign forward
         /// </summary>
         SignForward = 2
     }

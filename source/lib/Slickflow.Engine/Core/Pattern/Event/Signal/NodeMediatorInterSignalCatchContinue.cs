@@ -14,6 +14,7 @@ using Slickflow.Module.Essential;
 namespace Slickflow.Engine.Core.Pattern.Event.Signal
 {
     /// <summary>
+    /// Intermediate singal catch continue node mediator
     /// 中间事件节点处理类
     /// </summary>
     internal class NodeMediatorInterSignalCatchContinue : NodeMediator
@@ -26,7 +27,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Signal
         }
 
         /// <summary>
-        /// 执行方法
+        /// Execute work item
         /// </summary>
         internal override void ExecuteWorkItem()
         {
@@ -34,13 +35,13 @@ namespace Slickflow.Engine.Core.Pattern.Event.Signal
             {
                 OnBeforeExecuteWorkItem();
 
-                //完成当前的任务节点
                 bool canContinueForwardCurrentNode = CompleteWorkItem(ActivityForwardContext.ActivityResource,
                     Session);
 
                 OnAfterExecuteWorkItem();
 
                 //获取下一步节点列表：并继续执行
+                //Get the next node list: and continue execution
                 if (canContinueForwardCurrentNode)
                 {
                     ContinueForwardCurrentNode(ActivityForwardContext.IsNotParsedByTransition, Session);
@@ -53,20 +54,20 @@ namespace Slickflow.Engine.Core.Pattern.Event.Signal
         }
 
         /// <summary>
+        /// Complete work item
         /// 完成节点实例
         /// </summary>
-        /// <param name="activityResource">活动资源</param>
-        /// <param name="session">会话</param>        
+        /// <param name="activityResource"></param>
+        /// <param name="session"></param>        
         internal bool CompleteWorkItem(ActivityResource activityResource,
             IDbSession session)
         {
             WfAppRunner runner = new WfAppRunner
             {
-                UserID = activityResource.AppRunner.UserID,         //避免taskview为空
+                UserID = activityResource.AppRunner.UserID,        
                 UserName = activityResource.AppRunner.UserName
             };
 
-            //设置活动节点的状态为完成状态
             ActivityInstanceManager.Complete(LinkContext.FromActivityInstance.ID,
                 activityResource.AppRunner,
                 session);

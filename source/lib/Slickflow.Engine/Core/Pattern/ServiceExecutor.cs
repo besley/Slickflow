@@ -19,15 +19,14 @@ using Slickflow.Engine.Delegate;
 namespace Slickflow.Engine.Core.Pattern
 {
     /// <summary>
+    /// Service Executor
     /// 自动服务方法类
     /// </summary>
     internal class ServiceExecutor
     {
         /// <summary>
-        /// Action 的执行方法
+        /// Execute service list
         /// </summary>
-        /// <param name="serviceList">操作列表</param>
-        /// <param name="delegateService">参数列表</param>
         internal static void ExecuteServiceList(IList<Xpdl.Entity.ServiceDetail> serviceList,
             IDelegateService delegateService)
         {
@@ -44,10 +43,8 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 执行外部服务实现类
+        /// Execute
         /// </summary>
-        /// <param name="service">操作</param>
-        /// <param name="delegateService">委托服务类</param>
         private static void Execute(Xpdl.Entity.ServiceDetail service, IDelegateService delegateService)
         {
             if (service.Method == ServiceMethodEnum.LocalService)
@@ -73,17 +70,17 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 执行外部方法
+        /// Execute Local Service
         /// </summary>
-        /// <param name="service">Action实体</param>
-        /// <param name="delegateService">委托服务</param>
         private static void ExecuteLocalService(Xpdl.Entity.ServiceDetail service, IDelegateService delegateService)
         {
             try
             {
                 //先获取具体实现类
+                //First, obtain the specific implementation class
                 var instance = ReflectionHelper.GetSpecialInstance<IExternalService>(service.Expression);
                 //再调用基类可执行方法
+                //Call the base class executable method again
                 var exterableInstance = instance as IExternable;
                 exterableInstance.Executable(delegateService);
             }
@@ -94,10 +91,8 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 执行外部方法
+        /// Execute WebApi Method
         /// </summary>
-        /// <param name="service">Action实体</param>
-        /// <param name="delegateService">委托服务</param>
         private static void ExecuteWebApiMethod(Xpdl.Entity.ServiceDetail service, IDelegateService delegateService)
         {
             try
@@ -141,10 +136,8 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 执行外部方法
+        /// Execute Store procedure
         /// </summary>
-        /// <param name="service">Action实体</param>
-        /// <param name="delegateService">委托服务</param>
         private static void ExecuteStoreProcedureMethod(Xpdl.Entity.ServiceDetail service, IDelegateService delegateService)
         {
             try
@@ -162,15 +155,14 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 执行插件方法
+        /// Execute library
         /// </summary>
-        /// <param name="service">Action实体</param>
-        /// <param name="delegateService">委托服务</param>
         private static void ExecuteCSharpLibraryMethod(Xpdl.Entity.ServiceDetail service, IDelegateService delegateService)
         {
             try
             {
                 //取出当前应用程序执行路径
+                //Retrieve the current application execution path
                 var methodInfo = service.MethodInfo;
                 var assemblyFullName = methodInfo.AssemblyFullName;
                 var methodName = methodInfo.MethodName;

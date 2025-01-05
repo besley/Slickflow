@@ -7,11 +7,12 @@ using Slickflow.Engine.Common;
 namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
-    /// 任务实现详细类
+    /// Task Implement Detail
     /// </summary>
     public class TaskImplementDetail
     {
         /// <summary>
+        /// Task implementation type definition
         /// 任务实现类型定义
         /// </summary>
         public ImplementationTypeEnum ImplementationType

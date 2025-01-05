@@ -10,19 +10,23 @@ using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
+using static IronPython.Runtime.Profiler;
+using System.Reflection;
 
 namespace Slickflow.Engine.Core.Parser
 {
     /// <summary>
-    /// 上一步活动节点检查器
+    /// Sign Forward Step Maker
+    /// 加签步骤生成器
     /// </summary>
     internal class SignForwardStepMaker : ManagerBase
     {
         /// <summary>
-        /// 流程下一步信息获取
+        /// Obtain information on the steps for adding a signature
+        /// 获取加签步骤信息
         /// </summary>
-        /// <param name="runner">当前运行用户</param>
-        /// <returns>下一步信息</returns>
+        /// <param name="runner"></param>
+        /// <returns></returns>
         internal SignForwardStepInfo GetSignForwardStepInfo(WfAppRunner runner)
         {
             var signForwardStepInfo = new SignForwardStepInfo();
@@ -32,15 +36,17 @@ namespace Slickflow.Engine.Core.Parser
         }
 
         /// <summary>
+        /// According to the application, obtain the next node list of the process, including role users
         /// 根据应用获取流程下一步节点列表，包含角色用户
         /// </summary>
-        /// <param name="runner">应用执行人</param>
-        /// <returns>节点列表</returns>
+        /// <param name="runner"></param>
+        /// <returns></returns>
         internal NextActivityTreeResult GetSignForwardRoleUserTree(WfAppRunner runner)
         {
             var nextTreeResult = new NextActivityTreeResult();
 
             //判断应用数据是否缺失
+            //Determine whether the application data is missing
             if (string.IsNullOrEmpty(runner.AppInstanceID)
                 || string.IsNullOrEmpty(runner.ProcessGUID))
             {
@@ -50,6 +56,7 @@ namespace Slickflow.Engine.Core.Parser
             using (var session = SessionFactory.CreateSession())
             {
                 //运行状态的流程实例
+                //Process instance of running status
                 var tm = new TaskManager();
                 TaskViewEntity taskView = tm.GetTaskOfMine(session.Connection, runner, session.Transaction);
 
@@ -60,7 +67,6 @@ namespace Slickflow.Engine.Core.Parser
                 }
 
                 var treeNodeList = new List<NodeView>();
-                //var processModel = ProcessModelFactory.Create(runner.ProcessGUID, runner.Version);
                 var processModel = ProcessModelFactory.CreateByTask(session.Connection, taskView, session.Transaction);
                 var currentActivity = processModel.GetActivity(taskView.ActivityGUID);
                 treeNodeList.Add(new NodeView

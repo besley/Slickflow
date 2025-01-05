@@ -1,6 +1,7 @@
 ﻿namespace Slickflow.Module.Resource
 {
     /// <summary>
+    /// Role User Entity
     /// 角色用户关联表
     /// </summary>
     [Table("SysRoleUser")]

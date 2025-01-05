@@ -19,6 +19,7 @@ using Slickflow.Graph.Common;
 namespace Slickflow.Designer.Controllers.WebApi
 {
     /// <summary>
+    /// Workflow xml controller
     /// 流程定义XML操作控制器
     /// </summary>
     public class Wf2XmlController : Controller
@@ -84,9 +85,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
         #endregion
 
-        #region 流程定义数据
+        #region Process Definition
         /// <summary>
-        /// 创建流程定义
+        /// Create Process
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -105,6 +106,7 @@ namespace Slickflow.Designer.Controllers.WebApi
                 }
 
                 //创建新流程,ProcessGUID默认赋值
+                ////Create a new process, with ProcessUID assigned by default
                 if (string.IsNullOrEmpty(fileEntity.ProcessGUID))
                 {
                     fileEntity.ProcessGUID = Guid.NewGuid().ToString();
@@ -116,6 +118,7 @@ namespace Slickflow.Designer.Controllers.WebApi
                 }
 
                 //根据模板类型来创建流程
+                //Create processes based on template types
                 ProcessEntity entity = new ProcessEntity
                 {
                     ProcessGUID = fileEntity.ProcessGUID,
@@ -127,10 +130,12 @@ namespace Slickflow.Designer.Controllers.WebApi
                 };
 
                 //生成XML内容
+                //Generate XML content
                 fileEntity = ProcessXmlBuilder.InitNewBPMNFileBlank(fileEntity);
                 entity.XmlContent = fileEntity.XmlContent;
 
                 //插入XML文档
+                //Insert XML document
                 var wfService = new WorkflowService();
                 var processID = wfService.CreateProcess(entity);
                 entity.ID = processID;
@@ -147,6 +152,7 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Create a process definition based on the business template name
         /// 根据业务模板名称, 创建流程定义
         /// </summary>
         /// <param name="entity"></param>
@@ -176,10 +182,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Code creation flowchart
         /// 代码创建流程图
         /// </summary>
-        /// <param name="graph">代码文本</param>
-        /// <returns>创建结果</returns>
         [HttpPost]
         public ResponseResult<ProcessEntity> ExecuteProcessGraph([FromBody] ProcessGraph graph)
         {
@@ -207,10 +212,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Update process
         /// 更新流程数据
         /// </summary>
-        /// <param name="entity">流程实体</param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult UpdateProcess([FromBody] ProcessEntity entity)
         {
@@ -242,10 +246,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Update process using state
         /// 更新流程使用状态
         /// </summary>
-        /// <param name="entity">流程实体</param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult UpdateProcessUsingState([FromBody] ProcessEntity entity)
         {
@@ -265,13 +268,10 @@ namespace Slickflow.Designer.Controllers.WebApi
             return result;
         }
 
-
-
         /// <summary>
+        /// Upgrade process
         /// 更新流程数据
         /// </summary>
-        /// <param name="entity">流程实体</param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult UpgradeProcess([FromBody] ProcessEntity entity)
         {
@@ -295,10 +295,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Delete process
         /// 删除琉璃厂数据
         /// </summary>
-        /// <param name="entity">流程实体</param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult DeleteProcess([FromBody] ProcessEntity entity)
         {
@@ -319,10 +318,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Load process template
         /// 加载流程模板
         /// </summary>
-        /// <param name="id">模板类型</param>
-        /// <returns>模板内容</returns>
         [HttpGet]
         public ResponseResult<ProcessTemplate> LoadProcessTemplate(string id)
         {
@@ -346,15 +344,13 @@ namespace Slickflow.Designer.Controllers.WebApi
             }
             return result;
         }
-        
         #endregion
 
-        #region 读取流程XML文件数据处理
+        #region Read process data
         /// <summary>
+        /// Query process by name
         /// 根据流程名称获取流程实体
         /// </summary>
-        /// <param name="query">查询实体</param>
-        /// <returns>流程实体</returns>
         [HttpPost]
         public ResponseResult<ProcessEntity> QueryProcessByName([FromBody] ProcessQuery query)
         {
@@ -375,10 +371,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Query process file
         /// 读取XML文件
         /// </summary>
-        /// <param name="query">查询实体</param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult<ProcessFileEntity> QueryProcessFile([FromBody] ProcessFileQuery query)
         {
@@ -399,10 +394,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Check if the process file exists
         /// 检查流程文件是否重复
         /// </summary>
-        /// <param name="query">查询实体</param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult<ProcessEntity> CheckProcessFile([FromBody] ProcessEntity query)
         {
@@ -426,10 +420,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Query process file by id
         /// 查询流程文件
         /// </summary>
-        /// <param name="query">查询实体</param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult<ProcessFileEntity> QueryProcessFileByID([FromBody] ProcessFileQuery query)
         {
@@ -449,10 +442,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Get process by version
         /// 根据版本获取流程记录
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult<ProcessEntity> GetProcessByVersion([FromBody] ProcessEntity obj)
         {
@@ -472,9 +464,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         } 
 
         /// <summary>
+        /// Get process list with simple info
         /// 获取流程记录列表
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
         public ResponseResult<List<ProcessEntity>> GetProcessListSimple()
         {
@@ -494,10 +486,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Get process
         /// 获取当前使用版本的流程记录
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult<ProcessEntity> GetProcess([FromBody] ProcessQuery query)
         {
@@ -517,9 +508,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Initialize bpmn file
         /// 初始化流程XML文件
         /// </summary>
-        /// <returns>流程XML</returns>
         [HttpGet]
         public ResponseResult<ProcessFileEntity> InitNewBPMNFile()
         {
@@ -537,10 +528,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Save process file
         /// 保存XML文件
         /// </summary>
-        /// <param name="entity">流程文件实体</param>
-        /// <returns>响应结果</returns>
         [HttpPost]
         public ResponseResult SaveProcessFile([FromBody] ProcessFileEntity entity)
         {
@@ -565,8 +555,6 @@ namespace Slickflow.Designer.Controllers.WebApi
         /// 补足XmlContent内容（Oracle-01483-error）
         /// ORA-01483: invalid length for DATE or NUMBER
         /// </summary>
-        /// <param name="content">原始文本内容</param>
-        /// <returns>处理后的文本内容</returns>
         private string PaddingContentWithRightSpace(string content)
         {
             var newContent = content;
@@ -579,10 +567,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Validate process
         /// 校验流程有效性
         /// </summary>
-        /// <param name="entity">校验实体</param>
-        /// <returns>校验结果对象</returns>
         [HttpPost]
         public ResponseResult<ProcessValidateResult> ValidateProcess([FromBody] ProcessEntity entity)
         {
@@ -602,12 +589,11 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
         #endregion
 
-        #region 任务数据记录
+        #region Task Data
         /// <summary>
+        /// Query ready activity instance
         /// 获取待办状态的节点
         /// </summary>
-        /// <param name="query">查询实体</param>
-        /// <returns>活动实例数据列表</returns>
         [HttpPost]
         public ResponseResult<List<ActivityInstanceEntity>> QueryReadyActivityInstance([FromBody] TaskQuery query)
         {
@@ -628,10 +614,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Query completed transiton instance
         /// 查询已完成转移数据
         /// </summary>
-        /// <param name="query">查询实体</param>
-        /// <returns>转移实例列表</returns>
         [HttpPost]
         public ResponseResult<List<TransitionImage>> QueryCompletedTransitionInstance([FromBody] TransitionInstanceQuery query)
         {
@@ -651,10 +636,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Query completed tasks
         /// 获取完成状态的任务
         /// </summary>
-        /// <param name="query">任务查询实体</param>
-        /// <returns>任务列表</returns>
         [HttpPost]
         public ResponseResult<List<TaskViewEntity>> QueryCompletedTasks([FromBody] TaskQuery query)
         {
@@ -721,8 +705,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
         #endregion
 
-        #region 角色资源数据获取
+        #region Role User Resource Data
         /// <summary>
+        /// Get Role all
         /// 获取所有角色数据集
         /// </summary>
         /// <returns></returns>
@@ -745,6 +730,7 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
+        /// Get user all
         /// 获取所有用户数据
         /// </summary>
         /// <returns></returns>

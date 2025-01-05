@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Transition Instance Query
     /// 转移查询实体
     /// </summary>
     public class TransitionInstanceQuery

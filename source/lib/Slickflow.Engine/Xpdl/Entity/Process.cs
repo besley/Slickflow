@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Slickflow.Engine.Common;
 
 namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
-    /// 流程对象
+    /// Process
     /// </summary>
     public class Process
     {
@@ -30,6 +31,15 @@ namespace Slickflow.Engine.Xpdl.Entity
             {
                 return transitionList;
             } 
+        }
+
+        private IList<FormOuter> formList = new List<FormOuter>();
+        public IList<FormOuter> FormList
+        {
+            get
+            {
+                return formList;
+            }
         }
     }
 }

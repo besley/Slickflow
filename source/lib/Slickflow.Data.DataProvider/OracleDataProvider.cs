@@ -9,6 +9,7 @@ namespace Slickflow.Data.DataProvider
 {
     /// <summary>
     /// ORACLE SQL 特定语句
+    /// ORACLE SQL Specific Statements
     /// </summary>
     internal class OracleDataProvider : ISqlDataProvider
     {

@@ -59,6 +59,7 @@ function ComplexType(props) {
 
     function getOptions() {
         //会加签类型
+        //Sign together / forward type
         var options = [
             { "label": kresource.getItem("optiondefault"), "value": "0", "name": "Optiondefault" },
             { "label": kresource.getItem("signtogether"), "value": "1", "name": "SignTogether" },

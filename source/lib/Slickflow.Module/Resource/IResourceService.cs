@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.Module.Resource
 {
     /// <summary>
+    /// Resource Service Interface
     /// 资源服务接口
     /// </summary>
     public interface IResourceService
@@ -15,6 +16,7 @@ namespace Slickflow.Module.Resource
         IList<User> GetUserListByRoles(string[] roleIDs);
         IList<Role> FillUsersIntoRoles(string[] roleIDs);
         IList<User> GetUserAll();
+        User GetUserById(string id);
         IList<User> GetUserListByRole(string roleID);
         IList<User> GetUserListByRoleCode(string roleCode);
         IList<User> GetUserListByRoleReceiverType(string[] roleIDs, string curUserID, int receiverType);

@@ -5,14 +5,16 @@ using Slickflow.Engine.Core.Pattern;
 namespace Slickflow.Engine.Core.Runtime
 {
     /// <summary>
+    /// Handling of revise methods
     /// 流程重新修订处理类
     /// </summary>
     internal class WfRuntimeManagerRevise : WfRuntimeManager
     {
         /// <summary>
+        /// Revise execute method
         /// 修订操作的处理逻辑
         /// </summary>
-        /// <param name="session">会话</param>
+        /// <param name="session"></param>
         internal override void ExecuteInstanceImp(IDbSession session)
         {
             try
@@ -23,11 +25,9 @@ namespace Slickflow.Engine.Core.Runtime
                     true,
                     session);
 
-                //执行节点
                 NodeMediator mediator = new NodeMediatorRevise(runningExecutionContext, session);
                 mediator.ExecuteWorkItem();
 
-                //构造回调函数需要的数据
                 var result = base.WfExecutedResult;
                 result.Status = WfExecutedStatus.Success;
                 result.Message = mediator.GetNodeMediatedMessage();

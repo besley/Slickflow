@@ -6,6 +6,7 @@ using System.Text;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Process Instance Entity
     /// 流程实例类
     /// </summary>
     [Table("WfProcessInstance")]

@@ -6,6 +6,7 @@ using System.Text;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Query base
     /// 查询基类
     /// </summary>
     public abstract class QueryBase
@@ -16,6 +17,7 @@ namespace Slickflow.Engine.Business.Entity
     }
 
     /// <summary>
+    /// Query Generic
     /// 查询泛型类
     /// </summary>
     /// <typeparam name="T"></typeparam>

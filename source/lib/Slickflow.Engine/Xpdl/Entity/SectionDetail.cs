@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
-    /// 自定义属性
+    /// Section Detail
     /// </summary>
     public class SectionDetail
     {

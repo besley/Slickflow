@@ -9,6 +9,7 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Xpdl.Schedule
 {
     /// <summary>
+    /// Next scheduling for intermediate event nodes
     /// 中间事件节点下一步调度
     /// </summary>
     internal class NextActivityScheduleIntermediate : NextActivityScheduleBase
@@ -20,14 +21,9 @@ namespace Slickflow.Engine.Xpdl.Schedule
         }
 
         /// <summary>
+        /// Get Next Activity List from Gateway Node
         /// 获取下一步节点列表
         /// </summary>
-        /// <param name="fromTransition">起始转移</param>
-        /// <param name="currentGatewayActivity">当前节点</param>
-        /// <param name="conditionKeyValuePair">条件对</param>
-        /// <param name="session">会话</param>
-        /// <param name="resultType">结果类型</param>
-        /// <returns>下一步组件类型</returns>
         internal override NextActivityComponent GetNextActivityListFromGateway(Transition fromTransition,
             Activity currentGatewayActivity, 
             IDictionary<string, string> conditionKeyValuePair,

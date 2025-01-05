@@ -12,7 +12,7 @@ using Slickflow.Engine.Xpdl.Common;
 namespace Slickflow.Engine.Xpdl.Convertor
 {
     /// <summary>
-    /// 网关转换器
+    /// Gateway Convertor
     /// </summary>
     internal class GatewayConvertor : ConvertorBase, IConvert
     {
@@ -26,17 +26,18 @@ namespace Slickflow.Engine.Xpdl.Convertor
             var gatewayNode = base.XMLNode;
 
             //节点详细类型设置
+            //Node detailed type setting
             var gatewatDetailNode = gatewayNode.SelectSingleNode(XPDLDefinition.Sf_StrXmlPath_GatewayDetail, base.XMLNamespaceManager);
 
             //区分Split和Join的类型
+            //Distinguish between Split and Join types
             var incomingCount = gatewayNode.SelectNodes(XPDLDefinition.BPMN2_StrXmlPath_Incoming, base.XMLNamespaceManager).Count;
             var outgoingCount = gatewayNode.SelectNodes(XPDLDefinition.BPMN2_StrXmlPath_Outgoing, base.XMLNamespaceManager).Count;
-
 
             if (incomingCount == 1
                 && outgoingCount > 1)
             {
-                //Split 类型
+                //Split 
                 gatewayDetail.SplitJoinType = GatewaySplitJoinTypeEnum.Split;
                 if (XPDLHelper.IsOrGateway(gatewayNode))
                 {
@@ -67,7 +68,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
             else if (outgoingCount == 1
                 && incomingCount > 1)
             {
-                // Join类型
+                // Join
                 gatewayDetail.SplitJoinType = GatewaySplitJoinTypeEnum.Join;
                 if (XPDLHelper.IsOrGateway(gatewayNode))
                 {
@@ -108,7 +109,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
             else if (outgoingCount == 1
                 && incomingCount == 1)
             {
-                //AndSplitMI 和 AndJoinMI的情形
+                //AndSplitMI and AndJoinMI
                 var strExtraSplitType = XMLHelper.GetXmlAttribute(gatewatDetailNode, "extraSplitType");
                 if (!string.IsNullOrEmpty(strExtraSplitType))
                 {

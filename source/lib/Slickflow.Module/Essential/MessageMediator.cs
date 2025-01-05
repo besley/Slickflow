@@ -5,17 +5,19 @@ using Slickflow.Module.Logging;
 namespace Slickflow.Module.Essential
 {
     /// <summary>
+    /// Message Mediator
     /// 消息处理器
     /// </summary>
     public class MessageMediator
     {
         /// <summary>
+        /// Invoke from message
         /// 激活消息服务
         /// </summary>
-        /// <param name="consumeMessageFunction">消息函数</param>
-        /// <param name="topic">主题</param>
-        /// <param name="line">内容</param>
-        /// <param name="jobName">作业名称</param>
+        /// <param name="consumeMessageFunction">message function</param>
+        /// <param name="topic">topic</param>
+        /// <param name="line">content</param>
+        /// <param name="jobName">job name</param>
         public void InvokeFromMessage(Func<MessageEntity, MessageConsumedResult> consumeMessageFunction,
             string topic,
             string line,

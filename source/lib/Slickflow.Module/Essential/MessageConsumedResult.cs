@@ -5,6 +5,7 @@ using System.Text;
 namespace Slickflow.Module.Essential
 {
     /// <summary>
+    /// Message Consumed Result
     /// 消息执行结果
     /// </summary>
     public class MessageConsumedResult
@@ -21,6 +22,7 @@ namespace Slickflow.Module.Essential
         }
 
         /// <summary>
+        /// Default
         /// 缺省方法
         /// </summary>
         /// <returns></returns>

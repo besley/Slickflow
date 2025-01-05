@@ -6,6 +6,7 @@ using Slickflow.Engine.Common;
 namespace Slickflow.Engine.Delegate
 {
     /// <summary>
+    /// Delegate execution context
     /// 代理执行上下文
     /// </summary>
     public class DelegateContext

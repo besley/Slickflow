@@ -5,17 +5,15 @@ using Slickflow.Module.Localize;
 namespace Slickflow.Engine.Delegate
 {
     /// <summary>
+    /// Delegate Service Factory
     /// 委托服务创建类
     /// </summary>
     public class DelegateServiceFactory
     {
         /// <summary>
+        /// Create Delegate Service
         /// 创建委托服务
         /// </summary>
-        /// <param name="scopeType">委托类型</param>
-        /// <param name="session">数据会话</param>
-        /// <param name="context">上下文</param>
-        /// <returns>委托服务</returns>
         public static DelegateServiceBase CreateDelegateService(DelegateScopeTypeEnum scopeType, 
             IDbSession session, 
             DelegateContext context)

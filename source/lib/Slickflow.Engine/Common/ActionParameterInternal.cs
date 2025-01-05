@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Common
 {
     /// <summary>
+    /// Call the parameter encapsulation class of external API
     /// 调用外部API的参数封装类
     /// </summary>
     public class ActionParameterInternal

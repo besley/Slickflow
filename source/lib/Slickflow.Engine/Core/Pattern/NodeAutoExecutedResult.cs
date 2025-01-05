@@ -6,7 +6,8 @@ using System.Text;
 namespace Slickflow.Engine.Core.Pattern
 {
     /// <summary>
-    /// Gateway执行结果类
+    /// Node Auto Executed Result
+    /// 节点自动执行结果类
     /// </summary>
     internal class NodeAutoExecutedResult
     {
@@ -46,6 +47,4 @@ namespace Slickflow.Engine.Core.Pattern
             return result;
         }
     }
-
-    
 }

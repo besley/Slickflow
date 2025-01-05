@@ -24,18 +24,14 @@ using Slickflow.Engine.Core.Pattern.Event.Signal;
 namespace Slickflow.Engine.Core.Pattern
 {
     /// <summary>
+    /// Node Mediator Abstract Class
     /// 节点执行器的抽象类
     /// </summary>
     internal abstract class NodeMediator
     {
-        #region 属性列表
-        /// <summary>
-        /// 活动上下文
-        /// </summary>
+        #region Property
+
         private ActivityForwardContext _activityForwardContext;
-        /// <summary>
-        /// 活动上下文
-        /// </summary>
         protected ActivityForwardContext ActivityForwardContext
         {
             get
@@ -44,13 +40,7 @@ namespace Slickflow.Engine.Core.Pattern
             }
         }
 
-        /// <summary>
-        /// 退回上下文
-        /// </summary>
         private BackwardContext _backwardContext;
-        /// <summary>
-        /// 退回上下文
-        /// </summary>
         protected BackwardContext BackwardContext
         {
             get
@@ -59,13 +49,7 @@ namespace Slickflow.Engine.Core.Pattern
             }
         }
 
-        /// <summary>
-        /// 数据库会话
-        /// </summary>
         private IDbSession _session;
-        /// <summary>
-        /// 数据库会话
-        /// </summary>
         protected IDbSession Session
         {
             get
@@ -74,13 +58,7 @@ namespace Slickflow.Engine.Core.Pattern
             }
         }
 
-        /// <summary>
-        /// 节点间连线
-        /// </summary>
         private LinkContext _linkContext;
-        /// <summary>
-        /// 节点间连线
-        /// </summary>
         internal LinkContext LinkContext
         {
             get
@@ -92,13 +70,7 @@ namespace Slickflow.Engine.Core.Pattern
             }
         }
 
-        /// <summary>
-        /// 活动节点实例管理对象
-        /// </summary>
         private ActivityInstanceManager activityInstanceManager;
-        /// <summary>
-        /// 活动实例管理
-        /// </summary>
         internal ActivityInstanceManager ActivityInstanceManager
         {
             get
@@ -111,13 +83,7 @@ namespace Slickflow.Engine.Core.Pattern
             }
         }
 
-        /// <summary>
-        /// 任务管理
-        /// </summary>
         private TaskManager taskManager;
-        /// <summary>
-        /// 任务管理
-        /// </summary>
         internal TaskManager TaskManager
         {
             get
@@ -130,13 +96,7 @@ namespace Slickflow.Engine.Core.Pattern
             }
         }
 
-        /// <summary>
-        /// 流程实例管理
-        /// </summary>
         private ProcessInstanceManager processInstanceManager;
-        /// <summary>
-        /// 流程实例管理
-        /// </summary>
         internal ProcessInstanceManager ProcessInstanceManager
         {
             get
@@ -147,13 +107,7 @@ namespace Slickflow.Engine.Core.Pattern
             }
         }
 
-        /// <summary>
-        /// 节点执行结果
-        /// </summary>
         private WfNodeMediatedResult _wfNodeMediatedResult;
-        /// <summary>
-        /// 节点执行结果
-        /// </summary>
         internal WfNodeMediatedResult WfNodeMediatedResult
         {
             get
@@ -170,13 +124,7 @@ namespace Slickflow.Engine.Core.Pattern
             }
         }
 
-        /// <summary>
-        /// 返回上下文
-        /// </summary>
         private ReturnDataContext _returnDataContext;
-        /// <summary>
-        /// 返回上下文
-        /// </summary>
         public ReturnDataContext ReturnDataContext
         {
             get
@@ -189,25 +137,14 @@ namespace Slickflow.Engine.Core.Pattern
             }
         }
 
-        /// <summary>
-        /// 委托服务
-        /// </summary>
         private DelegateServiceBase _delegateService;
         #endregion
 
-        #region 抽象方法列表
-        /// <summary>
-        /// 执行节点方法
-        /// </summary>
+        #region Abstract Method
         internal abstract void ExecuteWorkItem();
         #endregion
 
-        #region 构造函数
-        /// <summary>
-        /// 向前流转时的NodeMediator的构造函数
-        /// </summary>
-        /// <param name="forwardContext">前进上下文</param>
-        /// <param name="session">Session</param>
+        #region Constructor Function
         internal NodeMediator(ActivityForwardContext forwardContext, IDbSession session)
         {
             _activityForwardContext = forwardContext;
@@ -215,11 +152,6 @@ namespace Slickflow.Engine.Core.Pattern
             LinkContext.FromActivity = forwardContext.Activity;
         }
 
-        /// <summary>
-        /// 退回处理时的NodeMediator的构造函数
-        /// </summary>
-        /// <param name="backwardContext">退回上下文</param>
-        /// <param name="session">Session</param>
         internal NodeMediator(BackwardContext backwardContext, IDbSession session)
         {
             _session = session;
@@ -233,11 +165,11 @@ namespace Slickflow.Engine.Core.Pattern
         }
         #endregion
 
-        #region 执行外部事件的方法
+        #region Execute Method
         /// <summary>
-        /// 获取委托服务
+        /// Get Delegate Servide
         /// </summary>
-        /// <returns>委托服务实例</returns>
+        /// <returns></returns>
         private DelegateServiceBase GetDelegateService()
         {
             if (_delegateService == null)
@@ -268,10 +200,11 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Determine whether it is a starting type node
         /// 判断是否是起始类型的节点
         /// </summary>
-        /// <param name="nodeMediator">节点监督器</param>
-        /// <returns>判断结果</returns>
+        /// <param name="nodeMediator"></param>
+        /// <returns></returns>
         private bool IsNotNodeMediatorStart(NodeMediator nodeMediator)
         {
             if (!(nodeMediator is NodeMediatorStart)
@@ -291,15 +224,17 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// On before execute work item
         /// 触发前执行
         /// </summary>
         protected void OnBeforeExecuteWorkItem()
         {
             var delegateService = GetDelegateService();
             var actionList = LinkContext.FromActivity.ActionList;
-            ActionExecutor.ExecteActionListBefore(actionList, delegateService as IDelegateService);
+            ActionExecutor.ExecuteActionListBefore(actionList, delegateService as IDelegateService);
 
             //----> 节点流转前，调用活动执行的委托事件
+            //Before node flow, invoke the delegation event of activity execution
             var currentActivity = LinkContext.ToActivity != null ? LinkContext.ToActivity : LinkContext.FromActivity;
             DelegateExecutor.InvokeExternalDelegate(this.Session,
                 EventFireTypeEnum.OnActivityExecuting,
@@ -308,15 +243,17 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// On after execute work item
         /// 触发后执行
         /// </summary>
         protected void OnAfterExecuteWorkItem()
         {
             var delegateService = GetDelegateService();
             var actionList = ((this is NodeMediatorEnd) || (this is NodeMediatorIntermediate)) ? LinkContext.ToActivity.ActionList : LinkContext.FromActivity.ActionList;
-            ActionExecutor.ExecteActionListAfter(actionList, delegateService as IDelegateService);
+            ActionExecutor.ExecuteActionListAfter(actionList, delegateService as IDelegateService);
 
             //----> 节点流转完成后，调用活动完成执行的委托事件
+            //After the node flow is completed, invoke the delegation event that the activity completes execution
             var currentActivity = LinkContext.ToActivity != null ? LinkContext.ToActivity : LinkContext.FromActivity;
             DelegateExecutor.InvokeExternalDelegate(this.Session,
                 EventFireTypeEnum.OnActivityExecuted,
@@ -325,6 +262,7 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Execute code to automatically serve content
         /// 执行代码自动服务内容
         /// </summary>
         protected void OnExecutingServiceItem()
@@ -334,6 +272,9 @@ namespace Slickflow.Engine.Core.Pattern
             ServiceExecutor.ExecuteServiceList(serviceList, delegateService as IDelegateService);
         }
 
+        /// <summary>
+        /// Executing script item
+        /// </summary>
         protected void OnExecutingScriptItem()
         {
             var delegateService = GetDelegateService();
@@ -342,14 +283,18 @@ namespace Slickflow.Engine.Core.Pattern
         }
         #endregion
 
-        #region 流程执行逻辑
+        #region Process Running Logical
         /// <summary>
+        /// Traverse and execute the nodes following the current node
+        /// Normal operation: Transition parsing flow is required
+        /// Other methods are directly specified, such as jump, return, etc., 
+        /// which do not require parsing and cannot be equated with normal flow parsing
         /// 遍历执行当前节点后面的节点
         /// 正常运行：需要走Transition的解析流转
         /// 其它方式为直接指定：比如跳转，返送等，不需要解析，不能等同于正常流转解析
         /// </summary>
-        /// <param name="isNotParsedByTransition">不需要走解析流转</param>
-        /// <param name="session">数据会话</param>
+        /// <param name="isNotParsedByTransition"></param>
+        /// <param name="session"></param>
         internal void ContinueForwardCurrentNode(bool isNotParsedByTransition, IDbSession session)
         {
             try
@@ -360,6 +305,7 @@ namespace Slickflow.Engine.Core.Pattern
                 if (isNotParsedByTransition == true)
                 {
                     //跳转模式时，直接流转运行
+                    //Jump style
                     var root = NextActivityComponentFactory.CreateNextActivityComponent();
                     var nextActivityComponent = NextActivityComponentFactory.CreateNextActivityComponent(
                         this.LinkContext.FromActivity,
@@ -377,6 +323,7 @@ namespace Slickflow.Engine.Core.Pattern
                 else
                 {
                     //普通正常运行
+                    //Normal running
                     var nextActivityMatchedResult = this.ActivityForwardContext.ProcessModel.GetNextActivityList(
                         this.LinkContext.FromActivityInstance.ActivityGUID,
                         ActivityForwardContext.TaskID,
@@ -412,16 +359,13 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Recursive execution node
+        /// 1) Task of creating regular nodes
+        /// 2) Task of creating a countersignature node
         /// 递归执行节点
         /// 1)创建普通节点的任务
         /// 2)创建会签节点的任务
         /// </summary>
-        /// <param name="fromActivity">起始活动</param>
-        /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="isNotParsedForward">是否跳跃</param>
-        /// <param name="root">根节点</param>
-        /// <param name="conditionKeyValuePair">条件key-value</param>
-        /// <param name="mediatorResult">执行结果的返回列表</param>
         protected void ContinueForwardCurrentNodeRecurisivly(Activity fromActivity,
             ActivityInstanceEntity fromActivityInstance,
             NextActivityComponent root,
@@ -437,9 +381,11 @@ namespace Slickflow.Engine.Core.Pattern
                     if (XPDLHelper.IsGatewayComponentNode(comp.Activity.ActivityType) == true)
                     {
                         //此节点类型为任务节点：根据fromActivityInstance的类型判断是否可以创建任务
+                        //This node type is a task node: Determine whether a task can be created based on the type of from Activity Instance
                         if (fromActivityInstance.ActivityState == (short)ActivityStateEnum.Completed)
                         {
                             //此节点类型为分支或合并节点类型：首先需要实例化当前节点(自动完成)
+                            //This node type is a branch or merge node type: First, the current node needs to be instantiated (auto complete)
                             NodeMediatorGateway gatewayNodeMediator = NodeMediatorFactory.CreateNodeMediatorGateway(comp.Activity,
                             this.ActivityForwardContext.ProcessModel,
                             Session);
@@ -455,6 +401,7 @@ namespace Slickflow.Engine.Core.Pattern
                             if (nodeExecutedResult.Status == NodeAutoExecutedStatus.Successed)
                             {
                                 //遍历后续子节点
+                                //Traverse subsequent child nodes
                                 ContinueForwardCurrentNodeRecurisivly(gatewayNodeMediator.GatewayActivity,
                                     gatewayNodeMediator.GatewayActivityInstance,
                                     comp,
@@ -478,6 +425,7 @@ namespace Slickflow.Engine.Core.Pattern
                         else
                         {
                             //下一步的任务节点没有创建，需给出提示信息
+                            //The next task node has not been created, and a prompt message is required
                             if (IsWaitingOneOfJoin(fromActivity.GatewayDetail) == true)
                             {
                                 mediatorResult.Add(WfNodeMediatedResult.CreateNodeMediatedResultWithException(
@@ -505,6 +453,8 @@ namespace Slickflow.Engine.Core.Pattern
                     else if (XPDLHelper.IsCrossOverComponentNode(comp.Activity.ActivityType) == true)
                     {
                         //中间事件类型节点，调用外部业务逻辑，然后流程继续向下流转
+                        //Intermediate event type node, calling external business logic,
+                        //and then the process continues to flow downwards
                         NodeMediator eventNodeMediator = NodeMediatorFactory.CreateNodeMediatorEvent(ActivityForwardContext,
                             comp.Activity,
                             ActivityForwardContext.ProcessModel,
@@ -525,6 +475,7 @@ namespace Slickflow.Engine.Core.Pattern
                         if (nodeExecutedResult.Status == NodeAutoExecutedStatus.Successed)
                         {
                             //遍历后续子节点
+                            //Traverse subsequent child nodes
                             ContinueForwardCurrentNodeRecurisivly(eventNodeMediator.LinkContext.ToActivity,
                                 eventNodeMediator.LinkContext.ToActivityInstance,
                                 comp,
@@ -556,19 +507,21 @@ namespace Slickflow.Engine.Core.Pattern
                             );
                     }
                 }
-                else if (comp.Activity.ActivityType == ActivityTypeEnum.TaskNode)                   //普通任务节点
+                else if (comp.Activity.ActivityType == ActivityTypeEnum.TaskNode)                  
                 {
                     //此节点类型为任务节点：根据fromActivityInstance的类型判断是否可以创建任务
+                    //This node type is a task node: Determine whether a task can be created based on the type of from Activity Instance
                     if (fromActivityInstance.ActivityState == (short)ActivityStateEnum.Completed)
                     {
                         //创建新任务节点
+                        //Create new task node
                         NodeMediator taskNodeMediator = new NodeMediatorTask(Session);
                         taskNodeMediator.CreateActivityTaskTransitionInstance(comp.Activity,
                             ActivityForwardContext.ProcessInstance,
                             fromActivityInstance,
                             comp.Transition.TransitionGUID,
                             comp.Transition.DirectionType == TransitionDirectionTypeEnum.Loop ?
-                                TransitionTypeEnum.Loop : TransitionTypeEnum.Forward, //根据Direction方向确定是否是自身循环
+                                TransitionTypeEnum.Loop : TransitionTypeEnum.Forward, 
                             isNotParsedForward == true ?
                                 TransitionFlyingTypeEnum.ForwardFlying : TransitionFlyingTypeEnum.NotFlying,
                             ActivityForwardContext.ActivityResource,
@@ -577,6 +530,7 @@ namespace Slickflow.Engine.Core.Pattern
                     else
                     {
                         //下一步的任务节点没有创建，需给出提示信息
+                        //The next task node has not been created, and a prompt message is required
                         if (IsWaitingOneOfJoin(fromActivity.GatewayDetail) == true)
                         {
                             mediatorResult.Add(WfNodeMediatedResult.CreateNodeMediatedResultWithException(
@@ -604,6 +558,7 @@ namespace Slickflow.Engine.Core.Pattern
                 else if (comp.Activity.ActivityType == ActivityTypeEnum.ServiceNode)
                 {
                     //服务类型节点，调用外部业务逻辑，然后流程继续向下流转
+                    //Service type node, calling external business logic, and then the process continues to flow downwards
                     NodeAutoExecutedResult serviceExecutedResult = null;
                     NodeMediator serviceNodeMediator = NodeMediatorFactory.CreateNodeMediatorEvent(ActivityForwardContext,
                         comp.Activity,
@@ -623,6 +578,7 @@ namespace Slickflow.Engine.Core.Pattern
                     if (serviceExecutedResult.Status == NodeAutoExecutedStatus.Successed)
                     {
                         //遍历后续子节点
+                        //Traverse subsequent child nodes
                         ContinueForwardCurrentNodeRecurisivly(serviceNodeMediator.LinkContext.ToActivity,
                             serviceNodeMediator.LinkContext.ToActivityInstance,
                             comp,
@@ -644,6 +600,7 @@ namespace Slickflow.Engine.Core.Pattern
                 else if(comp.Activity.ActivityType == ActivityTypeEnum.ScriptNode)
                 {
                     //脚本类型节点，调用脚本程序，然后流程继续向下流转
+                    //Script type node, calling script program, and then the process continues to flow downwards
                     NodeAutoExecutedResult scriptExecutedResult = null;
                     NodeMediator scriptNodeMediator = NodeMediatorFactory.CreateNodeMediatorEvent(ActivityForwardContext,
                         comp.Activity,
@@ -678,9 +635,10 @@ namespace Slickflow.Engine.Core.Pattern
                             new WfRuntimeException(scriptExecutedResult.Status.ToString()));
                     }
                 }
-                else if (comp.Activity.ActivityType == ActivityTypeEnum.MultiSignNode)       //多实例会签节点
+                else if (comp.Activity.ActivityType == ActivityTypeEnum.MultiSignNode)      
                 {
                     //此节点类型为任务节点：根据fromActivityInstance的类型判断是否可以创建任务
+                    //This node type is a task node: Determine whether a task can be created based on the type of from Activity Instance
                     if (fromActivityInstance.ActivityState == (short)ActivityStateEnum.Completed)
                     {
                         //创建新多实例节点
@@ -690,7 +648,7 @@ namespace Slickflow.Engine.Core.Pattern
                             fromActivityInstance,
                             comp.Transition.TransitionGUID,
                             comp.Transition.DirectionType == TransitionDirectionTypeEnum.Loop ?
-                                TransitionTypeEnum.Loop : TransitionTypeEnum.Forward, //根据Direction方向确定是否是自身循环
+                                TransitionTypeEnum.Loop : TransitionTypeEnum.Forward, 
                             isNotParsedForward == true ?
                                 TransitionFlyingTypeEnum.ForwardFlying : TransitionFlyingTypeEnum.NotFlying,
                             ActivityForwardContext.ActivityResource,
@@ -699,6 +657,7 @@ namespace Slickflow.Engine.Core.Pattern
                     else
                     {
                         //下一步的任务节点没有创建，需给出提示信息
+                        ////The next task node has not been created, and a prompt message is required
                         if (IsWaitingOneOfJoin(fromActivity.GatewayDetail) == true)
                         {
                             mediatorResult.Add(WfNodeMediatedResult.CreateNodeMediatedResultWithException(
@@ -723,12 +682,10 @@ namespace Slickflow.Engine.Core.Pattern
                         }
                     }
                 }
-                else if (comp.Activity.ActivityType == ActivityTypeEnum.SubProcessNode)         //子流程节点
+                else if (comp.Activity.ActivityType == ActivityTypeEnum.SubProcessNode)         
                 {
-                    //节点类型为subprocessnode
                     if (fromActivityInstance.ActivityState == (short)ActivityStateEnum.Completed)
                     {
-                        //实例化subprocess节点数据
                         var subNodeMediator = NodeMediatorFactory.CreateNodeMediatorSubProcess(comp.Activity, this.Session);
                         subNodeMediator.CreateActivityTaskTransitionInstance(comp.Activity,
                             ActivityForwardContext.ProcessInstance,
@@ -741,15 +698,17 @@ namespace Slickflow.Engine.Core.Pattern
                             Session);
                     }
                 }
-                else if (comp.Activity.ActivityType == ActivityTypeEnum.EndNode)        //结束节点
+                else if (comp.Activity.ActivityType == ActivityTypeEnum.EndNode)        
                 {
                     if (fromActivityInstance.ActivityState == (short)ActivityStateEnum.Completed)
                     {
                         //此节点为完成结束节点，结束流程
+                        //This node is the completion end node, ending the process
                         var endMediator = NodeMediatorFactory.CreateNodeMediatorEnd(ActivityForwardContext, comp.Activity, Session);
                         endMediator.LinkContext.ToActivity = comp.Activity;
 
                         //创建结束节点实例及转移数据
+                        //Create end node instance and transitioni data
                         endMediator.CreateActivityTaskTransitionInstance(comp.Activity, ActivityForwardContext.ProcessInstance,
                             fromActivityInstance, comp.Transition.TransitionGUID, TransitionTypeEnum.Forward,
                             TransitionFlyingTypeEnum.NotFlying,
@@ -757,11 +716,13 @@ namespace Slickflow.Engine.Core.Pattern
                             Session);
 
                         //执行结束节点中的业务逻辑
+                        //Create end node instance and transfer data
                         endMediator.ExecuteWorkItem();
                     }
                     else
                     {
                         //结束节点没有创建，需给出提示信息
+                        //End node not created, prompt message is required
                         if (IsWaitingOneOfJoin(fromActivity.GatewayDetail) == true)
                         {
                             mediatorResult.Add(WfNodeMediatedResult.CreateNodeMediatedResultWithException(
@@ -802,6 +763,7 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Determine whether it is a merger situation
         /// 判断是否是合并情况
         /// </summary>
         /// <param name="gatewayDetail"></param>
@@ -824,16 +786,9 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Create activity task transtion instance
         /// 创建工作项及转移数据
         /// </summary>
-        /// <param name="toActivity">活动</param>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="flyingType">跳跃类型</param>
-        /// <param name="activityResource">活动资源</param>
-        /// <param name="session">Session</param>
         internal virtual void CreateActivityTaskTransitionInstance(Activity toActivity,
             ProcessInstanceEntity processInstance,
             ActivityInstanceEntity fromActivityInstance,
@@ -845,13 +800,16 @@ namespace Slickflow.Engine.Core.Pattern
         { }
 
         /// <summary>
+        /// Virtual method for creating tasks
+        /// 1.  For automatically executed work items, there is no need to rewrite this method
+        /// 2.  For manually executed work items, the method needs to be rewritten to insert pending task data
         /// 创建任务的虚方法
         /// 1. 对于自动执行的工作项，无需重写该方法
         /// 2. 对于人工执行的工作项，需要重写该方法，插入待办的任务数据
         /// </summary>
-        /// <param name="activityResource">活动资源</param>
-        /// <param name="toActivityInstance">活动实例</param>
-        /// <param name="session">Session</param>
+        /// <param name="activityResource"></param>
+        /// <param name="toActivityInstance"></param>
+        /// <param name="session"></param>
         internal virtual void CreateNewTask(ActivityInstanceEntity toActivityInstance,
             ActivityResource activityResource,
             IDbSession session)
@@ -868,11 +826,11 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 创建节点对象
+        /// Create activity instance object
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="activity">活动</param>
-        /// <param name="runner">执行者</param>
+        /// <param name="processInstance"></param>
+        /// <param name="activity"></param>
+        /// <param name="runner"></param>
         protected ActivityInstanceEntity CreateActivityInstanceObject(Activity activity,
             ProcessInstanceEntity processInstance,
             WfAppRunner runner)
@@ -889,10 +847,10 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 插入实例数据
+        /// Insert activity instance
         /// </summary>
-        /// <param name="activityInstance">活动资源</param>
-        /// <param name="session">会话</param>
+        /// <param name="activityInstance"></param>
+        /// <param name="session"></param>
         protected virtual int InsertActivityInstance(ActivityInstanceEntity activityInstance,
             IDbSession session)
         {
@@ -901,33 +859,26 @@ namespace Slickflow.Engine.Core.Pattern
 
 
         /// <summary>
-        /// 节点对象的完成方法
+        /// Complete activity instance
         /// </summary>
-        /// <param name="ActivityInstanceID">活动实例ID</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
+        /// <param name="ActivityInstanceID"></param>
+        /// <param name="runner"></param>
+        /// <param name="session"></param>
         protected virtual void CompleteActivityInstance(int ActivityInstanceID,
             WfAppRunner runner,
             IDbSession session)
         {
-            //设置完成状态
             ActivityInstanceManager.Complete(ActivityInstanceID,
                 runner,
                 session);
         }
 
         /// <summary>
+        /// Master node of countersignature type, handling multiple instance nodes
+        /// Create the master node for the countersignature node and record the instance child nodes under the countersignature master node
         /// 会签类型的主节点, 多实例节点处理
         /// 创建会签节点的主节点，以及会签主节点下的实例子节点记录
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="toActivity">活动</param>
-        /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="activityResource">资源</param>
-        /// <param name="flyingType">跳跃类型</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="session">会话</param>
         internal void CreateMultipleInstance(Activity toActivity,
             ProcessInstanceEntity processInstance,
             ActivityInstanceEntity fromActivityInstance,
@@ -937,19 +888,14 @@ namespace Slickflow.Engine.Core.Pattern
             ActivityResource activityResource,
             IDbSession session)
         {
-            //实例化主节点Activity
             var toActivityInstance = CreateActivityInstanceObject(toActivity,
                 processInstance, activityResource.AppRunner);
 
-            //更新主节点实例数据
             toActivityInstance.ActivityState = (short)ActivityStateEnum.Suspended;
             toActivityInstance.ComplexType = (short)ComplexTypeEnum.SignTogether;
 
-            //串行或并行类型
             toActivityInstance.MergeType = (short)toActivity.MultiSignDetail.MergeType;
-            //通过率类型：个数或者百分比
             toActivityInstance.CompareType = (short)toActivity.MultiSignDetail.CompareType;
-            //主节点设置通过率
             toActivityInstance.CompleteOrder = toActivity.MultiSignDetail.CompleteOrder;
 
             toActivityInstance.AssignedToUserIDs = PerformerBuilder.GenerateActivityAssignedUserIDs(
@@ -957,10 +903,7 @@ namespace Slickflow.Engine.Core.Pattern
             toActivityInstance.AssignedToUserNames = PerformerBuilder.GenerateActivityAssignedUserNames(
                 activityResource.NextActivityPerformers[toActivity.ActivityGUID]);
 
-            //插入主节点实例数据
             ActivityInstanceManager.Insert(toActivityInstance, session);
-
-            //插入主节点转移数据
             InsertTransitionInstance(processInstance,
                 transitionGUID,
                 fromActivityInstance,
@@ -971,6 +914,7 @@ namespace Slickflow.Engine.Core.Pattern
                 session);
 
             //插入会签子节点实例数据
+            //Insert signature sub node instance data
             var plist = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
             ActivityInstanceEntity entity = new ActivityInstanceEntity();
             for (short i = 0; i < plist.Count; i++)
@@ -981,38 +925,34 @@ namespace Slickflow.Engine.Core.Pattern
                 entity.MIHostActivityInstanceID = toActivityInstance.ID;
 
                 //并行串行下，多实例子节点的执行顺序设置
+                //Setting the Execution Order of Multiple Real Example Nodes in Parallel Serial
                 if (toActivityInstance.MergeType == (short)MergeTypeEnum.Sequence)
                 {
                     entity.CompleteOrder = (short)(i + 1);
                 }
                 else if (toActivityInstance.MergeType == (short)MergeTypeEnum.Parallel)
                 {
-                    entity.CompleteOrder = -1;       //并行模式下CompleteOrder的优先级一样，所以置为 -1
+                    //并行模式下CompleteOrder的优先级一样，所以置为 -1
+                    //In parallel mode, the priority of Completed Order is the same, so it is set to -1
+                    entity.CompleteOrder = -1;       
                 }
 
                 //如果是串行会签，只有第一个节点处于运行状态，其它节点挂起
+                //If it is a serial countersignature, only the first node is running, and the other nodes are suspended
                 if ((i > 0) && (toActivity.MultiSignDetail.MergeType == MergeTypeEnum.Sequence))
                 {
                     entity.ActivityState = (short)ActivityStateEnum.Suspended;
                 }
 
-                //插入活动实例数据，并返回活动实例ID
                 entity.ID = ActivityInstanceManager.Insert(entity, session);
-
-                //插入任务数据
                 TaskManager.Insert(entity, plist[i], activityResource.AppRunner, session);
             }
         }
 
         /// <summary>
+        /// Create backward activity instance object
         /// 创建退回类型的活动实例对象
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="backwardType">退回类型</param>
-        /// <param name="backSrcActivityInstanceID">退回的活动实例ID</param>
-        /// <param name="backOrgActivityInstanceID">初始办理活动实例ID</param>
-        /// <param name="runner">登录用户</param>
-        /// <returns></returns>
         protected ActivityInstanceEntity CreateBackwardToActivityInstanceObject(ProcessInstanceEntity processInstance,
             BackwardTypeEnum backwardType,
             int backSrcActivityInstanceID,
@@ -1035,17 +975,8 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 插入连线实例的方法
+        /// Insert transition instance
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="transitionGUID">转移ID</param>
-        /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="toActivityInstance">到达活动实例</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="flyingType">跳跃类型</param>
-        /// <param name="runner">执行者</param>
-        /// <param name="session">Session</param>
-        /// <returns>新转移实例ID</returns>
         internal virtual int InsertTransitionInstance(ProcessInstanceEntity processInstance,
             String transitionGUID,
             ActivityInstanceEntity fromActivityInstance,
@@ -1070,11 +1001,12 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Generate activity user allocation information
         /// 生成活动用户分配信息
         /// </summary>
-        /// <param name="toActivityInstance">下一步活动实例</param>
-        /// <param name="activityResource">活动资源</param>
-        /// <returns>下一步活动实例</returns>
+        /// <param name="toActivityInstance"></param>
+        /// <param name="activityResource"></param>
+        /// <returns></returns>
         protected ActivityInstanceEntity GenerateActivityAssignedUserInfo(ActivityInstanceEntity toActivityInstance,
             ActivityResource activityResource)
         {
@@ -1082,6 +1014,7 @@ namespace Slickflow.Engine.Core.Pattern
                 && activityResource.NextActivityPerformers != null)
             {
                 //前端显式指定下一步骤的执行用户列表
+                //The front-end explicitly specifies the list of executing users for the next step
                 toActivityInstance.AssignedToUserIDs = PerformerBuilder.GenerateActivityAssignedUserIDs(
                     activityResource.NextActivityPerformers[toActivityInstance.ActivityGUID]);
                 toActivityInstance.AssignedToUserNames = PerformerBuilder.GenerateActivityAssignedUserNames(
@@ -1090,6 +1023,7 @@ namespace Slickflow.Engine.Core.Pattern
             else if (activityResource.AppRunner.NextPerformerType ==  NextPerformerIntTypeEnum.Definition)
             {
                 //根据节点上的角色定义获取下一步骤的执行用户列表
+                //Obtain the list of executing users for the next step based on the role definition on the node
                 var performers = ActivityForwardContext.ProcessModel.GetActivityPerformers(toActivityInstance.ActivityGUID);
                 activityResource.NextActivityPerformers = performers;
 
@@ -1101,6 +1035,7 @@ namespace Slickflow.Engine.Core.Pattern
             else if (activityResource.AppRunner.NextPerformerType == NextPerformerIntTypeEnum.Single)
             {
                 //用于测试使用的单一用户列表
+                //Single user list for testing purposes
                 activityResource.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(toActivityInstance.ActivityGUID,
                     activityResource.AppRunner.UserID,
                     activityResource.AppRunner.UserName);
@@ -1116,10 +1051,11 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Generate PerformerList data structure based on personnel information assigned by nodes
         /// 由节点分配的人员信息生成PerformerList数据结构
         /// </summary>
-        /// <param name="activityInstance">活动实例</param>
-        /// <returns>人员列表</returns>
+        /// <param name="activityInstance"></param>
+        /// <returns></returns>
         protected PerformerList AntiGenerateActivityPerformerList(ActivityInstanceEntity activityInstance)
         {
             var performerList = new PerformerList();
@@ -1140,9 +1076,10 @@ namespace Slickflow.Engine.Core.Pattern
         #endregion
 
         /// <summary>
+        /// Generate messages based on the type of node execution result
         /// 根据节点执行结果类型，生成消息
         /// </summary>
-        /// <returns>消息内容</returns>
+        /// <returns></returns>
         internal string GetNodeMediatedMessage()
         {
             var message = string.Empty;

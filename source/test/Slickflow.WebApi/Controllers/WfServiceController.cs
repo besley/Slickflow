@@ -14,16 +14,16 @@ using Slickflow.Engine.Service;
 namespace Slickflow.WebApi.Controllers
 {
     /// <summary>
-    /// 引擎接口服务
+    /// Workflow Service Controller
+    /// 工作流服务接口测试
     /// </summary>
     public class WfServiceController : Controller
     {
-        #region Workflow 步骤获取操作
+        #region Workflow Get Step Info
         /// <summary>
+        /// Get Next Step Info
         /// 获取下一步的步骤列表
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>步骤列表</returns>
         [HttpPost]
         public ResponseResult<NextStepInfo> GetNextStepInfo([FromBody] WfAppRunner runner)
         {
@@ -43,12 +43,11 @@ namespace Slickflow.WebApi.Controllers
         }
         #endregion
 
-        #region Workflow 运行访问操作
+        #region Workflow Execute Process
         /// <summary>
+        /// Start process
         ///  启动流程
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult<WfExecutedResult> StartProcess([FromBody] WfAppRunner runner)
         {
@@ -74,10 +73,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  运行流程测试
+        /// Run Process
+        /// 运行流程测试
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult<WfExecutedResult> RunProcess([FromBody] WfAppRunner runner)
         {
@@ -103,10 +101,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  加签流程
+        /// Sign Forward Process
+        /// 加签流程
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult<WfExecutedResult> SignForwardProcess([FromBody] WfAppRunner runner)
         {
@@ -132,10 +129,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  撤销流程
+        /// Withdraw process
+        /// 撤销流程
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult<WfExecutedResult> WithdrawProcess([FromBody] WfAppRunner runner)
         {
@@ -161,10 +157,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  退回流程
+        /// Sendback process
+        /// 退回流程
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult<WfExecutedResult> SendBackProcess([FromBody] WfAppRunner runner)
         {
@@ -190,10 +185,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
+        /// Reverse process
         ///  返签流程
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult<WfExecutedResult> ReverseProcess([FromBody] WfAppRunner runner)
         {
@@ -219,10 +213,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
+        /// Reject process
         /// 跳转流程
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult<WfExecutedResult> RejectProcess([FromBody] WfAppRunner runner)
         {
@@ -248,10 +241,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
+        /// Jump process
         /// 跳转流程
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult<WfExecutedResult> JumpProcess([FromBody] WfAppRunner runner)
         {
@@ -277,10 +269,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
+        /// Close process
         /// 关闭流程
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult<WfExecutedResult> CloseProcess([FromBody] WfAppRunner runner)
         {
@@ -306,10 +297,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
+        /// Revise process
         /// 修订流程
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult<WfExecutedResult> ReviseProcess([FromBody] WfAppRunner runner)
         {
@@ -335,12 +325,11 @@ namespace Slickflow.WebApi.Controllers
         }
         #endregion
 
-        #region Workflow 获取流程定义
+        #region Workflow Process Definition
         /// <summary>
+        /// Get process by version
         /// 获取流程定义实体
         /// </summary>
-        /// <param name="query">查询对象</param>
-        /// <returns>实体对象</returns>
         [HttpPost]
         public ResponseResult<ProcessEntity> GetProcessByVersion([FromBody] ProcessQuery query)
         {
@@ -362,9 +351,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
+        /// Get Process List Simple
         /// 获取流程记录列表
         /// </summary>
-        /// <returns>流程列表</returns>
         [HttpGet]
         public ResponseResult<List<ProcessEntity>> GetProcessListSimple()
         {
@@ -386,10 +375,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
+        /// Get Task activity list
         /// 获取任务节点列表
         /// </summary>
-        /// <param name="id">流程ID</param>
-        /// <returns>节点列表</returns>
         [HttpGet]
         public ResponseResult<List<Activity>> GetTaskActivityList(int id)
         {
@@ -431,10 +419,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
+        /// Get Task View
         /// 获取任务节点列表
         /// </summary>
-        /// <param name="id">流程ID</param>
-        /// <returns>节点列表</returns>
         [HttpGet]
         public ResponseResult<TaskViewEntity> GetTaskView(int id)
         {
@@ -457,10 +444,9 @@ namespace Slickflow.WebApi.Controllers
 
 
         /// <summary>
+        /// Import process
         /// 导入流程
         /// </summary>
-        /// <param name="entity">流程实体</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult ImportProcess([FromBody] ProcessEntity entity)
         {
@@ -481,12 +467,11 @@ namespace Slickflow.WebApi.Controllers
         }
         #endregion
 
-        #region Workflow 任务数据获取
+        #region Workflow Task Data
         /// <summary>
+        /// Get Ready Task list
         /// 获取任务列表
         /// </summary>
-        /// <param name="query">任务查询</param>
-        /// <returns>任务列表</returns>
         [HttpPost]
         public ResponseResult<List<TaskViewEntity>> GetReadyTaskList([FromBody] TaskQuery query)
         {
@@ -508,10 +493,9 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
+        /// Get Done Task List
         /// 获取任务列表
         /// </summary>
-        /// <param name="query">任务查询</param>
-        /// <returns>任务列表</returns>
         [HttpPost]
         public ResponseResult<List<TaskViewEntity>> GetDoneTaskList([FromBody] TaskQuery query)
         {

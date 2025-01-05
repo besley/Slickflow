@@ -7,11 +7,11 @@ using Slickflow.Engine.Business.Manager;
 namespace Slickflow.Engine.Delegate
 {
     /// <summary>
-    /// 委托服务基类
+    /// Delegate Service Base
     /// </summary>
     public abstract class DelegateServiceBase
     {
-        #region 属性、抽象方法及构造
+        #region Property, Abstract and Constructor
         private ActivityResource _activityResource = null;
         public string AppInstanceID { get; set; }
         public string ProcessGUID { get; set; }
@@ -22,11 +22,6 @@ namespace Slickflow.Engine.Delegate
 
         public abstract T GetInstance<T>(int id) where T : class;
 
-        /// <summary>
-        /// 构造方法
-        /// </summary>
-        /// <param name="session">会话</param>
-        /// <param name="context">上下文</param>
         public DelegateServiceBase(IDbSession session, 
             DelegateContext context)
         {
@@ -40,58 +35,63 @@ namespace Slickflow.Engine.Delegate
         #endregion
 
         /// <summary>
+        /// Read instance primary key ID
         /// 读取实例主键ID
         /// </summary>
-        /// <returns>主键ID</returns>
+        /// <returns></returns>
         public int GetProcessInstanceID()
         {
             return ProcessInstanceID;
         }
 
         /// <summary>
-        /// 获取Session
+        /// Get Session
         /// </summary>
-        /// <returns>会话</returns>
+        /// <returns></returns>
         public IDbSession GetSession()
         {
             return Session;
         }
 
         /// <summary>
+        /// Get Condition Value
         /// 获取条件参数数值
         /// </summary>
-        /// <param name="name">参数名称</param>
-        /// <returns>参数数值</returns>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public string GetCondition(string name)
         {
             var value = _activityResource.ConditionKeyValuePair[name];
             return value;
         }
         /// <summary>
+        /// Set Condition Value
         /// 设置条件
         /// </summary>
-        /// <param name="name">名称</param>
-        /// <param name="value">数值</param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
         public void SetCondition(string name, string value)
         {
             _activityResource.ConditionKeyValuePair[name] = value;
         }
 
         /// <summary>
+        /// Set Activity Resource
         /// 设置活动资源
         /// </summary>
-        /// <param name="activityResource">资源</param>
+        /// <param name="activityResource"></param>
         internal void SetActivityResource(ActivityResource activityResource)
         {
             _activityResource = activityResource;
         }
 
         /// <summary>
-        /// 设置变量
+        /// Save Variable
+        /// 保存变量
         /// </summary>
-        /// <param name="name">名称</param>
-        /// <param name="value">数值</param>
-        /// <param name="variableType">变量类型</param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <param name="variableType"></param>
         public void SaveVariable(ProcessVariableTypeEnum variableType, string name, string value)
         {
             var pvm = new ProcessVariableManager();
@@ -99,7 +99,6 @@ namespace Slickflow.Engine.Delegate
 
             if (variableType == ProcessVariableTypeEnum.Process)
             {
-                //设置流程变量
                 entity = new ProcessVariableEntity
                 {
                     VariableType = ProcessVariableTypeEnum.Process.ToString(),
@@ -130,21 +129,20 @@ namespace Slickflow.Engine.Delegate
         }
 
         /// <summary>
+        /// Get Variable
         /// 获取变量
         /// </summary>
-        /// <param name="name">名称</param>
-        /// <param name="variableType">变量类型</param>
-        /// <returns>数值</returns>
+        /// <param name="name"></param>
+        /// <param name="variableType"></param>
+        /// <returns></returns>
         public string GetVariable(ProcessVariableTypeEnum variableType, string name)
         {
-            //查询活动变量
             var value = string.Empty;
             ProcessVariableQuery query = null;
             var pvm = new ProcessVariableManager();
 
             if (variableType == ProcessVariableTypeEnum.Process)
             {
-                //查询流程变量
                 query = new ProcessVariableQuery
                 {
                     VariableType = ProcessVariableTypeEnum.Process,
@@ -168,10 +166,11 @@ namespace Slickflow.Engine.Delegate
         }
 
         /// <summary>
+        /// Get Variable Throughtly
         /// 获取变量内容
         /// </summary>
-        /// <param name="name">变量名称</param>
-        /// <returns>变量内容</returns>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public string GetVariableThroughly(string name)
         {
             var query = new ProcessVariableQuery();

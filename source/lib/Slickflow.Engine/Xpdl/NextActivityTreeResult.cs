@@ -6,7 +6,7 @@ using Slickflow.Engine.Common;
 namespace Slickflow.Engine.Xpdl
 {
     /// <summary>
-    /// 下一步节点树对象
+    /// Next Activity Tree Result
     /// </summary>
     public class NextActivityTreeResult
     {

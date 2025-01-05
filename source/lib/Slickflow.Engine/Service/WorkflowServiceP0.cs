@@ -13,17 +13,16 @@ using Slickflow.Engine.Xpdl.Common;
 namespace Slickflow.Engine.Service
 {
     /// <summary>
+    /// Process Definition Data Service Class
     /// 流程定义数据服务类
     /// </summary>
     public partial class WorkflowService: IWorkflowService
     {
-        #region 流程定义数据
+        #region Process Definition Data
         /// <summary>
+        /// Get Process by Version
         /// 流程定义数据读取
         /// </summary>
-        /// <param name="processGUID">流程定义GUID</param>
-        /// <param name="version">版本号</param>
-        /// <returns>流程</returns>
         public ProcessEntity GetProcessByVersion(string processGUID, string version = null)
         {
             var pm = new ProcessManager();
@@ -33,11 +32,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get Process by Version
         /// 流程定义数据读取
         /// </summary>
-        /// <param name="processName">流程名称</param>
-        /// <param name="version">版本号</param>
-        /// <returns>流程</returns>
         public ProcessEntity GetProcessByName(string processName, string version = null)
         {
             var pm = new ProcessManager();
@@ -47,11 +44,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get Process by Version
         /// 流程定义数据读取
         /// </summary>
-        /// <param name="processCode">流程代码</param>
-        /// <param name="version">版本号</param>
-        /// <returns>流程</returns>
         public ProcessEntity GetProcessByCode(string processCode, string version)
         {
             var pm = new ProcessManager();
@@ -61,10 +56,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Retrieve the current using version of the process 
         /// 获取当前版本的流程定义记录
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <returns>流程</returns>
         public ProcessEntity GetProcessUsing(string processGUID)
         {
             var pm = new ProcessManager();
@@ -73,10 +67,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Retrieve the process by id
         /// 获取流程定义记录
         /// </summary>
-        /// <param name="processID">流程主键ID</param>
-        /// <returns>流程</returns>
         public ProcessEntity GetProcessByID(int processID)
         {
             var pm = new ProcessManager();
@@ -85,10 +78,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Retrieve the process file by id
         /// 获取流程定义文件
         /// </summary>
-        /// <param name="id">流程ID</param>
-        /// <returns></returns>
         public ProcessFileEntity GetProcessFileByID(int id)
         {
             var pm = new ProcessManager();
@@ -98,9 +90,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Get process list
         /// 获取流程定义数据
         /// </summary>
-        /// <returns></returns>
         public IList<ProcessEntity> GetProcessList()
         {
             var pm = new ProcessManager();
@@ -110,9 +102,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Obtain process definition data (including only basic attributes)
         /// 获取流程定义数据（只包括基本属性）
         /// </summary>
-        /// <returns></returns>
         public IList<ProcessEntity> GetProcessListSimple()
         {
             var pm = new ProcessManager();
@@ -122,11 +114,9 @@ namespace Slickflow.Engine.Service
 
 
         /// <summary>
+        /// Get process file
         /// 流程定义的XML文件获取
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <returns>流程文件</returns>
         public ProcessFileEntity GetProcessFile(string processGUID, string version)
         {
             var pm = new ProcessManager();
@@ -136,9 +126,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Save process file
         /// 保存流程定义的xml文件
         /// </summary>
-        /// <param name="entity">流程文件实体</param>
         public void SaveProcessFile(ProcessFileEntity entity)
         {
             var pm = new ProcessManager();
@@ -146,10 +136,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Insert process
         /// 创建流程定义记录
         /// </summary>
-        /// <param name="entity">流程定义实体</param>
-        /// <returns>新ID</returns>
         public int InsertProcess(ProcessEntity entity)
         {
             var pm = new ProcessManager();
@@ -159,10 +148,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Create process
         /// 创建流程定义记录
         /// </summary>
-        /// <param name="entity">流程定义实体</param>
-        /// <returns>新ID</returns>
         public int CreateProcess(ProcessEntity entity)
         {
             var pm = new ProcessManager();
@@ -172,9 +160,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Create process version
         /// 创建流程定义记录新版本
         /// </summary>
-        /// <param name="entity">流程</param>
         public int CreateProcessVersion(ProcessEntity entity)
         {
             int newProcessID = 0;
@@ -187,9 +175,9 @@ namespace Slickflow.Engine.Service
             return newProcessID;
         }
         /// <summary>
+        /// Update process
         /// 更新流程定义记录
         /// </summary>
-        /// <param name="entity">流程</param>
         public void UpdateProcess(ProcessEntity entity)
         {
             var processManager = new ProcessManager();
@@ -197,11 +185,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Update process state
         /// 更新流程使用状态
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="usingState">使用状态</param>
         public void UpdateProcessUsingState(string processGUID,
             string version,
             byte usingState)
@@ -211,11 +197,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Upgrade process
         /// 升级流程记录
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">流程版本</param>
-        /// <param name="newVersion">新版本编号</param>
         public void UpgradeProcess(string processGUID, string version, string newVersion)
         {
             var processManager = new ProcessManager();
@@ -223,10 +207,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Delete process
         /// 删除流程定义记录
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
         public void DeleteProcess(string processGUID, string version)
         {
             var pm = new ProcessManager();
@@ -234,9 +217,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Delete process
         /// 删除流程定义记录
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
         public void DeleteProcess(string processGUID)
         {
             IDbSession session = SessionFactory.CreateSession();
@@ -259,11 +242,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Delete instance internal
         /// 删除流程实例包括其关联数据
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <returns>是否删除</returns>
         public bool DeleteInstanceInt(string processGUID, string version)
         {
             var pim = new ProcessInstanceManager();
@@ -271,10 +252,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Import process file and generate a new process
         /// 导入流程XML文件，并生成新流程
         /// </summary>
-        /// <param name="xmlContent">流程XML文档</param>
-        /// <returns>新流程ID</returns>
         public void ImportProcess(string xmlContent)
         {
             var pm = new ProcessManager();
@@ -282,10 +262,9 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Validate process
         /// 流程校验
         /// </summary>
-        /// <param name="entity">流程校验实体</param>
-        /// <returns>流程校验结果</returns>
         public ProcessValidateResult ValidateProcess(ProcessEntity entity)
         {
             var result = ProcessValidator.Validate(entity);
@@ -293,6 +272,7 @@ namespace Slickflow.Engine.Service
         }
 
         /// <summary>
+        /// Reset Cachae
         /// 重置缓存中的流程定义信息
         /// </summary>
         /// <param name="processGUID">流程Guid编号</param>
@@ -312,13 +292,6 @@ namespace Slickflow.Engine.Service
             //}
             throw new NotImplementedException();
         }
-
-        public void SetProcessTimerType(string processGUID, string version)
-        {
-            var pm = new ProcessManager();
-            
-        }
-
         #endregion
     }
 }

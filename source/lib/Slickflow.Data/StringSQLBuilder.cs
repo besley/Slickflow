@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Slickflow.Data
 {
+    /// <summary>
+    /// Operator
+    /// </summary>
     public enum Operator
     {
         Eq = 1,
@@ -23,6 +26,10 @@ namespace Slickflow.Data
         Like = 7
     }
 
+    /// <summary>
+    /// String SQL Builder
+    /// SQL 语句构造器
+    /// </summary>
     public class StringSQLBuilder
     {
         private StringBuilder stringSQLBuilder = new StringBuilder(1024);
@@ -65,6 +72,13 @@ namespace Slickflow.Data
             }
             return strOperator;
         }
+
+        /// <summary>
+        /// Logical And
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="op"></param>
+        /// <param name="variable"></param>
         public void And(string field, Operator op, dynamic variable)
         {
             var strOperator = GetStringOperator(op);
@@ -81,6 +95,11 @@ namespace Slickflow.Data
             stringSQLBuilder.Append(condition);
         }
 
+        /// <summary>
+        /// Order By
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="isDesc"></param>
         public void OrderBy(string field, bool isDesc = false)
         {
             var strOrderBy = string.Empty;
@@ -95,6 +114,10 @@ namespace Slickflow.Data
             stringSQLBuilder.Append(strOrderBy);
         }
 
+        /// <summary>
+        /// GetSQL from string builder
+        /// </summary>
+        /// <returns></returns>
         public string GetSQL()
         {
             return stringSQLBuilder.ToString();

@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Text;
 //using System.Diagnostics;
 using Slickflow.Data;
+using Slickflow.Module.Form;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Common;
@@ -18,13 +19,12 @@ using Slickflow.Engine.Xpdl.Schedule;
 namespace Slickflow.Engine.Xpdl
 {
     /// <summary>
-    /// 流程模型解析
+    /// Process Model Interface
     /// </summary>
     public interface IProcessModel 
     {
         Process Process { get; }
         ProcessEntity ProcessEntity { get; set; }
-        //方法列表
         Entity.Activity GetStartActivity();
         Entity.Activity GetFirstActivity();
         NextActivityMatchedResult GetFirstActivityList(Entity.Activity startActivity, IDictionary<string, string> conditionKeyValuePair);
@@ -66,7 +66,7 @@ namespace Slickflow.Engine.Xpdl
 
         int GetForcedBranchesCountBeforeEOrJoin(Entity.Activity gatewayActivity, out IList<Transition> forcedTransitionList);
 
-        //节点类型判断
+        //Activity type
         Boolean IsMIParallel(Entity.Activity activity);
         Boolean IsMISequence(Entity.Activity activity);
         Boolean IsMINode(Entity.Activity activity);
@@ -75,13 +75,14 @@ namespace Slickflow.Engine.Xpdl
         Boolean IsTaskNode(ActivityInstanceEntity activityInstance);
         Boolean IsAndSplitMI(Entity.Activity activity);
 
-        //资源
+        //Resource
         IList<Role> GetRoles();
         IList<Role> GetActivityRoles(string activityGUID);
         IDictionary<string, PerformerList> GetActivityPerformers(string activityGUID);
         IDictionary<string, PerformerList> GetActivityPerformers(IList<NodeView> nextActivityTree);
+        IList<Form> GetFormList();
 
-        //通知
+        //Notification
         IList<User> GetActivityNotifications(string activityGUID);
     }
 }

@@ -15,6 +15,7 @@ using Slickflow.Engine.Essential;
 namespace Slickflow.Engine.Core.Pattern.Event.Timer
 {
     /// <summary>
+    /// Intermediate timer node mediator
     /// 中间事件节点处理类
     /// </summary>
     internal class NodeMediatorInterTimer : NodeMediator, ICompleteAutomaticlly
@@ -26,7 +27,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
         }
 
         /// <summary>
-        /// 执行方法
+        /// Execute work item
         /// </summary>
         internal override void ExecuteWorkItem()
         {
@@ -42,18 +43,9 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
             }
         }
 
-        #region ICompleteAutomaticlly 成员
         /// <summary>
-        /// 自动完成
+        /// Complete automatically
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="fromActivity">起始活动</param>
-        /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="toActivity">目标活动</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
-        /// <returns>网关执行结果</returns>
         public NodeAutoExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
             string transitionGUID,
             Activity fromActivity,
@@ -63,13 +55,19 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
             IDbSession session)
         {
             var timerActivityInstance = CreateActivityInstanceObject(toActivity, processInstance, runner);
+
             //存储下一步步骤人员信息
+            //Store personnel information for the next step
             timerActivityInstance.NextStepPerformers = NextStepUtility.SerializeNextStepPerformers(runner.NextActivityPerformers);
+
             //延时时间信息
+            //Overdue datetime
             timerActivityInstance.OverdueDateTime = CalcDataTimeFromVariable(toActivity);
             timerActivityInstance.AssignedToUserIDs = WfDefine.SYSTEM_JOBTIMER_USER_ID;
             timerActivityInstance.AssignedToUserNames = WfDefine.SYSTEM_JOBTIMER_USER_NAME;
+
             //定时作业信息
+            //job timer
             timerActivityInstance.JobTimerType = (short)JobTimerTypeEnum.Timer;
             timerActivityInstance.JobTimerStatus = (short)JobTimerStatusEnum.Ready;
 
@@ -77,7 +75,6 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
                 session);
             LinkContext.ToActivityInstance = timerActivityInstance;
 
-            //写节点转移实例数据
             base.InsertTransitionInstance(processInstance,
                 transitionGUID,
                 fromActivityInstance,
@@ -87,7 +84,6 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
                 runner,
                 session);
 
-            //插入任务数据
             var tm = new TaskManager();
             var newTaskID = tm.Insert(timerActivityInstance,
                 new Performer(WfDefine.SYSTEM_JOBTIMER_USER_ID, WfDefine.SYSTEM_JOBTIMER_USER_NAME),
@@ -100,10 +96,11 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
         }
 
         /// <summary>
+        /// Calculate delay time
         /// 计算延迟时间
         /// </summary>
-        /// <param name="timerActivity">活动</param>
-        /// <returns>延迟时间</returns>
+        /// <param name="timerActivity"></param>
+        /// <returns></returns>
         private DateTime CalcDataTimeFromVariable(Activity timerActivity)
         {
             if (!string.IsNullOrEmpty(timerActivity.TriggerDetail.Expression))
@@ -125,6 +122,5 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
                 throw new WfXpdlException(LocalizeHelper.GetEngineMessage("nodemediatorintertimer.CalcDataTimeFromVariable.error"));
             }
         }
-        #endregion
     }
 }

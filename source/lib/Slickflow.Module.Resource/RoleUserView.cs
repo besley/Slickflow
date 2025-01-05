@@ -1,6 +1,7 @@
 ﻿namespace Slickflow.Module.Resource
 {
     /// <summary>
+    /// Role User View
     /// 角色用户视图对象类
     /// </summary>
     public class RoleUserView

@@ -8,6 +8,7 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Xpdl.Schedule
 {
     /// <summary>
+    /// Merge types to obtain the next node list
     /// 合并类型，获取下一步节点列表
     /// </summary>
     internal class NextActivityScheduleJoin : NextActivityScheduleBase
@@ -19,14 +20,9 @@ namespace Slickflow.Engine.Xpdl.Schedule
         }
 
         /// <summary>
+        /// Get Next Activity List from Gateway Node
         /// 获取下一步节点列表
         /// </summary>
-        /// <param name="fromTransition">起始转移</param>
-        /// <param name="currentGatewayActivity">当前节点</param>
-        /// <param name="conditionKeyValuePair">条件对</param>
-        /// <param name="session">会话</param>
-        /// <param name="resultType">结果类型</param>
-        /// <returns>下一步组件类型</returns>
         internal override NextActivityComponent GetNextActivityListFromGateway(Transition fromTransition,
             Activity currentGatewayActivity,
             IDictionary<string, string> conditionKeyValuePair,
@@ -38,6 +34,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
             resultType = NextActivityMatchedType.Unknown;
 
             //直接取出下步列表，运行时再根据条件执行
+            //Directly retrieve the next step list and execute it based on the conditions during runtime
             List<Transition> transitionList = base.ProcessModel.GetForwardTransitionList(currentGatewayActivity.ActivityGUID,
                 conditionKeyValuePair).ToList();
             foreach (Transition transition in transitionList)

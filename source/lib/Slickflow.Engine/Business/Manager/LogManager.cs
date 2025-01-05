@@ -8,12 +8,14 @@ using Slickflow.Engine.Business.Entity;
 namespace Slickflow.Engine.Business.Manager
 {
     /// <summary>
+    /// Log processing and recording class
     /// 日志处理记录类
     /// </summary>
     public class LogManager : ManagerBase
     {
-        #region 获取日志数据
+        #region Retrieve log data 获取日志数据
         ///// <summary>
+        ///// Retrieve log records (pagination)
         ///// 获取日志记录（分页）
         ///// </summary>
         ///// <param name="query"></param>
@@ -25,6 +27,7 @@ namespace Slickflow.Engine.Business.Manager
         //    string orderBySql = "ORDER BY LogID DESC";
 
         //    //如果数据记录数为0，则不用查询列表
+        //    //If the number of data records is 0, there is no need to query the list
         //    allRowsCount = LogRepository.Count<LogEntity>(string.Empty, conn);
         //    if (allRowsCount == 0)
         //    {
@@ -32,6 +35,7 @@ namespace Slickflow.Engine.Business.Manager
         //    }
 
         //    //查询列表数据并返回结果集
+        //    //Query list data and return result set
         //    var list = LogRepository.GetPage<LogEntity>(query.PageIndex, query.PageSize, out allRowsCount,
         //        conn,
         //        null);
@@ -40,15 +44,16 @@ namespace Slickflow.Engine.Business.Manager
         //}
         #endregion
 
-        #region 新增、更新和删除流程数据
+        #region Add, update, and delete process data 新增、更新和删除流程数据
         /// <summary>
+        /// Record process exception logs
         /// 记录流程异常日志
         /// </summary>
-        /// <param name="title">标题</param>
-        /// <param name="eventType">事件类型</param>
-        /// <param name="priority">优先级</param>
-        /// <param name="extraObject">处理对象</param>
-        /// <param name="e">异常</param>
+        /// <param name="title"></param>
+        /// <param name="eventType"></param>
+        /// <param name="priority"></param>
+        /// <param name="extraObject"></param>
+        /// <param name="e"></param>
         public void Record(string title, 
             LogEventType eventType, 
             LogPriority priority, 
@@ -82,19 +87,22 @@ namespace Slickflow.Engine.Business.Manager
                 }
 
                 //线程池添加日志记录
+                //Add log records to thread pool
                 ThreadPool.QueueUserWorkItem(new WaitCallback(Insert), log);
             }
             catch
             {
                 //如果记录日志发生异常，不做处理
+                //If there is an exception in the log recording, do not take any action
                 ;
             }
         }
 
         /// <summary>
+        /// Insert log data
         /// 插入流程日志数据
         /// </summary>
-        /// <param name="entity">实体</param>
+        /// <param name="entity"></param>
         private void Insert(object entity)
         {
             IDbSession session = SessionFactory.CreateSession();
@@ -117,15 +125,16 @@ namespace Slickflow.Engine.Business.Manager
         }
         #endregion
 
-        #region 静态方法
+        #region Static method 静态方法
         /// <summary>
+        /// Record log data
         /// 记录流程异常日志
         /// </summary>
-        /// <param name="title">标题</param>
-        /// <param name="eventType">事件类型</param>
-        /// <param name="priority">优先级</param>
-        /// <param name="extraObject">处理对象</param>
-        /// <param name="e">异常</param>
+        /// <param name="title"></param>
+        /// <param name="eventType"></param>
+        /// <param name="priority"></param>
+        /// <param name="extraObject"></param>
+        /// <param name="e"></param>
         public static void RecordLog(string title, 
             LogEventType eventType, 
             LogPriority priority, 

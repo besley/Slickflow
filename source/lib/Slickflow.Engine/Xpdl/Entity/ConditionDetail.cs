@@ -7,22 +7,16 @@ using Slickflow.Engine.Common;
 namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
-    /// Transition上的条件类
+    /// Condtion Detail on Transition
     /// </summary>
     public class ConditionDetail
     {
-        /// <summary>
-        /// 条件类型
-        /// </summary>
         public ConditionTypeEnum ConditionType
         {
             get;
             set;
         }
 
-        /// <summary>
-        /// 条件表达式
-        /// </summary>
         public string ConditionText
         {
             get;

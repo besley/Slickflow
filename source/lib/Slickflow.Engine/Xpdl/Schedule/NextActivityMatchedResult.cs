@@ -7,43 +7,30 @@ using Slickflow.Module.Localize;
 namespace Slickflow.Engine.Xpdl.Schedule
 {
     /// <summary>
+    /// Next Activity Matched Result
     /// 执行活动的可选类型
     /// </summary>
     public class NextActivityMatchedResult
     {
-        #region 属性和构造函数
-        /// <summary>
-        /// 消息
-        /// </summary>
+        #region Property and Constructor
         public string Message
         {
             get;
             set;
         }
 
-        /// <summary>
-        /// 匹配类型
-        /// </summary>
         public NextActivityMatchedType MatchedType
         {
             get;
             set;
         }
 
-        /// <summary>
-        /// 根节点
-        /// </summary>
         public NextActivityComponent Root
         {
             get;
             set;
         }
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="matchedType">匹配类型</param>
-        /// <param name="root">根节点</param>
         private NextActivityMatchedResult(NextActivityMatchedType matchedType,
             NextActivityComponent root)
         {
@@ -53,13 +40,14 @@ namespace Slickflow.Engine.Xpdl.Schedule
 
         #endregion
 
-        #region 创建方法
+        #region Create Method
         /// <summary>
+        /// Create Method
         /// 创建方法
         /// </summary>
-        /// <param name="matchedType">匹配类型</param>
-        /// <param name="root">根节点</param>
-        /// <returns>下一步匹配结果</returns>
+        /// <param name="matchedType"></param>
+        /// <param name="root"></param>
+        /// <returns></returns>
         internal static NextActivityMatchedResult CreateNextActivityMatchedResultObject(NextActivityMatchedType matchedType,
             NextActivityComponent root)
         {

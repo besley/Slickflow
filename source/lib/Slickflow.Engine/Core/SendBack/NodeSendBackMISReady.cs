@@ -10,6 +10,8 @@ using Slickflow.Engine.Common;
 namespace Slickflow.Engine.Core.SendBack
 {
     /// <summary>
+    /// Sendback processor for task types
+    /// Sequence signature, the first node is in pending status
     /// 任务类型的退回处理器
     /// 串行会签，第一个节点处于待办
     /// </summary>
@@ -22,11 +24,10 @@ namespace Slickflow.Engine.Core.SendBack
         }
 
         /// <summary>
-        /// 执行退回操作
+        /// Execute method
         /// </summary>
         internal override void Execute()
         {
-            //取出运行节点信息
             var runner = base.SendBackOperation.ActivityResource.AppRunner;
             var runningNode = base.SendBackOperation.BackwardFromActivityInstance;
             var runningMainNode = base.ActivityInstanceManager.GetById(runningNode.MIHostActivityInstanceID.Value);
@@ -35,6 +36,7 @@ namespace Slickflow.Engine.Core.SendBack
                 base.Session);
 
             //创建撤销到上一步的节点记录
+            //Create a node record to sendback to the previous step
             CreateBackwardActivityTaskTransitionOfLastMultipleInstance(base.SendBackOperation.ProcessInstance,
                 runningMainNode,
                 previousActivityInstance,
@@ -45,6 +47,7 @@ namespace Slickflow.Engine.Core.SendBack
                 base.Session);
 
             //如果上一步节点也是会签节点，更新主节点状态为运行状态
+            //If the previous node is also a co signing node, update the main node status to running status
             if (previousActivityInstance.ActivityType == (short)ActivityTypeEnum.MultiSignNode)
             {
                 base.ActivityInstanceManager.Rerun(previousActivityInstance.MIHostActivityInstanceID.Value,
@@ -53,16 +56,9 @@ namespace Slickflow.Engine.Core.SendBack
         }
 
         /// <summary>
+        /// The revocation operation of the last multi instance node with multiple signatures
         /// 最后一个会签多实例子节点的撤销操作
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="fromActivityInstance">运行节点</param>
-        /// <param name="originalBackwardToActivityInstance">初始退回到的节点实例</param>
-        /// <param name="backwardType">退回类型</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="flyingType">跳跃类型</param>
-        /// <param name="activityResource">资源</param>
-        /// <param name="session">会话</param>
         internal void CreateBackwardActivityTaskTransitionOfLastMultipleInstance(ProcessInstanceEntity processInstance,
             ActivityInstanceEntity fromActivityInstance,
             ActivityInstanceEntity originalBackwardToActivityInstance,
@@ -72,7 +68,6 @@ namespace Slickflow.Engine.Core.SendBack
             ActivityResource activityResource,
             IDbSession session)
         {
-            //创建回滚到的节点信息
             var rollbackPreviousActivityInstance = base.CreateBackwardToActivityInstanceObject(processInstance,
                 backwardType,
                 fromActivityInstance.ID,
@@ -85,21 +80,18 @@ namespace Slickflow.Engine.Core.SendBack
             rollbackPreviousActivityInstance.ComplexType = originalBackwardToActivityInstance.ComplexType;
             rollbackPreviousActivityInstance.SignForwardType = originalBackwardToActivityInstance.SignForwardType;
             //人员来自步骤列表的用户数据
-            rollbackPreviousActivityInstance.AssignedToUserIDs = base.SendBackOperation.BackwardToTaskPerformer.UserID;      //多实例节点为单一用户任务
+            //User data of performer from the step list
+            rollbackPreviousActivityInstance.AssignedToUserIDs = base.SendBackOperation.BackwardToTaskPerformer.UserID;     
             rollbackPreviousActivityInstance.AssignedToUserNames = base.SendBackOperation.BackwardToTaskPerformer.UserName;
 
-            //插入新活动实例数据
             base.ActivityInstanceManager.Insert(rollbackPreviousActivityInstance,
                 session);
 
-            //创建新任务数据
-            //插入任务数据
             base.TaskManager.Insert(rollbackPreviousActivityInstance,
                 base.SendBackOperation.BackwardToTaskPerformer,
                 activityResource.AppRunner,
                 session);
 
-            //插入转移数据
             base.InsertTransitionInstance(processInstance,
                 fromActivityInstance,
                 rollbackPreviousActivityInstance,

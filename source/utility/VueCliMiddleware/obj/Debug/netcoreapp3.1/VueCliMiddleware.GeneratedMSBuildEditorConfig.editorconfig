@@ -3,3 +3,6 @@ build_property.RootNamespace = VueCliMiddleware
 build_property.ProjectDir = D:\GitHub\Slickflow\source\utility\VueCliMiddleware\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.CsWinRTUseWindowsUIXamlProjections = false
+build_property.EffectiveAnalysisLevelStyle = 
+build_property.EnableCodeStyleSeverity = 

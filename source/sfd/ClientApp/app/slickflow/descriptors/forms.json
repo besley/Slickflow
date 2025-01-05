@@ -1,0 +1,35 @@
+{
+  "forms": [
+    {
+      "name": "Forms",
+      "superClass": [ "Element" ],
+      "properties": [
+        {
+          "name": "values",
+          "isMany": true,
+          "type": "Form"
+        }
+      ]
+    },
+    {
+      "name": "Form",
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "outerId",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "outerCode",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}

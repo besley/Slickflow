@@ -10,16 +10,13 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Xpdl
 {
     /// <summary>
-    /// 动态运行接口
+    /// Dynamic Runable
     /// </summary>
     internal interface IDynamicRunable
     {
         /// <summary>
-        /// 调用外部方法
+        /// Invoke method
         /// </summary>
-        /// <param name="implementation"></param>
-        /// <param name="userParameters"></param>
-        /// <returns></returns>
         object InvokeMethod(TaskImplementDetail implementation, object[] userParameters);
     }
 }

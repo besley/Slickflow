@@ -10,6 +10,7 @@ using Slickflow.Module.Essential.Entity;
 namespace Slickflow.Module.Essential.Common
 {
     /// <summary>
+    /// RabbitMQ Service
     /// 消息队列服务
     /// </summary>
     public class RabbitMQService : IMessageQueueService
@@ -23,10 +24,9 @@ namespace Slickflow.Module.Essential.Common
         }
 
         /// <summary>
+        /// Publish Message
         /// 消息发布
         /// </summary>
-        /// <param name="topic">主题</param>
-        /// <param name="line">内容</param>
         public void Publish(string topic, string line)
         {
             var channel = RabbitMQClientFactory.CreatePublishChannel();
@@ -44,20 +44,21 @@ namespace Slickflow.Module.Essential.Common
         }
 
         /// <summary>
+        /// Pbulish message
         /// 消息发布
         /// </summary>
-        /// <param name="message">消息实体</param>
         public void Publish(MessageEntity message)
         {
             Publish(message.Topic, message.Line);
         }
 
         /// <summary>
+        /// Subscribe message
         /// 消息订阅
         /// </summary>
-        /// <param name="topic">主题</param>
-        /// <param name="jobName">作业名称</param>
-        /// <param name="strTriggerType">触发类型</param>
+        /// <param name="topic">topic</param>
+        /// <param name="jobName">job name</param>
+        /// <param name="strTriggerType">trigger type</param>
         /// <returns></returns>
         public void Subscribe(string topic, string jobName, string strTriggerType)
         {
@@ -97,9 +98,10 @@ namespace Slickflow.Module.Essential.Common
         }
 
         /// <summary>
+        /// Unsubscribe message
         /// 取消订阅主题
         /// </summary>
-        /// <param name="topic">消息主题</param>
+        /// <param name="topic">topic</param>
         public void Unsubscribe(string topic)
         {
             var channel = RabbitMQClientFactory.CreateRecieveChannel();

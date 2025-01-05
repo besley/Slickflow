@@ -11,6 +11,7 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Xpdl
 {
     /// <summary>
+    /// XPDL memroy cachaed helper
     /// 流程文件缓存
     /// </summary>
     internal class XPDLMemoryCachedHelper
@@ -24,11 +25,9 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Set xpdl cache
         /// 设置流程缓存
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="process">流程</param>
         internal static void SetXpdlCache(string processGUID, string version, Process process)
         {
             var str = string.Format("{0}-{1}", processGUID, version);
@@ -38,11 +37,9 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Get xpdl cache
         /// 获取流程缓存
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <returns>流程</returns>
         internal static Process GetXpdlCache(string processGUID, string version)
         {
             var str = string.Format("{0}-{1}", processGUID, version);
@@ -54,12 +51,9 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Update xpdl cache
         /// 更新流程缓存
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="process">流程</param>
-        /// <returns></returns>
         internal static Boolean TryUpdate(string processGUID, string version, Process process)
         {
             var str = string.Format("{0}-{1}", processGUID, version);

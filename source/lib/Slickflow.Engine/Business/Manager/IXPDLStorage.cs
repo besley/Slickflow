@@ -9,6 +9,7 @@ using Slickflow.Engine.Business.Entity;
 namespace Slickflow.Engine.Business.Manager
 {
     /// <summary>
+    /// Process definition database storage interface
     /// 流程定义数据库存储接口
     /// </summary>
     public interface IXPDLStorage

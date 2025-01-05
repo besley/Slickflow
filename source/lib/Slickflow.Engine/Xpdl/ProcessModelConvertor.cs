@@ -14,25 +14,23 @@ using Slickflow.Engine.Utility;
 namespace Slickflow.Engine.Xpdl
 {
     /// <summary>
-    /// 流程模型转换类
+    /// Process Model Convertor
     /// </summary>
     public class ProcessModelConvertor
     {
         /// <summary>
-        /// 流程实体转换
+        /// Convert Process Model from xml
         /// </summary>
-        /// <param name="xmlNodeProcess">流程XML节点</param>
-        /// <returns>流程模型</returns>
         public static Process ConvertProcessModelFromXML(XmlNode xmlNodeProcess)
         {
             Process process = null;
 
             if (xmlNodeProcess != null)
             {
-                //流程基本属性
+                //Process attribute
                 process = ConvertProcessAttribute(xmlNodeProcess);
 
-                //流程子节点
+                //Process child ndoes
                 var childNodeList = xmlNodeProcess.ChildNodes;
                 foreach (XmlNode child in childNodeList)
                 {
@@ -42,7 +40,7 @@ namespace Slickflow.Engine.Xpdl
                     }
                 }
 
-                //流程连线
+                //process transition
                 foreach (XmlNode child in childNodeList)
                 {
                     if (child.Name == XPDLDefinition.BPMN2_ElementName_SequenceFlow)
@@ -55,10 +53,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 转换流程属性
+        /// Process attribute
         /// </summary>
-        /// <param name="xmlNode">XML节点</param>
-        /// <returns>流程模型</returns>
         private static Process ConvertProcessAttribute(XmlNode xmlNode)
         {
             var process = new Process();
@@ -70,13 +66,29 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 转换XML节点
+        /// Convert xml child node
         /// </summary>
-        /// <param name="node">XML节点</param>
-        /// <param name="process">流程</param>
         private static void ConvertXmlChildNode(XmlNode node, Process process)
         {
-            if (node.Name == XPDLDefinition.BPMN2_ElementName_SubProcess)
+            if (node.Name == XPDLDefinition.BPMN2_ElementName_ExtensionElements)
+            {
+                var formsXmlElement = node.SelectSingleNode(XPDLDefinition.Sf_ElementName_Forms, XPDLHelper.GetSlickflowXmlNamespaceManager(node.OwnerDocument));
+                if (formsXmlElement != null)
+                {
+                    var childNodes = formsXmlElement.ChildNodes;
+                    foreach (XmlNode child in childNodes)
+                    {
+                        var form = ConvertHelper.ComnvertXmlFormNodeToFormEntity(child,
+                            XPDLHelper.GetSlickflowXmlNamespaceManager(node.OwnerDocument), process.ProcessGUID);
+                        process.FormList.Add(form);
+                    }
+                }
+                else
+                {
+                    throw new NotImplementedException("NOT supported extension xml element");
+                }
+            }
+            else if (node.Name == XPDLDefinition.BPMN2_ElementName_SubProcess)
             {
                 ActivityTypeEnum subProcessActivityType = ActivityTypeEnum.Unknown;
                 var subConvertor = ConvertorFactory.CreateConvertor(node, XPDLHelper.GetSlickflowXmlNamespaceManager(node.OwnerDocument), out subProcessActivityType);
@@ -84,7 +96,7 @@ namespace Slickflow.Engine.Xpdl
                 subProcessActivity.ActivityType = subProcessActivityType;
                 subProcessActivity.ProcessGUID = process.ProcessGUID;
 
-                //添加子流程节点到节点列表
+                //add subprocess into activitylist
                 process.ActivityList.Add(subProcessActivity);
             }
             else if (node.Name == XPDLDefinition.BPMN2_ElementName_SequenceFlow)
@@ -101,6 +113,7 @@ namespace Slickflow.Engine.Xpdl
             else
             {
                 //不同节点类型的处理
+                //Processing of different node types
                 ActivityTypeEnum activityType = ActivityTypeEnum.Unknown;
                 var convertor = ConvertorFactory.CreateConvertor(node, XPDLHelper.GetSlickflowXmlNamespaceManager(node.OwnerDocument), out activityType);
                 var activity = convertor.Convert();
@@ -113,10 +126,9 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Obtain work item types based on activity types
         /// 根据活动类型获取工作项类型
         /// </summary>
-        /// <param name="activityType">活动类型</param>
-        /// <returns>工作项类型</returns>
         private static WorkItemTypeEnum GetWorkItemType(ActivityTypeEnum activityType)
         {
             WorkItemTypeEnum workItemType = WorkItemTypeEnum.NonWorkItem;
@@ -131,16 +143,14 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 转换子流程节点
+        /// Convert sub process
         /// </summary>
-        /// <param name="node">子流程节点</param>
-        /// <returns>流程实体</returns>
         public static Process ConvertSubProcess(XmlNode node)
         {
-            //子流程
+            //subprocess
             var subProcess = ConvertProcessAttribute(node);
 
-            //流程子节点
+            //child nodes
             var childNodeList = node.ChildNodes;
             foreach (XmlNode child in childNodeList)
             {
@@ -150,7 +160,7 @@ namespace Slickflow.Engine.Xpdl
                 }
             }
 
-            //流程连线
+            //transitions
             foreach (XmlNode child in childNodeList)
             {
                 if (child.Name == XPDLDefinition.BPMN2_ElementName_SequenceFlow)
@@ -162,11 +172,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 从XML节点转换为转移节点
+        /// Convert to transition
         /// </summary>
-        /// <param name="node">XML节点</param>
-        /// <param name="process">流程对象</param>
-        /// <returns></returns>
         public static Transition ConvertTransition(XmlNode node, Process process)
         {
             Transition transition = new Transition();
@@ -178,7 +185,7 @@ namespace Slickflow.Engine.Xpdl
             transition.FromActivity = ProcessModelHelper.GetActivity(process, transition.FromActivityGUID);
             transition.ToActivity = ProcessModelHelper.GetActivity(process, transition.ToActivityGUID);
 
-            //构造转移的条件节点
+            //Condition node
             var conditionNode = node.SelectSingleNode(XPDLDefinition.BPMN2_ElementName_ConditionExpression,
                 XPDLHelper.GetSlickflowXmlNamespaceManager(node.OwnerDocument));
             if (conditionNode != null)
@@ -189,7 +196,7 @@ namespace Slickflow.Engine.Xpdl
                 transition.Condition = conditionDetail;
             }
 
-            //构造连线的群组行为节点
+            //Group behavious
             var groupBehavioursNode = node.SelectSingleNode(XPDLDefinition.BPMN2_StrXmlPath_SequenceFlow_GroupBehaviours,
                 XPDLHelper.GetSlickflowXmlNamespaceManager(node.OwnerDocument));
             if (groupBehavioursNode != null)

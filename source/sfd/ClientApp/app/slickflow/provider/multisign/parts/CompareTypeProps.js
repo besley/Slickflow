@@ -59,6 +59,7 @@ function CompareType(props) {
 
     function getOptions() {
         //通过率类型
+        //Passing rate type
         var options = [
             { "label": kresource.getItem("optiondefault"), "value": "0", "name": "Optiondefault" },
             { "label": kresource.getItem("count"), "value": "1", "name": "Count" },

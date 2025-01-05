@@ -8,6 +8,7 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Xpdl.Schedule
 {
     /// <summary>
+    /// Approval transition validate type
     /// 审批转移检验类型
     /// </summary>
     internal enum ApprovedTransitionValidatedTypeEnum
@@ -20,6 +21,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
     }
 
     /// <summary>
+    /// Approval transition validate result object
     /// 审批转移检验结果对象
     /// </summary>
     internal class ApprovedTransitionValidatedResult
@@ -41,6 +43,4 @@ namespace Slickflow.Engine.Xpdl.Schedule
             return result;
         }
     }
-
-   
 }

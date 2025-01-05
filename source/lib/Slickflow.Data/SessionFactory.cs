@@ -11,12 +11,14 @@ using System.Threading.Tasks;
 namespace Slickflow.Data
 {
     /// <summary>
+    /// Session Factory
     /// Session 创建类
     /// </summary>
     public static class SessionFactory
     {
 
         /// <summary>
+        /// Create database connection
         /// 创建数据库连接
         /// </summary>
         /// <returns></returns>
@@ -31,6 +33,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Create a database connection session
         /// 创建数据库连接会话
         /// </summary>
         /// <returns></returns>
@@ -43,6 +46,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Create a database connection transaction session
         /// 创建数据库事务会话
         /// </summary>
         /// <param name="conn"></param>

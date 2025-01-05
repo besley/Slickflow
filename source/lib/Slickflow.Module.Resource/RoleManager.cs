@@ -5,11 +5,13 @@ using Slickflow.Data;
 namespace Slickflow.Module.Resource
 {
     /// <summary>
+    /// Role Manager
     /// 角色管理类
     /// </summary>
     internal class RoleManager : ManagerBase
     {
         /// <summary>
+        /// Get all roles
         /// 获取所有角色数据
         /// </summary>
         /// <returns></returns>
@@ -24,10 +26,11 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// Get role by role code
         /// 根据角色代码获取角色
         /// </summary>
-        /// <param name="roleCode">角色代码</param>
-        /// <returns>角色实体</returns>
+        /// <param name="roleCode"></param>
+        /// <returns></returns>
         internal RoleEntity GetByCode(string roleCode)
         {
             var strSQL = @"SELECT 

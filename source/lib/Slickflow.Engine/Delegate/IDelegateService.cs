@@ -9,7 +9,7 @@ using Slickflow.Engine.Common;
 namespace Slickflow.Engine.Delegate
 {
     /// <summary>
-    /// 委托接口
+    /// Delegate Service Interface
     /// </summary>
     public interface IDelegateService
     {
@@ -26,7 +26,7 @@ namespace Slickflow.Engine.Delegate
     }
 
     /// <summary>
-    /// 委托事件列表
+    /// Delegate Event List
     /// </summary>
     public class DelegateEventList
         : List<KeyValuePair<EventFireTypeEnum, Func<DelegateContext, IDelegateService, Boolean>>>

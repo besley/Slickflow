@@ -19,17 +19,19 @@ using Slickflow.Module.Essential.Entity;
 namespace Slickflow.Engine.Essential
 {
     /// <summary>
+    /// Signal Delegate Service
     /// 消息队列中的信号委托函数
     /// </summary>
     public class SignalDelegateService
     {
-        #region 信号发布
+        #region Signal Publish
         /// <summary>
+        /// Build Singal Published
         /// 构建要发布的消息
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="throwActivity">消息活动</param>
-        /// <param name="throwActivityInstance">消息活动实例</param>
+        /// <param name="processInstance"></param>
+        /// <param name="throwActivity"></param>
+        /// <param name="throwActivityInstance"></param>
         public void PublishSignal(ProcessInstanceEntity processInstance,
             Activity throwActivity,
             ActivityInstanceEntity throwActivityInstance)
@@ -54,12 +56,13 @@ namespace Slickflow.Engine.Essential
         }
         #endregion
 
-        #region 信号消费函数
+        #region Singal Consume
         /// <summary>
+        /// Singal Consume function
         /// 消息消费函数
         /// </summary>
-        /// <param name="entity">消息实体对象</param>
-        /// <returns>消费结果</returns>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public List<SignalConsumedResult> ConsumeSignal(SignalEntity entity)
         {
             var resultList = new List<SignalConsumedResult>();
@@ -122,10 +125,11 @@ namespace Slickflow.Engine.Essential
         }
 
         /// <summary>
-        /// 开始开始节点的运行者信息
+        /// Get start info from signal exchange
+        /// 从信号交换获取启动信息
         /// </summary>
-        /// <param name="msgRunnerView">消息视图</param>
-        /// <param name="jobInfo">作业信息</param>
+        /// <param name="msgRunnerView"></param>
+        /// <param name="jobInfo"></param>
         /// <returns></returns>
         private WfAppRunner GetStartRunnerFromSignalExchange(SignalRunnerView msgRunnerView, JobInfoEntity jobInfo)
         {
@@ -141,6 +145,7 @@ namespace Slickflow.Engine.Essential
         }
 
         /// <summary>
+        /// Run the process belonging to the SignalCatch node
         /// 运行属于SignalCatch节点的流程
         /// </summary>
         /// <param name="signalRunner"></param>
@@ -149,6 +154,7 @@ namespace Slickflow.Engine.Essential
         {
             var resultList = new List<SignalConsumedResult>();
             //封装下一步的步骤信息
+            //Encapsulate the next step information
             var aim = new ActivityInstanceManager();
             var runningActivityInstanceList = aim.GetActivityInstanceList(jobInfo.ProcessGUID, jobInfo.Version, jobInfo.ActivityGUID);
             foreach (var activityInstance in runningActivityInstanceList)
@@ -178,10 +184,11 @@ namespace Slickflow.Engine.Essential
         }
 
         /// <summary>
-        /// 开始开始节点的运行者信息
+        /// Get runner info from activity instance
+        /// 从活动实例获取运行者信息
         /// </summary>
-        /// <param name="signalRunner">消息视图</param>
-        /// <param name="jobInfo">作业信息</param>
+        /// <param name="signalRunner"></param>
+        /// <param name="jobInfo"></param>
         /// <returns></returns>
         private WfAppRunner GetRunnerFromActivityInstance(SignalRunnerView signalRunner, JobInfoEntity jobInfo, ActivityInstanceEntity activityInstance)
         {

@@ -14,6 +14,7 @@ using Slickflow.Engine.Essential;
 namespace Slickflow.Engine.Core.Pattern.Event.Signal
 {
     /// <summary>
+    /// Intermediate Signal throw node mediator
     /// 中间事件节点处理类
     /// </summary>
     internal class NodeMediatorInterSignalThrow : NodeMediator, ICompleteAutomaticlly
@@ -25,7 +26,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Signal
         }
 
         /// <summary>
-        /// 执行方法
+        /// Execute work item
         /// </summary>
         internal override void ExecuteWorkItem()
         {
@@ -41,18 +42,9 @@ namespace Slickflow.Engine.Core.Pattern.Event.Signal
             }
         }
 
-        #region ICompleteAutomaticlly 成员
         /// <summary>
-        /// 自动完成
+        /// Complete automatically
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="fromActivity">起始活动</param>
-        /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="toActivity">目标活动</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
-        /// <returns>网关执行结果</returns>
         public NodeAutoExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
             string transitionGUID,
             Activity fromActivity,
@@ -73,12 +65,11 @@ namespace Slickflow.Engine.Core.Pattern.Event.Signal
                 session);
             messageActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
 
-
             //执行节点上的信号发布
+            //Signal release on the execution node
             var signalDelegateService = new SignalDelegateService();
             signalDelegateService.PublishSignal(processInstance, LinkContext.ToActivity, messageActivityInstance);
 
-            //写节点转移实例数据
             base.InsertTransitionInstance(processInstance,
                 transitionGUID,
                 fromActivityInstance,
@@ -91,6 +82,5 @@ namespace Slickflow.Engine.Core.Pattern.Event.Signal
             NodeAutoExecutedResult result = NodeAutoExecutedResult.CreateGatewayExecutedResult(NodeAutoExecutedStatus.Successed);
             return result;
         }
-        #endregion
     }
 }

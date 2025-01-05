@@ -7,6 +7,7 @@ using Slickflow.Engine.Common;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Process File Entity
     /// 流程文件实体对象
     /// </summary>
     public class ProcessFileEntity

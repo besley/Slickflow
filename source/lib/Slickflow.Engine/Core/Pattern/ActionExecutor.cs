@@ -18,16 +18,18 @@ using Slickflow.Engine.Delegate;
 namespace Slickflow.Engine.Core.Pattern
 {
     /// <summary>
+    /// Action Executor
     /// Action 执行器类
     /// </summary>
     internal class ActionExecutor
     {
         /// <summary>
+        /// Execute Action List
         /// Action 的执行方法
         /// </summary>
-        /// <param name="actionList">操作列表</param>
-        /// <param name="delegateService">参数列表</param>
-        internal static void ExecteActionList(IList<Xpdl.Entity.Action> actionList, 
+        /// <param name="actionList"></param>
+        /// <param name="delegateService"></param>
+        internal static void ExecuteActionList(IList<Xpdl.Entity.Action> actionList, 
             IDelegateService delegateService)
         {
             if (actionList != null && actionList.Count > 0)
@@ -44,11 +46,12 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Method for executing external operations before triggering
         /// 触发前执行外部操作的方法
         /// </summary>
-        /// <param name="actionList">操作列表</param>
-        /// <param name="delegateService">委托服务</param>
-        internal static void ExecteActionListBefore(IList<Xpdl.Entity.Action> actionList,
+        /// <param name="actionList"></param>
+        /// <param name="delegateService"></param>
+        internal static void ExecuteActionListBefore(IList<Xpdl.Entity.Action> actionList,
             IDelegateService delegateService)
         {
             if (actionList != null && actionList.Count > 0)
@@ -56,17 +59,18 @@ namespace Slickflow.Engine.Core.Pattern
                 var list = actionList.Where(a => a.FireType == FireTypeEnum.Before).ToList();
                 if (list != null && list.Count > 0)
                 {
-                    ExecteActionList(list, delegateService);
+                    ExecuteActionList(list, delegateService);
                 }
             }
         }
 
         /// <summary>
+        /// Method for executing external operations after triggering
         /// 触发后执行外部操作的方法
         /// </summary>
-        /// <param name="actionList">操作列表</param>
-        /// <param name="delegateService">委托服务</param>
-        internal static void ExecteActionListAfter(IList<Xpdl.Entity.Action> actionList,
+        /// <param name="actionList"></param>
+        /// <param name="delegateService"></param>
+        internal static void ExecuteActionListAfter(IList<Xpdl.Entity.Action> actionList,
             IDelegateService delegateService)
         {
             if (actionList != null && actionList.Count > 0)
@@ -74,16 +78,17 @@ namespace Slickflow.Engine.Core.Pattern
                 var list = actionList.Where(a => a.FireType == FireTypeEnum.After).ToList();
                 if (list != null && list.Count > 0)
                 {
-                    ExecteActionList(list, delegateService);
+                    ExecuteActionList(list, delegateService);
                 }
             }
         }
 
         /// <summary>
+        /// Execute external service implementation class
         /// 执行外部服务实现类
         /// </summary>
-        /// <param name="action">操作</param>
-        /// <param name="delegateService">委托服务类</param>
+        /// <param name="action"></param>
+        /// <param name="delegateService"></param>
         private static void Execute(Xpdl.Entity.Action action, IDelegateService delegateService)
         {
             if (action.ActionType == ActionTypeEnum.Event)
@@ -120,17 +125,20 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Execute local service
         /// 执行外部方法
         /// </summary>
-        /// <param name="action">Action实体</param>
-        /// <param name="delegateService">委托服务</param>
+        /// <param name="action"></param>
+        /// <param name="delegateService"></param>
         private static void ExecuteLocalService(Xpdl.Entity.Action action, IDelegateService delegateService)
         {
             try
             {
                 //先获取具体实现类
+                //First, obtain the specific implementation class
                 var instance = ReflectionHelper.GetSpecialInstance<IExternalService>(action.Expression);
                 //再调用基类可执行方法
+                //Call the base class executable method again
                 var exterableInstance = instance as IExternable;
                 exterableInstance.Executable(delegateService);
             }
@@ -141,10 +149,11 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Execute WebApi Method
         /// 执行外部方法
         /// </summary>
-        /// <param name="action">Action实体</param>
-        /// <param name="delegateService">委托服务</param>
+        /// <param name="action"></param>
+        /// <param name="delegateService"></param>
         private static void ExecuteWebApiMethod(Xpdl.Entity.Action action, IDelegateService delegateService)
         {
             try
@@ -188,10 +197,11 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Execute SQL Method
         /// 执行外部方法
         /// </summary>
-        /// <param name="action">Action实体</param>
-        /// <param name="delegateService">委托服务</param>
+        /// <param name="action"></param>
+        /// <param name="delegateService"></param>
         private static void ExecuteSQLMethod(Xpdl.Entity.Action action, IDelegateService delegateService)
         {
             try
@@ -200,7 +210,6 @@ namespace Slickflow.Engine.Core.Pattern
                 if (action.CodeInfo != null 
                     && !string.IsNullOrEmpty(action.CodeInfo.CodeText))
                 {
-                    //var sqlScript = action.Expression;
                     var sqlScript = action.CodeInfo.CodeText;        //modified by Besley in 12/26/2019, body is nodetext rather than attribute
                     var session = delegateService.GetSession();
                     var repository = new Repository();
@@ -218,10 +227,11 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Execute sql store procedure
         /// 执行外部方法
         /// </summary>
-        /// <param name="action">Action实体</param>
-        /// <param name="delegateService">委托服务</param>
+        /// <param name="action"></param>
+        /// <param name="delegateService"></param>
         private static void ExecuteStoreProcedureMethod(Xpdl.Entity.Action action, IDelegateService delegateService)
         {
             try
@@ -239,12 +249,13 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Execute python script
         /// 执行外部方法
         /// SetVariable:
         /// https://stackoverflow.com/questions/26426955/setting-and-getting-variables-in-net-hosted-ironpython-script/45734097
         /// </summary>
-        /// <param name="action">Action实体</param>
-        /// <param name="delegateService">委托服务</param>
+        /// <param name="action"></param>
+        /// <param name="delegateService"></param>
         private static void ExecutePythonMethod(Xpdl.Entity.Action action, IDelegateService delegateService)
         {
             try
@@ -276,15 +287,17 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Execute c# library
         /// 执行插件方法
         /// </summary>
-        /// <param name="action">Action实体</param>
-        /// <param name="delegateService">委托服务</param>
+        /// <param name="action"></param>
+        /// <param name="delegateService"></param>
         private static void ExecuteCSharpLibraryMethod(Xpdl.Entity.Action action, IDelegateService delegateService)
         {
             try
             {
                 //取出当前应用程序执行路径
+                //Retrieve the current application execution path
                 var methodInfo = action.MethodInfo;
                 var assemblyFullName = methodInfo.AssemblyFullName;
                 var methodName = methodInfo.MethodName;
@@ -311,11 +324,12 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Construct JSON string for the final object
         /// 构造最终对象的Json字符串
         /// </summary>
-        /// <param name="arguments">参数列表</param>
-        /// <param name="delegateService">委托服务</param>
-        /// <returns>Json字符串</returns>
+        /// <param name="arguments"></param>
+        /// <param name="delegateService"></param>
+        /// <returns></returns>
         private static string CompositeJsonValue(string arguments, IDelegateService delegateService)
         {
             var jsonValue = string.Empty;
@@ -340,11 +354,12 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// If it is a simple string, add double quotation marks
         /// 如果是简单字符串, 加双引号
         /// jack => "jack"
         /// </summary>
-        /// <param name="jsonValue">字符串</param>
-        /// <returns>变换格式后的字符串</returns>
+        /// <param name="jsonValue"></param>
+        /// <returns></returns>
         private static string FormatJsonStringIfSimple(string jsonValue)
         {
             jsonValue = jsonValue.TrimStart().TrimEnd();
@@ -360,11 +375,12 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Construct JSON string for the final object
         /// 构造最终对象的Json字符串
         /// </summary>
-        /// <param name="arguments">参数列表</param>
-        /// <param name="delegateService">委托服务</param>
-        /// <returns>动态参数列表</returns>
+        /// <param name="arguments"></param>
+        /// <param name="delegateService"></param>
+        /// <returns></returns>
         private static DynamicParameters CompositeSqlParametersValue(string arguments, IDelegateService delegateService)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -380,11 +396,12 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Construct JSON string for the final object
         /// 构造最终对象的Json字符串
         /// </summary>
-        /// <param name="arguments">参数列表</param>
-        /// <param name="delegateService">委托服务</param>
-        /// <returns>字典列表</returns>
+        /// <param name="arguments"></param>
+        /// <param name="delegateService"></param>
+        /// <returns></returns>
         private static IDictionary<string, string> CompositeKeyValue(string arguments, IDelegateService delegateService)
         {
             var dictionary = new Dictionary<string, string>();
@@ -399,11 +416,12 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Construct Parameters value
         /// 构造可变数值列表
         /// </summary>
-        /// <param name="arguments">参数列表</param>
-        /// <param name="delegateService">委托服务</param>
-        /// <returns>参数列表</returns>
+        /// <param name="arguments"></param>
+        /// <param name="delegateService"></param>
+        /// <returns></returns>
         private static object[] CompositeParameterValues(string arguments, IDelegateService delegateService)
         {
             var arguList = arguments.Split(',');

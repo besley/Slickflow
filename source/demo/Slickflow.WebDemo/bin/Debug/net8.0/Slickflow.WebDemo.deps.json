@@ -11,12 +11,12 @@
           "Dapper": "1.0.0",
           "SlickOne.WebUtility": "1.0.0",
           "Slickflow.Data": "1.0.0",
-          "Slickflow.Engine": "2.3.0",
+          "Slickflow.Engine": "2.4.0",
           "Slickflow.HrsService": "1.0.0",
           "Slickflow.Module": "1.0.0",
           "Slickflow.Module.Resource": "1.0.0",
           "VueCliMiddleware": "6.0.0",
-          "Slickflow.Module.Localize": "1.0.0.0"
+          "Slickflow.Module.Localize": "2.4.0.0"
         },
         "runtime": {
           "Slickflow.WebDemo.dll": {}
@@ -623,14 +623,7 @@
           }
         }
       },
-      "System.Formats.Asn1/8.0.1": {
-        "runtime": {
-          "lib/net8.0/System.Formats.Asn1.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.724.31311"
-          }
-        }
-      },
+      "System.Formats.Asn1/8.0.1": {},
       "System.IO/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "5.0.0",
@@ -726,7 +719,10 @@
           "System.Data.SqlClient": "4.8.6"
         },
         "runtime": {
-          "Dapper.dll": {}
+          "Dapper.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Slickflow.Data/1.0.0": {
@@ -738,7 +734,10 @@
           "System.Data.SqlClient": "4.8.6"
         },
         "runtime": {
-          "Slickflow.Data.dll": {}
+          "Slickflow.Data.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Slickflow.Data.DataProvider/1.0.0": {
@@ -746,10 +745,13 @@
           "Slickflow.Data": "1.0.0"
         },
         "runtime": {
-          "Slickflow.Data.DataProvider.dll": {}
+          "Slickflow.Data.DataProvider.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
-      "Slickflow.Engine/2.3.0": {
+      "Slickflow.Engine/2.4.0": {
         "dependencies": {
           "Devart.Data.Oracle.EFCore": "10.3.21.8",
           "IronPython": "3.4.1",
@@ -764,17 +766,23 @@
           "System.Reflection.Emit": "4.7.0"
         },
         "runtime": {
-          "Slickflow.Engine.dll": {}
+          "Slickflow.Engine.dll": {
+            "assemblyVersion": "2.4.0",
+            "fileVersion": "2.4.0.0"
+          }
         }
       },
       "Slickflow.HrsService/1.0.0": {
         "dependencies": {
           "Dapper": "1.0.0",
           "Slickflow.Data": "1.0.0",
-          "Slickflow.Engine": "2.3.0"
+          "Slickflow.Engine": "2.4.0"
         },
         "runtime": {
-          "Slickflow.HrsService.dll": {}
+          "Slickflow.HrsService.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Slickflow.Module/1.0.0": {
@@ -784,7 +792,10 @@
           "Slickflow.Data": "1.0.0"
         },
         "runtime": {
-          "Slickflow.Module.dll": {}
+          "Slickflow.Module.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Slickflow.Module.Resource/1.0.0": {
@@ -795,7 +806,10 @@
           "Slickflow.Module": "1.0.0"
         },
         "runtime": {
-          "Slickflow.Module.Resource.dll": {}
+          "Slickflow.Module.Resource.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "SlickOne.WebUtility/1.0.0": {
@@ -803,7 +817,10 @@
           "Newtonsoft.Json": "13.0.3"
         },
         "runtime": {
-          "SlickOne.WebUtility.dll": {}
+          "SlickOne.WebUtility.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "VueCliMiddleware/6.0.0": {
@@ -812,14 +829,17 @@
           "Microsoft.Extensions.Logging": "8.0.0"
         },
         "runtime": {
-          "VueCliMiddleware.dll": {}
+          "VueCliMiddleware.dll": {
+            "assemblyVersion": "6.0.0",
+            "fileVersion": "6.0.0.0"
+          }
         }
       },
-      "Slickflow.Module.Localize/1.0.0.0": {
+      "Slickflow.Module.Localize/2.4.0.0": {
         "runtime": {
           "Slickflow.Module.Localize.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
+            "assemblyVersion": "2.4.0.0",
+            "fileVersion": "2.4.0.0"
           }
         }
       }
@@ -1343,7 +1363,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Slickflow.Engine/2.3.0": {
+    "Slickflow.Engine/2.4.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -1373,7 +1393,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Slickflow.Module.Localize/1.0.0.0": {
+    "Slickflow.Module.Localize/2.4.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

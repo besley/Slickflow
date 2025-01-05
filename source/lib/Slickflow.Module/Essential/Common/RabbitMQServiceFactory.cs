@@ -6,15 +6,14 @@ using Slickflow.Module.Essential.Entity;
 namespace Slickflow.Module.Essential.Common
 {
     /// <summary>
+    /// RabbitMQ Service Factory
     /// 消息队列服务创建类
     /// </summary>
     public class RabbitMQServiceFactory
     {
         /// <summary>
-        /// 创建方法
+        /// Create
         /// </summary>
-        /// <param name="func">消息使用函数</param>
-        /// <returns消息队列服务</returns>
         public static RabbitMQService Create()
         {
             var mqService = new RabbitMQService();
@@ -22,10 +21,9 @@ namespace Slickflow.Module.Essential.Common
         }
 
         /// <summary>
-        /// 创建方法
+        /// Create
         /// </summary>
-        /// <param name="func">消息使用函数</param>
-        /// <returns消息队列服务</returns>
+        /// <param name="func">message consume function</param>
         public static RabbitMQService CreateMessage(Func<MessageEntity, MessageConsumedResult> func = null)
         {
             var mqService = new RabbitMQService();
@@ -35,10 +33,9 @@ namespace Slickflow.Module.Essential.Common
         }
 
         /// <summary>
-        /// 创建方法
+        /// Create
         /// </summary>
-        /// <param name="func">消息使用函数</param>
-        /// <returns消息队列服务</returns>
+        /// <param name="func">message consume function</param>
         public static RabbitMQService CreateSignal(Func<SignalEntity, List<SignalConsumedResult>> func = null)
         {
             var mqService = new RabbitMQService();

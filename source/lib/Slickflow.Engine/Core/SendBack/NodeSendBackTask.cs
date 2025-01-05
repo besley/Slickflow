@@ -11,6 +11,7 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Core.SendBack
 {
     /// <summary>
+    /// Sendback processing for task types
     /// 任务类型的退回处理器
     /// </summary>
     internal class NodeSendBackTask : NodeSendBack
@@ -22,13 +23,14 @@ namespace Slickflow.Engine.Core.SendBack
         }
 
         /// <summary>
-        /// 执行退回操作
+        /// Execute method
         /// </summary>
         internal override void Execute()
         {
             if (base.SendBackOperation.IsCancellingBrothersNode == true)
             {
                 //取消相邻并行分支上的其它并行节点
+                //Cancel other parallel nodes on adjacent parallel branches
                 CancelBrothersNode(base.SendBackOperation.BackwardToTaskActivity, 
                     base.SendBackOperation.BackwardFromActivityInstance,
                     base.SendBackOperation.ActivityResource.AppRunner,
@@ -46,12 +48,9 @@ namespace Slickflow.Engine.Core.SendBack
         }
 
         /// <summary>
+        /// Cancel adjacent branch nodes
         /// 取消相邻分支节点
         /// </summary>
-        /// <param name="toActivity">退回到的节点</param>
-        /// <param name="fromActivityInstance">退回前的运行节点</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">数据会话</param>
         private void CancelBrothersNode(Activity toActivity,
             ActivityInstanceEntity fromActivityInstance,
             WfAppRunner runner,

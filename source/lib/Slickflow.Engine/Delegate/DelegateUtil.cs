@@ -1,30 +1,23 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Dynamic;
-using System.Reflection;
-using System.Reflection.Emit;
 using System.Text;
-using IronPython.Hosting;
 using Dapper;
-using Slickflow.Data;
-using Slickflow.Module.Localize;
-using Slickflow.Engine.Common;
-using Slickflow.Engine.Utility;
-using Slickflow.Engine.Xpdl.Common;
-using Slickflow.Engine.Xpdl.Entity;
 
 namespace Slickflow.Engine.Delegate
 {
+    /// <summary>
+    /// Delegate Utility
+    /// </summary>
     internal class DelegateUtil
     {
         /// <summary>
+        /// Construct JSON string for the final object
         /// 构造最终对象的Json字符串
         /// </summary>
-        /// <param name="arguments">参数列表</param>
-        /// <param name="delegateService">委托服务</param>
-        /// <returns>Json字符串</returns>
+        /// <param name="arguments"></param>
+        /// <param name="delegateService"></param>
+        /// <returns></returns>
         internal static string CompositeJsonValue(string arguments, IDelegateService delegateService)
         {
             var jsonValue = string.Empty;
@@ -49,11 +42,12 @@ namespace Slickflow.Engine.Delegate
         }
 
         /// <summary>
+        /// If it is a simple string, add double quotation marks
         /// 如果是简单字符串, 加双引号
         /// jack => "jack"
         /// </summary>
-        /// <param name="jsonValue">字符串</param>
-        /// <returns>变换格式后的字符串</returns>
+        /// <param name="jsonValue"></param>
+        /// <returns></returns>
         internal static string FormatJsonStringIfSimple(string jsonValue)
         {
             jsonValue = jsonValue.TrimStart().TrimEnd();
@@ -69,11 +63,12 @@ namespace Slickflow.Engine.Delegate
         }
 
         /// <summary>
+        /// Construct JSON string for the final object
         /// 构造最终对象的Json字符串
         /// </summary>
-        /// <param name="arguments">参数列表</param>
-        /// <param name="delegateService">委托服务</param>
-        /// <returns>动态参数列表</returns>
+        /// <param name="arguments"></param>
+        /// <param name="delegateService"></param>
+        /// <returns></returns>
         internal static DynamicParameters CompositeSqlParametersValue(string arguments, IDelegateService delegateService)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -89,11 +84,12 @@ namespace Slickflow.Engine.Delegate
         }
 
         /// <summary>
+        /// Construct JSON string for the final object
         /// 构造最终对象的Json字符串
         /// </summary>
-        /// <param name="arguments">参数列表</param>
-        /// <param name="delegateService">委托服务</param>
-        /// <returns>字典列表</returns>
+        /// <param name="arguments"></param>
+        /// <param name="delegateService"></param>
+        /// <returns></returns>
         internal static IDictionary<string, string> CompositeKeyValue(string arguments, IDelegateService delegateService)
         {
             var dictionary = new Dictionary<string, string>();
@@ -108,11 +104,12 @@ namespace Slickflow.Engine.Delegate
         }
 
         /// <summary>
+        /// Construct a variable value list
         /// 构造可变数值列表
         /// </summary>
-        /// <param name="arguments">参数列表</param>
-        /// <param name="delegateService">委托服务</param>
-        /// <returns>参数列表</returns>
+        /// <param name="arguments"></param>
+        /// <param name="delegateService"></param>
+        /// <returns></returns>
         internal static object[] CompositeParameterValues(string arguments, IDelegateService delegateService)
         {
             var arguList = arguments.Split(',');

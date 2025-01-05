@@ -20,6 +20,7 @@ using Slickflow.Engine.Core.Runtime;
 namespace Slickflow.Engine.Core.Pattern
 {
     /// <summary>
+    /// Node Mediator Sub Process Nested
     /// 子流程节点执行器
     /// </summary>
     internal class NodeMediatorSubProcessNested : NodeMediator
@@ -36,7 +37,7 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 执行子流程节点
+        /// Execute work item
         /// </summary>
         internal override void ExecuteWorkItem()
         {
@@ -45,6 +46,7 @@ namespace Slickflow.Engine.Core.Pattern
                 if (base.LinkContext.FromActivity.ActivityType == ActivityTypeEnum.SubProcessNode)
                 {
                     //检查子流程是否结束
+                    //Check if the sub process has ended
                     var pim = new ProcessInstanceManager();
                     bool isCompleted = pim.CheckSubProcessInstanceCompleted(Session.Connection,
                         base.LinkContext.FromActivityInstance.ID,
@@ -58,11 +60,13 @@ namespace Slickflow.Engine.Core.Pattern
                 }
 
                 //完成当前的任务节点
+                //Complete current node
                 bool canContinueForwardCurrentNode = CompleteWorkItem(ActivityForwardContext.TaskID,
                     ActivityForwardContext.ActivityResource,
                     this.Session);
 
                 //获取下一步节点列表：并继续执行
+                //Get the next node list: and continue execution
                 if (canContinueForwardCurrentNode)
                 {
                     ContinueForwardCurrentNode(ActivityForwardContext.IsNotParsedByTransition, this.Session);
@@ -75,11 +79,8 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 完成任务实例
+        /// Complete work item
         /// </summary>
-        /// <param name="taskID">任务ID</param>
-        /// <param name="activityResource">活动资源</param>
-        /// <param name="session">会话</param>
         internal bool CompleteWorkItem(int? taskID,
             ActivityResource activityResource,
             IDbSession session)
@@ -89,24 +90,30 @@ namespace Slickflow.Engine.Core.Pattern
             if (taskID != null)
             {
                 //完成本任务，返回任务已经转移到下一个会签任务，不继续执行其它节点
+                //Complete this task, return that the task has been transferred to the next co signing task,
+                //and do not continue to execute other nodes
                 base.TaskManager.Complete(taskID.Value, activityResource.AppRunner, session);
             }
 
             //设置活动节点的状态为完成状态
+            //Set the status of the activity node to complete status
             base.ActivityInstanceManager.Complete(base.LinkContext.FromActivityInstance.ID,
                 activityResource.AppRunner,
                 session);
             base.LinkContext.FromActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
 
             //先判断是否是多实例类型的任务
+            //First, determine whether it is a multi instance type task
             var miDetail = base.LinkContext.FromActivity.MultiSignDetail;
             if (miDetail != null && miDetail.ComplexType == ComplexTypeEnum.SignTogether)
             {
                 //取出主节点信息
+                //Retrieve main node information
                 var mainNodeIndex = base.LinkContext.FromActivityInstance.MIHostActivityInstanceID.Value;
                 var mainActivityInstance = base.ActivityInstanceManager.GetById(mainNodeIndex);
 
                 //取出多实例节点列表
+                //Retrieve a list of multiple instance nodes
                 var sqList = base.ActivityInstanceManager.GetActivityMulitipleInstanceWithState(
                     mainNodeIndex,
                     base.LinkContext.FromActivityInstance.ProcessInstanceID,
@@ -116,17 +123,20 @@ namespace Slickflow.Engine.Core.Pattern
                 if (base.LinkContext.FromActivity.MultiSignDetail.MergeType == MergeTypeEnum.Sequence)
                 {
                     //取出最大执行节点
+                    //Retrieve the maximum execution node 
                     short maxOrder = (short)sqList.Max<ActivityInstanceEntity>(t => t.CompleteOrder).Value;
 
                     if (base.LinkContext.FromActivityInstance.CompleteOrder < maxOrder)
                     {
                         //设置下一个任务进入准备状态
+                        //Set the next task to enter preparation mode
                         var currentNodeIndex = (short)base.LinkContext.FromActivityInstance.CompleteOrder.Value;
                         var nextActivityInstance = sqList[currentNodeIndex];
                         nextActivityInstance.ActivityState = (short)ActivityStateEnum.Ready;
                         base.ActivityInstanceManager.Update(nextActivityInstance, session);
 
                         //设置下一个任务对应的子流程进入运行状态
+                        //Set the sub process corresponding to the next task to enter the running state
                         base.ProcessInstanceManager.RecallSubProcess(nextActivityInstance.ID,
                             activityResource.AppRunner,
                             Session);
@@ -137,9 +147,12 @@ namespace Slickflow.Engine.Core.Pattern
                     else if (base.LinkContext.FromActivityInstance.CompleteOrder == maxOrder)
                     {
                         //完成最后一个会签任务，会签主节点状态由挂起设置为准备状态
+                        //Complete the last countersignature task,
+                        //and set the status of the countersignature master node from suspended to ready
                         mainActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
                         base.ActivityInstanceManager.Update(mainActivityInstance, session);
                         //将执行权责交由会签主节点
+                        //Transfer the execution responsibilities to the main signing node
                         base.LinkContext.FromActivityInstance = mainActivityInstance;
                     }
                 }
@@ -153,9 +166,11 @@ namespace Slickflow.Engine.Core.Pattern
                     if (completedCount / allCount >= mainActivityInstance.CompleteOrder)
                     {
                         //如果超过约定的比例数，则执行下一步节点
+                        //If the agreed proportion is exceeded, proceed to the next node
                         mainActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
                         base.ActivityInstanceManager.Update(mainActivityInstance, session);
                         //将执行权责交由会签主节点
+                        //Transfer the execution responsibilities to the main signing node
                         base.LinkContext.FromActivityInstance = mainActivityInstance;
                     }
                     else
@@ -169,16 +184,9 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Create activity task transition instance
         /// 创建活动任务转移数据
         /// </summary>
-        /// <param name="toActivity">目的活动</param>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="fromActivityInstance">来源活动实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="flyingType">飞跃类型</param>
-        /// <param name="activityResource">活动资源</param>
-        /// <param name="session">会话</param>
         internal override void CreateActivityTaskTransitionInstance(Activity toActivity,
            ProcessInstanceEntity processInstance,
            ActivityInstanceEntity fromActivityInstance,
@@ -201,6 +209,7 @@ namespace Slickflow.Engine.Core.Pattern
                 var entity = new ActivityInstanceEntity();
                 var plist = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
                 //创建并行多实例分支
+                //Create parallel multi instance branches
                 for (var i = 0; i < plist.Count; i++)
                 {
                     var performer = plist[i];
@@ -225,17 +234,9 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Create sub process 
         /// 创建子流程节点数据以及子流程记录
         /// </summary>
-        /// <param name="toActivity">目的活动</param>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="fromActivityInstance">来源活动实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="flyingType">飞跃类型</param>
-        /// <param name="activityResource">活动资源</param>
-        /// <param name="performer">执行者</param>
-        /// <param name="session">会话</param>
         private void CreateSubProcessNode(Activity toActivity,
            ProcessInstanceEntity processInstance,
            ActivityInstanceEntity fromActivityInstance,
@@ -248,31 +249,28 @@ namespace Slickflow.Engine.Core.Pattern
         {
             WfExecutedResult startedResult = WfExecutedResult.Default();
 
-            //实例化Activity
             var toActivityInstance = CreateActivityInstanceObject(toActivity, processInstance, activityResource.AppRunner);
-
-            //进入运行状态
             toActivityInstance.ActivityState = (short)ActivityStateEnum.Ready;
             if (performer != null)
             {
                 //并行容器中的子流程节点，每个人发起一个子流程
+                //Sub process nodes in parallel containers, where each person initiates a sub process
                 toActivityInstance.AssignedToUserIDs = performer.UserID;
                 toActivityInstance.AssignedToUserNames = performer.UserName;
-                //插入活动实例数据
+
                 base.ActivityInstanceManager.Insert(toActivityInstance, session);
-                //插入任务数据
+
                 this.TaskManager.Insert(toActivityInstance, performer, activityResource.AppRunner, session);
             }
             else
             {
                 toActivityInstance = GenerateActivityAssignedUserInfo(toActivityInstance, activityResource);
-                //插入活动实例数据
+
                 base.ActivityInstanceManager.Insert(toActivityInstance, session);
-                //插入任务数据
+
                 base.CreateNewTask(toActivityInstance, activityResource, session);
             }
 
-            //插入转移数据
             var newTransitionInstanceID = InsertTransitionInstance(processInstance,
                 transitionGUID,
                 fromActivityInstance,
@@ -283,10 +281,12 @@ namespace Slickflow.Engine.Core.Pattern
                 session);
 
             //启动子流程
+            //Startup sub process
             var subProcessNode = (SubProcessNode)toActivity.Node;
             subProcessNode.ActivityInstance = toActivityInstance;
 
             //复制子流程启动用户信息
+            //Copy sub process to start user information
             WfAppRunner subRunner = null;
             var performerList = new PerformerList();
             if (performer != null)
@@ -321,16 +321,9 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Create multiple instance
         /// 会签类型的主节点, 多实例节点处理
         /// </summary>
-        /// <param name="toActivity">目的活动</param>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="fromActivityInstance">来源活动实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="flyingType">飞跃类型</param>
-        /// <param name="activityResource">活动资源</param>
-        /// <param name="session">会话</param>
         internal new void CreateMultipleInstance(Activity toActivity,
             ProcessInstanceEntity processInstance,
             ActivityInstanceEntity fromActivityInstance,
@@ -341,10 +334,10 @@ namespace Slickflow.Engine.Core.Pattern
             IDbSession session)
         {
             //实例化主节点Activity
+            //Instantiate the main node Activity
             var toActivityInstance = CreateActivityInstanceObject(toActivity,
                 processInstance, activityResource.AppRunner);
 
-            //主节点实例数据
             toActivityInstance.ActivityState = (short)ActivityStateEnum.Suspended;
             toActivityInstance.ComplexType = (short)ComplexTypeEnum.SignTogether;
             if (toActivity.MultiSignDetail.MergeType == MergeTypeEnum.Parallel)
@@ -353,10 +346,8 @@ namespace Slickflow.Engine.Core.Pattern
             }
             toActivityInstance = GenerateActivityAssignedUserInfo(toActivityInstance, activityResource);
 
-            //插入主节点实例数据
             base.ActivityInstanceManager.Insert(toActivityInstance, session);
 
-            //插入主节点转移数据
             InsertTransitionInstance(processInstance,
                 transitionGUID,
                 fromActivityInstance,
@@ -367,6 +358,7 @@ namespace Slickflow.Engine.Core.Pattern
                 session);
 
             //插入会签子节点实例数据
+            //Insert signature sub node instance data
             var plist = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
             ActivityInstanceEntity entity = new ActivityInstanceEntity();
             for (short i = 0; i < plist.Count; i++)
@@ -378,21 +370,21 @@ namespace Slickflow.Engine.Core.Pattern
                 entity.CompleteOrder = (short)(i + 1);
 
                 //只有第一个节点处于运行状态，其它节点挂起
+                //Only the first node is running, while the other nodes are suspended
                 if ((i > 0) && (toActivity.MultiSignDetail.MergeType == MergeTypeEnum.Sequence))
                 {
                     entity.ActivityState = (short)ActivityStateEnum.Suspended;
                 }
 
-                //插入活动实例数据，并返回活动实例ID
                 entity.ID = base.ActivityInstanceManager.Insert(entity, session);
 
-                //插入任务数据
                 base.TaskManager.Insert(entity, plist[i], activityResource.AppRunner, session);
 
                 //启动子流程
+                //Startup sub process
                 IDbSession subSession = SessionFactory.CreateSession();
                 var subProcessNode = (SubProcessNode)toActivity.Node;
-                subProcessNode.ActivityInstance = entity;   //在流程实例表中记录激活子流程的活动节点ID
+                subProcessNode.ActivityInstance = entity;   
                 WfAppRunner subRunner = CreateSubProcessRunner(activityResource.AppRunner, 
                     plist[i],
                     session);
@@ -412,6 +404,8 @@ namespace Slickflow.Engine.Core.Pattern
                 runtimeInstance.Execute(subSession);
 
                 //如果是串行会签，只有第一个子流程可以运行，其它子流程处于挂起状态
+                //If it is a serial countersignature,
+                //only the first subprocess can run, and the other subprocesses are in a suspended state
                 if ((i > 0) && (toActivity.MultiSignDetail.MergeType == MergeTypeEnum.Sequence))
                 {
                     base.ProcessInstanceManager.Suspend(startedResult.ProcessInstanceIDStarted, subRunner, subSession);
@@ -420,11 +414,9 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// When creating a subprocess, regenerate the runner information
         /// 创建子流程时，重新生成runner信息
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <param name="performer">下一步执行者</param>
-        /// <param name="session">会话</param>
         /// <returns></returns>
         private WfAppRunner CreateSubProcessRunner(WfAppRunner runner,
             Performer performer,
@@ -439,7 +431,7 @@ namespace Slickflow.Engine.Core.Pattern
             subRunner.UserID = performer.UserID;
             subRunner.UserName = performer.UserName;
 
-            #region 动态子流程调用
+            #region Dynamic sub process called
             //如果是动态调用子流程，则需要获取具体子流程实体对象
             //var isSubProcessNotExisted = false;
             //if (subProcessNode.SubProcessType == SubProcessTypeEnum.Dynamic)

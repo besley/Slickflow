@@ -15,23 +15,25 @@ using Slickflow.Engine.Utility;
 namespace Slickflow.Engine.Business.Manager
 {
     /// <summary>
+    /// Transition manager
     /// 节点转移管理类
     /// </summary>
     internal class TransitionInstanceManager : ManagerBase
     {
-        #region 实例创建方法
+        #region Create method 实例创建方法
         /// <summary>
+        /// Create transfer instance data
         /// 创建转移实例数据
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="fromActivityInstance">来源活动实例</param>
-        /// <param name="toActivityInstance">目的活动实例</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="flyingType">飞越类型</param>
-        /// <param name="runner">执行者</param>
-        /// <param name="conditionParseResult">条件解析结果</param>
-        /// <returns>转移实例</returns>
+        /// <param name="processInstance"></param>
+        /// <param name="transitionGUID"></param>
+        /// <param name="fromActivityInstance"></param>
+        /// <param name="toActivityInstance"></param>
+        /// <param name="transitionType"></param>
+        /// <param name="flyingType"></param>
+        /// <param name="runner"></param>
+        /// <param name="conditionParseResult"></param>
+        /// <returns></returns>
         internal TransitionInstanceEntity CreateTransitionInstanceObject(ProcessInstanceEntity processInstance,
             String transitionGUID,
             ActivityInstanceEntity fromActivityInstance,
@@ -69,13 +71,14 @@ namespace Slickflow.Engine.Business.Manager
         }
         #endregion
 
-        #region 数据插入
+        #region Insert 数据插入
         /// <summary>
+        /// Insert transition
         /// 插入方法
         /// </summary>
-        /// <param name="conn">数据库连接</param>
-        /// <param name="entity">实体</param>
-        /// <param name="trans">事务</param>
+        /// <param name="conn"></param>
+        /// <param name="entity"></param>
+        /// <param name="trans"></param>
         internal int Insert(IDbConnection conn,
             TransitionInstanceEntity entity,
             IDbTransaction trans)
@@ -87,11 +90,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Delete transition
         /// 删除转移实例
         /// </summary>
-        /// <param name="conn">数据库连接</param>
-        /// <param name="transitionInstanceID">转移实例ID</param>
-        /// <param name="trans">事务</param>
+        /// <param name="conn"></param>
+        /// <param name="transitionInstanceID"></param>
+        /// <param name="trans"></param>
         internal void Delete(IDbConnection conn,
             int transitionInstanceID,
             IDbTransaction trans)
@@ -100,24 +104,26 @@ namespace Slickflow.Engine.Business.Manager
         }
         #endregion
 
-        #region 数据查询
+        #region Query task 数据查询
         /// <summary>
+        /// Retrieve instance data based on ID
         /// 根据ID获取实例数据
         /// </summary>
-        /// <param name="transitionInstanceID">转移ID</param>
-        /// <returns>转移实例</returns>
+        /// <param name="transitionInstanceID"></param>
+        /// <returns></returns>
         internal TransitionInstanceEntity GetById(int transitionInstanceID)
         {
             return Repository.GetById<TransitionInstanceEntity>(transitionInstanceID);
         }
 
         /// <summary>
+        /// Get End transition Data
         /// 获取结束转移数据
         /// </summary>
-        /// <param name="appName">应用名称</param>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <returns>转移实体</returns>
+        /// <param name="appName"></param>
+        /// <param name="appInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <returns></returns>
         internal TransitionInstanceEntity GetEndTransition(string appName, 
             string appInstanceID, 
             string processGUID)
@@ -133,12 +139,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain the final transition entity data
         /// 获取最后的转移实体数据
         /// </summary>
-        /// <param name="appName">应用名称</param>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <returns>转移实体数据</returns>
+        /// <param name="appName"></param>
+        /// <param name="appInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <returns></returns>
         internal TransitionInstanceEntity GetLastTaskTransition(string appName, string appInstanceID, string processGUID)
         {
             var nodeList = GetWorkItemTransitonInstance(appInstanceID, processGUID).ToList();
@@ -152,17 +159,20 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain a transition list of WorkItem type destination nodes
         /// 获得去向节点是WorkItem类型的转移列表
         /// </summary>
-        /// <param name="appInstanceID">应用ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <returns>转移实例列表</returns>
+        /// <param name="appInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <returns></returns>
         internal IEnumerable<TransitionInstanceEntity> GetWorkItemTransitonInstance(string appInstanceID,
             String processGUID)
         {
             //2015.09.11 besley
             //需考虑后期节点类型增加目前支持TaskNode, SubProcessNode, MultipleInstanceNode
             //以上都是WorkItemType为1类型，保留ToActivityType是为了版本兼容，后期版本去掉ToActivity类型的判断。
+            //It is necessary to consider adding node types in the later stage. Currently, TaskNode is supported, SubProcessNode, MultipleInstanceNode
+            //The above are all WorkItemType 1 types. Keeping ToActiveType is for version compatibility, and removing the judgment of ToActivity type in later versions.
             var sql = @"SELECT 
                             T.* 
                         FROM WfTransitionInstance T
@@ -183,12 +193,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Select data transition based on destination node type
         /// 根据去向节点类型选择转移数据
         /// </summary>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="toActivityType">到的活动节点类型</param>
-        /// <returns>转移实体列表</returns>
+        /// <param name="appInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="toActivityType"></param>
+        /// <returns></returns>
         internal IEnumerable<TransitionInstanceEntity> GetTransitonInstance(string appInstanceID,
             String processGUID,
             ActivityTypeEnum toActivityType)
@@ -210,12 +221,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain the list of transition data
         /// 获取转移数据列表
         /// </summary>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">流程版本</param>
-        /// <returns>转移实例列表</returns>
+        /// <param name="appInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         internal IEnumerable<TransitionInstanceEntity> GetTransitionInstanceList(string appInstanceID,
             string processGUID,
             string version)
@@ -231,12 +243,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get transition list
         /// 获取转移数据列表
         /// </summary>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <returns>转移实例列表</returns>
+        /// <param name="appInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="processInstanceID"></param>
+        /// <returns></returns>
         internal IEnumerable<TransitionInstanceEntity> GetTransitionInstanceList(string appInstanceID,
             string processGUID,
             int processInstanceID)
@@ -258,10 +271,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get the list of activity instances that have been issued for the next step of the current node
         /// 获取当前节点的下一步已经发出的活动实例列表
         /// </summary>
-        /// <param name="fromActivityInstanceID">起始活动实例ID</param>
-        /// <returns>下一步活动实例列表</returns>
+        /// <param name="fromActivityInstanceID"></param>
+        /// <returns></returns>
         internal IList<ActivityInstanceEntity> GetTargetActivityInstanceList(int fromActivityInstanceID)
         {
             var session = SessionFactory.CreateSession();
@@ -280,11 +294,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get the list of activity instances that have been issued for the next step of the current node
         /// 获取当前节点的下一步已经发出的活动实例列表
         /// </summary>
-        /// <param name="fromActivityInstanceID">起始活动实例ID</param>
-        /// <param name="session">数据会话</param>
-        /// <returns>下一步活动实例列表</returns>
+        /// <param name="fromActivityInstanceID"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal IList<ActivityInstanceEntity> GetTargetActivityInstanceList(int fromActivityInstanceID, 
             IDbSession session)
         {
@@ -295,11 +310,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Traverse the ID of the next activity instance
         /// 遍历下一步活动实例的ID
         /// </summary>
-        /// <param name="fromActivityInstanceID">起始活动实例ID</param>
-        /// <param name="session">数据会话</param>
-        /// <returns>下一步活动实例ID列表</returns>
+        /// <param name="fromActivityInstanceID"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         private IList<dynamic> GetTargetActivityInstanceIDs(int fromActivityInstanceID,
             IDbSession session)
         {
@@ -329,11 +345,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Determine whether the defined Transition has been instantiated and executed
         /// 判读定义的Transition是否已经被实例化执行
         /// </summary>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="transitionInstanceList">转移实例列表</param>
-        /// <returns>布尔值</returns>
+        /// <param name="transitionGUID"></param>
+        /// <param name="transitionInstanceList"></param>
+        /// <returns></returns>
         internal bool IsTransiionInstancedAndConditionParsedOK(String transitionGUID,
             IList<TransitionInstanceEntity> transitionInstanceList)
         {
@@ -341,6 +358,7 @@ namespace Slickflow.Engine.Business.Manager
             foreach (TransitionInstanceEntity transitionInstance in transitionInstanceList)
             {
                 //判断连线是否被实例化，并且条件是否满足
+                //Determine whether the connection has been instantiated and whether the conditions are met
                 if (transitionGUID == transitionInstance.TransitionGUID)
                 {
                     if (transitionInstance.ConditionParseResult == (byte)ConditionParseResultEnum.Passed)

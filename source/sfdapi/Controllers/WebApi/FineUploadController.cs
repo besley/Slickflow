@@ -19,6 +19,7 @@ using Slickflow.Engine.Service;
 namespace Slickflow.Designer.Controllers.WebApi
 {
     /// <summary>
+    /// File Uploader Controller
     /// 文件上传控制器
     /// </summary>
     public class FineUploadController : Controller
@@ -26,9 +27,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
 
         /// <summary>
+        /// File Import
         /// 文件导入过程
         /// </summary>
-        /// <returns>导入结果对象</returns>
         [HttpPost]
         public async Task<ActionResult> Import()
         {
@@ -75,9 +76,9 @@ namespace Slickflow.Designer.Controllers.WebApi
         }
 
         /// <summary>
-        /// 解析XML文件
+        /// Create new process
+        /// 创建新流程
         /// </summary>
-        /// <param name="xmlContent"></param>
         private bool CreateNewProcess(string xmlContent, out string message)
         {
             bool isUploaded = false;

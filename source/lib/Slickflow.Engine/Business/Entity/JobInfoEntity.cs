@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Job Info Entity
     /// 作业信息
     /// </summary>
     [Table("WfJobInfo")]

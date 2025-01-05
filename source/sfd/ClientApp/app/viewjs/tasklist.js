@@ -18,6 +18,7 @@ const tasklist = (function () {
                 $(divTaskGrid).empty();
 
                 var gridOptions = {
+                    theme: themeBalham,
                     columnDefs: [
                         { headerName: 'ID', field: 'TaskID', width: 50 },
                         { headerName: kresource.getItem('appname'), field: 'AppName', width: 120 },
@@ -27,11 +28,15 @@ const tasklist = (function () {
                         { headerName: kresource.getItem('assignedusername'), field: 'AssignedToUserName', width: 100 },
                         { headerName: kresource.getItem('createddatetime'), field: 'CreatedDateTime', width: 200 },
                     ],
-                    rowSelection: 'single'
+                    rowSelection: {
+                        mode: 'singleRow',
+                        checkboxes: false,
+                        enableClickSelection: true
+                    },
                 };
 
-                new agGrid.Grid(divTaskGrid, gridOptions);
-                gridOptions.api.setRowData(result.Entity);
+                gridOptions.rowData = result.Entity;
+                const gridApi = createGrid(divTaskGrid, gridOptions);
 
                 $('#loading-indicator').hide();
             } else {
@@ -49,6 +54,7 @@ const tasklist = (function () {
                 $(divTaskGrid).empty();
 
                 var gridOptions = {
+                    theme: themeBalham,
                     columnDefs: [
                         { headerName: 'ID', field: 'TaskID', width: 50 },
                         { headerName: kresource.getItem('appname'), field: 'AppName', width: 120 },
@@ -58,11 +64,15 @@ const tasklist = (function () {
                         { headerName: kresource.getItem('endedbyusername'), field: 'EndedByUserName', width: 100 },
                         { headerName: kresource.getItem('endeddatetime'), field: 'EndedDateTime', width: 200 },
                     ],
-                    rowSelection: 'single'
+                    rowSelection: {
+                        mode: 'singleRow',
+                        checkboxes: false,
+                        enableClickSelection: true
+                    },
                 };
 
-                new agGrid.Grid(divTaskGrid, gridOptions);
-                gridOptions.api.setRowData(result.Entity);
+                gridOptions.rowData = result.Entity;
+                const gridApi = createGrid(divTaskGrid, gridOptions);
 
                 $('#loading-indicator').hide();
             } else {

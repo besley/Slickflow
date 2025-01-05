@@ -9,24 +9,27 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Xpdl.Node
 {
     /// <summary>
+    /// Sub Process Node
     /// 子流程节点
     /// </summary>
     public class SubProcessNode : NodeBase
     {
         /// <summary>
-        /// 子流程ID
+        /// SubProcessID
         /// </summary>
         public int SubProcessID { get; set; }
         /// <summary>
-        /// 子流程节点GUID
+        /// SubProcessGUID
         /// </summary>
         public string SubProcessGUID { get; set; }
         /// <summary>
+        /// Dynamically bound variable name for subprocess ID
         /// 子流程ID的动态绑定变量名称
         /// </summary>
         public string SubVarName { get; set; }
 
         /// <summary>
+        /// Embedded subprocess
         /// 内嵌子流程
         /// </summary>
         public Process SubProcessNested { get; set; }

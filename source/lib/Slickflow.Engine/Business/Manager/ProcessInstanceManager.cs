@@ -14,22 +14,26 @@ using Slickflow.Engine.Utility;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Xpdl.Node;
+using DnsClient.Protocol;
+using Org.BouncyCastle.Asn1;
 
 namespace Slickflow.Engine.Business.Manager
 {
     /// <summary>
+    /// Process instance manager
     /// 流程实例管理者类
     /// </summary>
     internal class ProcessInstanceManager : ManagerBase
     {
-        #region ProcessInstanceManager 基本数据操作
+        #region ProcessInstanceManager Basic Data Operations 基本数据操作
         /// <summary>
+        /// Get the current running process instance latest
         /// 获取当前运行的流程实例
         /// </summary>
-        /// <param name="appInstanceID">应用ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">流程版本</param>
-        /// <returns>流程实例实体</returns>
+        /// <param name="appInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         internal ProcessInstanceEntity GetProcessInstanceLatest(String appInstanceID,
            String processGUID,
            String version)
@@ -41,14 +45,15 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get the current running process instance latest
         /// 获取当前运行的流程实例
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="appInstanceID">应用ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">流程版本</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程实例实体</returns>
+        /// <param name="conn"></param>
+        /// <param name="appInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         internal ProcessInstanceEntity GetProcessInstanceLatest(IDbConnection conn,
            String appInstanceID,
            String processGUID,
@@ -59,33 +64,36 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 根据GUID获取流程实例数据
+        /// Obtain process instance data based on ID
+        /// 根据ID获取流程实例数据
         /// </summary>
         /// <param name="processInstanceID"></param>
-        /// <returns>流程实例实体</returns>
+        /// <returns></returns>
         internal ProcessInstanceEntity GetById(int processInstanceID)
         {
             return Repository.GetById<ProcessInstanceEntity>(processInstanceID);
         }
 
         /// <summary>
+        /// Obtain process instance data based on ID
         /// 根据ID获取流程实例数据
         /// </summary>
-        /// <param name="conn">连接</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程实例实体</returns>
+        /// <param name="conn"></param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         internal ProcessInstanceEntity GetById(IDbConnection conn, int processInstanceID, IDbTransaction trans)
         {
             return Repository.GetById<ProcessInstanceEntity>(conn, processInstanceID, trans);
         }
 
         /// <summary>
-        /// 获取流程实例
+        /// Obtain process instance data by Version
+        /// 根据版本获取流程实例
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <returns>流程实例</returns>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         private ProcessInstanceEntity GetByVersion(string processGUID, 
             string version)
         {
@@ -106,12 +114,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 根据活动实例查询流程实例
+        ///  Obtain process instance data by activity instance id
+        /// 根据活动实例ID查询流程实例
         /// </summary>
-        /// <param name="conn">数据库链接</param>
-        /// <param name="activityInstanceID">活动实例ID</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程实例实体</returns>
+        /// <param name="conn"></param>
+        /// <param name="activityInstanceID"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         internal ProcessInstanceEntity GetByActivity(IDbConnection conn,
             int activityInstanceID,
             IDbTransaction trans)
@@ -123,10 +132,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Determine whether the process instance is a subprocess
         /// 判断流程实例是否为子流程
         /// </summary>
-        /// <param name="entity">流程实例</param>
-        /// <returns>子流程标志</returns>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         internal Boolean IsSubProcess(ProcessInstanceEntity entity)
         {
             var isSub = false;
@@ -139,10 +149,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain the initiator of the process
         /// 获取流程的发起人
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <returns>流程发起人</returns>
+        /// <param name="processInstanceID"></param>
+        /// <returns></returns>
         internal User GetProcessInitiator(int processInstanceID)
         {
             using (var session = SessionFactory.CreateSession())
@@ -152,12 +163,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain the initiator of the process
         /// 获取流程的发起人
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程发起人</returns>
+        /// <param name="conn"></param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         internal User GetProcessInitiator(IDbConnection conn,
             int processInstanceID,
             IDbTransaction trans)
@@ -168,12 +180,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 获取最近的流程运行实例
+        /// Get the current process running instance
+        /// 获取当前的流程运行实例
         /// </summary>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <returns>流程实例实体</returns>
+        /// <param name="appInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         internal ProcessInstanceEntity GetProcessInstanceCurrent(String appInstanceID,
             String processGUID,
             String version)
@@ -185,14 +198,15 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 获取最近的流程运行实例
+        /// Get the current process running instance
+        /// 获取当前的流程运行实例
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">流程版本</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程实例实体</returns>
+        /// <param name="conn"></param>
+        /// <param name="appInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         internal ProcessInstanceEntity GetProcessInstanceCurrent(IDbConnection conn,
             String appInstanceID,
             String processGUID,
@@ -209,11 +223,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 根据业务实例ID查询流程实例
+        /// Query process instances based on application instance IDs
+        /// Explanation: The appInstanceID here only determines uniqueness if it is of type UUID. Otherwise, ProcessUID is added to determine uniqueness
+        /// 根据应用实例ID查询流程实例
         /// 说明：此处appInstanceID 只有GUID类型，才确定唯一性，否则就加入ProcessGUID来确定唯一性
         /// </summary>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <returns>流程实例实体</returns>
+        /// <param name="appInstanceID"></param>
+        /// <returns></returns>
         internal IEnumerable<ProcessInstanceEntity> GetProcessInstance(String appInstanceID)
         {
             var sql = @"SELECT 
@@ -233,14 +249,15 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 根据流程完成状态获取流程实例数据
+        /// Query process instance
+        /// 查询流程实例
         /// </summary>
-        /// <param name="conn">链接</param>
+        /// <param name="conn"></param>
         /// <param name="appInstanceID"></param>
         /// <param name="processGUID"></param>
-        /// <param name="version">流程版本</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程实例列表</returns>
+        /// <param name="version"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         internal IEnumerable<ProcessInstanceEntity> GetProcessInstance(IDbConnection conn,
             String appInstanceID,
             String processGUID,
@@ -268,14 +285,15 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Obtain sub process data
         /// 获取子流程数据
         /// </summary>
-        /// <param name="conn">链接</param>
+        /// <param name="conn"></param>
         /// <param name="appInstanceID"></param>
         /// <param name="processGUID"></param>
         /// <param name="subProcessGUID"></param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程实例列表</returns>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         internal ProcessInstanceEntity GetSubProcessInstance(IDbConnection conn,
             String appInstanceID,
             String processGUID,
@@ -314,11 +332,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Get process instances in running state
         /// 获取处于运行状态的流程实例
         /// </summary>
-        /// <param name="appInstanceID">应用实例ID</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <returns>流程实例实体</returns>
+        /// <param name="appInstanceID"></param>
+        /// <param name="processGUID"></param>
+        /// <returns></returns>
         internal ProcessInstanceEntity GetRunningProcessInstance(string appInstanceID,
             string processGUID)
         {
@@ -343,11 +362,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 判断流程实例是否存在
+        /// Obtain the number of process instances
+        /// 获取流程实例的数目
         /// </summary>
-        /// <param name="processGUID">流程GUId</param>
-        /// <param name="version">版本</param>
-        /// <returns>流程实例记录数</returns>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         internal Int32 GetProcessInstanceCount(string processGUID, string version)
         {
             var sql = @"SELECT 
@@ -363,13 +383,14 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Check if the sub process has ended
         /// 检查子流程是否结束
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="activityInstanceID">活动实例ID</param>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <param name="trans">事务</param>
-        /// <returns>是否结束标志</returns>
+        /// <param name="conn"></param>
+        /// <param name="activityInstanceID"></param>
+        /// <param name="activityGUID"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         internal bool CheckSubProcessInstanceCompleted(IDbConnection conn,
             int activityInstanceID,
             String activityGUID,
@@ -403,12 +424,13 @@ namespace Slickflow.Engine.Business.Manager
 
 
         /// <summary>
+        /// Insert process instance
         /// 流程数据插入
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="entity">流程实例实体</param>
-        /// <param name="trans">事务</param>
-        /// <returns>新实例ID</returns>
+        /// <param name="conn"></param>
+        /// <param name="entity"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         internal Int32 Insert(IDbConnection conn, ProcessInstanceEntity entity, IDbTransaction trans)
         {
             int newID = Repository.Insert(conn, entity, trans);
@@ -417,10 +439,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Update process instance
         /// 流程实例更新
         /// </summary>
-        /// <param name="entity">实体</param>
-        /// <param name="session">会话</param>
+        /// <param name="entity"></param>
+        /// <param name="session"></param>
         internal void Update(ProcessInstanceEntity entity, 
             IDbSession session)
         {
@@ -428,33 +451,36 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Update process instance
         /// 流程实例更新
         /// </summary>
-        /// <param name="entity">实体</param>
+        /// <param name="entity"></param>
         internal void Update(ProcessInstanceEntity entity)
         {
             Repository.Update<ProcessInstanceEntity>(entity);
         }
 
         /// <summary>
-        /// 流程数据插入
+        /// Update process instance
+        /// 流程数据更新
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="entity">流程实例实体</param>
-        /// <param name="trans">事务</param>
-        /// <returns>新实例ID</returns>
+        /// <param name="conn"></param>
+        /// <param name="entity"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         internal void Update(IDbConnection conn, ProcessInstanceEntity entity, IDbTransaction trans)
         {
             Repository.Update<ProcessInstanceEntity>(conn, entity, trans);
         }
 
         /// <summary>
+        /// Create a new process instance according to the process definition
         /// 根据流程定义，创建新的流程实例
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <param name="processEntity">流程定义</param>
-        /// <param name="subProcessNode">子流程节点</param>
-        /// <returns>流程实例的ID</returns>
+        /// <param name="runner"></param>
+        /// <param name="processEntity"></param>
+        /// <param name="subProcessNode"></param>
+        /// <returns></returns>
         internal ProcessInstanceEntity CreateNewProcessInstanceObject(WfAppRunner runner,
             ProcessEntity processEntity,
             SubProcessNode subProcessNode = null)
@@ -476,12 +502,15 @@ namespace Slickflow.Engine.Business.Manager
                 {
                     //内嵌子流程，子流程的流程实例记录保存以主流程记录为主
                     //内嵌子流程没有SubProcessID属性
+                    //Embedded sub processes, the process instance records of sub processes are mainly saved based on the main process records
+                    //The embedded subprocess does not have the SubProcessID attribute
                     entity.ProcessGUID = subProcessNode.ActivityInstance.ProcessGUID;
                     entity.SubProcessType = (short)SubProcessTypeEnum.Nested;
                 }
                 else
                 {
                     //外部引用子流程在WfProcess表中有记录存在
+                    //There are records of external reference subprocesses in the WfProcess table
                     entity.SubProcessType = (short)SubProcessTypeEnum.Referenced;
                     entity.SubProcessID = subProcessNode.SubProcessID;
                 }
@@ -491,6 +520,7 @@ namespace Slickflow.Engine.Business.Manager
             entity.CreatedDateTime = System.DateTime.Now;
 
             //过期时间设置
+            //Expiration time setting
             if (processEntity.EndType == (short)ProcessEndTypeEnum.Timer)
             {
                 entity.OverdueDateTime = CalculateOverdueDateTime(entity.CreatedDateTime, processEntity.EndExpression);
@@ -503,13 +533,14 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Calculate the expiration time of process instances
         /// 计算流程实例过期时间
         /// XmlConvert.ToTimeSpan()
         /// https://stackoverflow.com/questions/12466188/how-do-i-convert-an-iso8601-timespan-to-a-c-sharp-timespan
         /// </summary>
-        /// <param name="current">当前时间</param>
-        /// <param name="expression">表达式</param>
-        /// <returns>过期时间</returns>
+        /// <param name="current"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
         private DateTime CalculateOverdueDateTime(DateTime current, string expression)
         {
             var timeSpan = System.Xml.XmlConvert.ToTimeSpan(expression);
@@ -518,11 +549,12 @@ namespace Slickflow.Engine.Business.Manager
         }
         #endregion
 
-        #region 流程业务规则处理
+        #region Process business rule processing 流程业务规则处理
         /// <summary>
+        /// Process completed, set the status of the process to complete
         /// 流程完成，设置流程的状态为完成
         /// </summary>
-        /// <returns>是否成功</returns>
+        /// <returns></returns>
         internal ProcessInstanceEntity Complete(int processInstanceID, 
             WfAppRunner runner, 
             IDbSession session)
@@ -546,6 +578,7 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Suspend process instance
         /// 挂起流程实例
         /// </summary>
         /// <param name="processInstanceID"></param>
@@ -573,11 +606,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Resume process instance
         /// 恢复流程实例
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="runner"></param>
+        /// <param name="session"></param>
         internal void Resume(int processInstanceID,
             WfAppRunner runner,
             IDbSession session)
@@ -599,11 +633,12 @@ namespace Slickflow.Engine.Business.Manager
             }
         }
         /// <summary>
+        /// Recall sub process
         /// 恢复子流程
         /// </summary>
-        /// <param name="invokedActivityInstanceID">激活活动实例ID</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
+        /// <param name="invokedActivityInstanceID"></param>
+        /// <param name="runner"></param>
+        /// <param name="session"></param>
         internal void RecallSubProcess(int invokedActivityInstanceID,
             WfAppRunner runner,
             IDbSession session)
@@ -640,11 +675,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Reverse process, set the process status to reverse and modify the process incomplete flag
         /// 返签流程，将流程状态置为返签，并修改流程未完成标志
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="currentUser">当前用户</param>
-        /// <param name="session">会话</param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="currentUser"></param>
+        /// <param name="session"></param>
         internal void Reverse(int processInstanceID, 
             WfAppRunner currentUser, 
             IDbSession session)
@@ -666,11 +702,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Cancel process instance
         /// 流程的取消操作
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <param name="conn">数据库链接</param>
-        /// <returns>设置成功标识</returns>
+        /// <param name="runner"></param>
+        /// <param name="conn"></param>
+        /// <returns></returns>
         internal bool Cancel(WfAppRunner runner, IDbConnection conn = null)
         {
             bool isCanceled = false;
@@ -713,11 +750,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Discard process instance
         /// 废弃单据下所有流程的信息
         /// </summary>
-        /// <param name="runner">运行者</param>
-
-        /// <returns>设置成功标识</returns>
+        /// <param name="runner"></param>
+        /// <returns></returns>
         internal bool Discard(WfAppRunner runner)
         {
             var isDiscarded = false;
@@ -762,10 +799,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Terminate process instance
         /// 流程终止操作
         /// </summary>
-        /// <param name="runner">执行者</param>
-        /// <returns>设置成功标识</returns>
+        /// <param name="runner"></param>
+        /// <returns></returns>
         internal bool Terminate(WfAppRunner runner)
         {
             var isTerminated = false;
@@ -789,15 +827,17 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Terminate process instance
         /// 终结流程实例
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="entity">流程实例</param>
-        /// <param name="userID">用户ID</param>
-        /// <param name="userName">用户名称</param>
-        /// <param name="trans">事务</param>
+        /// <param name="conn"></param>
+        /// <param name="entity"></param>
+        /// <param name="userID"></param>
+        /// <param name="userName"></param>
+        /// <param name="trans"></param>
         /// <returns></returns>
-        internal bool Terminate(IDbConnection conn, ProcessInstanceEntity entity, string userID, string userName, IDbTransaction trans)
+        internal bool Terminate(IDbConnection conn, ProcessInstanceEntity entity, string userID, 
+            string userName, IDbTransaction trans)
         {
             var isTerminated = false;
             if (entity.ProcessState == (int)ProcessStateEnum.Running
@@ -819,12 +859,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Set process overdue time
         /// 设置流程过期时间
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="overdueDateTime">过期时间</param>
-        /// <param name="runner">当前运行用户</param>
-        /// <returns>设置成功标识</returns>
+        /// <param name="processInstanceID"></param>
+        /// <param name="overdueDateTime"></param>
+        /// <param name="runner"></param>
+        /// <returns></returns>
         internal bool SetOverdue(int processInstanceID, DateTime overdueDateTime, WfAppRunner runner)
         {
             ProcessInstanceEntity entity = Repository.GetById<ProcessInstanceEntity>(processInstanceID);
@@ -849,11 +890,15 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 删除不正常的流程实例（流程在取消状态，才可以进行删除！）
+        /// Delete abnormal process instances 
+        /// Notes:the process can only be deleted when it is in a cancelled state!
+        /// Or, delete it forcedly
+        /// 删除流程实例
+        /// 备注:流程在取消状态，才可以进行删除！, 或者强制删除
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="isForced">不取消，直接删除</param>
-        /// <returns>是否删除标识</returns>
+        /// <param name="processInstanceID"></param>
+        /// <param name="isForced"></param>
+        /// <returns></returns>
         internal bool Delete(int processInstanceID, bool isForced = false)
         {
             bool isDeleted = false;
@@ -924,11 +969,12 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 删除流程实例包括其关联数据
+        /// Delete process instance
+        /// 删除流程实例
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <returns>是否删除</returns>
+        /// <param name="processGUID"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         internal bool Delete(string processGUID, string version)
         {
             var entity = GetByVersion(processGUID, version);

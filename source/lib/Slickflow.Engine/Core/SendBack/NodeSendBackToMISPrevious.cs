@@ -11,6 +11,8 @@ using Slickflow.Engine.Xpdl;
 namespace Slickflow.Engine.Core.SendBack
 {
     /// <summary>
+    /// Sign together type sendback processor
+    /// The revocation operation of the last multi instance node with multiple signatures
     /// 会签类型的退回处理器
     /// 最后一个会签多实例子节点的撤销操作
     /// </summary>
@@ -23,7 +25,7 @@ namespace Slickflow.Engine.Core.SendBack
         }
 
         /// <summary>
-        /// 执行退回方法
+        /// Execute method
         /// </summary>
         internal override void Execute()
         {
@@ -34,6 +36,7 @@ namespace Slickflow.Engine.Core.SendBack
                 base.Session);
 
             //只退回到最后一个实例子节点的办理位置
+            //Only return to the processing location of the last example node
             CreateBackwardActivityTaskTransitionOfLastMultipleInstance(base.SendBackOperation.ProcessInstance,
                 base.SendBackOperation.BackwardFromActivityInstance,
                 previousActivityInstance,
@@ -43,23 +46,17 @@ namespace Slickflow.Engine.Core.SendBack
                 base.SendBackOperation.ActivityResource,
                 base.Session);
 
-            // 更新主节点状态从完成状态->挂起状态
+            //更新主节点状态从完成状态->挂起状态
+            //Update the status of the master node from completed state to suspended state
             base.ActivityInstanceManager.Resuspend(previousActivityInstance.MIHostActivityInstanceID.Value,
                 base.Session,
                 base.SendBackOperation.ActivityResource.AppRunner);
         }
 
         /// <summary>
+        /// The revocation operation of the last multi instance node with multiple signatures
         /// 最后一个会签多实例子节点的撤销操作
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="fromActivityInstance">运行节点</param>
-        /// <param name="originalBackwardToActivityInstance">初始退回到的节点实例</param>
-        /// <param name="backwardType">退回类型</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="flyingType">跳跃类型</param>
-        /// <param name="activityResource">资源</param>
-        /// <param name="session">会话</param>
         internal void CreateBackwardActivityTaskTransitionOfLastMultipleInstance(ProcessInstanceEntity processInstance,
             ActivityInstanceEntity fromActivityInstance,
             ActivityInstanceEntity originalBackwardToActivityInstance,
@@ -70,6 +67,7 @@ namespace Slickflow.Engine.Core.SendBack
             IDbSession session)
         {
             //创建回滚到的节点信息
+            //Create rollback to node information
             var rollbackPreviousActivityInstance = base.ActivityInstanceManager.CreateBackwardActivityInstanceObject(processInstance.AppName,
                 processInstance.AppInstanceID,
                 processInstance.AppInstanceCode,
@@ -88,21 +86,18 @@ namespace Slickflow.Engine.Core.SendBack
             rollbackPreviousActivityInstance.SignForwardType = originalBackwardToActivityInstance.SignForwardType;
 
             //人员来自步骤列表的用户数据
-            rollbackPreviousActivityInstance.AssignedToUserIDs = base.SendBackOperation.BackwardToTaskPerformer.UserID;      //多实例节点为单一用户任务
+            //User data of personnel from the step list
+            rollbackPreviousActivityInstance.AssignedToUserIDs = base.SendBackOperation.BackwardToTaskPerformer.UserID;     
             rollbackPreviousActivityInstance.AssignedToUserNames = base.SendBackOperation.BackwardToTaskPerformer.UserName;
 
-            //插入新活动实例数据
             base.ActivityInstanceManager.Insert(rollbackPreviousActivityInstance,
                 session);
 
-            //创建新任务数据
-            //插入任务数据
             base.TaskManager.Insert(rollbackPreviousActivityInstance,
                 base.SendBackOperation.BackwardToTaskPerformer,
                 activityResource.AppRunner,
                 session);
 
-            //插入转移数据
             base.InsertTransitionInstance(processInstance,
                 fromActivityInstance,
                 rollbackPreviousActivityInstance,

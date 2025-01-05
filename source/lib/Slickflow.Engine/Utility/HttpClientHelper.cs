@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 namespace Slickflow.Engine.Utility
 {
     /// <summary>
-    /// Mime内容格式
+    /// Mime format
     /// </summary>
     public enum MimeFormat
     {
@@ -22,7 +22,7 @@ namespace Slickflow.Engine.Utility
     }
 
     /// <summary>
-    /// HttpClient 帮助类
+    /// HttpClient Helper
     /// </summary>
     public class HttpClientHelper
     {
@@ -32,18 +32,12 @@ namespace Slickflow.Engine.Utility
 
         private static readonly HttpClient HttpClient;
 
-        /// <summary>
-        /// URL 属性
-        /// </summary>
         private string URL
         {
             get;
             set;
         }
 
-        /// <summary>
-        /// 构造方法
-        /// </summary>
         static HttpClientHelper()
         {
             HttpClient = new System.Net.Http.HttpClient();
@@ -51,10 +45,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 创建基本HttpClientHelper类
+        /// Create Helper
         /// </summary>
-        /// <param name="url">URL</param>
-        /// <returns>帮助类</returns>
         public static HttpClientHelper CreateHelper(string url)
         {
             var helper = new HttpClientHelper();
@@ -67,11 +59,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 创建HttpClientHelper类
+        /// Create Helper
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="ticket"></param>
-        /// <returns></returns>
         public static HttpClientHelper CreateHelper(string url, string ticket)
         {
             var helper = new HttpClientHelper();
@@ -89,9 +78,8 @@ namespace Slickflow.Engine.Utility
 
 
         /// <summary>
-        /// 返回请求结果
+        /// HttpGet
         /// </summary>
-        /// <returns>字符串</returns>
         public string Get()
         {
             var response = HttpClient.GetAsync(URL).Result;
@@ -101,10 +89,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 获取
+        /// HttpGet
         /// </summary>
-        /// <typeparam name="T1">类型</typeparam>
-        /// <returns>对象</returns>
         public T1 Get<T1>()
             where T1 : class
         {
@@ -117,10 +103,8 @@ namespace Slickflow.Engine.Utility
 
 
         /// <summary>
-        /// 异步获取
+        /// GetAsync
         /// </summary>
-        /// <typeparam name="T1">类型</typeparam>
-        /// <returns>对象</returns>
         public async Task<T1> GetAsync<T1>()
             where T1 : class
         {
@@ -132,12 +116,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 提交
+        /// HttpPost
         /// </summary>
-        /// <typeparam name="T1">类型1</typeparam>
-        /// <typeparam name="T2">类型2</typeparam>
-        /// <param name="t">对象t</param>
-        /// <returns>对象</returns>
         public T2 Post<T1, T2>(T1 t)
             where T1 : class
             where T2 : class
@@ -152,12 +132,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 异步提交
+        /// HttpPost async
         /// </summary>
-        /// <typeparam name="T1">类型1</typeparam>
-        /// <typeparam name="T2">类型2</typeparam>
-        /// <param name="t">对象t</param>
-        /// <returns>对象</returns>
         public async Task<T2> PostAsync<T1, T2>(T1 t)
             where T1 : class
             where T2 : class
@@ -172,10 +148,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// Post提交
+        /// Post
         /// </summary>
-        /// <param name="json">Json格式对象</param>
-        /// <returns>任意结果</returns>
         public Object Post(string json)
         {
             StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -185,10 +159,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// Post提交
+        /// Post
         /// </summary>
-        /// <param name="json">Json格式对象</param>
-        /// <returns>任意结果</returns>
         public async Task<Object> PostAsync(string json)
         {
             StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -198,12 +170,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// Post获取分页数据
+        /// Query
         /// </summary>
-        /// <typeparam name="T1">类型1</typeparam>
-        /// <typeparam name="T2">类型2</typeparam>
-        /// <param name="t">对象t</param>
-        /// <returns>对象</returns>
         public List<T2> Query<T1, T2>(T1 t)
             where T1 : class
             where T2 : class
@@ -218,12 +186,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 异步查询列表
+        /// Query Async
         /// </summary>
-        /// <typeparam name="T1">类型1</typeparam>
-        /// <typeparam name="T2">类型2</typeparam>
-        /// <param name="t">对象t</param>
-        /// <returns>对象</returns>
         public async Task<List<T2>> QueryAsync<T1, T2>(T1 t)
             where T1 : class
             where T2 : class
@@ -238,12 +202,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 插入
+        /// Insert
         /// </summary>
-        /// <typeparam name="T1">类型1</typeparam>
-        /// <typeparam name="T2">类型2</typeparam>
-        /// <param name="t">对象t</param>
-        /// <returns>对象</returns>
         public T2 Insert<T1, T2>(T1 t)
             where T1 : class
             where T2 : class
@@ -258,12 +218,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 异步插入
+        /// Insert Async
         /// </summary>
-        /// <typeparam name="T1">类型1</typeparam>
-        /// <typeparam name="T2">类型2</typeparam>
-        /// <param name="t">对象t</param>
-        /// <returns>对象</returns>
         public async Task<T2> InsertAsync<T1, T2>(T1 t)
             where T1 : class
             where T2 : class
@@ -278,12 +234,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 更新
+        /// Put
         /// </summary>
-        /// <typeparam name="T1">类型1</typeparam>
-        /// <typeparam name="T2">类型2</typeparam>
-        /// <param name="t">对象t</param>
-        /// <returns>对象</returns>
         public T2 Put<T1, T2>(T1 t)
             where T1 : class
             where T2 : class
@@ -298,12 +250,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 异步更新
+        /// Put async
         /// </summary>
-        /// <typeparam name="T1">类型1</typeparam>
-        /// <typeparam name="T2">类型2</typeparam>
-        /// <param name="t">对象t</param>
-        /// <returns>对象</returns>
         public async Task<T2> PutAsync<T1, T2>(T1 t)
             where T1 : class
             where T2 : class
@@ -318,10 +266,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// Post提交
+        /// Put
         /// </summary>
-        /// <param name="json">Json格式对象</param>
-        /// <returns>任意结果</returns>
         public Object Put(string json)
         {
             StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -331,12 +277,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 更新
+        /// Update
         /// </summary>
-        /// <typeparam name="T1">类型1</typeparam>
-        /// <typeparam name="T2">类型2</typeparam>
-        /// <param name="t">对象t</param>
-        /// <returns>对象</returns>
         public T2 Update<T1, T2>(T1 t)
             where T1 : class
             where T2 : class
@@ -345,12 +287,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 异步更新
+        /// Update Async
         /// </summary>
-        /// <typeparam name="T1">类型1</typeparam>
-        /// <typeparam name="T2">类型2</typeparam>
-        /// <param name="t">对象t</param>
-        /// <returns>对象</returns>
         public async Task<T2> UpdateAsync<T1, T2>(T1 t)
             where T1 : class
             where T2 : class
@@ -359,9 +297,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 返回请求结果
+        /// Delete
         /// </summary>
-        /// <returns>字符串</returns>
         public string Delete()
         {
             var response = HttpClient.DeleteAsync(URL).Result;
@@ -371,10 +308,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 删除
+        /// Delete
         /// </summary>
-        /// <typeparam name="T1">类型</typeparam>
-        /// <returns>对象</returns>
         public T1 Delete<T1>()
             where T1 : class
         {
@@ -387,10 +322,8 @@ namespace Slickflow.Engine.Utility
 
 
         /// <summary>
-        /// 异步删除
+        /// Delete Aysnc
         /// </summary>
-        /// <typeparam name="T1">类型</typeparam>
-        /// <returns>对象</returns>
         public async Task<T1> DeleteAsync<T1>()
             where T1 : class
         {

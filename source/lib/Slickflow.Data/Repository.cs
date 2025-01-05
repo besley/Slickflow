@@ -16,6 +16,7 @@ using DapperExtensions.Sql;
 namespace Slickflow.Data
 {
     /// <summary>
+    /// Repository Class
     /// Repository基类
     /// </summary>
     public class Repository : IRepository
@@ -26,6 +27,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Retrieve records based on primary key ID
         /// 根据主键ID获取记录
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -49,10 +51,13 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Obtain entity based on Id
         /// 根据Id获取实体
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="primaryId"></param>
+        /// <param name="conn">Connection</param>
+        /// <param name="primaryId">Primary Key ID</param>
+        /// <param name="trans">Transaction</param>
         /// <returns></returns>
         public T GetById<T>(IDbConnection conn, dynamic primaryId, IDbTransaction trans) where T : class
         {
@@ -60,11 +65,12 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Retrieve entities based on field column names
         /// 根据字段列名称获取实体
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="colName"></param>
-        /// <param name="value"></param>
+        /// <param name="colName">Field Name</param>
+        /// <param name="value">Value</param>
         /// <returns></returns>
         public T GetDefaultByName<T>(string colName, string value) where T : class
         {
@@ -77,6 +83,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Get table name
         /// 获取表名称
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -89,6 +96,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Retrieve entities based on field column names
         /// 根据字段列名称获取实体
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -115,11 +123,12 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Obtain multiple entities based on multiple IDs
         /// 根据多个Id获取多个实体
         /// </summary>
-        /// <typeparam name="T">泛型</typeparam>
-        /// <param name="ids">ID列表</param>
-        /// <returns>实体列表</returns>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ids">id list</param>
+        /// <returns>entity list</returns>
         public IEnumerable<T> GetByIds<T>(IList<dynamic> ids) where T : class
         {
             IDbConnection conn = SessionFactory.CreateConnection();
@@ -139,14 +148,15 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Obtain multiple entities based on multiple IDs
         /// 根据多个Id获取多个实体
         /// </summary>
-        /// <typeparam name="T">泛型</typeparam>
-        /// <param name="conn">链接</param>
-        /// <param name="ids">ID列表</param>
-        /// <param name="trans">事务</param>
-        /// <param name="buffered">缓存</param>
-        /// <returns>实体列表</returns>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="conn"></param>
+        /// <param name="ids"></param>
+        /// <param name="trans"></param>
+        /// <param name="buffered"></param>
+        /// <returns></returns>
         public IEnumerable<T> GetByIds<T>(IDbConnection conn, IList<dynamic> ids, IDbTransaction trans = null, bool buffered = true) where T : class
         {
             var tblName = GetTableName<T>();
@@ -158,6 +168,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Obtain all data sets
         /// 获取全部数据集合
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -181,6 +192,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Obtain all data sets
         /// 获取全部数据集合
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -194,6 +206,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Search for a matching piece of data
         /// 查询匹配的一条数据
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -225,7 +238,8 @@ namespace Slickflow.Data
         }
 
         /// <summary>
-        /// 
+        /// Obtain the first data queried
+        /// 获得查询到的第一条数据
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="conn"></param>
@@ -247,6 +261,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Filter the dataset based on the conditions
         /// 根据条件筛选出数据集合
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -264,6 +279,7 @@ namespace Slickflow.Data
 
 
         /// <summary>
+        /// Filter the dataset based on the conditions
         /// 根据条件筛选出数据集合
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -277,6 +293,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Filter the dataset based on the conditions
         /// 根据条件筛选数据集合
         /// </summary>
         /// <param name="sql"></param>
@@ -289,6 +306,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Filter the dataset based on the conditions
         /// 根据表达式筛选
         /// </summary>
         /// <typeparam name="TFirst"></typeparam>
@@ -310,7 +328,8 @@ namespace Slickflow.Data
         }
 
         /// <summary>
-        /// 
+        /// Query based on expression
+        /// 根据表达式查询
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate"></param>
@@ -339,6 +358,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Query based on expression
         /// 查询列表数据
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -355,13 +375,13 @@ namespace Slickflow.Data
         }
 
         /// <summary>
-        /// 分页方法调用示例：
-        /// 1. 单一条件
+        /// Pager Example：分页方法调用示例
+        /// 1. Signle Condition 单一条件  
         //  using (SqlConnection cn = new SqlConnection(_connectionString))
         //  {
         //    cn.Open();
         //
-        //    //排序字段
+        //    //排序字段 Order Field
         //    var sortList = new List<DapperExtensions.ISort>();
         //    sortList.Add(new DapperExtensions.Sort { PropertyName = "ID", Ascending = false });
         //
@@ -372,12 +392,12 @@ namespace Slickflow.Data
         //    cn.Close();
         //  }
         //
-        //  2. 组合条件
+        //  2. Combine Conditons 组合条件
         //  using (SqlConnection cn = new SqlConnection(_connectionString))
         //  {
         //    cn.Open();
         //
-        //    //排序字段
+        //    //排序字段 Order Field
         //    var sortList = new List<DapperExtensions.ISort>();
         //    sortList.Add(new DapperExtensions.Sort { PropertyName = "ID", Ascending = false });
         //
@@ -391,13 +411,13 @@ namespace Slickflow.Data
         //    cn.Close();
         //  }
         /// </summary>
-        /// <typeparam name="T">泛型类型</typeparam>
-        /// <param name="pageIndex">页索引</param>
-        /// <param name="pageSize">页大小</param>
-        /// <param name="allRowsCount">总记录数</param>
-        /// <param name="predicate">条件</param>
-        /// <param name="sort">排序</param>
-        /// <param name="buffered">缓存</param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="allRowsCount"></param>
+        /// <param name="predicate"></param>
+        /// <param name="sort"></param>
+        /// <param name="buffered"></param>
         /// <returns></returns>
         public IEnumerable<T> GetPaged<T>(IDbConnection conn, int pageIndex, int pageSize, object predicate,
             IList<ISort> sort = null, bool buffered = false) where T : class
@@ -406,12 +426,13 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Paging query (stored procedure)
         /// 分页查询（存储过程）
         /// </summary>
-        /// <typeparam name="T">泛型类型</typeparam>
-        /// <param name="conn">连接</param>
-        /// <param name="pager">分页对象</param>
-        /// <param name="buffered">缓存</param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="conn"></param>
+        /// <param name="pager"></param>
+        /// <param name="buffered"></param>
         /// <returns></returns>
         public IEnumerable<T> GetPaged<T>(IDbConnection conn, Pager pager, bool buffered = false) where T : class
         {
@@ -431,11 +452,12 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Total number of statistical records
         /// 统计记录总数
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="predicate">条件</param>
-        /// <param name="buffered">缓存</param>
+        /// <param name="predicate"></param>
+        /// <param name="buffered"></param>
         /// <returns></returns>
         public int Count<T>(IDbConnection conn, IPredicate predicate, bool buffered = false) where T : class
         {
@@ -443,6 +465,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Total number of statistical records
         /// 统计查询语句记录总数
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -472,6 +495,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Sum of Count in SQL with Parameters
         /// 带参数的SQL的Count求和
         /// </summary>
         /// <param name="sql"></param>
@@ -486,6 +510,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Obtain a collection of multiple entities
         /// 获取多实体集合
         /// </summary>
         /// <param name="sql"></param>
@@ -501,6 +526,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Execute SQL operations
         /// 执行sql操作
         /// </summary>
         /// <param name="sql"></param>
@@ -512,6 +538,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Execute Command operations
         /// 执行command操作
         /// </summary>
         /// <param name="cmd"></param>
@@ -524,6 +551,7 @@ namespace Slickflow.Data
 
 
         /// <summary>
+        /// Execute SQL Procedure
         /// 执行存储过程
         /// </summary>
         /// <param name="procName"></param>
@@ -538,6 +566,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Execute SQL Procedure
         /// 执行存储过程
         /// </summary>
         /// <param name="conn"></param>
@@ -550,6 +579,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Execute SQL Procedure
         /// 执行存储过程
         /// </summary>
         /// <param name="conn"></param>
@@ -563,6 +593,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Execute SQL Procedure
         /// 存储过程执行方法
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -578,6 +609,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Execute SQL Procedure
         /// 存储过程执行方法
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -595,6 +627,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Execute SQL statements and return query results
         /// 执行SQL语句，返回查询结果
         /// </summary>
         /// <param name="conn"></param>
@@ -611,6 +644,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Execute SQL statements and return query value
         /// 执行SQL语句，并返回数值
         /// </summary>
         /// <param name="cmd"></param>
@@ -638,6 +672,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Insert Entity
         /// 插入实体
         /// </summary>
         /// <typeparam name="T">类型</typeparam>
@@ -668,6 +703,7 @@ namespace Slickflow.Data
 
 
         /// <summary>
+        /// Insert Single Record
         /// 插入单条记录
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -681,11 +717,12 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Update
         /// 修改
         /// </summary>
-        /// <typeparam name="T">实体类型</typeparam>
-        /// <param name="entity">实体</param>
-        /// <returns>是否成功</returns>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public bool Update<T>(T entity) where T : class
         {
             var session = SessionFactory.CreateSession();
@@ -710,11 +747,12 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Update Single Record
         /// 更新单条记录
         /// </summary>
-        /// <typeparam name="T">实体类型</typeparam>
-        /// <param name="entity">实体</param>
-        /// <returns>是否成功</returns>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public bool Update<T>(IDbConnection conn, T entity, IDbTransaction transaction = null) where T : class
         {
             bool isOk = conn.Update<T>(entity, transaction);
@@ -722,6 +760,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Delete
         /// 删除
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -750,6 +789,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Delete Single Record
         /// 删除单条记录
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -764,6 +804,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Delete Single Record
         /// 删除单条记录
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -776,6 +817,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Batchly Insert
         /// 批量插入功能
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -811,7 +853,8 @@ namespace Slickflow.Data
         }
 
         /// <summary>
-        /// 批量更新（）
+        /// Update Multiple
+        /// 批量更新
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entityList"></param>
@@ -828,6 +871,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Delete Multiple
         /// 批量删除
         /// </summary>
         /// <typeparam name="T"></typeparam>

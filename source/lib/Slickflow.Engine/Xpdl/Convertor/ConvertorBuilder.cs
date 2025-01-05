@@ -13,11 +13,12 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Xpdl.Convertor
 {
     /// <summary>
+    /// Convertor Builder
     /// 转换器构建类
     /// </summary>
     public class ConvertorBuilder
     {
-        #region 属性及构造函数
+        #region Property and Constructor
         private XmlNode xmlNode;
         public XmlNode XMLNode
         {
@@ -53,8 +54,20 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
         #endregion
 
-        #region 节点类型获取方法
+        #region Get Method
         /// <summary>
+        /// Get Forms Node
+        /// 获取Forms的XML节点
+        /// </summary>
+        /// <returns></returns>
+        protected XmlNode GetFormsNode()
+        {
+            var formsNode = XMLNode.SelectSingleNode(XPDLDefinition.Sf_StrXmlPath_Forms, XMLNamespaceManager);
+            return formsNode;
+        }
+
+        /// <summary>
+        /// Get Actions Node
         /// 获取Action的XML节点
         /// </summary>
         /// <returns></returns>
@@ -65,6 +78,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Get Boundaries Node
         /// 获取Boundary的XML节点
         /// </summary>
         /// <returns></returns>
@@ -75,6 +89,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Get Sections Node
         /// 获取Section的XML节点
         /// </summary>
         /// <returns></returns>
@@ -85,6 +100,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Get Performers Node
         /// 获取Performer的XML节点
         /// </summary>
         /// <returns></returns>
@@ -95,6 +111,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Get Services Node
         /// 获取Services的XML节点
         /// </summary>
         /// <returns></returns>
@@ -105,6 +122,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Get Scripts Node
         /// 获取Scripts的XML节点
         /// </summary>
         /// <returns></returns>
@@ -115,6 +133,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Get Notifications Node
         /// 获取Notifications的XML节点
         /// </summary>
         /// <returns></returns>
@@ -125,8 +144,9 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
         #endregion
 
-        #region 转变方法
+        #region Convert method
         /// <summary>
+        /// Convert general info
         /// 转换通用属性
         /// </summary>
         /// <returns></returns>
@@ -147,6 +167,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
             mActivityEntity.ActivityUrl = XMLHelper.GetXmlAttribute(XMLNode, "sf:url");
 
             //描述信息
+            //Description
             XmlNode descNode = XMLNode.SelectSingleNode("documentation");
             if (descNode != null) mActivityEntity.Description = (descNode != null) ? descNode.InnerText : string.Empty;
 
@@ -154,6 +175,17 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert Forms
+        /// 转换表单信息
+        /// </summary>
+        /// <returns></returns>
+        public ConvertorBuilder ConvertForms()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Convert Actions
         /// 转换Action节点
         /// </summary>
         /// <returns></returns>
@@ -174,6 +206,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert Boundires
         /// 转换Boundaries节点
         /// </summary>
         /// <returns></returns>
@@ -194,6 +227,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert Performers
         /// 转换Performers节点
         /// </summary>
         /// <returns></returns>
@@ -215,6 +249,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert Services
         /// 转换Services节点
         /// </summary>
         /// <returns></returns>
@@ -235,6 +270,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert Scripts
         /// 转换Scripts节点
         /// </summary>
         /// <returns></returns>
@@ -255,6 +291,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Covnert Sections
         /// 转换Sections节点
         /// </summary>
         /// <returns></returns>
@@ -275,6 +312,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert Notifications
         /// 转换Notificaitons节点
         /// </summary>
         /// <returns></returns>
@@ -296,6 +334,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert Actions
         /// 转换Action实体
         /// </summary>
         /// <param name="node">XML节点</param>
@@ -354,10 +393,11 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert Service
         /// 转换Service实体
         /// </summary>
-        /// <param name="node">XML节点</param>
-        /// <returns>操作实体</returns>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private Entity.ServiceDetail ConvertXmlServiceNodeToServiceEntity(XmlNode node)
         {
             Entity.ServiceDetail service = new Entity.ServiceDetail();
@@ -388,10 +428,11 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert Script Node
         /// 转换脚本任务节点
         /// </summary>
-        /// <param name="node">XML节点</param>
-        /// <returns>脚本对象</returns>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private Entity.ScriptDetail ConvertXmlScriptNodeToScriptEntity(XmlNode node)
         {
             Entity.ScriptDetail script = new Entity.ScriptDetail();
@@ -406,10 +447,11 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert Partaker
         /// 转换Partaker节点
         /// </summary>
-        /// <param name="node">xml节点</param>
-        /// <returns>实体对象</returns>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private Partaker ConvertXmlPerformerNodeToPartakerEntity(XmlNode node)
         {
             Partaker partaker = new Partaker();
@@ -423,10 +465,11 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert Boundary
         /// 转换Boundary节点
         /// </summary>
-        /// <param name="node">xml节点</param>
-        /// <returns>实体对象</returns>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private Boundary ConvertXmlBoundaryNodeToBoundaryEntity(XmlNode node)
         {
             Boundary boundary = new Boundary();
@@ -441,10 +484,11 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert Section
         /// 转换Section节点
         /// </summary>
-        /// <param name="node">xml节点</param>
-        /// <returns>实体对象</returns>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private SectionDetail ConvertXmlSectionNodeToSectionEntity(XmlNode node)
         {
             SectionDetail section = new SectionDetail();
@@ -455,10 +499,11 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert Partaker
         /// 转换Partaker节点
         /// </summary>
-        /// <param name="node">xml节点</param>
-        /// <returns>实体对象</returns>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private Partaker ConvertXmlNotificationNodeToPartakerEntity(XmlNode node)
         {
             Partaker partaker = new Partaker();
@@ -473,13 +518,8 @@ namespace Slickflow.Engine.Xpdl.Convertor
         #endregion
 
         /// <summary>
-        /// 创建方法
+        /// Create method
         /// </summary>
-        /// <param name="xmlNode">XML节点</param>
-        /// <param name="xnpmgr">XML命名空间</param>
-        /// <param name="activityEntity">活动实体</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
         public static ConvertorBuilder Create(XmlNode xmlNode, XmlNamespaceManager xnpmgr, Activity activityEntity)
         {
             if (xmlNode == null 

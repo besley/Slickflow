@@ -15,7 +15,7 @@ using Slickflow.Engine.Service;
 namespace Slickflow.WebApi.Controllers
 {
     /// <summary>
-    /// 串行序列流程测试流程
+    /// EDev Controller
     /// </summary>
     public class WfEDevController : Controller
     {

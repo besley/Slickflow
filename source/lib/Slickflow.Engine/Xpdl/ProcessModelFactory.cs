@@ -12,6 +12,9 @@ using Slickflow.Engine.Utility;
 namespace Slickflow.Engine.Xpdl
 {
     /// <summary>
+    /// Process Model Factory Class
+    /// 1.  Four types of process model creation (by process, by process instance, by task view, by subprocess node)
+    /// 2.  Distinguish the creation mode of sub processes (handle the situation where sub processes are embedded into the main process)
     /// 流程模型工厂类
     /// 1. 流程模型创建的4种类型(按流程, 按流程实例, 按任务视图, 按子流程节点)
     /// 2. 区分出子流程的创建模式(子流程嵌入到主流程里面的情况处理)
@@ -19,10 +22,8 @@ namespace Slickflow.Engine.Xpdl
     public class ProcessModelFactory
     {
         /// <summary>
-        /// 创建流程模型实例
+        /// Create by Process
         /// </summary>
-        /// <param name="entity">流程实体</param>
-        /// <returns>流程模型</returns>
         public static IProcessModel CreateByProcess(ProcessEntity entity)
         {
             IProcessModel processModel = new ProcessModelBPMN(entity);
@@ -30,11 +31,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 创建流程模型实例
+        /// Create by Process version
         /// </summary>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <returns>流程模型</returns>
         public static IProcessModel CreateByProcess(string processGUID, string version)
         {
             using (var session = SessionFactory.CreateSession())
@@ -45,26 +43,19 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 创建流程模型实例
+        /// Create by Process version
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程模型</returns>
         private static IProcessModel CreateByProcess(IDbConnection conn,
             string processGUID,
             string version,
             IDbTransaction trans)
         {
-            //检查关键属性
             if (string.IsNullOrEmpty(processGUID)
                 || string.IsNullOrEmpty(version))
             {
                 throw new WfXpdlException(LocalizeHelper.GetEngineMessage("processmodel.factory.processnullexception"));
             }
 
-            //获取流程信息
             var pm = new ProcessManager();
             var entity = pm.GetByVersion(conn, processGUID, version, false, trans);
 
@@ -73,16 +64,13 @@ namespace Slickflow.Engine.Xpdl
                 throw new WfXpdlException(LocalizeHelper.GetEngineMessage("processmodel.factory.processnullexception"));
             }
 
-            //实例化ProcessModel对象
             IProcessModel processModel = new ProcessModelBPMN(entity);
             return processModel;
         }
 
         /// <summary>
-        /// 创建流程模型实例
+        /// Create by Process instance
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <returns>流程模型</returns>
         public static IProcessModel CreateByProcessInstance(ProcessInstanceEntity processInstance)
         {
             using (var session = SessionFactory.CreateSession())
@@ -93,12 +81,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 创建流程模型
+        /// Create by Process instance
         /// </summary>
-        /// <param name="conn">数据库链接</param>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程模型</returns>
         public static IProcessModel CreateByProcessInstance(IDbConnection conn,
             ProcessInstanceEntity processInstance,
             IDbTransaction trans)
@@ -106,23 +90,21 @@ namespace Slickflow.Engine.Xpdl
             IProcessModel processModel = null;
             if (processInstance.SubProcessType == null)
             {
-                //单一流程
+                //Single process
                 processModel = CreateByProcess(conn, processInstance.ProcessGUID, processInstance.Version, trans);
             }
             else if (processInstance.SubProcessType != null
                 && !string.IsNullOrEmpty(processInstance.SubProcessGUID))
             {
-                //子流程
+                //Sub process
                 processModel = CreateSubByProcessInstance(conn, processInstance, trans);
             }
             return processModel;
         }
 
         /// <summary>
-        /// 创建流程模型实例
+        /// Create by task
         /// </summary>
-        /// <param name="taskView">任务视图</param>
-        /// <returns>流程模型</returns>
         public static IProcessModel CreateByTask(TaskViewEntity taskView)
         {
             using (var session = SessionFactory.CreateSession())
@@ -133,53 +115,44 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 创建流程模型
+        /// Create by task
         /// </summary>
-        /// <param name="conn">数据库链接</param>
-        /// <param name="taskView">任务视图</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程模型</returns>
         public static IProcessModel CreateByTask(IDbConnection conn, TaskViewEntity taskView, IDbTransaction trans)
         {
             IProcessModel processModel = null;
             if (taskView.SubProcessType == null)
             {
-                //单一流程
+                //Single process
                 processModel = CreateByProcess(conn, taskView.ProcessGUID, taskView.Version, trans);
             }
             else if (taskView.SubProcessType != null
                 && !string.IsNullOrEmpty(taskView.SubProcessGUID))
             {
-                //子流程
+                //Sub process
                 processModel = CreateSubByTask(conn, taskView, trans);
             }
             return processModel;
         }
 
         /// <summary>
-        /// 创建流程模型实例
+        /// Create by sub process node
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="subProcessNode">子流程节点</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程模型</returns>
         public static IProcessModel CreateSubByNode(IDbConnection conn,
             SubProcessNode subProcessNode,
             IDbTransaction trans)
         {
-            //有子流程信息
             ProcessEntity entity = null;
             if (subProcessNode != null)
             {
                 if (subProcessNode.SubProcessNested == null)
                 {
-                    //外部引用子流程
+                    //Referenced from outer
                     var pm = new ProcessManager();
                     entity = pm.GetByID(subProcessNode.SubProcessID);
                 }
                 else
                 {
-                    //内嵌子流程
+                    //Nested sub process
                     entity = BuildProcessEntityFromXpdl(subProcessNode.SubProcessNested);
                 }
             }
@@ -189,16 +162,14 @@ namespace Slickflow.Engine.Xpdl
                 throw new WfXpdlException(LocalizeHelper.GetEngineMessage("processmodel.factory.processnullexception"));
             }
 
-            //实例化ProcessModel对象
             IProcessModel processModel = new ProcessModelBPMN(entity);
             return processModel;
         }
 
         /// <summary>
+        /// Build process objects with nested subprocesses
         /// 构建内嵌子流程的流程对象
         /// </summary>
-        /// <param name="subProcess">子流程</param>
-        /// <returns></returns>
         private static ProcessEntity BuildProcessEntityFromXpdl(Xpdl.Entity.Process subProcess)
         {
             var processEntity = new ProcessEntity();
@@ -211,12 +182,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 创建流程模型实例
+        /// Create sub process by process instance
         /// </summary>
-        /// <param name="conn">数据库链接</param>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="trans">数据库交易</param>
-        /// <returns>流程模型</returns>
         private static IProcessModel CreateSubByProcessInstance(IDbConnection conn,
             ProcessInstanceEntity processInstance,
             IDbTransaction trans)
@@ -230,12 +197,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 创建流程模型实例
+        /// Create sub process by task
         /// </summary>
-        /// <param name="conn">数据库链接</param>
-        /// <param name="taskView">任务视图</param>
-        /// <param name="trans">数据库交易</param>
-        /// <returns>流程模型</returns>
         private static IProcessModel CreateSubByTask(IDbConnection conn,
             TaskViewEntity taskView,
             IDbTransaction trans)
@@ -249,16 +212,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 创建流程模型实例
+        /// Create sub process internal
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="processGUID">流程GUID</param>
-        /// <param name="version">版本</param>
-        /// <param name="subProcessID">子流程ID</param>
-        /// <param name="subProcessGUID">子流程GUID</param>
-        /// <param name="subProcessType">子流程类型</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程模型</returns>
         private static IProcessModel CreateSubInternal(IDbConnection conn,
             string processGUID,
             string version,
@@ -279,11 +234,13 @@ namespace Slickflow.Engine.Xpdl
             {
                 processEntity = pm.GetByVersion(conn, processGUID, version, true, trans);
                 //取出子流程节点对象
+                //Retrieve sub process node objects
                 var xmlContent = processEntity.XmlContent;
                 var xmlDoc = new XmlDocument();
                 xmlDoc.LoadXml(xmlContent);
 
                 //查找子流程节点
+                //Find sub process nodes
                 var strSubProcessPath = XPDLHelper.GetXmlPathOfProcess(true);
                 XmlNode xmlSubProcessNode = xmlDoc.DocumentElement.SelectSingleNode(
                     string.Format("{0}[@sf:guid='" + subProcessGUID + "']", strSubProcessPath),
@@ -295,7 +252,6 @@ namespace Slickflow.Engine.Xpdl
                 processEntity.Version = "1";
                 processEntity.XmlContent = xmlSubProcessNode.OuterXml;
             }
-            //实例化ProcessModel对象
             IProcessModel processModel = new ProcessModelBPMN(processEntity);
             return processModel;
         }

@@ -6,8 +6,11 @@ import bootstrap from 'bootstrap'
 import BootstrapDialog from 'bootstrap5-dialog'
 window.BootstrapDialog = BootstrapDialog;
 
-import agGrid from 'ag-grid-community'
-window.agGrid = require('ag-grid-community');
+import { createGrid, ModuleRegistry, AllCommunityModule, themeBalham } from 'ag-grid-community';
+window.themeBalham = themeBalham;
+window.createGrid = createGrid;
+
+ModuleRegistry.registerModules([AllCommunityModule])
 
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
@@ -30,7 +33,6 @@ import multisignModdleDescriptor from './slickflow/descriptors/multisign';
 import subinfoesModdleDescriptor from './slickflow/descriptors/subinfoes';
 import servicetaskModdleDescriptor from './slickflow/descriptors/servicetask';
 import scripttaskModdleDescriptor from './slickflow/descriptors/scripttask';
-//import triggerModdleDescriptor from './slickflow/descriptors/trigger';
 
 sfModdleDescriptor.types.push(identityModdleDescriptor.identity);
 sfModdleDescriptor.types.push(transitionModdleDescriptor.transition);
@@ -44,13 +46,11 @@ sfModdleDescriptor.types = sfModdleDescriptor.types.concat(scripttaskModdleDescr
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(performersModdleDescriptor.performers);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(notificationModdleDescriptor.notifications);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(subinfoesModdleDescriptor.subinfoes);
-/*sfModdleDescriptor.types.push(triggerModdleDescriptor.trigger);*/
 
 //import external property panel
 import SfCommandInterceptor from './slickflow/module/SfCommandInterceptor';
 import SfCommandExtension from './slickflow/module/SfCommandExtension';
 
-/*import magicPropertiesProviderModule from './slickflow/provider/magic';*/
 import actionPropertiesProviderModule from './slickflow/provider/action/';
 import transitionPropertiesProviderModule from './slickflow/provider/transition/';
 import sectionPropertiesProviderModule from './slickflow/provider/section/';
@@ -63,10 +63,7 @@ import servicetaskPropertiesProviderModule from './slickflow/provider/servicetas
 import scripttaskPropertiesProviderModule from './slickflow/provider/scripttask/';
 import performersPropertiesProviderModule from './slickflow/provider/performers/';
 import notificationPropertiesProviderModule from './slickflow/provider/notification/';
-//import expressionPropertiesProviderModule from './slickflow/provider/expression';
-//import SfOverallPropertiesProviderModule from './slickflow/provider/overall/';
 import identityPropertiesProviderModule from './slickflow/provider/identity';
-/*import customContextModule from './slickflow/context';*/
 
 
 import {
@@ -92,7 +89,6 @@ var bpmnModeler = new BpmnModeler({
       SfCommandExtension,
       identityPropertiesProviderModule,
       actionPropertiesProviderModule,
-/*      magicPropertiesProviderModule,*/
       transitionPropertiesProviderModule,
       sectionPropertiesProviderModule,
       boundaryPropertiesProviderModule,
@@ -102,10 +98,8 @@ var bpmnModeler = new BpmnModeler({
       servicetaskPropertiesProviderModule,
       scripttaskPropertiesProviderModule,
       notificationPropertiesProviderModule,
-      performersPropertiesProviderModule,
-      subinfoesPropertiesProviderModule
-/*      expressionPropertiesProviderModule,*/
-/*      customContextModule*/
+      subinfoesPropertiesProviderModule,
+      performersPropertiesProviderModule
   ]
 });
 //const eventList = bpmnModeler.get('eventBus');

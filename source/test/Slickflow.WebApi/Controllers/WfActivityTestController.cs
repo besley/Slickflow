@@ -11,13 +11,14 @@ using Slickflow.Engine.Service;
 
 namespace Slickflow.WebApi.Controllers
 {
+    /// <summary>
+    /// Activity Test Controller
+    /// </summary>
     public class WfActivityTestController : Controller
     {
         /// <summary>
-        ///  启动流程测试
+        ///  Get First Activity
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult<IList<NodeView>> GetFirstActivity([FromBody] WfAppRunner runner)
         {
