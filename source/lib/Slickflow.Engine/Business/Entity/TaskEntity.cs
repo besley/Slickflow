@@ -7,6 +7,7 @@ using Slickflow.Engine.Common;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Task Entity
     /// 任务实体对象
     /// </summary>
     [Table("WfTasks")]

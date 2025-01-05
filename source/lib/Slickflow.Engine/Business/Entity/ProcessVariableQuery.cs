@@ -8,6 +8,7 @@ using Slickflow.Engine.Common;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Process Variable Query
     /// 流程变量查询实体
     /// </summary>
     public class ProcessVariableQuery

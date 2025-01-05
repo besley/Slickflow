@@ -3,12 +3,12 @@
 
     }
 
-    //#region ajax 方法
+    //#region ajax Method
     /***
-     * HttpPost保存数据
+     * HttpPost
      * @url 
-     * @data json数据
-     * @fn回调方法
+     * @data json
+     * @fn Callback
      */
     jshelper.ajaxGet = function (url, data, fn) {
         $.ajax({
@@ -34,16 +34,16 @@
     }
 
     /***
-     * HttpPost同步保存数据
+     * HttpPost
      * @url 
-     * @data json数据
-     * @fn回调方法
+     * @data json
+     * @fn callback
      */
     jshelper.ajaxPostSyn = function(url, data, _async, fn) {
         $.ajax({
             url: url,
             type: 'POST',
-            async: _async,//false同步
+            async: _async,//false
             data: data,
             dataType: 'json',
             contentType: 'application/json;charset=utf-8',
@@ -107,6 +107,7 @@
     //#endregion
 
     //字符串类型转换为Boolean类型
+    //Convert string type to Boolean type
     jshelper.parseBool = function(val) {
         if ((typeof val === "string" && (val.toLowerCase() === 'true' || val.toLowerCase() === 'yes')) || val === 1)
             return true;
@@ -117,6 +118,7 @@
     }
 
     //判断是否是数字类型，如果是返回true, 否则返回false
+    //Determine whether it is a numeric type, return true if it is, otherwise return false
     jshelper.isNumber = function(o) {
         return !isNaN(o - 0) && o !== null && o !== "" && o !== false;
     }
@@ -156,6 +158,7 @@
     }
 
     //字符串转换为Integer
+    //Convert string to Integer
     Number.tryParseInt = function (str, defaultValue) {
         if (isNumber(str) == true) {
             return parseInt(str);
@@ -173,6 +176,7 @@
     }
 
     //字符串转换为Float
+    //Convert string to Float
     Number.tryParseFloat = function (str, defaultValue) {
         if (isNumber(str) == true) {
             return parseFloat(str);
@@ -194,6 +198,7 @@
     }
 
     //获取函数方法名
+    //Get function method name
     jshelper.getFnName = function(fn) {
         return (fn.toString().match(/function (.+?)\(/) || [, ''])[1];
     }

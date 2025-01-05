@@ -14,16 +14,14 @@ using Slickflow.Engine.Utility;
 namespace Slickflow.Engine.Xpdl
 {
     /// <summary>
-    /// 流程模型帮助类
+    /// Process Model Helper
     /// </summary>
     public class ProcessModelHelper
     {
-        #region 活动视图转换
+        #region Activity Veiw Convertor
         /// <summary>
-        /// 获取开始节点
+        /// Get start activity
         /// </summary>
-        /// <param name="process">流程</param>
-        /// <returns>开始节点</returns>
         public static Activity GetStartActivity(Process process)
         {
             var activityList = process.ActivityList.ToList();
@@ -32,10 +30,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 获取开始节点
+        /// Get end activity
         /// </summary>
-        /// <param name="process">流程</param>
-        /// <returns>开始节点</returns>
         public static Activity GetEndActivity(Process process)
         {
             var activityList = process.ActivityList.ToList();
@@ -44,11 +40,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 获取活动节点
+        /// Get activity
         /// </summary>
-        /// <param name="process">流程</param>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <returns>活动节点</returns>
         public static Activity GetActivity(Process process, string activityGUID)
         {
             var activityList = process.ActivityList.ToList();
@@ -57,10 +50,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 获取第一个办理节点
+        /// Get first activity
         /// </summary>
-        /// <param name="process">流程</param>
-        /// <returns>开始节点</returns>
         public static Activity GetFirstActivity(Process process)
         {
             var activityList = process.ActivityList.ToList();
@@ -74,11 +65,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 获取第一个办理节点
+        /// Get Next Activity by from
         /// </summary>
-        /// <param name="process">流程</param>
-        /// <param name="fromActivityGUID">起始活动节点</param>
-        /// <returns>下一步节点</returns>
         public static Activity GetNextActivity(Process process, string fromActivityGUID)
         {
             var transitionList = process.TransitionList.ToList();
@@ -89,10 +77,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 从活动节点转换为活动视图
+        /// Convert to activity view
         /// </summary>
-        /// <param name="entity">活动实体</param>
-        /// <returns>活动视图</returns>
         public static ActivityView ConvertFromActivityEntity(Activity entity)
         {
             var view = new ActivityView();
@@ -110,13 +96,10 @@ namespace Slickflow.Engine.Xpdl
         }
         #endregion
 
-        #region 连线实体转换
+        #region Transition Convertor
         /// <summary>
-        /// 获取连线列表
+        /// Get transition list
         /// </summary>
-        /// <param name="process">流程</param>
-        /// <param name="fromActivityGUID">活动GUID</param>
-        /// <returns>连线列表</returns>
         public static IList<Transition> GetForwardTransitionList(Process process, string fromActivityGUID)
         {
             var transitionList = process.TransitionList.Where<Transition>(t => t.FromActivityGUID == fromActivityGUID).ToList();
@@ -124,12 +107,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 获取连线实体
+        /// Get transition
         /// </summary>
-        /// <param name="process">流程</param>
-        /// <param name="fromActivityGUID">起始节点GUID</param>
-        /// <param name="toActivityGUID">到达节点GUID</param>
-        /// <returns></returns>
         public static Transition GetForwardTransition(Process process, string fromActivityGUID, string toActivityGUID)
         {
             var transiton = process.TransitionList.SingleOrDefault<Transition>(t => t.FromActivityGUID == fromActivityGUID
@@ -138,11 +117,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 获取连线列表
+        /// Get backward transition list
         /// </summary>
-        /// <param name="process">流程</param>
-        /// <param name="toActivityGUID">活动GUID</param>
-        /// <returns>连线列表</returns>
         public static IList<Transition> GetBackwardTransitionList(Process process, string toActivityGUID)
         {
             var transitionList = process.TransitionList.Where<Transition>(t => t.ToActivityGUID == toActivityGUID).ToList();
@@ -150,12 +126,10 @@ namespace Slickflow.Engine.Xpdl
         }
         #endregion
 
-        #region 转换流程实体基本属性
+        #region Convert process property
         /// <summary>
-        /// 转换流程基本实体
+        /// Convert to process file entity
         /// </summary>
-        /// <param name="xmlNodeProcess">流程XML节点</param>
-        /// <returns>流程实体</returns>
         public static ProcessFileEntity ConvertFromXmlNodeProcess(XmlNode xmlNodeProcess)
         {
             var process = new ProcessFileEntity();
@@ -169,10 +143,8 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 校验时，转换流程实体对象
+        /// Convert to process
         /// </summary>
-        /// <param name="xmlDoc">xml文档</param>
-        /// <returns></returns>
         public static Xpdl.Entity.Process ConvertToXPDLProcess(XmlDocument xmlDoc)
         {
             var root = xmlDoc.DocumentElement;

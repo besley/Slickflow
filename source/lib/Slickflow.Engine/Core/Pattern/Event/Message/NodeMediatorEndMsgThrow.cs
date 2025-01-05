@@ -17,6 +17,7 @@ using Slickflow.Engine.Essential;
 namespace Slickflow.Engine.Core.Pattern.Event.Message
 {
     /// <summary>
+    /// End node mediator message throw
     /// 结束节点处理类
     /// </summary>
     internal class NodeMediatorEndMsgThrow : NodeMediator
@@ -28,47 +29,56 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
         }
 
         /// <summary>
-        /// 节点内部业务逻辑执行
+        /// Execute work item
         /// </summary>
         internal override void ExecuteWorkItem()
         {
             //执行前Action列表
+            //On before execute work item
             OnBeforeExecuteWorkItem();
 
             //设置流程完成
+            //Set process instance completed
             ProcessInstanceManager pim = new ProcessInstanceManager();
             var processInstance = pim.Complete(ActivityForwardContext.ProcessInstance.ID,
                 ActivityForwardContext.ActivityResource.AppRunner,
                 Session);
 
             //执行节点上的消息发布
+            //Publish messages on the execution node
             var msgDelegateService = new MessageDelegateService();
             msgDelegateService.PublishMessage(processInstance, LinkContext.ToActivity, ActivityForwardContext.FromActivityInstance);
 
             //如果当前流程是子流程，则子流程完成，主流程流转到下一节点
+            //If the current process is a subprocess,
+            //then the subprocess is completed and the main process flows to the next node
             if (pim.IsSubProcess(processInstance) == true)
             {
                 ContinueMainProcessRunning(processInstance, Session);
             }
 
             //执行后Action列表
+            //On after execute work item
             OnAfterExecuteWorkItem();
         }
 
         /// <summary>
+        /// Continue to execute the main process
         /// 继续执行主流程
         /// </summary>
-        /// <param name="processInstance">子流程实例</param>
-        /// <param name="session">数据库会话</param>
+        /// <param name="processInstance"></param>
+        /// <param name="session"></param>
         private void ContinueMainProcessRunning(ProcessInstanceEntity processInstance,
             IDbSession session)
         {
             //读取流程下一步办理人员列表信息
+            //Read the personnel list information for the next step in the process
             var runner = FillNextActivityPerformersByRoleList(processInstance.InvokedActivityInstanceID,
                 processInstance.InvokedActivityGUID,
                 session);
 
             //开始执行下一步
+            //Start executing the next step
             var runAppResult = WfExecutedResult.Default();
             var runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceAppRunning(runner, session, ref runAppResult);
             if (runAppResult.Status == WfExecutedStatus.Exception)
@@ -77,6 +87,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
             }
 
             //注册事件并运行
+            //Register the event and run it
             WfRuntimeManagerFactory.RegisterEvent(runtimeInstance,
                 runtimeInstance_OnWfProcessRunning,
                 runtimeInstance_OnWfProcessContinued);
@@ -104,12 +115,13 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
         }
 
         /// <summary>
+        /// Add role users using process defined resources
         /// 使用流程定义资源添加角色用户
         /// </summary>
-        /// <param name="mainActivityInstanceID">主流程节点实例ID</param>
-        /// <param name="mainActivityGUID">主流程节点GUID</param>
-        /// <param name="session">数据库会话</param>
-        /// <returns>执行用户</returns>
+        /// <param name="mainActivityInstanceID"></param>
+        /// <param name="mainActivityGUID"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         private WfAppRunner FillNextActivityPerformersByRoleList(int mainActivityInstanceID,
             string mainActivityGUID,
             IDbSession session)
@@ -120,7 +132,9 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
                 mainProcessInstance,
                 session.Transaction);
             var nextSteps = processModel.GetNextActivityTree(mainActivityGUID);
+
             //获取主流程的任务
+            //The task of obtaining the mainstream process
             var task = new TaskManager().GetTaskByActivity(session.Connection, mainProcessInstance.ID, mainActivityInstanceID, session.Transaction);
             var runner = new WfAppRunner
             {
@@ -136,7 +150,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
             foreach (var node in nextSteps)
             {
                 Dictionary<string, PerformerList> dict = new Dictionary<string, PerformerList>();
-                var performerList = PerformerBuilder.CreatePerformerList(node.Roles);      //根据节点角色定义，读取执行者列表
+                var performerList = PerformerBuilder.CreatePerformerList(node.Roles);      
                 if (node.ActivityType != ActivityTypeEnum.EndNode
                     && performerList.Count == 0)
                 {
@@ -152,16 +166,9 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
         }
 
         /// <summary>
+        /// End node activity and transfer instantiation, no task data available
         /// 结束节点活动及转移实例化，没有任务数据
         /// </summary>
-        /// <param name="toActivity">当前Activity</param>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="flyingType">跳跃类型</param>
-        /// <param name="activityResource">活动资源</param>
-        /// <param name="session">Session</param>
         internal override void CreateActivityTaskTransitionInstance(Activity toActivity,
             ProcessInstanceEntity processInstance,
             ActivityInstanceEntity fromActivityInstance,
@@ -180,7 +187,6 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
                 activityResource.AppRunner,
                 session);
 
-            //写节点转移实例数据
             base.InsertTransitionInstance(processInstance,
                 transitionGUID,
                 fromActivityInstance,

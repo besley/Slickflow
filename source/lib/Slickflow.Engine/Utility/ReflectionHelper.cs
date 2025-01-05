@@ -9,16 +9,13 @@ using System.IO;
 namespace Slickflow.Engine.Utility
 {
     /// <summary>
-    /// 反射帮助类
+    /// Reflection Helper
     /// </summary>
     public static class ReflectionHelper
     {
         /// <summary>
-        /// 获取特别类型的实例
+        /// Get Special Instance
         /// </summary>
-        /// <typeparam name="T">类型</typeparam>
-        /// <param name="fullName">名称</param>
-        /// <returns>实例</returns>
         public static T GetSpecialInstance<T>(string fullName) where T : class
         {
             var directory = AppDomain.CurrentDomain.BaseDirectory;
@@ -45,10 +42,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 获取属性
+        /// Get Property
         /// </summary>
-        /// <param name="lambda">表达式</param>
-        /// <returns>成员信息</returns>
         public static MemberInfo GetProperty(LambdaExpression lambda)
         {
             Expression expression = lambda;

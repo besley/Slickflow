@@ -10,7 +10,7 @@ using Slickflow.Engine.Xpdl.Common;
 namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
-    /// 服务清单
+    /// Script Detail
     /// </summary>
     public class ScriptDetail
     {

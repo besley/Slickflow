@@ -10,17 +10,17 @@ using Slickflow.Engine.Xpdl.Convertor;
 namespace Slickflow.Engine.Xpdl
 {
     /// <summary>
-    /// 转变器工厂类
+    /// Convertor Factory
     /// </summary>
     public class ConvertorFactory
     {
         /// <summary>
-        /// 转变器构造工厂方法
+        /// Factory method
         /// </summary>
-        /// <param name="xmlNode">XML节点</param>
-        /// <param name="xnpmgr">XML命名空间管理</param>
-        /// <param name="activityType">节点类型</param>
-        /// <returns>IConvert接口</returns>
+        /// <param name="xmlNode">XML node</param>
+        /// <param name="xnpmgr">XML namespace manager</param>
+        /// <param name="activityType">activity type</param>
+        /// <returns>IConvert</returns>
         /// <exception cref="ApplicationException"></exception>
         public static IConvert CreateConvertor(XmlNode xmlNode, XmlNamespaceManager xnpmgr, out ActivityTypeEnum activityType)
         {
@@ -57,10 +57,10 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// 获取活动节点类型
+        /// Get activity type by node name
         /// </summary>
-        /// <param name="node">XML节点</param>
-        /// <returns>活动节点类型</returns>
+        /// <param name="node">xml node</param>
+        /// <returns>activity type</returns>
         /// <exception cref="ApplicationException"></exception>
         private static ActivityTypeEnum GetActivityTypeByNodeName(XmlNode node)
         {
@@ -76,7 +76,7 @@ namespace Slickflow.Engine.Xpdl
             else if (node.Name == XPDLDefinition.BPMN2_ElementName_IntermediateEvent_Catch
                 || node.Name == XPDLDefinition.BPMN2_ElementName_IntermediateEvent_Throw)
             {
-                //中间事件节点
+                //Intermediator node
                 activityType = ActivityTypeEnum.IntermediateNode;
             }
             else if (node.Name == XPDLDefinition.BPMN2_ElementName_SubProcess)
@@ -88,6 +88,7 @@ namespace Slickflow.Engine.Xpdl
                 || node.Name == XPDLDefinition.BPMN2_ElementName_ManualTask)
             {
                 //判断是否为多人会签节点
+                //Determine whether it is a multi person signing node
                 var multipleDetailNode = node.SelectSingleNode(XPDLDefinition.Sf_StrXmlPath_MultiSignDetail, 
                     XPDLHelper.GetSlickflowXmlNamespaceManager(node.OwnerDocument));
                 if (multipleDetailNode != null) activityType = ActivityTypeEnum.MultiSignNode;
@@ -105,7 +106,7 @@ namespace Slickflow.Engine.Xpdl
                 || node.Name == XPDLDefinition.BPMN2_ElementName_InclusiveGateway
                 || node.Name == XPDLDefinition.BPMN2_ElementName_ParallelGateway)
             {
-                //各类网关节点
+                //Gateway node
                 activityType = ActivityTypeEnum.GatewayNode;
             }
             else

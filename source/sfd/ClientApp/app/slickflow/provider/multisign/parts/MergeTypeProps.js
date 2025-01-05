@@ -59,6 +59,7 @@ function MergeType(props) {
 
     function getOptions() {
         //串行并行类型
+        //Sequence and Parallel type
         var options = [
             { "label": kresource.getItem("optiondefault"), "value": "0", "name": "Optiondefault" },
             { "label": kresource.getItem("sequence"), "value": "1", "name": "Sequence" },

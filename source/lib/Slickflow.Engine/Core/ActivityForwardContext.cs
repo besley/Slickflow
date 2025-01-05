@@ -12,11 +12,12 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Core
 {
     /// <summary>
+    /// Activity node execution context object
     /// 活动节点执行上下文对象
     /// </summary>
     internal class ActivityForwardContext
     {
-        #region ActivityForwardContext 属性列表
+        #region ActivityForwardContext Property
 
         internal IProcessModel ProcessModel { get; set; }
         internal ProcessInstanceEntity ProcessInstance { get; set; }
@@ -28,15 +29,11 @@ namespace Slickflow.Engine.Core
 
         #endregion
 
-        #region ActivityForwardContext 构造函数
+        #region ActivityForwardContext Constructor
         /// <summary>
-        /// 开始节点的构造执行上下文对象
+        /// Context object on the starting node
+        /// 开始节点上的上下文对象
         /// </summary>
-        /// <param name="processModel">流程模型</param>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="activity">活动</param>
-        /// <param name="activityResource">活动资源</param>
-        /// <param name="isNotParsedByTransition">非解析流转</param>
         private ActivityForwardContext(IProcessModel processModel,
             ProcessInstanceEntity processInstance,
             Activity activity,
@@ -51,13 +48,9 @@ namespace Slickflow.Engine.Core
         }
 
         /// <summary>
-        /// 任务执行的上下文对象
+        /// Context object for task node execution
+        /// 任务节点执行的上下文对象
         /// </summary>
-        /// <param name="taskView"></param>
-        /// <param name="processModel">流程模型</param>
-        /// <param name="activityResource">活动资源</param>
-        /// <param name="isNotParsedByTransition">非解析流转</param>
-        /// <param name="session">数据会话</param>
         private ActivityForwardContext(TaskViewEntity taskView,
             IProcessModel processModel,
             ActivityResource activityResource,
@@ -76,13 +69,9 @@ namespace Slickflow.Engine.Core
         }
 
         /// <summary>
+        /// Interrupt event type activity instance execution context object
         /// Interrupt事件类型活动实例执行上下文对象
         /// </summary>
-        /// <param name="activityInstance">活动实例</param>
-        /// <param name="processModel">流程模型</param>
-        /// <param name="activityResource">活动资源</param>
-        /// <param name="isNotParsedByTransition">非解析流转</param>
-        /// <param name="session">数据会话</param>
         private ActivityForwardContext(ActivityInstanceEntity activityInstance,
             IProcessModel processModel,
             ActivityResource activityResource,
@@ -99,13 +88,9 @@ namespace Slickflow.Engine.Core
         }
 
         /// <summary>
+        /// Context object for initiating the process
         /// 启动流程的上下文对象
         /// </summary>
-        /// <param name="processModel"></param>
-        /// <param name="processInstance"></param>
-        /// <param name="activity"></param>
-        /// <param name="activityResource"></param>
-        /// <returns></returns>
         internal static ActivityForwardContext CreateStartupContext(IProcessModel processModel,
             ProcessInstanceEntity processInstance,
             Activity activity,
@@ -115,14 +100,9 @@ namespace Slickflow.Engine.Core
         }
 
         /// <summary>
+        /// Create task execution context object
         /// 创建任务执行上下文对象
         /// </summary>
-        /// <param name="taskView">任务</param>
-        /// <param name="processModel">流程模型</param>
-        /// <param name="activityResource">活动资源</param>
-        /// <param name="isNotParsedForward">不需要解析的流转</param>
-        /// <param name="session">数据会话</param>
-        /// <returns>活动上下文</returns>
         internal static ActivityForwardContext CreateRunningContextByTask(TaskViewEntity taskView,
             IProcessModel processModel,
             ActivityResource activityResource,
@@ -133,14 +113,9 @@ namespace Slickflow.Engine.Core
         }
 
         /// <summary>
+        /// Interrupt event type creates activity execution context object
         /// Interrupt事件类型创建活动执行上下文对象
         /// </summary>
-        /// <param name="activityInstance">活动实例</param>
-        /// <param name="processModel">流程模型</param>
-        /// <param name="activityResource">活动资源</param>
-        /// <param name="isNotParsedForward">不需要解析的流转</param>
-        /// <param name="session">数据会话</param>
-        /// <returns>活动上下文</returns>
         internal static ActivityForwardContext CreateRunningContextByActivity(ActivityInstanceEntity activityInstance,
             IProcessModel processModel,
             ActivityResource activityResource,
@@ -151,13 +126,9 @@ namespace Slickflow.Engine.Core
         }
 
         /// <summary>
+        /// Create process jump context object
         /// 创建流程跳转上下文对象
         /// </summary>
-        /// <param name="jumpforwardActivity">跳转节点</param>
-        /// <param name="processModel">流程模型</param>
-        /// <param name="processInstance">活动实例</param>
-        /// <param name="activityResource">活动资源</param>
-        /// <returns></returns>
         internal static ActivityForwardContext CreateJumpforwardContext(Activity jumpforwardActivity,
             IProcessModel processModel,
             ProcessInstanceEntity processInstance,
@@ -165,7 +136,6 @@ namespace Slickflow.Engine.Core
         {
             return new ActivityForwardContext(processModel, processInstance, jumpforwardActivity, activityResource, true);
         }
-        
         #endregion
     }
 }

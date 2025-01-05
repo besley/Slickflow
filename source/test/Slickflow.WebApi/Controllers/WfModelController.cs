@@ -17,7 +17,7 @@ using Slickflow.Graph.Roslyn;
 namespace Slickflow.WebApi.Controllers
 {
     /// <summary>
-    /// 串行序列流程测试流程
+    /// Model Controller
     /// </summary>
     public class WfModelController : Controller
     {

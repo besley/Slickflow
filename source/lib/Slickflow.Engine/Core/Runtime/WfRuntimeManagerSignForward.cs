@@ -5,18 +5,22 @@ using Slickflow.Engine.Core.Pattern;
 namespace Slickflow.Engine.Core.Runtime
 {
     /// <summary>
+    /// Runtime Manager Signforward
     /// 加签执行运行时
     /// </summary>
     internal class WfRuntimeManagerSignForward : WfRuntimeManager
     {
         /// <summary>
+        /// The processing logic of signforward operation
         /// 加签执行方法
         /// </summary>
-        /// <param name="session">会话</param>
+        /// <param name="session"></param>
         internal override void ExecuteInstanceImp(IDbSession session)
         {
             //根据加签类型选项，生成新的ActivityInstance记录
             //加签类型有前加签，后加签和并加签
+            //Generate a new ActiveInstance record based on the signature type option
+            //The types of signatures include before signature, behind signature, and parallel signature
             try
             {
                 var signforwardExecutionContext = ActivityForwardContext.CreateRunningContextByTask(base.TaskView,

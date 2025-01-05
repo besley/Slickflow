@@ -6,41 +6,26 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Xpdl.Schedule
 {
     /// <summary>
-    /// 下一步节点的抽象类
+    /// Next Activity Component
     /// </summary>
     public abstract class NextActivityComponent
     {
-        #region 属性列表
-        /// <summary>
-        /// 名称
-        /// </summary>
+        #region Property
         public string Name
         {
             get;
             set;
         }
-
-        /// <summary>
-        /// 描述
-        /// </summary>
         public string Description
         {
             get;
             set;
         }
-
-        /// <summary>
-        /// 转移
-        /// </summary>
         public Transition Transition
         {
             get;
             set;
         }
-
-        /// <summary>
-        /// 活动节点
-        /// </summary>
         public Activity Activity
         {
             get;
@@ -48,9 +33,6 @@ namespace Slickflow.Engine.Xpdl.Schedule
         }
 
         protected bool hasChildren = false;
-        /// <summary>
-        /// 是否有子节点
-        /// </summary>
         public bool HasChildren
         {
             get
@@ -61,12 +43,13 @@ namespace Slickflow.Engine.Xpdl.Schedule
         #endregion
         
         /// <summary>
-        /// 枚举
+        /// Get Enumerator
         /// </summary>
         /// <returns></returns>
         public abstract IEnumerator<NextActivityComponent> GetEnumerator();
         
         /// <summary>
+        /// Add Children
         /// 添加子节点
         /// </summary>
         /// <param name="nextActivity"></param>
@@ -76,6 +59,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
         }
 
         /// <summary>
+        /// Remove Children
         /// 删除子节点
         /// </summary>
         /// <param name="nextActivity"></param>

@@ -14,7 +14,7 @@ using System.Xml.Linq;
 namespace Slickflow.Engine.Xpdl.Convertor
 {
     /// <summary>
-    /// 事件节点转换器
+    /// Event Convertor
     /// </summary>
     internal class EventConvertor : ConvertorBase, IConvert
     {
@@ -22,6 +22,11 @@ namespace Slickflow.Engine.Xpdl.Convertor
         {
         }
 
+        /// <summary>
+        /// Convert Element Detail
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public override Activity ConvertElementDetail(Activity entity)
         {
             var eventNode = base.XMLNode;
@@ -30,7 +35,6 @@ namespace Slickflow.Engine.Xpdl.Convertor
             if (eventDefinitionNode != null
                 && triggerType != TriggerTypeEnum.None)
             {
-                //trigger资料节点
                 var triggerDetail = new TriggerDetail();
                 triggerDetail.TriggerType = triggerType;
                 if (triggerType == TriggerTypeEnum.Conditional)
@@ -40,12 +44,11 @@ namespace Slickflow.Engine.Xpdl.Convertor
                 else if (triggerType == TriggerTypeEnum.Message)
                 {
                     //消息触发类型Message Trigger Type
+                    //Message Trigger Type
                     var messageRef = XMLHelper.GetXmlAttribute(eventDefinitionNode, "messageRef");
                     if (!string.IsNullOrEmpty(messageRef)) 
                     {
-                        //获取消息Throw/Catch
                         triggerDetail.MessageDirection = GetMessageDirectionFromEventNode(eventNode);
-                        //获取Message主题
                         var xmlDoc = eventDefinitionNode.OwnerDocument;
                         var root = xmlDoc.DocumentElement;
                         var strMessagePath = string.Format("{0}[@id='{1}']", XPDLDefinition.BPMN2_StrXmlPath_Message, messageRef);
@@ -60,12 +63,11 @@ namespace Slickflow.Engine.Xpdl.Convertor
                 else if (triggerType == TriggerTypeEnum.Signal)
                 {
                     //信号触发类型Signal Trigger Type
+                    //Signal Trigger Type
                     var signalRef = XMLHelper.GetXmlAttribute(eventDefinitionNode, "signalRef");
                     if (!string.IsNullOrEmpty(signalRef))
                     {
-                        //获取消息Throw/Catch
                         triggerDetail.MessageDirection = GetMessageDirectionFromEventNode(eventNode);
-                        //获取Message主题
                         var xmlDoc = eventDefinitionNode.OwnerDocument;
                         var root = xmlDoc.DocumentElement;
                         var strSignalPath = string.Format("{0}[@id='{1}']", XPDLDefinition.BPMN2_StrXmlPath_Signal, signalRef);
@@ -83,10 +85,11 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Get Event Definition Node
         /// 获得事件定义节点
         /// </summary>
-        /// <param name="eventNode">事件街道</param>
-        /// <param name="triggerType">触发类型</param>
+        /// <param name="eventNode"></param>
+        /// <param name="triggerType"></param>
         /// <returns></returns>
         private XmlNode GetEventDefinitionNode(XmlNode eventNode, out TriggerTypeEnum triggerType)
         {
@@ -123,6 +126,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Get Message Direction from Event Node
         /// 获取消息Throw/Catch 类型
         /// </summary>
         /// <param name="eventNode"></param>

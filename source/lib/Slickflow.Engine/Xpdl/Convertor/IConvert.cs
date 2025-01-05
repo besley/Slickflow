@@ -8,15 +8,11 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Xpdl.Convertor
 {
     /// <summary>
+    /// Node Convert Interface
     /// 节点转变实体
     /// </summary>
     public interface IConvert
     {
-        /// <summary>
-        /// 转变方法
-        /// </summary>
-        /// <param name="entity">活动实体</param>
-        /// <returns></returns>
        public Activity Convert();
     }
 }

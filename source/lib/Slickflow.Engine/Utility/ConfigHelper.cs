@@ -8,15 +8,14 @@ using Slickflow.Module.Localize;
 namespace Slickflow.Engine.Utility
 {
     /// <summary>
-    /// 配置帮助类
+    /// Config Helper
     /// </summary>
     public class ConfigHelper
     {
         /// <summary>
+        /// Obtain node information for application configuration
         /// 获取应用配置的节点信息
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
         public static string GetAppSettingString(string key)
         {
             try
@@ -31,10 +30,9 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
+        /// Obtain node information of the connection string
         /// 获取连接串的节点信息
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
         public static string GetConnectionString(string key)
         {
             try
@@ -49,9 +47,9 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
+        /// Get the execution path of the current application
         /// 获取当前应用程序的执行路径
         /// </summary>
-        /// <returns></returns>
         public static string GetExecutingDirectory()
         {
             string codeBase = Assembly.GetExecutingAssembly().CodeBase;

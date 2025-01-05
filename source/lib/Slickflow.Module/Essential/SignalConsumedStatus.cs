@@ -7,27 +7,28 @@ using System.Threading.Tasks;
 namespace Slickflow.Module.Essential
 {
     /// <summary>
+    /// Signal Consumed Status
     /// 状态执行枚举类型
     /// </summary>
     public enum SignalConsumedStatus
     {
         /// <summary>
-        /// 缺省状态
+        /// Default
         /// </summary>
         Default = 0,
 
         /// <summary>
-        /// 成功状态
+        /// Success
         /// </summary>
         Success = 1,
 
         /// <summary>
-        /// 执行失败状态
+        /// Failed
         /// </summary>
         Failed = 2,
 
         /// <summary>
-        /// 异常状态
+        /// Exception
         /// </summary>
         Exception = 3
     }

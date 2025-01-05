@@ -13,11 +13,12 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Xpdl.Convertor
 {
     /// <summary>
+    /// Convert Base
     /// 转换器基类
     /// </summary>
     public abstract class ConvertorBase : IConvert
     {
-        #region 属性和构造方法
+        #region Property and Constructor
         abstract public Activity ConvertElementDetail(Activity entity);
         private XmlNode xmlNode;
         public XmlNode XMLNode
@@ -44,6 +45,10 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
         #endregion
 
+        /// <summary>
+        /// Convert
+        /// </summary>
+        /// <returns></returns>
         public Activity Convert()
         {
             var activity = new Activity();

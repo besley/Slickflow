@@ -11,6 +11,7 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Xpdl.Node
 {
     /// <summary>
+    /// Multiple Instance Node
     /// 多实例节点类型
     /// </summary>
     internal class MultipleInstanceNode : NodeBase

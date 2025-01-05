@@ -8,21 +8,13 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Essential
 {
     /// <summary>
+    /// Signal Runner View
     /// 信号运行者对象视图
     /// </summary>
     public class SignalRunnerView
     {
-        /// <summary>
-        /// 目标流程实体
-        /// </summary>
         public ProcessEntity ProcessEntity { get; set; }
-        /// <summary>
-        /// 目标节点实体
-        /// </summary>
         public Activity ActivityEntity { get; set; }
-        /// <summary>
-        /// 当前运行者身份
-        /// </summary>
         public WfAppRunner WfAppRunner { get; set; }
     }
 }

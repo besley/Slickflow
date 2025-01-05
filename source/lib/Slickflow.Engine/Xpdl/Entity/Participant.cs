@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
-    /// 参与者流程
+    /// Participant
     /// </summary>
     public class Participant
     {

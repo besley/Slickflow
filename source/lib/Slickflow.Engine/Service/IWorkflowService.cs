@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using Slickflow.Module.Form;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Delegate;
@@ -13,6 +14,7 @@ using Slickflow.Engine.Xpdl.Common;
 namespace Slickflow.Engine.Service
 {
     /// <summary>
+    /// Workflow Service Interface
     /// 工作流服务接口
     /// </summary>
     public interface IWorkflowService
@@ -51,79 +53,90 @@ namespace Slickflow.Engine.Service
 
         void ResetCache(string processGUID, string version = null);
 
-
         [Obsolete("replaced by the new method RunProcess()")]
         WfExecutedResult RunProcessApp(WfAppRunner runner);
         [Obsolete("replaced by the new method RunProcess()")]
         WfExecutedResult RunProcessApp(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
     
         //启动流程
+        //Startup Process
         WfExecutedResult StartProcess(WfAppRunner runner);
         WfExecutedResult StartProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
         Task<WfExecutedResult> StartProcessAsync(WfAppRunner runner);
         Task<WfExecutedResult> StartProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
 
         //消息启动流程
+        //Message Startup Process
         WfExecutedResult StartProcessByMessage(WfAppRunner runner);
         WfExecutedResult StartProcessByMessage(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
         Task<WfExecutedResult> StartProcessByMessageAsync(WfAppRunner runner);
         Task<WfExecutedResult> StartProcessByMessageAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
 
         //运行流程
+        //Run Process
         WfExecutedResult RunProcess(WfAppRunner runner);
         WfExecutedResult RunProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
         Task<WfExecutedResult> RunProcessAsync(WfAppRunner runner);
         Task<WfExecutedResult> RunProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
 
         //自动运行流程
+        //Run Automatically Process
         WfExecutedResult RunProcessAuto(WfAppRunner runner);
         WfExecutedResult RunProcessAuto(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
         Task<WfExecutedResult> RunProcessAutoAsync(WfAppRunner runner);
         Task<WfExecutedResult> RunProcessAutoAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
 
         //撤销流程
+        //Withdraw Process
         WfExecutedResult WithdrawProcess(WfAppRunner runner);
         WfExecutedResult WithdrawProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
         Task<WfExecutedResult> WithdrawProcessAsync(WfAppRunner runner);
         Task<WfExecutedResult> WithdrawProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
 
         //退回流程
+        //SendBack Process
         WfExecutedResult SendBackProcess(WfAppRunner runner);
         WfExecutedResult SendBackProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
         Task<WfExecutedResult> SendBackProcessAsync(WfAppRunner runner);
         Task<WfExecutedResult> SendBackProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
 
         //返送流程
+        //Resend Process
         WfExecutedResult ResendProcess(WfAppRunner runner);
         WfExecutedResult ResendProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
         Task<WfExecutedResult> ResendProcessAsync(WfAppRunner runner);
         Task<WfExecutedResult> ResendProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
 
         //修订流程
+        //Revise Process
         WfExecutedResult ReviseProcess(WfAppRunner runner);
         WfExecutedResult ReviseProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
         Task<WfExecutedResult> ReviseProcessAsync(WfAppRunner runner);
         Task<WfExecutedResult> ReviseProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
 
         //驳回流程
+        //Reject Process
         WfExecutedResult RejectProcess(WfAppRunner runner);
         WfExecutedResult RejectProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
         Task<WfExecutedResult> RejectProcessAsync(WfAppRunner runner);
         Task<WfExecutedResult> RejectProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
 
         //关闭流程
+        //Close Process
         WfExecutedResult CloseProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
         WfExecutedResult CloseProcess(WfAppRunner runner);
         Task<WfExecutedResult> CloseProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
         Task<WfExecutedResult> CloseProcessAsync(WfAppRunner runner);
 
         //返签流程
+        //Reverse Process
         WfExecutedResult ReverseProcess(WfAppRunner runner);
         WfExecutedResult ReverseProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
         Task<WfExecutedResult> ReverseProcessAsync(WfAppRunner runner);
         Task<WfExecutedResult> ReverseProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
 
         //跳转流程
+        //Jump Process
         WfExecutedResult JumpProcess(WfAppRunner runner, JumpOptionEnum jumpOption = JumpOptionEnum.Default);
         WfExecutedResult JumpProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans, 
             JumpOptionEnum jumpOption = JumpOptionEnum.Default);
@@ -132,12 +145,14 @@ namespace Slickflow.Engine.Service
             JumpOptionEnum jumpOption = JumpOptionEnum.Default);
 
         //加签流程
+        //Sign Forward Process
         WfExecutedResult SignForwardProcess(WfAppRunner runner);
         WfExecutedResult SignForwardProcess(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
         Task<WfExecutedResult> SignForwardProcessAsync(WfAppRunner runner);
         Task<WfExecutedResult> SignForwardProcessAsync(IDbConnection conn, WfAppRunner runner, IDbTransaction trans);
 
         //审批决策
+        //Approval
         void AgreeTask(int taskID);
         void RefuseTask(int taskID);
 
@@ -154,7 +169,6 @@ namespace Slickflow.Engine.Service
         Boolean SetProcessOverdue(int processInstanceID, DateTime overdueDateTime, WfAppRunner runner);
         void SetActivityJobTimerCompleted(IDbConnection conn, int activityInstanceID, IDbTransaction trans);
         void SetProcessJobTimerCompleted(IDbConnection conn, int processInstanceID, IDbTransaction trans);
-        void SetProcessTimerType(string processGUID, string version);
         int SaveProcessVariable(ProcessVariableEntity entity);
         
         IList<NodeImage> GetActivityInstanceCompleted(int taskID);
@@ -213,22 +227,24 @@ namespace Slickflow.Engine.Service
         ProcessValidateResult ValidateProcess(ProcessEntity processValidateEntity);
         
 
-        //资源接口
+        //角色资源接口
+        //Role Resource Interfaces
         IList<Role> GetRoleAll();
         IList<Role> GetRoleByProcess(string processGUID, string version);
         IList<Role> GetRoleUserListByProcess(string processGUId, string version);
         IList<User> GetUserAll();
         IList<User> GetUserListByRole(string roleID);
         PerformerList GetPerformerList(NodeView nextNode);
+
+        //流程变量接口
+        //Process Variables Interfaces
         IList<ProcessVariableEntity> GetProcessVariableList(ProcessVariableQuery query);
         ProcessVariableEntity GetProcessVariable(ProcessVariableQuery query);
         ProcessVariableEntity GetProcessVariable(int variableID);
         Boolean ValidateProcessVariable(int processInstanceID, string expression);
         void DeleteProcessVariable(int variableID);
 
-
-        #region 链式服务接口
-        //创建方法
+        #region Chain Service Interface
         IWorkflowService CreateRunner(WfAppRunner runner);
         IWorkflowService CreateRunner(string userID, string UserName);
         IWorkflowService UseApp(string appInstanceID, string appName, string appCode = null);
@@ -245,7 +261,8 @@ namespace Slickflow.Engine.Service
         IWorkflowService NextStepInt(PerformerList performerList);
         IWorkflowService PrevStepInt();
 
-        //流传方法
+        //流转相关接口
+        //Flow related method
         WfExecutedResult Start();
         WfExecutedResult Start(IDbConnection conn, IDbTransaction trans);
         WfExecutedResult StartByMessage();
@@ -273,4 +290,3 @@ namespace Slickflow.Engine.Service
         #endregion
     }
 }
-;

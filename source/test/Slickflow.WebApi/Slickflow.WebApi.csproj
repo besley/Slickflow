@@ -18,6 +18,9 @@
     <Reference Include="Slickflow.Graph">
       <HintPath>..\..\lib\References\Slickflow.Graph.dll</HintPath>
     </Reference>
+    <Reference Include="Slickflow.Module.Localize">
+      <HintPath>..\..\lib\References\Slickflow.Module.Localize.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

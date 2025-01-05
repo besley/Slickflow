@@ -6,17 +6,18 @@ using System.Text;
 namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
+    /// Compare by priority of connections
     /// 按连线的优先级比较
     /// </summary>
     public class TransitionPriorityCompare : IComparer<Transition>
     {
-        #region IComparer<TransitionEntity> 成员
+        #region IComparer<TransitionEntity> Member
         /// <summary>
-        /// 比较实现
+        /// Compare
         /// </summary>
-        /// <param name="x">实体X</param>
-        /// <param name="y">实体Y</param>
-        /// <returns>比较结果</returns>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public int Compare(Transition x, Transition y)
         {
             if (x.GroupBehaviours != null 
@@ -36,7 +37,6 @@ namespace Slickflow.Engine.Xpdl.Entity
 
             return 0;
         }
-
         #endregion
     }
 }

@@ -7,18 +7,13 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Xpdl.Schedule
 {
     /// <summary>
-    /// 网关类型的下一步节点（其下包含子节点)
+    /// Next Activity Intermediate
+    /// 中间类型节点
     /// </summary>
     public class NextActivityIntermediate : NextActivityComponent
     {
+        #region Property and Constructor
         private IList<NextActivityComponent> nextActivityList = new List<NextActivityComponent>();
-
-        /// <summary>
-        /// 构造方法
-        /// </summary>
-        /// <param name="name">名称</param>
-        /// <param name="transition">转移</param>
-        /// <param name="activity">活动</param>
         public NextActivityIntermediate(string name,
             Transition transition,
             Activity activity)
@@ -27,11 +22,13 @@ namespace Slickflow.Engine.Xpdl.Schedule
             base.Transition = transition;
             base.Activity = activity;
         }
+        #endregion
 
         /// <summary>
+        /// Add child
         /// 添加子节点
         /// </summary>
-        /// <param name="nextActivity">活动节点</param>
+        /// <param name="nextActivity"></param>
         public override void Add(NextActivityComponent nextActivity)
         {
             nextActivityList.Add(nextActivity);
@@ -40,10 +37,11 @@ namespace Slickflow.Engine.Xpdl.Schedule
         }
 
         /// <summary>
+        /// Remove child
         /// 移除子节点
         /// </summary>
-        /// <param name="nextActivity">活动节点</param>
-        /// <returns>删除状态</returns>
+        /// <param name="nextActivity"></param>
+        /// <returns></returns>
         public override bool Remove(NextActivityComponent nextActivity)
         {
             bool isRemoved = nextActivityList.Remove(nextActivity);
@@ -53,9 +51,9 @@ namespace Slickflow.Engine.Xpdl.Schedule
         }
 
         /// <summary>
-        /// 获取枚举器
+        /// Get enumerator
         /// </summary>
-        /// <returns>枚举器</returns>
+        /// <returns></returns>
         public override IEnumerator<NextActivityComponent> GetEnumerator()
         {
             foreach (NextActivityComponent c in nextActivityList)
@@ -65,7 +63,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
         }
 
         /// <summary>
-        /// 下一步步骤节点列表
+        /// Next activity list
         /// </summary>
         public List<NextActivityComponent> NextActivityList
         {

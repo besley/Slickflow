@@ -9,6 +9,7 @@ using Slickflow.Engine.Business;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Task View
     /// 任务视图类
     /// </summary>
     [Table("vwWfActivityInstanceTasks")]

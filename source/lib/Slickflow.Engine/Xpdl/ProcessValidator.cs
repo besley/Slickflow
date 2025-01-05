@@ -12,15 +12,13 @@ using Slickflow.Engine.Xpdl.Common;
 namespace Slickflow.Engine.Xpdl
 {
     /// <summary>
-    /// 流程校验器
+    /// Process Validator
     /// </summary>
     internal class ProcessValidator
     {
         /// <summary>
-        /// 校验方法
+        /// Validate
         /// </summary>
-        /// <param name="entity">实体</param>
-        /// <returns>校验结果</returns>
         internal static ProcessValidateResult Validate(ProcessEntity entity)
         {
             var result = new ProcessValidateResult();
@@ -35,6 +33,7 @@ namespace Slickflow.Engine.Xpdl
                 XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
 
             //检验开始节点和结束节点
+            //Check the start and end nodes
             if (startEvent == null)
             {
                 result.ProcessValidatedResultType = ProcessValidateResultTypeEnum.WithoutStartEvent;
@@ -47,6 +46,7 @@ namespace Slickflow.Engine.Xpdl
             }
 
             //检验开始到结束的关键路径是否存在
+            //Check if there is a critical path from start to finish
             var process = ProcessModelHelper.ConvertToXPDLProcess(xmlDoc);
 
             var startActivityGUID = XMLHelper.GetXmlAttribute(startEvent, "sf:guid");
@@ -66,13 +66,9 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Iterative verification method
         /// 迭代验证方法
         /// </summary>
-        /// <param name="process">流程实体</param>
-        /// <param name="activityList">活动列表</param>
-        /// <param name="transitionList">转移列表</param>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <returns>是否存在关键路径</returns>
         internal static Boolean TranverseTransitonList(Process process,
             IList<Activity> activityList,
             IList<Transition> transitionList,

@@ -6,6 +6,7 @@ using System.Text;
 namespace Slickflow.Engine.Xpdl
 {
     /// <summary>
+    /// Constant definitions used in the XML file of process definition
     /// 流程定义的XML文件中，用到的常量定义
     /// </summary>
     public class XPDLDefinition
@@ -20,6 +21,7 @@ namespace Slickflow.Engine.Xpdl
         public static readonly string BPMNDI_NameSpacePrefix_Value = "http://www.omg.org/spec/BPMN/20100524/DI";
 
         public static readonly string Sf_StrXmlPath_ExtensionElements = "bpmn2:extensionElements";
+        public static readonly string Sf_StrXmlPath_Forms = "bpmn2:extensionElements/sf:forms";
         public static readonly string Sf_StrXmlPath_Actions = "bpmn2:extensionElements/sf:actions";
         public static readonly string Sf_StrXmlPath_Boundaries = "bpmn2:extensionElements/sf:boundaries";
         public static readonly string Sf_StrXmlPath_GroupBehaviours = "bpmn2:extensionElements/sf:groupBehaviours";
@@ -32,11 +34,13 @@ namespace Slickflow.Engine.Xpdl
         public static readonly string Sf_StrXmlPath_Scripts = "bpmn2:extensionElements/sf:scripts";
         public static readonly string Sf_StrXmlPath_Notifications = "bpmn2:extensionElements/sf:notifications";
         public static readonly string Sf_StrXmlPath_SequenceFlow = "bpmn2:sequenceFlow";
+        public static readonly string Sf_ElementName_Forms= "sf:forms";
 
         public static readonly string BPMN2_ElementName_Definitions = "bpmn2:definitions";
         public static readonly string BPMN2_ElementName_Collaboration = "bpmn2:collaboration";
         public static readonly string BPMN2_ElementName_Participant = "bpmn2:participant";
         public static readonly string BPMN2_ElementName_Process = "bpmn2:process";
+        public static readonly string BPMN2_ElementName_ExtensionElements = "bpmn2:extensionElements";
         public static readonly string BPMN2_ElementName_SubProcess = "bpmn2:subProcess";
         public static readonly string BPMN2_ElementName_SequenceFlow = "bpmn2:sequenceFlow";
         public static readonly string BPMN2_ElementName_StartEvent = "bpmn2:startEvent";

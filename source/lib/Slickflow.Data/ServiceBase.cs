@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 namespace Slickflow.Data
 {
     /// <summary>
+    /// Service Base
     /// 服务基类
     /// </summary>
     public class ServiceBase
     {
         /// <summary>
-        /// Repository 属性
+        /// Repository
         /// </summary>
         private IRepository _quickRepository;
         public IRepository QuickRepository

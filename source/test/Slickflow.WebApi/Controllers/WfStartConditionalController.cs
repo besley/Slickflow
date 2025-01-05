@@ -14,26 +14,23 @@ using Slickflow.Engine.Service;
 namespace Slickflow.WebApi.Controllers
 {
     //webapi: http://localhost/sfapi/api/wfsequence/
-    //数据库表: WfProcess
-    //条件启动流程测试
-    //流程记录ID：870
-    //流程名称：报价流程
+    //Database table: WfProcess
+    //Conditional start process testing
+    //Process record ID: 870
+    //Process Name: Quotation Process
     //GUID: 444db0c2-4dcb-4f86-c75d-43719b28cbb4
     //startup process:
     //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"52023958-996d-48ac-b9a7-ba51e48d4821","Version":"1","ControlParameterSheet":{"ConditionalVariables":{"days":"10"}}}
 
 
     /// <summary>
-    /// process test
+    /// Process Start with Condition TEst
     /// </summary>
     public class WfStartConditionalController : Controller
     {
-       
         /// <summary>
-        ///  启动流程测试
+        /// Start Process
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult StartProcess([FromBody] WfAppRunner runner)
         {
@@ -66,10 +63,8 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  运行流程测试
+        /// Run Process
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult RunProcessApp([FromBody] WfAppRunner runner)
         {
@@ -93,10 +88,8 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  运行流程测试
+        /// Run Process
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult RunProcess([FromBody] WfAppRunner runner)
         {

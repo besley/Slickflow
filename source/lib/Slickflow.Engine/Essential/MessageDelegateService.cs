@@ -17,17 +17,19 @@ using Slickflow.Module.Essential.Entity;
 namespace Slickflow.Engine.Essential
 {
     /// <summary>
+    /// Message delegation function in the message queue
     /// 消息队列中的消息委托函数
     /// </summary>
     public class MessageDelegateService
     {
-        #region 消息发布
+        #region Message Publish
         /// <summary>
+        /// Build the message to be published
         /// 构建要发布的消息
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="throwActivity">消息活动</param>
-        /// <param name="throwActivityInstance">消息活动实例</param>
+        /// <param name="processInstance"></param>
+        /// <param name="throwActivity"></param>
+        /// <param name="throwActivityInstance"></param>
         public void PublishMessage(ProcessInstanceEntity processInstance,
             Activity throwActivity,
             ActivityInstanceEntity throwActivityInstance)
@@ -56,12 +58,13 @@ namespace Slickflow.Engine.Essential
         }
         #endregion
 
-        #region 消息消费函数
+        #region Message Consume
         /// <summary>
+        /// Message consumption function
         /// 消息消费函数
         /// </summary>
-        /// <param name="entity">消息实体对象</param>
-        /// <returns>消费结果</returns>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public MessageConsumedResult ConsumeMessage(MessageEntity entity)
         {
             var msgResult = MessageConsumedResult.Default();
@@ -143,10 +146,11 @@ namespace Slickflow.Engine.Essential
         }
 
         /// <summary>
+        /// Encapsulate the operator object from the message view
         /// 从消息视图中封装运行者对象
         /// </summary>
-        /// <param name="msgRunnerView">消息视图</param>
-        /// <returns>运行者对象</returns>
+        /// <param name="msgRunnerView"></param>
+        /// <returns></returns>
         private WfAppRunner GetRunnerFromMessagExchange(MessageRunnerView msgRunnerView)
         {
             var runner = new WfAppRunner();
@@ -160,6 +164,7 @@ namespace Slickflow.Engine.Essential
             runner.UserName = msgRunnerView.WfAppRunner.UserName;
 
             //封装下一步的步骤信息
+            //Encapsulate the next step information
             var aim = new ActivityInstanceManager();
             var runningActivityInstance = aim.GetActivityInstanceLatest(runner.AppInstanceID, runner.ProcessGUID, msgRunnerView.ActivityEntity.ActivityGUID);
             if (runningActivityInstance != null)

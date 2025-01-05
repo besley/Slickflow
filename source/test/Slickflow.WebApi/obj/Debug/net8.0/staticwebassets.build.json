@@ -1,11 +1,12 @@
 {
   "Version": 1,
-  "Hash": "yyNh0e3LDAp1NN2J1Zimm4lQCxKZZSfSiJacAaIwnzs=",
+  "Hash": "/Wj9X6RTsOlbsQEcBt19Ids29uzdMGpeIbb2fGWYPV0=",
   "Source": "Slickflow.WebApi",
   "BasePath": "_content/Slickflow.WebApi",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": []
+  "Assets": [],
+  "Endpoints": []
 }

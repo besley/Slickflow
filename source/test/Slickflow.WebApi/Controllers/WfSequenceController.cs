@@ -14,77 +14,70 @@ using Slickflow.Engine.Service;
 namespace Slickflow.WebApi.Controllers
 {
     //webapi: http://localhost/sfapi/api/wfsequence/
-    //数据库表: WfProcess
-    //普通顺序流程基本测试(顺序,返签,退回,撤销等测试)
-    //流程记录ID：3
-    //流程名称：报价流程
-    //GUID: 072af8c3-482a-4b1c-890b-685ce2fcc75d
+    //Database table: WfProcess
+    //Basic testing of ordinary sequential processes (testing of sequence, return, cancellation, etc.)
+    //Process record ID: 3
+    //Process Name: Quotation Process
+    //GUID:  072af8c3-482a-4b1c-890b-685ce2fcc75d
     //startup process:
     //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
 
     //run process app:
-    ////业务员提交办理节点：
-    ////下一步是“板房签字”办理节点
+    ////Salesperson submits processing nodes:
+    ////The next step is to handle the node of "signing the board house"
     //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"eb833577-abb5-4239-875a-5f2e2fcb6d57":[{"UserID":"10","UserName":"Long"}]}}
 
     //withdraw process:
-    //撤销至上一步节点（由板房签字到上一步业务员提交）
-    //每次修改一下已办任务的TaskID
+    //Revoke the previous node (signed by the board room and submitted by the previous salesperson)
+    //Modify the TaskID of completed tasks every time
     //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d", "TaskID": 30639}
 
     //runprocess app
-    //板房签字办理节点
-    //下一步是业务员确认
+    //Node for signature processing of prefabricated houses
+    //The next step is for the salesperson to confirm
     //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"cab57060-f433-422a-a66f-4a5ecfafd54e":[{"UserID":"10","UserName":"Long"}]}}
 
-    //流程结束
-    //业务员确认办理节点
-    //下一步流程结束
+    //Process completed
+    //The salesperson confirms the processing node
+    //The next step of the process ends
     //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","NextActivityPerformers":{"b53eb9ab-3af6-41ad-d722-bed946d19792":[{"UserID":"10","UserName":"Long"}]}}
 
     //run sub process
-    //有子流程
-    //启动子流程
+    //There are sub processes
+    //Initiate sub process
     //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"5fa796f6-2d5d-4ed6-84e2-a7c4e4e6aabc":[{"UserID":"10","UserName":"Long"}]}}
 
 
     //reverse process:
-    //返签
+    //Return signature
     //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
 
     //sendback process
-    //退回
-    //数据格式同返签(撤销,退回,返签Json数据格式相同.)
+    //Return
+    //The data format is the same as the JSON data format for cancellation, return, and re signing
 
-    //read task, and make activity running:
-    //任务阅读：
+    //read task,  and make activity running:
+    //Task Reading:
     //{"UserID":"10","UserName":"Long","TaskID":"17"}}
 
-    //获取下一步办理步骤：
-    //1) 根据应用来获取
+    //Obtain the next steps for processing:
+    //1) Obtain based on the application
     //GetNextSteps
-    //{"AppName":"SamplePrice","AppInstanceID":915,"UserID":"10","UserName":"Long","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","NextActivityPerformers":{"39c71004-d822-4c15-9ff2-94ca1068d745":[{"UserID":"10","UserName":"Long"}]},"Flowstatus":"启动"}
+    //{"AppName": "SamplePrice", "AppInstanceID": 915, "UserID": "10", "UserName": "Long", "ProcessUID": "072af8c3-482a-4b1c-890b-685ce2fcc75d", "NextActivity Performers": {"39c71004-d822-4c15-9ff2-94ca1068d745": [{"UserID": "10", "UserName": "Long"}}, "Flowstatus": "Start"}
 
-    //2) 根据任务ID来获取
+    //2) Obtain based on task ID
     //GetTaskNextSteps
 
-    //撤销流程: WithdrawProcess
-    //退回流程：SendBackProcess
-    //返签流程：ReverseProcess
-    //取消运行流程：CancelProcess
-    //废弃所有流程实例：DiscardProcess
 
     /// <summary>
-    /// process test
+    /// Sequence Process Test
+    /// 序列流程测试
     /// </summary>
     public class WfSequenceController : Controller
     {
-       
         /// <summary>
-        ///  启动流程测试
+        ///  Start process
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult StartProcess([FromBody] WfAppRunner runner)
         {
@@ -117,10 +110,8 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  运行流程测试
+        /// Run process
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult RunProcessApp([FromBody] WfAppRunner runner)
         {
@@ -144,10 +135,8 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  运行流程测试
+        /// Run process
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult RunProcess([FromBody] WfAppRunner runner)
         {
@@ -171,10 +160,8 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  运行流程测试
+        /// Jump to End
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult JumpEnd([FromBody] WfAppRunner runner)
         {
@@ -198,10 +185,8 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  跳转流程测试
+        /// Jump Process
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult JumpProcess([FromBody] WfAppRunner runner)
         {
@@ -225,10 +210,8 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  驳回流程测试
+        /// Reject Process
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult RejectProcess([FromBody] WfAppRunner runner)
         {
@@ -252,10 +235,8 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  返签流程测试
+        /// Reverse Process
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult ReverseProcess([FromBody] WfAppRunner runner)
         {
@@ -279,10 +260,8 @@ namespace Slickflow.WebApi.Controllers
         }
 
         /// <summary>
-        ///  驳回流程测试
+        /// Resend Process
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult ResendProcess([FromBody] WfAppRunner runner)
         {

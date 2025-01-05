@@ -6,25 +6,17 @@ using System.Text;
 namespace Slickflow.Engine.Essential
 {
     /// <summary>
+    /// Message Delegation Exception
     /// 消息代理服务异常类
     /// </summary>
     public class WfMessageDelegationException : ApplicationException
     {
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="message">消息</param>
         public WfMessageDelegationException(string message)
             : base(message)
         {
 
         }
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="message">消息</param>
-        /// <param name="ex">异常</param>
         public WfMessageDelegationException(string message, Exception ex)
             : base(message, ex)
         {

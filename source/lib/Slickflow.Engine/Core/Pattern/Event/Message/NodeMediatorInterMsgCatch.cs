@@ -14,6 +14,7 @@ using Slickflow.Engine.Essential;
 namespace Slickflow.Engine.Core.Pattern.Event.Message
 {
     /// <summary>
+    /// Intermediate Node Mediator message catch
     /// 中间事件节点处理类
     /// </summary>
     internal class NodeMediatorInterMsgCatch : NodeMediator, ICompleteAutomaticlly
@@ -26,7 +27,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
         }
 
         /// <summary>
-        /// 执行方法
+        /// Execute work item
         /// </summary>
         internal override void ExecuteWorkItem()
         {
@@ -42,18 +43,9 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
             }
         }
 
-        #region ICompleteAutomaticlly 成员
         /// <summary>
-        /// 自动完成
+        /// Complete automatically
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="fromActivity">起始活动</param>
-        /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="toActivity">目标活动</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
-        /// <returns>网关执行结果</returns>
         public NodeAutoExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
             string transitionGUID,
             Activity fromActivity,
@@ -65,6 +57,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
             var nextActivityInstance = CreateActivityInstanceObject(toActivity, processInstance, runner);
 
             //写入默认第一次的预选步骤用户列表
+            //Write the default user list for the first pre selection step
             nextActivityInstance.NextStepPerformers = NextStepUtility.SerializeNextStepPerformers(runner.NextActivityPerformers);
             base.InsertActivityInstance(nextActivityInstance, session);
 
@@ -83,6 +76,5 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
             NodeAutoExecutedResult result = NodeAutoExecutedResult.CreateGatewayExecutedResult(NodeAutoExecutedStatus.Successed);
             return result;
         }
-        #endregion
     }
 }

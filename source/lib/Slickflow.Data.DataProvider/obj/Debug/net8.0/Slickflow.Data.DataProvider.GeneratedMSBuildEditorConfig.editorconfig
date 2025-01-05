@@ -11,3 +11,5 @@ build_property.RootNamespace = Slickflow.Data.DataProvider
 build_property.ProjectDir = D:\GitHub\Slickflow\source\lib\Slickflow.Data.DataProvider\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 

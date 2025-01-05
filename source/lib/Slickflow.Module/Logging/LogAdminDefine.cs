@@ -5,6 +5,7 @@ using System.Text;
 namespace Slickflow.Module.Logging
 {
     /// <summary>
+    /// Job Admin Define
     /// 作业变量定义
     /// </summary>
     public class LogAdminDefine

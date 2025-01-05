@@ -9,16 +9,13 @@ using System.Text;
 namespace Slickflow.Engine.Utility
 {
     /// <summary>
-    /// 序列化帮助类
+    /// Serialization Helper
     /// </summary>
     public static class SerializationHelper
     {
         /// <summary>
-        /// DataContractSerializer序列化一个对象
+        /// Serialize method
         /// </summary>
-        /// <param name="type">对象类型</param>
-        /// <param name="obj">实例对象</param>
-        /// <returns>序列化后的文本</returns>
         public static string Serialize(Type type, object obj)
         {
             using (MemoryStream mStream = new MemoryStream())
@@ -33,11 +30,8 @@ namespace Slickflow.Engine.Utility
 
 
         /// <summary>
-        /// 反序列化一个对象
+        /// Deserialize
         /// </summary>
-        /// <param name="type">对象类型</param>
-        /// <param name="strObject">实例对象</param>
-        /// <returns>序列化后的对象</returns>
         public static object Deserialize(Type type, string strObject)
         {
             using (XmlReader reader = XmlReader.Create(new StringReader(strObject)))
@@ -49,11 +43,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 添加分隔符
+        /// Split Strings
         /// </summary>
-        /// <param name="list">列表</param>
-        /// <param name="seperator">分隔符</param>
-        /// <returns>字符串</returns>
         public static string SplitStrings(this IEnumerable<string> list, string seperator = ", ")
         {
             var result = list.Aggregate(

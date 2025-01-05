@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Common
 {
    /// <summary>
-   /// 上一步活动信息
+   /// Sign Forward Step Info
+   /// 加签活动信息
    /// </summary>
     public class SignForwardStepInfo
     {
         /// <summary>
-        /// 下一步活动角色用户树
+        /// Sign Forward Role User Tree
+        /// 加签活动角色用户树
         /// </summary>
         public IList<NodeView> SignForwardRoleUserTree { get; set; }
     }

@@ -14,7 +14,7 @@ using Slickflow.Engine.Xpdl.Node;
 namespace Slickflow.Engine.Xpdl.Convertor
 {
     /// <summary>
-    /// 多实例转换器
+    /// Multiple Instance Convertor
     /// </summary>
     public class MultiSignConvertor : ConvertorBase, IConvert
     {

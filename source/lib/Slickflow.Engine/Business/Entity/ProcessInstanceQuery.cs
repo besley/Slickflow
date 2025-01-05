@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Process Instance Query
     /// 流程实例查询实体
     /// </summary>
     public class ProcessInstanceQuery : QueryBase

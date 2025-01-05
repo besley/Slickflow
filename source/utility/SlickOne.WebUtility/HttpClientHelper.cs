@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 namespace SlickOne.WebUtility
 {
     /// <summary>
+    /// Mime format
     /// Mime内容格式
     /// </summary>
     public enum MimeFormat
@@ -19,7 +20,7 @@ namespace SlickOne.WebUtility
     }
 
     /// <summary>
-    /// HttpClient 帮助类
+    /// HttpClient Helper
     /// </summary>
     public class HttpClientHelper
     {
@@ -30,7 +31,7 @@ namespace SlickOne.WebUtility
         private static readonly HttpClient HttpClient;
 
         /// <summary>
-        /// URL 属性
+        /// URL 
         /// </summary>
         private string URL
         {
@@ -38,9 +39,6 @@ namespace SlickOne.WebUtility
             set;
         }
 
-        /// <summary>
-        /// 构造方法
-        /// </summary>
         static HttpClientHelper()
         {
             HttpClient = new System.Net.Http.HttpClient();
@@ -48,10 +46,10 @@ namespace SlickOne.WebUtility
         }
 
         /// <summary>
-        /// 创建基本HttpClientHelper类
+        /// Create method
         /// </summary>
-        /// <param name="url">URL</param>
-        /// <returns>帮助类</returns>
+        /// <param name="url"></param>
+        /// <returns></returns>
         public static HttpClientHelper CreateHelper(string url)
         {
             var helper = new HttpClientHelper();
@@ -65,9 +63,9 @@ namespace SlickOne.WebUtility
 
 
         /// <summary>
-        /// 返回请求结果
+        /// Get
         /// </summary>
-        /// <returns>字符串</returns>
+        /// <returns></returns>
         public string Get()
         {
             var response = HttpClient.GetAsync(URL).Result;
@@ -77,10 +75,8 @@ namespace SlickOne.WebUtility
         }
 
         /// <summary>
-        /// 获取
+        /// Get by generic
         /// </summary>
-        /// <typeparam name="T1">类型</typeparam>
-        /// <returns>对象</returns>
         public T1 Get<T1>()
             where T1 : class
         {
@@ -92,12 +88,8 @@ namespace SlickOne.WebUtility
         }
 
         /// <summary>
-        /// 提交
+        /// Post
         /// </summary>
-        /// <typeparam name="T1">类型1</typeparam>
-        /// <typeparam name="T2">类型2</typeparam>
-        /// <param name="t">对象t</param>
-        /// <returns>对象</returns>
         public T2 Post<T1, T2>(T1 t)
             where T1 : class
             where T2 : class
@@ -112,10 +104,8 @@ namespace SlickOne.WebUtility
         }
 
         /// <summary>
-        /// Post方法
+        /// Post
         /// </summary>
-        /// <param name="t">动态实体</param>
-        /// <returns>响应结果</returns>
         public ResponseResult Post(dynamic t)
         {
             string jsonValue = JsonConvert.SerializeObject(t);
@@ -128,12 +118,8 @@ namespace SlickOne.WebUtility
         }
 
         /// <summary>
-        /// Post获取分页数据
+        /// Query
         /// </summary>
-        /// <typeparam name="T1">类型1</typeparam>
-        /// <typeparam name="T2">类型2</typeparam>
-        /// <param name="t">对象t</param>
-        /// <returns>对象</returns>
         public List<T2> Query<T1, T2>(T1 t)
             where T1 : class
             where T2 : class
@@ -149,12 +135,8 @@ namespace SlickOne.WebUtility
         }
 
         /// <summary>
-        /// 插入
+        /// Insert
         /// </summary>
-        /// <typeparam name="T1">类型1</typeparam>
-        /// <typeparam name="T2">类型2</typeparam>
-        /// <param name="t">对象t</param>
-        /// <returns>对象</returns>
         public T2 Insert<T1, T2>(T1 t)
             where T1 : class
             where T2 : class
@@ -169,12 +151,8 @@ namespace SlickOne.WebUtility
         }
 
         /// <summary>
-        /// 更新
+        /// Update
         /// </summary>
-        /// <typeparam name="T1">类型1</typeparam>
-        /// <typeparam name="T2">类型2</typeparam>
-        /// <param name="t">对象t</param>
-        /// <returns>对象</returns>
         public T2 Update<T1, T2>(T1 t)
             where T1 : class
             where T2 : class

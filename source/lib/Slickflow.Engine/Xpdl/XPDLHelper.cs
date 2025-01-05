@@ -15,15 +15,14 @@ using Slickflow.Engine.Xpdl.Node;
 namespace Slickflow.Engine.Xpdl
 {
     /// <summary>
-    /// 常用的一些帮助方法
+    /// XPDL Helper
     /// </summary>
     public class XPDLHelper
     {
         /// <summary>
+        /// Is simple component node
         /// 是否简单组件节点
         /// </summary>
-        /// <param name="activityType">活动类型</param>
-        /// <returns>判断结果</returns>
         public static Boolean IsSimpleComponentNode(ActivityTypeEnum activityType)
         {
             if (activityType == ActivityTypeEnum.TaskNode
@@ -39,20 +38,18 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Is gateway component node
         /// 是否复合逻辑处理节点
         /// </summary>
-        /// <param name="activityType">活动类型</param>
-        /// <returns>判断结果</returns>
         public static Boolean IsGatewayComponentNode(ActivityTypeEnum activityType)
         {
             return activityType == ActivityTypeEnum.GatewayNode;
         }
 
         /// <summary>
+        /// Is cross over component node
         /// 是否中间事件或服务类型节点
         /// </summary>
-        /// <param name="activityType">活动类型</param>
-        /// <returns>判断结果</returns>
         public static Boolean IsCrossOverComponentNode(ActivityTypeEnum activityType)
         {
             if (activityType == ActivityTypeEnum.IntermediateNode 
@@ -68,10 +65,9 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Is intermediate timer event node
         /// 判断是否是中间Timer事件节点
         /// </summary>
-        /// <param name="activity">活动节点</param>
-        /// <returns>判断结果</returns>
         public static Boolean IsInterTimerEventComponentNode(Activity activity)
         {
             return activity.ActivityType == ActivityTypeEnum.IntermediateNode
@@ -80,6 +76,7 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Is work item
         /// 是否是可办理的任务节点
         /// </summary>
         public static Boolean IsWorkItem(ActivityTypeEnum activityType)
@@ -95,10 +92,9 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Get work item type by activity type
         /// 根据活动类型获取工作项类型
         /// </summary>
-        /// <param name="activityType">活动类型</param>
-        /// <returns>工作项类型</returns>
         public static WorkItemTypeEnum GetWorkItemType(ActivityTypeEnum activityType)
         {
             WorkItemTypeEnum workItemType = WorkItemTypeEnum.NonWorkItem;
@@ -113,13 +109,9 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Get message catch activity
         /// 获取跨流程XML的消息节点实体对象
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="throwActivity">消息抛出节点</param>
-        /// <param name="throwActivityInstance">消息抛出节点活动实例</param>
-        /// <param name="catchProcessEntity">消息捕获流程实体对象</param>
-        /// <returns>消息接收节点实体</returns>
         public static Activity GetMessageCatchActivity(ProcessInstanceEntity processInstance,
             Activity throwActivity,
             ActivityInstanceEntity throwActivityInstance,
@@ -158,11 +150,9 @@ namespace Slickflow.Engine.Xpdl
 
 
         /// <summary>
+        /// Get slickflow xml document namespace manager
         /// 添加XML文档的命名空间
         /// </summary>
-        /// <param name="document">XML文档</param>
-        /// <param name="isBPMNDIContained">是否包含Shape节点</param>
-        /// <returns>XML命名空间管理</returns>
         public static XmlNamespaceManager GetSlickflowXmlNamespaceManager(XmlDocument document, Boolean isBPMNDIContained = false)
         {
             var nsmgr = new XmlNamespaceManager(document.NameTable);
@@ -177,10 +167,9 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Get xml path for process
         /// 获取流程节点的查找路径
         /// </summary>
-        /// <param name="isSubProcess">是否子流程</param>
-        /// <returns>XML路径</returns>
         public static string GetXmlPathOfProcess(Boolean isSubProcess)
         {
             var strXmlPath = string.Empty;
@@ -196,10 +185,9 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Is or gateway
         /// 判断是否或网关
         /// </summary>
-        /// <param name="gatewayNode">网关节点</param>
-        /// <returns></returns>
         public static bool IsOrGateway(XmlNode gatewayNode)
         {
             var isOr = gatewayNode.Name == XPDLDefinition.BPMN2_ElementName_InclusiveGateway;
@@ -207,9 +195,9 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Is xor gateway
         /// 判断是否或网关
         /// </summary>
-        /// <param name="gatewayNode">网关节点</param>
         public static bool IsXOrGateway(XmlNode gatewayNode)
         {
             var isXOr = gatewayNode.Name == XPDLDefinition.BPMN2_ElementName_ExclusiveGateway;
@@ -217,9 +205,9 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Is and gateway
         /// 判断是否或网关
         /// </summary>
-        /// <param name="gatewayNode">网关节点</param>
         public static bool IsAndGateway(XmlNode gatewayNode)
         {
             var isAnd = gatewayNode.Name == XPDLDefinition.BPMN2_ElementName_ParallelGateway;

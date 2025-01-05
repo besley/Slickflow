@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Table
     /// 映射数据库表对象
     /// </summary>
     [AttributeUsageAttribute(AttributeTargets.Class, Inherited = false, AllowMultiple = false), Serializable]

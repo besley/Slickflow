@@ -2,6 +2,7 @@
 namespace Slickflow.Module.Resource
 {
     /// <summary>
+    /// Role Entity
     /// 角色对象
     /// </summary>
     [Table("SysRole")]

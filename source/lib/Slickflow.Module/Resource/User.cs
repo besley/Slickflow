@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 namespace Slickflow.Module.Resource
 {
     /// <summary>
+    /// Workflow module - User Entity
+    /// Used to adapt to the client's organizational structure or permission object model
+    /// Field type: String
     /// 工作流模块-用户实体
     /// 用以适配客户方组织机构或权限对象模型
     /// 字段类型：字符串

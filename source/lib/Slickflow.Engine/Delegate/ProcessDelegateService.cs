@@ -11,16 +11,12 @@ using Slickflow.Engine.Business.Manager;
 namespace Slickflow.Engine.Delegate
 {
     /// <summary>
+    /// Process Delegate Service
     /// 流程委托服务类
     /// </summary>
     public class ProcessDelegateService : DelegateServiceBase, IDelegateService
     {
-        #region 属性及构造方法
-        /// <summary>
-        /// 构造方法
-        /// </summary>
-        /// <param name="session">会话</param>
-        /// <param name="context">上下文</param>
+        #region Property and Constructor
         public ProcessDelegateService(IDbSession session, DelegateContext context) 
             : base(session, context)
         {
@@ -28,19 +24,17 @@ namespace Slickflow.Engine.Delegate
         }
         #endregion
 
-        #region 获取及设置方法
         /// <summary>
-        /// 查询实例
+        /// Get Instance
         /// </summary>
-        /// <typeparam name="T">实体类型</typeparam>
-        /// <param name="id">实体主键ID</param>
-        /// <returns>实体</returns>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public override T GetInstance<T>(int id)
         {
             var pim = new ProcessInstanceManager();
             var entity = pim.GetById(Session.Connection, id, Session.Transaction);
             return entity as T;
         }
-        #endregion
     }
 }

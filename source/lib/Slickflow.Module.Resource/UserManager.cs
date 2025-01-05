@@ -5,11 +5,13 @@ using Slickflow.Data;
 namespace Slickflow.Module.Resource
 {
     /// <summary>
+    /// User Manager
     /// 角色管理类
     /// </summary>
     internal class UserManager : ManagerBase
     {
         /// <summary>
+        /// Get all users
         /// 获取所有用户数据
         /// </summary>
         /// <returns></returns>
@@ -24,10 +26,11 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// Get user by user name
         /// 根据用户名称获取用户
         /// </summary>
-        /// <param name="userName">用户名称</param>
-        /// <returns>角色实体</returns>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         internal UserEntity GetByName(string userName)
         {
             var strSQL = @"SELECT
@@ -43,6 +46,18 @@ namespace Slickflow.Module.Resource
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Get user by id
+        /// 根据ID获取用户信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        internal UserEntity GetById(int id) 
+        {
+            var user = Repository.GetById<UserEntity>(id);
+            return user;
         }
     }
 }

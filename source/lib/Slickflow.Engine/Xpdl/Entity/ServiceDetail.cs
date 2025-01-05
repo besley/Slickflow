@@ -10,7 +10,7 @@ using Slickflow.Engine.Xpdl.Common;
 namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
-    /// 服务详细
+    /// Service Detail
     /// </summary>
     public class ServiceDetail
     {
@@ -19,6 +19,7 @@ namespace Slickflow.Engine.Xpdl.Entity
         public string Arguments { get; set; }
         public string Expression { get; set; }
         /// <summary>
+        /// Reflection method configuration information
         /// 反射方法配置信息
         /// </summary>
         public MethodInfo MethodInfo { get; set; }

@@ -5,6 +5,7 @@ using System.Text;
 namespace Slickflow.Engine.Utility
 {
     /// <summary>
+    /// Random sequence generator
     /// 随机序列生成器
     /// https://www.c-sharpcorner.com/article/generating-random-number-and-string-in-C-Sharp/
     /// </summary>
@@ -13,20 +14,18 @@ namespace Slickflow.Engine.Utility
         private static readonly Random random = new Random();
 
         /// <summary>
+        /// Get Random Number
         /// 获取随机数字
         /// </summary>
-        /// <param name="min"></param>
-        /// <param name="max"></param>
-        /// <returns></returns>
         public static int GetRandomNumber(int min, int max)
         {
             return random.Next(min, max);
         }
 
         /// <summary>
+        /// Get Random Int 4
         /// 获得随机整数，默认4位整数
         /// </summary>
-        /// <returns></returns>
         public static int GetRandomInt4()
         {
             Random r = new Random();
@@ -35,11 +34,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 获取随机字符串
+        /// Get Random String
         /// </summary>
-        /// <param name="size"></param>
-        /// <param name="lowerCase"></param>
-        /// <returns></returns>
         public static string GetRandomString(int size, bool lowerCase = false)
         {
             var builder = new StringBuilder(1024);
@@ -56,9 +52,8 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 获取字符串和数字的混合序列
+        /// Get Random Sequence
         /// </summary>
-        /// <returns></returns>
         public static string GetRandomSequece()
         {
             var passwordBuilder = new StringBuilder();

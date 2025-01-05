@@ -6,6 +6,7 @@ using Slickflow.Data;
 namespace Slickflow.Module.Logging
 {
     /// <summary>
+    /// Log Service
     /// 日志服务类
     /// </summary>
     public class LogService : ILogService
@@ -23,7 +24,7 @@ namespace Slickflow.Module.Logging
         }
         #endregion
 
-        #region 新增作业日志记录
+        #region Add Record 
         /// <summary>
         /// 插入方法
         /// </summary>
@@ -50,17 +51,18 @@ namespace Slickflow.Module.Logging
         }
         #endregion
 
-        #region 静态方法
+        #region Static Method
         /// <summary>
+        /// Record error log
         /// 作业日志记录
         /// </summary>
-        /// <param name="jobType">作业类型</param>
-        /// <param name="jobName">作业名称</param>
-        /// <param name="jobKey">作业主键</param>
-        /// <param name="refClass">应用类别</param>
-        /// <param name="refIDs">关键ID列表</param>
-        /// <param name="status">状态</param>
-        /// <param name="message">消息</param>
+        /// <param name="jobType">job type</param>
+        /// <param name="jobName">job name</param>
+        /// <param name="jobKey">job key</param>
+        /// <param name="refClass">application type</param>
+        /// <param name="refIDs">application id</param>
+        /// <param name="status">status</param>
+        /// <param name="message">message</param>
         public static void RecordErrorLog(JobTypeEnum jobType,
             string jobName,
             string jobKey,
@@ -93,6 +95,16 @@ namespace Slickflow.Module.Logging
             ThreadPool.QueueUserWorkItem(new WaitCallback(ls.Record), entity);
         }
 
+        /// <summary>
+        /// Record info log
+        /// </summary>
+        /// <param name="jobType">job type</param>
+        /// <param name="jobName">job name</param>
+        /// <param name="jobKey">job key</param>
+        /// <param name="refClass">application type</param>
+        /// <param name="refIDs">application id</param>
+        /// <param name="status">status</param>
+        /// <param name="message">message</param>
         public static void RecordInfoLog(JobTypeEnum jobType,
             string jobName,
             string jobKey,

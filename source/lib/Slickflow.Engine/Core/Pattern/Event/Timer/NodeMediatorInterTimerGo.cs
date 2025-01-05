@@ -15,6 +15,7 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Core.Pattern.Event.Timer
 {
     /// <summary>
+    /// Intermediate timer go node mediator
     /// 中间事件节点处理类
     /// </summary>
     internal class NodeMediatorInterTimerGo : NodeMediator
@@ -26,27 +27,28 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
         }
 
         /// <summary>
-        /// 执行方法
+        /// Execute work item
         /// </summary>
         internal override void ExecuteWorkItem()
         {
             try
             {
                 //检查Timer节点运行条件
+                //Check if the operating conditions of the node are met
                 CheckBeingExecutedInfo();
 
-                //执行前Action列表
                 OnBeforeExecuteWorkItem();
 
                 //完成当前的任务节点
+                //Complete current task node
                 bool canContinueForwardCurrentNode = CompleteWorkItem(ActivityForwardContext.TaskID,
                     ActivityForwardContext.ActivityResource,
                     Session);
 
-                //执行后Action列表
                 OnAfterExecuteWorkItem();
 
                 //获取下一步节点列表：并继续执行
+                //Get the next node list: and continue execution
                 if (canContinueForwardCurrentNode)
                 {
                     ContinueForwardCurrentNode(ActivityForwardContext.IsNotParsedByTransition, Session);
@@ -59,6 +61,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
         }
 
         /// <summary>
+        /// Check if the operating conditions of the node are met
         /// 检查节点运行条件是否满足
         /// </summary>
         private void CheckBeingExecutedInfo()
@@ -70,29 +73,30 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
         }
 
         /// <summary>
+        /// Complete work item
         /// 完成任务实例
         /// </summary>
-        /// <param name="taskID">任务视图</param>
-        /// <param name="activityResource">活动资源</param>
-        /// <param name="session">会话</param>        
+        /// <param name="taskID"></param>
+        /// <param name="activityResource"></param>
+        /// <param name="session"></param>        
         internal bool CompleteWorkItem(int? taskID,
             ActivityResource activityResource,
             IDbSession session)
         {
             WfAppRunner runner = new WfAppRunner
             {
-                UserID = activityResource.AppRunner.UserID,         //避免taskview为空
+                UserID = activityResource.AppRunner.UserID,        
                 UserName = activityResource.AppRunner.UserName
             };
 
-            //流程强制拉取向前跳转时，没有运行人的任务实例
             if (taskID != null)
             {
                 //完成本任务，返回任务已经转移到下一个会签任务，不继续执行其它节点
+                //Complete this task, return that the task has been transferred to the next co signing task,
+                //and do not continue to execute other nodes
                 TaskManager.Complete(taskID.Value, activityResource.AppRunner, session);
             }
 
-            //设置活动节点的状态为完成状态
             ActivityInstanceManager.Complete(LinkContext.FromActivityInstance.ID,
                 activityResource.AppRunner,
                 session);
@@ -104,16 +108,9 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
         }
 
         /// <summary>
+        /// Create activity task transition instance
         /// 创建活动任务转移实例数据
         /// </summary>
-        /// <param name="toActivity">活动</param>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="fromActivityInstance">开始活动实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="flyingType">跳跃类型</param>
-        /// <param name="activityResource">活动资源</param>
-        /// <param name="session">会话</param>
         internal override void CreateActivityTaskTransitionInstance(Activity toActivity,
             ProcessInstanceEntity processInstance,
             ActivityInstanceEntity fromActivityInstance,
@@ -128,6 +125,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
             if (fromActivityInstance.ActivityType == (short)ActivityTypeEnum.GatewayNode)
             {
                 //并发多实例分支判断(AndSplit Multiple)
+                //Concurrent multi instance branch judgment (AndSplit Multiple)
                 var processModel = ProcessModelFactory.CreateByProcessInstance(session.Connection,
                     processInstance,
                     session.Transaction);
@@ -138,21 +136,23 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
             if (isParallel)
             {
                 //并行多实例容器
+                //Parallel multi instance container
                 var entity = new ActivityInstanceEntity();
                 var plist = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
 
                 //创建并行多实例分支
+                //Create parallel multi instance branches
                 for (var i = 0; i < plist.Count; i++)
                 {
                     entity = CreateActivityInstanceObject(toActivity, processInstance, activityResource.AppRunner);
                     entity.AssignedToUserIDs = plist[i].UserID;
                     entity.AssignedToUserNames = plist[i].UserName;
                     entity.ActivityState = (short)ActivityStateEnum.Ready;
-                    //插入活动实例数据
+
                     entity.ID = ActivityInstanceManager.Insert(entity, session);
-                    //插入任务
+
                     TaskManager.Insert(entity, plist[i], activityResource.AppRunner, session);
-                    //插入转移数据
+
                     InsertTransitionInstance(processInstance,
                         transitionGUID,
                         fromActivityInstance,
@@ -166,19 +166,15 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
             else
             {
                 //普通任务节点
+                //Normal task node
                 var toActivityInstance = CreateActivityInstanceObject(toActivity, processInstance, activityResource.AppRunner);
 
-                //进入运行状态
                 toActivityInstance.ActivityState = (short)ActivityStateEnum.Ready;
                 toActivityInstance = GenerateActivityAssignedUserInfo(toActivityInstance, activityResource);
 
-                //插入活动实例数据
                 newActivityInstanceID = ActivityInstanceManager.Insert(toActivityInstance, session);
-
-                //插入任务数据
                 base.CreateNewTask(toActivityInstance, activityResource, session);
 
-                //插入转移数据
                 InsertTransitionInstance(processInstance,
                     transitionGUID,
                     fromActivityInstance,

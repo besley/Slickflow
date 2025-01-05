@@ -6,36 +6,30 @@ using System.Text;
 namespace Slickflow.Engine.Common
 {
     /// <summary>
+    /// Process business data access exception class
     /// 流程业务数据访问异常类
     /// </summary>
     public class WorkflowException : ApplicationException
     {
+        /// <summary>
+        /// Constructor function
+        /// </summary>
+        /// <param name="message"></param>
         public WorkflowException(string message)
             : base(message)
         {
 
         }
 
+        /// <summary>
+        /// Constructor function
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="ex"></param>
         public WorkflowException(string message, Exception ex)
             : base(message, ex)
         {
 
-        }
-    }
-
-    /// <summary>
-    /// 工作流xml定义文件异常类
-    /// </summary>
-    public class WfXpdlException : ApplicationException
-    {
-        public WfXpdlException(string message)
-            : base(message)
-        {
-        }
-
-        public WfXpdlException(string message, Exception ex)
-            : base(message, ex)
-        {
         }
     }
 }

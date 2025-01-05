@@ -9,6 +9,7 @@
     ktemplate.mxTemplateGallery[biz] = {};
 
     //标准流程模板
+    //Standard Process Template
     ktemplate.mxTemplateGallery[std]["blank"] = 'Blank';
     ktemplate.mxTemplateGallery[std]["default"] = 'Default';
     ktemplate.mxTemplateGallery[std]["simple"] = 'Simple';
@@ -21,6 +22,7 @@
     ktemplate.mxTemplateGallery[std]["complex"] = 'Complex';
 
     //业务流程模板
+    //Business Process Template
     ktemplate.mxTemplateGallery[biz]["askforleave"] = 'AskforLeave';
     ktemplate.mxTemplateGallery[biz]["eorder"] = 'EOrder';
     ktemplate.mxTemplateGallery[biz]["reimbursement"] = 'Reimbursement';
@@ -29,6 +31,7 @@
     ktemplate.mxTemplateGallery[biz]["contract"] = 'Contract';
 
     //代码编辑器
+    //Code Editor
     ktemplate.mprocessTemplate = {};
     ktemplate.mprocessTemplate["Default"] = "";
     ktemplate.mprocessTemplate["Sequence"] = "";

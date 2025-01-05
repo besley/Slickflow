@@ -7,6 +7,7 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Core
 {
     /// <summary>
+    /// Context object during process backward processing
     /// 流程回退处理时的上下文对象
     /// </summary>
     internal class BackwardContext

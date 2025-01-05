@@ -9,12 +9,14 @@ using Slickflow.Module.Resource;
 namespace Slickflow.Engine.Common
 {
     /// <summary>
+    /// Resources related to activity
     /// 活动上的资源类
     /// </summary>
     public class ActivityResource
     {
-        #region 属性、构造函数
+        #region Properties, Constructors 属性、构造函数
         /// <summary>
+        /// Current process execution user
         /// 当前流程执行用户
         /// </summary>
         public WfAppRunner AppRunner
@@ -24,6 +26,7 @@ namespace Slickflow.Engine.Common
         }
 
         /// <summary>
+        /// Next activity list with execution personnel information
         /// 带有执行人员信息的下一步节点列表
         /// </summary>
         public IDictionary<string, PerformerList> NextActivityPerformers
@@ -33,6 +36,7 @@ namespace Slickflow.Engine.Common
         }
 
         /// <summary>
+        /// Key value pair
         /// 条件Key-Value对
         /// </summary>
         public IDictionary<string, string> ConditionKeyValuePair
@@ -42,11 +46,12 @@ namespace Slickflow.Engine.Common
         }
 
         /// <summary>
+        /// Construct function
         /// 构造函数
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <param name="nextActivityPerformers">下一步步骤人员列表</param>
-        /// <param name="conditionKeyValuePair">条件参数</param>
+        /// <param name="runner"></param>
+        /// <param name="nextActivityPerformers"></param>
+        /// <param name="conditionKeyValuePair"></param>
         internal ActivityResource(WfAppRunner runner,
             IDictionary<string, PerformerList> nextActivityPerformers,
             IDictionary<string, string> conditionKeyValuePair = null)
@@ -57,11 +62,12 @@ namespace Slickflow.Engine.Common
         }
 
         /// <summary>
-        /// 获取特定步骤的办理人员列表
+        /// Obtain the list of performers handling the previous step
+        /// 获取上一步骤的办理人员列表
         /// </summary>
-        /// <param name="previousActivityPerformers">上一步办理人员列表</param>
-        /// <param name="activityGUID">节点GUID</param>
-        /// <returns>办理人员列表</returns>
+        /// <param name="previousActivityPerformers"></param>
+        /// <param name="activityGUID"></param>
+        /// <returns></returns>
         internal PerformerList GetPreviousPerformerList(IList<KeyValuePairWrapper> previousActivityPerformers,
             string activityGUID)
         {
@@ -78,14 +84,15 @@ namespace Slickflow.Engine.Common
         }
         #endregion
 
-        #region 创建下一步活动执行者列表
-        /// <summary>
+        #region Create a list of next activity performers 创建下一步活动执行者列表
+        /// <summary>、
+        /// Create a list of next activity performers
         /// 创建下一步活动执行者列表
         /// </summary>
-        /// <param name="activityGUID">活动节点GUID</param>
-        /// <param name="userID">用户ID</param>
-        /// <param name="userName">用户名称</param>
-        /// <returns>步骤执行者列表</returns>
+        /// <param name="activityGUID"></param>
+        /// <param name="userID"></param>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         internal static IDictionary<string, PerformerList> CreateNextActivityPerformers(string activityGUID,
             string userID,
             string userName)
@@ -98,12 +105,13 @@ namespace Slickflow.Engine.Common
         }
 
         /// <summary>
+        /// Create a list of next activity performers
         /// 创建下一步活动执行者列表
         /// </summary>
-        /// <param name="nextActivityTree">活动节点列表</param>
-        /// <param name="userID">用户ID</param>
-        /// <param name="userName">用户名称</param>
-        /// <returns>步骤执行者列表</returns>
+        /// <param name="nextActivityTree"></param>
+        /// <param name="userID"></param>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         internal static IDictionary<string, PerformerList> CreateNextActivityPerformers(IList<NodeView> nextActivityTree,
             string userID,
             string userName)
@@ -118,11 +126,12 @@ namespace Slickflow.Engine.Common
         }
 
         /// <summary>
+        /// Create a list of next activity performers
         /// 创建下一步活动执行者列表
         /// </summary>
-        /// <param name="activityGUID">活动节点GUID</param>
-        /// <param name="roleList">角色列表</param>
-        /// <returns>步骤执行者列表</returns>
+        /// <param name="activityGUID"></param>
+        /// <param name="roleList"></param>
+        /// <returns></returns>
         internal static IDictionary<string, PerformerList> CreateNextActivityPerformers(string activityGUID,
             IList<Role> roleList)
         {
@@ -135,11 +144,12 @@ namespace Slickflow.Engine.Common
         }
 
         /// <summary>
+        /// Create a list of next activity performers
         /// 创建下一步活动执行者列表
         /// </summary>
-        /// <param name="nextActivityPerformers">下一步活动人员列表</param>
-        /// <param name="activityGUID">活动节点GUID</param>
-        /// <param name="roleList">角色列表</param>
+        /// <param name="nextActivityPerformers"></param>
+        /// <param name="activityGUID"></param>
+        /// <param name="roleList"></param>
         internal static void CreateNextActivityPerformers(IDictionary<string, PerformerList> nextActivityPerformers,
             string activityGUID,
             IList<Role> roleList)
@@ -149,11 +159,12 @@ namespace Slickflow.Engine.Common
         }
 
         /// <summary>
+        /// Create a list of next activity performers
         /// 创建下一步活动执行者列表
         /// </summary>
-        /// <param name="activityGUID">活动节点GUID</param>
-        /// <param name="performerList">执行者列表</param>
-        /// <returns>步骤执行者列表</returns>
+        /// <param name="activityGUID"></param>
+        /// <param name="performerList"></param>
+        /// <returns></returns>
         internal static IDictionary<string, PerformerList> CreateNextActivityPerformers(string activityGUID, 
             PerformerList performerList)
         {

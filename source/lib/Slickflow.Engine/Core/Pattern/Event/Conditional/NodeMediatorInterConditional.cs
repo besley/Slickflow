@@ -11,10 +11,13 @@ using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Core.Runtime;
+using Microsoft.VisualBasic;
+using static IronPython.Modules._ast;
 
 namespace Slickflow.Engine.Core.Pattern.Event.Conditional
 {
     /// <summary>
+    /// Intermediate event node (condition) processing class
     /// 中间事件节点(条件)处理类
     /// </summary>
     internal class NodeMediatorInterConditional : NodeMediator, ICompleteAutomaticlly
@@ -25,9 +28,6 @@ namespace Slickflow.Engine.Core.Pattern.Event.Conditional
 
         }
 
-        /// <summary>
-        /// 执行方法
-        /// </summary>
         internal override void ExecuteWorkItem()
         {
             try
@@ -42,18 +42,11 @@ namespace Slickflow.Engine.Core.Pattern.Event.Conditional
             }
         }
 
-        #region ICompleteAutomaticlly 成员
+        #region ICompleteAutomaticlly Member
         /// <summary>
+        /// Complete Automatically
         /// 自动完成
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="fromActivity">起始活动</param>
-        /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="toActivity">目标活动</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
-        /// <returns>网关执行结果</returns>
         public NodeAutoExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
             string transitionGUID,
             Activity fromActivity,
@@ -64,11 +57,13 @@ namespace Slickflow.Engine.Core.Pattern.Event.Conditional
         {
             var condActivityInstance = CreateActivityInstanceObject(toActivity, processInstance, runner);
             //存储下一步步骤人员信息
+            //Store performer information for the next step
             condActivityInstance.NextStepPerformers = NextStepUtility.SerializeNextStepPerformers(runner.NextActivityPerformers);
             condActivityInstance.AssignedToUserIDs = WfDefine.SYSTEM_JOBTIMER_USER_ID;
             condActivityInstance.AssignedToUserNames = WfDefine.SYSTEM_JOBTIMER_USER_NAME;
 
             //定时作业信息
+            //Job timer info
             condActivityInstance.JobTimerType = (short)JobTimerTypeEnum.Conditional;
             condActivityInstance.JobTimerStatus = (short)JobTimerStatusEnum.Ready;
             condActivityInstance.TriggerExpression = toActivity.TriggerDetail.Expression;
@@ -78,6 +73,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Conditional
             LinkContext.ToActivityInstance = condActivityInstance;
 
             //写节点转移实例数据
+            //Write transition instance data
             base.InsertTransitionInstance(processInstance,
                 transitionGUID,
                 fromActivityInstance,
@@ -88,6 +84,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Conditional
                 session);
 
             //插入任务数据
+            //Insert task data
             var tm = new TaskManager();
             var newTaskID = tm.Insert(condActivityInstance,
                 new Performer(WfDefine.SYSTEM_JOBTIMER_USER_ID, WfDefine.SYSTEM_JOBTIMER_USER_NAME),

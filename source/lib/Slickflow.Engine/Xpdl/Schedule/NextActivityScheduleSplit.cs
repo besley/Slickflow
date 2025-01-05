@@ -11,11 +11,12 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Xpdl.Schedule
 {
     /// <summary>
+    /// Split type, obtain the next node list
     /// 分支类型，获取下一步节点列表
     /// </summary>
     internal class NextActivityScheduleSplit : NextActivityScheduleBase
     {
-        #region 属性及构造函数
+        #region Property and Constructor
         private Nullable<int> _taskID;
         internal Nullable<int> TaskID
         {
@@ -32,14 +33,8 @@ namespace Slickflow.Engine.Xpdl.Schedule
         #endregion
 
         /// <summary>
-        /// 获取下一步节点列表
+        /// Get next activity list from gateway
         /// </summary>
-        /// <param name="fromTransition">起始转移</param>
-        /// <param name="currentGatewayActivity">当前节点</param>
-        /// <param name="conditionKeyValuePair">条件</param>
-        /// <param name="session">会话</param>
-        /// <param name="resultType">结果类型</param>
-        /// <returns>返回节点</returns>
         internal override NextActivityComponent GetNextActivityListFromGateway(Transition fromTransition,
             Activity currentGatewayActivity, 
             IDictionary<string, string> conditionKeyValuePair,
@@ -55,6 +50,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
                 || currentGatewayActivity.GatewayDetail.DirectionType == GatewayDirectionEnum.AndSplitMI)
             {
                 //获取AndSplit的每一条后续连线上的To节点
+                //Obtain the To nodes on each subsequent connection of AndSplit
                 foreach (Transition transition in transitionList)
                 {
                     child = GetNextActivityListFromGatewayCore(transition,
@@ -73,6 +69,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
             else if (currentGatewayActivity.GatewayDetail.DirectionType == GatewayDirectionEnum.OrSplit)
             {
                 //获取OrSplit的，满足条件的后续连线上的To节点
+                //Obtain the To nodes on the subsequent connections of OrSplit that meet the conditions
                 foreach (Transition transition in transitionList)
                 {
                     bool isValidTransition = base.ProcessModel.IsValidTransition(transition, conditionKeyValuePair);
@@ -90,6 +87,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
                 if (gatewayComponent == null)
                 {
                     //没有分支满足，则选择默认分支流转
+                    //If no branch is met, select the default branch flow
                     var defaultTransition = transitionList.Find(t => t.GroupBehaviours != null && t.GroupBehaviours.DefaultBranch == true);
                     if (defaultTransition != null)
                     {
@@ -109,9 +107,11 @@ namespace Slickflow.Engine.Xpdl.Schedule
             else if (currentGatewayActivity.GatewayDetail.DirectionType == GatewayDirectionEnum.XOrSplit)
             {
                 //按连线定义的优先级排序
+                //Sort by priority defined by the connection
                 transitionList.Sort(new TransitionPriorityCompare());
 
                 //获取XOrSplit的，第一条满足条件的后续连线上的To节点
+                //Obtain the To node on the first subsequent connection that satisfies the condition for XOrSplit
                 foreach (Transition transition in transitionList)
                 {
                     bool isValidTransitionXOr = base.ProcessModel.IsValidTransition(transition, conditionKeyValuePair);
@@ -124,6 +124,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
 
                         gatewayComponent = AddChildToGatewayComponent(fromTransition, currentGatewayActivity, gatewayComponent, child);
                         //退出循环
+                        //Exit loop
                         break;
                     }
                 }
@@ -140,6 +141,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
                 var nodePassedResult = aim.CheckActivityInstancePassedResult(this.TaskID, session);
 
                 //根据节点通过类型连线类型
+                //Connection type based on node connection type
                 if (nodePassedResult.NodePassedType == NodePassedTypeEnum.Passed)
                 {
                     transitionList = transitionList.Where<Transition>(t => t.GroupBehaviours.Approval == ApprovalStatusEnum.Agreed).ToList();
@@ -159,6 +161,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
                 }
 
                 //获取有效的下一步节点
+                //Obtain effective next step nodes
                 if (transitionList != null)
                 {
                     foreach (Transition transition in transitionList)

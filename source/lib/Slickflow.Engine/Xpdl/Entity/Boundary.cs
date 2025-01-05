@@ -8,7 +8,7 @@ using Slickflow.Engine.Common;
 namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
-    /// 边界实体对象
+    /// Boundary
     /// </summary>
     public class Boundary
     {

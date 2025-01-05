@@ -28,6 +28,7 @@ function createTransitionGroup(element, translate) {
     var entries = [conditionProps(element), recieverTypeProps(element)];
 
     //根据split/join 获取设置条目
+    //Obtain setting entries based on split/join
     var source = element.source;
     var target = element.target;
 

@@ -16,16 +16,15 @@ using Slickflow.Engine.Utility;
 namespace Slickflow.Designer.Controllers.WebApi
 {
     /// <summary>
-    /// 流程定义XML操作控制器
+    /// Language controller
+    /// 界面语言控制器
     /// </summary>
     public class LanguageController : Controller
     {
-        #region 语言设置
+        #region Langauge Set
         /// <summary>
-        /// 设置本地化语言
+        /// set language
         /// </summary>
-        /// <param name="id">语言类型</param>
-        /// <returns></returns>
         [HttpGet]
         public ResponseResult SetLang(string id)
         {

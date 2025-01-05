@@ -4,6 +4,9 @@ using Microsoft.Net.Http.Headers;
 
 namespace Slickflow.Designer.Controllers.WebApi
 {
+    /// <summary>
+    /// Multi part request helper
+    /// </summary>
     public static class MultipartRequestHelper
     {
         // Content-Type: multipart/form-data; boundary="----WebKitFormBoundarymx2fSWqWSd0OxQqq"

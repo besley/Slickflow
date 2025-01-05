@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Delegate
 {
     /// <summary>
+    /// External Service Interface
     /// 外部服务接口
     /// </summary>
     public interface IExternalService

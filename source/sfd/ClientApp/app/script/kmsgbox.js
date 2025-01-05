@@ -69,7 +69,7 @@ const kmsgbox = (function () {
     kmsgbox.confirm = function (message, okFunc) {
         BootstrapDialog.show({
             type: BootstrapDialog.TYPE_INFO,
-            title: kresource.getItem('info'),
+            title: kresource.getItem('confirmation'),
             message: message,
             buttons: [{
                 label: kresource.getItem('yes'),

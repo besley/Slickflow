@@ -5,7 +5,7 @@ using System.Text;
 namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
-    /// 活动视图
+    /// Activity View
     /// </summary>
     public class ActivityView
     {

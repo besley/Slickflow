@@ -13,17 +13,19 @@ using Slickflow.Engine.Business.Manager;
 namespace Slickflow.Engine.Core.Parser
 {
     /// <summary>
+    /// Next Step Parser
     /// 下一步的步骤列表读取类
     /// </summary>
     internal class NextStepParser
     {
         /// <summary>
+        /// Next step of the process: information acquisition
         /// 流程下一步信息获取
         /// </summary>
-        /// <param name="resourceService">资源服务</param>
-        /// <param name="runner">当前运行用户</param>
-        /// <param name="condition">条件</param>
-        /// <returns>下一步信息</returns>
+        /// <param name="resourceService"></param>
+        /// <param name="runner"></param>
+        /// <param name="condition"></param>
+        /// <returns></returns>
         internal NextStepInfo GetNextStepInfo(IResourceService resourceService,
             WfAppRunner runner, 
             IDictionary<string, string> condition = null)
@@ -38,10 +40,11 @@ namespace Slickflow.Engine.Core.Parser
         }
 
         /// <summary>
+        /// Obtain the list of performer for the pre selection steps
         /// 获取预选步骤人员列表
         /// </summary>
-        /// <param name="runner">当前运行用户</param>
-        /// <returns>步骤预选人员列表</returns>
+        /// <param name="runner"></param>
+        /// <returns></returns>
         private IDictionary<string, PerformerList> GetNextActivityPerformersPriliminary(WfAppRunner runner)
         {
             IDictionary<string, PerformerList> nextSteps = null;
@@ -50,6 +53,7 @@ namespace Slickflow.Engine.Core.Parser
             TaskViewEntity taskView = tm.GetTaskOfMine(runner);
 
             //读取活动实例中记录的步骤预选数据
+            //Read the pre selected data of the steps recorded in the activity instance
             var aim = new ActivityInstanceManager();
             if (taskView.MIHostActivityInstanceID != null)
             {
@@ -62,6 +66,7 @@ namespace Slickflow.Engine.Core.Parser
             }
 
             //获取下一步信息
+            //Obtain the next step information
             var processModel = ProcessModelFactory.CreateByTask(taskView);
             var nextActivity = processModel.GetNextActivity(taskView.ActivityGUID);
             if (nextActivity != null)
@@ -69,6 +74,7 @@ namespace Slickflow.Engine.Core.Parser
                 if (nextActivity.ActivityType == ActivityTypeEnum.GatewayNode)
                 {
                     //获取网关节点信息
+                    //Obtain gateway node information
                     var gatewayActivityInstance = aim.GetActivityInstanceLatest(taskView.ProcessInstanceID, nextActivity.ActivityGUID);
                     if (gatewayActivityInstance != null
                         && !string.IsNullOrEmpty(gatewayActivityInstance.NextStepPerformers))
@@ -79,6 +85,7 @@ namespace Slickflow.Engine.Core.Parser
                 else if (XPDLHelper.IsInterTimerEventComponentNode(nextActivity) == true)
                 {
                     //中间Timer事件节点
+                    //Intermediate Timer Event Node
                     var timerActivityInstance = aim.GetActivityInstanceLatest(taskView.ProcessInstanceID, nextActivity.ActivityGUID);
                     if (timerActivityInstance != null
                         && !string.IsNullOrEmpty(timerActivityInstance.NextStepPerformers))
@@ -91,17 +98,19 @@ namespace Slickflow.Engine.Core.Parser
         }
 
         /// <summary>
+        /// According to the application, obtain the next node list of the process, including role users
         /// 根据应用获取流程下一步节点列表，包含角色用户
         /// </summary>
-        /// <param name="resourceService">资源服务</param>
-        /// <param name="runner">应用执行人</param>
-        /// <param name="condition">条件</param>
-        /// <returns>节点列表</returns>
+        /// <param name="resourceService"></param>
+        /// <param name="runner"></param>
+        /// <param name="condition"></param>
+        /// <returns></returns>
         internal NextActivityTreeResult GetNextActivityRoleUserTree(IResourceService resourceService, 
             WfAppRunner runner,
             IDictionary<string, string> condition)
         {
             //判断应用数据是否缺失
+            //Determine whether the application data is missing
             if (string.IsNullOrEmpty(runner.AppInstanceID)
                 || string.IsNullOrEmpty(runner.ProcessGUID))
             {
@@ -109,6 +118,7 @@ namespace Slickflow.Engine.Core.Parser
             }
 
             //条件参数一致
+            //Consistent condition parameters
             if (condition == null && runner.Conditions != null)
             {
                 condition = runner.Conditions;
@@ -126,6 +136,7 @@ namespace Slickflow.Engine.Core.Parser
                 if (runner.TaskID != null)
                 {
                     //运行中的流程
+                    //Running process
                     taskView = tm.GetTaskView(runner.TaskID.Value);
                     processInstance = pim.GetById(taskView.ProcessInstanceID);
                 }
@@ -140,10 +151,12 @@ namespace Slickflow.Engine.Core.Parser
                 }
 
                 //判断流程是否创建还是已经运行
+                //Determine whether the process has been created or already run
                 if (processInstance != null
                     && processInstance.ProcessState == (short)ProcessStateEnum.Running)
                 {
                     //运行状态的流程实例
+                    //Process instance of running status
                     if (taskView == null)
                     {
                         taskView = tm.GetTaskOfMine(session.Connection, runner, session.Transaction);
@@ -156,16 +169,19 @@ namespace Slickflow.Engine.Core.Parser
                     }
 
                     //获取下一步列表
+                    //Get the next step list
                     processModel = ProcessModelFactory.CreateByTask(session.Connection, taskView, session.Transaction);
                     nextTreeResult = processModel.GetNextActivityTree(taskView.ActivityGUID, taskView.TaskID, condition, session);
                     
                     foreach (var ns in nextTreeResult.StepList)
                     {
-                        if (ns.ReceiverType == ReceiverTypeEnum.ProcessInitiator)       //下一步执行人为流程发起人
+                        //下一步执行人为流程发起人
+                        //The next step is for the executor to initiate the process
+                        if (ns.ReceiverType == ReceiverTypeEnum.ProcessInitiator)       
                         {
                             ns.Users = AppendUserList(ns.Users, pim.GetProcessInitiator(session.Connection,
                                 taskView.ProcessInstanceID,
-                                session.Transaction));   //获取流程发起人
+                                session.Transaction));  
                         }
                         else
                         {
@@ -180,6 +196,7 @@ namespace Slickflow.Engine.Core.Parser
                 else
                 {
                     //流程准备启动，获取第一个办理节点的用户列表
+                    //Process preparation to start, obtain the user list of the first processing node
                     processModel = ProcessModelFactory.CreateByProcess(runner.ProcessGUID, runner.Version);
                     var firstActivity = processModel.GetFirstActivity();
                     nextTreeResult = processModel.GetNextActivityTree(firstActivity.ActivityGUID,
@@ -197,11 +214,12 @@ namespace Slickflow.Engine.Core.Parser
         }
 
         /// <summary>
+        /// Append a single user
         /// 增加单个用户
         /// </summary>
-        /// <param name="existUserList">用户列表</param>
-        /// <param name="user">追加用户</param>
-        /// <returns>用户列表</returns>
+        /// <param name="existUserList"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         private IList<User> AppendUserList(IList<User> existUserList, User user)
         {
             if (existUserList == null)
@@ -214,11 +232,12 @@ namespace Slickflow.Engine.Core.Parser
 
 
         /// <summary>
-        /// 构造用户列表
+        /// Append User List
+        /// 添加用户列表
         /// </summary>
-        /// <param name="existUserList">用户列表</param>
-        /// <param name="newUserList">追加用户列表</param>
-        /// <returns>用户列表</returns>
+        /// <param name="existUserList"></param>
+        /// <param name="newUserList"></param>
+        /// <returns></returns>
         private IList<User> AppendUserList(IList<User> existUserList, IList<User> newUserList)
         {
             if (existUserList == null)

@@ -5,18 +5,12 @@ using System.Text;
 namespace Slickflow.Engine.Xpdl.Common
 {
     /// <summary>
-    /// 操作基本类型
+    /// Action Type
     /// </summary>
     public enum ActionTypeEnum
     {
-        /// <summary>
-        /// 空类型
-        /// </summary>
         None = 0,
 
-        /// <summary>
-        /// 事件
-        /// </summary>
         Event = 1
     }
 }

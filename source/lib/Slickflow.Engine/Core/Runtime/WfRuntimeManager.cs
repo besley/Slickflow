@@ -12,15 +12,16 @@ using Slickflow.Engine.Xpdl.Node;
 namespace Slickflow.Engine.Core.Runtime
 {
     /// <summary>
+    /// Workflow Runtime Manager
     /// 流程运行时管理
     /// </summary>
     internal abstract class WfRuntimeManager
     {
-        #region 抽象方法
+        #region Abstract Method
         internal abstract void ExecuteInstanceImp(IDbSession session);
         #endregion
 
-        #region 流转属性和基础方法
+        #region Property and Basic Method
         internal WfAppRunner AppRunner { get; set; }
         internal IProcessModel ProcessModel { get; set; }
         internal ProcessInstanceEntity ParentProcessInstance { get; set; }
@@ -31,18 +32,12 @@ namespace Slickflow.Engine.Core.Runtime
         internal int ProcessInstanceID { get; set; }
         internal ProcessInstanceEntity ProcessInstance { get; set; }
         
-        //流程返签或退回时的属性
         internal BackwardContext BackwardContext { get; set; }
         internal Boolean IsBackward { get; set; }
         internal SendBackOperation SendBackOperation { get; set; }
 
-        /// <summary>
-        /// 流程执行结果对象
-        /// </summary>
         internal WfExecutedResult WfExecutedResult { get; set; }
-        #endregion
 
-        #region 构造方法
         internal WfRuntimeManager()
         {
             AppRunner = new WfAppRunner();
@@ -50,11 +45,12 @@ namespace Slickflow.Engine.Core.Runtime
         }
         #endregion
 
-        #region 执行方法
+        #region Execute Method
         /// <summary>
+        /// Execute Method
         /// 执行方法
         /// </summary>
-        /// <returns>执行状态</returns>
+        /// <returns></returns>
         internal bool Execute(IDbSession session)
         {
             try
@@ -82,8 +78,9 @@ namespace Slickflow.Engine.Core.Runtime
         }
 
         /// <summary>
+        /// Callback
         /// 事件回调
-        /// <param name="result">执行结果</param>
+        /// <param name="result"></param>
         internal void Callback(WfExecutedResult result)
         {
             WfEventArgs args = new WfEventArgs(result);
@@ -91,7 +88,7 @@ namespace Slickflow.Engine.Core.Runtime
         }
         #endregion
 
-        #region 流程事件定义及绑定
+        #region Register Event
         private event EventHandler<WfEventArgs> _onWfProcessExecuting;
         internal event EventHandler<WfEventArgs> OnWfProcessExecuting
         {
@@ -119,10 +116,11 @@ namespace Slickflow.Engine.Core.Runtime
         }
 
         /// <summary>
-        /// 绑定事件
+        /// Register Event
+        /// 注册事件
         /// </summary>
-        /// <param name="executing">执行事件</param>
-        /// <param name="executed">执行完成事件</param>
+        /// <param name="executing"></param>
+        /// <param name="executed"></param>
         internal WfRuntimeManager RegisterEvent(EventHandler<WfEventArgs> executing, EventHandler<WfEventArgs> executed)
         {
             if (executing != null)
@@ -135,10 +133,11 @@ namespace Slickflow.Engine.Core.Runtime
         }
 
         /// <summary>
-        /// 解除绑定事件
+        /// Unregister Event
+        /// 解除注册事件
         /// </summary>
-        /// <param name="executing">执行事件</param>
-        /// <param name="executed">执行完成事件</param>
+        /// <param name="executing"></param>
+        /// <param name="executed"></param>
         internal WfRuntimeManager UnRegiesterEvent(EventHandler<WfEventArgs> executing, EventHandler<WfEventArgs> executed)
         {
             if (executing != null)

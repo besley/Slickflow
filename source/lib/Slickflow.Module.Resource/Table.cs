@@ -3,6 +3,7 @@
 namespace Slickflow.Module.Resource
 {
     /// <summary>
+    /// Map database table objects
     /// 映射数据库表对象
     /// </summary>
     [AttributeUsageAttribute(AttributeTargets.Class, Inherited = false, AllowMultiple = false), Serializable]

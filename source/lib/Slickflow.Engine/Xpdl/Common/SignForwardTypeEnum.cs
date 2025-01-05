@@ -7,27 +7,27 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Xpdl.Common
 {
     /// <summary>
-    /// 加签类型
+    /// Sign forward Type
     /// </summary>
     public enum SignForwardTypeEnum
     {
         /// <summary>
-        /// 不加签
+        /// None
         /// </summary>
         None = 0,
 
         /// <summary>
-        /// 前加签
+        /// Before
         /// </summary>
         SignForwardBefore = 1,
 
         /// <summary>
-        /// 后加签
+        /// Behind
         /// </summary>
         SignForwardBehind = 2,
 
         /// <summary>
-        /// 并行加签
+        /// Parallel
         /// </summary>
         SignForwardParallel = 3
     }

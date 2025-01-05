@@ -13,6 +13,7 @@ using Slickflow.Engine.Business.Entity;
 namespace Slickflow.Engine.Core.Pattern
 {
     /// <summary>
+    /// Backward Node Mediator
     /// 退回处理时的节点调节器
     /// </summary>
     internal class NodeMediatorBackward : NodeMediator
@@ -29,16 +30,9 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Create backward activity task transition instance
         /// 创建退回时的流转节点对象、任务和转移数据
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="fromActivityInstance">运行节点实例</param>
-        /// <param name="backwardType">退回类型</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="flyingType">跳跃类型</param>
-        /// <param name="activityResource">资源</param>
-        /// <param name="session">会话</param>
         internal void CreateBackwardActivityTaskTransitionInstance(ProcessInstanceEntity processInstance,
             ActivityInstanceEntity fromActivityInstance,
             BackwardTypeEnum backwardType,
@@ -48,28 +42,23 @@ namespace Slickflow.Engine.Core.Pattern
             ActivityResource activityResource,
             IDbSession session)
         {
-            //实例化Activity
             var toActivityInstance = base.CreateBackwardToActivityInstanceObject(processInstance,
                 backwardType,
                 fromActivityInstance.ID,
                 base.BackwardContext.BackwardToTaskActivityInstance.ID,
                 activityResource.AppRunner);
 
-            //进入准备运行状态
             toActivityInstance.ActivityState = (short)ActivityStateEnum.Ready;
             toActivityInstance = GenerateActivityAssignedUserInfo(toActivityInstance, activityResource);
 
-            //插入活动实例数据
             base.ActivityInstanceManager.Insert(toActivityInstance,
                 session);
 
             base.ReturnDataContext.ActivityInstanceID = toActivityInstance.ID;
             base.ReturnDataContext.ProcessInstanceID = toActivityInstance.ProcessInstanceID;
 
-            //插入任务数据
             base.CreateNewTask(toActivityInstance, activityResource, session);
 
-            //插入转移数据
             base.InsertTransitionInstance(processInstance,
                 transitionGUID,
                 fromActivityInstance,
@@ -80,22 +69,16 @@ namespace Slickflow.Engine.Core.Pattern
                 session);
         }
 
-         /// <summary>
+        /// <summary>
+        /// Return is handled in the case of countersignature:
+        /// The node to be returned is the countersign node
+        /// 1) Instantiate all multi instance nodes under the co signing node
+        /// 2) Only obtain nodes that have been processed and ensure the uniqueness of the Completed Order
         /// 退回是会签情况下的处理：
         /// 要退回的节点是会签节点
         /// 1) 全部实例化会签节点下的多实例节点
         /// 2) 只取得办理完成的节点，而且保证CompleteOrder的唯一性
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="backwardToTaskActvity">退回到的活动节点</param>
-        /// <param name="fromActivityInstance">运行节点</param>
-        /// <param name="backwardType">退回类型</param>
-        /// <param name="previousMainInstance">前主节点实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="flyingType">跳跃类型</param>
-        /// <param name="activityResource">资源</param>
-        /// <param name="session">会话</param>
         internal void CreateBackwardActivityTaskRepeatedSignTogetherMultipleInstance(ProcessInstanceEntity processInstance,
             Activity backwardToTaskActvity,
             ActivityInstanceEntity fromActivityInstance,
@@ -110,6 +93,9 @@ namespace Slickflow.Engine.Core.Pattern
             //上一步节点是会签节点的退回处理
             //需要重新实例化会签节点上的所有办理人的任务
             //重新封装任务办理人为AssignedToUsers, AssignedToUsernames
+            //The previous node is the return processing of the countersignature node
+            //Need to re instantiated the tasks of all handlers on the co signing node
+            //Encapsulate the task handler as Assigned To Users, AssignedToUsernames
             var performerList = AntiGenerateActivityPerformerList(previousMainInstance);
 
             activityResource.NextActivityPerformers.Clear();
@@ -117,19 +103,15 @@ namespace Slickflow.Engine.Core.Pattern
             activityResource.NextActivityPerformers.Add(backwardToTaskActvity.ActivityGUID, performerList);
 
             //重新生成会签节点的多实例数据
+            //Re generate multi instance data for the countersignature node
             CreateMultipleInstance(backwardToTaskActvity, processInstance, fromActivityInstance,
                 transitionGUID, transitionType, flyingType, activityResource, session);
         }
 
         /// <summary>
+        /// Create active instances and task data for rollback between multiple instance nodes
         /// 创建多实例节点之间回滚时的活动实例，任务数据
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="originalBackwardToActivityInstance">原始退回到的节点实例</param>
-        /// <param name="backwardType">退回类型</param>
-        /// <param name="backSrcActivityInstanceID">源退回节点实例ID</param>
-        /// <param name="activityResource">资源</param>
-        /// <param name="session">会话</param>
         internal void CreateBackwardActivityTaskOfInnerMultipleInstance(ProcessInstanceEntity processInstance,
             ActivityInstanceEntity originalBackwardToActivityInstance,
             BackwardTypeEnum backwardType,
@@ -138,6 +120,7 @@ namespace Slickflow.Engine.Core.Pattern
             IDbSession session)
         {
             //创建回滚到的节点信息
+            //Create rollback to node information
             var rollbackPreviousActivityInstance = base.CreateBackwardToActivityInstanceObject(processInstance,
                 backwardType,
                 backSrcActivityInstanceID,
@@ -152,29 +135,19 @@ namespace Slickflow.Engine.Core.Pattern
             rollbackPreviousActivityInstance.AssignedToUserIDs = originalBackwardToActivityInstance.AssignedToUserIDs;      //多实例节点为单一用户任务
             rollbackPreviousActivityInstance.AssignedToUserNames = originalBackwardToActivityInstance.AssignedToUserNames;
 
-            //插入新活动实例数据
             base.ActivityInstanceManager.Insert(rollbackPreviousActivityInstance,
                 session);
 
             base.ReturnDataContext.ActivityInstanceID = rollbackPreviousActivityInstance.ID;
             base.ReturnDataContext.ProcessInstanceID = rollbackPreviousActivityInstance.ProcessInstanceID;
 
-            //创建新任务数据
             base.CreateNewTask(rollbackPreviousActivityInstance, activityResource, session);
         }
 
         /// <summary>
+        /// The withdraw operation of the last multi instance node with multiple signatures
         /// 最后一个会签多实例子节点的撤销操作
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="fromActivityInstance">运行节点</param>
-        /// <param name="originalBackwardToActivityInstance">初始退回到的节点实例</param>
-        /// <param name="backwardType">退回类型</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="flyingType">跳跃类型</param>
-        /// <param name="activityResource">资源</param>
-        /// <param name="session">会话</param>
         internal void CreateBackwardActivityTaskTransitionOfLastMultipleInstance(ProcessInstanceEntity processInstance,
             ActivityInstanceEntity fromActivityInstance,
             ActivityInstanceEntity originalBackwardToActivityInstance,
@@ -186,6 +159,7 @@ namespace Slickflow.Engine.Core.Pattern
             IDbSession session)
         {
             //创建回滚到的节点信息
+            //Create rollback to node information
             var rollbackPreviousActivityInstance = base.CreateBackwardToActivityInstanceObject(processInstance,
                 backwardType,
                 fromActivityInstance.ID,
@@ -200,15 +174,12 @@ namespace Slickflow.Engine.Core.Pattern
             rollbackPreviousActivityInstance.AssignedToUserIDs = originalBackwardToActivityInstance.AssignedToUserIDs;      //多实例节点为单一用户任务
             rollbackPreviousActivityInstance.AssignedToUserNames = originalBackwardToActivityInstance.AssignedToUserNames;
 
-            //插入新活动实例数据
             base.ActivityInstanceManager.Insert(rollbackPreviousActivityInstance,
                 session);
             base.ReturnDataContext.ActivityInstanceID = rollbackPreviousActivityInstance.ID;
             base.ReturnDataContext.ProcessInstanceID = rollbackPreviousActivityInstance.ProcessInstanceID;
-            //创建新任务数据
             base.CreateNewTask(rollbackPreviousActivityInstance, activityResource, session);
 
-            //插入转移数据
             base.InsertTransitionInstance(processInstance,
                 transitionGUID,
                 fromActivityInstance,

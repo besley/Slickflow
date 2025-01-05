@@ -14,24 +14,26 @@ using Slickflow.Engine.Core.Pattern.Event.Signal;
 using Slickflow.Engine.Core.Pattern.Gateway;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Xpdl.Node;
+using static IronPython.Modules._ast;
 
 namespace Slickflow.Engine.Core.Pattern
 {
     /// <summary>
+    /// Node Mediator Factory
     /// 节点执行器的工厂类
     /// </summary>
     internal class NodeMediatorFactory
     {
         /// <summary>
-        /// 创建节点执行器的抽象类
+        /// Create Method
         /// </summary>
-        /// <param name="forwardContext">活动上下文</param>
-        /// <param name="session">会话</param>
+        /// <param name="forwardContext"></param>
+        /// <param name="session"></param>
         /// <returns></returns>
         internal static NodeMediator CreateNodeMediator(ActivityForwardContext forwardContext,
             IDbSession session)
         {
-            if (forwardContext.Activity.ActivityType == ActivityTypeEnum.StartNode)         //开始节点
+            if (forwardContext.Activity.ActivityType == ActivityTypeEnum.StartNode)        
             {
                 if (forwardContext.Activity.TriggerDetail == null || 
                     forwardContext.Activity.TriggerDetail.TriggerType == TriggerTypeEnum.None)
@@ -196,9 +198,10 @@ namespace Slickflow.Engine.Core.Pattern
                     return null;
                 }
             }
-            else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.TaskNode)         //任务节点
+            else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.TaskNode)        
             {
                 //普通任务节点，运行时临时加签变为多实例节点
+                //Normal task node, temporarily signed at runtime to become a multi instance node
                 var controlParamSheet = forwardContext.ActivityResource.AppRunner.ControlParameterSheet;
                 if (controlParamSheet != null)
                 {
@@ -215,6 +218,7 @@ namespace Slickflow.Engine.Core.Pattern
                 else if(forwardContext.FromActivityInstance.MIHostActivityInstanceID != null)
                 {
                     //加签子实例
+                    //Signature forward sub instance
                     return new NodeMediatorMultiSignForward(forwardContext, session);
                 }
                 else
@@ -222,7 +226,7 @@ namespace Slickflow.Engine.Core.Pattern
                     return new NodeMediatorTask(forwardContext, session);
                 } 
             }
-            else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.ServiceNode)      //自动服务节点
+            else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.ServiceNode)      
             {
                 return new NodeMediatorService(forwardContext, session);
             }
@@ -230,15 +234,15 @@ namespace Slickflow.Engine.Core.Pattern
             {
                 return new NodeMediatorScript(forwardContext, session);
             }
-            else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.MultiSignNode)         //多实例节点
+            else if (forwardContext.Activity.ActivityType == ActivityTypeEnum.MultiSignNode)         
             {
                 if (forwardContext.FromActivityInstance.MIHostActivityInstanceID != null)
                 {
-                    if (forwardContext.Activity.MultiSignDetail.ComplexType == ComplexTypeEnum.SignTogether)        //会签子节点
+                    if (forwardContext.Activity.MultiSignDetail.ComplexType == ComplexTypeEnum.SignTogether)        
                     {
                         return new NodeMediatorMultiSignTogether(forwardContext, session);
                     }
-                    else if (forwardContext.Activity.MultiSignDetail.ComplexType == ComplexTypeEnum.SignForward)            //加签子节点
+                    else if (forwardContext.Activity.MultiSignDetail.ComplexType == ComplexTypeEnum.SignForward)            
                     {
                         return new NodeMediatorMultiSignForward(forwardContext, session);
                     }
@@ -250,11 +254,14 @@ namespace Slickflow.Engine.Core.Pattern
                 else if (forwardContext.FromActivityInstance.MIHostActivityInstanceID == null)        
                 {
                     //加签主节点的分发操作
+                    //Distribution operation of signing the main node
                     if (forwardContext.Activity.MultiSignDetail.ComplexType == ComplexTypeEnum.SignForward)
                     {
                         var aim = new ActivityInstanceManager();
                         var miChildList = aim.GetActivityMulitipleInstanceWithState(forwardContext.FromActivityInstance.ID, forwardContext.FromActivityInstance.ProcessInstanceID);
+
                         //加签的动态变量传入
+                        //Pass in the signed dynamic variable
                         var controlParamSheet = forwardContext.ActivityResource.AppRunner.ControlParameterSheet;
                         if (controlParamSheet != null)
                         {
@@ -300,11 +307,11 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 抛出异常信息
+        /// Throw uncertern xml node type exception
         /// </summary>
-        /// <param name="activityType">活动类型</param>
-        /// <param name="triggerType">触发类型</param>
-        /// <param name="throwCatchDirection">throw/catch类型</param>
+        /// <param name="activityType"></param>
+        /// <param name="triggerType"></param>
+        /// <param name="throwCatchDirection"></param>
         /// <exception cref="ApplicationException"></exception>
         private static void ThrowUncerternXmlNodeTypeException(string activityType, string triggerType, string throwCatchDirection = null)
         {
@@ -323,12 +330,13 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Create Node Mediator Gateway
         /// 创建Gateway节点处理类实例
         /// </summary>
-        /// <param name="gActivity">节点</param>
-        /// <param name="processModel">流程模型类</param>
-        /// <param name="session">会话</param>
-        /// <returns>Gateway节点处理实例</returns>
+        /// <param name="gActivity"></param>
+        /// <param name="processModel"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal static NodeMediatorGateway CreateNodeMediatorGateway(Activity gActivity,
             IProcessModel processModel,
             IDbSession session)
@@ -391,13 +399,14 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Create Node Mediator Event
         /// 创建中间事件节点处理类实例
         /// </summary>
-        /// <param name="forwardContext">活动上下文</param>
-        /// <param name="eventActivity">节点</param>
-        /// <param name="processModel">流程模型类</param>
-        /// <param name="session">会话</param>
-        /// <returns>Gateway节点处理实例</returns>
+        /// <param name="forwardContext"></param>
+        /// <param name="eventActivity"></param>
+        /// <param name="processModel"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal static NodeMediator CreateNodeMediatorEvent(ActivityForwardContext forwardContext,
             Activity eventActivity,
             IProcessModel processModel,
@@ -471,12 +480,13 @@ namespace Slickflow.Engine.Core.Pattern
 
 
         /// <summary>
+        /// Create Node Mediator End
         /// 创建结束事件节点处理类实例
         /// </summary>
-        /// <param name="forwardContext">活动上下文</param>
-        /// <param name="endActivity">节点</param>
-        /// <param name="session">会话</param>
-        /// <returns>节点处理实例</returns>
+        /// <param name="forwardContext"></param>
+        /// <param name="endActivity"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal static NodeMediator CreateNodeMediatorEnd(ActivityForwardContext forwardContext, 
             Activity endActivity, 
             IDbSession session)
@@ -518,12 +528,13 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Create Node Mediator Sub Process
         /// 创建子流程节点处理类实例
         /// </summary>
-        /// <param name="forwardContext">活动上下文</param>
-        /// <param name="activity">活动节点</param>
-        /// <param name="session">会话</param>
-        /// <returns>节点处理实例</returns>
+        /// <param name="forwardContext"></param>
+        /// <param name="activity"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal static NodeMediator CreateNodeMediatorSubProcess(ActivityForwardContext forwardContext,
             Activity activity,
             IDbSession session)
@@ -540,11 +551,12 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Create Node Mediator Sub Process
         /// 创建子流程节点处理类实例
         /// </summary>
-        /// <param name="activity">活动节点</param>
-        /// <param name="session">会话</param>
-        /// <returns>节点处理实例</returns>
+        /// <param name="activity"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal static NodeMediator CreateNodeMediatorSubProcess(Activity activity,
             IDbSession session)
         {

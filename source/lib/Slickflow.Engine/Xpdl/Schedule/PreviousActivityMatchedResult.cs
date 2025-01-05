@@ -8,6 +8,7 @@ using Slickflow.Engine.Common;
 namespace Slickflow.Engine.Xpdl.Schedule
 {
     /// <summary>
+    /// Previous Activity Mathced Result
     /// 上一步节点匹配结果
     /// </summary>
     public class PreviousActivityMatchedResult

@@ -11,36 +11,33 @@ using Slickflow.Engine.Business.Manager;
 namespace Slickflow.Engine.Delegate
 {
     /// <summary>
+    /// Activity Delegate Service
     /// 活动委托服务类
     /// </summary>
     public class ActivityDelegateService : DelegateServiceBase, IDelegateService
-    {
-        #region 属性及构造方法       
+    {    
         /// <summary>
-        /// 构造方法
+        /// Constructor
         /// </summary>
-        /// <param name="session">会话</param>
-        /// <param name="context">上下文</param>
+        /// <param name="session"></param>
+        /// <param name="context"></param>
         public ActivityDelegateService(IDbSession session, DelegateContext context)
             : base(session, context)
         {
 
         }
-        #endregion
 
-        #region 获取及设置方法
         /// <summary>
-        /// 查询实例
+        /// Get Instance
         /// </summary>
-        /// <typeparam name="T">实体类型</typeparam>
-        /// <param name="id">实体主键ID</param>
-        /// <returns>实体</returns>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public override T GetInstance<T>(int id)
         {
             var aim = new ActivityInstanceManager();
             var entity = aim.GetById(Session.Connection, id, Session.Transaction);
             return entity as T;
         }
-        #endregion
     }
 }

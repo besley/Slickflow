@@ -16,17 +16,19 @@ using Slickflow.Engine.Business.Entity;
 namespace Slickflow.Engine.Business.Manager
 {
     /// <summary>
+    /// Process Variable Manager
     /// 流程变量管理类
     /// </summary>
     internal class ProcessVariableManager : ManagerBase
     {
         /// <summary>
+        /// Insert process variable
         /// 流程变量数据插入
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="entity">流程变量实体</param>
-        /// <param name="trans">事务</param>
-        /// <returns>新实例ID</returns>
+        /// <param name="conn"></param>
+        /// <param name="entity"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         private Int32 Insert(IDbConnection conn, ProcessVariableEntity entity, IDbTransaction trans)
         {
             int newID = Repository.Insert(conn, entity, trans);
@@ -36,12 +38,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 流程实例更新
+        /// Update process variable
+        /// 流程变量更新
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="entity">流程变量实体</param>
-        /// <param name="trans">事务</param>
-        /// <returns>新实例ID</returns>
+        /// <param name="conn"></param>
+        /// <param name="entity"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         private void Update(IDbConnection conn, ProcessVariableEntity entity,
             IDbTransaction trans)
         {
@@ -49,16 +52,18 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Delete process variable
         /// 删除变量
         /// </summary>
-        /// <param name="variableID">变量ID</param>
+        /// <param name="variableID"></param>
         internal void DeleteVariable(int variableID)
         {
             Repository.Delete<ProcessVariableEntity>(variableID);
         }
 
         /// <summary>
-        /// 设置变量
+        /// Save process variable
+        /// 保存变量
         /// </summary>
         /// <param name="entity">流程变量实体</param>
         /// <returns>实体ID</returns>
@@ -73,12 +78,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
-        /// 设置变量
+        /// Save process variable
+        /// 保存变量
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="entity">流程变量实体</param>
-        /// <param name="trans">事务</param>
-        /// <returns>实体ID</returns>
+        /// <param name="conn"></param>
+        /// <param name="entity"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         internal int SaveVariable(IDbConnection conn, ProcessVariableEntity entity, IDbTransaction trans)
         {
             if (string.IsNullOrEmpty(entity.AppInstanceID) || entity.ProcessInstanceID == 0)
@@ -109,10 +115,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Retrieve the list of process variables
         /// 获取流程变量列表
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <returns>流程变量列表</returns>
+        /// <param name="processInstanceID"></param>
+        /// <returns></returns>
         internal IList<ProcessVariableEntity> GetVariableList(int processInstanceID)
         {
             var sql = @"SELECT * FROM WfProcessVariable
@@ -127,10 +134,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Retrieve process variable entity
         /// 获取流程变量实体
         /// </summary>
-        /// <param name="query">变量查询</param>
-        /// <returns>实体</returns>
+        /// <param name="query"></param>
+        /// <returns></returns>
         internal ProcessVariableEntity GetVariableEntity(ProcessVariableQuery query)
         {
             using (var session = SessionFactory.CreateSession())
@@ -141,10 +149,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Retrieve process variable entity
         /// 获取流程变量实体
         /// </summary>
-        /// <param name="variableID">流程变量ID</param>
-        /// <returns>实体</returns>
+        /// <param name="variableID"></param>
+        /// <returns></returns>
         internal ProcessVariableEntity GetVariableEntity(int variableID)
         {
             var entity = Repository.GetById<ProcessVariableEntity>(variableID);
@@ -152,10 +161,11 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Retrieve process variable value
         /// 获取变量数值
         /// </summary>
-        /// <param name="query">查询</param>
-        /// <returns>变量的值</returns>
+        /// <param name="query"></param>
+        /// <returns></returns>
         internal string GetVariableValue(ProcessVariableQuery query)
         {
             using (var session = SessionFactory.CreateSession())
@@ -168,12 +178,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Retrieve process variable value
         /// 获取变量数值
         /// </summary>
-        /// <param name="conn">链接串</param>
-        /// <param name="query">查询</param>
-        /// <param name="trans">事务</param>
-        /// <returns>变量的值</returns>
+        /// <param name="conn"></param>
+        /// <param name="query"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         internal string GetVariableValue(IDbConnection conn, ProcessVariableQuery query, IDbTransaction trans)
         {
             var entity = Query(conn, query, trans);
@@ -183,12 +194,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Query process variable
         /// 流程变量查询
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="query">查询对象</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程变量实体</returns>
+        /// <param name="conn"></param>
+        /// <param name="query"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         private ProcessVariableEntity Query(IDbConnection conn, 
             ProcessVariableQuery query,
             IDbTransaction trans)
@@ -211,13 +223,14 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Query process variable
         /// 流程变量查询
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="name">变量名称</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程变量实体</returns>
+        /// <param name="conn"></param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="name"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         private ProcessVariableEntity GetVariable(IDbConnection conn,
             int processInstanceID, 
             string name,
@@ -246,14 +259,15 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Query process variable
         /// 流程变量查询
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <param name="name">变量名称</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程变量实体</returns>
+        /// <param name="conn"></param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="activityGUID"></param>
+        /// <param name="name"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         private ProcessVariableEntity GetVariable(IDbConnection conn,
             int processInstanceID,
             string activityGUID,
@@ -271,13 +285,14 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Query process variable
         /// 流程变量查询
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="name">变量名称</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程变量实体</returns>
+        /// <param name="conn"></param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="name"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         private ProcessVariableEntity GetVariableOfProcess(IDbConnection conn,
             int processInstanceID,
             string name,
@@ -304,14 +319,15 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Query activity variable
         /// 活动变量查询
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <param name="name">变量名称</param>
-        /// <param name="trans">事务</param>
-        /// <returns>流程变量实体</returns>
+        /// <param name="conn"></param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="activityGUID"></param>
+        /// <param name="name"></param>
+        /// <param name="trans"></param>
+        /// <returns></returns>
         private ProcessVariableEntity GetVariableOfActivity(IDbConnection conn,
             int processInstanceID,
             string activityGUID,
@@ -340,12 +356,13 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Verify if the trigger expression satisfies
         /// 验证触发表达式是否满足
         /// </summary>
-        /// <param name="conn">链接</param>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="expression">表达式</param>
-        /// <param name="trans">事务</param>
+        /// <param name="conn"></param>
+        /// <param name="processInstanceID"></param>
+        /// <param name="expression"></param>
+        /// <param name="trans"></param>
         /// <returns></returns>
         internal bool ValidateProcessVariable(IDbConnection conn, int processInstanceID, string expression, IDbTransaction trans)
         {

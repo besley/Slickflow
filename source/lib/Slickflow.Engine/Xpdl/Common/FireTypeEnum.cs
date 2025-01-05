@@ -5,23 +5,14 @@ using System.Text;
 namespace Slickflow.Engine.Xpdl.Common
 {
     /// <summary>
-    /// 事件发生类型
+    /// Event fire Type
     /// </summary>
     public enum FireTypeEnum
     {
-        /// <summary>
-        /// 空类型
-        /// </summary>
         None = 0,
 
-        /// <summary>
-        /// 执行前
-        /// </summary>
         Before = 1,
 
-        /// <summary>
-        /// 执行后
-        /// </summary>
         After = 2
     }
 }

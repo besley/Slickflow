@@ -7,14 +7,16 @@ using Slickflow.Engine.Core.Pattern;
 namespace Slickflow.Engine.Core.Runtime
 {
     /// <summary>
+    /// Handling of resend methods
     /// 返送回的处理
     /// </summary>
     internal class WfRuntimeManagerResend : WfRuntimeManager
     {
         /// <summary>
-        /// 退回操作的处理逻辑
+        /// Resend execution method
+        /// 返送操作的处理逻辑
         /// </summary>
-        /// <param name="session">会话</param>
+        /// <param name="session"></param>
         internal override void ExecuteInstanceImp(IDbSession session)
         {
             try
@@ -25,14 +27,12 @@ namespace Slickflow.Engine.Core.Runtime
                     true,
                     session);
 
-                //执行节点
                 NodeMediator mediator = NodeMediatorFactory.CreateNodeMediator(runningExecutionContext, session);
                 mediator.LinkContext.FromActivityInstance = RunningActivityInstance;
                 var toActivityGUID = runningExecutionContext.ActivityResource.NextActivityPerformers.First().Key;
                 mediator.LinkContext.ToActivity = ProcessModel.GetActivity(toActivityGUID);
                 mediator.ExecuteWorkItem();
 
-                //构造回调函数需要的数据
                 var result = base.WfExecutedResult;
                 result.Status = WfExecutedStatus.Success;
                 result.Message = mediator.GetNodeMediatedMessage();

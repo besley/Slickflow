@@ -1,0 +1,17 @@
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\bin\Release\net8.0\Slickflow.Data.DataProvider.deps.json
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\bin\Release\net8.0\Slickflow.Data.DataProvider.dll
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\bin\Release\net8.0\Slickflow.Data.DataProvider.pdb
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\bin\Release\net8.0\Dapper.dll
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\bin\Release\net8.0\Slickflow.Data.dll
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\bin\Release\net8.0\Slickflow.Data.pdb
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\bin\Release\net8.0\Dapper.pdb
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\obj\Release\net8.0\Slickflow.Data.DataProvider.csproj.AssemblyReference.cache
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\obj\Release\net8.0\Slickflow.Data.DataProvider.GeneratedMSBuildEditorConfig.editorconfig
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\obj\Release\net8.0\Slickflow.Data.DataProvider.AssemblyInfoInputs.cache
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\obj\Release\net8.0\Slickflow.Data.DataProvider.AssemblyInfo.cs
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\obj\Release\net8.0\Slickflow.Data.DataProvider.csproj.CoreCompileInputs.cache
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\obj\Release\net8.0\Slickflo.B0ACD27B.Up2Date
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\obj\Release\net8.0\Slickflow.Data.DataProvider.dll
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\obj\Release\net8.0\refint\Slickflow.Data.DataProvider.dll
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\obj\Release\net8.0\Slickflow.Data.DataProvider.pdb
+D:\Cloud365\GitHomeCore\SfBpmn2\source\lib\Slickflow.Data.DataProvider\obj\Release\net8.0\ref\Slickflow.Data.DataProvider.dll

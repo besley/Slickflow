@@ -5,14 +5,16 @@ using Slickflow.Data;
 namespace Slickflow.Module.Resource
 {
     /// <summary>
+    /// Resource Manager - Organizational Structure Service
     /// 资源管理器--组织架构服务
     /// </summary>
     public partial class ResourceService : IResourceService
     {
         /// <summary>
+        /// Get All Roles
         /// 获取全部角色
         /// </summary>
-        /// <returns>角色列表</returns>
+        /// <returns></returns>
         public IList<Role> GetRoleAll()
         {
             var rm = new RoleManager();
@@ -32,9 +34,10 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// Get All Users
         /// 获取所有用户数据
         /// </summary>
-        /// <returns>用户列表</returns>
+        /// <returns></returns>
         public IList<User> GetUserAll()
         {
             var um = new UserManager();
@@ -54,10 +57,34 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// Get User by id
+        /// 获取用户数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public User GetUserById(string id)
+        {
+            User user = null;
+            var um = new UserManager();
+            var userEntity = um.GetById(int.Parse(id));
+            if (userEntity != null)
+            {
+                user = new User
+                {
+                    UserID = userEntity.ID.ToString(),
+                    UserName = userEntity.UserName,
+                    EMail = userEntity.EMail
+                };
+            }
+            return user;
+        }
+
+        /// <summary>
+        /// Retrieve user data list based on multiple role IDs
         /// 根据多个角色ID获取用户数据列表
         /// </summary>
-        /// <param name="roleIDs">多个角色ID</param>
-        /// <returns>用户列表</returns>
+        /// <param name="roleIDs"></param>
+        /// <returns></returns>
         public IList<User> GetUserListByRoles(string[] roleIDs)
         {
             var rum = new RoleUserManager();
@@ -65,10 +92,11 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// Retrieve user list based on roles
         /// 根据角色获取用户列表
         /// </summary>
-        /// <param name="roleID">角色ID</param>
-        /// <returns>用户列表</returns>
+        /// <param name="roleID"></param>
+        /// <returns></returns>
         public IList<User> GetUserListByRole(string roleID)
         {
             var rum = new RoleUserManager();
@@ -77,10 +105,11 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// Retrieve user list based on role code
         /// 根据角色代码获取用户列表
         /// </summary>
-        /// <param name="roleCode">角色代码</param>
-        /// <returns>用户列表</returns>
+        /// <param name="roleCode"></param>
+        /// <returns></returns>
         public IList<User> GetUserListByRoleCode(string roleCode)
         {
             var rum = new RoleUserManager();
@@ -89,12 +118,13 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// Retrieve data from the role user tree based on the recipient type
         /// 根据接收者类型，来获取角色用户树的数据
         /// </summary>
-        /// <param name="roleIDs">角色ID</param>
-        /// <param name="curUserID">当前用户ID</param>
-        /// <param name="receiverType">接收者类型</param>
-        /// <returns>用户列表</returns>
+        /// <param name="roleIDs"></param>
+        /// <param name="curUserID"></param>
+        /// <param name="receiverType"></param>
+        /// <returns></returns>
         public IList<User> GetUserListByRoleReceiverType(string[] roleIDs, string curUserID, int receiverType)
         {
             IList<User> userList = null;
@@ -103,6 +133,7 @@ namespace Slickflow.Module.Resource
                 if (receiverType == 0)
                 {
                     //直接根据角色查询
+                    //Directly query based on roles
                     var rum = new RoleUserManager();
                     userList = rum.GetUserListByRoles(roleIDs, session);
                 }
@@ -110,6 +141,8 @@ namespace Slickflow.Module.Resource
                 {
                     //根据用户级别关系查询
                     // 上司:1, 同事:2, 下属:3
+                    //Query based on user level relationships
+                    //Superior: 1, Colleagues: 2, Subordinates: 3
                     IDeptService deptService = DeptServiceFactory.CreateDeptService();
                     userList = deptService.GetUserListByDeptRank(roleIDs, curUserID, receiverType);
                 }
@@ -118,10 +151,11 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// Retrieve the user list under the role and bind it to the role attributes
         /// 获取角色下的用户列表，并绑定在角色属性上
         /// </summary>
-        /// <param name="roleIDs">多个角色ID</param>
-        /// <returns>角色列表</returns>
+        /// <param name="roleIDs"></param>
+        /// <returns></returns>
         public IList<Role> FillUsersIntoRoles(string[] roleIDs)
         {
             var rum = new RoleUserManager();
@@ -132,10 +166,11 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// Obtain roles based on role codes
         /// 根据角色代码获取角色
         /// </summary>
-        /// <param name="roleCode">角色代码</param>
-        /// <returns>角色实体</returns>
+        /// <param name="roleCode"></param>
+        /// <returns></returns>
         public Role GetRoleByCode(string roleCode)
         {
             var rm = new RoleManager();

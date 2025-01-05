@@ -6,6 +6,7 @@ using System.Text;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Log Entity
     /// 日志记录实体
     /// </summary>
     [Table("WfLog")]

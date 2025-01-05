@@ -24,6 +24,7 @@ const processlist = (function () {
                 $(divProcessGrid).empty();
 
                 var gridOptions = {
+                    theme: themeBalham,
                     columnDefs: [
                         { headerName: 'ID', field: 'ID', width: 80 },
                         { headerName: kresource.getItem('processguid'), field: 'ProcessGUID', width: 120 },
@@ -39,7 +40,11 @@ const processlist = (function () {
                         { headerName: kresource.getItem('endexpression'), field: 'EndExpression', width: 140 },
                         { headerName: kresource.getItem('createddatetime'), field: 'CreatedDateTime', width: 220 },
                     ],
-                    rowSelection: 'single',
+                    rowSelection: {
+                        mode: 'singleRow',
+                        checkboxes: false,
+                        enableClickSelection: true
+                    },
                     onSelectionChanged: onSelectionChanged,
                     onRowDoubleClicked: onRowDoubleClicked
                 };
@@ -75,14 +80,14 @@ const processlist = (function () {
                     return endType;
                 }
 
-                new agGrid.Grid(divProcessGrid, gridOptions);
-                gridOptions.api.setRowData(result.Entity);
+                gridOptions.rowData = result.Entity;
+                const gridApi = createGrid(divProcessGrid, gridOptions);
 
                 $('#loading-indicator').hide();
 
                 function onSelectionChanged() {
-                    var selectedRows = gridOptions.api.getSelectedRows();
-                    var selectedProcessID = 0;
+                    var selectedRows = gridApi.getSelectedRows();
+
                     selectedRows.forEach(function (selectedRow, index) {
                         processlist.pselectedProcessEntity = selectedRow;
                     });
@@ -137,10 +142,12 @@ const processlist = (function () {
             return false;
         } else {
             //泳道流程只能用主流程编辑
+            //The lane process can only be edited using the main process
             if (process.PackageType === 2) {
                 kmsgbox.warn(kresource.getItem('processpoolopendiagramwarnmsg'));
             } else {
                 //单一流程编辑页面
+                //Single process editing page
                 BootstrapDialog.show({
                     message: $('<div id="popupContent-edit"></div>'),
                     title: kresource.getItem("processedit"),
@@ -154,6 +161,7 @@ const processlist = (function () {
     }
 
     //先拖动控件，在主界面创建流程图形，然后保存
+    //First, drag the control to create a process graphic on the main interface, and then save it
     processlist.saveDiagram = function () {
         if ($.trim($("#txtProcessName").val()) === ""
             || $.trim($("#txtProcessCode").val()) === ""

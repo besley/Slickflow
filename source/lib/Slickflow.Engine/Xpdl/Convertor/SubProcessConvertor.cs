@@ -13,7 +13,7 @@ using Slickflow.Engine.Xpdl.Node;
 namespace Slickflow.Engine.Xpdl.Convertor
 {
     /// <summary>
-    /// 子流程转换器
+    /// Sub Process Convertor
     /// </summary>
     internal class SubProcessConvertor: ConvertorBase, IConvert
     {
@@ -27,6 +27,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
             if (subInfoList.Count > 0)
             {
                 //外部子流程节点属性信息
+                //External subprocess node attribute information
                 var subProcessNode = new SubProcessNode(entity);
                 var subInfoNode = subInfoList[0];
                 subProcessNode.SubProcessID = int.Parse(subInfoNode.SubID);
@@ -36,6 +37,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
             else
             {
                 //内部子流程包括子节点信息
+                //Internal sub processes include sub node information
                 var subProcess = ProcessModelConvertor.ConvertSubProcess(this.XMLNode);
                 subProcess.XmlContent = this.XMLNode.OuterXml;
                 if (subProcess != null)
@@ -55,6 +57,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert sub process object list
         /// 转换子流程对象列表
         /// </summary>
         /// <returns></returns>
@@ -65,6 +68,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
             if (subInfoesNode != null)
             {
                 //指定外部子流程id信息
+                //Specify external subprocess ID information
                 XmlNodeList xmlSubInfoList = subInfoesNode.ChildNodes;
                 foreach (XmlNode element in xmlSubInfoList)
                 {
@@ -75,6 +79,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Retrieve the XML node of SubInfo
         /// 获取SubInfo的XML节点
         /// </summary>
         /// <returns></returns>
@@ -85,10 +90,11 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert SubInfo node
         /// 转换SubInfo节点
         /// </summary>
-        /// <param name="node">xml节点</param>
-        /// <returns>实体对象</returns>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private SubInfo ConvertXmlSubInfoNodeToSubInfoEntity(XmlNode node)
         {
             SubInfo subInfo = new SubInfo();

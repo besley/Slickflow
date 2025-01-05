@@ -8,11 +8,13 @@ using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Entity;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Slickflow.Engine.Core.Pattern.Gateway
 {
     /// <summary>
-    /// OrJoin 节点处理类
+    /// EOrJoin Node Mediator
+    /// EOrJoin 节点处理类
     /// </summary>
     internal class NodeMediatorEOrJoin : NodeMediatorGateway, ICompleteGatewayAutomaticlly
     {
@@ -22,16 +24,9 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
 
         }
 
-        #region ICompleteAutomaticlly 成员
         /// <summary>
-        /// EOrJoin合并时的节点完成方法
+        /// Complete automatically
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="fromActivity">起始活动</param>
-        /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
         public NodeAutoExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
             string transitionGUID,
             Activity fromActivity,
@@ -40,7 +35,7 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             IDbSession session)
         {
             NodeAutoExecutedResult result = NodeAutoExecutedResult.CreateGatewayExecutedResult(NodeAutoExecutedStatus.Unknown);
-            //根据强制或合并类型来处理
+
             if (GatewayActivity.GatewayDetail.JoinPassType == GatewayJoinPassEnum.Count)
             {
                 result = CompleteAutomaticallyByTokensCount(processInstance, transitionGUID, fromActivity, fromActivityInstance, runner, session);
@@ -53,15 +48,11 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
         }
 
         /// <summary>
+        /// Node completion method for EORJoin merging
+        /// The front-end dynamically passes the number of tokens to be merged
         /// EOrJoin合并时的节点完成方法
         /// 前端动态传递要合并的Tokens的数目
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="fromActivity">起始活动</param>
-        /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
         private NodeAutoExecutedResult CompleteAutomaticallyByTokensCount(ProcessInstanceEntity processInstance,
             string transitionGUID,
             Activity fromActivity,
@@ -81,15 +72,11 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
         }
 
         /// <summary>
+        /// Node completion method for EORJoin merging
+        /// Determine the completion of merging nodes based on whether to force branching as defined on the pre transfer
         /// EOrJoin合并时的节点完成方法
         /// 根据前置转移上定义的是否强制分支来判断完成合并节点
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="fromActivity">起始活动</param>
-        /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
         private NodeAutoExecutedResult CompleteAutomaticallyByForcedBranchesCount(ProcessInstanceEntity processInstance,
             string transitionGUID,
             Activity fromActivity,
@@ -108,10 +95,12 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             }
 
             //根据强制分支的数目和具体分支来完成增强合并节点
+            //Enhance and merge nodes based on the number of mandatory branches and specific branches
             var forcedCount = forcedTransitionList.Where(t => t.TransitionGUID == transitionGUID).Count();
             if (forcedCount == 0)
             {
                 //当前执行的分支不是强制分支，直接返回就可以
+                //The currently executing branch is not a mandatory branch, simply return it directly
                 result = NodeAutoExecutedResult.CreateGatewayExecutedResult(NodeAutoExecutedStatus.NotForcedBrancheWhenEOrJoin);
             }
             else if (forcedCount == 1)
@@ -122,16 +111,11 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
         }
 
         /// <summary>
+        /// Node completion method for EORJoin merging
+        /// Internal execution logic
         /// EOrJoin合并时的节点完成方法
         /// 内部执行逻辑
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="fromActivity">起始活动</param>
-        /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="tokensCountRequired">合并要求的Token数目</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
         private NodeAutoExecutedResult CompleteAutomaticallyInternal(ProcessInstanceEntity processInstance,
             string transitionGUID,
             Activity fromActivity,
@@ -143,6 +127,8 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             NodeAutoExecutedResult result = NodeAutoExecutedResult.CreateGatewayExecutedResult(NodeAutoExecutedStatus.Unknown);
             //当前执行的分支就是强制分支
             //检查是否有运行中的合并节点实例
+            //The current executing branch is the forced branch
+            //Check if there are any running merge node instances
             ActivityInstanceEntity joinNode = base.ActivityInstanceManager.GetActivityRunning(
                     processInstance.ID,
                     base.GatewayActivity.ActivityGUID,
@@ -151,18 +137,20 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             if (joinNode == null)
             {
                 //第一个分支首次运行
+                //The first branch runs for the first time
                 joinNode = base.CreateActivityInstanceObject(base.GatewayActivity,
                     processInstance, runner);
 
                 //计算总需要的Token数目
+                //Calculate the total number of tokens required
                 joinNode.TokensRequired = tokensCountRequired;
                 joinNode.TokensHad = 1;
 
-                //进入运行状态
                 joinNode.ActivityState = (short)ActivityStateEnum.Running;
                 joinNode.GatewayDirectionTypeID = (short)GatewayDirectionEnum.OrJoin;
 
                 //写入默认第一次的预选步骤用户列表
+                //Write the default user list for the first pre selection step
                 joinNode.NextStepPerformers = NextStepUtility.SerializeNextStepPerformers(runner.NextActivityPerformers);
 
                 base.InsertActivityInstance(joinNode,
@@ -178,11 +166,11 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             }
             else
             {
-                //更新节点的活动实例属性
                 joinNode.TokensHad += 1;
                 base.GatewayActivityInstance = joinNode;
 
                 //更新Token数目
+                //Increase tokens count
                 base.ActivityInstanceManager.IncreaseTokensHad(base.GatewayActivityInstance.ID,
                     runner,
                     session);
@@ -197,15 +185,18 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             }
 
             //判断是否到达合并节点的通过Token数目要求
+            //Determine whether the required number of tokens for merging nodes has been reached
             if (joinNode.TokensHad == joinNode.TokensRequired)
             {
                 //如果达到完成节点的Token数，则设置该节点状态为完成
+                //If the number of tokens for the completion node is reached, set the node status to complete
                 base.CompleteActivityInstance(base.GatewayActivityInstance.ID,
                     runner,
                     session);
                 base.GatewayActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
 
                 //更新其它分支上的待办节点为阻止状态(CanRenewInstance = 0)
+                //Update pending nodes on other branches to block status(CanRenewInstance = 0)
                 base.ActivityInstanceManager.UpdateActivityInstanceBlockedBetweenSplitJoin(base.GatewayActivity, base.GatewayActivityInstance, 
                     base.ProcessModel, session);
 
@@ -217,6 +208,5 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             }
             return result;
         }
-        #endregion
     }
 }

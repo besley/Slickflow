@@ -9,10 +9,12 @@ using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Utility;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Slickflow.Engine.Core.Pattern
 {
     /// <summary>
+    /// Node Mediator Sign Forward
     /// 加签主节点执行器
     /// </summary>
     internal class NodeMediatorSignForward : NodeMediator
@@ -24,9 +26,7 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 执行方法
-        /// 生成加签记录，包括作者本人，以及发送给的加签人
-        /// 加签主节点及其加签实例子节点记录生成
+        /// Execute work item
         /// </summary>
         internal override void ExecuteWorkItem()
         {
@@ -34,6 +34,8 @@ namespace Slickflow.Engine.Core.Pattern
             {
                 //读取加签控制参数
                 //记录加签通过类型和通过率
+                //Read signature control parameters
+                //Record the type and rate of approval for additional signatures
                 var controlParamSheet = base.ActivityForwardContext.ActivityResource.AppRunner.ControlParameterSheet;
                 if (controlParamSheet != null
                     && controlParamSheet.SignForwardCompareType.ToUpper() == "COUNT")
@@ -51,10 +53,12 @@ namespace Slickflow.Engine.Core.Pattern
                 }
 
                 //更新当前实例节点为主节点，并且置当前节点为挂起状态
+                //Update the current instance node as the primary node and put the current node in a suspended state
                 var signForwardType = EnumHelper.ParseEnum<SignForwardTypeEnum>(controlParamSheet.SignForwardType);
                 UpgradeToMainSignForwardNode(base.ActivityForwardContext.FromActivityInstance, signForwardType);
 
                 //产生加签记录，即要发送给加签人的活动实例记录
+                //Generate endorsement records, which are activity instance records to be sent to the endorser
                 CreateSignForwardTasks(ActivityForwardContext.ActivityResource);
             }
             catch (System.Exception ex)
@@ -64,10 +68,11 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Upgrade the current node to become the signing master node
         /// 升级当前节点为加签主节点
         /// </summary>
-        /// <param name="currentActivityInstance">当前活动实例</param>
-        /// <param name="signForwardType">加签类型</param>
+        /// <param name="currentActivityInstance"></param>
+        /// <param name="signForwardType"></param>
         private void UpgradeToMainSignForwardNode(ActivityInstanceEntity currentActivityInstance,
             SignForwardTypeEnum signForwardType)
         {
@@ -87,6 +92,7 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
+        /// Create a signature node record
         /// 创建加签节点记录
         /// </summary>
         /// <param name="activityResource"></param>
@@ -96,6 +102,8 @@ namespace Slickflow.Engine.Core.Pattern
                 base.ActivityForwardContext.ActivityResource.AppRunner.ControlParameterSheet.SignForwardType);
 
             //根据当前活动实例的记录为加签发起人创建一条新的记录，并修改CompleteOrder
+            //Create a new record for adding the issuer based on the current activity instance record,
+            //and modify the CompleteOrder accordingly
             var newActivityInstance = base.ActivityInstanceManager.CreateActivityInstanceObject(base.ActivityForwardContext.FromActivityInstance);
             newActivityInstance.AssignedToUserIDs = activityResource.AppRunner.UserID;
             newActivityInstance.AssignedToUserNames = activityResource.AppRunner.UserName;
@@ -115,11 +123,13 @@ namespace Slickflow.Engine.Core.Pattern
                 }
             }
             newActivityInstance.ComplexType = (short)ComplexTypeEnum.SignForward;
-            
+
             //获取加签人集合
+            //Obtain the collection of signatories
             var plist = activityResource.NextActivityPerformers[base.ActivityForwardContext.Activity.ActivityGUID];
 
             //前加签是别人先审核，然后自己再审核
+            //Sign forward before is someone else's first review, and then self review
             if (signForwardType == SignForwardTypeEnum.SignForwardBefore)
             {
                 newActivityInstance.CompleteOrder = plist.Count + 1;
@@ -128,6 +138,7 @@ namespace Slickflow.Engine.Core.Pattern
             else if (signForwardType == SignForwardTypeEnum.SignForwardBehind)
             {
                 //后加签是自己审批后，其他接收人再加签
+                //Sign forward behind refers to the process of obtaining approval from oneself and then having other recipients sign again
                 newActivityInstance.CompleteOrder = 1;
             }
 			else if (signForwardType == SignForwardTypeEnum.SignForwardParallel)
@@ -137,12 +148,15 @@ namespace Slickflow.Engine.Core.Pattern
             }
 
             //主节点挂起后，插入当前人的加签记录信息, 并插入任务记录
+            //After the master node is suspended,
+            //insert the signature record information of the current person and insert the task record
             base.ActivityInstanceManager.Insert(newActivityInstance, base.Session);
             var signer = new Performer(base.ActivityForwardContext.ActivityResource.AppRunner.UserID,
                 base.ActivityForwardContext.ActivityResource.AppRunner.UserName);
             base.TaskManager.Insert(newActivityInstance, signer, base.ActivityForwardContext.ActivityResource.AppRunner, base.Session);
 
             //创建新加签节点记录
+            //Create a new signing node record
             var signforwardActivityInstance = new ActivityInstanceEntity();
             for (var i = 0; i < plist.Count; i++)
             {
@@ -158,6 +172,7 @@ namespace Slickflow.Engine.Core.Pattern
                     if (i > 0)
                     {
                         //加签是串行加签，逐次完成
+                        //Sign forward is a serial signing process that is completed step by step
                         signforwardActivityInstance.ActivityState = (short)ActivityStateEnum.Suspended;
                     }
                 }

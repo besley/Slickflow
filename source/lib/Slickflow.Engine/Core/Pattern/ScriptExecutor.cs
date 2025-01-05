@@ -17,13 +17,15 @@ using Slickflow.Engine.Delegate;
 
 namespace Slickflow.Engine.Core.Pattern
 {
+    /// <summary>
+    /// Script Executor
+    /// 脚本执行器
+    /// </summary>
     internal class ScriptExecutor
     {
         /// <summary>
-        /// Action 的执行方法
+        /// Execute script list
         /// </summary>
-        /// <param name="scriptList">操作列表</param>
-        /// <param name="delegateService">参数列表</param>
         internal static void ExecuteScriptList(IList<Xpdl.Entity.ScriptDetail> scriptList,
             IDelegateService delegateService)
         {
@@ -40,10 +42,8 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 执行外部服务实现类
+        /// Execute
         /// </summary>
-        /// <param name="script">操作</param>
-        /// <param name="delegateService">委托服务类</param>
         private static void Execute(Xpdl.Entity.ScriptDetail script, IDelegateService delegateService)
         {
             if (script.Method == ScriptMethodEnum.SQL)
@@ -62,12 +62,11 @@ namespace Slickflow.Engine.Core.Pattern
 
 
         /// <summary>
+        /// Execute Python script
         /// 执行外部方法
         /// SetVariable:
         /// https://stackoverflow.com/questions/26426955/setting-and-getting-variables-in-net-hosted-ironpython-script/45734097
         /// </summary>
-        /// <param name="script">Action实体</param>
-        /// <param name="delegateService">委托服务</param>
         private static void ExecutePythonMethod(Xpdl.Entity.ScriptDetail script, IDelegateService delegateService)
         {
             try
@@ -98,10 +97,8 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// 执行外部方法
+        /// Excute sql method
         /// </summary>
-        /// <param name="script">Action实体</param>
-        /// <param name="delegateService">委托服务</param>
         private static void ExecuteSQLMethod(Xpdl.Entity.ScriptDetail script, IDelegateService delegateService)
         {
             try

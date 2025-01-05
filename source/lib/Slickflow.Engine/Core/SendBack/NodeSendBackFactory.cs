@@ -10,16 +10,18 @@ using Slickflow.Engine.Common;
 namespace Slickflow.Engine.Core.SendBack
 {
     /// <summary>
+    /// Create a sendback node processor
     /// 创建退回节点处理器
     /// </summary>
     internal class NodeSendBackFactory
     {
         /// <summary>
+        /// Create method
         /// 创建方法
         /// </summary>
-        /// <param name="sendbackOperation">退回选项</param>
-        /// <param name="session">会话</param>
-        /// <returns>退回器</returns>
+        /// <param name="sendbackOperation"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal static NodeSendBack CreateNodeReverter(SendBackOperation sendbackOperation, IDbSession session)
         {
             NodeSendBack nodeSendBack = null;
@@ -40,6 +42,7 @@ namespace Slickflow.Engine.Core.SendBack
                 else
                 {
                     //如果有其它模式，没有处理到，则直接抛出异常
+                    //If there are other modes that cannot be handled, throw an exception directly
                     throw new WorkflowException(LocalizeHelper.GetEngineMessage("nodesendbackfactory.CreateNodeReverter.error",
                         sendbackOperation.PreviousNodeOperationType.ToString()));
                 }
@@ -61,6 +64,7 @@ namespace Slickflow.Engine.Core.SendBack
                 else
                 {
                     //如果有其它模式，没有处理到，则直接抛出异常
+                    //If there are other modes that cannot be handled, throw an exception directly
                     throw new WorkflowException(LocalizeHelper.GetEngineMessage("nodesendbackfactory.CreateNodeReverter.error",
                         sendbackOperation.CurrentMultipleInstanceDetailType.ToString()));
                 }

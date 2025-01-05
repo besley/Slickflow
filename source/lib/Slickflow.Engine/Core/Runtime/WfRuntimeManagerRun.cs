@@ -9,14 +9,16 @@ using Slickflow.Engine.Business.Manager;
 namespace Slickflow.Engine.Core.Runtime
 {
     /// <summary>
+    /// Runtimer Manager Run
     /// 应用执行运行时
     /// </summary>
     internal class WfRuntimeManagerRun : WfRuntimeManager
     {
         /// <summary>
+        /// Run execute method
         /// 运行执行方法
         /// </summary>
-        /// <param name="session">会话</param>
+        /// <param name="session"></param>
         internal override void ExecuteInstanceImp(IDbSession session)
         {
             var result = base.WfExecutedResult;
@@ -24,11 +26,11 @@ namespace Slickflow.Engine.Core.Runtime
 
             try
             {
-                //创建运行时上下文
                 ActivityForwardContext runningExecutionContext = null;
                 if (base.TaskView != null)
                 {
                     //有TaskID的任务类型执行上下文
+                    //Task type execution context with TaskID
                     runningExecutionContext = ActivityForwardContext.CreateRunningContextByTask(base.TaskView,
                         base.ProcessModel,
                         base.ActivityResource,
@@ -38,6 +40,7 @@ namespace Slickflow.Engine.Core.Runtime
                 else
                 {
                     //Interrupt事件类型的活动执行上下文
+                    //Interrupt event type activity execution context
                     runningExecutionContext = ActivityForwardContext.CreateRunningContextByActivity(base.RunningActivityInstance,
                         base.ProcessModel,
                         base.ActivityResource,
@@ -45,18 +48,14 @@ namespace Slickflow.Engine.Core.Runtime
                         session);
                 }
 
-                //执行流程运行事件
                 OnProcessRunning(session);
 
-                //执行节点流转过程
                 NodeMediator mediator = NodeMediatorFactory.CreateNodeMediator(runningExecutionContext, session);
                 mediator.LinkContext.FromActivityInstance = RunningActivityInstance;
                 mediator.ExecuteWorkItem();
 
-                //执行流程完成事件
                 OnProcessCompleted(session);
                
-                //构造回调函数需要的数据
                 result.Status = WfExecutedStatus.Success;
                 result.Message = mediator.GetNodeMediatedMessage();
             }
@@ -77,12 +76,12 @@ namespace Slickflow.Engine.Core.Runtime
         }
 
         /// <summary>
-        /// 执行流程完成事件
+        /// Process Running event
+        /// 执行流程时的绑定事件
         /// </summary>
-        /// <param name="session">会话</param>
+        /// <param name="session"></param>
         private void OnProcessRunning(IDbSession session)
         {
-            //调用流程结束事件
             DelegateExecutor.InvokeExternalDelegate(session,
                 EventFireTypeEnum.OnProcessRunning,
                 base.ActivityResource.AppRunner.DelegateEventList,
@@ -90,16 +89,16 @@ namespace Slickflow.Engine.Core.Runtime
         }
 
         /// <summary>
+        /// Process Complete event
         /// 执行流程完成事件
         /// </summary>
-        /// <param name="session">会话</param>
+        /// <param name="session"></param>
         private void OnProcessCompleted(IDbSession session)
         {
             var pim = new ProcessInstanceManager();
             var entity = pim.GetById(session.Connection, RunningActivityInstance.ProcessInstanceID, session.Transaction);
             if (entity.ProcessState == (short)ProcessStateEnum.Completed)
             {
-                //调用流程结束事件
                 DelegateExecutor.InvokeExternalDelegate(session,
                     EventFireTypeEnum.OnProcessCompleted,
                     base.ActivityResource.AppRunner.DelegateEventList,

@@ -15,76 +15,44 @@ using Slickflow.Engine.Essential;
 namespace Slickflow.Engine.Core.Pattern.Event
 {
     /// <summary>
-    /// 逻辑控制节点执行器
+    /// Event node mediator
     /// </summary>
     internal class NodeMediatorEvent
     {
-        #region 属性及构造方法
-        /// <summary>
-        /// 活动上下文
-        /// </summary>
+        #region Property and constructor
+
         private ActivityForwardContext _activityFowardContext;
-        /// <summary>
-        /// 活动上下文
-        /// </summary>
         internal ActivityForwardContext ActivityForwardContext
         {
             get { return _activityFowardContext; }
            
         }
 
-        /// <summary>
-        /// 事件活动
-        /// </summary>
         private Activity _eventActivity;
-        /// <summary>
-        /// 事件活动
-        /// </summary>
         internal Activity EventActivity
         {
             get { return _eventActivity; }
         }
 
-        /// <summary>
-        /// 流程模型
-        /// </summary>
         private IProcessModel _processModel;
-        /// <summary>
-        /// 流程模型
-        /// </summary>
         internal IProcessModel ProcessModel
         {
             get { return _processModel; }
         }
 
-        /// <summary>
-        /// 数据会话
-        /// </summary>
         private IDbSession _session;
-        /// <summary>
-        /// 数据会话
-        /// </summary>
         internal IDbSession Session
         {
             get { return _session; }
         }
 
-        /// <summary>
-        /// 事件活动实例
-        /// </summary>
         internal ActivityInstanceEntity EventActivityInstance
         {
             get;
             set;
         }
 
-        /// <summary>
-        /// 活动实例管理
-        /// </summary>
         private ActivityInstanceManager activityInstanceManager;
-        /// <summary>
-        /// 活动实例管理
-        /// </summary>
         internal ActivityInstanceManager ActivityInstanceManager
         {
             get
@@ -98,12 +66,8 @@ namespace Slickflow.Engine.Core.Pattern.Event
         }
 
         /// <summary>
-        /// 构造函数
+        /// Constructor function
         /// </summary>
-        /// <param name="forwardContext">上下文</param>
-        /// <param name="eActivity">活动</param>
-        /// <param name="processModel">流程模型</param>
-        /// <param name="session">会话</param>
         internal NodeMediatorEvent(ActivityForwardContext forwardContext,
             Activity eActivity, 
             IProcessModel processModel, 
@@ -116,27 +80,26 @@ namespace Slickflow.Engine.Core.Pattern.Event
         }
         #endregion
 
-        #region 节点逻辑及事件响应执行
         internal virtual void ExecuteWorkItem() { }
 
         /// <summary>
-        /// 执行外部操作的方法
+        /// Execute action list
         /// </summary>
-        /// <param name="actionList">操作列表</param>
-        /// <param name="delegateService">委托方法</param>
+        /// <param name="actionList"></param>
+        /// <param name="delegateService"></param>
         protected void ExecteActionList(IList<Xpdl.Entity.Action> actionList,
             IDelegateService delegateService)
         {
             if (actionList != null && actionList.Count > 0)
             {
-                ActionExecutor.ExecteActionList(actionList, delegateService);
+                ActionExecutor.ExecuteActionList(actionList, delegateService);
             }
         }
 
         /// <summary>
-        /// 获取委托服务
+        /// Get delegate sevice
         /// </summary>
-        /// <returns>委托服务类</returns>
+        /// <returns></returns>
         private DelegateServiceBase GetDelegateService()
         {
             //执行Action列表
@@ -156,15 +119,14 @@ namespace Slickflow.Engine.Core.Pattern.Event
         }
 
         /// <summary>
-        /// 触发前执行
+        /// On before execute work item
         /// </summary>
         protected void OnBeforeExecuteWorkItem()
         {
             var delegateService = GetDelegateService();
             var actionList = this.EventActivity.ActionList;
-            ActionExecutor.ExecteActionListBefore(actionList, delegateService as IDelegateService);
+            ActionExecutor.ExecuteActionListBefore(actionList, delegateService as IDelegateService);
 
-            //----> 节点流转前，调用活动执行的委托事件
             DelegateExecutor.InvokeExternalDelegate(this.Session,
                 EventFireTypeEnum.OnActivityExecuting,
                 this.EventActivity,
@@ -172,7 +134,7 @@ namespace Slickflow.Engine.Core.Pattern.Event
         }
 
         /// <summary>
-        /// 执行代码自动服务内容
+        /// On executing service item
         /// </summary>
         protected void OnExecutingServiceItem()
         {
@@ -182,29 +144,27 @@ namespace Slickflow.Engine.Core.Pattern.Event
         }
 
         /// <summary>
-        /// 触发后执行
+        /// On after execute work item
         /// </summary>
         protected void OnAfterExecuteWorkItem()
         {
             var delegateService = GetDelegateService();
             var actionList = this.EventActivity.ActionList;
-            ActionExecutor.ExecteActionListAfter(actionList, delegateService as IDelegateService);
+            ActionExecutor.ExecuteActionListAfter(actionList, delegateService as IDelegateService);
 
-            //----> 节点流转完成后，调用活动完成执行的委托事件
             DelegateExecutor.InvokeExternalDelegate(this.Session,
                 EventFireTypeEnum.OnActivityExecuted,
                 this.EventActivity,
                 ActivityForwardContext);
         }
-        #endregion
 
-        #region 节点创建
         /// <summary>
+        /// Create activity instance object
         /// 创建节点对象
         /// </summary>
-        /// <param name="activity">活动</param>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="runner">运行者</param>
+        /// <param name="activity"></param>
+        /// <param name="processInstance"></param>
+        /// <param name="runner"></param>
         protected ActivityInstanceEntity CreateActivityInstanceObject(Activity activity,
             ProcessInstanceEntity processInstance,
             WfAppRunner runner)
@@ -222,10 +182,11 @@ namespace Slickflow.Engine.Core.Pattern.Event
         }
 
         /// <summary>
+        /// Insert activity instance
         /// 插入实例数据
         /// </summary>
-        /// <param name="activityInstance">活动资源</param>
-        /// <param name="session">会话</param>
+        /// <param name="activityInstance"></param>
+        /// <param name="session"></param>
         internal virtual void InsertActivityInstance(ActivityInstanceEntity activityInstance,
             IDbSession session)
         {
@@ -233,17 +194,9 @@ namespace Slickflow.Engine.Core.Pattern.Event
         }
 
         /// <summary>
+        /// Insert transition instance
         /// 插入连线实例的方法
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="fromActivityInstance">来源活动实例</param>
-        /// <param name="toActivityInstance">目的活动实例</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="flyingType">飞跃类型</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
-        /// <returns>新转移实例ID</returns>
         internal virtual int InsertTransitionInstance(ProcessInstanceEntity processInstance,
             string transitionGUID,
             ActivityInstanceEntity fromActivityInstance,
@@ -268,20 +221,19 @@ namespace Slickflow.Engine.Core.Pattern.Event
         }
 
         /// <summary>
+        /// Complete activity instance
         /// 节点对象的完成方法
         /// </summary>
-        /// <param name="ActivityInstanceID">活动实例ID</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
+        /// <param name="ActivityInstanceID"></param>
+        /// <param name="runner"></param>
+        /// <param name="session"></param>
         internal virtual void CompleteActivityInstance(int ActivityInstanceID,
             WfAppRunner runner,
             IDbSession session)
         {
-            //设置完成状态
             ActivityInstanceManager.Complete(ActivityInstanceID,
                 runner,
                 session);
         }
-        #endregion
     }
 }

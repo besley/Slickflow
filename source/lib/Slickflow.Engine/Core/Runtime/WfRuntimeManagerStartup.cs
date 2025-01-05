@@ -6,22 +6,21 @@ using Slickflow.Engine.Core.Pattern;
 namespace Slickflow.Engine.Core.Runtime
 {
     /// <summary>
+    /// Runtime Manager Startup
     /// 流程启动运行时
     /// </summary>
     internal class WfRuntimeManagerStartup : WfRuntimeManager
     {
         /// <summary>
+        /// The processing logic of startup
         /// 启动执行方法
         /// </summary>
-        /// <param name="session">会话</param>
+        /// <param name="session"></param>
         internal override void ExecuteInstanceImp(IDbSession session)
         {
-            //构造流程实例
             var processInstance = new ProcessInstanceManager()
                 .CreateNewProcessInstanceObject(base.AppRunner, base.ProcessModel.ProcessEntity);
 
-            //构造活动实例
-            //1. 获取开始节点活动
             var startActivity = base.ProcessModel.GetStartActivity();
             var startExecutionContext = ActivityForwardContext.CreateStartupContext(base.ProcessModel,
                 processInstance,
@@ -32,7 +31,6 @@ namespace Slickflow.Engine.Core.Runtime
             mediator.LinkContext.FromActivityInstance = RunningActivityInstance;
             mediator.ExecuteWorkItem();
 
-            //构造回调函数需要的数据
             WfExecutedResult result = base.WfExecutedResult;
             result.ProcessInstanceIDStarted = processInstance.ID;
             result.Status = WfExecutedStatus.Success;

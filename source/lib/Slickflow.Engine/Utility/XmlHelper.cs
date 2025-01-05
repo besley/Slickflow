@@ -8,19 +8,15 @@ using System.Text;
 namespace Slickflow.Engine.Utility
 {
     /// <summary>
-    /// XMLHelper XML文档操作管理器
+    /// XMLHelper 
     /// </summary>
     public class XMLHelper
     {
         public XMLHelper()
         {
-            //
-            // TODO: 在此处添加构造函数逻辑
-            //
         }
 
-
-        #region XML文档节点查询和读取
+        #region XML read and query
         /// <summary>
         /// 选择匹配XPath表达式的第一个节点XmlNode.
         /// </summary>
@@ -153,9 +149,8 @@ namespace Slickflow.Engine.Utility
             }
         }
         #endregion
-
      
-        #region XML文档创建和节点或属性的添加、修改
+        #region XML create, add, remove
         /// <summary>
         /// 创建一个XML文档
         /// </summary>
@@ -326,8 +321,7 @@ namespace Slickflow.Engine.Utility
         }
         #endregion
 
-
-        #region XML文档节点或属性的删除
+        #region XML delete
         /// <summary>
         /// 删除匹配XPath表达式的第一个节点(节点中的子元素同时会被删除)
         /// </summary>
@@ -415,19 +409,18 @@ namespace Slickflow.Engine.Utility
             XmlDocument xmlDoc = new XmlDocument();
             try
             {
-                xmlDoc.Load(xmlFileName); //加载XML文档
+                xmlDoc.Load(xmlFileName); 
                 XmlNode xmlNode = xmlDoc.SelectSingleNode(xpath);
                 if (xmlNode != null)
                 {
-                    //遍历xpath节点中的所有属性
                     xmlNode.Attributes.RemoveAll();
                 }
-                xmlDoc.Save(xmlFileName); //保存到XML文档
+                xmlDoc.Save(xmlFileName); 
                 isSuccess = true;
             }
             catch (Exception)
             {
-                throw; //这里可以定义你自己的异常处理
+                throw; 
             }
             return isSuccess;
         }

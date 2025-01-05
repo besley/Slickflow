@@ -11,15 +11,17 @@ using Slickflow.Engine.Utility;
 namespace Slickflow.Engine.Business.Manager
 {
     /// <summary>
+    /// Job Info Manager
     /// 作业数据管理器
     /// </summary>
     public class JobInfoManager : ManagerBase
     {
         /// <summary>
-        /// 获取作业信息
+        /// Retrieve job info by the topic
+        /// 根据主题获取作业信息
         /// </summary>
         /// <param name="topic"></param>
-        /// <returns>作业实体</returns>
+        /// <returns></returns>
         public List<JobInfoEntity> GetJobSubscribedByTopic(string topic)
         {
             var sql = @"SELECT 

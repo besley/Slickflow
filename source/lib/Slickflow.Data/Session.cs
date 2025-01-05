@@ -11,6 +11,7 @@ using System.Diagnostics;
 namespace Slickflow.Data
 {
     /// <summary>
+    /// Session interface for data connection transactions
     /// 数据连接事务的Session接口
     /// </summary>
     public interface IDbSession : IDisposable
@@ -24,6 +25,7 @@ namespace Slickflow.Data
     }
 
     /// <summary>
+    /// Session object for database connection transaction
     /// 数据库连接事务的Session对象
     /// </summary>
     public class DbSession : IDbSession
@@ -32,7 +34,7 @@ namespace Slickflow.Data
         private IDbTransaction _transaction;
 
         /// <summary>
-        /// 数据库连接对象
+        /// Database Connection
         /// </summary>
         public IDbConnection Connection
         {
@@ -40,7 +42,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
-        /// 数据库事务对象
+        /// Database Transaction
         /// </summary>
         public IDbTransaction Transaction
         {
@@ -48,16 +50,16 @@ namespace Slickflow.Data
         }
 
         /// <summary>
-        /// 构造方法
+        /// Constructor
         /// </summary>
-        /// <param name="conn">连接</param>
+        /// <param name="conn"></param>
         internal DbSession(IDbConnection conn)
         {
             _connection = conn;
         }
 
         /// <summary>
-        /// 构造方法
+        /// Constructor
         /// </summary>
         /// <param name="conn">连接</param>
         /// <param name="trans">事务</param>
@@ -68,7 +70,8 @@ namespace Slickflow.Data
         }
 
         /// <summary>
-        /// 开启会话
+        /// Begin Transaction
+        /// 开启事务
         /// </summary>
         /// <param name="isolation"></param>
         /// <returns></returns>
@@ -79,7 +82,8 @@ namespace Slickflow.Data
         }
 
         /// <summary>
-        /// 事务提交
+        /// Commit Transaction
+        /// 提交事务
         /// </summary>
         public void Commit()
         {
@@ -88,6 +92,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// Rollback Transaction
         /// 事务回滚
         /// </summary>
         public void Rollback()
@@ -97,6 +102,7 @@ namespace Slickflow.Data
         }
 
         /// <summary>
+        /// resource release
         /// 资源释放
         /// </summary>
         public void Dispose()
@@ -105,7 +111,6 @@ namespace Slickflow.Data
             {
                 if (_transaction != null)
                 {
-                    //_transaction.Rollback();
                     _transaction.Dispose();
                     _transaction = null;
                     

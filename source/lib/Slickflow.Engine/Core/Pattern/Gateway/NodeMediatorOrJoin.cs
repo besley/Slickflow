@@ -11,6 +11,7 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Core.Pattern.Gateway
 {
     /// <summary>
+    /// OrJoin Node Mediator
     /// OrJoin 节点处理类
     /// </summary>
     internal class NodeMediatorOrJoin : NodeMediatorGateway, ICompleteGatewayAutomaticlly
@@ -22,12 +23,13 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
         }
 
         /// <summary>
+        /// Calculate the required number of merging tokens
         /// 计算需要的汇合Token数目
         /// </summary>
-        /// <param name="processInstanceID">流程实例ID</param>
-        /// <param name="gatewayActivity">网关活动</param>
-        /// <param name="session">会话</param>
-        /// <returns>Token数目</returns>
+        /// <param name="processInstanceID"></param>
+        /// <param name="gatewayActivity"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
 		internal int GetTokensRequired(int processInstanceID,
             Activity gatewayActivity,
             IDbSession session)
@@ -43,18 +45,12 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
                 session);
         }
 
-        #region ICompleteAutomaticlly 成员
-
         /// <summary>
+        /// Node completion method for OrJoin merging
+        /// 1.  If there are OrJoin predecessor transfers that meet the conditions, a new OrJoin node instance will be generated
         /// OrJoin合并时的节点完成方法
         /// 1. 如果有满足条件的OrJoin前驱转移，则会重新生成新的OrJoin节点实例
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="fromActivity">起始活动</param>
-        /// <param name="fromActivityInstance">起始活动实例</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
         public NodeAutoExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
             string transitionGUID,
             Activity fromActivity,
@@ -64,7 +60,8 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
         {
             NodeAutoExecutedResult result = NodeAutoExecutedResult.CreateGatewayExecutedResult(NodeAutoExecutedStatus.Unknown);
 
-			//检查是否有运行中的合并节点实例
+            //检查是否有运行中的合并节点实例
+            //Check if there are any running merge node instances
             ActivityInstanceEntity joinNode = base.ActivityInstanceManager.GetActivityRunning(processInstance.ID,
                 base.GatewayActivity.ActivityGUID,
                 session);
@@ -75,14 +72,15 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
                     processInstance, runner);
 
                 //计算总需要的Token数目
+                //Calculate the total number of tokens required
                 joinNode.TokensRequired = GetTokensRequired(processInstance.ID, base.GatewayActivity, session);
                 joinNode.TokensHad = 1;
 
-                //进入运行状态
                 joinNode.ActivityState = (short)ActivityStateEnum.Running;
                 joinNode.GatewayDirectionTypeID = (short)GatewayDirectionEnum.OrJoin;
 
                 //写入默认第一次的预选步骤用户列表
+                //Write the default user list for the first pre selection step
                 joinNode.NextStepPerformers = NextStepUtility.SerializeNextStepPerformers(runner.NextActivityPerformers);
 
                 base.InsertActivityInstance(joinNode,
@@ -98,11 +96,11 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             }
             else
             {
-                //更新节点的活动实例属性
                 joinNode.TokensHad += 1;
                 base.GatewayActivityInstance = joinNode;
 
                 //更新Token数目
+                //Increase tokens count
                 base.ActivityInstanceManager.IncreaseTokensHad(base.GatewayActivityInstance.ID,
                     runner,
                     session);
@@ -117,9 +115,11 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             }
 
             //判断是否到达合并节点的通过Token数目要求
+            //Determine whether the required number of tokens for merging nodes has been reached
             if (joinNode.TokensHad == joinNode.TokensRequired)
             {
                 //如果达到完成节点的Token数，则设置该节点状态为完成
+                //If the number of tokens for the completion node is reached, set the node status to complete
                 base.CompleteActivityInstance(base.GatewayActivityInstance.ID,
                     runner,
                     session);
@@ -134,7 +134,5 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             
             return result;
         }
-
-        #endregion
     }
 }

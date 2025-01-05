@@ -6,6 +6,7 @@ using System.Text;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Transition Instance Entity
     /// 节点转移类
     /// </summary>
     [Table("WfTransitionInstance")]

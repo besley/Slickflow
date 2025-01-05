@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Delegate
 {
     /// <summary>
-    /// 委托类型
+    /// Delegate Scope Type
     /// </summary>
     public enum DelegateScopeTypeEnum
     {
         /// <summary>
-        /// 流程级别
+        /// Process Level
         /// </summary>
         Process = 1,
 
         /// <summary>
-        /// 活动级别
+        /// Activity Level
         /// </summary>
         Activity = 2
     }

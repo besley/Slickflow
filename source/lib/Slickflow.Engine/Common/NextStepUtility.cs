@@ -7,29 +7,36 @@ using Newtonsoft.Json;
 
 namespace Slickflow.Engine.Common
 {
+    /// <summary>
+    /// Next Step Utility
+    /// 下一步工具类
+    /// </summary>
     public class NextStepUtility
     {
         /// <summary>
+        /// Deserialize the next personnel list based on the text content
         /// 根据文本内容反序列化下一步人员列表
         /// </summary>
-        /// <param name="jsonNextStep">json格式的步骤文本</param>
-        /// <returns>下一步步骤对象</returns>
+        /// <param name="jsonNextStep"></param>
+        /// <returns></returns>
         public static IDictionary<string, PerformerList> DeserializeNextStepPerformers(string jsonNextStep)
         {
             IDictionary<string, PerformerList> nextSteps = null;
             if (!string.IsNullOrEmpty(jsonNextStep))
             {
                 //反序列化步骤数据
+                //Deserialize step data
                 nextSteps = JsonConvert.DeserializeObject<IDictionary<string, PerformerList>>(jsonNextStep);
             }
             return nextSteps;
         }
 
         /// <summary>
+        /// List of personnel involved in deserialization steps
         /// 反序列化步骤人员列表
         /// </summary>
-        /// <param name="nextSteps">下一步步骤对象</param>
-        /// <returns>json格式的步骤文本</returns>
+        /// <param name="nextSteps"></param>
+        /// <returns></returns>
         public static string SerializeNextStepPerformers(IDictionary<string, PerformerList> nextSteps)
         {
             var jsonNextSteps = string.Empty;
@@ -44,12 +51,13 @@ namespace Slickflow.Engine.Common
         }
 
         /// <summary>
+        /// Generate the next step performer list
         /// 生成下一步人员列表
         /// </summary>
-        /// <param name="activityGUID">活动GUID</param>
-        /// <param name="userID">用户ID</param>
-        /// <param name="userName">用户名称</param>
-        /// <returns>步骤列表</returns>
+        /// <param name="activityGUID"></param>
+        /// <param name="userID"></param>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         public static IDictionary<string, PerformerList> CreateNextStepPerformerList(string activityGUID, 
             string userID, 
             string userName)

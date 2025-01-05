@@ -7,7 +7,7 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Core.SendBack
 {
     /// <summary>
-    /// 退回操作类型
+    /// Sendback Operation Data
     /// </summary>
     internal class SendBackOperation
     {

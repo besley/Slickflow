@@ -8,84 +8,87 @@ using Slickflow.Engine.Xpdl.Node;
 namespace Slickflow.Engine.Xpdl.Entity
 {
     /// <summary>
-    /// 活动节点属性定义
+    /// Activity
     /// </summary>
     public class Activity
     {
         /// <summary>
-        /// 标识ID
+        /// ID
         /// </summary>
         public string ID { get; set; }
         /// <summary>
-        /// 活动GUID
+        /// ActivityGUID
         /// </summary>
         public string ActivityGUID { get; set; }
         /// <summary>
-        /// 活动名称
+        /// Activity Name
         /// </summary>
         public string ActivityName { get; set; }
 
         /// <summary>
-        /// 活动代码
+        /// Activity Code
         /// </summary>
         public string ActivityCode { get; set; }
 
         /// <summary>
+        /// URL of the activity associated page
         /// 活动关联页面的URL
         /// </summary>
         public string ActivityUrl { get; set; }
 
         /// <summary>
-        /// 描述
+        /// Description
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// 流程GUID
+        /// ProcessGUID
         /// </summary>
         public string ProcessGUID { get; set; }
 
         /// <summary>
-        /// 活动类型
+        /// Activity Type
         /// </summary>
         public ActivityTypeEnum ActivityType{ get; set; }
 
         /// <summary>
-        /// 工作项类型
+        /// WorkItem Type
         /// </summary>
         public WorkItemTypeEnum WorkItemType { get; set; }
 
         /// <summary>
-        /// 触发Detail
+        /// Trigger Detail
         /// </summary>
         public TriggerDetail TriggerDetail { get; set; }
 
         /// <summary>
-        /// 网关类型Detail
+        /// Gateway Detail
         /// </summary>
         public GatewayDetail GatewayDetail { get; set; }
 
         /// <summary>
-        /// 会签类型Detail
+        /// Mutiple Instance Detail
         /// </summary>
         public MultiSignDetail MultiSignDetail { get; set; }
 
         /// <summary>
-        /// 跳转信息
+        /// Skip Detail
         /// </summary>
         public SkipDetail SkipDetail { get; set; }
 
         /// <summary>
-        /// 节点
+        /// Node
         /// </summary>
         public NodeBase Node { get; set; }
 
         /// <summary>
-        /// 自定义章节
+        /// Section List
         /// </summary>
         public List<SectionDetail> SectionList { get; set; }
 
         /// <summary>
+        /// Custom attributes associated with activities
+        /// JSON data format
         /// 活动关联的自定义属性
         /// JSON数据格式
         /// </summary>
@@ -104,32 +107,32 @@ namespace Slickflow.Engine.Xpdl.Entity
         }
 
         /// <summary>
-        /// 操作列表
+        /// Action List
         /// </summary>
         public List<Action> ActionList { get; set; }
 
         /// <summary>
-        /// 服务列表
+        /// Service List
         /// </summary>
         public List<ServiceDetail> ServiceList { get; set; }
 
         /// <summary>
-        /// 脚本列表
+        /// Script List
         /// </summary>
         public List<ScriptDetail> ScriptList { get; set; }
 
         /// <summary>
-        /// 边界列表
+        /// Boundary List
         /// </summary>
         public List<Boundary> BoundaryList { get; set; }
 
         /// <summary>
-        /// 参与者列表
+        /// Partaker List
         /// </summary>
         public List<Partaker> PartakerList { get; set; }
 
         /// <summary>
-        /// 通知用户列表
+        /// Notification List
         /// </summary>
         public List<Partaker> NotificationList { get; set; }
     }

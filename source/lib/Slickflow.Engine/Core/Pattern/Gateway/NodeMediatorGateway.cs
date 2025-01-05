@@ -12,11 +12,12 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Core.Pattern.Gateway
 {
     /// <summary>
-    /// 逻辑控制节点执行器
+    /// Gatewayt Node Mediator
+    /// 网关控制节点执行器
     /// </summary>
     internal class NodeMediatorGateway
     {
-        #region 属性及构造方法
+        #region Property and constructor
         private Activity _gatewayActivity;
         internal Activity GatewayActivity
         {
@@ -63,11 +64,8 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
         #endregion
 
         /// <summary>
-        /// 创建节点对象
+        /// Create activity instance
         /// </summary>
-        /// <param name="activity">活动</param>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="runner">运行者</param>
         protected ActivityInstanceEntity CreateActivityInstanceObject(Activity activity,
             ProcessInstanceEntity processInstance,
             WfAppRunner runner)
@@ -85,10 +83,10 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
         }
 
         /// <summary>
-        /// 插入实例数据
+        /// Insert activity instance
         /// </summary>
-        /// <param name="activityInstance">活动资源</param>
-        /// <param name="session">会话</param>
+        /// <param name="activityInstance"></param>
+        /// <param name="session"></param>
         internal virtual void InsertActivityInstance(ActivityInstanceEntity activityInstance,
             IDbSession session)
         {
@@ -96,17 +94,8 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
         }
 
         /// <summary>
-        /// 插入连线实例的方法
+        /// Insert transition instance
         /// </summary>
-        /// <param name="processInstance">流程实例</param>
-        /// <param name="transitionGUID">转移GUID</param>
-        /// <param name="fromActivityInstance">来源活动实例</param>
-        /// <param name="toActivityInstance">目的活动实例</param>
-        /// <param name="transitionType">转移类型</param>
-        /// <param name="flyingType">飞跃类型</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
-        /// <returns>新转移实例ID</returns>
         internal virtual int InsertTransitionInstance(ProcessInstanceEntity processInstance,
             string transitionGUID,
             ActivityInstanceEntity fromActivityInstance,
@@ -131,16 +120,15 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
         }
 
         /// <summary>
-        /// 节点对象的完成方法
+        /// Compelete activity instance
         /// </summary>
-        /// <param name="ActivityInstanceID">活动实例ID</param>
-        /// <param name="runner">运行者</param>
-        /// <param name="session">会话</param>
+        /// <param name="ActivityInstanceID"></param>
+        /// <param name="runner"></param>
+        /// <param name="session"></param>
         internal virtual void CompleteActivityInstance(int ActivityInstanceID,
             WfAppRunner runner,
             IDbSession session)
         {
-            //设置完成状态
             ActivityInstanceManager.Complete(ActivityInstanceID,
                 runner,
                 session);

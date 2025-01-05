@@ -9,15 +9,14 @@ using System.Security.Cryptography;
 namespace Slickflow.Engine.Utility
 {
     /// <summary>
-    /// MD5 签名的帮助类
+    /// MD5 Helper
     /// </summary>
     public class MD5Helper
     {
         /// <summary>
+        /// Calculate the MD5 value of the file content
         /// 计算文件内容的MD5值
         /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
         public static string ComputeMD5(Stream stream)
         {
             using (var md5 = new MD5CryptoServiceProvider())
@@ -37,10 +36,9 @@ namespace Slickflow.Engine.Utility
         }
 
         /// <summary>
-        /// 计算文本类型的MD5值
+        /// Get the MD5 value of the file content
+        /// 获取文本类型的MD5值
         /// </summary>
-        /// <param name="sDataIn"></param>
-        /// <returns></returns>
         public static string GetMD5(string sDataIn)
         {
             var md5 = new MD5CryptoServiceProvider();

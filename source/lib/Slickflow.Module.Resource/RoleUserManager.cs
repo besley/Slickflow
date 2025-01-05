@@ -5,15 +5,17 @@ using Slickflow.Data;
 namespace Slickflow.Module.Resource
 {
     /// <summary>
+    /// Role User Manager
     /// 角色用户管理类
     /// </summary>
     internal class RoleUserManager : ManagerBase
     {
         /// <summary>
+        /// Get users by role code
         /// 根据角色编码查询用户
         /// </summary>
-        /// <param name="roleCode">角色代码</param>
-        /// <returns>用户列表</returns>
+        /// <param name="roleCode"></param>
+        /// <returns></returns>
         internal List<User> GetUserListByRoleCode(string roleCode)
         {
             var strSQL = @"SELECT 
@@ -31,6 +33,7 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// Get Role User Tree
         /// 获取角色用户树
         /// </summary>
         /// <returns></returns>
@@ -54,10 +57,11 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
-        /// 获取用户邮件地址
+        /// Get user entity
+        /// 获取用户
         /// </summary>
-        /// <param name="userID">用户ID</param>
-        /// <returns>用户实体对象</returns>
+        /// <param name="userID"></param>
+        /// <returns></returns>
         internal UserEntity GetUserEntity(string userID)
         {
             var userEntity = Repository.GetById<UserEntity>(userID);
@@ -65,10 +69,11 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// Get roleuserview by role id
         /// 根据角色ID获取用户角色视图
         /// </summary>
-        /// <param name="roleID">角色ID</param>
-        /// <returns>角色用户列表</returns>
+        /// <param name="roleID"></param>
+        /// <returns></returns>
         internal List<RoleUserView> GetUserByRole(int roleID)
         {
             var sql = @"SELECT 
@@ -93,10 +98,11 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// Retrieve character user list data based on character iD list
         /// 根据角色iD列表获取角色用户列表数据
         /// </summary>
-        /// <param name="idsin">多个ID数组</param>
-        /// <returns>角色用户列表</returns>
+        /// <param name="idsin"></param>
+        /// <returns></returns>
         internal List<RoleUserView> GetUserByRoleIDs(string[] idsin)
         {
             var sql = @"SELECT 
@@ -121,10 +127,11 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// Retrieve user list based on role ids
         /// 根据角色获取用户列表
         /// </summary>
-        /// <param name="roleIDs">多个角色ID</param>
-        /// <returns>用户列表</returns>
+        /// <param name="roleIDs"></param>
+        /// <returns></returns>
         internal List<User> GetUserListByRoles(string[] idsin)
         {
             using (var session = SessionFactory.CreateSession())
@@ -134,11 +141,12 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// Retrieve user list based on role ids
         /// 根据角色获取用户列表
         /// </summary>
-        /// <param name="roleIDs">多个角色ID</param>
-        /// <param name="session">会话</param>
-        /// <returns>用户列表</returns>
+        /// <param name="roleIDs"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
         internal List<User> GetUserListByRoles(string[] idsin, IDbSession session)
         {
             var sql = @"SELECT DISTINCT 
@@ -164,10 +172,11 @@ namespace Slickflow.Module.Resource
         }
 
         /// <summary>
+        /// Retrieve user list based on role id
         /// 根据角色ID获取用户列表
         /// </summary>
-        /// <param name="roleID">角色ID</param>
-        /// <returns>用户列表</returns>
+        /// <param name="roleID"></param>
+        /// <returns></returns>
         internal List<User> GetUserListByRole(string roleID)
         {
             var sql = @"SELECT 
@@ -187,13 +196,14 @@ namespace Slickflow.Module.Resource
             }).ToList<User>();
             return list;
         }
-       
+
 
         /// <summary>
+        /// Encapsulate the front-end role list based on the role user view
         /// 根据角色用户视图，封装前端角色列表
         /// </summary>
-        /// <param name="roleUserView">角色用户视图</param>
-        /// <returns>角色列表</returns>
+        /// <param name="roleUserView"></param>
+        /// <returns></returns>
         internal IList<Role> GetRoleListByRoleUserView(List<RoleUserView> roleUserView)
         {
             int roleID = 0;

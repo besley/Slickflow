@@ -13,24 +13,20 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Delegate
 {
     /// <summary>
+    /// Delegate Agent Executor
     /// 委托代理执行器
     /// </summary>
     internal class DelegateExecutor
     {
         /// <summary>
+        /// Call program methods for external business applications
         /// 调用外部业务应用的程序方法
         /// </summary>
-        /// <param name="session">数据会话</param>
-        /// <param name="eventType">事件类型</param>
-        /// <param name="currentActivity">当前活动节点</param>
-        /// <param name="context">活动上下文</param>
         internal static void InvokeExternalDelegate(IDbSession session,
             EventFireTypeEnum eventType,
             Activity currentActivity,
             ActivityForwardContext context)
         {
-            //默认为linker.FromActivity表示执行当前运行节点
-            //linker.ToActivity != null 为运行事件类型的节点
             var delegateContext = new DelegateContext
             {
                 AppInstanceID = context.ProcessInstance.AppInstanceID,
@@ -47,24 +43,22 @@ namespace Slickflow.Engine.Delegate
         }
 
         /// <summary>
+        /// Call program methods for external business applications
         /// 调用外部业务应用的程序方法
         /// </summary>
-        /// <param name="session">数据会话</param>
-        /// <param name="eventType">事件类型</param>
-        /// <param name="eventList">事件列表</param>
-        /// <param name="processInstanceID">流程实例ID</param>
         internal static void InvokeExternalDelegate(IDbSession session,
             EventFireTypeEnum eventType,
             DelegateEventList eventList,
             int processInstanceID)
         {
             //过滤注册事件类型
+            //Filter registration event types
             var eventListFiltered = eventList.Where(k => k.Key == eventType);
             if (eventListFiltered != null)
             {
                 var pim = new ProcessInstanceManager();
                 var entity = pim.GetById(session.Connection, processInstanceID, session.Transaction);
-                //执行方法
+
                 var context = new DelegateContext
                 {
                     AppInstanceID = entity.AppInstanceID,
@@ -76,33 +70,28 @@ namespace Slickflow.Engine.Delegate
         }
 
         /// <summary>
+        /// Call program methods for external business applications
         /// 调用外部业务应用的程序方法
         /// </summary>
-        /// <param name="session">数据会话</param>
-        /// <param name="eventType">事件类型</param>
-        /// <param name="eventList">事件列表</param>
-        /// <param name="context">上下文</param>
         internal static void InvokeExternalDelegate(IDbSession session,
             EventFireTypeEnum eventType,
             DelegateEventList eventList,
             DelegateContext context)
         {
             //过滤注册事件类型
+            //Filter registration event types
             var eventListFiltered = eventList.Where(k => k.Key == eventType);
 
             if (eventListFiltered != null)
             {
-                //执行方法
                 Execute(session, context, eventListFiltered);
             }
         }
 
         /// <summary>
+        /// Execution delegation list method
         /// 执行委托列表方法
         /// </summary>
-        /// <param name="session">数据会话</param>
-        /// <param name="context">上下文</param>
-        /// <param name="eventList">事件列表</param>
         private static void Execute(IDbSession session,
             DelegateContext context,
             IEnumerable<KeyValuePair<EventFireTypeEnum, Func<DelegateContext, IDelegateService, Boolean>>> eventList)
@@ -114,12 +103,9 @@ namespace Slickflow.Engine.Delegate
         }
 
         /// <summary>
+        /// Execution delegation method
         /// 执行委托方法
         /// </summary>
-        /// <param name="session">数据会话</param>
-        /// <param name="context">上下文</param>
-        /// <param name="item">事件</param>
-        /// <returns>执行结果</returns>
         private static Boolean Execute(IDbSession session,
             DelegateContext context,
             KeyValuePair<EventFireTypeEnum, Func<DelegateContext, IDelegateService, Boolean>> item)

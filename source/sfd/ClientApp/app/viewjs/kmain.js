@@ -17,6 +17,12 @@ window.rolelist = rolelist;
 import userlist from '../viewjs/userlist.js'
 window.userlist = userlist;
 
+import formlist from '../viewjs/formlist.js'
+window.formlist = formlist;
+
+import fieldlist from '../viewjs/fieldlist.js'
+window.fieldlist = fieldlist;
+
 import kresource from '../viewjs/kresource.js'
 window.kresource = kresource;
 

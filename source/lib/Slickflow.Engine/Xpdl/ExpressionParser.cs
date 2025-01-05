@@ -6,15 +6,13 @@ using System.Text.RegularExpressions;
 namespace Slickflow.Engine.Xpdl
 {
     /// <summary>
-    /// 条件表达式解析器
+    /// Expression Parser
     /// </summary>
     internal class ExpressionParser
     {
         /// <summary>
-        /// 解析条件表达式
+        /// Parse expresson
         /// </summary>
-        /// <param name="expressionReplaced">字符串</param>
-        /// <returns>解析结果</returns>
         internal static bool Parse(string expressionReplaced)
         {
             Expression e = System.Linq.Dynamic.DynamicExpression.Parse(typeof(Boolean), expressionReplaced);
@@ -25,11 +23,9 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Replace parameter values in conditional expressions
         /// 取代条件表达式中的参数值
         /// </summary>
-        /// <param name="expression">表达式</param>
-        /// <param name="dictoinary">列表</param>
-        /// <returns>表达式</returns>
         internal static string ReplaceParameterToValue(string expression, IDictionary<string, string> dictoinary)
         {
             foreach (KeyValuePair<string, string> p in dictoinary)
@@ -38,6 +34,7 @@ namespace Slickflow.Engine.Xpdl
                     || !ExpressionParser.IsNumeric(p.Value))
                 {
                     //字符串类型的变量处理，加上双引号。
+                    //Handling string type variables with double quotation marks.
                     string s = "\"" + p.Value.Trim('\"') + "\"";
                     expression = expression.Replace(p.Key, s);
                 }
@@ -50,10 +47,9 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
+        /// Determine whether the string is of numeric type
         /// 判断字符串是否是数字类型
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
         public static bool IsNumeric(string value)
         {
             return Regex.IsMatch(value, @"^[+-]?\d*[.]?\d*$");

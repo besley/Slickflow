@@ -1213,6 +1213,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Slickflow.MvcDemo.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Slickflow.MvcDemo.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

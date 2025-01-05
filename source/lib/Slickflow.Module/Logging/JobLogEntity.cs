@@ -7,6 +7,7 @@ namespace Slickflow.Module.Logging
 {
     /// <summary>
     /// Job Log Entity
+    /// 作业日志实体
     /// </summary>
     [Table("WfJobLog")]
     public class JobLogEntity

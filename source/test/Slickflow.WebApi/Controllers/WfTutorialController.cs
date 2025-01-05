@@ -16,7 +16,7 @@ using Slickflow.Engine.Xpdl.Common;
 namespace Slickflow.WebApi.Controllers
 {
     /// <summary>
-    /// 串行序列流程测试流程
+    /// Tutorial Controller
     /// </summary>
     public class WfTutorialController : Controller
     {
@@ -82,7 +82,7 @@ namespace Slickflow.WebApi.Controllers
     }
 
     /// <summary>
-    /// 并行分支测试流程
+    /// AndSplitAndJoin Test
     /// </summary>
     public class WfAndSplitAndJoinController : Controller
     {

@@ -7,17 +7,30 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Common
 {
     /// <summary>
-    /// 序列化Key-Value(WebAPI)
+    /// Key value pair wrapper for Webapi
     /// </summary>
     public class KeyValuePairWrapper
     {
+        /// <summary>
+        /// ActivityGUID
+        /// </summary>
         public string ActivityGUID { get; set; }
+
+        /// <summary>
+        /// Performer List
+        /// </summary>
         public PerformerList PerformerList { get; set; }
 
-        //default constructor will be required for binding, the Web.MVC binder will invoke this and set the Key and Value accordingly.
+        /// <summary>
+        /// default constructor will be required for binding, the Web.MVC binder will invoke this and set the Key and Value accordingly.
+        /// </summary>
         public KeyValuePairWrapper() { }
 
-        //a convenience method which allows you to set the values while sorting
+        /// <summary>
+        /// a convenience method which allows you to set the values while sorting
+        /// </summary>
+        /// <param name="activityGUID"></param>
+        /// <param name="performerList"></param>
         public KeyValuePairWrapper(string activityGUID, PerformerList performerList)
         {
             ActivityGUID = activityGUID;

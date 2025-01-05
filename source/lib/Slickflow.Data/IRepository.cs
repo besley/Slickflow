@@ -14,8 +14,9 @@ using DapperExtensions.Sql;
 namespace Slickflow.Data
 {
     /// <summary>
-    /// Data Repository
+    /// Data Repository Interface
     /// Implement Select, Insert, Update, Delete
+    /// 数据仓库类接口，实现增删改查
     /// </summary>
     public interface IRepository
     {

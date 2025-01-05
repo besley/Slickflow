@@ -6,6 +6,7 @@ using System.Text;
 namespace Slickflow.Engine.Business.Entity
 {
     /// <summary>
+    /// Task Query
     /// 任务查询实体对象
     /// </summary>
     public class TaskQuery : QueryBase

@@ -12,7 +12,7 @@ using Slickflow.Engine.Xpdl.Common;
 namespace Slickflow.Engine.Xpdl.Convertor
 {
     /// <summary>
-    /// 网关转换器
+    /// Default Convertor
     /// </summary>
     internal class DefaultlConvertor : ConvertorBase, IConvert
     {

@@ -16,6 +16,7 @@ using Slickflow.Engine.Business.Manager;
 namespace Slickflow.Engine.Core.Pattern.Event.Timer
 {
     /// <summary>
+    /// Start timer node mediator
     /// 开始节点执行器
     /// </summary>
     internal class NodeMediatorStartTimer : NodeMediator
@@ -27,29 +28,27 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
         }
 
         /// <summary>
-        /// 执行开始节点
+        /// Execute work item
         /// </summary>
         internal override void ExecuteWorkItem()
         {
             try
             {
-                //写入流程实例
                 ProcessInstanceManager pim = new ProcessInstanceManager();
                 var newID = pim.Insert(Session.Connection, ActivityForwardContext.ProcessInstance,
                     Session.Transaction);
                 ActivityForwardContext.ProcessInstance.ID = newID;
 
-                //执行前Action列表
                 OnBeforeExecuteWorkItem();
 
                 CompleteAutomaticlly(ActivityForwardContext.ProcessInstance,
                     ActivityForwardContext.ActivityResource,
                     Session);
 
-                //执行后Action列表
                 OnAfterExecuteWorkItem();
 
                 //执行开始节点之后的节点集合
+                //Collection of nodes after executing the start node
                 ContinueForwardCurrentNode(ActivityForwardContext.IsNotParsedByTransition, Session);
             }
             catch (Exception ex)
@@ -59,7 +58,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
         }
 
         /// <summary>
-        /// 置开始节点为结束状态
+        /// Complete automatically
         /// </summary>
         /// <param name="processInstance"></param>
         /// <param name="activityResource"></param>
@@ -69,7 +68,6 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
             ActivityResource activityResource,
             IDbSession session)
         {
-            //开始节点没前驱信息
             var fromActivityInstance = CreateActivityInstanceObject(LinkContext.FromActivity, processInstance, activityResource.AppRunner);
 
             ActivityInstanceManager.Insert(fromActivityInstance, session);

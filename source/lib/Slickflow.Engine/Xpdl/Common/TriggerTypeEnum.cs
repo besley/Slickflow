@@ -7,37 +7,37 @@ using System.Threading.Tasks;
 namespace Slickflow.Engine.Xpdl.Common
 {
     /// <summary>
-    /// 触发器类型
+    /// Trigger Type
     /// </summary>
     public enum TriggerTypeEnum
     {
         /// <summary>
-        /// 默认是没有定时器
+        /// None
         /// </summary>
         None = 0,
 
         /// <summary>
-        /// 邮件
+        /// EMail
         /// </summary>
         EMail = 1,
 
         /// <summary>
-        /// 定时器
+        /// Timer
         /// </summary>
         Timer = 2,
 
         /// <summary>
-        /// 消息
+        /// Message
         /// </summary>
         Message = 3,
 
         /// <summary>
-        /// 信号
+        /// Singal
         /// </summary>
         Signal = 4,
 
         /// <summary>
-        /// 条件
+        /// Conditional
         /// </summary>
         Conditional = 5
     }

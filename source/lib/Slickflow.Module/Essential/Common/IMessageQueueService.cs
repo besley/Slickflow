@@ -6,6 +6,7 @@ using Slickflow.Module.Essential.Entity;
 namespace Slickflow.Module.Essential.Common
 {
     /// <summary>
+    /// Message Queue Service Interface
     /// 消息队列服务接口
     /// </summary>
     public interface IMessageQueueService

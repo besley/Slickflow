@@ -10,7 +10,7 @@ using Slickflow.Engine.Xpdl.Entity;
 namespace Slickflow.Engine.Core.Pattern
 {
     /// <summary>
-    /// 路由接口
+    /// Complete Automatically
     /// </summary>
     internal interface ICompleteAutomaticlly
     {
@@ -24,7 +24,7 @@ namespace Slickflow.Engine.Core.Pattern
     }
 
     /// <summary>
-    /// 网关接口
+    /// Complete Automatically
     /// </summary>
     internal interface ICompleteGatewayAutomaticlly
     {
