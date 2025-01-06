@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("sfdapi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d9633f9f9769d0ef77460893bdf277f3078fee34")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6e048cf6fef356bf8aebee210a8775084cce1d33")]
 [assembly: System.Reflection.AssemblyProductAttribute("sfdapi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("sfdapi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

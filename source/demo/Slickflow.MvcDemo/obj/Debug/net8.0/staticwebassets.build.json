@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "OOdX5WgrKbRlAcM9FjHGiDyi2Gota1ZNbUetv93NkIY=",
+  "Hash": "uQBAE+tbaPfxWW7HLbUmOpq9uWRHcedLyDp7ONWmQEI=",
   "Source": "Slickflow.MvcDemo",
   "BasePath": "_content/Slickflow.MvcDemo",
   "Mode": "Default",
@@ -6289,8 +6289,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "elwiwo8fj1",
-      "Integrity": "gjVmqjEUAOB8MTvJjAKM0zod/am3K9pkPZmjNvQXTwU=",
+      "Fingerprint": "3pnxk2u0d7",
+      "Integrity": "N7J6dPZunbh9P8j9PFmxgnr1ybWhRIHbBQmX8hLP6tI=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\ViewJS\\accountmanager.js"
@@ -6331,8 +6331,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "fp4m8lehpu",
-      "Integrity": "raIda+r6LR+bzhbFXkEiTL3YNOZxvZS2BZb4D0WR1zo=",
+      "Fingerprint": "mhep1n29f8",
+      "Integrity": "Zi3SN4lyLDz9AikG1pgXDl891v5vn0U9QbwO0KWnHfQ=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\ViewJS\\nextactivitytree.js"
@@ -6352,8 +6352,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "gzj172hxk3",
-      "Integrity": "lOVf7mo0kTSreMdZKhwG2b/MayADMgmc6y5xk2tOflw=",
+      "Fingerprint": "bumusdt6nf",
+      "Integrity": "3fBE5duL/VvJnJ3A9dfViO7o+Q5t+iMCWeSp2tR0hSI=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\ViewJS\\pordermanager.js"
@@ -6373,8 +6373,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "7b6fkwm9h4",
-      "Integrity": "s4Hs/nulNnFc36POW624nV/uJ35sAP18zto6bpN/gdk=",
+      "Fingerprint": "ckx0fjrh4d",
+      "Integrity": "FMtzzn5zp6Dver+fj3VZBpPsAVdUENEYM5YoH34bS64=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\ViewJS\\sfmain.js"
@@ -30818,7 +30818,7 @@
       ]
     },
     {
-      "Route": "ViewJS/accountmanager.elwiwo8fj1.js",
+      "Route": "ViewJS/accountmanager.3pnxk2u0d7.js",
       "AssetFile": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\ViewJS\\accountmanager.js",
       "Selectors": [],
       "ResponseHeaders": [
@@ -30828,7 +30828,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "3399"
+          "Value": "3520"
         },
         {
           "Name": "Content-Type",
@@ -30836,11 +30836,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"gjVmqjEUAOB8MTvJjAKM0zod/am3K9pkPZmjNvQXTwU=\""
+          "Value": "\"N7J6dPZunbh9P8j9PFmxgnr1ybWhRIHbBQmX8hLP6tI=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 19 Sep 2024 01:30:28 GMT"
+          "Value": "Mon, 06 Jan 2025 01:34:51 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -30850,7 +30850,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "elwiwo8fj1"
+          "Value": "3pnxk2u0d7"
         },
         {
           "Name": "label",
@@ -30858,7 +30858,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-gjVmqjEUAOB8MTvJjAKM0zod/am3K9pkPZmjNvQXTwU="
+          "Value": "sha256-N7J6dPZunbh9P8j9PFmxgnr1ybWhRIHbBQmX8hLP6tI="
         }
       ]
     },
@@ -30873,7 +30873,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "3399"
+          "Value": "3520"
         },
         {
           "Name": "Content-Type",
@@ -30881,11 +30881,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"gjVmqjEUAOB8MTvJjAKM0zod/am3K9pkPZmjNvQXTwU=\""
+          "Value": "\"N7J6dPZunbh9P8j9PFmxgnr1ybWhRIHbBQmX8hLP6tI=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 19 Sep 2024 01:30:28 GMT"
+          "Value": "Mon, 06 Jan 2025 01:34:51 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -30895,7 +30895,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-gjVmqjEUAOB8MTvJjAKM0zod/am3K9pkPZmjNvQXTwU="
+          "Value": "sha256-N7J6dPZunbh9P8j9PFmxgnr1ybWhRIHbBQmX8hLP6tI="
         }
       ]
     },
@@ -30982,51 +30982,6 @@
       ]
     },
     {
-      "Route": "ViewJS/nextactivitytree.fp4m8lehpu.js",
-      "AssetFile": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\ViewJS\\nextactivitytree.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "6125"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"raIda+r6LR+bzhbFXkEiTL3YNOZxvZS2BZb4D0WR1zo=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Thu, 19 Sep 2024 01:30:28 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "fp4m8lehpu"
-        },
-        {
-          "Name": "label",
-          "Value": "ViewJS/nextactivitytree.js"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-raIda+r6LR+bzhbFXkEiTL3YNOZxvZS2BZb4D0WR1zo="
-        }
-      ]
-    },
-    {
       "Route": "ViewJS/nextactivitytree.js",
       "AssetFile": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\ViewJS\\nextactivitytree.js",
       "Selectors": [],
@@ -31037,7 +30992,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "6125"
+          "Value": "6252"
         },
         {
           "Name": "Content-Type",
@@ -31045,11 +31000,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"raIda+r6LR+bzhbFXkEiTL3YNOZxvZS2BZb4D0WR1zo=\""
+          "Value": "\"Zi3SN4lyLDz9AikG1pgXDl891v5vn0U9QbwO0KWnHfQ=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 19 Sep 2024 01:30:28 GMT"
+          "Value": "Mon, 06 Jan 2025 02:37:48 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -31059,13 +31014,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-raIda+r6LR+bzhbFXkEiTL3YNOZxvZS2BZb4D0WR1zo="
+          "Value": "sha256-Zi3SN4lyLDz9AikG1pgXDl891v5vn0U9QbwO0KWnHfQ="
         }
       ]
     },
     {
-      "Route": "ViewJS/pordermanager.gzj172hxk3.js",
-      "AssetFile": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\ViewJS\\pordermanager.js",
+      "Route": "ViewJS/nextactivitytree.mhep1n29f8.js",
+      "AssetFile": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\ViewJS\\nextactivitytree.js",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -31074,7 +31029,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "16925"
+          "Value": "6252"
         },
         {
           "Name": "Content-Type",
@@ -31082,11 +31037,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"lOVf7mo0kTSreMdZKhwG2b/MayADMgmc6y5xk2tOflw=\""
+          "Value": "\"Zi3SN4lyLDz9AikG1pgXDl891v5vn0U9QbwO0KWnHfQ=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 19 Sep 2024 01:30:28 GMT"
+          "Value": "Mon, 06 Jan 2025 02:37:48 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -31096,7 +31051,52 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "gzj172hxk3"
+          "Value": "mhep1n29f8"
+        },
+        {
+          "Name": "label",
+          "Value": "ViewJS/nextactivitytree.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Zi3SN4lyLDz9AikG1pgXDl891v5vn0U9QbwO0KWnHfQ="
+        }
+      ]
+    },
+    {
+      "Route": "ViewJS/pordermanager.bumusdt6nf.js",
+      "AssetFile": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\ViewJS\\pordermanager.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "16972"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"3fBE5duL/VvJnJ3A9dfViO7o+Q5t+iMCWeSp2tR0hSI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 06 Jan 2025 01:50:03 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "bumusdt6nf"
         },
         {
           "Name": "label",
@@ -31104,7 +31104,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-lOVf7mo0kTSreMdZKhwG2b/MayADMgmc6y5xk2tOflw="
+          "Value": "sha256-3fBE5duL/VvJnJ3A9dfViO7o+Q5t+iMCWeSp2tR0hSI="
         }
       ]
     },
@@ -31119,7 +31119,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "16925"
+          "Value": "16972"
         },
         {
           "Name": "Content-Type",
@@ -31127,11 +31127,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"lOVf7mo0kTSreMdZKhwG2b/MayADMgmc6y5xk2tOflw=\""
+          "Value": "\"3fBE5duL/VvJnJ3A9dfViO7o+Q5t+iMCWeSp2tR0hSI=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 19 Sep 2024 01:30:28 GMT"
+          "Value": "Mon, 06 Jan 2025 01:50:03 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -31141,12 +31141,12 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-lOVf7mo0kTSreMdZKhwG2b/MayADMgmc6y5xk2tOflw="
+          "Value": "sha256-3fBE5duL/VvJnJ3A9dfViO7o+Q5t+iMCWeSp2tR0hSI="
         }
       ]
     },
     {
-      "Route": "ViewJS/sfmain.7b6fkwm9h4.js",
+      "Route": "ViewJS/sfmain.ckx0fjrh4d.js",
       "AssetFile": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\wwwroot\\ViewJS\\sfmain.js",
       "Selectors": [],
       "ResponseHeaders": [
@@ -31156,7 +31156,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1367"
+          "Value": "1377"
         },
         {
           "Name": "Content-Type",
@@ -31164,11 +31164,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"s4Hs/nulNnFc36POW624nV/uJ35sAP18zto6bpN/gdk=\""
+          "Value": "\"FMtzzn5zp6Dver+fj3VZBpPsAVdUENEYM5YoH34bS64=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 19 Sep 2024 01:30:28 GMT"
+          "Value": "Mon, 06 Jan 2025 01:50:38 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -31178,7 +31178,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "7b6fkwm9h4"
+          "Value": "ckx0fjrh4d"
         },
         {
           "Name": "label",
@@ -31186,7 +31186,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-s4Hs/nulNnFc36POW624nV/uJ35sAP18zto6bpN/gdk="
+          "Value": "sha256-FMtzzn5zp6Dver+fj3VZBpPsAVdUENEYM5YoH34bS64="
         }
       ]
     },
@@ -31201,7 +31201,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1367"
+          "Value": "1377"
         },
         {
           "Name": "Content-Type",
@@ -31209,11 +31209,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"s4Hs/nulNnFc36POW624nV/uJ35sAP18zto6bpN/gdk=\""
+          "Value": "\"FMtzzn5zp6Dver+fj3VZBpPsAVdUENEYM5YoH34bS64=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 19 Sep 2024 01:30:28 GMT"
+          "Value": "Mon, 06 Jan 2025 01:50:38 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -31223,7 +31223,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-s4Hs/nulNnFc36POW624nV/uJ35sAP18zto6bpN/gdk="
+          "Value": "sha256-FMtzzn5zp6Dver+fj3VZBpPsAVdUENEYM5YoH34bS64="
         }
       ]
     }

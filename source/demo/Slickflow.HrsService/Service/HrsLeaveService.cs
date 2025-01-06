@@ -12,6 +12,9 @@ using Slickflow.HrsService.Utility;
 
 namespace Slickflow.HrsService.Service
 {
+    /// <summary>
+    /// Leave Service
+    /// </summary>
     public class HrsLeaveService : ServiceBase, IHrsLeaveService, IWfServiceRegister
     {
         #region IWorkflowRegister members
@@ -61,6 +64,7 @@ namespace Slickflow.HrsService.Service
                 var appInstanceID = QuickRepository.Insert<HrsLeaveEntity>(session.Connection, entity, session.Transaction);
 
                 //保存流程中关于业务信息的关联信息
+                //Save the associated information about business information in the process
                 runner.AppInstanceID = appInstanceID.ToString();
                 runner.AppInstanceCode = string.Format("A4L-{0}", appInstanceID.ToString());
 

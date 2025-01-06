@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Slickflow.QingJia": {
+    "Slickflow.WebDemo": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "weatherforecast",

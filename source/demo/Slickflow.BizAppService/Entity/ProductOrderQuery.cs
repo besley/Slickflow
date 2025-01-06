@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Slickflow.BizAppService.Entity
 {
+    /// <summary>
+    /// Product Order Query
+    /// </summary>
     public class ProductOrderQuery : QueryBase
     {
         public string OrderCode { get; set; }

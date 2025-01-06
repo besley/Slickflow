@@ -6,7 +6,7 @@
   "author": "besley <william.ligong@hotmail.com>",
   "private": true,
   "scripts": {
-    "serve": "quasar dev",
+    "serve": "SET NODE_OPTIONS=--openssl-legacy-provider && quasar dev",
     "build": "quasar build",
     "build:pwa": "quasar build -m pwa",
     "lint": "eslint --ext .js,.vue ./",

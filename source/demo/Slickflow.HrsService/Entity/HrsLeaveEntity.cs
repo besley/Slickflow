@@ -5,6 +5,9 @@ using System.Web;
 
 namespace Slickflow.HrsService.Entity
 {
+    /// <summary>
+    /// Leave entity
+    /// </summary>
     [Table("HrsLeave")]
     public class HrsLeaveEntity
     {
@@ -29,6 +32,5 @@ namespace Slickflow.HrsService.Entity
         public string CreatedUserID { get; set; }
         public string CreatedUserName { get; set; }
         public DateTime CreatedDateTime { get; set; }
-        
     }
 }

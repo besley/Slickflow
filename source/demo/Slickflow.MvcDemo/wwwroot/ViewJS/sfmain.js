@@ -9,7 +9,6 @@
     }
 
     sfmain.initWfAppRunner = function () {
-        //仅作示例用
         var user = lsm.getUserIdentity();
 
         sfmain.WfAppRunner.UserID = user.UserID;
@@ -28,11 +27,12 @@
     }
 
     //显示流程图
+    //Display flowchart
     sfmain.showKGraph = function () {
         if (pordermanager.mProductOrderProcessGUID === "") {
             $.msgBox({
                 title: "DynamicFlow / KGraph",
-                content: "请选定有流程信息的表单！",
+                content: "Please select a form with process information！",
                 type: "alert"
             });
             return false;

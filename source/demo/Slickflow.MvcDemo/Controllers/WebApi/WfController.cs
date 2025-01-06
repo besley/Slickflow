@@ -9,23 +9,18 @@ using SlickOne.WebUtility;
 
 namespace Slickflow.MvcDemo.Controllers.WebApi
 {
-    public class Conditions
-    {
-        public Dictionary<string, string> KeyValuePair { get; set; }
-        public string Name { get; set; }
-    }
-
     /// <summary>
+    /// Process Service Controller
+    /// Example code for developers' reference
     /// 流程服务控制器
-    /// 示例代码，请勿直接作为生产项目代码使用。
+    /// 示例代码，供开发人员参考
     /// </summary>
     public class WfController : Controller
     {
         /// <summary>
+        /// Query process file
         /// 读取XML文件
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult<ProcessFileEntity> QueryProcessFile([FromBody] ProcessFileQuery query)
         {
@@ -45,10 +40,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         }
 
         /// <summary>
+        /// Query next step
         /// 查询流程下一步信息
         /// </summary>
-        /// <param name="runner">当前执行人</param>
-        /// <returns>流程下一步信息</returns>
         [HttpPost]
         public ResponseResult<List<NodeView>> QueryNextStep([FromBody] WfAppRunner runner)
         {
@@ -67,10 +61,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         }
 
         /// <summary>
+        /// Get next step role user tree
         /// 查询流程下一步信息的节点角色人员树
         /// </summary>
-        /// <param name="runner">当前执行人</param>
-        /// <returns>流程下一步信息</returns>
         [HttpPost]
         public ResponseResult<List<NodeView>> GetNextStepRoleUserTree([FromBody] WfAppRunner runner)
         {
@@ -89,10 +82,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         }
 
         /// <summary>
+        /// Get first step role user tree
         /// 查询流程下一步信息的节点角色人员树
         /// </summary>
-        /// <param name="runner">当前执行人</param>
-        /// <returns>流程下一步信息</returns>
         [HttpPost]
         public ResponseResult<List<NodeView>> GetFirstStepRoleUserTree([FromBody] WfAppRunner runner)
         {
@@ -117,10 +109,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         }
 
         /// <summary>
+        /// Query process roles
         /// 获取流程定义下的角色数据
         /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult<List<Role>> QueryProcessRoles([FromBody] ProcessQuery query)
         {
@@ -139,10 +130,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         }
 
         /// <summary>
+        /// Query process role user list
         /// 获取流程定义下的角色数据
         /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult<List<Role>> QueryProcessRoleUserList([FromBody] ProcessQuery query)
         { 
@@ -161,10 +151,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         }
 
         /// <summary>
+        /// Get user by role
         /// 获取角色下的用户数据
         /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
         [HttpGet]
         public ResponseResult<List<Performer>> GetUserByRole(string id)
         {

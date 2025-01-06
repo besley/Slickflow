@@ -4,7 +4,7 @@
 
     pordermanager.mProductOrderProcessGUID = config.ProcessGUID;
     pordermanager.mcurrentProcessInstanceID = 0;
-    pordermanager.mcurrentAppName = "生产订单";
+    pordermanager.mcurrentAppName = "ProductOrder";
 
     var porderStatus = {};
     porderStatus.Ready = 1;
@@ -41,7 +41,7 @@
         if (user === undefined) {
             $.msgBox({
                 title: "MvcDemo / Order",
-                content: "请选择用户，重新登录！",
+                content: "Please select a user and login again！",
                 type: "alert"
             });
             return;
@@ -50,7 +50,7 @@
         var runner = {
             "UserID": user.UserID,
             "UserName": user.UserName,
-            "AppName": "生产订单",
+            "AppName": "ProductOrder",
             "AppInstanceID": pordermanager.selectedProductOrderID.toString(),
             "ProcessGUID": pordermanager.mProductOrderProcessGUID,
             "Version": "1"
@@ -106,22 +106,22 @@
 
     function fillOrderGrid(dsProductOrder) {
 
-        var statusTextArray = ["准备", "等待派单", "等待打样", "等待生产", "等待质检", "等待称重", "等待发货", "完成"];
+        var statusTextArray = ["Ready", "toDispatch", "toSample", "toManufature", "toQCCheck", "toWeight", "toDeliverty", "Completed"];
         //grid column define
         var columnProductOrder = [
                     { id: "ID", name: "ID", field: "ID", width: 40, cssClass: "bg-gray" },
-                    { id: "OrderCode", name: "订单标号", field: "OrderCode", width: 80, cssClass: "bg-gray" },
-                    { id: "ProductName", name: "产品名称", field: "ProductName", width: 90, cssClass: "bg-gray" },
-                    { id: "Status", name: "状态", field: "Status", width: 70, cssClass: "bg-gray", formatter: Slick.Formatters.EnmuabledText, enumabledTextArray: statusTextArray },
-                    { id: "Progress", name: "进度", field: "Status", width: 60, cssClass: "bg-gray", formatter: Slick.Formatters.PercentStatusBar, maxStatus: statusTextArray.length },
-                    { id: "UnitPrice", name: "单价", field: "UnitPrice", width: 60, cssClass: "bg-gray" },
-                    { id: "Quantity", name: "数量", field: "Quantity", width: 60, cssClass: "bg-gray" },
-                    { id: "TotalPrice", name: "总价", field: "TotalPrice", width: 80, cssClass: "bg-gray" },
-                    { id: "CreatedTime", name: "订单时间", field: "CreatedTime", width: 120, cssClass: "bg-gray", formatter: Slick.Formatters.DataTime },
-                    { id: "CustomerName", name: "客户名称", field: "CustomerName", width: 120, cssClass: "bg-gray" },
-                    { id: "Address", name: "客户地址", field: "Address", width: 120, cssClass: "bg-gray" },
-                    { id: "Mobile", name: "手机", field: "Mobile", width: 100, cssClass: "bg-gray" },
-                    { id: "LastUpdatedTime", name: "最后更新时间", field: "LastUpdatedTime", width: 120, cssClass: "bg-gray", formatter: Slick.Formatters.DataTime },
+                    { id: "OrderCode", name: "OrderCode", field: "OrderCode", width: 80, cssClass: "bg-gray" },
+                    { id: "ProductName", name: "OrderName", field: "ProductName", width: 90, cssClass: "bg-gray" },
+                    { id: "Status", name: "Status", field: "Status", width: 70, cssClass: "bg-gray", formatter: Slick.Formatters.EnmuabledText, enumabledTextArray: statusTextArray },
+                    { id: "Progress", name: "Progress", field: "Status", width: 60, cssClass: "bg-gray", formatter: Slick.Formatters.PercentStatusBar, maxStatus: statusTextArray.length },
+                    { id: "UnitPrice", name: "Price", field: "UnitPrice", width: 60, cssClass: "bg-gray" },
+                    { id: "Quantity", name: "Quantity", field: "Quantity", width: 60, cssClass: "bg-gray" },
+                    { id: "TotalPrice", name: "Price", field: "TotalPrice", width: 80, cssClass: "bg-gray" },
+                    { id: "CreatedTime", name: "CreatedTime", field: "CreatedTime", width: 120, cssClass: "bg-gray", formatter: Slick.Formatters.DataTime },
+                    { id: "CustomerName", name: "CustomerName", field: "CustomerName", width: 120, cssClass: "bg-gray" },
+                    { id: "Address", name: "Address", field: "Address", width: 120, cssClass: "bg-gray" },
+                    { id: "Mobile", name: "Mobile", field: "Mobile", width: 100, cssClass: "bg-gray" },
+                    { id: "LastUpdatedTime", name: "LastUpdatedTime", field: "LastUpdatedTime", width: 120, cssClass: "bg-gray", formatter: Slick.Formatters.DataTime },
         ];
 
         var optionsProductOrder = {
@@ -213,11 +213,11 @@
                 if (result.Status === 1) {
                     $.msgBox({
                         title: "MvcDemo / Order",
-                        content: "新的订单数据同步成功！",
+                        content: "New order data synchronized successfully！",
                         type: "info"
                     });
 
-                    //重新加载数据
+                    //refresh data
                     pordermanager.getProductOrderList(false);
                 } else {
                     $.msgBox({
@@ -249,6 +249,7 @@
 
         if (step === "dispatch") {
             //判断是否是重复派单
+            //Determine whether it is a duplicate dispatch
             jshelper.ajaxGet("api/productorder/checkdispatched/" + pordermanager.selectedProductOrderID,
                         null,
                         function (result) {
@@ -304,10 +305,10 @@
             if (result.Status === 1) {
                 var columnReadyActivityInstance = [
                     { id: "ID", name: "ID", field: "ID", width: 40, cssClass: "bg-gray" },
-                    { id: "AppInstanceID", name: "订单ID", field: "AppInstanceID", width: 40, cssClass: "bg-gray" },
-                    { id: "ActivityName", name: "当前节点", field: "ActivityName", width: 80, cssClass: "bg-gray" },
-                    { id: "CreatedDateTime", name: "创建时间", field: "CreatedDateTime", width: 120, cssClass: "bg-gray", formatter: Slick.Formatters.DataTime },
-                    { id: "AssignedToUserNames", name: "任务接收人", field: "AssignedToUserNames", width: 320, cssClass: "bg-gray" },
+                    { id: "AppInstanceID", name: "OrderID", field: "AppInstanceID", width: 40, cssClass: "bg-gray" },
+                    { id: "ActivityName", name: "ActivityName", field: "ActivityName", width: 80, cssClass: "bg-gray" },
+                    { id: "CreatedDateTime", name: "CreatedDateTiem", field: "CreatedDateTime", width: 120, cssClass: "bg-gray", formatter: Slick.Formatters.DataTime },
+                    { id: "AssignedToUserNames", name: "AssignedToUser", field: "AssignedToUserNames", width: 320, cssClass: "bg-gray" },
                 ];
 
                 var optionsReadyActivityInstance = {
@@ -360,9 +361,9 @@
             if (result.Status === 1) {
                 var columnAppFlow = [
                     { id: "ID", name: "ID", field: "ID", width: 40, cssClass: "bg-gray" },
-                    { id: "ActivityName", name: "完成节点", field: "ActivityName", width: 80, cssClass: "bg-gray" },
-                    { id: "ChangedTime", name: "完成时间", field: "ChangedTime", width: 120, cssClass: "bg-gray", formatter: Slick.Formatters.DataTime },
-                    { id: "ChangedUserName", name: "完成人", field: "ChangedUserName", width: 120, cssClass: "bg-gray" },
+                    { id: "ActivityName", name: "ActivityName", field: "ActivityName", width: 80, cssClass: "bg-gray" },
+                    { id: "ChangedTime", name: "ChangedTime", field: "ChangedTime", width: 120, cssClass: "bg-gray", formatter: Slick.Formatters.DataTime },
+                    { id: "ChangedUserName", name: "ChangedUser", field: "ChangedUserName", width: 120, cssClass: "bg-gray" },
                 ];
 
                 var optionsAppFlow = {

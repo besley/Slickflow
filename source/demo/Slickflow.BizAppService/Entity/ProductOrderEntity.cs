@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.BizAppService.Entity
 {
     /// <summary>
+    /// Product Order Entity
     /// 生产订单实体
     /// </summary>
     [Table("ManProductOrder")]

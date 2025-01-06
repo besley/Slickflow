@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.BizAppService.Entity
 {
     /// <summary>
+    /// Woprkflow Application Result
     /// 流程和应用交互结果对象封装
     /// </summary>
     public class WfAppResult
@@ -20,7 +21,7 @@ namespace Slickflow.BizAppService.Entity
         }
 
         /// <summary>
-        /// 默认
+        /// Default
         /// </summary>
         /// <returns></returns>
         public static WfAppResult Default()
@@ -29,7 +30,7 @@ namespace Slickflow.BizAppService.Entity
         }
 
         /// <summary>
-        /// 成功
+        /// Success
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
@@ -39,7 +40,7 @@ namespace Slickflow.BizAppService.Entity
         }
 
         /// <summary>
-        /// 失败
+        /// Error
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>

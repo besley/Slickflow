@@ -15,7 +15,7 @@
     <link href="~/Content/master.css" rel="stylesheet" />
 
     <title>
-        产品订单首页
+        Product Order Page
     </title>
     <style id="content-styles">
         .percent-complete-bar {
@@ -32,20 +32,20 @@
         <div class="row-fluid">
             <div class="span12">
                 <div class="container-fluid">
-                    <!-- 功能操作按钮 -->
+                    <!-- Function Button -->
                     <div class="row-fluid">
                         <div class="top-nav ">
-                            <a href="#" class="btn btn-info" onclick="pordermanager.syncorder();"><i class="icon-white icon-ok"></i> 同步</a>
+                            <a href="#" class="btn btn-info" onclick="pordermanager.syncorder();"><i class="icon-white icon-ok"></i> Sync Order</a>
                             <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('dispatch');">
-                                <i class="icon-white icon-user"></i>派单
+                                <i class="icon-white icon-user"></i>Dispatch
                             </a>
-                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('sample');"><i class="icon-white icon-print"></i> 打样</a>
-                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('manufacture');"><i class="icon-white icon-cog"></i> 生产</a>
-                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('qccheck');"><i class="icon-white icon-zoom-in"></i> 质检</a>
-                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('weight');"><i class="icon-white icon-shopping-cart"></i> 称重</a>
-                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('delivery');"><i class="icon-white icon-plane"></i> 发货</a>
+                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('sample');"><i class="icon-white icon-print"></i> Sample</a>
+                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('manufacture');"><i class="icon-white icon-cog"></i> Manufature</a>
+                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('qccheck');"><i class="icon-white icon-zoom-in"></i> QCCheck</a>
+                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('weight');"><i class="icon-white icon-shopping-cart"></i> Weight</a>
+                            <a href="#" class="btn btn-info" onclick="pordermanager.runAppFlow('delivery');"><i class="icon-white icon-plane"></i> Delivery</a>
                             <a href="#" onclick="sfmain.showKGraph();" class="btn btn-success">
-                                <i class="icon-white icon-picture"></i> 流程图
+                                <i class="icon-white icon-picture"></i> FlowChart
                             </a>
 
                             <!--search & user info start-->
@@ -61,7 +61,7 @@
                                         <li>
                                             <a href="~/Account/Login" data-toggle="modal" data-target="#modelLoginForm"
                                                role="dialog" id="btnLogount" onclick="onUserLogout();">
-                                                <i class="fa fa-key"></i> 重新登录
+                                                <i class="fa fa-key"></i> Login Again
                                             </a>
                                         </li>
                                     </ul>
@@ -72,25 +72,25 @@
                         </div>
                     </div>
 
-                    <!-- 主数据显示 -->
+                    <!-- Main Data -->
                     <div class="row-fluid">
                         <legend>
-                            生产订单
+                            Product Order
                             <select id="ddlStatus">
-                                <option value="-1">--请选择--</option>
-                                <option value="1">准备</option>
-                                <option value="2">等待派单</option>
-                                <option value="3">等待打样</option>
-                                <option value="4">等待生产</option>
-                                <option value="5">等待质检</option>
-                                <option value="6">等待称重</option>
-                                <option value="7">完成</option>
+                                <option value="-1">--Please Choose--</option>
+                                <option value="1">Ready</option>
+                                <option value="2">toDispatch</option>
+                                <option value="3">toSample</option>
+                                <option value="4">toManufacture</option>
+                                <option value="5">toQCCheck</option>
+                                <option value="6">toWeight</option>
+                                <option value="7">Completed</option>
                             </select>
-                            <input type="button" value="查询" onclick="pordermanager.queryByStatus();" />
+                            <input type="button" value="Query" onclick="pordermanager.queryByStatus();" />
                             <span id="divCondition" style="display:none">
-                                <span style="font-size:small"> 请选择条件：</span>
-                                <input type="checkbox" id="chkStorage" /><span style="font-size:small">库存?</span>
-                                <input type="checkbox" id="chkWeight" /><span style="font-size:small">称重?</span>
+                                <span style="font-size:small"> Choose Condition：</span>
+                                <input type="checkbox" id="chkStorage" /><span style="font-size:small">Inventory?</span>
+                                <input type="checkbox" id="chkWeight" /><span style="font-size:small">Weight?</span>
                             </span>
                         </legend>
                     </div>
@@ -98,16 +98,16 @@
                         <div id="myGridProductOrder" style="width:100%;height:400px;"></div>
                     </div>
                 </div>
-                <legend>流程数据</legend>
-                <!-- 流程待办记录及流转日志-->
+                <legend>Flow Data</legend>
+                <!-- Process backlog and flow log-->
                 <div class="row-fluid">
                     <ul id="myTab" class="nav nav-tabs">
                         <li class="active">
                             <a href="#tabReadyActivityInstance" data-toggle="tab">
-                                待办任务
+                                ToDo Task
                             </a>
                         </li>
-                        <li><a href="#tabAppFlowLog" data-toggle="tab">流转日志</a></li>
+                        <li><a href="#tabAppFlowLog" data-toggle="tab">AppFlow Log</a></li>
                     </ul>
                     <div id="myTabContent" class="tab-content">
                         <div class="tab-pane fade in active" id="tabReadyActivityInstance">
@@ -123,9 +123,30 @@
                     </div>
                 </div>
 
+                <legend>UI operation instructions</legend>
+                <!-- Process operation instructions -->
+                <div class="row-fluit">
+                    <div class="span12">
+                        <p>1.  Demo is a simulation of an e-commerce product order process, roughly introduced as follows:</ p>
+
+                        <p>
+                            1) Synchronization: The online order data will be synchronized to the internal order system, with the role of the salesperson <br />
+                            2) Dispatch: Refers to the process of placing and dividing orders by the salesperson; The executing role is a salesperson <br />
+                            3) The executing role of the sample is the sample mate <br />
+                            4) The executing role of production is the Merchaandiser <br />
+                            5) The executing role of quality inspection is the quality check <br />
+                            6) The roles responsible for weighing and shipping are both express mate.
+                        </p>
+
+                        <p>
+                            2. The interface buttons have permission control, allowing users under different roles to log in and perform corresponding operations <br />
+                            3. Implement functions such as process initiation, running, jumping, conditional branching, and task distribution.
+                        </p>
+                    </div>
+                </div>
+
                 <legend>界面操作说明</legend>
-                <!-- 流程操作说明 -->
-                <div class="row-fluid">
+                <div class="row-fluit">
                     <div class="span12">
                         <span>
                             <p>1. Demo是模拟一个电商商品订单流程，大致介绍如下：</p>
@@ -164,14 +185,14 @@
     <div id="modelNextStepForm" class="modal hide eavModalDialog" style="width:400px;height:500px;">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalLabel">选取下一步人员</h3>
+            <h3 id="myModalLabel">Please choose next step user</h3>
         </div>
         <div class="modal-body" style="width:300px;height:320px;">
             <ul id="nextStepTree" class="ztree" style="overflow:auto;"></ul>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" onclick="nextactivitytree.sure();">确定</button>
-            <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+            <button class="btn btn-primary" onclick="nextactivitytree.sure();">Sure</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
         </div>
     </div>
 
