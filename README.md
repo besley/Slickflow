@@ -202,6 +202,7 @@ http://www.slickflow.com/demo/index
 http://doc.slickflow.com (中文) 
 http://doc.slickflow.net(English) 
 
+**Donation 捐赠:**  
 您的捐赠将用于产品的持续研发和社区建设
 
 Your donation will be used for the continuous research and development of the product and community building
