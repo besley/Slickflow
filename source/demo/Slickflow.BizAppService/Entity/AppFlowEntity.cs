@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.BizAppService.Entity
 {
     /// <summary>
+    /// App Flow Entity
     /// 流转记录实体对象
     /// </summary>
     [Table("BizAppFlow")]

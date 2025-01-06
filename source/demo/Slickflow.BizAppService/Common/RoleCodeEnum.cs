@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.BizAppService.Common
 {
     /// <summary>
+    /// Role Code Type
     /// 角色代码类型
     /// </summary>
     public enum RoleCodeEnum

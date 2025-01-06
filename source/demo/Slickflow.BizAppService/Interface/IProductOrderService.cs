@@ -9,6 +9,7 @@ using Slickflow.BizAppService.Entity;
 namespace Slickflow.BizAppService.Interface
 {
     /// <summary>
+    /// Product Order Service Interface
     /// 生产订单服务接口
     /// </summary>
     public partial interface IProductOrderService

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Slickflow.MvcDemo.Controllers.Mvc
 {
     /// <summary>
-    /// 任务的执行者对象
+    /// Performer for tasks
     /// </summary>
     public class Performer
     {
@@ -32,7 +32,7 @@ namespace Slickflow.MvcDemo.Controllers.Mvc
     }
 
     /// <summary>
-    /// 执行者列表类
+    /// Performer list
     /// </summary>
     public class PerformerList : List<Performer>
     {
@@ -42,7 +42,7 @@ namespace Slickflow.MvcDemo.Controllers.Mvc
     }
 
     /// <summary>
-    /// 流程执行人(业务应用的办理者)
+    /// Workflow Application Runner
     /// </summary>
     public class WfAppRunner
     {

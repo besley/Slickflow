@@ -8,7 +8,7 @@ using Slickflow.Engine.Common;
 namespace Slickflow.HrsService.Interface
 {
     /// <summary>
-    /// 工作流注册接口
+    /// Workflow Service Register
     /// </summary>
     public interface IWfServiceRegister
     {

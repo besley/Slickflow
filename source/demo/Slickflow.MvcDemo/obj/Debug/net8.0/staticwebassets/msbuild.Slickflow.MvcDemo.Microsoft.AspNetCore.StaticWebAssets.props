@@ -5376,8 +5376,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>elwiwo8fj1</Fingerprint>
-      <Integrity>gjVmqjEUAOB8MTvJjAKM0zod/am3K9pkPZmjNvQXTwU=</Integrity>
+      <Fingerprint>3pnxk2u0d7</Fingerprint>
+      <Integrity>N7J6dPZunbh9P8j9PFmxgnr1ybWhRIHbBQmX8hLP6tI=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\accountmanager.js'))</OriginalItemSpec>
@@ -5412,8 +5412,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>fp4m8lehpu</Fingerprint>
-      <Integrity>raIda+r6LR+bzhbFXkEiTL3YNOZxvZS2BZb4D0WR1zo=</Integrity>
+      <Fingerprint>mhep1n29f8</Fingerprint>
+      <Integrity>Zi3SN4lyLDz9AikG1pgXDl891v5vn0U9QbwO0KWnHfQ=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\nextactivitytree.js'))</OriginalItemSpec>
@@ -5430,8 +5430,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>gzj172hxk3</Fingerprint>
-      <Integrity>lOVf7mo0kTSreMdZKhwG2b/MayADMgmc6y5xk2tOflw=</Integrity>
+      <Fingerprint>bumusdt6nf</Fingerprint>
+      <Integrity>3fBE5duL/VvJnJ3A9dfViO7o+Q5t+iMCWeSp2tR0hSI=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\pordermanager.js'))</OriginalItemSpec>
@@ -5448,8 +5448,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>7b6fkwm9h4</Fingerprint>
-      <Integrity>s4Hs/nulNnFc36POW624nV/uJ35sAP18zto6bpN/gdk=</Integrity>
+      <Fingerprint>ckx0fjrh4d</Fingerprint>
+      <Integrity>FMtzzn5zp6Dver+fj3VZBpPsAVdUENEYM5YoH34bS64=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\sfmain.js'))</OriginalItemSpec>

@@ -56,9 +56,10 @@
             function (result) {
                 if (result.Status === 1) {
                     //弹窗步骤人员办理弹窗
-                    var nextStep = result.Entity[0];        //单步演示
+                    //Pop up steps for personnel to handle pop ups
+                    var nextStep = result.Entity[0];        //Single Step Demo
                     var zNodes = [
-                         { id: 0, pId: -1, name: "下一步流转", type: "root", open: true },
+                         { id: 0, pId: -1, name: "Next Step Info", type: "root", open: true },
                          {
                              id: 1,
                              pId: 0,
@@ -101,17 +102,19 @@
 
     nextactivitytree.sure = function () {
         //取得下一步节点信息
+        //Get next step info
         var selectedNodes = nextactivitytree.mzTree.getCheckedNodes();
         if (selectedNodes.length <= 0) {
             $.msgBox({
                 title: "DynFlow / GoNext",
-                content: "请单击选中下一步人员列表再进行流转！",
+                content: "Please select the next performer list to run！",
                 type: "alert"
             });
             return false;
         }
 
         //单步可选示例
+        //Single step optional example
         var nextStep = {};
         nextStep.Users = [];
         var activityGUID = "", activityName="";
@@ -133,7 +136,7 @@
         
         $.msgBox({
             title: "Are You Sure",
-            content: "请确认下一步是否要流转到步骤：" + activityName,
+            content: "Please confirm next step：" + activityName,
             type: "confirm",
             buttons: [{ value: "Yes" }, { value: "Cancel" }],
             success: function (result) {
@@ -144,7 +147,7 @@
                             if (result.Status === 1) {
                                 $.msgBox({
                                     title: "DynFlow / GoNext",
-                                    content: "流程已经流转到下一步！",
+                                    content: "The process has moved on to the next step！",
                                     type: "info"
                                 });
                                 $("#modelNextStepForm").modal("hide");

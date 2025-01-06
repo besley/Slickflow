@@ -8,6 +8,9 @@ using Slickflow.HrsService.Entity;
 
 namespace Slickflow.HrsService.Interface
 {
+    /// <summary>
+    /// Application flow service
+    /// </summary>
     public interface IAppFlowService
     {
         List<AppFlowEntity> GetPaged(AppFlowQuery query, out int count);

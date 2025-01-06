@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.HrsService.Common
 {
     /// <summary>
+    /// Process and application interaction result object encapsulation
     /// 流程和应用交互结果对象封装
     /// </summary>
     public class WfAppResult
@@ -20,7 +21,7 @@ namespace Slickflow.HrsService.Common
         }
 
         /// <summary>
-        /// 默认
+        /// Default
         /// </summary>
         /// <returns></returns>
         public static WfAppResult Default()
@@ -29,20 +30,16 @@ namespace Slickflow.HrsService.Common
         }
 
         /// <summary>
-        /// 成功
+        /// Success
         /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
         public static WfAppResult Success(string message = null)
         {
             return new WfAppResult { Status = 1, Message = message };
         }
 
         /// <summary>
-        /// 失败
+        /// Error
         /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
         public static WfAppResult Error(string message)
         {
             return new WfAppResult { Status = -1, Message = message };

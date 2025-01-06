@@ -12,17 +12,18 @@ using Slickflow.Engine.Service;
 namespace Slickflow.BizAppService.Service
 {
     /// <summary>
+    /// Interactive service class between engine and application side
+    /// Example code for developers' reference
     /// 引擎和应用端的交互服务类
-    /// 示例代码，请勿直接作为生产项目代码使用。
+    /// 示例代码，供开发人员参考
     /// </summary>
     public class WfAppInteropService
     {
         /// <summary>
-        /// 启动流程
+        /// Start Process
         /// </summary>
         public WfExecutedResult StartProcess(WfAppRunner runner)
         {
-            //启动流程
             var wfService = new WorkflowService();
             var result = wfService.StartProcess(runner);
 
@@ -30,11 +31,8 @@ namespace Slickflow.BizAppService.Service
         }
 
         /// <summary>
-        /// 工作流运行
+        /// Run Process
         /// </summary>
-        /// <param name="session"></param>
-        /// <param name="runner"></param>
-        /// <returns></returns>
         public WfExecutedResult RunProcess(IDbSession session, WfAppRunner runner, IDictionary<string, string> conditions = null)
         {
             var result = new WfExecutedResult();
@@ -43,7 +41,7 @@ namespace Slickflow.BizAppService.Service
 
             foreach (var node in nodeViewList)
             {
-                var performerList = wfService.GetPerformerList(node);       //根据节点角色定义，读取执行者列表
+                var performerList = wfService.GetPerformerList(node);      
                 Dictionary<string, PerformerList> dict = new Dictionary<string, PerformerList>();
                 dict.Add(node.ActivityGUID, performerList);
                 runner.NextActivityPerformers = dict;
@@ -54,10 +52,8 @@ namespace Slickflow.BizAppService.Service
         }
 
         /// <summary>
-        /// 检查流程是否已经运行
+        /// Check process instance running status
         /// </summary>
-        /// <param name="runner">流程查询属性</param>
-        /// <returns></returns>
         public Boolean CheckProcessInstanceRunning(WfAppRunner runner)
         {
             var isRunning = false;
@@ -71,12 +67,8 @@ namespace Slickflow.BizAppService.Service
         }
 
         /// <summary>
-        /// 获取节点信息
+        /// Get Activity
         /// </summary>
-        /// <param name="processGUID"></param>
-        /// <param name="version"></param>
-        /// <param name="activityGUID"></param>
-        /// <returns></returns>
         public Activity GetActivity(string processGUID, string version, string activityGUID)
         {
             var wfService = new WorkflowService();

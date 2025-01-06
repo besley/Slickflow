@@ -5,6 +5,9 @@ using System.Web;
 
 namespace Slickflow.HrsService.Entity
 {
+    /// <summary>
+    /// Leave Opinion Entity
+    /// </summary>
     [Table("HrsLeaveOpinion")]
     public class HrsLeaveOpinionEntity
     {

@@ -13,16 +13,13 @@ using Slickflow.BizAppService.Interface;
 namespace Slickflow.BizAppService.Service
 {
     /// <summary>
-    /// 流转记录器
+    /// Appflow Service
     /// </summary>
     public class AppFlowService : ServiceBase, IAppFlowService
     {
         /// <summary>
-        /// 流程业务记录分页方法
+        /// App Flow Data Paged
         /// </summary>
-        /// <param name="query"></param>
-        /// <param name="count"></param>
-        /// <returns></returns>
         public List<AppFlowEntity> GetPaged(AppFlowQuery query, out int count)
         {
             List<AppFlowEntity> list = null;

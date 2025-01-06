@@ -8,6 +8,7 @@ using Slickflow.Engine.Common;
 namespace Slickflow.BizAppService.Service
 {
     /// <summary>
+    /// Workflow Service Register Interface
     /// 工作流注册接口
     /// </summary>
     public interface IWfServiceRegister

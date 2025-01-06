@@ -3576,17 +3576,17 @@
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-ba4kZWGMY2xZnkTVUpXzCQPnnsGhfSUiLYawa4zX/7c="}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"6648"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022ba4kZWGMY2xZnkTVUpXzCQPnnsGhfSUiLYawa4zX/7c=\u0022"},{"Name":"Last-Modified","Value":"Thu, 19 Sep 2024 01:30:28 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/Slickflow.MvcDemo/ViewJS/accountmanager.elwiwo8fj1.js">
+    <StaticWebAssetEndpoint Include="_content/Slickflow.MvcDemo/ViewJS/accountmanager.3pnxk2u0d7.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\accountmanager.js'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"elwiwo8fj1"},{"Name":"integrity","Value":"sha256-gjVmqjEUAOB8MTvJjAKM0zod/am3K9pkPZmjNvQXTwU="},{"Name":"label","Value":"_content/Slickflow.MvcDemo/ViewJS/accountmanager.js"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"3399"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022gjVmqjEUAOB8MTvJjAKM0zod/am3K9pkPZmjNvQXTwU=\u0022"},{"Name":"Last-Modified","Value":"Thu, 19 Sep 2024 01:30:28 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"3pnxk2u0d7"},{"Name":"integrity","Value":"sha256-N7J6dPZunbh9P8j9PFmxgnr1ybWhRIHbBQmX8hLP6tI="},{"Name":"label","Value":"_content/Slickflow.MvcDemo/ViewJS/accountmanager.js"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"3520"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022N7J6dPZunbh9P8j9PFmxgnr1ybWhRIHbBQmX8hLP6tI=\u0022"},{"Name":"Last-Modified","Value":"Mon, 06 Jan 2025 01:34:51 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/Slickflow.MvcDemo/ViewJS/accountmanager.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\accountmanager.js'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-gjVmqjEUAOB8MTvJjAKM0zod/am3K9pkPZmjNvQXTwU="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"3399"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022gjVmqjEUAOB8MTvJjAKM0zod/am3K9pkPZmjNvQXTwU=\u0022"},{"Name":"Last-Modified","Value":"Thu, 19 Sep 2024 01:30:28 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-N7J6dPZunbh9P8j9PFmxgnr1ybWhRIHbBQmX8hLP6tI="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"3520"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022N7J6dPZunbh9P8j9PFmxgnr1ybWhRIHbBQmX8hLP6tI=\u0022"},{"Name":"Last-Modified","Value":"Mon, 06 Jan 2025 01:34:51 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/Slickflow.MvcDemo/ViewJS/config.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\config.js'))</AssetFile>
@@ -3600,41 +3600,41 @@
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"vr5r31y1o5"},{"Name":"integrity","Value":"sha256-\u002BzzFB8umu3sEh\u002BJgmJmIQRnnvsUFNa8xMAXduC/DmTo="},{"Name":"label","Value":"_content/Slickflow.MvcDemo/ViewJS/config.js"}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"230"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022\u002BzzFB8umu3sEh\u002BJgmJmIQRnnvsUFNa8xMAXduC/DmTo=\u0022"},{"Name":"Last-Modified","Value":"Thu, 19 Sep 2024 01:30:28 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/Slickflow.MvcDemo/ViewJS/nextactivitytree.fp4m8lehpu.js">
-      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\nextactivitytree.js'))</AssetFile>
-      <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"fp4m8lehpu"},{"Name":"integrity","Value":"sha256-raIda\u002Br6LR\u002BbzhbFXkEiTL3YNOZxvZS2BZb4D0WR1zo="},{"Name":"label","Value":"_content/Slickflow.MvcDemo/ViewJS/nextactivitytree.js"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"6125"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022raIda\u002Br6LR\u002BbzhbFXkEiTL3YNOZxvZS2BZb4D0WR1zo=\u0022"},{"Name":"Last-Modified","Value":"Thu, 19 Sep 2024 01:30:28 GMT"}]]]></ResponseHeaders>
-    </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/Slickflow.MvcDemo/ViewJS/nextactivitytree.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\nextactivitytree.js'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-raIda\u002Br6LR\u002BbzhbFXkEiTL3YNOZxvZS2BZb4D0WR1zo="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"6125"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022raIda\u002Br6LR\u002BbzhbFXkEiTL3YNOZxvZS2BZb4D0WR1zo=\u0022"},{"Name":"Last-Modified","Value":"Thu, 19 Sep 2024 01:30:28 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-Zi3SN4lyLDz9AikG1pgXDl891v5vn0U9QbwO0KWnHfQ="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"6252"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022Zi3SN4lyLDz9AikG1pgXDl891v5vn0U9QbwO0KWnHfQ=\u0022"},{"Name":"Last-Modified","Value":"Mon, 06 Jan 2025 02:37:48 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/Slickflow.MvcDemo/ViewJS/pordermanager.gzj172hxk3.js">
+    <StaticWebAssetEndpoint Include="_content/Slickflow.MvcDemo/ViewJS/nextactivitytree.mhep1n29f8.js">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\nextactivitytree.js'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"mhep1n29f8"},{"Name":"integrity","Value":"sha256-Zi3SN4lyLDz9AikG1pgXDl891v5vn0U9QbwO0KWnHfQ="},{"Name":"label","Value":"_content/Slickflow.MvcDemo/ViewJS/nextactivitytree.js"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"6252"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022Zi3SN4lyLDz9AikG1pgXDl891v5vn0U9QbwO0KWnHfQ=\u0022"},{"Name":"Last-Modified","Value":"Mon, 06 Jan 2025 02:37:48 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/Slickflow.MvcDemo/ViewJS/pordermanager.bumusdt6nf.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\pordermanager.js'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"gzj172hxk3"},{"Name":"integrity","Value":"sha256-lOVf7mo0kTSreMdZKhwG2b/MayADMgmc6y5xk2tOflw="},{"Name":"label","Value":"_content/Slickflow.MvcDemo/ViewJS/pordermanager.js"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"16925"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022lOVf7mo0kTSreMdZKhwG2b/MayADMgmc6y5xk2tOflw=\u0022"},{"Name":"Last-Modified","Value":"Thu, 19 Sep 2024 01:30:28 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"bumusdt6nf"},{"Name":"integrity","Value":"sha256-3fBE5duL/VvJnJ3A9dfViO7o\u002BQ5t\u002BiMCWeSp2tR0hSI="},{"Name":"label","Value":"_content/Slickflow.MvcDemo/ViewJS/pordermanager.js"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"16972"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u00223fBE5duL/VvJnJ3A9dfViO7o\u002BQ5t\u002BiMCWeSp2tR0hSI=\u0022"},{"Name":"Last-Modified","Value":"Mon, 06 Jan 2025 01:50:03 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/Slickflow.MvcDemo/ViewJS/pordermanager.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\pordermanager.js'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-lOVf7mo0kTSreMdZKhwG2b/MayADMgmc6y5xk2tOflw="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"16925"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022lOVf7mo0kTSreMdZKhwG2b/MayADMgmc6y5xk2tOflw=\u0022"},{"Name":"Last-Modified","Value":"Thu, 19 Sep 2024 01:30:28 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-3fBE5duL/VvJnJ3A9dfViO7o\u002BQ5t\u002BiMCWeSp2tR0hSI="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"16972"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u00223fBE5duL/VvJnJ3A9dfViO7o\u002BQ5t\u002BiMCWeSp2tR0hSI=\u0022"},{"Name":"Last-Modified","Value":"Mon, 06 Jan 2025 01:50:03 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/Slickflow.MvcDemo/ViewJS/sfmain.7b6fkwm9h4.js">
+    <StaticWebAssetEndpoint Include="_content/Slickflow.MvcDemo/ViewJS/sfmain.ckx0fjrh4d.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\sfmain.js'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"7b6fkwm9h4"},{"Name":"integrity","Value":"sha256-s4Hs/nulNnFc36POW624nV/uJ35sAP18zto6bpN/gdk="},{"Name":"label","Value":"_content/Slickflow.MvcDemo/ViewJS/sfmain.js"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1367"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022s4Hs/nulNnFc36POW624nV/uJ35sAP18zto6bpN/gdk=\u0022"},{"Name":"Last-Modified","Value":"Thu, 19 Sep 2024 01:30:28 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"ckx0fjrh4d"},{"Name":"integrity","Value":"sha256-FMtzzn5zp6Dver\u002Bfj3VZBpPsAVdUENEYM5YoH34bS64="},{"Name":"label","Value":"_content/Slickflow.MvcDemo/ViewJS/sfmain.js"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1377"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022FMtzzn5zp6Dver\u002Bfj3VZBpPsAVdUENEYM5YoH34bS64=\u0022"},{"Name":"Last-Modified","Value":"Mon, 06 Jan 2025 01:50:38 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/Slickflow.MvcDemo/ViewJS/sfmain.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\sfmain.js'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-s4Hs/nulNnFc36POW624nV/uJ35sAP18zto6bpN/gdk="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1367"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022s4Hs/nulNnFc36POW624nV/uJ35sAP18zto6bpN/gdk=\u0022"},{"Name":"Last-Modified","Value":"Thu, 19 Sep 2024 01:30:28 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-FMtzzn5zp6Dver\u002Bfj3VZBpPsAVdUENEYM5YoH34bS64="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1377"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022FMtzzn5zp6Dver\u002Bfj3VZBpPsAVdUENEYM5YoH34bS64=\u0022"},{"Name":"Last-Modified","Value":"Mon, 06 Jan 2025 01:50:38 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
   </ItemGroup>
 </Project>

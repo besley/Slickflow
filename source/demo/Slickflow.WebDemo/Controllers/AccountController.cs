@@ -7,6 +7,9 @@ using SlickOne.WebUtility;
 
 namespace Slickflow.WebDemo.Controllers
 {
+    /// <summary>
+    /// Account Controller
+    /// </summary>
     public class AccountController : Controller
     {
         [HttpGet]

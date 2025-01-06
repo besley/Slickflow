@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Slickflow.MvcDemo.Controllers.Mvc
 {
     /// <summary>
-    /// 用户登录控制器
+    /// User Account Controller
     /// </summary>
     public class AccountController : Controller
     {

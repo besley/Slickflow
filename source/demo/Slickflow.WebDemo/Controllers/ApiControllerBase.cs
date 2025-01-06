@@ -11,7 +11,7 @@ using Slickflow.Data;
 namespace Slickflow.WebDemo.Controllers
 {
     /// <summary>
-    /// 控制器基类
+    /// Controller Base
     /// </summary>
     public class ApiControllerBase : Controller
     {
@@ -28,11 +28,6 @@ namespace Slickflow.WebDemo.Controllers
             }
         }
 
-        /// <summary>
-        /// 按主键查询实体
-        /// </summary>
-        /// <param name="id">主键ID</param>
-        /// <returns>结果及实体</returns>
         [HttpGet]
         public ResponseResult<T> Get<T>(dynamic id) where T : class
         {
@@ -49,11 +44,6 @@ namespace Slickflow.WebDemo.Controllers
             return result;
         }
 
-        /// <summary>
-        /// 插入实体数据
-        /// </summary>
-        /// <param name="entity">实体</param>
-        /// <returns>结果</returns>
         [HttpPost]
         public ResponseResult<dynamic> Insert<T>(T entity) where T : class
         {
@@ -70,11 +60,6 @@ namespace Slickflow.WebDemo.Controllers
             return result;
         }
 
-        /// <summary>
-        /// 更新实体数据
-        /// </summary>
-        /// <param name="entity">实体</param>
-        /// <returns>结果</returns>
         [HttpPut]
         public ResponseResult Update<T>(T entity) where T : class
         {
@@ -94,11 +79,6 @@ namespace Slickflow.WebDemo.Controllers
             return result;
         }
 
-        /// <summary>
-        /// 删除实体数据
-        /// </summary>
-        /// <param name="id">实体主键ID</param>
-        /// <returns>结果</returns>
         [HttpDelete]
         public ResponseResult Delete<T>(int id) where T : class
         {

@@ -13,12 +13,14 @@ using Slickflow.BizAppService.Service;
 namespace Slickflow.MvcDemo.Controllers.WebApi
 {
     /// <summary>
+    /// Process business step record
+    /// Example code for developers' reference
     /// 流程业务步骤记录
-    /// 示例代码，请勿直接作为生产项目代码使用。
+    /// 示例代码，供开发人员参考
     /// </summary>
     public class AppFlowController : Controller
     {
-        #region 基本数据操作
+        #region Interface
         private IAppFlowService _service;
         protected IAppFlowService AppFlowService
         {
@@ -34,10 +36,8 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         #endregion
 
         /// <summary>
-        /// 数据分页显示
+        /// Query Data Paged
         /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult<List<AppFlowEntity>> QueryPaged([FromBody] AppFlowQuery query)
         {
@@ -53,7 +53,7 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             catch (System.Exception ex)
             {
                 result = ResponseResult<List<AppFlowEntity>>.Error(
-                    string.Format("获取{0}分页数据失败，错误{1}", "AppFlow", ex.Message)
+                    string.Format("Get Paged Data {0} Failed，Exception:{1}", "AppFlow", ex.Message)
                 );
             }
             return result;

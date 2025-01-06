@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Slickflow.BizAppService.Entity
 {
     /// <summary>
-    /// 查询实体的基类
+    /// Query base
     /// </summary>
     public abstract class QueryBase
     {
@@ -16,7 +16,7 @@ namespace Slickflow.BizAppService.Entity
         public int TotalRowsCount { get; set; }
         public int TotalPages { get; set; }
         public string RoleCode { get; set; }
-        public string Field { set; get; }//排序字段
-        public string Order { set; get; }//排序方式
+        public string Field { set; get; }
+        public string Order { set; get; }
     }
 }

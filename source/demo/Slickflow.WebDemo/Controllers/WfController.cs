@@ -10,15 +10,11 @@ using SlickOne.WebUtility;
 
 namespace Slickflow.WebDemo.Controllers
 {
-    public class Conditions
-    {
-        public Dictionary<string, string> KeyValuePair { get; set; }
-        public string Name { get; set; }
-    }
-
     /// <summary>
+    /// Process Service Controller
+    /// Example code for developers' reference
     /// 流程服务控制器
-    /// 示例代码，请勿直接作为生产项目代码使用。
+    /// 示例代码，供开发人员参考
     /// </summary>
     public class WfController : Controller
     {
@@ -29,10 +25,9 @@ namespace Slickflow.WebDemo.Controllers
         }
 
         /// <summary>
+        /// Query process file by id
         /// 读取XML文件
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult<ProcessFileEntity> QueryProcessFile([FromBody] ProcessFileQuery query)
         {
@@ -52,10 +47,9 @@ namespace Slickflow.WebDemo.Controllers
         }
 
         /// <summary>
+        /// Get next step info
         /// 获取下一步步骤列表
         /// </summary>
-        /// <param name="runner">运行者</param>
-        /// <returns>步骤列表</returns>
         [HttpPost]
         public ResponseResult<NextStepInfo> GetNextStepInfo([FromBody] WfAppRunner runner)
         {
@@ -67,7 +61,7 @@ namespace Slickflow.WebDemo.Controllers
                 var performers = nextStepInfo.NextActivityPerformers;
                 if (performers == null)
                 {
-                    //读取节点绑定角色
+                    //read role data from activity definition
                 }
 
                 result = ResponseResult<NextStepInfo>.Success(nextStepInfo);
@@ -80,10 +74,9 @@ namespace Slickflow.WebDemo.Controllers
         }
 
         /// <summary>
+        /// Query process roles
         /// 获取流程定义下的角色数据
         /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult<List<Role>> QueryProcessRoles([FromBody] ProcessQuery query)
         {
@@ -109,10 +102,9 @@ namespace Slickflow.WebDemo.Controllers
         }
 
         /// <summary>
+        /// Query process role user list
         /// 获取流程定义下的角色数据
         /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult<List<Role>> QueryProcessRoleUserList([FromBody] ProcessQuery query)
         { 
@@ -131,10 +123,9 @@ namespace Slickflow.WebDemo.Controllers
         }
 
         /// <summary>
+        /// Get user by role
         /// 获取角色下的用户数据
         /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
         [HttpGet]
         public ResponseResult<List<User>> GetUserByRole(string id)
         {
@@ -219,10 +210,8 @@ namespace Slickflow.WebDemo.Controllers
 
 
         /// <summary>
-        /// 运行流程
+        /// Run process
         /// </summary>
-        /// <param name="runner">执行用户</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult RunProcess([FromBody] WfAppRunner runner)
         {
@@ -249,10 +238,9 @@ namespace Slickflow.WebDemo.Controllers
         }
 
         /// <summary>
+        /// Reject Process
         /// 驳回流程
         /// </summary>
-        /// <param name="runner">执行用户</param>
-        /// <returns>执行结果</returns>
         [HttpPost]
         public ResponseResult RejectProcess([FromBody] WfAppRunner runner)
         {

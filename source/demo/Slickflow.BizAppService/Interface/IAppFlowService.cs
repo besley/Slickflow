@@ -8,6 +8,9 @@ using Slickflow.BizAppService.Entity;
 
 namespace Slickflow.BizAppService.Interface
 {
+    /// <summary>
+    /// App Flow Service Interface
+    /// </summary>
     public interface IAppFlowService
     {
         List<AppFlowEntity> GetPaged(AppFlowQuery query, out int count);

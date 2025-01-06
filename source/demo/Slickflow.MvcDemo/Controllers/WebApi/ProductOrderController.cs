@@ -17,12 +17,14 @@ using Slickflow.BizAppService.Service;
 namespace Slickflow.MvcDemo.Controllers.WebApi
 {
     /// <summary>
+    /// Production order controller
+    /// Example code for developers' reference
     /// 生产订单控制器
-    /// 示例代码，请勿直接作为生产项目代码使用。
+    /// 示例代码，供开发人员参考
     /// </summary>
     public partial class ProductOrderController : ApiControllerBase
     {
-        #region 基本数据操作
+        #region Basic Interface
         private IProductOrderService _service;
         protected IProductOrderService ProductOrderService
         {
@@ -37,10 +39,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         }
 
         /// <summary>
+        /// Obtain production order data
         /// 获取生产订单数据
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpGet]
         public ResponseResult<ProductOrderEntity> Get(int id)
         {
@@ -48,10 +49,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         }
 
         /// <summary>
+        /// Insert Product Data
         /// 插入ProductOrder数据
         /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult<dynamic> Insert([FromBody] ProductOrderEntity entity)
         {
@@ -59,10 +59,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         }
 
         /// <summary>
+        /// Update Product Data
         /// 更新ProductOrder数据
         /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
         [HttpPut]
         public ResponseResult Update([FromBody] ProductOrderEntity entity)
         {
@@ -70,10 +69,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         }
 
         /// <summary>
+        /// Delete Product Data
         /// 删除ProductOrder数据
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpDelete]
         public ResponseResult Delete(int id)
         {
@@ -82,10 +80,9 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         #endregion
 
         /// <summary>
+        /// Query data paged
         /// 数据分页显示
         /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult<List<ProductOrderEntity>> QueryPaged([FromBody] ProductOrderQuery query)
         {
@@ -101,13 +98,14 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             catch (System.Exception ex)
             {
                 result = ResponseResult<List<ProductOrderEntity>>.Error(
-                    string.Format("获取{0}分页数据失败，错误{1}", "ProductOrder", ex.Message)
+                    string.Format("Failed to retrieve paginated data, error:{0}",  ex.Message)
                 );
             }
             return result;
         }
 
         /// <summary>
+        /// Sync Order
         /// 同步订单
         /// </summary>
         /// <returns></returns>
@@ -124,13 +122,13 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
                         session.BeginTrans();
                         var entity = ProductOrderService.SyncOrder(session.Connection, session.Transaction);
                         session.Commit();
-                        result = ResponseResult<ProductOrderEntity>.Success(entity, "同步订单数据成功！");
+                        result = ResponseResult<ProductOrderEntity>.Success(entity, "Synchronized order data successfully！");
                     }
                     catch (System.Exception ex)
                     {
                         session.Rollback();
                         result = ResponseResult<ProductOrderEntity>.Error(
-                            string.Format("同步订单{0}失败, 错误:{1}", "ProductOrder", ex.Message)
+                            string.Format("Synchronization order failed, error:{0}", ex.Message)
                         );
                     }
                 }
@@ -138,13 +136,14 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             catch (System.Exception ex)
             {
                 result = ResponseResult<ProductOrderEntity>.Error(
-                    string.Format("同步订单{0}失败, 错误:{1}", "ProductOrder", ex.Message)
+                     string.Format("Synchronization order failed, error:{0}", ex.Message)
                 );
             }
             return result;
         }
 
         /// <summary>
+        /// Sync Order
         /// 同步订单
         /// </summary>
         /// <returns></returns>
@@ -165,13 +164,13 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
                     if (wfResult.Status == 1)
                     {
                         result = ResponseResult<ProductOrderEntity>.Success(entity,
-                            string.Format("同步订单数据状态:{0}", wfResult.Status));
+                            string.Format("Synchronize order data status:{0}", wfResult.Status));
                     }
                     else
                     {
                         session.Rollback();
                         result = ResponseResult<ProductOrderEntity>.Error(
-                            string.Format("订单消息启动流程失败失败, 错误:{0}", wfResult.Message)
+                            string.Format("Order message initiation process failed, error:{0}", wfResult.Message)
                         );
                     }
                 }
@@ -179,7 +178,7 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
                 {
                     session.Rollback();
                     result = ResponseResult<ProductOrderEntity>.Error(
-                        string.Format("同步订单{0}失败, 错误:{1}", "ProductOrder", ex.Message)
+                        string.Format("Synchronization order failed, error:{0}",  ex.Message)
                     );
                 }
             }
@@ -203,6 +202,7 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         }
 
         /// <summary>
+        /// Check if the order has been dispatched
         /// 检查是否已经被派单
         /// </summary>
         /// <param name="id"></param>
@@ -210,7 +210,6 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         [HttpGet]
         public ResponseResult CheckDispatched(int id)
         {
-            //检查是否已经进入流程阶段
             var result = ResponseResult.Default();
             var orderEntity = QuickRepository.GetById<ProductOrderEntity>(id);
             if (orderEntity.Status == 1)
@@ -219,16 +218,15 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             }
             else
             {
-                result = ResponseResult.Error("订单已经进入流程状态，不能再次派单！");
+                result = ResponseResult.Error("The order has entered the process status and cannot be dispatched again！");
             }
             return result;
         }
 
         /// <summary>
+        /// Assign Orders (Salesman)
         /// 分派订单(业务员)
         /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult Dispatch([FromBody] dynamic entity)
         {
@@ -244,24 +242,23 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
 
                 WfAppResult appResult = ProductOrderService.Dispatch(productOrder);
                 if (appResult.Status == 1)
-                    result = ResponseResult.Success("分派订单数据成功！");
+                    result = ResponseResult.Success("Successfully assigned order data！");
                 else
-                    result = ResponseResult.Error(string.Format("分派订单失败:{0}", appResult.Message));
+                    result = ResponseResult.Error(string.Format("Order assignment failed:{0}", appResult.Message));
             }
             catch (System.Exception ex)
             {
                 result = ResponseResult.Error(
-                    string.Format("分派订单{0}失败, 错误:{1}", "ProductOrder", ex.Message)
+                    string.Format("Order assignment failed, error:{0}", ex.Message)
                 );
             }
             return result;
         }
 
         /// <summary>
+        /// Sample(SampleMate)
         /// 打样(技术员)
         /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult Sample([FromBody] dynamic entity)
         {
@@ -277,24 +274,23 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
 
                 WfAppResult appResult = ProductOrderService.Sample(productOrder);
                 if (appResult.Status == 1)
-                    result = ResponseResult.Success("打样操作成功！");
+                    result = ResponseResult.Success("Successfully sample！");
                 else
-                    result = ResponseResult.Error(string.Format("打样操作失败:{0}", appResult.Message));
+                    result = ResponseResult.Error(string.Format("Failed sample:{0}", appResult.Message));
             }
             catch (System.Exception ex)
             {
                 result = ResponseResult.Error(
-                    string.Format("打样{0}失败, 错误:{1}", "ProductOrder", ex.Message)
+                    string.Format("Failed sample, error:{0}", ex.Message)
                 );
             }
             return result;
         }
 
         /// <summary>
+        /// Manufacture(Merchaandiser)
         /// 生产(跟单员)
         /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult Manufacture([FromBody] dynamic entity)
         {
@@ -310,24 +306,23 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
 
                 WfAppResult appResult = ProductOrderService.Manufacture(productOrder);
                 if (appResult.Status == 1)
-                    result = ResponseResult.Success("生产产品成功！");
+                    result = ResponseResult.Success("Successfully produced product！");
                 else
-                    result = ResponseResult.Error(string.Format("生产产品失败:{0}", appResult.Message));
+                    result = ResponseResult.Error(string.Format("Failed produced product:{0}", appResult.Message));
             }
             catch (System.Exception ex)
             {
                 result = ResponseResult.Error(
-                    string.Format("生产产品{0}失败, 错误:{1}", "ProductOrder", ex.Message)
+                    string.Format("Failed produced product:{0}", ex.Message)
                 );
             }
             return result;
         }
 
         /// <summary>
+        /// QCCheck(QCMate)
         /// 质检(质检员)
         /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult QCCheck([FromBody] dynamic entity)
         {
@@ -343,24 +338,23 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
 
                 WfAppResult appResult = ProductOrderService.QCCheck(productOrder);
                 if (appResult.Status == 1)
-                    result = ResponseResult.Success("产品质检成功！");
+                    result = ResponseResult.Success("Product quality check successful！");
                 else
-                    result = ResponseResult.Error(string.Format("产品质检失败:{0}", appResult.Message));
+                    result = ResponseResult.Error(string.Format("Failed product quality check, error:{0}", appResult.Message));
             }
             catch (System.Exception ex)
             {
                 result = ResponseResult.Error(
-                    string.Format("产品质检{0}失败, 错误:{1}", "ProductOrder", ex.Message)
+                    string.Format("Failed product quality check, error:{0}", ex.Message)
                 );
             }
             return result;
         }
 
         /// <summary>
+        /// Weight(ExpressMate)
         /// 称重(包装员)
         /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult Weight([FromBody] dynamic entity)
         {
@@ -376,24 +370,23 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
 
                 WfAppResult appResult = ProductOrderService.Weight(productOrder);
                 if (appResult.Status == 1)
-                    result = ResponseResult.Success("称重成功！");
+                    result = ResponseResult.Success("Successful weight！");
                 else
-                    result = ResponseResult.Error(string.Format("称重失败:{0}", appResult.Message));
+                    result = ResponseResult.Error(string.Format("Failed weight, error:{0}", appResult.Message));
             }
             catch (System.Exception ex)
             {
                 result = ResponseResult.Error(
-                    string.Format("称重{0}失败, 错误:{1}", "ProductOrder", ex.Message)
+                    string.Format("Failed weight, error:{0}", ex.Message)
                 );
             }
             return result;
         }
 
         /// <summary>
+        /// Delivery(ExpressMate)
         /// 发货(包装员)
         /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
         [HttpPost]
         public ResponseResult Delivery([FromBody] dynamic entity)
         {
@@ -410,14 +403,14 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
                 WfAppResult appResult = ProductOrderService.Delivery(productOrder);
 
                 if (appResult.Status == 1)
-                    result = ResponseResult.Success("发货成功！");
+                    result = ResponseResult.Success("Successful delivery！");
                 else
-                    result = ResponseResult.Error(string.Format("发货失败:{0}", appResult.Message));
+                    result = ResponseResult.Error(string.Format("Failed deliverty, error:{0}", appResult.Message));
             }
             catch (System.Exception ex)
             {
                 result = ResponseResult.Error(
-                    string.Format("发货{0}失败, 错误:{1}", "ProductOrder", ex.Message)        
+                    string.Format("Failed deliverty, error:{0}", ex.Message)        
                 );
             }
             return result;
