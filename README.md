@@ -207,5 +207,5 @@ http://doc.slickflow.net(English)
 
 Your donation will be used for the continuous research and development of the product and community building
 
-[![Donate with PayPal](https://github.com/besley/besley.github.io/blob/master/Images/paypal/donation.png)](https://paypal.me/slickflownet?country.x=C2&locale.x=zh_XC)
+[![Donate with PayPal](https://github.com/besley/besley.github.io/blob/master/Images/paypal/donation.png)](https://paypal.me/slickflownet)
 
