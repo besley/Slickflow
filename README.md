@@ -198,8 +198,13 @@ http://www.slickflow.net (English)
 **DEMO:**  
 http://www.slickflow.com/demo/index  
 
-**文档:**  
+**Document 文档:**  
 http://doc.slickflow.com (中文) 
 http://doc.slickflow.net(English) 
 
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](william.ligong@hotmail.com)
+您的捐赠将用于产品的持续研发和社区建设
+
+Your donation will be used for the continuous research and development of the product and community building
+
+[![Donate with PayPal](https://github.com/besley/besley.github.io/blob/master/Images/paypal/donation.png)](https://paypal.me/slickflownet?country.x=C2&locale.x=zh_XC)
+
