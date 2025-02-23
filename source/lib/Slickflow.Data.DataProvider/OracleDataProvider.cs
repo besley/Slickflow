@@ -49,7 +49,7 @@ namespace Slickflow.Data.DataProvider
                            FROM vwWfActivityInstanceTasks 
                            WHERE rownum = 1
                                 AND AppInstanceID=@appInstanceID 
-                                AND ProcessGUID=@processGUID 
+                                AND ProcessID=@processID 
                                 AND AssignedToUserID=@userID 
                                 AND ProcessState=2 
                                 AND (ActivityType=4 OR ActivityType=5 OR ActivityType=6 OR WorkItemType=1)

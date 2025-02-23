@@ -13,7 +13,7 @@ namespace Slickflow.Engine.Business.Entity
     public class TransitionInstanceQuery
     {
         public string AppInstanceID { get; set; }
-        public string ProcessGUID { get; set; }
+        public string ProcessID { get; set; }
         public string Version { get; set; }
     }
 }

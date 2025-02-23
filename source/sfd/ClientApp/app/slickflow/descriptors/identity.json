@@ -6,11 +6,6 @@
     ],
     "properties": [
       {
-        "name": "guid",
-        "isAttr": true,
-        "type": "String"
-      },
-      {
         "name": "code",
         "isAttr": true,
         "type": "String"

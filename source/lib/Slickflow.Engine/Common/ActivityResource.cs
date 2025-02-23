@@ -65,16 +65,13 @@ namespace Slickflow.Engine.Common
         /// Obtain the list of performers handling the previous step
         /// 获取上一步骤的办理人员列表
         /// </summary>
-        /// <param name="previousActivityPerformers"></param>
-        /// <param name="activityGUID"></param>
-        /// <returns></returns>
         internal PerformerList GetPreviousPerformerList(IList<KeyValuePairWrapper> previousActivityPerformers,
-            string activityGUID)
+            string activityID)
         {
             PerformerList performerList = null;
             foreach (var kvp in previousActivityPerformers)
             {
-                if (kvp.ActivityGUID == activityGUID)
+                if (kvp.ActivityID == activityID)
                 {
                     performerList = kvp.PerformerList;
                     break;
@@ -89,17 +86,13 @@ namespace Slickflow.Engine.Common
         /// Create a list of next activity performers
         /// 创建下一步活动执行者列表
         /// </summary>
-        /// <param name="activityGUID"></param>
-        /// <param name="userID"></param>
-        /// <param name="userName"></param>
-        /// <returns></returns>
-        internal static IDictionary<string, PerformerList> CreateNextActivityPerformers(string activityGUID,
+        internal static IDictionary<string, PerformerList> CreateNextActivityPerformers(string activityID,
             string userID,
             string userName)
         {
             var nextActivityPerformers = new Dictionary<string, PerformerList>();
             var performerList = PerformerBuilder.CreatePerformerList(userID, userName);
-            nextActivityPerformers.Add(activityGUID, performerList);
+            nextActivityPerformers.Add(activityID, performerList);
 
             return nextActivityPerformers;
         }
@@ -120,7 +113,7 @@ namespace Slickflow.Engine.Common
             var performList = PerformerBuilder.CreatePerformerList(userID, userName);
             foreach (var node in nextActivityTree)
             {
-                nextActivityPerformers.Add(node.ActivityGUID, performList);
+                nextActivityPerformers.Add(node.ActivityID, performList);
             }
             return nextActivityPerformers;
         }
@@ -129,16 +122,13 @@ namespace Slickflow.Engine.Common
         /// Create a list of next activity performers
         /// 创建下一步活动执行者列表
         /// </summary>
-        /// <param name="activityGUID"></param>
-        /// <param name="roleList"></param>
-        /// <returns></returns>
-        internal static IDictionary<string, PerformerList> CreateNextActivityPerformers(string activityGUID,
+        internal static IDictionary<string, PerformerList> CreateNextActivityPerformers(string activityID,
             IList<Role> roleList)
         {
             var performerList = PerformerBuilder.CreatePerformerList(roleList);
             var nextActivityPerformers = new Dictionary<string, PerformerList>();
 
-            nextActivityPerformers.Add(activityGUID, performerList);
+            nextActivityPerformers.Add(activityID, performerList);
 
             return nextActivityPerformers;
         }
@@ -147,29 +137,23 @@ namespace Slickflow.Engine.Common
         /// Create a list of next activity performers
         /// 创建下一步活动执行者列表
         /// </summary>
-        /// <param name="nextActivityPerformers"></param>
-        /// <param name="activityGUID"></param>
-        /// <param name="roleList"></param>
         internal static void CreateNextActivityPerformers(IDictionary<string, PerformerList> nextActivityPerformers,
-            string activityGUID,
+            string activityID,
             IList<Role> roleList)
         {
             var performerList = PerformerBuilder.CreatePerformerList(roleList);
-            nextActivityPerformers.Add(activityGUID, performerList);
+            nextActivityPerformers.Add(activityID, performerList);
         }
 
         /// <summary>
         /// Create a list of next activity performers
         /// 创建下一步活动执行者列表
         /// </summary>
-        /// <param name="activityGUID"></param>
-        /// <param name="performerList"></param>
-        /// <returns></returns>
-        internal static IDictionary<string, PerformerList> CreateNextActivityPerformers(string activityGUID, 
+        internal static IDictionary<string, PerformerList> CreateNextActivityPerformers(string activityID, 
             PerformerList performerList)
         {
             var nextActivityPerformers = new Dictionary<string, PerformerList>();
-            nextActivityPerformers.Add(activityGUID, performerList);
+            nextActivityPerformers.Add(activityID, performerList);
 
             return nextActivityPerformers;
         }

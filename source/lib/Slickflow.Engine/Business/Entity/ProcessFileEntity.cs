@@ -12,7 +12,7 @@ namespace Slickflow.Engine.Business.Entity
     /// </summary>
     public class ProcessFileEntity
     {
-        public String ProcessGUID { get; set; }
+        public String ProcessID { get; set; }
         public String ProcessName { get; set; }
         public String ProcessCode { get; set; }
         public String Version { get; set; }

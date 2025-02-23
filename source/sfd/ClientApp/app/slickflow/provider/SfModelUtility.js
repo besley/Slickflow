@@ -68,7 +68,6 @@ export default class sfModelUtility {
 
     static isApprovalOrSplit(gateway) {
         var activityTypeDetail = this.getGatewayDetail(gateway);
-        console.log(activityTypeDetail);
 
         if (activityTypeDetail) {
             var extraSplitType = activityTypeDetail.extraSplitType;

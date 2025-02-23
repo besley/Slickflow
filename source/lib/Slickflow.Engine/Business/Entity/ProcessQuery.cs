@@ -8,8 +8,7 @@ namespace Slickflow.Engine.Business.Entity
     /// </summary>
     public class ProcessQuery : QueryBase
     {
-        public int ID { get; set; }
-        public string ProcessGUID { get; set; }
+        public string ProcessID { get; set; }
         public string Version { get; set; }
         public string ProcessName { get; set; }
         public ProcessStartTypeEnum StartType { get; set; }

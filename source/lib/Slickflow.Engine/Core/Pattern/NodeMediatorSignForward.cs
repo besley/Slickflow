@@ -126,7 +126,7 @@ namespace Slickflow.Engine.Core.Pattern
 
             //获取加签人集合
             //Obtain the collection of signatories
-            var plist = activityResource.NextActivityPerformers[base.ActivityForwardContext.Activity.ActivityGUID];
+            var plist = activityResource.NextActivityPerformers[base.ActivityForwardContext.Activity.ActivityID];
 
             //前加签是别人先审核，然后自己再审核
             //Sign forward before is someone else's first review, and then self review

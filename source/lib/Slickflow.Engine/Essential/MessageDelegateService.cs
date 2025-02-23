@@ -154,7 +154,7 @@ namespace Slickflow.Engine.Essential
         private WfAppRunner GetRunnerFromMessagExchange(MessageRunnerView msgRunnerView)
         {
             var runner = new WfAppRunner();
-            runner.ProcessGUID = msgRunnerView.ProcessEntity.ProcessGUID;
+            runner.ProcessID = msgRunnerView.ProcessEntity.ProcessID;
             runner.Version = msgRunnerView.ProcessEntity.Version;
             runner.ProcessCode = msgRunnerView.ProcessEntity.ProcessCode;
             runner.AppName = msgRunnerView.WfAppRunner.AppName;
@@ -166,7 +166,7 @@ namespace Slickflow.Engine.Essential
             //封装下一步的步骤信息
             //Encapsulate the next step information
             var aim = new ActivityInstanceManager();
-            var runningActivityInstance = aim.GetActivityInstanceLatest(runner.AppInstanceID, runner.ProcessGUID, msgRunnerView.ActivityEntity.ActivityGUID);
+            var runningActivityInstance = aim.GetActivityInstanceLatest(runner.AppInstanceID, runner.ProcessID, msgRunnerView.ActivityEntity.ActivityID);
             if (runningActivityInstance != null)
             {
                 runner.ActivityInstanceID = runningActivityInstance.ID;

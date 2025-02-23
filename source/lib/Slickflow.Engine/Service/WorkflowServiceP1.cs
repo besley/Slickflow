@@ -76,7 +76,7 @@ namespace Slickflow.Engine.Service
         public ProcessInstanceEntity GetRunningProcessInstance(WfAppRunner runner)
         {
             var pim = new ProcessInstanceManager();
-            var entity = pim.GetRunningProcessInstance(runner.AppInstanceID, runner.ProcessGUID);
+            var entity = pim.GetRunningProcessInstance(runner.AppInstanceID, runner.ProcessID);
             return entity;
         }
 
@@ -84,10 +84,10 @@ namespace Slickflow.Engine.Service
         /// Get process instance count
         /// 判断流程实例是否存在
         /// </summary>
-        public Int32 GetProcessInstanceCount(string processGUID, string version)
+        public Int32 GetProcessInstanceCount(string processID, string version)
         {
             var pim = new ProcessInstanceManager();
-            return pim.GetProcessInstanceCount(processGUID, version);
+            return pim.GetProcessInstanceCount(processID, version);
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace Slickflow.Engine.Service
         public IList<ActivityInstanceEntity> GetRunningActivityInstance(TaskQuery query)
         {
             var aim = new ActivityInstanceManager();
-            var list = aim.GetRunningActivityInstanceList(query.AppInstanceID, query.ProcessGUID, query.Version).ToList();
+            var list = aim.GetRunningActivityInstanceList(query.AppInstanceID, query.ProcessID, query.Version).ToList();
             return list;
         }
 
@@ -372,9 +372,9 @@ namespace Slickflow.Engine.Service
         /// Get role by process
         /// 获取流程定义文件中的角色信息
         /// </summary>
-        public IList<Role> GetRoleByProcess(string processGUID, string version)
+        public IList<Role> GetRoleByProcess(string processID, string version)
         {
-            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
+            var processModel = ProcessModelFactory.CreateByProcess(processID, version);
             var roleList = processModel.GetRoles();
 
             return roleList;
@@ -384,9 +384,9 @@ namespace Slickflow.Engine.Service
         /// Get role user list by process
         /// 获取流程文件中角色用户的列表数据
         /// </summary>
-        public IList<Role> GetRoleUserListByProcess(string processGUID, string version)
+        public IList<Role> GetRoleUserListByProcess(string processID, string version)
         {
-            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
+            var processModel = ProcessModelFactory.CreateByProcess(processID, version);
             var roleList = processModel.GetRoles();
             var idsin = roleList.Select(r => r.ID).ToList().ToArray();
 

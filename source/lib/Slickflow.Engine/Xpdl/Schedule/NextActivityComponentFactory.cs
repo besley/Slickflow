@@ -134,11 +134,11 @@ namespace Slickflow.Engine.Xpdl.Schedule
             Activity toActivity)
         {
             Transition transition = new Transition();
-            transition.TransitionGUID = "JUMP-TRANSITION";
+            transition.TransitionID = "JUMP-TRANSITION";
             transition.FromActivity = fromActivity;
-            transition.FromActivityGUID = fromActivity.ActivityGUID;
+            transition.FromActivityID = fromActivity.ActivityID;
             transition.ToActivity = toActivity;
-            transition.ToActivityGUID = toActivity.ActivityGUID;
+            transition.ToActivityID = toActivity.ActivityID;
             transition.DirectionType = TransitionDirectionTypeEnum.Forward;
 
             return transition;

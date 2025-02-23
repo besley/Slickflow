@@ -44,7 +44,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
             NextActivityComponent child = null;
             NextActivityComponent gatewayComponent = null;
             resultType = NextActivityMatchedType.Unknown;
-            var transitionList = this.ProcessModel.GetForwardTransitionList(currentGatewayActivity.ActivityGUID).ToList();
+            var transitionList = this.ProcessModel.GetForwardTransitionList(currentGatewayActivity.ActivityID).ToList();
 
             if (currentGatewayActivity.GatewayDetail.DirectionType == GatewayDirectionEnum.AndSplit
                 || currentGatewayActivity.GatewayDetail.DirectionType == GatewayDirectionEnum.AndSplitMI)

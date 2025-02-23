@@ -27,7 +27,7 @@ const processlist = (function () {
                     theme: themeBalham,
                     columnDefs: [
                         { headerName: 'ID', field: 'ID', width: 80 },
-                        { headerName: kresource.getItem('processguid'), field: 'ProcessGUID', width: 120 },
+                        { headerName: kresource.getItem('processid'), field: 'ProcessID', width: 240 },
                         { headerName: kresource.getItem('processname'), field: 'ProcessName', width: 200 },
                         { headerName: kresource.getItem('version'), field: 'Version', width: 80 },
                         { headerName: kresource.getItem('processcode'), field: 'ProcessCode', width: 200 },
@@ -118,7 +118,7 @@ const processlist = (function () {
     processlist.loadProcess = function () {
         var entity = processlist.pselectedProcessEntity;
         if (entity !== null) {
-            $("#txtProcessGUID").val(entity.ProcessGUID);
+            $("#txtProcessID").val(entity.ProcessID);
             $("#txtProcessName").val(entity.ProcessName);
             $("#txtProcessCode").val(entity.ProcessCode);
             $("#txtVersion").val(entity.Version);
@@ -170,7 +170,7 @@ const processlist = (function () {
             return false;
         }
         var entity = {
-            "ProcessGUID": kmain.mxSelectedProcessEntity.ProcessGUID,
+            "ProcessID": kmain.mxSelectedProcessEntity.ProcessID,
             "ProcessName": $("#txtProcessName").val(),
             "ProcessCode": $("#txtProcessCode").val(),
             "Version": $("#txtVersion").val(),
@@ -233,7 +233,7 @@ const processlist = (function () {
 
             kmsgbox.confirm(msgConfirm, function () {
                 var entity = {
-                    "ProcessGUID": processlist.pselectedProcessEntity.ProcessGUID,
+                    "ProcessID": processlist.pselectedProcessEntity.ProcessID,
                     "Version": processlist.pselectedProcessEntity.Version,
                     "IsUsing": usingState
                 };
@@ -256,7 +256,7 @@ const processlist = (function () {
         }
 
         var entity = {
-            "ProcessGUID": $("#txtProcessGUID").val(),
+            "ProcessID": $("#txtProcessID").val(),
             "ProcessName": $("#txtProcessName").val(),
             "ProcessCode": $("#txtProcessCode").val(),
             "Version": $("#txtVersion").val(),
@@ -305,7 +305,7 @@ const processlist = (function () {
 
         kmsgbox.confirm(content, function () {
             var entity = {
-                "ProcessGUID": processlist.pselectedProcessEntity.ProcessGUID,
+                "ProcessID": processlist.pselectedProcessEntity.ProcessID,
                 "Version": processlist.pselectedProcessEntity.Version
             };
             processapi.delete(entity);

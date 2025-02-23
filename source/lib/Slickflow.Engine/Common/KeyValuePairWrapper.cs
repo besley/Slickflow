@@ -12,9 +12,9 @@ namespace Slickflow.Engine.Common
     public class KeyValuePairWrapper
     {
         /// <summary>
-        /// ActivityGUID
+        /// ActivityID
         /// </summary>
-        public string ActivityGUID { get; set; }
+        public string ActivityID { get; set; }
 
         /// <summary>
         /// Performer List
@@ -29,11 +29,9 @@ namespace Slickflow.Engine.Common
         /// <summary>
         /// a convenience method which allows you to set the values while sorting
         /// </summary>
-        /// <param name="activityGUID"></param>
-        /// <param name="performerList"></param>
-        public KeyValuePairWrapper(string activityGUID, PerformerList performerList)
+        public KeyValuePairWrapper(string activityID, PerformerList performerList)
         {
-            ActivityGUID = activityGUID;
+            ActivityID = activityID;
             PerformerList = performerList;
         }
     }

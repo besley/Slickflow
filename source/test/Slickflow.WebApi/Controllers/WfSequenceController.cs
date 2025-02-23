@@ -20,37 +20,37 @@ namespace Slickflow.WebApi.Controllers
     //Process Name: Quotation Process
     //GUID:  072af8c3-482a-4b1c-890b-685ce2fcc75d
     //startup process:
-    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
 
     //run process app:
     ////Salesperson submits processing nodes:
     ////The next step is to handle the node of "signing the board house"
-    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"eb833577-abb5-4239-875a-5f2e2fcb6d57":[{"UserID":"10","UserName":"Long"}]}}
+    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"eb833577-abb5-4239-875a-5f2e2fcb6d57":[{"UserID":"10","UserName":"Long"}]}}
 
     //withdraw process:
     //Revoke the previous node (signed by the board room and submitted by the previous salesperson)
     //Modify the TaskID of completed tasks every time
-    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d", "TaskID": 30639}
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d", "TaskID": 30639}
 
     //runprocess app
     //Node for signature processing of prefabricated houses
     //The next step is for the salesperson to confirm
-    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"cab57060-f433-422a-a66f-4a5ecfafd54e":[{"UserID":"10","UserName":"Long"}]}}
+    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"cab57060-f433-422a-a66f-4a5ecfafd54e":[{"UserID":"10","UserName":"Long"}]}}
 
     //Process completed
     //The salesperson confirms the processing node
     //The next step of the process ends
-    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","NextActivityPerformers":{"b53eb9ab-3af6-41ad-d722-bed946d19792":[{"UserID":"10","UserName":"Long"}]}}
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","NextActivityPerformers":{"b53eb9ab-3af6-41ad-d722-bed946d19792":[{"UserID":"10","UserName":"Long"}]}}
 
     //run sub process
     //There are sub processes
     //Initiate sub process
-    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"5fa796f6-2d5d-4ed6-84e2-a7c4e4e6aabc":[{"UserID":"10","UserName":"Long"}]}}
+    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"5fa796f6-2d5d-4ed6-84e2-a7c4e4e6aabc":[{"UserID":"10","UserName":"Long"}]}}
 
 
     //reverse process:
     //Return signature
-    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
 
     //sendback process
     //Return
@@ -95,7 +95,7 @@ namespace Slickflow.WebApi.Controllers
                     //var performerList = new PerformerList();
                     //performerList.Add(new Performer(runner.UserID, runner.UserID));
 
-                    //runner.NextActivityPerformers.Add(nextSteps[0].ActivityGUID, performerList);
+                    //runner.NextActivityPerformers.Add(nextSteps[0].ActivityID, performerList);
                     //var result2 = wfService.RunProcess(session.Connection, runner, session.Transaction);
 
                     transaction.Commit();

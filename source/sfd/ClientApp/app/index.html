@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Slickflow Designer</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="vendor/bootstrap-icons/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="vendor/bootstrap5-dialog/dist/css/bootstrap-dialog.css" />
@@ -26,7 +27,7 @@
             </a>
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLinkOptions">
-                <!--<a class="dropdown-item" href="#"><span class="lang" as="simutest" onclick="kmain.simuTest();"></span></a>-->
+                <a class="dropdown-item" href="#"><span class="lang" as="simutest" onclick="kmain.simuTest();"></span></a>
                 <li class="divider">&nbsp</li>
                 <li>
                     <a class="dropdown-item" href="#">
@@ -88,7 +89,7 @@
                 <a class="dropdown-item download" href="#" id="js-download-svg"><span class="lang" as="downsvg" onclick="kmain.downloadSvg();"></span></a>
 
                 <!--
-            <a class="dropdown-item" href="#"><span class="lang" as="adminboard" onclick="kmain.webJob();"></span></a>-->
+                <a class="dropdown-item" href="#"><span class="lang" as="adminboard" onclick="kmain.webJob();"></span></a>-->
             </div>
         </div>
         <div class="dropdown" style="float:left;margin-left: 5px;">
@@ -136,7 +137,31 @@
 
         <div class="canvas" id="js-canvas"></div>
         <div id="js-properties-panel"></div>
+
+        <!-- ai dialog -->
+        <div id="aiDialog" class="dialog-container">
+            <div class="dialog-header">
+                <span class="dialog-title lang" as="aiassistant"></span>
+                <button class="btn btn-close" onclick="closeDialog()">x</button>
+            </div>
+            <div class="progress-container-ai" id="progressBar">
+                <div class="progress-bar-ai"></div>
+            </div>
+            <div class="dialog-content">
+                <textarea class="text-area"
+                          placeholder=""
+                          id="userInput"></textarea>
+                <div class="response-area" id="responseArea">
+                    <!-- 响应内容将显示在这里 -->
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary lang" as="send" onclick="sendRequest()"></button>
+                </div>
+            </div>
+        </div>
     </div>
+
+
 
     <script type="module">
         import kconfig from './config/kconfig.js'
@@ -150,6 +175,32 @@
         $(function () {
             kresource.localize();
         });
+
+        async function sendRequest() {
+            const input = document.getElementById('userInput');
+            const responseArea = document.getElementById('responseArea');
+
+            if (!input.value.trim()) {
+                kmsgbox.info(kresource.getItem("aidialoginputnullwarnmsg"));
+                return;
+            }
+
+            try {
+                responseArea.innerHTML = kresource.getItem("deepseekprocessingmsg");
+                kmain.createByAI(input.value, function () {
+                    input.value = '';
+                    responseArea.innerHTML = "";
+                });
+            } catch (error) {
+                kmsgbox.error(kresource.getItem("aidialogresponseerrormsg") + error.message);
+            } finally {
+                ;
+            }
+        }
+
+        function closeDialog() {
+            document.querySelector('.dialog-container').style.display = 'none';
+        }
     </script>
 
 

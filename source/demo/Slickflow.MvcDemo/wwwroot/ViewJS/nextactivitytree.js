@@ -64,7 +64,7 @@
                              id: 1,
                              pId: 0,
                              name: nextStep.ActivityName,
-                             activityGUID: nextStep.ActivityGUID,
+                             activityID: nextStep.ActivityID,
                              activityName: nextStep.ActivityName,
                              type: "activity",
                              open: false
@@ -117,12 +117,12 @@
         //Single step optional example
         var nextStep = {};
         nextStep.Users = [];
-        var activityGUID = "", activityName="";
+        var activityID = "", activityName="";
         var user = null;
         var userlist = [];
         $.each(selectedNodes, function (i, o) {
             if (o.type === "activity") {
-                activityGUID = o.activityGUID;
+                activityID = o.activityID;
                 activityName = o.activityName;
             } else if (o.type === "user") {
                 user = { UserID: o.uid, UserName: o.name };
@@ -132,7 +132,10 @@
 
         var WfAppRunner = nextactivitytree.mEntity.WfAppRunner;
         WfAppRunner.NextActivityPerformers = {};
-        WfAppRunner.NextActivityPerformers[activityGUID] = userlist;
+        WfAppRunner.NextActivityPerformers[activityID] = userlist;
+
+        console.log(nextactivitytree.mstepName);
+        console.log(nextactivitytree.mEntity);
         
         $.msgBox({
             title: "Are You Sure",

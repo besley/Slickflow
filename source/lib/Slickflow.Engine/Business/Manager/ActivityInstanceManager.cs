@@ -127,7 +127,7 @@ namespace Slickflow.Engine.Business.Manager
 
             //没有传递TaskID参数，进行查询
             //No TaskID parameter passed for query
-            var activityInstanceList = aim.GetRunningActivityInstanceList(runner.AppInstanceID, runner.ProcessGUID, runner.Version, session).ToList();
+            var activityInstanceList = aim.GetRunningActivityInstanceList(runner.AppInstanceID, runner.ProcessID, runner.Version, session).ToList();
             if (activityInstanceList == null || activityInstanceList.Count == 0)
             {
                 //当前没有运行状态的节点存在，流程不存在，或者已经结束或取消
@@ -252,17 +252,14 @@ namespace Slickflow.Engine.Business.Manager
         /// Get Activity Instance Latest
         /// 获取活动节点实例
         /// </summary>
-        /// <param name="processInstanceID"></param>
-        /// <param name="activityGUID"></param>
-        /// <returns></returns>
         internal ActivityInstanceEntity GetActivityInstanceLatest(int processInstanceID,
-            string activityGUID)
+            string activityID)
         {
             ActivityInstanceEntity activityInstance = null;
             var session = SessionFactory.CreateSession();
             try
             {
-                activityInstance = GetActivityInstanceLatest(processInstanceID, activityGUID, session);
+                activityInstance = GetActivityInstanceLatest(processInstanceID, activityID, session);
             }
             catch
             {
@@ -279,25 +276,21 @@ namespace Slickflow.Engine.Business.Manager
         /// Get Activity Instance Latest
         /// 获取最近的节点实例
         /// </summary>
-        /// <param name="processInstanceID"></param>
-        /// <param name="activityGUID"></param>
-        /// <param name="session"></param>
-        /// <returns></returns>
         internal ActivityInstanceEntity GetActivityInstanceLatest(int processInstanceID,
-            string activityGUID,
+            string activityID,
             IDbSession session)
         {
             ActivityInstanceEntity activityInstance = null;
             var sql = @"SELECT * FROM WfActivityInstance 
                         WHERE ProcessInstanceID = @processInstanceID
-                            AND ActivityGUID = @activityGUID
+                            AND ActivityID = @activityID
                             ORDER BY ID DESC";
             var list = Repository.Query<ActivityInstanceEntity>(session.Connection,
                 sql,
                 new
                 {
                     processInstanceID = processInstanceID,
-                    activityGUID = activityGUID
+                    activityID = activityID
                 },
                 session.Transaction).ToList();
 
@@ -312,12 +305,12 @@ namespace Slickflow.Engine.Business.Manager
         /// 获取最近的节点实例
         /// </summary>
         /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <param name="activityGUID"></param>
+        /// <param name="processID"></param>
+        /// <param name="activityID"></param>
         /// <returns></returns>
         internal ActivityInstanceEntity GetActivityInstanceLatest(string appInstanceID,
-            string processGUID,
-            string activityGUID)
+            string processID,
+            string activityID)
         {
             ActivityInstanceEntity activityInstance = null;
             var sql = @"SELECT 
@@ -327,15 +320,15 @@ namespace Slickflow.Engine.Business.Manager
                                 ON AI.ProcessInstanceID = PI.ID
                             WHERE PI.ProcessState = 2 
                                 AND AI.AppInstanceID = @appInstanceID 
-                                AND AI.ProcessGUID = @processGUID
-                                AND AI.ActivityGUID = @activityGUID";
+                                AND AI.ProcessID = @processID
+                                AND AI.ActivityID = @activityID";
             var list = Repository.Query<ActivityInstanceEntity>(
                 sql,
                 new
                 {
                     appInstanceID = appInstanceID,
-                    processGUID = processGUID,
-                    activityGUID = activityGUID
+                    processID = processID,
+                    activityID = activityID
                 }).ToList();
             if (list.Count > 0) activityInstance = list[0];
 
@@ -346,13 +339,13 @@ namespace Slickflow.Engine.Business.Manager
         /// Get Activity Instance List Latest
         /// 获取最近的节点实例
         /// </summary>
-        /// <param name="processGUID"></param>
+        /// <param name="processID"></param>
         /// <param name="version"></param>
-        /// <param name="activityGUID"></param>
+        /// <param name="activityID"></param>
         /// <returns></returns>
-        internal List<ActivityInstanceEntity> GetActivityInstanceList(string processGUID,
+        internal List<ActivityInstanceEntity> GetActivityInstanceList(string processID,
             string version,
-            string activityGUID)
+            string activityID)
         {
             ActivityInstanceEntity activityInstance = null;
             var sql = @"SELECT 
@@ -361,17 +354,17 @@ namespace Slickflow.Engine.Business.Manager
                             INNER JOIN WfProcessInstance PI 
                                 ON AI.ProcessInstanceID = PI.ID
                             WHERE PI.ProcessState = 2 
-                                AND PI.ProcessGUID = @processGUID
+                                AND PI.ProcessID = @processID
                                 AND PI.Version=@version
-                                AND AI.ActivityGUID = @activityGUID
+                                AND AI.ActivityID = @activityID
                                 AND (AI.ActivityState=1 OR AI.ActivityState=2)";
             var list = Repository.Query<ActivityInstanceEntity>(
                 sql,
                 new
                 {
-                    processGUID = processGUID,
+                    processID = processID,
                     version = version,
-                    activityGUID = activityGUID
+                    activityID = activityID
                 }).ToList();
 
             return list;
@@ -381,35 +374,26 @@ namespace Slickflow.Engine.Business.Manager
         /// Get activity instances with running status
         /// 获取运行状态的活动实例
         /// </summary>
-        /// <param name="activityGUID"></param>
-        /// <param name="processInstanceID"></param>
-        /// <param name="session"></param>
-        /// <returns></returns>
         internal ActivityInstanceEntity GetActivityRunning(int processInstanceID,
-            string activityGUID,
+            string activityID,
             IDbSession session)
         {
-            return GetActivityByState(processInstanceID, activityGUID, ActivityStateEnum.Running, session);
+            return GetActivityByState(processInstanceID, activityID, ActivityStateEnum.Running, session);
         }
 
         /// <summary>
         /// Obtain activity instances based on states
         /// 根据状态获取活动实例
         /// </summary>
-        /// <param name="processInstanceID"></param>
-        /// <param name="activityGUID"></param>
-        /// <param name="activityState"></param>
-        /// <param name="session"></param>
-        /// <returns></returns>
         internal ActivityInstanceEntity GetActivityByState(int processInstanceID,
-            string activityGUID,
+            string activityID,
             ActivityStateEnum activityState,
             IDbSession session)
         {
             ActivityInstanceEntity entity = null;
             var sql = @"SELECT * FROM WfActivityInstance 
                         WHERE ProcessInstanceID = @processInstanceID 
-                            AND ActivityGUID = @activityGUID 
+                            AND ActivityID = @activityID 
                             AND ActivityState = @state
                         ORDER BY ID DESC";
 
@@ -418,7 +402,7 @@ namespace Slickflow.Engine.Business.Manager
                 new
                 {
                     processInstanceID = processInstanceID,
-                    activityGUID = activityGUID.ToString(),
+                    activityID = activityID,
                     state = (short)activityState
                 },
                 session.Transaction).ToList();
@@ -434,10 +418,10 @@ namespace Slickflow.Engine.Business.Manager
         /// 获取已经运行完成的节点
         /// </summary>
         /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
+        /// <param name="processID"></param>
         /// <returns></returns>
         internal List<ActivityInstanceEntity> GetActivityInstanceListCompleted(string appInstanceID,
-            string processGUID)
+            string processID)
         {
             //activityState: 4-completed（完成）
             var sql = @"SELECT 
@@ -447,7 +431,7 @@ namespace Slickflow.Engine.Business.Manager
                                 ON AI.ProcessInstanceID = PI.ID
                             WHERE PI.ProcessState = 2 
                                 AND AI.AppInstanceID = @appInstanceID 
-                                AND AI.ProcessGUID = @processGUID
+                                AND AI.ProcessID = @processID
                                 AND AI.ActivityState = 4";
 
             var list = Repository.Query<ActivityInstanceEntity>(
@@ -455,7 +439,7 @@ namespace Slickflow.Engine.Business.Manager
                 new
                 {
                     appInstanceID = appInstanceID,
-                    processGUID = processGUID.ToString()
+                    processID = processID
                 }).ToList();
             return list;
         }
@@ -464,16 +448,13 @@ namespace Slickflow.Engine.Business.Manager
         /// Obtain instances of activities that have already been completed in the previous step
         /// 获取上一步已经完成活动的实例
         /// </summary>
-        /// <param name="runningNode"></param>
-        /// <param name="previousActivityGUID"></param>
-        /// <returns></returns>
         internal ActivityInstanceEntity GetPreviousActivityInstanceSimple(ActivityInstanceEntity runningNode,
-            string previousActivityGUID)
+            string previousActivityID)
         {
             IDbSession session = SessionFactory.CreateSession();
             try
             {
-                return GetPreviousActivityInstanceSimple(runningNode, previousActivityGUID, session);
+                return GetPreviousActivityInstanceSimple(runningNode, previousActivityID, session);
             }
             catch
             {
@@ -489,12 +470,8 @@ namespace Slickflow.Engine.Business.Manager
         /// Obtain instances of activities that have already been completed in the previous step
         /// 获取上一步已经完成活动的实例
         /// </summary>
-        /// <param name="runningNode"></param>
-        /// <param name="previousActivityGUID">previous activity guid</param>
-        /// <param name="session"></param>
-        /// <returns></returns>
         internal ActivityInstanceEntity GetPreviousActivityInstanceSimple(ActivityInstanceEntity runningNode,
-            string previousActivityGUID,
+            string previousActivityID,
             IDbSession session)
         {
             ActivityInstanceEntity originalRunningNode = null;
@@ -517,7 +494,7 @@ namespace Slickflow.Engine.Business.Manager
 
             //获取上一步节点列表
             //Retrieve the previous node list
-            var instanceList = GetActivityInstanceListCompletedSimple(processInstanceID, previousActivityGUID, session);
+            var instanceList = GetActivityInstanceListCompletedSimple(processInstanceID, previousActivityID, session);
 
             //排除掉是包含已经退回过的非初始节点
             //Excluding non initial nodes that have already been returned
@@ -549,15 +526,12 @@ namespace Slickflow.Engine.Business.Manager
         /// Obtain activity instances with completion status
         /// 获取完成状态的活动实例
         /// </summary>
-        /// <param name="processInstanceID"></param>
-        /// <param name="activityGUID"></param>
-        /// <returns></returns>
         internal IList<ActivityInstanceEntity> GetActivityInstanceListCompletedSimple(int processInstanceID,
-            string activityGUID)
+            string activityID)
         {
             using (IDbSession session = SessionFactory.CreateSession())
             {
-                var list = GetActivityInstanceListCompletedSimple(processInstanceID, activityGUID, session);
+                var list = GetActivityInstanceListCompletedSimple(processInstanceID, activityID, session);
                 return list;
             }
         }
@@ -566,18 +540,14 @@ namespace Slickflow.Engine.Business.Manager
         /// Obtain activity instances with completion status
         /// 获取完成状态的活动实例
         /// </summary>
-        /// <param name="processInstanceID"></param>
-        /// <param name="activityGUID"></param>
-        /// <param name="session"></param>
-        /// <returns></returns>
         internal IList<ActivityInstanceEntity> GetActivityInstanceListCompletedSimple(int processInstanceID,
-            string activityGUID,
+            string activityID,
             IDbSession session)
         {
             //activityState: 4-completed（完成）
             var sql = @"SELECT * FROM WfActivityInstance 
                         WHERE ProcessInstanceID = @processInstanceID 
-                            AND ActivityGUID = @activityGUID 
+                            AND ActivityID = @activityID 
                             AND ActivityState = @state 
                         ORDER BY ID DESC";
 
@@ -586,7 +556,7 @@ namespace Slickflow.Engine.Business.Manager
                 new
                 {
                     processInstanceID = processInstanceID,
-                    activityGUID = activityGUID.ToString(),
+                    activityID = activityID,
                     state = (short)ActivityStateEnum.Completed
                 },
                 session.Transaction).ToList();
@@ -643,17 +613,13 @@ namespace Slickflow.Engine.Business.Manager
         /// Get the activity nodes running in the process instance
         /// 获取流程实例中运行的活动节点
         /// </summary>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <param name="version"></param>
-        /// <returns></returns>
         internal IEnumerable<ActivityInstanceEntity> GetRunningActivityInstanceList(string appInstanceID,
-            string processGUID,
+            string processID,
             string version = null)
         {
             using (var session = SessionFactory.CreateSession())
             {
-                return GetRunningActivityInstanceList(appInstanceID, processGUID, version, session);
+                return GetRunningActivityInstanceList(appInstanceID, processID, version, session);
             }
         }
 
@@ -662,12 +628,12 @@ namespace Slickflow.Engine.Business.Manager
         /// 获取流程实例中运行的活动节点
         /// </summary>
         /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
+        /// <param name="processID"></param>
         /// <param name="version"></param>
         /// <param name="session"></param>
         /// <returns></returns>
         internal IEnumerable<ActivityInstanceEntity> GetRunningActivityInstanceList(string appInstanceID,
-            string processGUID,
+            string processID,
             string version,
             IDbSession session)
         {
@@ -682,14 +648,14 @@ namespace Slickflow.Engine.Business.Manager
                                 AND PI.ProcessState = 2 
                                 AND PI.Version = @version 
                                 AND AI.AppInstanceID = @appInstanceID 
-                                AND AI.ProcessGUID = @processGUID";
+                                AND AI.ProcessID = @processID";
 
             var list = Repository.Query<ActivityInstanceEntity>(session.Connection,
                 sql,
                 new
                 {
                     appInstanceID = appInstanceID,
-                    processGUID = processGUID,
+                    processID = processID,
                     version = version
                 },
                 session.Transaction);
@@ -753,16 +719,13 @@ namespace Slickflow.Engine.Business.Manager
         /// Retrieve completed multi instance nodes
         /// 获取已经完成的多实例子节点
         /// </summary>
-        /// <param name="runningNode"></param>
-        /// <param name="previousActivityGUID"></param>
-        /// <returns></returns>
         internal List<ActivityInstanceEntity> GetPreviousParallelMultipleInstanceListCompleted(ActivityInstanceEntity runningNode,
-            string previousActivityGUID)
+            string previousActivityID)
         {
             IDbSession session = SessionFactory.CreateSession();
             try
             {
-                var previousList = GetPreviousParallelMultipleInstanceListCompleted(runningNode, previousActivityGUID, session);
+                var previousList = GetPreviousParallelMultipleInstanceListCompleted(runningNode, previousActivityID, session);
                 return previousList;
             }
             catch (System.Exception ex)
@@ -779,12 +742,8 @@ namespace Slickflow.Engine.Business.Manager
         /// Retrieve completed multi instance nodes
         /// 获取已经完成的多实例子节点
         /// </summary>
-        /// <param name="runningNode"></param>
-        /// <param name="previousActivityGUID"></param>
-        /// <param name="session"></param>
-        /// <returns></returns>
         internal List<ActivityInstanceEntity> GetPreviousParallelMultipleInstanceListCompleted(ActivityInstanceEntity runningNode,
-            string previousActivityGUID,
+            string previousActivityID,
             IDbSession session)
         {
             ActivityInstanceEntity originalRunningNode = null;
@@ -806,7 +765,7 @@ namespace Slickflow.Engine.Business.Manager
 
             var sql = @"SELECT * FROM WfActivityInstance 
                         WHERE ProcessInstanceID = @processInstanceID 
-                            AND ActivityGUID = @activityGUID 
+                            AND ActivityID = @activityID 
                             AND ActivityState = 4
                             AND MIHostActivityInstanceID IS NOT NULL 
                         ORDER BY ID DESC";
@@ -816,7 +775,7 @@ namespace Slickflow.Engine.Business.Manager
                 new
                 {
                     processInstanceID = runningNode.ProcessInstanceID,
-                    activityGUID = previousActivityGUID
+                    activityID = previousActivityID
                 },
                 session.Transaction).ToList();
 
@@ -995,26 +954,21 @@ namespace Slickflow.Engine.Business.Manager
         /// Query the number of branch instances
         /// 查询分支实例的个数
         /// </summary>
-        /// <param name="splitActivityGUID"></param>
-        /// <param name="splitActivityInstanceID"></param>
-        /// <param name="processInstanceID"></param>
-        /// <param name="session"></param>
-        /// <returns></returns>
-        internal int GetGatewayInstanceCountByTransition(string splitActivityGUID,
+        internal int GetGatewayInstanceCountByTransition(string splitActivityID,
             int splitActivityInstanceID,
             int processInstanceID,
             IDbSession session)
         {
-            var sql = @"SELECT * FROM wftransitioninstance
-                            WHERE processinstanceid=@processinstanceID 
-                                AND fromactivityguid=@fromActivityGUID
-                                AND fromactivityinstanceid=@fromActivityInstanceID";
+            var sql = @"SELECT * FROM WfTransitionInstance
+                            WHERE ProcessInstanceID=@processinstanceID 
+                                AND FromActivityID=@fromActivityID
+                                AND FromActivityInstanceID=@fromActivityInstanceID";
             var list = Repository.Query<TransitionInstanceEntity>(
                 session.Connection,
                 sql,
                 new
                 {
-                    fromActivityGUID = splitActivityGUID,
+                    fromActivityID = splitActivityID,
                     fromActivityInstanceID = splitActivityInstanceID,
                     processinstanceID = processInstanceID
                 },
@@ -1143,7 +1097,7 @@ namespace Slickflow.Engine.Business.Manager
         /// <param name="appName"></param>
         /// <param name="appInstanceID"></param>
         /// <param name="appInstanceCode"></param>
-        /// <param name="processGUID"></param>
+        /// <param name="processID"></param>
         /// <param name="processInstanceID"></param>
         /// <param name="activity"></param>
         /// <param name="runner"></param>
@@ -1151,19 +1105,19 @@ namespace Slickflow.Engine.Business.Manager
         internal ActivityInstanceEntity CreateActivityInstanceObject(string appName,
             string appInstanceID,
             string appInstanceCode,
-            string processGUID,
+            string processID,
             int processInstanceID,
             Activity activity,
             WfAppRunner runner)
         {
             ActivityInstanceEntity instance = new ActivityInstanceEntity();
-            instance.ActivityGUID = activity.ActivityGUID;
+            instance.ActivityID = activity.ActivityID;
             instance.ActivityName = activity.ActivityName;
             instance.ActivityCode = activity.ActivityCode;
             instance.ActivityType = (short)activity.ActivityType;
             instance.WorkItemType = (short)activity.WorkItemType;
             instance.GatewayDirectionTypeID = activity.GatewayDetail != null ? (short)activity.GatewayDetail.DirectionType : null;
-            instance.ProcessGUID = processGUID;
+            instance.ProcessID = processID;
             instance.AppName = appName;
             instance.AppInstanceID = appInstanceID;
             instance.AppInstanceCode = appInstanceCode;
@@ -1219,13 +1173,13 @@ namespace Slickflow.Engine.Business.Manager
         internal ActivityInstanceEntity CreateActivityInstanceObject(ActivityInstanceEntity main)
         {
             ActivityInstanceEntity instance = new ActivityInstanceEntity();
-            instance.ActivityGUID = main.ActivityGUID;
+            instance.ActivityID = main.ActivityID;
             instance.ActivityName = main.ActivityName;
             instance.ActivityCode = main.ActivityCode;
             instance.ActivityType = main.ActivityType;
             instance.WorkItemType = main.WorkItemType;
             instance.GatewayDirectionTypeID = main.GatewayDirectionTypeID;
-            instance.ProcessGUID = main.ProcessGUID;
+            instance.ProcessID = main.ProcessID;
             instance.AppName = main.AppName;
             instance.AppInstanceID = main.AppInstanceID;
             instance.AppInstanceCode = main.AppInstanceCode;
@@ -1245,22 +1199,11 @@ namespace Slickflow.Engine.Business.Manager
         /// Create an object for the activity instance
         /// 创建活动实例的对象
         /// </summary>
-        /// <param name="appName"></param>
-        /// <param name="appInstanceID"></param>
-        /// <param name="appInstanceCode"></param>
-        /// <param name="processInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <param name="activity"></param>
-        /// <param name="backwardType"></param>
-        /// <param name="backSrcActivityInstanceID"></param>
-        /// <param name="backOrgActivityInstanceID"></param>
-        /// <param name="runner"></param>
-        /// <returns></returns>
         internal ActivityInstanceEntity CreateBackwardActivityInstanceObject(string appName,
             string appInstanceID,
             string appInstanceCode,
             int processInstanceID,
-            string processGUID,
+            string processID,
             Activity activity,
             BackwardTypeEnum backwardType,
             int backSrcActivityInstanceID,
@@ -1268,13 +1211,13 @@ namespace Slickflow.Engine.Business.Manager
             WfAppRunner runner)
         {
             ActivityInstanceEntity instance = new ActivityInstanceEntity();
-            instance.ActivityGUID = activity.ActivityGUID;
+            instance.ActivityID = activity.ActivityID;
             instance.ActivityName = activity.ActivityName;
             instance.ActivityCode = activity.ActivityCode;
             instance.ActivityType = (short)activity.ActivityType;
             instance.WorkItemType = (short)activity.WorkItemType;
             instance.GatewayDirectionTypeID = activity.GatewayDetail != null ? (short)activity.GatewayDetail.DirectionType : null;
-            instance.ProcessGUID = processGUID;
+            instance.ProcessID = processID;
             instance.AppName = appName;
             instance.AppInstanceID = appInstanceID;
             instance.AppInstanceCode = appInstanceCode;
@@ -1454,19 +1397,16 @@ namespace Slickflow.Engine.Business.Manager
         /// Update the activities in the activity to block status
         /// 更新活动里面的活动为阻止状态
         /// </summary>
-        /// <param name="processInstanceID"></param>
-        /// <param name="taskActivityList"></param>
-        /// <param name="session"></param>
         private void UpdateActivityInstanceBlockedBetweenSplitJoin(int processInstanceID, 
             IList<Activity> taskActivityList,
             IDbSession session)
         {
-            var idsin = taskActivityList.Select(a => a.ActivityGUID).ToList();
+            var idsin = taskActivityList.Select(a => a.ActivityID).ToList();
             var updSql = @"UPDATE WfActivityInstance 
                         SET CanNotRenewInstance=1 
                         WHERE ProcessInstanceID=@processInstanceID 
                             AND ActivityState in (1, 2, 5) 
-                            AND ActivityGUID in @ids";
+                            AND ActivityID in @ids";
 
             var rows = Repository.Execute(session.Connection, updSql,
                 new

@@ -13,7 +13,7 @@ namespace Slickflow.Engine.Business.Entity
     public class ProcessInstanceEntity
     {
         public int ID { get; set; }
-        public string ProcessGUID { get; set; }
+        public string ProcessID { get; set; }
         public string ProcessName { get; set; }
         public string Version { get; set; }
         public string AppName { get; set; }
@@ -21,10 +21,10 @@ namespace Slickflow.Engine.Business.Entity
         public string AppInstanceCode { get; set; }
         public short ProcessState { get; set; }
         public Nullable<short> SubProcessType { get; set; }
-        public int SubProcessID { get; set; }
-        public string SubProcessGUID { get; set; }
+        public int SubProcessDefID { get; set; }
+        public string SubProcessID { get; set; }
         public int InvokedActivityInstanceID { get; set; }
-        public string InvokedActivityGUID { get; set; }
+        public string InvokedActivityID { get; set; }
         public Nullable<short> JobTimerType { get; set; }
         public Nullable<short> JobTimerStatus { get; set; }
         public string TriggerExpression { get; set; }

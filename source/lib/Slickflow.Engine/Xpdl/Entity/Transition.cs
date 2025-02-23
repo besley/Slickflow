@@ -11,13 +11,7 @@ namespace Slickflow.Engine.Xpdl.Entity
     /// </summary>
     public class Transition
     {
-        public string ID
-        { 
-            get;
-            set;
-        }
-
-        public String TransitionGUID
+        public String TransitionID
         {
             get;
             set;
@@ -29,13 +23,13 @@ namespace Slickflow.Engine.Xpdl.Entity
             set;
         }
 
-        public String FromActivityGUID
+        public String FromActivityID
         {
             get;
             set;
         }
 
-        public String ToActivityGUID
+        public String ToActivityID
         {
             get;
             set;

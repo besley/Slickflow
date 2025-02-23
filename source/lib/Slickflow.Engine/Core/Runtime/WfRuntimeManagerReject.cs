@@ -27,7 +27,7 @@ namespace Slickflow.Engine.Core.Runtime
             //取消当前其它处于办理状态的节点
             //Cancel other nodes currently in processing status
             var aim = new ActivityInstanceManager();
-            var runningList = aim.GetRunningActivityInstanceList(base.AppRunner.AppInstanceID, base.AppRunner.ProcessGUID, base.AppRunner.Version, session);
+            var runningList = aim.GetRunningActivityInstanceList(base.AppRunner.AppInstanceID, base.AppRunner.ProcessID, base.AppRunner.Version, session);
             foreach (var ai in runningList)
             {
                 if (ai.ID != base.BackwardContext.BackwardFromActivityInstance.ID)

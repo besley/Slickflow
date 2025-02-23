@@ -68,14 +68,14 @@ namespace Slickflow.Engine.Core.Parser
             //获取下一步信息
             //Obtain the next step information
             var processModel = ProcessModelFactory.CreateByTask(taskView);
-            var nextActivity = processModel.GetNextActivity(taskView.ActivityGUID);
+            var nextActivity = processModel.GetNextActivity(taskView.ActivityID);
             if (nextActivity != null)
             {
                 if (nextActivity.ActivityType == ActivityTypeEnum.GatewayNode)
                 {
                     //获取网关节点信息
                     //Obtain gateway node information
-                    var gatewayActivityInstance = aim.GetActivityInstanceLatest(taskView.ProcessInstanceID, nextActivity.ActivityGUID);
+                    var gatewayActivityInstance = aim.GetActivityInstanceLatest(taskView.ProcessInstanceID, nextActivity.ActivityID);
                     if (gatewayActivityInstance != null
                         && !string.IsNullOrEmpty(gatewayActivityInstance.NextStepPerformers))
                     {
@@ -86,7 +86,7 @@ namespace Slickflow.Engine.Core.Parser
                 {
                     //中间Timer事件节点
                     //Intermediate Timer Event Node
-                    var timerActivityInstance = aim.GetActivityInstanceLatest(taskView.ProcessInstanceID, nextActivity.ActivityGUID);
+                    var timerActivityInstance = aim.GetActivityInstanceLatest(taskView.ProcessInstanceID, nextActivity.ActivityID);
                     if (timerActivityInstance != null
                         && !string.IsNullOrEmpty(timerActivityInstance.NextStepPerformers))
                     {
@@ -112,7 +112,7 @@ namespace Slickflow.Engine.Core.Parser
             //判断应用数据是否缺失
             //Determine whether the application data is missing
             if (string.IsNullOrEmpty(runner.AppInstanceID)
-                || string.IsNullOrEmpty(runner.ProcessGUID))
+                || string.IsNullOrEmpty(runner.ProcessID))
             {
                 throw new WorkflowException(LocalizeHelper.GetEngineMessage("nextstepparser.getnextactivityroleusertree.error"));
             }
@@ -144,7 +144,7 @@ namespace Slickflow.Engine.Core.Parser
                 {
                     var processInstanceList = pim.GetProcessInstance(session.Connection,
                         runner.AppInstanceID,
-                        runner.ProcessGUID,
+                        runner.ProcessID,
                         runner.Version,
                         session.Transaction).ToList();
                     processInstance = EnumHelper.GetFirst<ProcessInstanceEntity>(processInstanceList);
@@ -171,7 +171,7 @@ namespace Slickflow.Engine.Core.Parser
                     //获取下一步列表
                     //Get the next step list
                     processModel = ProcessModelFactory.CreateByTask(session.Connection, taskView, session.Transaction);
-                    nextTreeResult = processModel.GetNextActivityTree(taskView.ActivityGUID, taskView.TaskID, condition, session);
+                    nextTreeResult = processModel.GetNextActivityTree(taskView.ActivityID, taskView.TaskID, condition, session);
                     
                     foreach (var ns in nextTreeResult.StepList)
                     {
@@ -197,9 +197,9 @@ namespace Slickflow.Engine.Core.Parser
                 {
                     //流程准备启动，获取第一个办理节点的用户列表
                     //Process preparation to start, obtain the user list of the first processing node
-                    processModel = ProcessModelFactory.CreateByProcess(runner.ProcessGUID, runner.Version);
+                    processModel = ProcessModelFactory.CreateByProcess(runner.ProcessID, runner.Version);
                     var firstActivity = processModel.GetFirstActivity();
-                    nextTreeResult = processModel.GetNextActivityTree(firstActivity.ActivityGUID,
+                    nextTreeResult = processModel.GetNextActivityTree(firstActivity.ActivityID,
                         null,
                         condition,
                         session);

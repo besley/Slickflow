@@ -100,7 +100,7 @@ namespace Slickflow.Engine.Core.Pattern
 
             activityResource.NextActivityPerformers.Clear();
             activityResource.NextActivityPerformers = new Dictionary<string, PerformerList>();
-            activityResource.NextActivityPerformers.Add(backwardToTaskActvity.ActivityGUID, performerList);
+            activityResource.NextActivityPerformers.Add(backwardToTaskActvity.ActivityID, performerList);
 
             //重新生成会签节点的多实例数据
             //Re generate multi instance data for the countersignature node

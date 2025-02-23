@@ -152,12 +152,11 @@ namespace Slickflow.Engine.Xpdl.Convertor
         /// <returns></returns>
         public ConvertorBuilder ConvertGeneral()
         {
-            mActivityEntity.ID = XMLHelper.GetXmlAttribute(XMLNode, "id");
-            mActivityEntity.ActivityGUID = XMLHelper.GetXmlAttribute(XMLNode, "sf:guid");
+            mActivityEntity.ActivityID = XMLHelper.GetXmlAttribute(XMLNode, "id");
             var name = XMLHelper.GetXmlAttribute(XMLNode, "name");
             if (string.IsNullOrEmpty(name))
             {
-                mActivityEntity.ActivityName = mActivityEntity.ID;
+                mActivityEntity.ActivityName = mActivityEntity.ActivityID;
             }
             else
             {

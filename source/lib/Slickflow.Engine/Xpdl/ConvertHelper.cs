@@ -21,13 +21,9 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// Convert XmlNode to Activity Entity
         /// </summary>
-        /// <param name="xmlNode">Xml Node</param>
-        /// <param name="xnpmgr">XML namespace manager</param>
-        /// <param name="processGUID">ProcessGUID</param>
-        /// <returns>Activity Entity</returns>
         public static Activity ConvertXmlActivityNodeToActivityEntity(XmlNode xmlNode, 
             XmlNamespaceManager xnpmgr, 
-            string processGUID)
+            string processID)
         {
             if (xmlNode == null)
             {
@@ -37,7 +33,7 @@ namespace Slickflow.Engine.Xpdl
             ActivityTypeEnum activityType = ActivityTypeEnum.Unknown;
             var convert = ConvertorFactory.CreateConvertor(xmlNode, xnpmgr, out activityType);
             Activity entity = convert.Convert();
-            entity.ProcessGUID = processGUID;
+            entity.ProcessID = processID;
             entity.ActivityType = activityType;
 
             return entity;
@@ -48,14 +44,9 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// Convert nodt to Form
         /// </summary>
-        /// <param name="xmlNode">Xml Node</param>
-        /// <param name="xnpmgr">XML namespace manager</param>
-        /// <param name="processGUID">ProcessGUID</param>
-        /// <returns>Form</returns>
-        /// <exception cref="WfXpdlException"></exception>
         public static FormOuter ComnvertXmlFormNodeToFormEntity(XmlNode xmlNode,
             XmlNamespaceManager xnpmgr,
-            string processGUID)
+            string processID)
         {
             if (xmlNode == null)
             {

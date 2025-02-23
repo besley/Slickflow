@@ -9,7 +9,7 @@ namespace Slickflow.Engine.Xpdl.Entity
     /// </summary>
     public class ActivityView
     {
-        public string ActivityGUID { get; set; }
+        public string ActivityID { get; set; }
         public string ActivityName { get; set; }
         public string ActivityCode { get; set; }
         public string ActivityType { get; set; }

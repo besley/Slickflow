@@ -29,8 +29,8 @@ namespace Slickflow.Engine.Core.Runtime
 
                 NodeMediator mediator = NodeMediatorFactory.CreateNodeMediator(runningExecutionContext, session);
                 mediator.LinkContext.FromActivityInstance = RunningActivityInstance;
-                var toActivityGUID = runningExecutionContext.ActivityResource.NextActivityPerformers.First().Key;
-                mediator.LinkContext.ToActivity = ProcessModel.GetActivity(toActivityGUID);
+                var toActivityID = runningExecutionContext.ActivityResource.NextActivityPerformers.First().Key;
+                mediator.LinkContext.ToActivity = ProcessModel.GetActivity(toActivityID);
                 mediator.ExecuteWorkItem();
 
                 var result = base.WfExecutedResult;

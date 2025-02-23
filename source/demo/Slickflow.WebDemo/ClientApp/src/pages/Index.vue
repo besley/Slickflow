@@ -95,9 +95,9 @@ export default {
         this.$refs.mytodotasks.selected[0] !== undefined) {
         var selectedTask = this.$refs.mytodotasks.selected[0]
         var appInstanceID = selectedTask.AppInstanceID
-        var processGUID = selectedTask.ProcessGUID
+        var processID = selectedTask.ProcessID
         window.open('/sfd2/Diagram?AppInstanceID=' + appInstanceID +
-          '&ProcessGUID=' + processGUID + '&Mode=' + 'READONLY')
+          '&ProcessID=' + processID + '&Mode=' + 'READONLY')
       } else {
         kmsgbox.warn(this.gmxGetTitle('Index.onDiagramShow.warn'))
       }

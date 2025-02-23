@@ -50,7 +50,7 @@ namespace Slickflow.Engine.Core.Pattern
                     var pim = new ProcessInstanceManager();
                     bool isCompleted = pim.CheckSubProcessInstanceCompleted(Session.Connection,
                         base.LinkContext.FromActivityInstance.ID,
-                        base.LinkContext.FromActivityInstance.ActivityGUID,
+                        base.LinkContext.FromActivityInstance.ActivityID,
                         Session.Transaction);
                     if (isCompleted == false)
                     {
@@ -200,14 +200,14 @@ namespace Slickflow.Engine.Core.Pattern
             if (fromActivityInstance.ActivityType == (short)ActivityTypeEnum.GatewayNode)
             {
                 var processModel = ProcessModelFactory.CreateByProcessInstance(session.Connection, processInstance, session.Transaction);
-                var activityNode = processModel.GetActivity(fromActivityInstance.ActivityGUID);
+                var activityNode = processModel.GetActivity(fromActivityInstance.ActivityID);
                 isParallel = processModel.IsAndSplitMI(activityNode);
             }
 
             if (isParallel)
             {
                 var entity = new ActivityInstanceEntity();
-                var plist = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
+                var plist = activityResource.NextActivityPerformers[toActivity.ActivityID];
                 //创建并行多实例分支
                 //Create parallel multi instance branches
                 for (var i = 0; i < plist.Count; i++)
@@ -301,7 +301,7 @@ namespace Slickflow.Engine.Core.Pattern
                 subRunner = CreateSubProcessRunner(activityResource.AppRunner,
                    new Performer(activityResource.AppRunner.UserID, activityResource.AppRunner.UserName),
                    session);
-                performerList = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
+                performerList = activityResource.NextActivityPerformers[toActivity.ActivityID];
             }
 
             var runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceStartupSub(subRunner,
@@ -359,7 +359,7 @@ namespace Slickflow.Engine.Core.Pattern
 
             //插入会签子节点实例数据
             //Insert signature sub node instance data
-            var plist = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
+            var plist = activityResource.NextActivityPerformers[toActivity.ActivityID];
             ActivityInstanceEntity entity = new ActivityInstanceEntity();
             for (short i = 0; i < plist.Count; i++)
             {
@@ -423,7 +423,7 @@ namespace Slickflow.Engine.Core.Pattern
             IDbSession session)
         {
             WfAppRunner subRunner = new WfAppRunner();
-            subRunner.ProcessGUID = runner.ProcessGUID;
+            subRunner.ProcessID = runner.ProcessID;
             subRunner.AppInstanceCode = runner.AppInstanceCode;
             subRunner.AppInstanceID = runner.AppInstanceID;
             subRunner.AppName = runner.AppName;
@@ -447,7 +447,7 @@ namespace Slickflow.Engine.Core.Pattern
             //            var process = pm.GetByID(session.Connection, processID, session.Transaction);
             //            if (process != null)
             //            {
-            //                subProcessNode.SubProcessGUID = process.ProcessGUID;
+            //                subProcessNode.SubProcessID = process.ProcessID;
             //            }
             //            else
             //            {

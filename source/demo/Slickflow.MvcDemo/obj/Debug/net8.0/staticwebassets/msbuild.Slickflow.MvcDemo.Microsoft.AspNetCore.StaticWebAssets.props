@@ -5376,8 +5376,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>3pnxk2u0d7</Fingerprint>
-      <Integrity>N7J6dPZunbh9P8j9PFmxgnr1ybWhRIHbBQmX8hLP6tI=</Integrity>
+      <Fingerprint>b0ukkezowv</Fingerprint>
+      <Integrity>FW/KtcC2s8jJEgVsLzcw902OTma9wOqXlgqJbzjaKKE=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\accountmanager.js'))</OriginalItemSpec>
@@ -5394,8 +5394,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>vr5r31y1o5</Fingerprint>
-      <Integrity>+zzFB8umu3sEh+JgmJmIQRnnvsUFNa8xMAXduC/DmTo=</Integrity>
+      <Fingerprint>rr75zqzcco</Fingerprint>
+      <Integrity>aW7QcU9HJ2j/Vj4axcz4jCSrSxUqoAeo0vhi1Sv9Sig=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\config.js'))</OriginalItemSpec>
@@ -5412,8 +5412,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>mhep1n29f8</Fingerprint>
-      <Integrity>Zi3SN4lyLDz9AikG1pgXDl891v5vn0U9QbwO0KWnHfQ=</Integrity>
+      <Fingerprint>u92u8st39d</Fingerprint>
+      <Integrity>/hC38Mdnc6TyOJlmD3TR3bOvY4pq8Aqu52EU6IA6sFI=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\nextactivitytree.js'))</OriginalItemSpec>
@@ -5430,8 +5430,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>bumusdt6nf</Fingerprint>
-      <Integrity>3fBE5duL/VvJnJ3A9dfViO7o+Q5t+iMCWeSp2tR0hSI=</Integrity>
+      <Fingerprint>m4tlwgnitz</Fingerprint>
+      <Integrity>SilOrJDyplGjieva1G0apSlfuykavscbvd2jwIKxsbQ=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\pordermanager.js'))</OriginalItemSpec>
@@ -5448,8 +5448,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>ckx0fjrh4d</Fingerprint>
-      <Integrity>FMtzzn5zp6Dver+fj3VZBpPsAVdUENEYM5YoH34bS64=</Integrity>
+      <Fingerprint>ivndrm6ln3</Fingerprint>
+      <Integrity>Hm0wiDop6SZLPWYwfNY83CLeKC7h00KUQHJ3RKjExNk=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\ViewJS\sfmain.js'))</OriginalItemSpec>

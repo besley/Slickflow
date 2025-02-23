@@ -2,7 +2,7 @@
     function pordermanager() {
     }
 
-    pordermanager.mProductOrderProcessGUID = config.ProcessGUID;
+    pordermanager.mProductOrderProcessID = config.ProcessID;
     pordermanager.mcurrentProcessInstanceID = 0;
     pordermanager.mcurrentAppName = "ProductOrder";
 
@@ -52,7 +52,7 @@
             "UserName": user.UserName,
             "AppName": "ProductOrder",
             "AppInstanceID": pordermanager.selectedProductOrderID.toString(),
-            "ProcessGUID": pordermanager.mProductOrderProcessGUID,
+            "ProcessID": pordermanager.mProductOrderProcessID,
             "Version": "1"
         };
         return runner;
@@ -163,7 +163,7 @@
                 pordermanager.selectedProductOrderID = row.ID;
                 pordermanager.selectedProductOrderCode = row.OrderCode;
 
-                pordermanager.getReadyActivityInstance(row.ID.toString(), pordermanager.mProductOrderProcessGUID);
+                pordermanager.getReadyActivityInstance(row.ID.toString(), pordermanager.mProductOrderProcessID);
                 pordermanager.getAppFlowList(row.ID);
 
                 var status = row.Status;
@@ -238,7 +238,7 @@
             "UserName": user.UserName,
             "AppName": pordermanager.mcurrentAppName,
             "AppInstanceID": pordermanager.selectedProductOrderID.toString(),
-            "ProcessGUID": pordermanager.mProductOrderProcessGUID,
+            "ProcessID": pordermanager.mProductOrderProcessID,
             "Version": "1"
         };
 
@@ -293,10 +293,10 @@
     //#endregion
 
     //#region 业务流程数据记录
-    pordermanager.getReadyActivityInstance = function (appInstanceID, processGUID) {
+    pordermanager.getReadyActivityInstance = function (appInstanceID, processID) {
         var query = {};
         query.AppInstanceID = appInstanceID.toString();
-        query.ProcessGUID = processGUID;
+        query.ProcessID = processID;
 
         window.console.log(query);
 

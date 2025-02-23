@@ -17,7 +17,7 @@ namespace Slickflow.Engine.Common
     ///     "UserName":"Long",
     ///     "AppName":"SamplePrice",
     ///     "AppInstanceID":"100",
-    ///     "ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"
+    ///     "ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"
     /// }
     /// 流程执行人(业务应用的办理者)
     /// 说明：WfAppRunner是流程流转参数的传递对象，传递引擎执行需要的业务数据、资源数据和流程定义数据等。
@@ -46,7 +46,7 @@ namespace Slickflow.Engine.Common
         /// Process data: Process GUID
         /// 流程数据：流程GUID
         /// </summary>
-        public string ProcessGUID { get; set; }
+        public string ProcessID { get; set; }
 
         /// <summary>
         /// Process data: Process Code

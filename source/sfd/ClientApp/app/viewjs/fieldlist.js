@@ -114,10 +114,10 @@ const fieldlist = (function () {
                 var activity = fieldlist.FieldActivityInfo;
                 var entity = {
                     "ProcessID": activity.ProcessID,
-                    "ProcessGUID": activity.ProcessGUID,
+                    "ProcessID": activity.ProcessID,
                     "ProcessVersion": activity.ProcessVersion,
                     "ProcessName": activity.ProcessName,
-                    "ActivityGUID": activity.ActivityGUID,
+                    "ActivityID": activity.ActivityID,
                     "ActivityName": activity.ActivityName,
                     "FormID": selectedFormID,
                     "FormName": selectedFormName,

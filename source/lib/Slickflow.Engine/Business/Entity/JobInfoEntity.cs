@@ -16,10 +16,10 @@ namespace Slickflow.Engine.Business.Entity
         public int ID { get; set; }
         public string JobName { get; set; }
         public string Topic { get; set; }
-        public string ProcessGUID { get; set; }
+        public string ProcessID { get; set; }
         public string ProcessName { get; set; }
         public string Version { get; set; }
-        public string ActivityGUID { get; set; }
+        public string ActivityID { get; set; }
         public string ActivityName { get; set; }
         public string ActivityType { get; set; }
         public string TriggerType { get; set; }

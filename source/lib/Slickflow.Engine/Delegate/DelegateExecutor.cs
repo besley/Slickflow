@@ -30,9 +30,9 @@ namespace Slickflow.Engine.Delegate
             var delegateContext = new DelegateContext
             {
                 AppInstanceID = context.ProcessInstance.AppInstanceID,
-                ProcessGUID = context.ProcessInstance.ProcessGUID,
+                ProcessID = context.ProcessInstance.ProcessID,
                 ProcessInstanceID = context.ProcessInstance.ID,
-                ActivityGUID = currentActivity.ActivityGUID,
+                ActivityID = currentActivity.ActivityID,
                 ActivityName = currentActivity.ActivityName,
                 ActivityCode = currentActivity.ActivityCode,
                 ActivityResource = context.ActivityResource
@@ -62,7 +62,7 @@ namespace Slickflow.Engine.Delegate
                 var context = new DelegateContext
                 {
                     AppInstanceID = entity.AppInstanceID,
-                    ProcessGUID = entity.ProcessGUID,
+                    ProcessID = entity.ProcessID,
                     ProcessInstanceID = processInstanceID
                 };
                 Execute(session, context, eventListFiltered);

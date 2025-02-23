@@ -13,13 +13,9 @@ namespace Slickflow.Engine.Xpdl.Entity
     public class Activity
     {
         /// <summary>
-        /// ID
+        /// ActivityID
         /// </summary>
-        public string ID { get; set; }
-        /// <summary>
-        /// ActivityGUID
-        /// </summary>
-        public string ActivityGUID { get; set; }
+        public string ActivityID { get; set; }
         /// <summary>
         /// Activity Name
         /// </summary>
@@ -42,9 +38,9 @@ namespace Slickflow.Engine.Xpdl.Entity
         public string Description { get; set; }
 
         /// <summary>
-        /// ProcessGUID
+        /// ProcessID
         /// </summary>
-        public string ProcessGUID { get; set; }
+        public string ProcessID { get; set; }
 
         /// <summary>
         /// Activity Type

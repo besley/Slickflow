@@ -23,10 +23,10 @@ namespace Slickflow.Engine.Service
         /// Get Process by Version
         /// 流程定义数据读取
         /// </summary>
-        public ProcessEntity GetProcessByVersion(string processGUID, string version = null)
+        public ProcessEntity GetProcessByVersion(string processID, string version = null)
         {
             var pm = new ProcessManager();
-            var entity = pm.GetByVersion(processGUID, version);
+            var entity = pm.GetByVersion(processID, version);
 
             return entity;
         }
@@ -59,10 +59,10 @@ namespace Slickflow.Engine.Service
         /// Retrieve the current using version of the process 
         /// 获取当前版本的流程定义记录
         /// </summary>
-        public ProcessEntity GetProcessUsing(string processGUID)
+        public ProcessEntity GetProcessUsing(string processID)
         {
             var pm = new ProcessManager();
-            var entity = pm.GetVersionUsing(processGUID);
+            var entity = pm.GetVersionUsing(processID);
             return entity;
         }
 
@@ -117,10 +117,10 @@ namespace Slickflow.Engine.Service
         /// Get process file
         /// 流程定义的XML文件获取
         /// </summary>
-        public ProcessFileEntity GetProcessFile(string processGUID, string version)
+        public ProcessFileEntity GetProcessFile(string processID, string version)
         {
             var pm = new ProcessManager();
-            var entity = pm.GetProcessFile(processGUID, version, XPDLStorageFactory.CreateXPDLStorage());
+            var entity = pm.GetProcessFile(processID, version, XPDLStorageFactory.CreateXPDLStorage());
 
             return entity;
         }
@@ -170,10 +170,22 @@ namespace Slickflow.Engine.Service
             var entityDB = pm.GetByID(entity.ID);
             if (entity != null)
             {
-                newProcessID = pm.Upgrade(entityDB.ProcessGUID, entityDB.Version, entity.Version);
+                newProcessID = pm.Upgrade(entityDB.ProcessID, entityDB.Version, entity.Version);
             }
             return newProcessID;
         }
+
+        /// <summary>
+        /// Create process by xml content
+        /// 根据XML创建新流程
+        /// </summary>
+        public ProcessFileEntity CreateProcessByXML(string xmlContent)
+        {
+            var pm = new ProcessManager();
+            var processFileEntity = pm.CreateProcessByXML(xmlContent);
+            return processFileEntity;
+        }
+
         /// <summary>
         /// Update process
         /// 更新流程定义记录
@@ -188,46 +200,46 @@ namespace Slickflow.Engine.Service
         /// Update process state
         /// 更新流程使用状态
         /// </summary>
-        public void UpdateProcessUsingState(string processGUID,
+        public void UpdateProcessUsingState(string processID,
             string version,
             byte usingState)
         {
             var processManager = new ProcessManager();
-            processManager.UpdateUsingState(processGUID, version, usingState);
+            processManager.UpdateUsingState(processID, version, usingState);
         }
 
         /// <summary>
         /// Upgrade process
         /// 升级流程记录
         /// </summary>
-        public void UpgradeProcess(string processGUID, string version, string newVersion)
+        public void UpgradeProcess(string processID, string version, string newVersion)
         {
             var processManager = new ProcessManager();
-            processManager.Upgrade(processGUID, version, newVersion);
+            processManager.Upgrade(processID, version, newVersion);
         }
 
         /// <summary>
         /// Delete process
         /// 删除流程定义记录
         /// </summary>
-        public void DeleteProcess(string processGUID, string version)
+        public void DeleteProcess(string processID, string version)
         {
             var pm = new ProcessManager();
-            pm.DeleteProcess(processGUID, version);
+            pm.DeleteProcess(processID, version);
         }
 
         /// <summary>
         /// Delete process
         /// 删除流程定义记录
         /// </summary>
-        public void DeleteProcess(string processGUID)
+        public void DeleteProcess(string processID)
         {
             IDbSession session = SessionFactory.CreateSession();
             try
             {
                 session.BeginTrans();
                 var processManager = new ProcessManager();
-                processManager.Delete(session.Connection, processGUID, session.Transaction);
+                processManager.Delete(session.Connection, processID, session.Transaction);
                 session.Commit();
             }
             catch (System.Exception ex)
@@ -245,10 +257,10 @@ namespace Slickflow.Engine.Service
         /// Delete instance internal
         /// 删除流程实例包括其关联数据
         /// </summary>
-        public bool DeleteInstanceInt(string processGUID, string version)
+        public bool DeleteInstanceInt(string processID, string version)
         {
             var pim = new ProcessInstanceManager();
-            return pim.Delete(processGUID, version);
+            return pim.Delete(processID, version);
         }
 
         /// <summary>
@@ -275,20 +287,18 @@ namespace Slickflow.Engine.Service
         /// Reset Cachae
         /// 重置缓存中的流程定义信息
         /// </summary>
-        /// <param name="processGUID">流程Guid编号</param>
-        /// <param name="version">流程版本</param>
-        public void ResetCache(string processGUID, string version = null)
+        public void ResetCache(string processID, string version = null)
         {
             ////获取流程信息
-            //var procesEntity = GetProcessByVersion(processGUID, version);
+            //var procesEntity = GetProcessByVersion(processID, version);
             //var process = ProcessModelConvertor.ConvertProcessModelFromXML(procesEntity);
-            //if (XPDLMemoryCachedHelper.GetXpdlCache(procesEntity.ProcessGUID, procesEntity.Version) == null)
+            //if (XPDLMemoryCachedHelper.GetXpdlCache(procesEntity.ProcessID, procesEntity.Version) == null)
             //{
-            //    XPDLMemoryCachedHelper.SetXpdlCache(procesEntity.ProcessGUID, procesEntity.Version, process);
+            //    XPDLMemoryCachedHelper.SetXpdlCache(procesEntity.ProcessID, procesEntity.Version, process);
             //}
             //else
             //{
-            //    XPDLMemoryCachedHelper.TryUpdate(procesEntity.ProcessGUID, procesEntity.Version, process);
+            //    XPDLMemoryCachedHelper.TryUpdate(procesEntity.ProcessID, procesEntity.Version, process);
             //}
             throw new NotImplementedException();
         }

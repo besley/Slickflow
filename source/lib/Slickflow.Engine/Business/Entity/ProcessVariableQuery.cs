@@ -15,7 +15,7 @@ namespace Slickflow.Engine.Business.Entity
     {
         public ProcessVariableTypeEnum VariableType { get; set; }
         public int ProcessInstanceID { get; set; }
-        public string ActivityGUID { get; set; }
+        public string ActivityID { get; set; }
         public string Name { get; set; }
     }
 }

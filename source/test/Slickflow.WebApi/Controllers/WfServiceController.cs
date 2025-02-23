@@ -337,7 +337,7 @@ namespace Slickflow.WebApi.Controllers
             try
             {
                 var wfService = new WorkflowService();
-                var entity = wfService.GetProcessByVersion(query.ProcessGUID, query.Version);
+                var entity = wfService.GetProcessByVersion(query.ProcessID, query.Version);
 
                 result = ResponseResult<ProcessEntity>.Success(entity);
             }
@@ -405,7 +405,7 @@ namespace Slickflow.WebApi.Controllers
             try
             {
                 var wfService = new WorkflowService();
-                var entity = wfService.GetAllTaskActivityList(query.ProcessGUID, query.Version).ToList();
+                var entity = wfService.GetAllTaskActivityList(query.ProcessID, query.Version).ToList();
 
                 result = ResponseResult<List<Activity>>.Success(entity);
             }

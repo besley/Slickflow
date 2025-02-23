@@ -1235,7 +1235,7 @@
           "bin/placeholder/Slickflow.Data.DataProvider.dll": {}
         }
       },
-      "Slickflow.Engine/2.4.0": {
+      "Slickflow.Engine/3.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
@@ -3610,7 +3610,7 @@
       "path": "../../lib/Slickflow.Data.DataProvider/Slickflow.Data.DataProvider.csproj",
       "msbuildProject": "../../lib/Slickflow.Data.DataProvider/Slickflow.Data.DataProvider.csproj"
     },
-    "Slickflow.Engine/2.4.0": {
+    "Slickflow.Engine/3.0.0": {
       "type": "project",
       "path": "../../Lib/Slickflow.Engine/Slickflow.Engine.csproj",
       "msbuildProject": "../../Lib/Slickflow.Engine/Slickflow.Engine.csproj"
@@ -3634,7 +3634,7 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "SlickOne.WebUtility >= 1.0.0",
-      "Slickflow.Engine >= 2.4.0"
+      "Slickflow.Engine >= 3.0.0"
     ]
   },
   "packageFolders": {
@@ -3663,6 +3663,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3709,7 +3710,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -19,9 +19,9 @@ namespace Slickflow.Engine.Utility
         /// <summary>
         /// Set Xpdl Cache
         /// </summary>
-        internal static XmlDocument SetXpdlCache(string processGUID, string version, XmlDocument xmlDoc)
+        internal static XmlDocument SetXpdlCache(string processID, string version, XmlDocument xmlDoc)
         {
-            var str = processGUID + version;
+            var str = processID + version;
             var strMD5 = MD5Helper.GetMD5(str);
 
             return _xpdlCache.GetOrAdd(strMD5, xmlDoc);
@@ -30,10 +30,10 @@ namespace Slickflow.Engine.Utility
         /// <summary>
         /// Read xpdl cache
         /// </summary>
-        internal static XmlDocument GetXpdlCache(string processGUID, string version)
+        internal static XmlDocument GetXpdlCache(string processID, string version)
         {
             XmlDocument xmlDoc = null;
-            var str = processGUID + version;
+            var str = processID + version;
             var strMD5 = MD5Helper.GetMD5(str);      
 
             if (_xpdlCache.ContainsKey(strMD5))
@@ -46,9 +46,9 @@ namespace Slickflow.Engine.Utility
         /// <summary>
         /// update cache
         /// </summary>
-        internal static bool TryUpdate(string processGUID, string version, XmlDocument xmlDoc)
+        internal static bool TryUpdate(string processID, string version, XmlDocument xmlDoc)
         {
-            var str = processGUID + version;
+            var str = processID + version;
             var strMD5 = MD5Helper.GetMD5(str);
 
             if (_xpdlCache.ContainsKey(strMD5))

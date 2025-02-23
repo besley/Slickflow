@@ -35,7 +35,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
 
             //直接取出下步列表，运行时再根据条件执行
             //Directly retrieve the next step list and execute it based on the conditions during runtime
-            List<Transition> transitionList = base.ProcessModel.GetForwardTransitionList(currentGatewayActivity.ActivityGUID,
+            List<Transition> transitionList = base.ProcessModel.GetForwardTransitionList(currentGatewayActivity.ActivityID,
                 conditionKeyValuePair).ToList();
             foreach (Transition transition in transitionList)
             {

@@ -1,5 +1,4 @@
-﻿import guidProps from './parts/GuidProps';
-import nameProps from './parts/NameProps';
+﻿import nameProps from './parts/NameProps';
 import codeProps from './parts/CodeProps';
 import urlProps from './parts/UrlProps';
 
@@ -21,7 +20,7 @@ function createIdentityGroup(element, translate) {
     const identityGroup = {
         id: 'general',
         label: kresource.getItem('general'),
-        entries: [nameProps(element), codeProps(element), guidProps(element), urlProps(element)]
+        entries: [nameProps(element), codeProps(element), urlProps(element)]
     };
     return identityGroup;
 }

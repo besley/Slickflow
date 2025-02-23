@@ -54,17 +54,13 @@ namespace Slickflow.Engine.Common
         /// Generate the next step performer list
         /// 生成下一步人员列表
         /// </summary>
-        /// <param name="activityGUID"></param>
-        /// <param name="userID"></param>
-        /// <param name="userName"></param>
-        /// <returns></returns>
-        public static IDictionary<string, PerformerList> CreateNextStepPerformerList(string activityGUID, 
+        public static IDictionary<string, PerformerList> CreateNextStepPerformerList(string activityID, 
             string userID, 
             string userName)
         {
             var performerList = PerformerBuilder.CreatePerformerList(userID, userName);
             var nextStep = new Dictionary<string, PerformerList>();
-            nextStep.Add(activityGUID, performerList);
+            nextStep.Add(activityID, performerList);
             return nextStep;
         }
     }

@@ -20,9 +20,9 @@ namespace Slickflow.Engine.Business.Entity
         public string AppInstanceID { get; set; }
         public string AppInstanceCode { get; set; }
         public int ProcessInstanceID { get; set; }
-        public string ProcessGUID { get; set; }
+        public string ProcessID { get; set; }
         public string Version { get; set; }
-        public string ActivityGUID { get; set; }
+        public string ActivityID { get; set; }
         public int ActivityInstanceID { get; set; }
         public string ActivityName { get; set; }
         public string ActivityCode { get; set; }
@@ -30,8 +30,8 @@ namespace Slickflow.Engine.Business.Entity
         public short WorkItemType { get; set; }
         public short TaskType { get; set; }
         public Nullable<short> SubProcessType { get; set; }
-        public int SubProcessID { get; set; }
-        public string SubProcessGUID { get; set; }
+        public int SubProcessDefID { get; set; }
+        public string SubProcessID { get; set; }
         public Nullable<int> EntrustedTaskID { get; set; }        //被委托任务ID
         public Nullable<int> MIHostActivityInstanceID { get; set; }
         public Nullable<float> CompleteOrder { get; set; }

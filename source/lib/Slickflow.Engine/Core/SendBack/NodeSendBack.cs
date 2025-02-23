@@ -63,7 +63,7 @@ namespace Slickflow.Engine.Core.SendBack
                 processInstance.AppInstanceID,
                 processInstance.AppInstanceCode,
                 processInstance.ID,
-                processInstance.ProcessGUID,
+                processInstance.ProcessID,
                 this.SendBackOperation.BackwardToTaskActivity,
                 backwardType,
                 backSrcActivityInstanceID,
@@ -91,7 +91,7 @@ namespace Slickflow.Engine.Core.SendBack
             }
 
             TaskManager.Insert(toActivityInstance,
-                activityResource.NextActivityPerformers[toActivityInstance.ActivityGUID],
+                activityResource.NextActivityPerformers[toActivityInstance.ActivityID],
                 activityResource.AppRunner,
                 session);
         }
@@ -108,9 +108,9 @@ namespace Slickflow.Engine.Core.SendBack
             WfAppRunner runner,
             IDbSession session)
         {
-            var transition = SendBackOperation.ProcessModel.GetForwardTransition(toActivityInstance.ActivityGUID,
-                fromActivityInstance.ActivityGUID);
-            var transitionGUID = transition != null ? transition.TransitionGUID : WfDefine.WF_XPDL_SEND_BACK_UNKNOWN_GUID;
+            var transition = SendBackOperation.ProcessModel.GetForwardTransition(toActivityInstance.ActivityID,
+                fromActivityInstance.ActivityID);
+            var transitionGUID = transition != null ? transition.TransitionID : WfDefine.WF_XPDL_SEND_BACK_UNKNOWN_GUID;
             var transitionInstanceObject = this.TransitionInstanceManager.CreateTransitionInstanceObject(processInstance,
                 transitionGUID,
                 fromActivityInstance,
@@ -138,7 +138,7 @@ namespace Slickflow.Engine.Core.SendBack
             IDbSession session)
         {
             var previousActivityInstance = this.ActivityInstanceManager.GetPreviousActivityInstanceSimple(fromActivityInstance, 
-                backwardToTaskActivity.ActivityGUID, 
+                backwardToTaskActivity.ActivityID, 
                 session);
 
             if (previousActivityInstance == null)
@@ -151,7 +151,7 @@ namespace Slickflow.Engine.Core.SendBack
                processInstance.AppInstanceID,
                processInstance.AppInstanceCode,
                processInstance.ID,
-               processInstance.ProcessGUID,
+               processInstance.ProcessID,
                backwardToTaskActivity,
                backwardType,
                fromActivityInstance.ID,

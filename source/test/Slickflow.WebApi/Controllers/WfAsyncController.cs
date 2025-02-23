@@ -25,14 +25,14 @@ namespace Slickflow.WebApi.Controllers
     //Process Name: Quotation Process
     //Process GUID: 072af8c3-482a-4b1c-890b-685ce2fcc75d
     //startup process:
-    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
 
     //run process app:
     //业务员提交办理节点：
     //下一步是“板房签字”办理节点
     //Salesperson submits processing nodes:
     //The next step is to handle the node of "signing the board house"
-    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"eb833577-abb5-4239-875a-5f2e2fcb6d57":[{"UserID":10,"UserName":"Long"}]}}
+    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"eb833577-abb5-4239-875a-5f2e2fcb6d57":[{"UserID":10,"UserName":"Long"}]}}
 
     /// <summary>
     /// Async Controller

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Slickflow.Module.Resource")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9fa8a86f8499a04131c1404cb5ef50cb8bbcae10")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+30b94d65b4bcd5fce9fe912c90bc54f3320a748e")]
 [assembly: System.Reflection.AssemblyProductAttribute("Slickflow.Module.Resource")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Slickflow.Module.Resource")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

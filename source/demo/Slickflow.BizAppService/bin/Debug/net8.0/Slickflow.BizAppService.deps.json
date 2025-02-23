@@ -9,7 +9,7 @@
       "Slickflow.BizAppService/1.0.0": {
         "dependencies": {
           "SlickOne.WebUtility": "1.0.0",
-          "Slickflow.Engine": "2.4.0"
+          "Slickflow.Engine": "3.0.0"
         },
         "runtime": {
           "Slickflow.BizAppService.dll": {}
@@ -811,7 +811,7 @@
           }
         }
       },
-      "Slickflow.Engine/2.4.0": {
+      "Slickflow.Engine/3.0.0": {
         "dependencies": {
           "Devart.Data.Oracle.EFCore": "10.3.21.8",
           "IronPython": "3.4.1",
@@ -827,7 +827,7 @@
         },
         "runtime": {
           "Slickflow.Engine.dll": {
-            "assemblyVersion": "2.4.0",
+            "assemblyVersion": "3.0.0",
             "fileVersion": "2.4.0.0"
           }
         }
@@ -875,6 +875,14 @@
           "Slickflow.Module.Localize.dll": {
             "assemblyVersion": "2.4.0.0",
             "fileVersion": "2.4.0.0"
+          }
+        }
+      },
+      "Slickflow.Module.Form/1.0.0.0": {
+        "runtime": {
+          "Slickflow.Module.Form.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       }
@@ -1370,7 +1378,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Slickflow.Engine/2.4.0": {
+    "Slickflow.Engine/3.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -1391,6 +1399,11 @@
       "sha512": ""
     },
     "Slickflow.Module.Localize/2.4.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Slickflow.Module.Form/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

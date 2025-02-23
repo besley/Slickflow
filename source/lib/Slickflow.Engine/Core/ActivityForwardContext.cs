@@ -62,7 +62,7 @@ namespace Slickflow.Engine.Core
             //check task condition has load activity instance
             FromActivityInstance = (new ActivityInstanceManager()).GetById(session.Connection, taskView.ActivityInstanceID, session.Transaction);
             ProcessInstance = (new ProcessInstanceManager()).GetById(session.Connection, taskView.ProcessInstanceID, session.Transaction);
-            Activity = processModel.GetActivity(taskView.ActivityGUID);
+            Activity = processModel.GetActivity(taskView.ActivityID);
             ProcessModel = processModel;
             ActivityResource = activityResource;
             IsNotParsedByTransition = isNotParsedByTransition;  
@@ -81,7 +81,7 @@ namespace Slickflow.Engine.Core
             //check task condition has load activity instance
             FromActivityInstance = (new ActivityInstanceManager()).GetById(session.Connection, activityInstance.ID, session.Transaction);
             ProcessInstance = (new ProcessInstanceManager()).GetById(session.Connection, activityInstance.ProcessInstanceID, session.Transaction);
-            Activity = processModel.GetActivity(activityInstance.ActivityGUID);
+            Activity = processModel.GetActivity(activityInstance.ActivityID);
             ProcessModel = processModel;
             ActivityResource = activityResource;
             IsNotParsedByTransition = isNotParsedByTransition;

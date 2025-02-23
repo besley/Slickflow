@@ -14,7 +14,7 @@ namespace Slickflow.Engine.Xpdl.Entity
         public string ID { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
-        public string CollaborationGUID { get; set; }
+        public string CollaborationID { get; set; }
         public List<Participant> ParticipantList { get; set; }
     }
 }

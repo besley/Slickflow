@@ -35,7 +35,7 @@ namespace Slickflow.WebDemo.Controllers
             try
             {
                 var wfService = new WorkflowService();
-                var entity = wfService.GetProcessFile(query.ProcessGUID, query.Version);
+                var entity = wfService.GetProcessFile(query.ProcessID, query.Version);
 
                 result = ResponseResult<ProcessFileEntity>.Success(entity);
             }
@@ -84,7 +84,7 @@ namespace Slickflow.WebDemo.Controllers
             try
             {
                 var wfService = new WorkflowService();
-                var roleList = wfService.GetRoleByProcess(query.ProcessGUID, query.Version).ToList();
+                var roleList = wfService.GetRoleByProcess(query.ProcessID, query.Version).ToList();
                 var roleQuery = (from r in roleList
                                  select new Role
                                  {
@@ -112,7 +112,7 @@ namespace Slickflow.WebDemo.Controllers
                         try
             {
                 var wfService = new WorkflowService();
-                var roleList = wfService.GetRoleUserListByProcess(query.ProcessGUID, query.Version).ToList();
+                var roleList = wfService.GetRoleUserListByProcess(query.ProcessID, query.Version).ToList();
                 result = ResponseResult<List<Role>>.Success(roleList);
             }
             catch (System.Exception ex)

@@ -88,7 +88,7 @@
   "processtype": "流程类型",
   "mainprocess": "主流程",
   "poolprocess": " 泳道流程",
-  "processguid": "流程GUID",
+  "processid": "流程ID",
   "processname": "流程名称",
   "version": "版本",
   "processcode": "流程代码",
@@ -341,5 +341,14 @@
 
   "tasklist": "任务列表",
   "tasktodolist": "待办列表",
-  "taskdonelist": "已办列表"
+  "taskdonelist": "已办列表",
+
+  "aiassistant": "AI 流程助手",
+  "deepseekuserinputprompt": "提示:请帮我设计一个员工请假流程",
+  "send": "发送",
+  "deepseekprocessingmsg": "DeepSeek正在处理......<br>",
+  "aidialoginputnullwarnmsg": "请输入有效的需求描述",
+  "aidialogresponseerrormsg": "发送请求处理产生错误",
+  "kmaincreatebyaiokmsg": "流程已经被AI模型成功创建!",
+  "kmaincreatebyaierrormsg": "AI模型创建流程时发生错误, 详细:"
 }

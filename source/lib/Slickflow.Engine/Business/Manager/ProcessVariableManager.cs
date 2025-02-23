@@ -97,7 +97,7 @@ namespace Slickflow.Engine.Business.Manager
             {
                 VariableType = EnumHelper.ParseEnum<ProcessVariableTypeEnum>(entity.VariableType.ToString()),
                 ProcessInstanceID = entity.ProcessInstanceID,
-                ActivityGUID = entity.ActivityGUID,
+                ActivityID = entity.ActivityID,
                 Name = entity.Name
             };
 
@@ -118,13 +118,11 @@ namespace Slickflow.Engine.Business.Manager
         /// Retrieve the list of process variables
         /// 获取流程变量列表
         /// </summary>
-        /// <param name="processInstanceID"></param>
-        /// <returns></returns>
         internal IList<ProcessVariableEntity> GetVariableList(int processInstanceID)
         {
             var sql = @"SELECT * FROM WfProcessVariable
                         WHERE ProcessInstanceID=@processInstanceID
-                        ORDER BY ActivityGUID";
+                        ORDER BY ActivityID";
             var list = Repository.Query<ProcessVariableEntity>(sql,
                 new
                 {
@@ -213,11 +211,11 @@ namespace Slickflow.Engine.Business.Manager
             }
             else if (query.VariableType == ProcessVariableTypeEnum.Activity)
             {
-                if (string.IsNullOrEmpty(query.ActivityGUID))
+                if (string.IsNullOrEmpty(query.ActivityID))
                 {
                     throw new WorkflowException(LocalizeHelper.GetEngineMessage("processvariablemanager.query.error"));
                 }
-                entity = GetVariable(conn, query.ProcessInstanceID, query.ActivityGUID, query.Name, trans);
+                entity = GetVariable(conn, query.ProcessInstanceID, query.ActivityID, query.Name, trans);
             }
             return entity;
         }
@@ -262,21 +260,15 @@ namespace Slickflow.Engine.Business.Manager
         /// Query process variable
         /// 流程变量查询
         /// </summary>
-        /// <param name="conn"></param>
-        /// <param name="processInstanceID"></param>
-        /// <param name="activityGUID"></param>
-        /// <param name="name"></param>
-        /// <param name="trans"></param>
-        /// <returns></returns>
         private ProcessVariableEntity GetVariable(IDbConnection conn,
             int processInstanceID,
-            string activityGUID,
+            string activityID,
             string name,
             IDbTransaction trans)
         {
-            if (!string.IsNullOrEmpty(activityGUID))
+            if (!string.IsNullOrEmpty(activityID))
             {
-                return GetVariableOfActivity(conn, processInstanceID, activityGUID, name, trans);
+                return GetVariableOfActivity(conn, processInstanceID, activityID, name, trans);
             }
             else
             {
@@ -303,7 +295,7 @@ namespace Slickflow.Engine.Business.Manager
                         WHERE VariableType=@variableType 
                             AND ProcessInstanceID=@processInstanceID 
                             AND Name=@name 
-                        ORDER BY ActivityGUID";
+                        ORDER BY ActivityID";
             var list = Repository.Query<ProcessVariableEntity>(sql,
                 new
                 {
@@ -322,15 +314,9 @@ namespace Slickflow.Engine.Business.Manager
         /// Query activity variable
         /// 活动变量查询
         /// </summary>
-        /// <param name="conn"></param>
-        /// <param name="processInstanceID"></param>
-        /// <param name="activityGUID"></param>
-        /// <param name="name"></param>
-        /// <param name="trans"></param>
-        /// <returns></returns>
         private ProcessVariableEntity GetVariableOfActivity(IDbConnection conn,
             int processInstanceID,
-            string activityGUID,
+            string activityID,
             string name,
             IDbTransaction trans)
         {
@@ -338,15 +324,15 @@ namespace Slickflow.Engine.Business.Manager
             var sql = @"SELECT * FROM WfProcessVariable
                         WHERE VariableType=@variableType
                             AND ProcessInstanceID=@processInstanceID
-                            AND ActivityGUID=@activityGUID 
+                            AND ActivityID=@activityID 
                             AND Name=@name
-                        ORDER BY ActivityGUID";
+                        ORDER BY ActivityID";
             var list = Repository.Query<ProcessVariableEntity>(sql,
                 new
                 {
                     variableType = ProcessVariableTypeEnum.Process.ToString(),
                     processInstanceID = processInstanceID,
-                    activityGUID = activityGUID,
+                    activityID = activityID,
                     name = name
                 }).ToList();
             if (list != null && list.Count() > 0)
@@ -359,11 +345,6 @@ namespace Slickflow.Engine.Business.Manager
         /// Verify if the trigger expression satisfies
         /// 验证触发表达式是否满足
         /// </summary>
-        /// <param name="conn"></param>
-        /// <param name="processInstanceID"></param>
-        /// <param name="expression"></param>
-        /// <param name="trans"></param>
-        /// <returns></returns>
         internal bool ValidateProcessVariable(IDbConnection conn, int processInstanceID, string expression, IDbTransaction trans)
         {
             var parsed = false;

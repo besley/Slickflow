@@ -48,7 +48,7 @@ namespace Slickflow.Engine.Core.Parser
             //判断应用数据是否缺失
             //Determine whether the application data is missing
             if (string.IsNullOrEmpty(runner.AppInstanceID)
-                || string.IsNullOrEmpty(runner.ProcessGUID))
+                || string.IsNullOrEmpty(runner.ProcessID))
             {
                 throw new WorkflowException(LocalizeHelper.GetEngineMessage("nextstepparser.getnextactivityroleusertree.error"));
             }
@@ -68,16 +68,16 @@ namespace Slickflow.Engine.Core.Parser
 
                 var treeNodeList = new List<NodeView>();
                 var processModel = ProcessModelFactory.CreateByTask(session.Connection, taskView, session.Transaction);
-                var currentActivity = processModel.GetActivity(taskView.ActivityGUID);
+                var currentActivity = processModel.GetActivity(taskView.ActivityID);
                 treeNodeList.Add(new NodeView
                 {
-                    ActivityGUID = currentActivity.ActivityGUID,
+                    ActivityID = currentActivity.ActivityID,
                     ActivityName = currentActivity.ActivityName,
                     ActivityCode = currentActivity.ActivityCode,
                     ActivityUrl = currentActivity.ActivityUrl,
                     MyProperties = currentActivity.MyProperties,
                     ActivityType = currentActivity.ActivityType,
-                    Roles = processModel.GetActivityRoles(currentActivity.ActivityGUID)
+                    Roles = processModel.GetActivityRoles(currentActivity.ActivityID)
                 });
                 nextTreeResult.StepList = treeNodeList;
             }

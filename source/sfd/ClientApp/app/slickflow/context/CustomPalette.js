@@ -14,19 +14,20 @@ export default class CustomPalette {
             translate
         } = this;
 
-        function createMITask(event) {
-            const shape = elementFactory.createShape({ type: 'bpmn:MITask' });
-            create.start(event, shape);
+        function createByAI(event) {
+            //const shape = elementFactory.createShape({ type: 'bpmn:AI' });
+            //create.start(event, shape);
+            console.log('hello')
         }
 
         return {
-            'create.mi-task': {
-                group: 'activity',
-                className: 'bpmn-icon-mi-task',
-                title: translate('Create MITask'),
+            'create.ai': {
+                group: 'artifact',
+                className: 'bpmn-icon-ai',
+                title: translate('create ai'),
                 action: {
-                    dragstart: createMITask,
-                    click:createMITask
+                    dragstart: createByAI,
+                    click:createByAI
                 }
             },
         }

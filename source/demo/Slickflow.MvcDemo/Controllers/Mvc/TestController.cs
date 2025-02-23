@@ -49,7 +49,7 @@ namespace Slickflow.MvcDemo.Controllers.Mvc
         public string AppName { get; set; }
         public string AppInstanceID { get; set; }
         public string AppInstanceCode { get; set; }
-        public string ProcessGUID { get; set; }
+        public string ProcessID { get; set; }
         public string Version { get; set; }
         public string FlowStatus { get; set; }
         public string UserID { get; set; }

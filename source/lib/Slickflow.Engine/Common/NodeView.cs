@@ -14,10 +14,10 @@ namespace Slickflow.Engine.Common
     public class NodeView
     {
         /// <summary>
-        /// ActivityGUID
-        /// 活动节点GUID
+        /// ActivityID
+        /// 活动节点ID
         /// </summary>
-        public String ActivityGUID { get; set; }
+        public String ActivityID { get; set; }
 
         /// <summary>
         /// Activity Name

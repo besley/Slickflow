@@ -32,7 +32,7 @@ namespace Slickflow.Engine.Core.SendBack
             var runningNode = base.SendBackOperation.BackwardFromActivityInstance;
             var runningMainNode = base.ActivityInstanceManager.GetById(runningNode.MIHostActivityInstanceID.Value);
             var previousActivityInstance = base.ActivityInstanceManager.GetPreviousActivityInstanceSimple(runningNode,
-                base.SendBackOperation.BackwardToTaskActivity.ActivityGUID,
+                base.SendBackOperation.BackwardToTaskActivity.ActivityID,
                 base.Session);
 
             //创建撤销到上一步的节点记录

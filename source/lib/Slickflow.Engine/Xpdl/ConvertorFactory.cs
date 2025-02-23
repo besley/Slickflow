@@ -65,27 +65,27 @@ namespace Slickflow.Engine.Xpdl
         private static ActivityTypeEnum GetActivityTypeByNodeName(XmlNode node)
         {
             ActivityTypeEnum activityType = ActivityTypeEnum.Unknown;
-            if (node.Name == XPDLDefinition.BPMN2_ElementName_StartEvent)
+            if (node.Name == XPDLDefinition.BPMN_ElementName_StartEvent)
             {
                 activityType = ActivityTypeEnum.StartNode;
             }
-            else if (node.Name == XPDLDefinition.BPMN2_ElementName_EndEvent)
+            else if (node.Name == XPDLDefinition.BPMN_ElementName_EndEvent)
             {
                 activityType = ActivityTypeEnum.EndNode;
             }
-            else if (node.Name == XPDLDefinition.BPMN2_ElementName_IntermediateEvent_Catch
-                || node.Name == XPDLDefinition.BPMN2_ElementName_IntermediateEvent_Throw)
+            else if (node.Name == XPDLDefinition.BPMN_ElementName_IntermediateEvent_Catch
+                || node.Name == XPDLDefinition.BPMN_ElementName_IntermediateEvent_Throw)
             {
                 //Intermediator node
                 activityType = ActivityTypeEnum.IntermediateNode;
             }
-            else if (node.Name == XPDLDefinition.BPMN2_ElementName_SubProcess)
+            else if (node.Name == XPDLDefinition.BPMN_ElementName_SubProcess)
             {
                 activityType = ActivityTypeEnum.SubProcessNode;
             }
-            else if (node.Name == XPDLDefinition.BPMN2_ElementName_Task
-                || node.Name == XPDLDefinition.BPMN2_ElementName_UserTask
-                || node.Name == XPDLDefinition.BPMN2_ElementName_ManualTask)
+            else if (node.Name == XPDLDefinition.BPMN_ElementName_Task
+                || node.Name == XPDLDefinition.BPMNElementNameUserTask
+                || node.Name == XPDLDefinition.BPMN_ElementName_ManualTask)
             {
                 //判断是否为多人会签节点
                 //Determine whether it is a multi person signing node
@@ -94,17 +94,17 @@ namespace Slickflow.Engine.Xpdl
                 if (multipleDetailNode != null) activityType = ActivityTypeEnum.MultiSignNode;
                 else activityType = ActivityTypeEnum.TaskNode;
             }
-            else if(node.Name == XPDLDefinition.BPMN2_ElementName_ServiceTask)
+            else if(node.Name == XPDLDefinition.BPMN_ElementName_ServiceTask)
             {
                 activityType = ActivityTypeEnum.ServiceNode;
             }
-            else if(node.Name == XPDLDefinition.BPMN2_ElementName_ScriptTask)
+            else if(node.Name == XPDLDefinition.BPMN_ElementName_ScriptTask)
             {
                 activityType = ActivityTypeEnum.ScriptNode;
             }
-            else if (node.Name == XPDLDefinition.BPMN2_ElementName_ExclusiveGateway
-                || node.Name == XPDLDefinition.BPMN2_ElementName_InclusiveGateway
-                || node.Name == XPDLDefinition.BPMN2_ElementName_ParallelGateway)
+            else if (node.Name == XPDLDefinition.BPMN_ElementName_ExclusiveGateway
+                || node.Name == XPDLDefinition.BPMN_ElementName_InclusiveGateway
+                || node.Name == XPDLDefinition.BPMN_ElementName_ParallelGateway)
             {
                 //Gateway node
                 activityType = ActivityTypeEnum.GatewayNode;

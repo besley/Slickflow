@@ -46,18 +46,18 @@ namespace Slickflow.Engine.Business.Manager
             var entity = new TransitionInstanceEntity();
             entity.AppName = processInstance.AppName;
             entity.AppInstanceID = processInstance.AppInstanceID;
-            entity.ProcessGUID = processInstance.ProcessGUID;
+            entity.ProcessID = processInstance.ProcessID;
             entity.ProcessInstanceID = processInstance.ID;
-            entity.TransitionGUID = transitionGUID;
+            entity.TransitionID = transitionGUID;
             entity.TransitionType = (byte)transitionType;
             entity.FlyingType = (byte)flyingType;
 
             //构造活动节点数据
-            entity.FromActivityGUID = fromActivityInstance.ActivityGUID;
+            entity.FromActivityID = fromActivityInstance.ActivityID;
             entity.FromActivityInstanceID = fromActivityInstance.ID;
             entity.FromActivityType = fromActivityInstance.ActivityType;
             entity.FromActivityName = fromActivityInstance.ActivityName;
-            entity.ToActivityGUID = toActivityInstance.ActivityGUID;
+            entity.ToActivityID = toActivityInstance.ActivityID;
             entity.ToActivityInstanceID = toActivityInstance.ID;
             entity.ToActivityType = toActivityInstance.ActivityType;
             entity.ToActivityName = toActivityInstance.ActivityName;
@@ -120,15 +120,11 @@ namespace Slickflow.Engine.Business.Manager
         /// Get End transition Data
         /// 获取结束转移数据
         /// </summary>
-        /// <param name="appName"></param>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <returns></returns>
         internal TransitionInstanceEntity GetEndTransition(string appName, 
             string appInstanceID, 
-            string processGUID)
+            string processID)
         {
-            var nodeList = GetTransitonInstance(appInstanceID, processGUID, ActivityTypeEnum.EndNode).ToList();
+            var nodeList = GetTransitonInstance(appInstanceID, processID, ActivityTypeEnum.EndNode).ToList();
 
             if (nodeList == null || nodeList.Count == 0)
             {
@@ -142,13 +138,11 @@ namespace Slickflow.Engine.Business.Manager
         /// Obtain the final transition entity data
         /// 获取最后的转移实体数据
         /// </summary>
-        /// <param name="appName"></param>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <returns></returns>
-        internal TransitionInstanceEntity GetLastTaskTransition(string appName, string appInstanceID, string processGUID)
+        internal TransitionInstanceEntity GetLastTaskTransition(string appName, 
+            string appInstanceID, 
+            string processID)
         {
-            var nodeList = GetWorkItemTransitonInstance(appInstanceID, processGUID).ToList();
+            var nodeList = GetWorkItemTransitonInstance(appInstanceID, processID).ToList();
 
             if (nodeList.Count == 0)
             {
@@ -162,11 +156,8 @@ namespace Slickflow.Engine.Business.Manager
         /// Obtain a transition list of WorkItem type destination nodes
         /// 获得去向节点是WorkItem类型的转移列表
         /// </summary>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <returns></returns>
         internal IEnumerable<TransitionInstanceEntity> GetWorkItemTransitonInstance(string appInstanceID,
-            String processGUID)
+            String processID)
         {
             //2015.09.11 besley
             //需考虑后期节点类型增加目前支持TaskNode, SubProcessNode, MultipleInstanceNode
@@ -179,7 +170,7 @@ namespace Slickflow.Engine.Business.Manager
                         INNER JOIN WfActivityInstance A
                             ON T.ToActivityInstanceID = A.ID
                         WHERE T.AppInstanceID=@appInstanceID 
-                            AND T.ProcessGUID=@processGUID 
+                            AND T.ProcessID=@processID 
                             AND (T.ToActivityType=4 OR T.ToActivityType=5 OR T.ToActivityType=6 OR A.WorkItemType=1)          
                         ORDER BY T.CreatedDateTime DESC";
 
@@ -187,7 +178,7 @@ namespace Slickflow.Engine.Business.Manager
                 new
                 {
                     appInstanceID = appInstanceID,
-                    processGUID = processGUID
+                    processID = processID
                 });
             return list;
         }
@@ -196,17 +187,13 @@ namespace Slickflow.Engine.Business.Manager
         /// Select data transition based on destination node type
         /// 根据去向节点类型选择转移数据
         /// </summary>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <param name="toActivityType"></param>
-        /// <returns></returns>
         internal IEnumerable<TransitionInstanceEntity> GetTransitonInstance(string appInstanceID,
-            String processGUID,
+            String processID,
             ActivityTypeEnum toActivityType)
         {
             var sql = @"SELECT * FROM WfTransitionInstance 
                         WHERE AppInstanceID=@appInstanceID 
-                            AND ProcessGUID=@processGUID 
+                            AND ProcessID=@processID 
                             AND ToActivityType=@toActivityType 
                         ORDER BY CreatedDateTime DESC";
 
@@ -214,7 +201,7 @@ namespace Slickflow.Engine.Business.Manager
                 new
                 {
                     appInstanceID = appInstanceID,
-                    processGUID = processGUID,
+                    processID = processID,
                     toActivityType = (int)toActivityType
                 });
             return list;
@@ -224,20 +211,16 @@ namespace Slickflow.Engine.Business.Manager
         /// Obtain the list of transition data
         /// 获取转移数据列表
         /// </summary>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <param name="version"></param>
-        /// <returns></returns>
         internal IEnumerable<TransitionInstanceEntity> GetTransitionInstanceList(string appInstanceID,
-            string processGUID,
+            string processID,
             string version)
         {
             IEnumerable<TransitionInstanceEntity> list = new List<TransitionInstanceEntity>();
             var pim = new ProcessInstanceManager();
-            var pi = pim.GetProcessInstanceCurrent(appInstanceID, processGUID, version);
+            var pi = pim.GetProcessInstanceCurrent(appInstanceID, processID, version);
             if (pi != null)
             {
-                list = GetTransitionInstanceList(appInstanceID, processGUID, pi.ID);
+                list = GetTransitionInstanceList(appInstanceID, processID, pi.ID);
             }
             return list;
         }
@@ -246,17 +229,13 @@ namespace Slickflow.Engine.Business.Manager
         /// Get transition list
         /// 获取转移数据列表
         /// </summary>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <param name="processInstanceID"></param>
-        /// <returns></returns>
         internal IEnumerable<TransitionInstanceEntity> GetTransitionInstanceList(string appInstanceID,
-            string processGUID,
+            string processID,
             int processInstanceID)
         {
             var sql = @"SELECT * FROM WfTransitionInstance 
                         WHERE AppInstanceID=@appInstanceID 
-                            AND ProcessGUID=@processGUID 
+                            AND ProcessID=@processID 
                             AND ProcessInstanceID=@processInstanceID
                         ORDER BY CreatedDateTime DESC";
 
@@ -264,7 +243,7 @@ namespace Slickflow.Engine.Business.Manager
                 new
                 {
                     appInstanceID = appInstanceID,
-                    processGUID = processGUID.ToString(),
+                    processID = processID,
                     processInstanceID = processInstanceID
                 });
             return list;
@@ -359,7 +338,7 @@ namespace Slickflow.Engine.Business.Manager
             {
                 //判断连线是否被实例化，并且条件是否满足
                 //Determine whether the connection has been instantiated and whether the conditions are met
-                if (transitionGUID == transitionInstance.TransitionGUID)
+                if (transitionGUID == transitionInstance.TransitionID)
                 {
                     if (transitionInstance.ConditionParseResult == (byte)ConditionParseResultEnum.Passed)
                     {

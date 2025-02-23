@@ -12,7 +12,7 @@ namespace Slickflow.Module.Form
     /// </summary>
     public class FormCompQuery
     {
-        public string ProcessGUID { get; set; }
+        public string ProcessID { get; set; }
         public string Version { get; set; }
     }
 }

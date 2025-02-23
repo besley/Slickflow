@@ -88,7 +88,7 @@
   "processtype": "ProcessType",
   "mainprocess": "MainProcess",
   "poolprocess": "PoolProcess",
-  "processguid": "ProcessGUID",
+  "processid": "ProcessID",
   "processname": "ProcessName",
   "version": "Version",
   "processcode": "ProcessCode",
@@ -342,5 +342,14 @@
 
   "tasklist": "Task List",
   "tasktodolist": "Task ToDo List",
-  "taskdonelist": "Task Done List"
+  "taskdonelist": "Task Done List",
+
+  "aiassistant": "AI Flow Assistant",
+  "deepseekuserinputprompt": "Prompt:Please help me design an employee leave process",
+  "send": "Send",
+  "deepseekprocessingmsg": "DeepSeek is currently processing......<br>",
+  "aidialoginputnullwarnmsg": "Please input the valid requirement",
+  "aidialogresponseerrormsg": "An error occurred when submit the request",
+  "kmaincreatebyaiokmsg": "The process has been created process by AI successfully",
+  "kmaincreatebyaierrormsg": "An error occurred when created process by AI, detail:"
 }
