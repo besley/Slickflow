@@ -27,9 +27,9 @@ namespace Slickflow.Engine.Xpdl
             xmlDoc.LoadXml(xmlContent);
 
             var root = xmlDoc.DocumentElement;
-            var startEvent = XMLHelper.GetXmlNodeByXpath(xmlDoc, XPDLDefinition.BPMN2_StrXmlPath_StartEvent,
+            var startEvent = XMLHelper.GetXmlNodeByXpath(xmlDoc, XPDLDefinition.BPMN_StrXmlPath_StartEvent,
                 XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
-            var endEvent = XMLHelper.GetXmlNodeByXpath(xmlDoc, XPDLDefinition.BPMN2_StrXmlPath_EndEvent,
+            var endEvent = XMLHelper.GetXmlNodeByXpath(xmlDoc, XPDLDefinition.BPMN_StrXmlPath_EndEvent,
                 XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
 
             //检验开始节点和结束节点
@@ -49,12 +49,12 @@ namespace Slickflow.Engine.Xpdl
             //Check if there is a critical path from start to finish
             var process = ProcessModelHelper.ConvertToXPDLProcess(xmlDoc);
 
-            var startActivityGUID = XMLHelper.GetXmlAttribute(startEvent, "sf:guid");
+            var startActivityID = XMLHelper.GetXmlAttribute(startEvent, "id");
             var activityList = process.ActivityList;
             var transitionList = process.TransitionList;
-            activityList = activityList.Where(a => a.ActivityGUID != startActivityGUID).ToList();
+            activityList = activityList.Where(a => a.ActivityID != startActivityID).ToList();
 
-            var isExistedStartEndPath = TranverseTransitonList(process, activityList, transitionList, startActivityGUID);
+            var isExistedStartEndPath = TranverseTransitonList(process, activityList, transitionList, startActivityID);
             if (isExistedStartEndPath == false)
             {
                 result.ProcessValidatedResultType = ProcessValidateResultTypeEnum.WithoutStartEndPath;
@@ -72,19 +72,19 @@ namespace Slickflow.Engine.Xpdl
         internal static Boolean TranverseTransitonList(Process process,
             IList<Activity> activityList,
             IList<Transition> transitionList,
-            string activityGUID)
+            string activityID)
         {
-            var list = transitionList.Where(t => t.FromActivityGUID == activityGUID).ToList();
+            var list = transitionList.Where(t => t.FromActivityID == activityID).ToList();
             foreach (var t in list)
             {
-                var toActivityGUID = t.ToActivityGUID;
-                var activity = ProcessModelHelper.GetActivity(process, toActivityGUID);
+                var toActivityID = t.ToActivityID;
+                var activity = ProcessModelHelper.GetActivity(process, toActivityID);
                 if (activity.ActivityType == Engine.Common.ActivityTypeEnum.EndNode)
                 {
                     return true;
                 }
-                activityList = activityList.Where(a => a.ActivityGUID != toActivityGUID).ToList();
-                var isStartEndExisted = TranverseTransitonList(process, activityList, transitionList, toActivityGUID);
+                activityList = activityList.Where(a => a.ActivityID != toActivityID).ToList();
+                var isStartEndExisted = TranverseTransitonList(process, activityList, transitionList, toActivityID);
                 if (isStartEndExisted == true)
                 {
                     return true;

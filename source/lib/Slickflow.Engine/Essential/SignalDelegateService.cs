@@ -134,7 +134,7 @@ namespace Slickflow.Engine.Essential
         private WfAppRunner GetStartRunnerFromSignalExchange(SignalRunnerView msgRunnerView, JobInfoEntity jobInfo)
         {
             var runner = new WfAppRunner();
-            runner.ProcessGUID = jobInfo.ProcessGUID;
+            runner.ProcessID = jobInfo.ProcessID;
             runner.Version = jobInfo.Version;
             runner.AppName = msgRunnerView.WfAppRunner.AppName;
             runner.AppInstanceID = msgRunnerView.WfAppRunner.AppInstanceID;
@@ -156,7 +156,7 @@ namespace Slickflow.Engine.Essential
             //封装下一步的步骤信息
             //Encapsulate the next step information
             var aim = new ActivityInstanceManager();
-            var runningActivityInstanceList = aim.GetActivityInstanceList(jobInfo.ProcessGUID, jobInfo.Version, jobInfo.ActivityGUID);
+            var runningActivityInstanceList = aim.GetActivityInstanceList(jobInfo.ProcessID, jobInfo.Version, jobInfo.ActivityID);
             foreach (var activityInstance in runningActivityInstanceList)
             {
                 var signalResult = SignalConsumedResult.Default();
@@ -193,7 +193,7 @@ namespace Slickflow.Engine.Essential
         private WfAppRunner GetRunnerFromActivityInstance(SignalRunnerView signalRunner, JobInfoEntity jobInfo, ActivityInstanceEntity activityInstance)
         {
             var runner = new WfAppRunner();
-            runner.ProcessGUID = jobInfo.ProcessGUID;
+            runner.ProcessID = jobInfo.ProcessID;
             runner.Version = jobInfo.Version;
             runner.AppName = activityInstance.AppName;
             runner.AppInstanceID = activityInstance.AppInstanceID;

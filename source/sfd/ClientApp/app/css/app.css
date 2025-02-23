@@ -163,3 +163,152 @@ a:link {
 .dropdown-menu > li:hover > .dropdown-submenu {
     display: block;
 }
+
+/* 白色主题对话框 */
+.dialog-container {
+    position: fixed;
+    display: none;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background: #ffffff;
+    border: 1px solid #d0d0d0;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 360px !important; /* 固定宽度 */
+    height: 320px !important; /* 固定高度 */
+    display: flex;
+    flex-direction: column;
+}
+
+/* 头部样式 */
+.dialog-header {
+    padding: 10px 16px;
+    border-bottom: 1px solid #e8e8e8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dialog-title {
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+}
+
+/* 内容区域 */
+.dialog-content {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 文本输入框 */
+.text-area {
+    width: 100%;
+    height: 130px; /* 固定高度 */
+    padding: 8px;
+    border: 1px solid #d0d0d0;
+    border-radius: 3px;
+    resize: none;
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+    .text-area:focus {
+        outline: none;
+        border-color: #1890ff;
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+    }
+
+/* 操作按钮 */
+.button-group {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: auto;
+}
+
+.btn {
+    padding: 6px 16px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: #1890ff;
+    color: white;
+}
+
+    .btn-primary:hover {
+        background: #40a9ff;
+    }
+
+.btn-close {
+    color: #666;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0 4px;
+}
+
+    .btn-close:hover {
+        color: #333;
+    }
+
+/* 响应区域 */
+.response-area {
+    border: 1px solid #e8e8e8;
+    border-radius: 3px;
+    overflow-y: auto;
+    background: #fafafa;
+    height: 56px;
+    white-space: pre-wrap;
+}
+
+/* 加载状态 */
+.loading {
+    display: none;
+    color: #1890ff;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 8px;
+}
+
+/* 新增进度条样式 */
+.progress-container-ai {
+    width: 100%;
+    height: 4px;
+    background: #e8e8e8;
+    border-radius: 2px;
+    overflow: hidden;
+    display: none; /* 默认隐藏 */
+}
+
+.progress-bar-ai {
+    width: 100%;
+    height: 100%;
+    background: #1890ff;
+    border-radius: 2px;
+    transform-origin: left;
+    animation: progress 2s ease-in-out infinite;
+}
+
+@keyframes progress {
+    0% {
+        transform: scaleX(0);
+    }
+
+    50% {
+        transform: scaleX(0.7);
+    }
+
+    100% {
+        transform: scaleX(0);
+    }
+}

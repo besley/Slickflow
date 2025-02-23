@@ -36,7 +36,7 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             int joinCount = 0, splitCount = 0;
             var gatewayNode = base.ProcessModel.GetBackwardGatewayActivity(joinNode, ref joinCount, ref splitCount);
 
-            var gatewayActivityInstance = base.ActivityInstanceManager.GetActivityInstanceLatest(processInstanceID, gatewayNode.ActivityGUID, base.Session);
+            var gatewayActivityInstance = base.ActivityInstanceManager.GetActivityInstanceLatest(processInstanceID, gatewayNode.ActivityID, base.Session);
             var splitedActivityInstanceList = base.ActivityInstanceManager.GetValidSplitedActivityInstanceList(processInstanceID, gatewayActivityInstance.ID, base.Session);
             int tokensCount = splitedActivityInstanceList.Count;
 
@@ -56,7 +56,7 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             //检查是否有运行中的合并节点实例
             //Check if there are any running merge node instances
             ActivityInstanceEntity joinNode = base.ActivityInstanceManager.GetActivityRunning(processInstance.ID,
-                base.GatewayActivity.ActivityGUID,
+                base.GatewayActivity.ActivityID,
                 session);
 
             int tokensRequired = 0;

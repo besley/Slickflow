@@ -96,7 +96,7 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
 
             //根据强制分支的数目和具体分支来完成增强合并节点
             //Enhance and merge nodes based on the number of mandatory branches and specific branches
-            var forcedCount = forcedTransitionList.Where(t => t.TransitionGUID == transitionGUID).Count();
+            var forcedCount = forcedTransitionList.Where(t => t.TransitionID == transitionGUID).Count();
             if (forcedCount == 0)
             {
                 //当前执行的分支不是强制分支，直接返回就可以
@@ -131,7 +131,7 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             //Check if there are any running merge node instances
             ActivityInstanceEntity joinNode = base.ActivityInstanceManager.GetActivityRunning(
                     processInstance.ID,
-                    base.GatewayActivity.ActivityGUID,
+                    base.GatewayActivity.ActivityID,
                     session); ;
 
             if (joinNode == null)

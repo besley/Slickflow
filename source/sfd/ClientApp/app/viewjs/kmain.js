@@ -2,6 +2,8 @@
 
 import { debounce } from 'min-dash';
 
+import { layoutProcess } from 'bpmn-auto-layout';
+
 import slick from '../script/slick.event.js'
 window.slick = slick;
 
@@ -87,7 +89,6 @@ const kmain = (function () {
         kmain.mxImageUrl['startsplit'] = 'slickflow-start-split-demo.gif';
     }
 
-
     kmain.createNewDiagram = function () {
         kmain.mxSelectedProcessEntity = null;
         processapi.InitNewBPMNFile(function (result) {
@@ -97,6 +98,14 @@ const kmain = (function () {
                 openDiagram(diagramXML);
             }
         })
+        setDeepSeekInputPrompt();
+    }
+
+    function setDeepSeekInputPrompt() {
+        document.getElementById('aiDialog').style.display = 'flex';
+        document.getElementById('userInput').focus();
+        //show deepseek user input prompt
+        document.getElementById("userInput").setAttribute("placeholder", kresource.getItem("deepseekuserinputprompt"));
     }
 
     kmain.openDiagramFile = function (xml) {
@@ -134,6 +143,8 @@ const kmain = (function () {
             },
             draggable: true
         });
+        //hide ai-dialog
+        document.querySelector('.dialog-container').style.display = 'none';
     }
 
     kmain.saveProcessFile = function (processEntity, xml) {
@@ -149,7 +160,7 @@ const kmain = (function () {
             var content = kresource.getItem('processnamechangedconfirmmsg');
             kmsgbox.confirm(content, function () {
                 var entity = {
-                    "ProcessGUID": processEntity.ProcessGUID,
+                    "ProcessID": processEntity.ProcessID,
                     "ProcessName": processName,
                     "ProcessCode": processCode,
                     "Version": processEntity.Version,
@@ -166,7 +177,7 @@ const kmain = (function () {
             });
         } else {
             var existEntity = {
-                "ProcessGUID": processEntity.ProcessGUID,
+                "ProcessID": processEntity.ProcessID,
                 "ProcessName": processEntity.ProcessName,
                 "ProcessCode": processEntity.ProcessCode,
                 "Version": processEntity.Version,
@@ -190,7 +201,7 @@ const kmain = (function () {
             var xmlContent = result.xml;
             if (data.ProcessEntity !== null) {
                 var entity = {
-                    "ProcessGUID": kmain.mxSelectedProcessEntity.ProcessGUID,
+                    "ProcessID": kmain.mxSelectedProcessEntity.ProcessID,
                     "ProcessName": kmain.mxSelectedProcessEntity.ProcessName,
                     "ProcessCode": kmain.mxSelectedProcessEntity.ProcessCode,
                     "Version": kmain.mxSelectedProcessEntity.Version,
@@ -219,7 +230,7 @@ const kmain = (function () {
         initializeGlobalVariables();
 
         var query = {
-            "ProcessGUID": data.ProcessEntity.ProcessGUID,
+            "ProcessID": data.ProcessEntity.ProcessID,
             "Version": data.ProcessEntity.Version
         };
 
@@ -321,7 +332,7 @@ const kmain = (function () {
 
     kmain.validateProcess = function (entity, xml) {
         var vEntity = {
-            "ProcessGUID": entity.ProcessGUID,
+            "ProcessID": entity.ProcessID,
             "Version": entity.Version,
             "XmlContent": xml
         };
@@ -351,6 +362,48 @@ const kmain = (function () {
     kmain.codeStudio = function () {
         var win = window.open("pages/model/index.html", '_blank');
         win.focus();
+    }
+
+    kmain.showProgressBar = function () {
+        const progressBar = document.getElementById('progressBar');
+        progressBar.style.display = 'block';
+    }
+
+    kmain.hideProgressBar = function () {
+        const progressBar = document.getElementById('progressBar');
+        progressBar.style.display = 'none';
+    }
+
+    kmain.createByAI = function (message, callback) {
+        kmain.showProgressBar();
+
+        var aiRequest = {
+            Message: message
+        };
+
+        jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/CreateProcessAI', JSON.stringify(aiRequest), function (result) {
+            if (result.Status === 1) {
+                if (result.Entity !== null) {
+                    kmain.mxSelectedProcessEntity = result.Entity;
+                    var diagramXML = result.Entity.XmlContent;
+                    openDiagram(diagramXML);
+
+                    //layoutProcess(diagramXML)
+                    //    .then(diagramWithLayoutXML => {
+                    //        // 处理布局后的XML字符串
+                    //        openDiagram(diagramWithLayoutXML);
+                    //    })
+                    //    .catch(error => {
+                    //        kmsgbox.error(kresource.getItem('kmaincreatebyaierrormsg'), error);
+                    //    });
+                }
+            } else {
+                kmsgbox.error(kresource.getItem('kmaincreatebyaierrormsg'), result.Message);
+            }
+
+            kmain.hideProgressBar();
+            callback();
+        });
     }
 
     kmain.createByTemplate = function () {

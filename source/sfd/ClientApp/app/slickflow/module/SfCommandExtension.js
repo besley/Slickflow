@@ -23,8 +23,7 @@ function SfCommandExtension(eventBus) {
                 var strRandom = jshelper.getRandomString(6);
                 modeling.updateProperties(element, {
                     name: "Collaboration_Name_" + strRandom,
-                    code: "Collaboration_Code_" + strRandom,
-                    guid: jshelper.getUUID()
+                    code: "Collaboration_Code_" + strRandom
                 })
             }
         } else if (element.type === "bpmn:Participant") {
@@ -42,7 +41,6 @@ function SfCommandExtension(eventBus) {
                 var strRandom = jshelper.getRandomString(6);
                 processRef.name = 'Process_Name_Child_' + strRandom;
                 processRef.code = 'Process_Code_Child' + strRandom;
-                processRef.guid = jshelper.getUUID();
             }
         } else if (element.type === "bpmn:Process") {
             var businessObject = getBusinessObject(element);
@@ -50,8 +48,7 @@ function SfCommandExtension(eventBus) {
                 var strRandom = jshelper.getRandomString(6);
                 modeling.updateProperties(element, {
                     name: 'Process_Name_' + strRandom,
-                    code: 'Process_Code_' + strRandom,
-                    guid: jshelper.getUUID()
+                    code: 'Process_Code_' + strRandom
                 })
             }
         }

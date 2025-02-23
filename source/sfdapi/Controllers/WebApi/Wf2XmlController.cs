@@ -6,14 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 using Slickflow.Data;
 using Slickflow.Module.Localize;
 using Slickflow.Module.Resource;
+using Slickflow.Module.Form;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
+using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Service;
 using Slickflow.Engine.Utility;
 using Slickflow.Graph;
 using Slickflow.Graph.Roslyn;
-using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Graph.Common;
 
 namespace Slickflow.Designer.Controllers.WebApi
@@ -105,11 +106,11 @@ namespace Slickflow.Designer.Controllers.WebApi
                     return result;
                 }
 
-                //创建新流程,ProcessGUID默认赋值
+                //创建新流程,ProcessID默认赋值
                 ////Create a new process, with ProcessUID assigned by default
-                if (string.IsNullOrEmpty(fileEntity.ProcessGUID))
+                if (string.IsNullOrEmpty(fileEntity.ProcessID))
                 {
-                    fileEntity.ProcessGUID = Guid.NewGuid().ToString();
+                    fileEntity.ProcessID = Guid.NewGuid().ToString();
                 }
 
                 if (string.IsNullOrEmpty(fileEntity.Version))
@@ -121,7 +122,7 @@ namespace Slickflow.Designer.Controllers.WebApi
                 //Create processes based on template types
                 ProcessEntity entity = new ProcessEntity
                 {
-                    ProcessGUID = fileEntity.ProcessGUID,
+                    ProcessID = fileEntity.ProcessID,
                     ProcessName = fileEntity.ProcessName,
                     ProcessCode = fileEntity.ProcessCode,
                     Version = fileEntity.Version,
@@ -222,7 +223,7 @@ namespace Slickflow.Designer.Controllers.WebApi
             try
             {
                 var wfService = new WorkflowService();
-                var processEntity = wfService.GetProcessByVersion(entity.ProcessGUID, entity.Version);
+                var processEntity = wfService.GetProcessByVersion(entity.ProcessID, entity.Version);
                 processEntity.ProcessName = entity.ProcessName;
                 processEntity.ProcessCode = entity.ProcessCode;
                 processEntity.XmlFileName = entity.XmlFileName;
@@ -256,7 +257,7 @@ namespace Slickflow.Designer.Controllers.WebApi
             try
             {
                 var wfService = new WorkflowService();
-                wfService.UpdateProcessUsingState(entity.ProcessGUID, entity.Version, entity.IsUsing);
+                wfService.UpdateProcessUsingState(entity.ProcessID, entity.Version, entity.IsUsing);
 
                 result = ResponseResult.Success(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.updateprocessusingstate.success")
                 );
@@ -283,7 +284,7 @@ namespace Slickflow.Designer.Controllers.WebApi
                 int newVersion = 1;
                 var parsed = int.TryParse(process.Version, out newVersion);
                 if (parsed == true) newVersion = newVersion + 1;
-                wfService.UpgradeProcess(process.ProcessGUID, process.Version, newVersion.ToString());
+                wfService.UpgradeProcess(process.ProcessID, process.Version, newVersion.ToString());
                
                 result = ResponseResult.Success(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.upgradeprocess.success"));
             }
@@ -305,7 +306,7 @@ namespace Slickflow.Designer.Controllers.WebApi
             try
             {
                 var wfService = new WorkflowService();
-                wfService.DeleteProcess(entity.ProcessGUID, entity.Version);
+                wfService.DeleteProcess(entity.ProcessID, entity.Version);
 
                 result = ResponseResult.Success(LocalizeHelper.GetDesignerMessage("wf2xmlcontroller.deleteprocess.success")
                 );
@@ -381,7 +382,7 @@ namespace Slickflow.Designer.Controllers.WebApi
             try
             {
                 var wfService = new WorkflowService();
-                var entity = wfService.GetProcessFile(query.ProcessGUID, query.Version);
+                var entity = wfService.GetProcessFile(query.ProcessID, query.Version);
 
                 result = ResponseResult<ProcessFileEntity>.Success(entity);
             }
@@ -452,7 +453,7 @@ namespace Slickflow.Designer.Controllers.WebApi
             try
             {
                 var wfService = new WorkflowService();
-                var entity = wfService.GetProcessByVersion(obj.ProcessGUID, obj.Version);
+                var entity = wfService.GetProcessByVersion(obj.ProcessID, obj.Version);
 
                 result = ResponseResult<ProcessEntity>.Success(entity);
             }
@@ -496,7 +497,7 @@ namespace Slickflow.Designer.Controllers.WebApi
             try
             {
                 var wfService = new WorkflowService();
-                var entity = wfService.GetProcessUsing(query.ProcessGUID);
+                var entity = wfService.GetProcessUsing(query.ProcessID);
 
                 result = ResponseResult<ProcessEntity>.Success(entity);
             }

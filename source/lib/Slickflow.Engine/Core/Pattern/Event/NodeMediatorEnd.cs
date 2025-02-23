@@ -63,7 +63,7 @@ namespace Slickflow.Engine.Core.Pattern.Event
             //读取流程下一步办理人员列表信息
             //Read the personnel list information for the next step in the process
             var runner = FillNextActivityPerformersByRoleList(processInstance.InvokedActivityInstanceID, 
-                processInstance.InvokedActivityGUID, 
+                processInstance.InvokedActivityID, 
                 session);
 
             //开始执行下一步
@@ -107,12 +107,8 @@ namespace Slickflow.Engine.Core.Pattern.Event
         /// Add role users using process defined resources
         /// 使用流程定义资源添加角色用户
         /// </summary>
-        /// <param name="mainActivityInstanceID"></param>
-        /// <param name="mainActivityGUID"></param>
-        /// <param name="session"></param>
-        /// <returns></returns>
         private WfAppRunner FillNextActivityPerformersByRoleList(int mainActivityInstanceID,
-            string mainActivityGUID,
+            string mainActivityID,
             IDbSession session)
         {
             var pm = new ProcessInstanceManager();
@@ -120,7 +116,7 @@ namespace Slickflow.Engine.Core.Pattern.Event
             var processModel = ProcessModelFactory.CreateByProcessInstance(session.Connection,
                 mainProcessInstance,
                 session.Transaction);
-            var nextSteps = processModel.GetNextActivityTree(mainActivityGUID);
+            var nextSteps = processModel.GetNextActivityTree(mainActivityID);
 
             //获取主流程的任务
             //The task of obtaining the mainstream process
@@ -130,7 +126,7 @@ namespace Slickflow.Engine.Core.Pattern.Event
                 AppName = mainProcessInstance.AppName,
                 AppInstanceID = mainProcessInstance.AppInstanceID,
                 AppInstanceCode = mainProcessInstance.AppInstanceCode,
-                ProcessGUID = mainProcessInstance.ProcessGUID,
+                ProcessID = mainProcessInstance.ProcessID,
                 Version = mainProcessInstance.Version,
                 UserID = task.AssignedToUserID,
                 UserName = task.AssignedToUserName
@@ -147,7 +143,7 @@ namespace Slickflow.Engine.Core.Pattern.Event
                     //There are no simulated test users here, so abnormal information is provided
                     throw new WfRuntimeException(LocalizeHelper.GetEngineMessage("nodemediatorend.FillNextActivityPerformersByRoleList.warn", node.ActivityName));
                 }
-                dict.Add(node.ActivityGUID, performerList);
+                dict.Add(node.ActivityID, performerList);
 
                 runner.NextActivityPerformers = dict;
             }

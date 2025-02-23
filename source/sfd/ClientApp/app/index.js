@@ -27,6 +27,7 @@ import sectionModdleDescriptor from './slickflow/descriptors/section';
 import boundaryModdleDescriptor from './slickflow/descriptors/boundary';
 import transitionModdleDescriptor from './slickflow/descriptors/transition';
 import performersModdleDescriptor from './slickflow/descriptors/performers';
+/*import formsModdleDescriptor from './slickflow/descriptors/forms';*/
 import notificationModdleDescriptor from './slickflow/descriptors/notification';
 import gatewayModdleDescriptor from './slickflow/descriptors/gateway';
 import multisignModdleDescriptor from './slickflow/descriptors/multisign';
@@ -44,6 +45,7 @@ sfModdleDescriptor.types = sfModdleDescriptor.types.concat(boundaryModdleDescrip
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(servicetaskModdleDescriptor.service);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(scripttaskModdleDescriptor.script);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(performersModdleDescriptor.performers);
+/*sfModdleDescriptor.types = sfModdleDescriptor.types.concat(formsModdleDescriptor.forms);*/
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(notificationModdleDescriptor.notifications);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(subinfoesModdleDescriptor.subinfoes);
 
@@ -62,8 +64,12 @@ import triggerPropertiesProviderModule from './slickflow/provider/trigger/';
 import servicetaskPropertiesProviderModule from './slickflow/provider/servicetask/';
 import scripttaskPropertiesProviderModule from './slickflow/provider/scripttask/';
 import performersPropertiesProviderModule from './slickflow/provider/performers/';
+/*import formsPropertiesProviderModule from './slickflow/provider/forms/';*/
+import fieldsPropertiesProviderModule from './slickflow/provider/fields/';
 import notificationPropertiesProviderModule from './slickflow/provider/notification/';
 import identityPropertiesProviderModule from './slickflow/provider/identity';
+/*import customContextModule from './slickflow/context';*/
+
 
 
 import {
@@ -98,12 +104,13 @@ var bpmnModeler = new BpmnModeler({
       servicetaskPropertiesProviderModule,
       scripttaskPropertiesProviderModule,
       notificationPropertiesProviderModule,
+/*      formsPropertiesProviderModule,*/
+      fieldsPropertiesProviderModule,
       subinfoesPropertiesProviderModule,
-      performersPropertiesProviderModule
+      performersPropertiesProviderModule,
+      //customContextModule
   ]
 });
-//const eventList = bpmnModeler.get('eventBus');
-//console.log(eventList);
 
 const propertiesPanel = bpmnModeler.get('propertiesPanel');
 
@@ -183,6 +190,10 @@ $(function() {
 $('#btnCreateProcess').click(function (e) {
     e.stopPropagation();
     e.preventDefault();
+
+    //display ai dialog
+    document.querySelector('.dialog-container').style.display = 'block';
+    document.getElementById('userInput').focus();
 
     kmain.createNewDiagram();
 });

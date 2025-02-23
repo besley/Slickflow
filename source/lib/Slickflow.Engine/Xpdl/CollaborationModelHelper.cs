@@ -27,7 +27,7 @@ namespace Slickflow.Engine.Xpdl
 
             foreach (XmlNode child in xmlNodeCollaboration.ChildNodes)
             {
-                if (child.Name == XPDLDefinition.BPMN2_ElementName_Participant)
+                if (child.Name == XPDLDefinition.BPMN_ElementName_Participant)
                 {
                     var participant = ConvertParticipant(child);
                     participantList.Add(participant);
@@ -46,7 +46,7 @@ namespace Slickflow.Engine.Xpdl
             collaboration.ID = XMLHelper.GetXmlAttribute(xmlNodeCollaboration, "id");
             collaboration.Name = XMLHelper.GetXmlAttribute(xmlNodeCollaboration, "name");
             collaboration.Code = XMLHelper.GetXmlAttribute(xmlNodeCollaboration, "code");
-            collaboration.CollaborationGUID = XMLHelper.GetXmlAttribute(xmlNodeCollaboration, "sf:guid");
+            collaboration.CollaborationID = XMLHelper.GetXmlAttribute(xmlNodeCollaboration, "id");
 
             return collaboration;
         }
@@ -60,10 +60,10 @@ namespace Slickflow.Engine.Xpdl
             participant.ID = XMLHelper.GetXmlAttribute(xmlNodeParticipant, "id");
             participant.Name = XMLHelper.GetXmlAttribute(xmlNodeParticipant, "name");
             participant.Code = XMLHelper.GetXmlAttribute(xmlNodeParticipant, "code");
-            participant.ParticipantGUID = XMLHelper.GetXmlAttribute(xmlNodeParticipant, "sf:guid");
+            participant.ParticipantID = XMLHelper.GetXmlAttribute(xmlNodeParticipant, "id");
             participant.ProcessRef = XMLHelper.GetXmlAttribute(xmlNodeParticipant, "processRef");
             var xmlProcess = XMLHelper.GetXmlNodeByXpath(xmlNodeParticipant.OwnerDocument,
-                string.Format("{0}[@id='" + participant.ProcessRef + "']", XPDLDefinition.BPMN2_StrXmlPath_Process),
+                string.Format("{0}[@id='" + participant.ProcessRef + "']", XPDLDefinition.BPMN_StrXmlPath_Process),
                 XPDLHelper.GetSlickflowXmlNamespaceManager(xmlNodeParticipant.OwnerDocument));
             participant.Process = ConvertProcess(xmlProcess);
 
@@ -76,8 +76,7 @@ namespace Slickflow.Engine.Xpdl
         private static Process ConvertProcess(XmlNode xmlProcess)
         {
             Process process = new Process();
-            process.ID = XMLHelper.GetXmlAttribute(xmlProcess, "id");
-            process.ProcessGUID = XMLHelper.GetXmlAttribute(xmlProcess, "sf:guid");
+            process.ProcessID = XMLHelper.GetXmlAttribute(xmlProcess, "id");
 
             return process;
         }     

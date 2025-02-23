@@ -13,11 +13,11 @@ namespace Slickflow.Module.Form
     public class FieldActivityEditInfo
     {
         public int ID { get; set; }
-        public int ProcessID { get; set; }
-        public string ProcessGUID { get; set; }
+        public int ProcessDefID { get; set; }
+        public string ProcessID { get; set; }
         public string ProcessName { get; set; }
         public string ProcessVersion { get; set; }
-        public string ActivityGUID { get; set; }
+        public string ActivityID { get; set; }
         public string ActivityName { get; set; }
         public int FormID { get; set; }
         public string FormVersion { get; set; }

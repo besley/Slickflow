@@ -15,7 +15,7 @@ namespace Slickflow.Engine.Common
         /// <summary>
         /// Sub Process ID
         /// </summary>
-        public string SubID
+        public string SubProcessDefID
         {
             get;
             set;
@@ -24,7 +24,7 @@ namespace Slickflow.Engine.Common
         /// <summary>
         /// Sub Process GUID
         /// </summary>
-        public string SubProcessGUID
+        public string SubProcessID
         {
             get;
             set;

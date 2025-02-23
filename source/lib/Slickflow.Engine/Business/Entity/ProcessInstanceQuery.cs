@@ -12,8 +12,7 @@ namespace Slickflow.Engine.Business.Entity
     /// </summary>
     public class ProcessInstanceQuery : QueryBase
     {
-        public int ProcessID { get; set; }
-        public string ProcessGUID { get; set; }
+        public string ProcessID { get; set; }
         public string ApplicationInstanceID { get; set; }
         public string AppName { get; set; }
     }

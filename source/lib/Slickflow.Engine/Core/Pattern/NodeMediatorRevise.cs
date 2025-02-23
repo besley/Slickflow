@@ -57,7 +57,7 @@ namespace Slickflow.Engine.Core.Pattern
                         //取出下一步办理人员信息
                         //Retrieve the information of the next processing personnel
                         var nextStep = base.ActivityForwardContext.ActivityResource.AppRunner.NextActivityPerformers;
-                        var performerList = nextStep[backSrcActivityInstance.ActivityGUID];
+                        var performerList = nextStep[backSrcActivityInstance.ActivityID];
 
                         //判断不同的修订模式
                         //Determine different revision modes
@@ -75,19 +75,19 @@ namespace Slickflow.Engine.Core.Pattern
                         {
                             //并行分支（多实例）的情况
                             ////In the case of parallel branches (multiple instances)
-                            var transitionList = ActivityForwardContext.ProcessModel.GetBackwardTransitionList(backSrcActivityInstance.ActivityGUID);
+                            var transitionList = ActivityForwardContext.ProcessModel.GetBackwardTransitionList(backSrcActivityInstance.ActivityID);
                             if (transitionList != null && transitionList.Count == 1)
                             {
                                 var transition = transitionList[0];
-                                var gatewayNode = ActivityForwardContext.ProcessModel.GetActivity(transition.FromActivityGUID);
+                                var gatewayNode = ActivityForwardContext.ProcessModel.GetActivity(transition.FromActivityID);
                                 if (gatewayNode.GatewayDetail.DirectionType == GatewayDirectionEnum.AndSplitMI)
                                 {
                                     //复制并行分支多实例
                                     //Copy parallel branches with multiple instances
                                     var gatewayActivityInstance = base.ActivityInstanceManager.GetActivityInstanceLatest(
                                         backSrcActivityInstance.ProcessInstanceID,
-                                        gatewayNode.ActivityGUID, base.Session);
-                                    CloneChildNodeOfAndSplitMI(performerList, transition.TransitionGUID, gatewayActivityInstance, backSrcActivityInstance, base.Session);
+                                        gatewayNode.ActivityID, base.Session);
+                                    CloneChildNodeOfAndSplitMI(performerList, transition.TransitionID, gatewayActivityInstance, backSrcActivityInstance, base.Session);
                                 }
                                 else
                                 {

@@ -74,7 +74,7 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             this.GatewayActivityInstance = aim.CreateActivityInstanceObject(processInstance.AppName,
                 processInstance.AppInstanceID,
                 processInstance.AppInstanceCode,
-                processInstance.ProcessGUID,
+                processInstance.ProcessID,
                 processInstance.ID,
                 activity,
                 runner);

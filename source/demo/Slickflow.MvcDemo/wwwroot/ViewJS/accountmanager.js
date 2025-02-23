@@ -8,7 +8,7 @@
         $('#loading-indicator').show();
 
         var query = {};
-        query.ProcessGUID = config.ProcessGUID;
+        query.ProcessID = config.ProcessID;
         query.Version = "1";
 
         jshelper.ajaxPost('api/wf/QueryProcessRoleUserList',

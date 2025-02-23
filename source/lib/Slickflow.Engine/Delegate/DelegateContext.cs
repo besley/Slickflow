@@ -12,9 +12,9 @@ namespace Slickflow.Engine.Delegate
     public class DelegateContext
     {
         public string AppInstanceID { get; set; }
-        public string ProcessGUID { get; set; }
+        public string ProcessID { get; set; }
         public int ProcessInstanceID { get; set; }
-        public string ActivityGUID { get; set; }
+        public string ActivityID { get; set; }
         public string ActivityName { get; set; }
         public string ActivityCode { get; set; }
         public ActivityResource ActivityResource { get; set; }

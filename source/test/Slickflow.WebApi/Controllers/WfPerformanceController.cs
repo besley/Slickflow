@@ -41,7 +41,7 @@ namespace Slickflow.WebApi.Controllers
 
         /// <summary>
         /// Get Ready Tasks
-        /// {"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"SEQ-C-1099","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
+        /// {"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"SEQ-C-1099","ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>

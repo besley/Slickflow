@@ -22,7 +22,7 @@ const actions = {
   getLeave: (context, payload) => {
     var leaveID = payload.leaveID
     var callback = payload.callback
-    axios.get('/webdemoapi/api/HrsLeave/GetLeave/' + leaveID)
+    axios.get(config.WebApi.ApiUrl + '/api/HrsLeave/GetLeave/' + leaveID)
       .then((response) => {
         var entity = response.data.Entity
         context.commit('setCurrent', entity)
@@ -39,7 +39,7 @@ const actions = {
       var query = {
         CreatedUserID: user.UserID
       }
-      axios.post('/webdemoapi/api/HrsLeave/queryLeave/', query)
+      axios.post(config.WebApi.ApiUrl + '/api/HrsLeave/queryLeave/', query)
         .then((response) => {
           var leaveList = response.data.Entity
           if (callback) callback(leaveList)
@@ -58,7 +58,7 @@ const actions = {
     entity.CreatedUserName = user.UserName
 
     var runner = {
-      ProcessGUID: config.PROCESS_A4L.ProcessGUID,
+      ProcessID: config.PROCESS_A4L.ProcessID,
       Version: config.PROCESS_A4L.Version,
       AppName: config.PROCESS_A4L.AppName,
       UserID: user.UserID,
@@ -71,7 +71,7 @@ const actions = {
     }
 
     var callback = payload.callback
-    axios.post('/webdemoapi/api/HrsLeave/CreateNewLeave', entityRunner)
+    axios.post(config.WebApi.ApiUrl + '/api/HrsLeave/CreateNewLeave', entityRunner)
       .then((response) => {
         var result = response.data
         if (result.Status === 1) {
@@ -87,7 +87,7 @@ const actions = {
   saveLeave: (context, payload) => {
     var entity = payload.Leave
     var callback = payload.callback
-    axios.post('/webdemoapi/api/HrsLeave/UpdateLeave', entity)
+    axios.post(config.WebApi.ApiUrl + '/api/HrsLeave/UpdateLeave', entity)
       .then((response) => {
         var result = response.data
         if (callback !== null) callback(result)

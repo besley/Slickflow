@@ -28,8 +28,8 @@ namespace Slickflow.Engine.Core.Runtime
 
             //构建跳转上下文
             //Build jump context
-            var jumpActivityGUID = base.AppRunner.NextActivityPerformers.First().Key;
-            var jumpforwardActivity = base.ProcessModel.GetActivity(jumpActivityGUID);
+            var jumpActivityID = base.AppRunner.NextActivityPerformers.First().Key;
+            var jumpforwardActivity = base.ProcessModel.GetActivity(jumpActivityID);
             var processInstance = (new ProcessInstanceManager()).GetById(base.RunningActivityInstance.ProcessInstanceID);
 
             var jumpforwardExecutionContext = ActivityForwardContext.CreateRunningContextByTask(base.TaskView,

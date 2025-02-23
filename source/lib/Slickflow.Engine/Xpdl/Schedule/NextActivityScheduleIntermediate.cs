@@ -34,7 +34,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
             NextActivityComponent gatewayComponent = null;
             resultType = NextActivityMatchedType.Unknown;
 
-            var transitionList = this.ProcessModel.GetForwardTransitionList(currentGatewayActivity.ActivityGUID).ToList();
+            var transitionList = this.ProcessModel.GetForwardTransitionList(currentGatewayActivity.ActivityID).ToList();
             foreach (Transition transition in transitionList)
             {
                 bool isValidTransition = base.ProcessModel.IsValidTransition(transition, conditionKeyValuePair);

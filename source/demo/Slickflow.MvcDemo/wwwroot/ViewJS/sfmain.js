@@ -29,7 +29,7 @@
     //显示流程图
     //Display flowchart
     sfmain.showKGraph = function () {
-        if (pordermanager.mProductOrderProcessGUID === "") {
+        if (pordermanager.mProductOrderProcessID === "") {
             $.msgBox({
                 title: "DynamicFlow / KGraph",
                 content: "Please select a form with process information！",
@@ -38,7 +38,7 @@
             return false;
         } else {
         	window.open('/sfd/Diagram?AppInstanceID=' + pordermanager.selectedProductOrderID.toString()
-				+ '&ProcessGUID=' + pordermanager.mProductOrderProcessGUID + '&Mode=' + 'READONLY');
+				+ '&ProcessID=' + pordermanager.mProductOrderProcessID + '&Mode=' + 'READONLY');
         }
     }
 

@@ -86,7 +86,7 @@ namespace Slickflow.Engine.Core.Result
         //流程启动异常信息
         //Process startup exception information
         public const string Started_IsRunningAlready = "Started_IsRunningAlready";
-        public const string Started_NoneExactlyProcessGUID = "Started_NoneExactlyProcessGUID";
+        public const string Started_NoneExactlyProcessID = "Started_NoneExactlyProcessID";
 
         //流程运行异常信息
         //Process running exception information

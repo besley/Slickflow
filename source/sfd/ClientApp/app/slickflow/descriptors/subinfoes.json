@@ -20,7 +20,7 @@
           "type": "String"
         },
         {
-          "name": "subProcessGUID",
+          "name": "subProcessID",
           "isAttr": true,
           "type": "String"
         },

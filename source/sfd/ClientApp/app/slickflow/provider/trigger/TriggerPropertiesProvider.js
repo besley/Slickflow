@@ -32,14 +32,16 @@ function createExpressionGroup(element, translate) {
     const businessObject = getBusinessObject(element);
     if (businessObject.eventDefinitions) {
         const eventDefinition = businessObject.eventDefinitions[0]
-        if (eventDefinition.$type === "bpmn:ConditionalEventDefinition") {
-            entries.push(conditionExpressionProps(element));
-        } else if (eventDefinition.$type === "bpmn:TimerEventDefinition") {
-            entries.push(timerExpressionProps(element));
-        } else if (eventDefinition.$type === "bpmn:MessageEventDefinition") {
-            entries.push(messageRefProps(element));
-        } else if (eventDefinition.$type === "bpmn:SignalEventDefinition") {
-            entries.push(signalRefProps(element));
+        if (eventDefinition) {
+            if (eventDefinition.$type === "bpmn:ConditionalEventDefinition") {
+                entries.push(conditionExpressionProps(element));
+            } else if (eventDefinition.$type === "bpmn:TimerEventDefinition") {
+                entries.push(timerExpressionProps(element));
+            } else if (eventDefinition.$type === "bpmn:MessageEventDefinition") {
+                entries.push(messageRefProps(element));
+            } else if (eventDefinition.$type === "bpmn:SignalEventDefinition") {
+                entries.push(signalRefProps(element));
+            }
         }
 
         const triggerGroup = {

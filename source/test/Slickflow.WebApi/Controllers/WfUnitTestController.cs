@@ -143,7 +143,7 @@ namespace Slickflow.WebApi.Controllers
                     //1) If there are pending tasks for the current user
                     //2) The process is executed only once and will no longer be called in a loop
                     var transactionContinue = session.BeginTrans();
-                    var myTask = wfService.GetTaskView(session.Connection, runner.AppInstanceID, runner.ProcessGUID, runner.UserID, session.Transaction);
+                    var myTask = wfService.GetTaskView(session.Connection, runner.AppInstanceID, runner.ProcessID, runner.UserID, session.Transaction);
                     if (myTask != null)
                     {
                         //构造执行用户信息
@@ -151,7 +151,7 @@ namespace Slickflow.WebApi.Controllers
                         {
                             AppInstanceID = runner.AppInstanceID,
                             AppName = runner.AppName,
-                            ProcessGUID = runner.ProcessGUID,
+                            ProcessID = runner.ProcessID,
                             Version = runner.Version,
                             TaskID = myTask.TaskID,
                             UserID = runner.UserID,
@@ -171,7 +171,7 @@ namespace Slickflow.WebApi.Controllers
                                 var performer = new Performer(user.UserID, user.UserName);
                                 performerList.Add(performer);
                             }
-                            nextActivityPerformers.Add(nodeview.ActivityGUID, performerList);
+                            nextActivityPerformers.Add(nodeview.ActivityID, performerList);
                         }
 
                         runnerContinue.NextActivityPerformers = nextActivityPerformers;
@@ -444,11 +444,11 @@ namespace Slickflow.WebApi.Controllers
         ///Test script:
         ///1) Start the process
         ///  http://localhost/sfapi2/api/wfunittest/startprocess
-        /// {"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
+        /// {"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
         /// 
         ///2) Operation process
         ///  http://localhost/sfapi2/api/wfunittest/runprocessapp
-        /// {"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"eb833577-abb5-4239-875a-5f2e2fcb6d57":[{"UserID":"20","UserName":"Jack"},{"UserID":"30","UserName":"Smith"},{"UserID":"40","UserName":"Tom"}]}}
+        /// {"AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"eb833577-abb5-4239-875a-5f2e2fcb6d57":[{"UserID":"20","UserName":"Jack"},{"UserID":"30","UserName":"Smith"},{"UserID":"40","UserName":"Tom"}]}}
         /// 
         ///3) Commissioned tasks
         ///  http://localhost/sfapi2/api/wfunittest/entrust

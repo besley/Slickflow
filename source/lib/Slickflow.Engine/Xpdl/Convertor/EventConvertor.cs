@@ -51,7 +51,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
                         triggerDetail.MessageDirection = GetMessageDirectionFromEventNode(eventNode);
                         var xmlDoc = eventDefinitionNode.OwnerDocument;
                         var root = xmlDoc.DocumentElement;
-                        var strMessagePath = string.Format("{0}[@id='{1}']", XPDLDefinition.BPMN2_StrXmlPath_Message, messageRef);
+                        var strMessagePath = string.Format("{0}[@id='{1}']", XPDLDefinition.BPMN_StrXmlPath_Message, messageRef);
                         var xmlMessageNode = root.SelectSingleNode(strMessagePath, XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
                         if (xmlMessageNode != null) 
                         {
@@ -70,7 +70,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
                         triggerDetail.MessageDirection = GetMessageDirectionFromEventNode(eventNode);
                         var xmlDoc = eventDefinitionNode.OwnerDocument;
                         var root = xmlDoc.DocumentElement;
-                        var strSignalPath = string.Format("{0}[@id='{1}']", XPDLDefinition.BPMN2_StrXmlPath_Signal, signalRef);
+                        var strSignalPath = string.Format("{0}[@id='{1}']", XPDLDefinition.BPMN_StrXmlPath_Signal, signalRef);
                         var xmlSignalNode = root.SelectSingleNode(strSignalPath, XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
                         if (xmlSignalNode != null)
                         {
@@ -97,25 +97,25 @@ namespace Slickflow.Engine.Xpdl.Convertor
             triggerType = TriggerTypeEnum.None;
             foreach (XmlNode child in eventNode.ChildNodes)
             {
-                if (child.Name == XPDLDefinition.BPMN2_ElementName_EventDefinition_Conditon)
+                if (child.Name == XPDLDefinition.BPMN_ElementName_EventDefinition_Conditon)
                 {
                     definitionNode = child;
                     triggerType = TriggerTypeEnum.Conditional;
                     break;
                 }
-                else if(child.Name == XPDLDefinition.BPMN2_ElementName_EventDefinition_Message)
+                else if(child.Name == XPDLDefinition.BPMN_ElementName_EventDefinition_Message)
                 {
                     definitionNode = child;
                     triggerType = TriggerTypeEnum.Message;
                     break;
                 }
-                else if (child.Name == XPDLDefinition.BPMN2_ElementName_EventDefinition_Timer)
+                else if (child.Name == XPDLDefinition.BPMN_ElementName_EventDefinition_Timer)
                 {
                     definitionNode = child;
                     triggerType = TriggerTypeEnum.Timer;
                     break;
                 }
-                else if (child.Name == XPDLDefinition.BPMN2_ElementName_EventDefinition_Signal)
+                else if (child.Name == XPDLDefinition.BPMN_ElementName_EventDefinition_Signal)
                 {
                     definitionNode = child;
                     triggerType = TriggerTypeEnum.Signal;
@@ -135,19 +135,19 @@ namespace Slickflow.Engine.Xpdl.Convertor
         {
             var messageDirection = MessageDirectionEnum.None;
             var nodeName = eventNode.Name;
-            if (nodeName == XPDLDefinition.BPMN2_ElementName_IntermediateEvent_Throw)
+            if (nodeName == XPDLDefinition.BPMN_ElementName_IntermediateEvent_Throw)
             {
                 messageDirection = MessageDirectionEnum.Throw;
             }
-            else if (nodeName == XPDLDefinition.BPMN2_ElementName_IntermediateEvent_Catch)
+            else if (nodeName == XPDLDefinition.BPMN_ElementName_IntermediateEvent_Catch)
             {
                 messageDirection = MessageDirectionEnum.Catch;
             }
-            else if (nodeName == XPDLDefinition.BPMN2_ElementName_StartEvent)
+            else if (nodeName == XPDLDefinition.BPMN_ElementName_StartEvent)
             {
                 messageDirection = MessageDirectionEnum.Catch;
             }
-            else if (nodeName == XPDLDefinition.BPMN2_ElementName_EndEvent)
+            else if (nodeName == XPDLDefinition.BPMN_ElementName_EndEvent)
             {
                 messageDirection = MessageDirectionEnum.Throw;
             }

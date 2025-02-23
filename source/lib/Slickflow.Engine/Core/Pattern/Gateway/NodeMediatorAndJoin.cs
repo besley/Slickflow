@@ -25,7 +25,7 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
         /// <returns></returns>
         internal int GetTokensRequired()
         {
-            int tokensRequired = this.ProcessModel.GetBackwardTransitionListCount(GatewayActivity.ActivityGUID);
+            int tokensRequired = this.ProcessModel.GetBackwardTransitionListCount(GatewayActivity.ActivityID);
             return tokensRequired;
         }
 
@@ -42,7 +42,7 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             //检查是否有运行中的合并节点实例
             //Check if there are any running merge node instances
             ActivityInstanceEntity joinNode = base.ActivityInstanceManager.GetActivityRunning(processInstance.ID,
-                base.GatewayActivity.ActivityGUID,
+                base.GatewayActivity.ActivityID,
                 session);
 
             int tokensRequired = 0;

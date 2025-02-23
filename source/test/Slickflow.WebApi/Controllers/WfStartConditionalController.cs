@@ -20,7 +20,7 @@ namespace Slickflow.WebApi.Controllers
     //Process Name: Quotation Process
     //GUID: 444db0c2-4dcb-4f86-c75d-43719b28cbb4
     //startup process:
-    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"52023958-996d-48ac-b9a7-ba51e48d4821","Version":"1","ControlParameterSheet":{"ConditionalVariables":{"days":"10"}}}
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"52023958-996d-48ac-b9a7-ba51e48d4821","Version":"1","ControlParameterSheet":{"ConditionalVariables":{"days":"10"}}}
 
 
     /// <summary>
@@ -48,7 +48,7 @@ namespace Slickflow.WebApi.Controllers
                     //var performerList = new PerformerList();
                     //performerList.Add(new Performer(runner.UserID, runner.UserID));
 
-                    //runner.NextActivityPerformers.Add(nextSteps[0].ActivityGUID, performerList);
+                    //runner.NextActivityPerformers.Add(nextSteps[0].ActivityID, performerList);
                     //var result2 = wfService.RunProcess(session.Connection, runner, session.Transaction);
 
                     transaction.Commit();

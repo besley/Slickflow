@@ -46,9 +46,9 @@ namespace Slickflow.Engine.Service
         /// Obtain the first feasible node of the process
         /// 获取流程的第一个可办理节点
         /// </summary>
-        public Activity GetFirstActivity(string processGUID, string version)
+        public Activity GetFirstActivity(string processID, string version)
         {
-            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
+            var processModel = ProcessModelFactory.CreateByProcess(processID, version);
             var firstActivity = processModel.GetFirstActivity();
             return firstActivity;
         }
@@ -57,9 +57,9 @@ namespace Slickflow.Engine.Service
         /// Get the node list of task types
         /// 获取任务类型的节点列表
         /// </summary>
-        public IList<Activity> GetTaskActivityList(string processGUID, string version)
+        public IList<Activity> GetTaskActivityList(string processID, string version)
         {
-            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
+            var processModel = ProcessModelFactory.CreateByProcess(processID, version);
             var activityList = processModel.GetTaskActivityList();
 
             return activityList;
@@ -83,9 +83,9 @@ namespace Slickflow.Engine.Service
         /// Get a list of nodes for all task types (including countersignature and subprocesses)
         /// 获取全部任务类型的节点列表（包含会签和子流程）
         /// </summary>
-        public IList<Activity> GetAllTaskActivityList(string processGUID, string version)
+        public IList<Activity> GetAllTaskActivityList(string processID, string version)
         {
-            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
+            var processModel = ProcessModelFactory.CreateByProcess(processID, version);
             var activityList = processModel.GetAllTaskActivityList();
 
             return activityList;
@@ -95,12 +95,12 @@ namespace Slickflow.Engine.Service
         /// Get the next node information of the current node
         /// 获取当前节点的下一个节点信息
         /// </summary>
-        public Activity GetNextActivity(string processGUID, 
+        public Activity GetNextActivity(string processID, 
             string version, 
-            string activityGUID)
+            string activityID)
         {
-            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
-            var nextActivity = processModel.GetNextActivity(activityGUID);
+            var processModel = ProcessModelFactory.CreateByProcess(processID, version);
+            var nextActivity = processModel.GetNextActivity(activityID);
             return nextActivity;
         }
 
@@ -108,15 +108,15 @@ namespace Slickflow.Engine.Service
         /// Get the next node information of the current node
         /// 获取当前节点的下一个节点信息
         /// </summary>
-        public IList<NodeView> GetNextActivity(String processGUID,
+        public IList<NodeView> GetNextActivity(String processID,
             String version,
-            String activityGUID,
+            String activityID,
             IDictionary<string, string> condition)
         {
-            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
+            var processModel = ProcessModelFactory.CreateByProcess(processID, version);
             using (var session = SessionFactory.CreateSession())
             {
-                var nextResult = processModel.GetNextActivityTree(activityGUID, null, condition, session);
+                var nextResult = processModel.GetNextActivityTree(activityID, null, condition, session);
 
                 return nextResult.StepList;
             }
@@ -203,10 +203,10 @@ namespace Slickflow.Engine.Service
                 }
                 else
                 {
-                    taskView = tm.GetTaskOfMine(session.Connection, runner.AppInstanceID, runner.ProcessGUID, runner.UserID, session.Transaction);
+                    taskView = tm.GetTaskOfMine(session.Connection, runner.AppInstanceID, runner.ProcessID, runner.UserID, session.Transaction);
                 }
                 var processModel = ProcessModelFactory.CreateByTask(session.Connection, taskView, session.Transaction);
-                var nextResult = processModel.GetNextActivityTree(taskView.ActivityGUID,
+                var nextResult = processModel.GetNextActivityTree(taskView.ActivityID,
                     taskView.TaskID,
                     condition,
                     session);
@@ -242,7 +242,7 @@ namespace Slickflow.Engine.Service
             {
                 var taskView = (new TaskManager()).GetTaskView(session.Connection, taskID, session.Transaction);
                 var processModel = ProcessModelFactory.CreateByTask(session.Connection, taskView, session.Transaction);
-                var nextResult = processModel.GetNextActivityTree(taskView.ActivityGUID,
+                var nextResult = processModel.GetNextActivityTree(taskView.ActivityID,
                     taskView.TaskID,
                     condition,
                     session);
@@ -335,9 +335,9 @@ namespace Slickflow.Engine.Service
         {
             using (var session = SessionFactory.CreateSession())
             {
-                var processModel = ProcessModelFactory.CreateByProcess(runner.ProcessGUID, runner.Version);
+                var processModel = ProcessModelFactory.CreateByProcess(runner.ProcessID, runner.Version);
                 var firstActivity = processModel.GetFirstActivity();
-                var nextResult = processModel.GetNextActivityTree(firstActivity.ActivityGUID,
+                var nextResult = processModel.GetNextActivityTree(firstActivity.ActivityID,
                     null,
                     condition,
                     session);
@@ -379,7 +379,7 @@ namespace Slickflow.Engine.Service
             var task = tm.GetTaskView(taskID);
 
             var am = new ActivityInstanceManager();
-            var list = am.GetActivityInstanceListCompleted(task.AppInstanceID, task.ProcessGUID);
+            var list = am.GetActivityInstanceListCompleted(task.AppInstanceID, task.ProcessID);
 
             foreach (ActivityInstanceEntity a in list)
             {
@@ -400,7 +400,7 @@ namespace Slickflow.Engine.Service
         {
             IList<NodeImage> imageList = new List<NodeImage>();
             var am = new ActivityInstanceManager();
-            var list = am.GetActivityInstanceListCompleted(runner.AppInstanceID, runner.ProcessGUID);
+            var list = am.GetActivityInstanceListCompleted(runner.AppInstanceID, runner.ProcessID);
 
             foreach (ActivityInstanceEntity a in list)
             {
@@ -421,14 +421,14 @@ namespace Slickflow.Engine.Service
         {
             IList<TransitionImage> imageList = new List<TransitionImage>();
             var tm = new TransitionInstanceManager();
-            var list = tm.GetTransitionInstanceList(query.AppInstanceID, query.ProcessGUID, query.Version).ToList();
+            var list = tm.GetTransitionInstanceList(query.AppInstanceID, query.ProcessID, query.Version).ToList();
 
             foreach (TransitionInstanceEntity t in list)
             {
                 imageList.Add(new TransitionImage
                 {
                     ID = t.ID,
-                    TransitionGUID = t.TransitionGUID
+                    TransitionGUID = t.TransitionID
                 });
             }
 
@@ -439,20 +439,20 @@ namespace Slickflow.Engine.Service
         /// Get activity entity
         /// 获取当前活动实体
         /// </summary>
-        public Activity GetActivityEntity(string processGUID, string version, string activityGUID)
+        public Activity GetActivityEntity(string processID, string version, string activityID)
         {
-            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
-            return processModel.GetActivity(activityGUID);
+            var processModel = ProcessModelFactory.CreateByProcess(processID, version);
+            return processModel.GetActivity(activityID);
         }
 
         /// <summary>
         /// Get activity roles
         /// 获取活动节点下的角色数据
         /// </summary>
-        public IList<Role> GetActivityRoles(string processGUID, string version, string activityGUID)
+        public IList<Role> GetActivityRoles(string processID, string version, string activityID)
         {
-            var processModel = ProcessModelFactory.CreateByProcess(processGUID, version);
-            return processModel.GetActivityRoles(activityGUID);
+            var processModel = ProcessModelFactory.CreateByProcess(processID, version);
+            return processModel.GetActivityRoles(activityID);
         }
         #endregion
 
@@ -533,7 +533,7 @@ namespace Slickflow.Engine.Service
         /// Coding Example：
         /// var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
         ///                 .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-        ///                 .UseProcess(runner.ProcessGUID, runner.Version)
+        ///                 .UseProcess(runner.ProcessID, runner.Version)
         ///                 .Start();
         /// </summary>
         public WfExecutedResult Start()
@@ -577,7 +577,7 @@ namespace Slickflow.Engine.Service
         /// Coding Example：
         /// var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
         ///                 .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-        ///                 .UseProcess(runner.ProcessGUID, runner.Version)
+        ///                 .UseProcess(runner.ProcessID, runner.Version)
         ///                 .Start(conn, trans);
         /// </summary>
         public WfExecutedResult Start(IDbConnection conn, IDbTransaction trans)
@@ -743,7 +743,7 @@ namespace Slickflow.Engine.Service
         {
             var pm = new ProcessManager();
             var entity = pm.GetByMessage(_wfAppRunner.MessageTopic);
-            _wfAppRunner.ProcessGUID = entity.ProcessGUID;
+            _wfAppRunner.ProcessID = entity.ProcessID;
             _wfAppRunner.ProcessCode = entity.ProcessCode;
             _wfAppRunner.Version = entity.Version;
 
@@ -810,7 +810,7 @@ namespace Slickflow.Engine.Service
         /// Coding example:
         /// var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
         ///                 .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-        ///                 .UseProcess(runner.ProcessGUID, runner.Version)
+        ///                 .UseProcess(runner.ProcessID, runner.Version)
         ///                 .Run();
         /// </summary>
         public WfExecutedResult Run()
@@ -845,7 +845,7 @@ namespace Slickflow.Engine.Service
         /// Coding example:
         /// var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
         ///                 .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-        ///                 .UseProcess(runner.ProcessGUID, runner.Version)
+        ///                 .UseProcess(runner.ProcessID, runner.Version)
         ///                 .Run(conn, trans);
         /// </summary>
         public WfExecutedResult Run(IDbConnection conn, 
@@ -2443,7 +2443,7 @@ namespace Slickflow.Engine.Service
             JumpOptionEnum jumpOption)
         {
             IDictionary<string, PerformerList> nextActivityPerformers = null;
-            var pm = ProcessModelFactory.CreateByProcess(runner.ProcessGUID, runner.Version);
+            var pm = ProcessModelFactory.CreateByProcess(runner.ProcessID, runner.Version);
             if (jumpOption == JumpOptionEnum.Default)
             {
                 nextActivityPerformers = runner.NextActivityPerformers;
@@ -2452,12 +2452,12 @@ namespace Slickflow.Engine.Service
             {
                 var firstActivity = pm.GetFirstActivity();
                 var aim = new ActivityInstanceManager();
-                var firstActivityInstance = aim.GetActivityInstanceLatest(runner.AppInstanceID, runner.ProcessGUID, firstActivity.ActivityGUID);
+                var firstActivityInstance = aim.GetActivityInstanceLatest(runner.AppInstanceID, runner.ProcessID, firstActivity.ActivityID);
                 nextActivityPerformers = new Dictionary<string, PerformerList>();
                 var performer = new Performer(firstActivityInstance.CreatedByUserID, firstActivityInstance.CreatedByUserName);
                 var performerList = new PerformerList();
                 performerList.Add(performer);
-                nextActivityPerformers.Add(firstActivity.ActivityGUID, performerList);
+                nextActivityPerformers.Add(firstActivity.ActivityID, performerList);
             }
             else if (jumpOption == JumpOptionEnum.End)
             {
@@ -2466,7 +2466,7 @@ namespace Slickflow.Engine.Service
                 var performer = new Performer(runner.UserID, runner.UserName);
                 var performerList = new PerformerList();
                 performerList.Add(performer);
-                nextActivityPerformers.Add(endActivity.ActivityGUID, performerList);
+                nextActivityPerformers.Add(endActivity.ActivityID, performerList);
             }
             return nextActivityPerformers;
         }
@@ -2805,10 +2805,10 @@ namespace Slickflow.Engine.Service
         /// Get task view
         /// 获取任务视图
         /// </summary>
-        public TaskViewEntity GetTaskView(IDbConnection conn, string appInstanceID, string processGUID, string userID, IDbTransaction trans)
+        public TaskViewEntity GetTaskView(IDbConnection conn, string appInstanceID, string processID, string userID, IDbTransaction trans)
         {
             var tm = new TaskManager();
-            var entity = tm.GetTaskOfMine(conn, appInstanceID, processGUID, userID, trans);
+            var entity = tm.GetTaskOfMine(conn, appInstanceID, processID, userID, trans);
             return entity;
         }
 

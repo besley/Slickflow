@@ -57,13 +57,13 @@ namespace Slickflow.Engine.Core.SendBack
             IDbSession session)
         {
             var processModel = this.SendBackOperation.ProcessModel;
-            var activityList = processModel.GetNextActivityListWithoutCondition(toActivity.ActivityGUID);
-            var brothersList = activityList.Where(a => a.ActivityGUID != fromActivityInstance.ActivityGUID).ToList();
+            var activityList = processModel.GetNextActivityListWithoutCondition(toActivity.ActivityID);
+            var brothersList = activityList.Where(a => a.ActivityID != fromActivityInstance.ActivityID).ToList();
 
             foreach (var activity in brothersList)
             {
                 var activityInstance = this.ActivityInstanceManager.GetActivityInstanceLatest(fromActivityInstance.ProcessInstanceID, 
-                    activity.ActivityGUID,
+                    activity.ActivityID,
                     session);
                 if (activityInstance != null 
                     && this.ActivityInstanceManager.IncludeRunningState(activityInstance) == true)

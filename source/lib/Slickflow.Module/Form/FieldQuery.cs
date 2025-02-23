@@ -12,11 +12,11 @@ namespace Slickflow.Module.Form
     /// </summary>
     public class FieldQuery
     {
-        public string ProcessGUID { get; set; }
+        public string ProcessID { get; set; }
         public string ProcessVersion { get; set; }
         public string ProcessName { get; set; }
         public string ProcessCode { get; set; }
-        public string ActivityGUID { get; set; }
+        public string ActivityID { get; set; }
         public string ActivityName { get; set; }
         public string ActivityCode { get; set; }
         public IList<Form> FormList { get; set; }

@@ -43,7 +43,7 @@ namespace Slickflow.HrsService.Service
             {
                 var performerList = wfService.GetPerformerList(node);      
                 Dictionary<string, PerformerList> dict = new Dictionary<string, PerformerList>();
-                dict.Add(node.ActivityGUID, performerList);
+                dict.Add(node.ActivityID, performerList);
                 runner.NextActivityPerformers = dict;
 
                 result = wfService.RunProcessApp(session.Connection, runner, session.Transaction);
@@ -69,10 +69,10 @@ namespace Slickflow.HrsService.Service
         /// <summary>
         /// Get Activity
         /// </summary>
-        public Activity GetActivity(string processGUID, string version, string activityGUID)
+        public Activity GetActivity(string processID, string version, string activityID)
         {
             var wfService = new WorkflowService();
-            var activityEntity = wfService.GetActivityEntity(processGUID, version, activityGUID);
+            var activityEntity = wfService.GetActivityEntity(processID, version, activityID);
 
             return activityEntity;
         }

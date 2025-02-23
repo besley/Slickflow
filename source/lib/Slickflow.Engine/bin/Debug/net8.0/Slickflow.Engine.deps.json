@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v8.0": {
-      "Slickflow.Engine/2.4.0.0": {
+      "Slickflow.Engine/3.0.0.0": {
         "dependencies": {
           "Devart.Data.Oracle.EFCore": "10.3.21.8",
           "IronPython": "3.4.1",
@@ -859,7 +859,7 @@
     }
   },
   "libraries": {
-    "Slickflow.Engine/2.4.0.0": {
+    "Slickflow.Engine/3.0.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

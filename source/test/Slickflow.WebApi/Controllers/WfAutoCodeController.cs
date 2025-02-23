@@ -19,36 +19,36 @@ namespace Slickflow.WebApi.Controllers
     //Process Name: Sequence Code Testing Process
     //GUID:  8b86e4fe-fef6-4e6f-9c8b-36bf0932f18b
     //startup process:
-    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":" 8b86e4fe-fef6-4e6f-9c8b-36bf0932f18b"}
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessID":" 8b86e4fe-fef6-4e6f-9c8b-36bf0932f18b"}
 
     //run process app:
     ////Order application node:
     ////The next step is the 'intermediate time' node
-    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"5d6a7d6f-daa2-482d-8303-87b3b9f59a6a","UserID":"10","UserName":"Long","Conditions":{"amount":"10"},"NextActivityPerformers":{"c7486da0-61f7-45b9-f82a-4a19fb8f9ee7":[{"UserID":10,"UserName":"Long"}]}}
+    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"5d6a7d6f-daa2-482d-8303-87b3b9f59a6a","UserID":"10","UserName":"Long","Conditions":{"amount":"10"},"NextActivityPerformers":{"c7486da0-61f7-45b9-f82a-4a19fb8f9ee7":[{"UserID":10,"UserName":"Long"}]}}
 
     //withdraw process:
     //Revoke the previous node (signed by the board room and submitted by the previous salesperson)
-    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"5d6a7d6f-daa2-482d-8303-87b3b9f59a6a"}
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"5d6a7d6f-daa2-482d-8303-87b3b9f59a6a"}
 
     //runprocess app
     //Node for signature processing of prefabricated houses
     //The next step is for the salesperson to confirm
-    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"5d6a7d6f-daa2-482d-8303-87b3b9f59a6a","UserID":"10","UserName":"Long","NextActivityPerformers":{"cab57060-f433-422a-a66f-4a5ecfafd54e":[{"UserID":10,"UserName":"Long"}]}}
+    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"5d6a7d6f-daa2-482d-8303-87b3b9f59a6a","UserID":"10","UserName":"Long","NextActivityPerformers":{"cab57060-f433-422a-a66f-4a5ecfafd54e":[{"UserID":10,"UserName":"Long"}]}}
 
     //Process completed
     //The salesperson confirms the processing node
     //The next step of the process ends
-    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"5d6a7d6f-daa2-482d-8303-87b3b9f59a6a","NextActivityPerformers":{"b53eb9ab-3af6-41ad-d722-bed946d19792":[{"UserID":10,"UserName":"Long"}]}}
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"5d6a7d6f-daa2-482d-8303-87b3b9f59a6a","NextActivityPerformers":{"b53eb9ab-3af6-41ad-d722-bed946d19792":[{"UserID":10,"UserName":"Long"}]}}
 
     //run sub process
     //There are sub processes
     //Initiate sub process
-    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"5d6a7d6f-daa2-482d-8303-87b3b9f59a6a","UserID":"10","UserName":"Long","NextActivityPerformers":{"5fa796f6-2d5d-4ed6-84e2-a7c4e4e6aabc":[{"UserID":10,"UserName":"Long"}]}}
+    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"5d6a7d6f-daa2-482d-8303-87b3b9f59a6a","UserID":"10","UserName":"Long","NextActivityPerformers":{"5fa796f6-2d5d-4ed6-84e2-a7c4e4e6aabc":[{"UserID":10,"UserName":"Long"}]}}
 
 
     //reverse process:
     //Return signature
-    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"5d6a7d6f-daa2-482d-8303-87b3b9f59a6a"}
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"5d6a7d6f-daa2-482d-8303-87b3b9f59a6a"}
 
     //sendback process
     //Return
@@ -88,7 +88,7 @@ namespace Slickflow.WebApi.Controllers
                 //            .Start();
                 var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
                          .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-                         .UseProcess(runner.ProcessGUID, runner.Version)
+                         .UseProcess(runner.ProcessID, runner.Version)
                          .Subscribe(EventFireTypeEnum.OnProcessStarted, (delegateContext, delegateService) => {
                              var processInstanceID = delegateContext.ProcessInstanceID;
                              delegateService.SaveVariable(ProcessVariableTypeEnum.Process, "name", "book");
@@ -121,7 +121,7 @@ namespace Slickflow.WebApi.Controllers
                 //            .Run();
                 var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
                          .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-                         .UseProcess(runner.ProcessGUID, runner.Version)
+                         .UseProcess(runner.ProcessID, runner.Version)
                          //.NextStep(runner.NextActivityPerformers)
                          //.NextStepInt(NextPerformerIntTypeEnum.Single)
                          .IfCondition(runner.Conditions)

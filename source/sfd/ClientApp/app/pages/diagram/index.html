@@ -45,10 +45,10 @@
     <script type="text/javascript">
         $(function () {
             var appInstanceID = jshelper.getUrlParameter('AppInstanceID');
-            var processGUID = jshelper.getUrlParameter('ProcessGUID');
+            var processID = jshelper.getUrlParameter('ProcessID');
             var version = jshelper.getUrlParameter('Version');
 
-            kdiagram.loadXml(appInstanceID, processGUID, version);
+            kdiagram.loadXml(appInstanceID, processID, version);
         });
     </script>
 </body>

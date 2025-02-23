@@ -11,7 +11,7 @@
           "Dapper": "1.0.0",
           "SlickOne.WebUtility": "1.0.0",
           "Slickflow.Data": "1.0.0",
-          "Slickflow.Engine": "2.4.0",
+          "Slickflow.Engine": "3.0.0",
           "Slickflow.HrsService": "1.0.0",
           "Slickflow.Module": "1.0.0",
           "Slickflow.Module.Resource": "1.0.0",
@@ -751,7 +751,7 @@
           }
         }
       },
-      "Slickflow.Engine/2.4.0": {
+      "Slickflow.Engine/3.0.0": {
         "dependencies": {
           "Devart.Data.Oracle.EFCore": "10.3.21.8",
           "IronPython": "3.4.1",
@@ -767,7 +767,7 @@
         },
         "runtime": {
           "Slickflow.Engine.dll": {
-            "assemblyVersion": "2.4.0",
+            "assemblyVersion": "3.0.0",
             "fileVersion": "2.4.0.0"
           }
         }
@@ -776,7 +776,7 @@
         "dependencies": {
           "Dapper": "1.0.0",
           "Slickflow.Data": "1.0.0",
-          "Slickflow.Engine": "2.4.0"
+          "Slickflow.Engine": "3.0.0"
         },
         "runtime": {
           "Slickflow.HrsService.dll": {
@@ -1363,7 +1363,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Slickflow.Engine/2.4.0": {
+    "Slickflow.Engine/3.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

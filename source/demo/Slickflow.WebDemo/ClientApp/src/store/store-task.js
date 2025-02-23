@@ -47,12 +47,12 @@ const actions = {
     var callback = payload.callback
 
     var query = {}
-    query.ProcessGUID = config.PROCESS_A4L.ProcessGUID
+    query.ProcessID = config.PROCESS_A4L.ProcessID
     query.Version = config.PROCESS_A4L.Version
     query.UserID = user.UserID
     query.UserName = user.UserName
 
-    axios.post('/webdemoapi/api/wf/QueryReadyTasks', query)
+    axios.post(config.WebApi.ApiUrl + '/api/wf/QueryReadyTasks', query)
       .then((response) => {
         var todotasks = response.data.Entity
         context.commit('setToDo', todotasks)
@@ -68,12 +68,12 @@ const actions = {
       var callback = payload.callback
 
       var query = {}
-      query.ProcessGUID = config.PROCESS_A4L.ProcessGUID
+      query.ProcessID = config.PROCESS_A4L.ProcessID
       query.Version = config.PROCESS_A4L.Version
       query.UserID = user.UserID
       query.UserName = user.UserName
 
-      axios.post('/webdemoapi/api/wf/QueryCompletedTasks', query)
+      axios.post(config.WebApi.ApiUrl + '/api/wf/QueryCompletedTasks', query)
         .then((response) => {
           var donetasks = response.data.Entity
           context.commit('setDone', donetasks)
@@ -86,10 +86,10 @@ const actions = {
   },
   getCreated: (context, payload) => {
     var query = {}
-    query.ProcessGUID = config.PROCESS_A4L.ProcessGUID
+    query.ProcessID = config.PROCESS_A4L.ProcessID
     query.Version = config.PROCESS_A4L.Version
 
-    axios.post('/webdemoapi/api/wf/QueryCreatedTasks', query)
+    axios.post(config.WebApi.ApiUrl + '/api/wf/QueryCreatedTasks', query)
       .then((response) => {
         var donetasks = response.data.Entity
         context.commit('setDone', donetasks)
@@ -107,7 +107,7 @@ const actions = {
     var callback = payload.callback
 
     var query = {}
-    query.ProcessGUID = config.PROCESS_A4L.ProcessGUID
+    query.ProcessID = config.PROCESS_A4L.ProcessID
     query.Version = config.PROCESS_A4L.Version
     query.UserID = user.UserID
     query.UserName = user.UserName
@@ -115,7 +115,7 @@ const actions = {
     query.AppInstanceID = task.AppInstanceID
     query.TaskID = task.TaskID
 
-    axios.post('/webdemoapi/api/wf/RejectProcess', query)
+    axios.post(config.WebApi.ApiUrl + '/api/wf/RejectProcess', query)
       .then((response) => {
         var result = response.data
         if (result.Status === 1) {

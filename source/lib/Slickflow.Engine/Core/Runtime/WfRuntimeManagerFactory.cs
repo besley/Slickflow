@@ -44,13 +44,13 @@ namespace Slickflow.Engine.Core.Runtime
 
             var pim = new ProcessInstanceManager();
             ProcessInstanceEntity processInstance = pim.GetProcessInstanceCurrent(runner.AppInstanceID,
-                runner.ProcessGUID,
+                runner.ProcessID,
                 runner.Version);
 
             //不能同时启动多个主流程
             //Cannot start multiple main processes simultaneously
             if (processInstance != null
-                && string.IsNullOrEmpty(processInstance.SubProcessGUID)
+                && string.IsNullOrEmpty(processInstance.SubProcessID)
                 && processInstance.ProcessState == (short)ProcessStateEnum.Running)
             {
                 result.Status = WfExecutedStatus.Exception;
@@ -63,7 +63,7 @@ namespace Slickflow.Engine.Core.Runtime
 
             //获取流程第一个可办理节点
             //Obtain the first available processing node in the process
-            rmins.ProcessModel = ProcessModelFactory.CreateByProcess(runner.ProcessGUID, runner.Version);
+            rmins.ProcessModel = ProcessModelFactory.CreateByProcess(runner.ProcessID, runner.Version);
             var startActivity = rmins.ProcessModel.GetStartActivity();
             var nextActivityTree = rmins.ProcessModel.GetFirstActivityTree(startActivity, runner.Conditions);
 
@@ -116,8 +116,8 @@ namespace Slickflow.Engine.Core.Runtime
             var pim = new ProcessInstanceManager();
             var subProcessInstance = pim.GetSubProcessInstance(session.Connection,
                 runner.AppInstanceID,
-                runner.ProcessGUID,
-                subProcessNode.SubProcessGUID,
+                runner.ProcessID,
+                subProcessNode.SubProcessID,
                 session.Transaction);
 
             //不能同时启动多个主流程
@@ -142,7 +142,7 @@ namespace Slickflow.Engine.Core.Runtime
 
             //子流程自动获取第一个办理节点上的人员列表
             //The subprocess automatically retrieves the list of performers on the first processing node
-            rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(subFirstActivity.ActivityGUID, 
+            rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(subFirstActivity.ActivityID, 
                 performerList);
             rmins.ActivityResource = new ActivityResource(runner, rmins.AppRunner.NextActivityPerformers);
 
@@ -166,7 +166,7 @@ namespace Slickflow.Engine.Core.Runtime
             //Check if the incoming parameters are valid
             if (string.IsNullOrEmpty(runner.AppName)
                 || string.IsNullOrEmpty(runner.AppInstanceID)
-                || runner.ProcessGUID == null)
+                || runner.ProcessID == null)
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.RunApp_ErrorArguments;
@@ -232,7 +232,7 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.WfExecutedResult = result = new WfExecutedResult();
             if (string.IsNullOrEmpty(runner.AppName)
                 || string.IsNullOrEmpty(runner.AppInstanceID)
-                || runner.ProcessGUID == null)
+                || runner.ProcessID == null)
             {
                 result.Status = WfExecutedStatus.Exception;
                 result.ExceptionType = WfExceptionType.RunApp_ErrorArguments;
@@ -248,7 +248,7 @@ namespace Slickflow.Engine.Core.Runtime
             //Provide process instance ID for process registration events
             var processInstance = (new ProcessInstanceManager()).GetById(session.Connection, runningNode.ProcessInstanceID, session.Transaction);
             rmins.ProcessInstanceID = runningNode.ProcessInstanceID;
-            var processModel = ProcessModelFactory.CreateByProcess(processInstance.ProcessGUID, processInstance.Version);
+            var processModel = ProcessModelFactory.CreateByProcess(processInstance.ProcessID, processInstance.Version);
             var activityResource = new ActivityResource(runner,
                 runner.NextActivityPerformers,
                 runner.Conditions);
@@ -276,7 +276,7 @@ namespace Slickflow.Engine.Core.Runtime
             //Check if the incoming parameters are valid
             if (string.IsNullOrEmpty(runner.AppName)
                || string.IsNullOrEmpty(runner.AppInstanceID)
-               || runner.ProcessGUID == null
+               || runner.ProcessID == null
                || runner.NextActivityPerformers == null)
             {
                 result.Status = WfExecutedStatus.Exception;
@@ -303,7 +303,7 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.TaskView = taskView;
             rmins.AppRunner.AppName = runner.AppName;
             rmins.AppRunner.AppInstanceID = runner.AppInstanceID;
-            rmins.AppRunner.ProcessGUID = runner.ProcessGUID;
+            rmins.AppRunner.ProcessID = runner.ProcessID;
             rmins.AppRunner.UserID = runner.UserID;
             rmins.AppRunner.UserName = runner.UserName;
             rmins.AppRunner.NextActivityPerformers = runner.NextActivityPerformers;
@@ -336,7 +336,7 @@ namespace Slickflow.Engine.Core.Runtime
             //Check if the incoming parameters are valid
             if (string.IsNullOrEmpty(runner.AppName)
                || string.IsNullOrEmpty(runner.AppInstanceID)
-               || runner.ProcessGUID == null
+               || runner.ProcessID == null
                || runner.NextActivityPerformers == null)
             {
                 result.Status = WfExecutedStatus.Exception;
@@ -362,7 +362,7 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.AppRunner = runner;
             rmins.AppRunner.AppName = runner.AppName;
             rmins.AppRunner.AppInstanceID = runner.AppInstanceID;
-            rmins.AppRunner.ProcessGUID = runner.ProcessGUID;
+            rmins.AppRunner.ProcessID = runner.ProcessID;
             rmins.AppRunner.UserID = runner.UserID;
             rmins.AppRunner.UserName = runner.UserName;
 
@@ -373,22 +373,22 @@ namespace Slickflow.Engine.Core.Runtime
 
             //获取跳转节点信息
             //Obtain jump node information
-            var jumpBackActivityGUID = runner.NextActivityPerformers.First().Key;
-            var jumpBackActivityInstance = aim.GetActivityInstanceLatest(runningNode.ProcessInstanceID, jumpBackActivityGUID);
+            var jumpBackActivityID = runner.NextActivityPerformers.First().Key;
+            var jumpBackActivityInstance = aim.GetActivityInstanceLatest(runningNode.ProcessInstanceID, jumpBackActivityID);
 
 
             //跳转到曾经执行过的节点上,可以作为跳回方式处理
             //Jumping to a node that has been executed before can be handled as a bounce back method
             rmins.IsBackward = true;
             rmins.BackwardContext.ProcessInstance = (new ProcessInstanceManager()).GetById(runningNode.ProcessInstanceID);
-            rmins.BackwardContext.BackwardToTaskActivity = processModel.GetActivity(jumpBackActivityGUID);
+            rmins.BackwardContext.BackwardToTaskActivity = processModel.GetActivity(jumpBackActivityID);
 
             //获取当前运行节点的上一步节点
             //Retrieve the previous node of the current running node
             bool hasGatewayNode = false;
             var tim = new TransitionInstanceManager();
             var lastTaskTransitionInstance = tim.GetLastTaskTransition(runner.AppName,
-                runner.AppInstanceID, runner.ProcessGUID);
+                runner.AppInstanceID, runner.ProcessID);
 
             var npc = new PreviousStepChecker();
             var previousActivityInstanceList = npc.GetPreviousActivityInstanceList(runningNode, true,
@@ -397,13 +397,13 @@ namespace Slickflow.Engine.Core.Runtime
 
             //仅仅是回跳到上一步节点，即按SendBack方式处理
             //Just jump back to the previous node and process it according to the SendBack method
-            if (previousActivityInstance != null && previousActivityInstance.ActivityGUID == jumpBackActivityGUID)
+            if (previousActivityInstance != null && previousActivityInstance.ActivityID == jumpBackActivityID)
             {
                 rmins.BackwardContext.BackwardToTaskActivityInstance = previousActivityInstance;
                 rmins.BackwardContext.BackwardToTargetTransitionGUID =
-                    hasGatewayNode == false ? lastTaskTransitionInstance.TransitionGUID : WfDefine.WF_XPDL_GATEWAY_BYPASS_GUID;        //如果中间有Gateway节点，则没有直接相连的TransitonGUID
+                    hasGatewayNode == false ? lastTaskTransitionInstance.TransitionID : WfDefine.WF_XPDL_GATEWAY_BYPASS_GUID;        //如果中间有Gateway节点，则没有直接相连的TransitonGUID
 
-                rmins.BackwardContext.BackwardFromActivity = processModel.GetActivity(runningNode.ActivityGUID);
+                rmins.BackwardContext.BackwardFromActivity = processModel.GetActivity(runningNode.ActivityID);
                 rmins.BackwardContext.BackwardFromActivityInstance = runningNode;
                 rmins.BackwardContext.BackwardTaskReceiver = WfBackwardTaskReceiver.Instance(
                     previousActivityInstance.ActivityName,
@@ -411,7 +411,7 @@ namespace Slickflow.Engine.Core.Runtime
                     previousActivityInstance.EndedByUserName);
 
                 rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(
-                    previousActivityInstance.ActivityGUID,
+                    previousActivityInstance.ActivityID,
                     previousActivityInstance.EndedByUserID,
                     previousActivityInstance.EndedByUserName);
             }
@@ -432,10 +432,10 @@ namespace Slickflow.Engine.Core.Runtime
 
                 //判断两个节点是否有Transition的定义存在
                 //Determine whether there is a definition of transition between two nodes
-                var transition = processModel.GetForwardTransition(runningNode.ActivityGUID, jumpBackActivityGUID);
-                rmins.BackwardContext.BackwardToTargetTransitionGUID = transition != null ? transition.TransitionGUID : WfDefine.WF_XPDL_GATEWAY_BYPASS_GUID;
+                var transition = processModel.GetForwardTransition(runningNode.ActivityID, jumpBackActivityID);
+                rmins.BackwardContext.BackwardToTargetTransitionGUID = transition != null ? transition.TransitionID : WfDefine.WF_XPDL_GATEWAY_BYPASS_GUID;
 
-                rmins.BackwardContext.BackwardFromActivity = processModel.GetActivity(runningNode.ActivityGUID);
+                rmins.BackwardContext.BackwardFromActivity = processModel.GetActivity(runningNode.ActivityID);
                 rmins.BackwardContext.BackwardFromActivityInstance = runningNode;
                 rmins.BackwardContext.BackwardTaskReceiver = WfBackwardTaskReceiver.Instance(
                     jumpBackActivityInstance.ActivityName,
@@ -443,7 +443,7 @@ namespace Slickflow.Engine.Core.Runtime
                     jumpBackActivityInstance.EndedByUserName);
 
                 rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(
-                    jumpBackActivityInstance.ActivityGUID,
+                    jumpBackActivityInstance.ActivityID,
                     jumpBackActivityInstance.EndedByUserID,
                     jumpBackActivityInstance.EndedByUserName);
             }
@@ -472,7 +472,7 @@ namespace Slickflow.Engine.Core.Runtime
             //Check if the incoming parameters are valid
             if (string.IsNullOrEmpty(runner.AppName)
                || string.IsNullOrEmpty(runner.AppInstanceID)
-               || runner.ProcessGUID == null
+               || runner.ProcessID == null
                || runner.NextActivityPerformers == null)
             {
                 result.Status = WfExecutedStatus.Exception;
@@ -500,7 +500,7 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.AppRunner = runner;
             rmins.AppRunner.AppName = runner.AppName;
             rmins.AppRunner.AppInstanceID = runner.AppInstanceID;
-            rmins.AppRunner.ProcessGUID = runner.ProcessGUID;
+            rmins.AppRunner.ProcessID = runner.ProcessID;
             rmins.AppRunner.UserID = runner.UserID;
             rmins.AppRunner.UserName = runner.UserName;
 
@@ -511,7 +511,7 @@ namespace Slickflow.Engine.Core.Runtime
             var processModel = ProcessModelFactory.CreateByTask(taskView);
             rmins.ProcessModel = processModel;
 
-            var endActivityGUID = runner.NextActivityPerformers.First().Key;
+            var endActivityID = runner.NextActivityPerformers.First().Key;
             var activityResource = new ActivityResource(runner, runner.NextActivityPerformers);
             rmins.ActivityResource = activityResource;
             rmins.RunningActivityInstance = runningNode;
@@ -612,11 +612,11 @@ namespace Slickflow.Engine.Core.Runtime
                 //Check if the nodes are consistent
                 if (previousActivityList.Count == 1)
                 {
-                    var onlyActivityGUID = previousActivityList[0].ActivityGUID;
+                    var onlyActivityID = previousActivityList[0].ActivityID;
                     var isOnly = true;
                     foreach (var step in runner.NextActivityPerformers)
                     {
-                        if (step.Key != onlyActivityGUID)
+                        if (step.Key != onlyActivityID)
                         {
                             isOnly = false;
                             break;
@@ -641,7 +641,7 @@ namespace Slickflow.Engine.Core.Runtime
                 //Traced is used to directly return to the previous step for testing mode
                 var prevActivity = previousActivityList[0];
                 var performerList = PerformerBuilder.CreatePerformerList(runningNode.CreatedByUserID, runningNode.CreatedByUserName);
-                runner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(prevActivity.ActivityGUID, performerList);
+                runner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(prevActivity.ActivityID, performerList);
             }
 
             rmins.TaskView = taskView;
@@ -684,7 +684,7 @@ namespace Slickflow.Engine.Core.Runtime
             var isInvalid = false;
             foreach (var key in steps.Keys)
             {
-                var activity = previousActivityList.Single(s => s.ActivityGUID == key);
+                var activity = previousActivityList.Single(s => s.ActivityID == key);
                 if (activity == null)
                 {
                     isInvalid = true;
@@ -714,7 +714,7 @@ namespace Slickflow.Engine.Core.Runtime
             IList<Activity> activityList = new List<Activity>();
             foreach (var activity in previousActivityList)
             {
-                var list = previousActivityInstanceList.Where(a => a.ActivityGUID == activity.ActivityGUID).ToList();
+                var list = previousActivityInstanceList.Where(a => a.ActivityID == activity.ActivityID).ToList();
                 if (list != null && list.Count > 0)
                 {
                     activityList.Add(activity);
@@ -755,7 +755,7 @@ namespace Slickflow.Engine.Core.Runtime
                 return rmins;
             }
 
-            runner.NextActivityPerformers = NextStepUtility.CreateNextStepPerformerList(taskDone.ActivityGUID,
+            runner.NextActivityPerformers = NextStepUtility.CreateNextStepPerformerList(taskDone.ActivityID,
                 taskDone.AssignedToUserID, taskDone.AssignedToUserName);
 
             //没有指定退回节点信息
@@ -832,11 +832,11 @@ namespace Slickflow.Engine.Core.Runtime
             //Check if the nodes are consistent
             if (previousActivityList.Count == 1)
             {
-                var onlyActivityGUID = previousActivityList[0].ActivityGUID;
+                var onlyActivityID = previousActivityList[0].ActivityID;
                 var isOnly = true;
                 foreach (var step in runner.NextActivityPerformers)
                 {
-                    if (step.Key != onlyActivityGUID)
+                    if (step.Key != onlyActivityID)
                     {
                         isOnly = false;
                         break;
@@ -936,13 +936,13 @@ namespace Slickflow.Engine.Core.Runtime
                 && runner.ControlParameterSheet.RecreatedMultipleInstanceWhenResending == 1)
             {
                 rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(
-                    backSrcActivityInstance.ActivityGUID,
-                    runner.NextActivityPerformers[backSrcActivityInstance.ActivityGUID]);
+                    backSrcActivityInstance.ActivityID,
+                    runner.NextActivityPerformers[backSrcActivityInstance.ActivityID]);
             }
             else
             {
                 rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(
-                    backSrcActivityInstance.ActivityGUID,
+                    backSrcActivityInstance.ActivityID,
                     runningActivityInstance.CreatedByUserID,
                     runningActivityInstance.CreatedByUserName);
             }
@@ -1013,7 +1013,7 @@ namespace Slickflow.Engine.Core.Runtime
             var rmins = new WfRuntimeManagerReverse();
             rmins.WfExecutedResult = result = new WfExecutedResult();
             var pim = new ProcessInstanceManager();
-            var processInstance = pim.GetProcessInstanceLatest(runner.AppInstanceID, runner.ProcessGUID, runner.Version);
+            var processInstance = pim.GetProcessInstanceLatest(runner.AppInstanceID, runner.ProcessID, runner.Version);
             if (processInstance == null || processInstance.ProcessState != (short)ProcessStateEnum.Completed)
             {
                 result.Status = WfExecutedStatus.Exception;
@@ -1027,10 +1027,10 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.ProcessInstanceID = processInstance.ID;
 
             var tim = new TransitionInstanceManager();
-            var endTransitionInstance = tim.GetEndTransition(runner.AppName, runner.AppInstanceID, runner.ProcessGUID);
+            var endTransitionInstance = tim.GetEndTransition(runner.AppName, runner.AppInstanceID, runner.ProcessID);
 
             var processModel = ProcessModelFactory.CreateByProcessInstance(processInstance);
-            var endActivity = processModel.GetActivity(endTransitionInstance.ToActivityGUID);
+            var endActivity = processModel.GetActivity(endTransitionInstance.ToActivityID);
 
             var aim = new ActivityInstanceManager();
             var endActivityInstance = aim.GetById(endTransitionInstance.ToActivityInstanceID);
@@ -1039,18 +1039,18 @@ namespace Slickflow.Engine.Core.Runtime
             var npc = new PreviousStepChecker();
             var lastTaskActivityInstance = npc.GetPreviousActivityInstanceList(endActivityInstance, false,
                 out hasGatewayNode).ToList()[0];
-            var lastTaskActivity = processModel.GetActivity(lastTaskActivityInstance.ActivityGUID);
+            var lastTaskActivity = processModel.GetActivity(lastTaskActivityInstance.ActivityID);
 
             //封装返签结束点之前办理节点的任务接收人
             //The recipient of the task to handle the node before the end point of the encapsulated return signature
-            rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(lastTaskActivityInstance.ActivityGUID,
+            rmins.AppRunner.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(lastTaskActivityInstance.ActivityID,
                 lastTaskActivityInstance.EndedByUserID,
                 lastTaskActivityInstance.EndedByUserName);
 
             rmins.ActivityResource = new ActivityResource(runner, rmins.AppRunner.NextActivityPerformers);
             rmins.AppRunner.AppName = runner.AppName;
             rmins.AppRunner.AppInstanceID = runner.AppInstanceID;
-            rmins.AppRunner.ProcessGUID = runner.ProcessGUID;
+            rmins.AppRunner.ProcessID = runner.ProcessID;
             rmins.AppRunner.UserID = runner.UserID;
             rmins.AppRunner.UserName = runner.UserName;
 
@@ -1058,7 +1058,7 @@ namespace Slickflow.Engine.Core.Runtime
             rmins.BackwardContext.BackwardToTaskActivity = lastTaskActivity;
             rmins.BackwardContext.BackwardToTaskActivityInstance = lastTaskActivityInstance;
             rmins.BackwardContext.BackwardToTargetTransitionGUID =
-                hasGatewayNode == false ? endTransitionInstance.TransitionGUID : string.Empty;
+                hasGatewayNode == false ? endTransitionInstance.TransitionID : string.Empty;
             rmins.BackwardContext.BackwardFromActivity = endActivity;
             rmins.BackwardContext.BackwardFromActivityInstance = endActivityInstance;
             rmins.BackwardContext.BackwardTaskReceiver = WfBackwardTaskReceiver.Instance(lastTaskActivityInstance.ActivityName,
@@ -1083,7 +1083,7 @@ namespace Slickflow.Engine.Core.Runtime
 
             if (string.IsNullOrEmpty(runner.AppName)
                 || string.IsNullOrEmpty(runner.AppInstanceID)
-                || runner.ProcessGUID == null
+                || runner.ProcessID == null
                 || runner.NextActivityPerformers == null)
             {
                 result.Status = WfExecutedStatus.Exception;

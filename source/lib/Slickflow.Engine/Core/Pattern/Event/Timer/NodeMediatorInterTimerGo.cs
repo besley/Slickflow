@@ -129,7 +129,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
                 var processModel = ProcessModelFactory.CreateByProcessInstance(session.Connection,
                     processInstance,
                     session.Transaction);
-                var activityNode = processModel.GetActivity(fromActivityInstance.ActivityGUID);
+                var activityNode = processModel.GetActivity(fromActivityInstance.ActivityID);
                 isParallel = processModel.IsAndSplitMI(activityNode);
             }
 
@@ -138,7 +138,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Timer
                 //并行多实例容器
                 //Parallel multi instance container
                 var entity = new ActivityInstanceEntity();
-                var plist = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
+                var plist = activityResource.NextActivityPerformers[toActivity.ActivityID];
 
                 //创建并行多实例分支
                 //Create parallel multi instance branches

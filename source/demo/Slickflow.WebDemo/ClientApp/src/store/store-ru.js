@@ -27,10 +27,11 @@ const mutations = {
 const actions = {
   getRoles: (context, payload) => {
     var query = {}
-    query.ProcessGUID = config.PROCESS_A4L.ProcessGUID
+    query.ProcessID = config.PROCESS_A4L.ProcessID
     query.Version = config.PROCESS_A4L.Version
 
-    axios.post('/webdemoapi/api/wf/QueryProcessRoles', query)
+    console.log(config.WebApi.ApiUrl)
+    axios.post(config.WebApi.ApiUrl + '/api/wf/QueryProcessRoles', query)
       .then((response) => {
         var roles = response.data.Entity
         context.commit('setRoles', roles)
@@ -40,7 +41,7 @@ const actions = {
       })
   },
   getUsers: (context, payload) => {
-    axios.get('/webdemoapi/api/wf/GetUserByRole/' + payload)
+    axios.get(config.WebApi.ApiUrl + '/api/wf/GetUserByRole/' + payload)
       .then((response) => {
         var users = response.data.Entity
         context.commit('setUsers', users)

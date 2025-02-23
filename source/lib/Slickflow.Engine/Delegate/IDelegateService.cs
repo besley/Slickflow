@@ -14,7 +14,7 @@ namespace Slickflow.Engine.Delegate
     public interface IDelegateService
     {
         int ProcessInstanceID { get; set; }
-        string ActivityGUID { get; set; }
+        string ActivityID { get; set; }
         int GetProcessInstanceID();
         IDbSession GetSession();
         string GetVariable(ProcessVariableTypeEnum variableType, string name);

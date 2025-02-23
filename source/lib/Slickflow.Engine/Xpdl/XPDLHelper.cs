@@ -119,31 +119,31 @@ namespace Slickflow.Engine.Xpdl
         {
             Activity catchActivity = null;
             var pm = new ProcessManager();
-            var processEntity = pm.GetByVersion(processInstance.ProcessGUID, processInstance.Version);
+            var processEntity = pm.GetByVersion(processInstance.ProcessID, processInstance.Version);
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(processEntity.XmlContent);
             var xnpmgr = XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc);
 
             var root = xmlDoc.DocumentElement;
-            var xmlNodeCollaboration = root.SelectSingleNode(XPDLDefinition.BPMN2_StrXmlPath_Collaboration,
+            var xmlNodeCollaboration = root.SelectSingleNode(XPDLDefinition.BPMN_StrXmlPath_Collaboration,
                 XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
 
-            var strFromPath = string.Format("{0}[@sf:from='{1}']", XPDLDefinition.BPMN2_StrXmlPath_MessageFlow, throwActivity.ActivityGUID);
+            var strFromPath = string.Format("{0}[@id='{1}']", XPDLDefinition.BPMN_StrXmlPath_MessageFlow, throwActivity.ActivityID);
             var xmlMessageFlow = xmlNodeCollaboration.SelectSingleNode(strFromPath, XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
 
-            var catchActivityGUID = XMLHelper.GetXmlAttribute(xmlMessageFlow, "sf:to");
-            var strXmlActivityPath = string.Format("//*[@sf:guid='{0}']", catchActivityGUID);
+            var catchActivityID = XMLHelper.GetXmlAttribute(xmlMessageFlow, "id");
+            var strXmlActivityPath = string.Format("//*[@id='{0}']", catchActivityID);
 
             var catchActivityNode = xmlNodeCollaboration.SelectSingleNode(strXmlActivityPath, XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
             var catchProcessNode = catchActivityNode.ParentNode;
 
             catchProcessEntity = new ProcessEntity();
             catchProcessEntity.ProcessName = XMLHelper.GetXmlAttribute(catchProcessNode, "name");
-            catchProcessEntity.ProcessGUID = XMLHelper.GetXmlAttribute(catchProcessNode, "sf:guid");
+            catchProcessEntity.ProcessID = XMLHelper.GetXmlAttribute(catchProcessNode, "id");
             catchProcessEntity.Version = processInstance.Version;
             catchProcessEntity.ProcessCode = XMLHelper.GetXmlAttribute(catchProcessNode, "sf:code");
 
-            catchActivity = ConvertHelper.ConvertXmlActivityNodeToActivityEntity(catchActivityNode, xnpmgr, catchProcessEntity.ProcessGUID);
+            catchActivity = ConvertHelper.ConvertXmlActivityNodeToActivityEntity(catchActivityNode, xnpmgr, catchProcessEntity.ProcessID);
 
             return catchActivity;
         }
@@ -156,7 +156,7 @@ namespace Slickflow.Engine.Xpdl
         public static XmlNamespaceManager GetSlickflowXmlNamespaceManager(XmlDocument document, Boolean isBPMNDIContained = false)
         {
             var nsmgr = new XmlNamespaceManager(document.NameTable);
-            nsmgr.AddNamespace(XPDLDefinition.BPMN2_NameSpacePrefix, XPDLDefinition.BPMN2_NameSpacePrefix_Value);
+            nsmgr.AddNamespace(XPDLDefinition.BPMN_NameSpacePrefix, XPDLDefinition.BPMN_NameSpacePrefix_Value);
             nsmgr.AddNamespace(XPDLDefinition.Sf_NameSpacePrefix, XPDLDefinition.Sf_NameSpacePrefix_Value);
 
             if (isBPMNDIContained)
@@ -175,11 +175,11 @@ namespace Slickflow.Engine.Xpdl
             var strXmlPath = string.Empty;
             if (isSubProcess == false)
             {
-                strXmlPath = XPDLDefinition.BPMN2_StrXmlPath_Process;
+                strXmlPath = XPDLDefinition.BPMN_StrXmlPath_Process;
             }
             else
             {
-                strXmlPath = XPDLDefinition.BPMN2_StrXmlPath_Process_Sub;
+                strXmlPath = XPDLDefinition.BPMN_StrXmlPath_Process_Sub;
             }
             return strXmlPath;
         }
@@ -190,7 +190,7 @@ namespace Slickflow.Engine.Xpdl
         /// </summary>
         public static bool IsOrGateway(XmlNode gatewayNode)
         {
-            var isOr = gatewayNode.Name == XPDLDefinition.BPMN2_ElementName_InclusiveGateway;
+            var isOr = gatewayNode.Name == XPDLDefinition.BPMN_ElementName_InclusiveGateway;
             return isOr;
         }
 
@@ -200,7 +200,7 @@ namespace Slickflow.Engine.Xpdl
         /// </summary>
         public static bool IsXOrGateway(XmlNode gatewayNode)
         {
-            var isXOr = gatewayNode.Name == XPDLDefinition.BPMN2_ElementName_ExclusiveGateway;
+            var isXOr = gatewayNode.Name == XPDLDefinition.BPMN_ElementName_ExclusiveGateway;
             return isXOr;
         }
 
@@ -210,7 +210,7 @@ namespace Slickflow.Engine.Xpdl
         /// </summary>
         public static bool IsAndGateway(XmlNode gatewayNode)
         {
-            var isAnd = gatewayNode.Name == XPDLDefinition.BPMN2_ElementName_ParallelGateway;
+            var isAnd = gatewayNode.Name == XPDLDefinition.BPMN_ElementName_ParallelGateway;
             return isAnd;
         }
     }

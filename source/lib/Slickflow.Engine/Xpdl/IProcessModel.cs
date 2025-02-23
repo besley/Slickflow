@@ -29,36 +29,36 @@ namespace Slickflow.Engine.Xpdl
         Entity.Activity GetFirstActivity();
         NextActivityMatchedResult GetFirstActivityList(Entity.Activity startActivity, IDictionary<string, string> conditionKeyValuePair);
         Entity.Activity GetEndActivity();
-        Entity.Activity GetActivity(string activityGUID);
+        Entity.Activity GetActivity(string activityID);
         IList<Entity.Activity> GetActivityList();
-        Entity.Activity GetNextActivity(string activityGUID);
-        IList<NodeView> GetNextActivityTree(string currentActivityGUID);
-        IList<NodeView> GetNextActivityTree(string currentActivityGUID, IDictionary<string, string> conditions);
+        Entity.Activity GetNextActivity(string activityID);
+        IList<NodeView> GetNextActivityTree(string currentActivityID);
+        IList<NodeView> GetNextActivityTree(string currentActivityID, IDictionary<string, string> conditions);
         IList<NodeView> GetFirstActivityTree(Entity.Activity startActivity, IDictionary<string, string> conditions);
-        NextActivityTreeResult GetNextActivityTree(string currentActivityGUID,
+        NextActivityTreeResult GetNextActivityTree(string currentActivityID,
             Nullable<int> taskID,
             IDictionary<string, string> conditions,
             IDbSession session);
-        NextActivityMatchedResult GetNextActivityList(string currentActivityGUID,
+        NextActivityMatchedResult GetNextActivityList(string currentActivityID,
             Nullable<int> taskID,
             IDictionary<string, string> conditionKeyValuePair,
             ActivityResource activityResource,
             Expression<Func<ActivityResource, Entity.Activity, bool>> expression,
             IDbSession session);
-        IList<Entity.Activity> GetNextActivityListWithoutCondition(string activityGUID);
+        IList<Entity.Activity> GetNextActivityListWithoutCondition(string activityID);
 
-        IList<NodeView> GetPreviousActivityTree(string currentActivityGUID);
-        IList<Entity.Activity> GetPreviousActivityList(string currentActivityGUID);
-        IList<Entity.Activity> GetPreviousActivityList(string currentActivityGUID, out bool hasGatewayPassed);
-        IList<Entity.Activity> GetFromActivityList(string toActivityGUID);
+        IList<NodeView> GetPreviousActivityTree(string currentActivityID);
+        IList<Entity.Activity> GetPreviousActivityList(string currentActivityID);
+        IList<Entity.Activity> GetPreviousActivityList(string currentActivityID, out bool hasGatewayPassed);
+        IList<Entity.Activity> GetFromActivityList(string toActivityID);
 
         Entity.Activity GetBackwardGatewayActivity(Entity.Activity gatewayActivity, 
             ref int joinCount, ref int splitCount);
-        Int32 GetBackwardTransitionListCount(string activityGUID);
-        Transition GetForwardTransition(string fromActivityGUID, string toActivityGUID);
-        IList<Transition> GetForwardTransitionList(string activityGUID);
-        IList<Transition> GetForwardTransitionList(string activityGUID, IDictionary<string, string> conditionKeyValuePair);
-        IList<Transition> GetBackwardTransitionList(string toActivityGUID);
+        Int32 GetBackwardTransitionListCount(string activityID);
+        Transition GetForwardTransition(string fromActivityID, string toActivityID);
+        IList<Transition> GetForwardTransitionList(string activityID);
+        IList<Transition> GetForwardTransitionList(string activityID, IDictionary<string, string> conditionKeyValuePair);
+        IList<Transition> GetBackwardTransitionList(string toActivityID);
         Boolean IsValidTransition(Transition transition, IDictionary<string, string> conditionValuePair);
         IList<Entity.Activity> GetTaskActivityList();
         IList<Entity.Activity> GetAllTaskActivityList();
@@ -77,12 +77,12 @@ namespace Slickflow.Engine.Xpdl
 
         //Resource
         IList<Role> GetRoles();
-        IList<Role> GetActivityRoles(string activityGUID);
-        IDictionary<string, PerformerList> GetActivityPerformers(string activityGUID);
+        IList<Role> GetActivityRoles(string activityID);
+        IDictionary<string, PerformerList> GetActivityPerformers(string activityID);
         IDictionary<string, PerformerList> GetActivityPerformers(IList<NodeView> nextActivityTree);
         IList<Form> GetFormList();
 
         //Notification
-        IList<User> GetActivityNotifications(string activityGUID);
+        IList<User> GetActivityNotifications(string activityID);
     }
 }

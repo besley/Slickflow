@@ -108,7 +108,7 @@ namespace Slickflow.Engine.Core.Pattern
                 //并发多实例分支判断(AndSplit Multiple)
                 //Concurrent multi instance branch judgment (AndSplit Multiple)
                 var processModel = ProcessModelFactory.CreateByProcessInstance(session.Connection, processInstance, session.Transaction);
-                var activityNode = processModel.GetActivity(fromActivityInstance.ActivityGUID);
+                var activityNode = processModel.GetActivity(fromActivityInstance.ActivityID);
                 isParallel = processModel.IsAndSplitMI(activityNode);
             }
 
@@ -117,7 +117,7 @@ namespace Slickflow.Engine.Core.Pattern
                 //并行多实例容器
                 //Parallel mutiple instance container
                 ActivityInstanceEntity entity = null;
-                var plist = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
+                var plist = activityResource.NextActivityPerformers[toActivity.ActivityID];
 
                 //创建并行多实例分支
                 //Create parallel multi instance branches
@@ -173,9 +173,9 @@ namespace Slickflow.Engine.Core.Pattern
                 var delegateContext = new DelegateContext
                 {
                     AppInstanceID = processInstance.AppInstanceID,
-                    ProcessGUID = processInstance.ProcessGUID,
+                    ProcessID = processInstance.ProcessID,
                     ProcessInstanceID = processInstance.ID,
-                    ActivityGUID = toActivity.ActivityGUID,
+                    ActivityID = toActivity.ActivityID,
                     ActivityCode = toActivity.ActivityCode,
                     ActivityResource = activityResource
                 };

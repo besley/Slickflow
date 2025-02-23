@@ -13,7 +13,7 @@ namespace Slickflow.Engine.Xpdl.Entity
     public class Process
     {
         public string ID { get; set; }
-        public string ProcessGUID { get; set; }
+        public string ProcessID { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
         public string XmlContent { get; set; }

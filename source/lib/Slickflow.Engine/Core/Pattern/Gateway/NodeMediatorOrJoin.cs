@@ -37,9 +37,9 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             int splitCount = 0;
             int joinCount = 0;
             Activity splitActivity = this.ProcessModel.GetBackwardGatewayActivity(gatewayActivity, ref joinCount, ref splitCount);
-            ActivityInstanceEntity splitActivityInstance = base.ActivityInstanceManager.GetActivityInstanceLatest(processInstanceID, splitActivity.ActivityGUID, session);
+            ActivityInstanceEntity splitActivityInstance = base.ActivityInstanceManager.GetActivityInstanceLatest(processInstanceID, splitActivity.ActivityID, session);
 
-            return base.ActivityInstanceManager.GetGatewayInstanceCountByTransition(splitActivity.ActivityGUID, 
+            return base.ActivityInstanceManager.GetGatewayInstanceCountByTransition(splitActivity.ActivityID, 
                 splitActivityInstance.ID,
                 processInstanceID, 
                 session);
@@ -63,7 +63,7 @@ namespace Slickflow.Engine.Core.Pattern.Gateway
             //检查是否有运行中的合并节点实例
             //Check if there are any running merge node instances
             ActivityInstanceEntity joinNode = base.ActivityInstanceManager.GetActivityRunning(processInstance.ID,
-                base.GatewayActivity.ActivityGUID,
+                base.GatewayActivity.ActivityID,
                 session);
 
             if (joinNode == null)

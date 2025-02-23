@@ -30,8 +30,8 @@ namespace Slickflow.Engine.Xpdl.Convertor
                 //External subprocess node attribute information
                 var subProcessNode = new SubProcessNode(entity);
                 var subInfoNode = subInfoList[0];
-                subProcessNode.SubProcessID = int.Parse(subInfoNode.SubID);
-                subProcessNode.SubProcessGUID = subInfoNode.SubProcessGUID;
+                subProcessNode.SubProcessDefID = int.Parse(subInfoNode.SubProcessDefID);
+                subProcessNode.SubProcessID = subInfoNode.SubProcessID;
                 entity.Node = subProcessNode;
             }
             else
@@ -43,7 +43,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
                 if (subProcess != null)
                 {
                     var subProcessNode = new SubProcessNode(entity);
-                    subProcessNode.SubProcessGUID = subProcess.ProcessGUID;
+                    subProcessNode.SubProcessID = subProcess.ProcessID;
                     subProcessNode.SubProcessNested = subProcess;
                     
                     entity.Node = subProcessNode;
@@ -98,8 +98,8 @@ namespace Slickflow.Engine.Xpdl.Convertor
         private SubInfo ConvertXmlSubInfoNodeToSubInfoEntity(XmlNode node)
         {
             SubInfo subInfo = new SubInfo();
-            subInfo.SubID = XMLHelper.GetXmlAttribute(node, "subId");
-            subInfo.SubProcessGUID = XMLHelper.GetXmlAttribute(node, "subProcessGUID");
+            subInfo.SubProcessDefID = XMLHelper.GetXmlAttribute(node, "subId");
+            subInfo.SubProcessID = XMLHelper.GetXmlAttribute(node, "subProcessID");
             subInfo.SubProcessName = XMLHelper.GetXmlAttribute(node, "subProcessName");
             subInfo.SubType = XMLHelper.GetXmlAttribute(node, "subType");
             subInfo.SubVar = XMLHelper.GetXmlAttribute(node, "subVar");

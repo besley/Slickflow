@@ -19,14 +19,14 @@ namespace Slickflow.Engine.Service
     /// </summary>
     public interface IWorkflowService
     {
-        Activity GetFirstActivity(string processGUID, string version);
-        IList<Activity> GetTaskActivityList(string processGUID, string version);
+        Activity GetFirstActivity(string processID, string version);
+        IList<Activity> GetTaskActivityList(string processID, string version);
         IList<Activity> GetTaskActivityList(int processID);
-		IList<Activity> GetAllTaskActivityList(string processGUID, string version);
-        Activity GetNextActivity(string processGUID, string version, string activityGUID);
-        IList<NodeView> GetNextActivity(string processGUID, string version, string activityGUID, IDictionary<string, string> condition);
-        Activity GetActivityEntity(string processGUID, string version, string actvityGUID);
-        IList<Role> GetActivityRoles(string processGUID, string version, string activityGUID);
+		IList<Activity> GetAllTaskActivityList(string processID, string version);
+        Activity GetNextActivity(string processID, string version, string activityID);
+        IList<NodeView> GetNextActivity(string processID, string version, string activityID, IDictionary<string, string> condition);
+        Activity GetActivityEntity(string processID, string version, string actvityID);
+        IList<Role> GetActivityRoles(string processID, string version, string activityID);
 
         NodeView GetNextActivity(int taskID, IDictionary<string, string> condition = null);
         NodeView GetNextActivity(WfAppRunner runner, IDictionary<string, string> condition = null);
@@ -51,7 +51,7 @@ namespace Slickflow.Engine.Service
         Task<IList<NodeView>> GetPreviousActivityTreeAsync(WfAppRunner runner);
         Task<PreviousStepInfo> GetPreviousStepInfoAsync(WfAppRunner runner);
 
-        void ResetCache(string processGUID, string version = null);
+        void ResetCache(string processID, string version = null);
 
         [Obsolete("replaced by the new method RunProcess()")]
         WfExecutedResult RunProcessApp(WfAppRunner runner);
@@ -179,7 +179,7 @@ namespace Slickflow.Engine.Service
         IList<ActivityInstanceEntity> GetRunningActivityInstance(TaskQuery query);
         TaskViewEntity GetTaskView(int taskID);
         TaskViewEntity GetTaskView(int processInstanceID, int activityInstanceID);
-        TaskViewEntity GetTaskView(IDbConnection conn, string appInstanceID, string processGUID, string userID, IDbTransaction trans);
+        TaskViewEntity GetTaskView(IDbConnection conn, string appInstanceID, string processID, string userID, IDbTransaction trans);
         IList<TaskViewEntity> GetRunningTasks(TaskQuery query);
         IList<TaskViewEntity> GetReadyTasks(TaskQuery query);
         IList<TaskViewEntity> GetCompletedTasks(TaskQuery query);
@@ -203,26 +203,27 @@ namespace Slickflow.Engine.Service
         ActivityInstanceEntity GetActivityInstance(int activityInstanceID);
 
         ProcessEntity GetProcessByID(int processID);
-        ProcessEntity GetProcessUsing(string processGUID);
-        ProcessEntity GetProcessByVersion(string processGUID, string version);
+        ProcessEntity GetProcessUsing(string processID);
+        ProcessEntity GetProcessByVersion(string processID, string version);
         ProcessEntity GetProcessByName(string processName, string version = null);
         ProcessEntity GetProcessByCode(string processCode, string version = null);
         IList<ProcessEntity> GetProcessList();
         IList<ProcessEntity> GetProcessListSimple();
 
-        ProcessFileEntity GetProcessFile(string processGUID, string version);
+        ProcessFileEntity GetProcessFile(string processID, string version);
         ProcessFileEntity GetProcessFileByID(int id);
         void SaveProcessFile(ProcessFileEntity entity);
 
         int CreateProcess(ProcessEntity entity);
         int CreateProcessVersion(ProcessEntity entity);
+        ProcessFileEntity CreateProcessByXML(string xmlContent);
         int InsertProcess(ProcessEntity entity);
         void UpdateProcess(ProcessEntity entity);
-        void UpdateProcessUsingState(string processGUID, string version, byte usingState);
-        void UpgradeProcess(string processGUID, string version, string newVersion);
-        void DeleteProcess(string processGUID, string version);
-		void DeleteProcess(string processGUID);
-        bool DeleteInstanceInt(string processGUID, string version);
+        void UpdateProcessUsingState(string processID, string version, byte usingState);
+        void UpgradeProcess(string processID, string version, string newVersion);
+        void DeleteProcess(string processID, string version);
+		void DeleteProcess(string processID);
+        bool DeleteInstanceInt(string processID, string version);
         void ImportProcess(string xmlContent);
         ProcessValidateResult ValidateProcess(ProcessEntity processValidateEntity);
         
@@ -230,8 +231,8 @@ namespace Slickflow.Engine.Service
         //角色资源接口
         //Role Resource Interfaces
         IList<Role> GetRoleAll();
-        IList<Role> GetRoleByProcess(string processGUID, string version);
-        IList<Role> GetRoleUserListByProcess(string processGUId, string version);
+        IList<Role> GetRoleByProcess(string processID, string version);
+        IList<Role> GetRoleUserListByProcess(string processID, string version);
         IList<User> GetUserAll();
         IList<User> GetUserListByRole(string roleID);
         PerformerList GetPerformerList(NodeView nextNode);
@@ -248,14 +249,14 @@ namespace Slickflow.Engine.Service
         IWorkflowService CreateRunner(WfAppRunner runner);
         IWorkflowService CreateRunner(string userID, string UserName);
         IWorkflowService UseApp(string appInstanceID, string appName, string appCode = null);
-        IWorkflowService UseProcess(string processCodeOrProcessGUID, string version = null);
+        IWorkflowService UseProcess(string processCodeOrProcessID, string version = null);
         IWorkflowService IfCondition(IDictionary<string, string> conditions);
         IWorkflowService IfCondition(string name, string value);
         IWorkflowService OnTask(int taskID);
         IWorkflowService SetVariable(string name, string value);
         IWorkflowService SetVariable(IDictionary<string, string> variables);
         IWorkflowService Subscribe(EventFireTypeEnum eventType, Func<DelegateContext, IDelegateService, Boolean> func);
-        IWorkflowService NextStep(string activityGUID, PerformerList performerList);
+        IWorkflowService NextStep(string activityID, PerformerList performerList);
         IWorkflowService NextStep(IDictionary<string, PerformerList> nextActivityPerformers);
         IWorkflowService NextStepInt(string userID, string userName);
         IWorkflowService NextStepInt(PerformerList performerList);
@@ -290,3 +291,4 @@ namespace Slickflow.Engine.Service
         #endregion
     }
 }
+;

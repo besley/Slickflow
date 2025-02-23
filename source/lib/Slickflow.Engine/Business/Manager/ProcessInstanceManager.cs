@@ -30,17 +30,13 @@ namespace Slickflow.Engine.Business.Manager
         /// Get the current running process instance latest
         /// 获取当前运行的流程实例
         /// </summary>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <param name="version"></param>
-        /// <returns></returns>
         internal ProcessInstanceEntity GetProcessInstanceLatest(String appInstanceID,
-           String processGUID,
+           String processID,
            String version)
         {
             using (var session = SessionFactory.CreateSession())
             {
-                return GetProcessInstanceCurrent(session.Connection, appInstanceID, processGUID, version, session.Transaction);
+                return GetProcessInstanceCurrent(session.Connection, appInstanceID, processID, version, session.Transaction);
             }
         }
 
@@ -48,19 +44,13 @@ namespace Slickflow.Engine.Business.Manager
         /// Get the current running process instance latest
         /// 获取当前运行的流程实例
         /// </summary>
-        /// <param name="conn"></param>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <param name="version"></param>
-        /// <param name="trans"></param>
-        /// <returns></returns>
         internal ProcessInstanceEntity GetProcessInstanceLatest(IDbConnection conn,
            String appInstanceID,
-           String processGUID,
+           String processID,
            String version,
            IDbTransaction trans)
         {
-            return GetProcessInstanceCurrent(conn, appInstanceID, processGUID, version, trans);
+            return GetProcessInstanceCurrent(conn, appInstanceID, processID, version, trans);
         }
 
         /// <summary>
@@ -91,22 +81,19 @@ namespace Slickflow.Engine.Business.Manager
         /// Obtain process instance data by Version
         /// 根据版本获取流程实例
         /// </summary>
-        /// <param name="processGUID"></param>
-        /// <param name="version"></param>
-        /// <returns></returns>
-        private ProcessInstanceEntity GetByVersion(string processGUID, 
+        private ProcessInstanceEntity GetByVersion(string processID, 
             string version)
         {
             var sql = @"SELECT 
                             * 
                         FROM WfProcessInstance
-                        WHERE ProcessGUID=@processGUID
+                        WHERE ProcessID=@processID
                             AND Version=@version
                         ORDER BY ID DESC";
             var list = Repository.Query<ProcessInstanceEntity>(sql,
                     new
                     {
-                        processGUID = processGUID,
+                        processID = processID,
                         version = version
                     }).ToList();
             var entity = EnumHelper.GetFirst<ProcessInstanceEntity>(list);
@@ -141,7 +128,7 @@ namespace Slickflow.Engine.Business.Manager
         {
             var isSub = false;
             if (entity.InvokedActivityInstanceID > 0 
-                && !string.IsNullOrEmpty(entity.InvokedActivityGUID))
+                && !string.IsNullOrEmpty(entity.InvokedActivityID))
             {
                 isSub = true;
             }
@@ -183,17 +170,13 @@ namespace Slickflow.Engine.Business.Manager
         /// Get the current process running instance
         /// 获取当前的流程运行实例
         /// </summary>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <param name="version"></param>
-        /// <returns></returns>
         internal ProcessInstanceEntity GetProcessInstanceCurrent(String appInstanceID,
-            String processGUID,
+            String processID,
             String version)
         {
             using (var session = SessionFactory.CreateSession())
             {
-                return GetProcessInstanceCurrent(session.Connection, appInstanceID, processGUID, version, session.Transaction);
+                return GetProcessInstanceCurrent(session.Connection, appInstanceID, processID, version, session.Transaction);
             }
         }
 
@@ -201,20 +184,14 @@ namespace Slickflow.Engine.Business.Manager
         /// Get the current process running instance
         /// 获取当前的流程运行实例
         /// </summary>
-        /// <param name="conn"></param>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <param name="version"></param>
-        /// <param name="trans"></param>
-        /// <returns></returns>
         internal ProcessInstanceEntity GetProcessInstanceCurrent(IDbConnection conn,
             String appInstanceID,
-            String processGUID,
+            String processID,
             String version,
             IDbTransaction trans)
         {
             ProcessInstanceEntity entity = null;
-            var processInstanceList = GetProcessInstance(conn, appInstanceID, processGUID, version, trans).ToList();
+            var processInstanceList = GetProcessInstance(conn, appInstanceID, processID, version, trans).ToList();
             if (processInstanceList != null && processInstanceList.Count > 0)
             {
                 entity = processInstanceList[0];
@@ -226,7 +203,7 @@ namespace Slickflow.Engine.Business.Manager
         /// Query process instances based on application instance IDs
         /// Explanation: The appInstanceID here only determines uniqueness if it is of type UUID. Otherwise, ProcessUID is added to determine uniqueness
         /// 根据应用实例ID查询流程实例
-        /// 说明：此处appInstanceID 只有GUID类型，才确定唯一性，否则就加入ProcessGUID来确定唯一性
+        /// 说明：此处appInstanceID 只有GUID类型，才确定唯一性，否则就加入ProcessID来确定唯一性
         /// </summary>
         /// <param name="appInstanceID"></param>
         /// <returns></returns>
@@ -252,15 +229,9 @@ namespace Slickflow.Engine.Business.Manager
         /// Query process instance
         /// 查询流程实例
         /// </summary>
-        /// <param name="conn"></param>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <param name="version"></param>
-        /// <param name="trans"></param>
-        /// <returns></returns>
         internal IEnumerable<ProcessInstanceEntity> GetProcessInstance(IDbConnection conn,
             String appInstanceID,
-            String processGUID,
+            String processID,
             String version,
             IDbTransaction trans)
         {
@@ -268,7 +239,7 @@ namespace Slickflow.Engine.Business.Manager
                             * 
                         FROM WfProcessInstance 
                         WHERE AppInstanceID=@appInstanceID 
-                            AND ProcessGUID=@processGUID 
+                            AND ProcessID=@processID 
                             AND Version=@version 
                             AND RecordStatusInvalid = 0
                         ORDER BY CreatedDateTime DESC";
@@ -277,7 +248,7 @@ namespace Slickflow.Engine.Business.Manager
                         new
                         {
                             appInstanceID = appInstanceID,
-                            processGUID = processGUID,
+                            processID = processID,
                             version= version
                         },
                         trans);
@@ -288,24 +259,18 @@ namespace Slickflow.Engine.Business.Manager
         /// Obtain sub process data
         /// 获取子流程数据
         /// </summary>
-        /// <param name="conn"></param>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <param name="subProcessGUID"></param>
-        /// <param name="trans"></param>
-        /// <returns></returns>
         internal ProcessInstanceEntity GetSubProcessInstance(IDbConnection conn,
             String appInstanceID,
-            String processGUID,
-            String subProcessGUID,
+            String processID,
+            String subProcessID,
             IDbTransaction trans)
         {
             var sql = @"SELECT 
                             * 
                         FROM WfProcessInstance 
                         WHERE AppInstanceID=@appInstanceID 
-                            AND ProcessGUID=@processGUID 
-                            AND SubProcessGUID=@subProcessGUID 
+                            AND ProcessID=@processID 
+                            AND SubProcessID=@subProcessID 
                             AND RecordStatusInvalid = 0
                         ORDER BY CreatedDateTime DESC";
             var list = Repository.Query<ProcessInstanceEntity>(conn,
@@ -313,8 +278,8 @@ namespace Slickflow.Engine.Business.Manager
                         new
                         {
                             appInstanceID = appInstanceID,
-                            processGUID = processGUID,
-                            subProcessGUID = subProcessGUID
+                            processID = processID,
+                            subProcessID = subProcessID
                         },
                         trans).ToList();
             if (list.Count() == 1)
@@ -335,17 +300,14 @@ namespace Slickflow.Engine.Business.Manager
         /// Get process instances in running state
         /// 获取处于运行状态的流程实例
         /// </summary>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <returns></returns>
         internal ProcessInstanceEntity GetRunningProcessInstance(string appInstanceID,
-            string processGUID)
+            string processID)
         {
             var sql = @"SELECT 
                             * 
                         FROM WfProcessInstance
                         WHERE AppInstanceID=@appInstanceID 
-                            AND ProcessGUID=@processGUID 
+                            AND ProcessID=@processID 
                             AND RecordStatusInvalid=0
                             AND (ProcessState=1 OR ProcessState=2)
                         ORDER BY CreatedDateTime DESC";
@@ -355,7 +317,7 @@ namespace Slickflow.Engine.Business.Manager
                     new
                     {
                         appInstanceID = appInstanceID,
-                        processGUID = processGUID
+                        processID = processID
                     }).ToList();
             var entity = EnumHelper.GetFirst<ProcessInstanceEntity>(list);
             return entity;
@@ -365,18 +327,15 @@ namespace Slickflow.Engine.Business.Manager
         /// Obtain the number of process instances
         /// 获取流程实例的数目
         /// </summary>
-        /// <param name="processGUID"></param>
-        /// <param name="version"></param>
-        /// <returns></returns>
-        internal Int32 GetProcessInstanceCount(string processGUID, string version)
+        internal Int32 GetProcessInstanceCount(string processID, string version)
         {
             var sql = @"SELECT 
                             * 
                         FROM WfProcessInstance
-                        WHERE ProcessGUID=@processGUID
+                        WHERE ProcessID=@processID
                             AND Version=@version";
             var parameters = new DynamicParameters();
-            parameters.Add("@processGUID", processGUID);
+            parameters.Add("@processID", processID);
             parameters.Add("@version", version);
             var count = Repository.Count(sql, parameters);
             return count;
@@ -386,20 +345,15 @@ namespace Slickflow.Engine.Business.Manager
         /// Check if the sub process has ended
         /// 检查子流程是否结束
         /// </summary>
-        /// <param name="conn"></param>
-        /// <param name="activityInstanceID"></param>
-        /// <param name="activityGUID"></param>
-        /// <param name="trans"></param>
-        /// <returns></returns>
         internal bool CheckSubProcessInstanceCompleted(IDbConnection conn,
             int activityInstanceID,
-            String activityGUID,
+            String activityID,
             IDbTransaction trans)
         {
             bool isCompleted = false;
             var sql = @"SELECT * FROM WfProcessInstance
                                 WHERE InvokedActivityInstanceID=@invokedActivityInstanceID 
-                                    AND InvokedActivityGUID=@invokedActivityGUID 
+                                    AND InvokedActivityID=@invokedActivityID 
                                     AND RecordStatusInvalid=0
                                     AND ProcessState=4
                                 ORDER BY CreatedDateTime DESC";
@@ -409,7 +363,7 @@ namespace Slickflow.Engine.Business.Manager
                     new
                     {
                         invokedActivityInstanceID = activityInstanceID,
-                        invokedActivityGUID = activityGUID
+                        invokedActivityID = activityID
                     },
                     trans).ToList();
 
@@ -486,7 +440,7 @@ namespace Slickflow.Engine.Business.Manager
             SubProcessNode subProcessNode = null)
         {
             ProcessInstanceEntity entity = new ProcessInstanceEntity();
-            entity.ProcessGUID = processEntity.ProcessGUID;
+            entity.ProcessID = processEntity.ProcessID;
             entity.ProcessName = processEntity.ProcessName;
             entity.Version = processEntity.Version;
             entity.AppName = runner.AppName;
@@ -495,8 +449,8 @@ namespace Slickflow.Engine.Business.Manager
             entity.ProcessState = (int)ProcessStateEnum.Running;
             if (subProcessNode != null)
             {
-                entity.SubProcessGUID = subProcessNode.SubProcessGUID;
-                entity.InvokedActivityGUID = subProcessNode.ActivityInstance.ActivityGUID;
+                entity.SubProcessID = subProcessNode.SubProcessID;
+                entity.InvokedActivityID = subProcessNode.ActivityInstance.ActivityID;
                 entity.InvokedActivityInstanceID = subProcessNode.ActivityInstance.ID;
                 if (subProcessNode.SubProcessNested != null)
                 {
@@ -504,7 +458,7 @@ namespace Slickflow.Engine.Business.Manager
                     //内嵌子流程没有SubProcessID属性
                     //Embedded sub processes, the process instance records of sub processes are mainly saved based on the main process records
                     //The embedded subprocess does not have the SubProcessID attribute
-                    entity.ProcessGUID = subProcessNode.ActivityInstance.ProcessGUID;
+                    entity.ProcessID = subProcessNode.ActivityInstance.ProcessID;
                     entity.SubProcessType = (short)SubProcessTypeEnum.Nested;
                 }
                 else
@@ -512,7 +466,7 @@ namespace Slickflow.Engine.Business.Manager
                     //外部引用子流程在WfProcess表中有记录存在
                     //There are records of external reference subprocesses in the WfProcess table
                     entity.SubProcessType = (short)SubProcessTypeEnum.Referenced;
-                    entity.SubProcessID = subProcessNode.SubProcessID;
+                    entity.SubProcessDefID = subProcessNode.SubProcessDefID;
                 }
             }
             entity.CreatedByUserID = runner.UserID;
@@ -719,7 +673,7 @@ namespace Slickflow.Engine.Business.Manager
             try
             {
                 var entity = GetProcessInstanceLatest(runner.AppInstanceID, 
-                    runner.ProcessGUID,
+                    runner.ProcessID,
                     runner.Version);
 
                 if (entity == null || entity.ProcessState != (short)ProcessStateEnum.Running)
@@ -753,8 +707,6 @@ namespace Slickflow.Engine.Business.Manager
         /// Discard process instance
         /// 废弃单据下所有流程的信息
         /// </summary>
-        /// <param name="runner"></param>
-        /// <returns></returns>
         internal bool Discard(WfAppRunner runner)
         {
             var isDiscarded = false;
@@ -771,13 +723,13 @@ namespace Slickflow.Engine.Business.Manager
 			                         [LastUpdatedByUserID] = @userID,
 			                         [LastUpdatedByUserName] = @userName
 		                        WHERE AppInstanceID = @appInstanceID
-			                        AND ProcessGUID = @processGUID
+			                        AND ProcessID = @processID
                                     AND Version = @version";
                 int result = Repository.Execute(conn, 
                     updSql, 
                     new{
                         appInstanceID = runner.AppInstanceID,
-                        processGUID = runner.ProcessGUID,
+                        processID = runner.ProcessID,
                         version = runner.Version,
                         userID = runner.UserID,
                         userName = runner.UserName,
@@ -811,7 +763,7 @@ namespace Slickflow.Engine.Business.Manager
             try
             {
                 session.BeginTrans();
-                var entity = GetProcessInstanceLatest(session.Connection , runner.AppInstanceID, runner.ProcessGUID, runner.Version, session.Transaction);
+                var entity = GetProcessInstanceLatest(session.Connection , runner.AppInstanceID, runner.ProcessID, runner.Version, session.Transaction);
                 isTerminated = Terminate(session.Connection, entity, runner.UserID, runner.UserName, session.Transaction);
                 session.Commit();
             }
@@ -972,12 +924,12 @@ namespace Slickflow.Engine.Business.Manager
         /// Delete process instance
         /// 删除流程实例
         /// </summary>
-        /// <param name="processGUID"></param>
+        /// <param name="processID"></param>
         /// <param name="version"></param>
         /// <returns></returns>
-        internal bool Delete(string processGUID, string version)
+        internal bool Delete(string processID, string version)
         {
-            var entity = GetByVersion(processGUID, version);
+            var entity = GetByVersion(processID, version);
             if (entity != null)
             {
                 return Delete(entity.ID, true);

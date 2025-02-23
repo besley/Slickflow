@@ -30,6 +30,7 @@ import axios from 'axios'
 import $ from 'jquery'
 import { mapGetters } from 'vuex'
 import kmsgbox from '../../js/kmsgbox.js'
+import config from '../../config/index.js'
 
 export default {
   name: 'NextStepTree',
@@ -92,13 +93,13 @@ export default {
     getNextSteps (callback) {
       var task = this.task
       var query = {}
-      query.ProcessGUID = task.ProcessGUID
+      query.ProcessID = task.ProcessID
       query.Version = task.Version
       query.AppInstanceID = task.AppInstanceID
       query.TaskID = task.TaskID
       query.Conditions = this.conditions
 
-      axios.post('/webdemoapi/api/wf/GetNextStepInfo', query)
+      axios.post(config.WebApi.ApiUrl + '/api/wf/GetNextStepInfo', query)
         .then((response) => {
           var result = response.data
           if (result.Status === 1) {
@@ -119,9 +120,9 @@ export default {
       var root = { label: 'Next Step', children: [], type: 'root' }
       treeStepNodes.push(root)
       $.each(steps, function (index, step) {
-        var child = { label: step.ActivityName, id: step.ActivityGUID, children: [], type: 'activity' }
+        var child = { label: step.ActivityName, id: step.ActivityID, children: [], type: 'activity' }
         $.each(step.Users, function (index, user) {
-          var u = { label: user.UserName, id: user.UserID, activity: step.ActivityGUID, type: 'user' }
+          var u = { label: user.UserName, id: user.UserID, activity: step.ActivityID, type: 'user' }
           child.children.push(u)
         })
         root.children.push(child)
@@ -157,7 +158,7 @@ export default {
 
       var task = this.task
       var runner = {}
-      runner.ProcessGUID = task.ProcessGUID
+      runner.ProcessID = task.ProcessID
       runner.Version = task.Version
       runner.AppName = task.AppName
       runner.AppInstanceID = task.AppInstanceID
@@ -169,7 +170,7 @@ export default {
       runner.UserName = user.UserName
       runner.Conditions = this.conditions
 
-      axios.post('/webdemoapi/api/wf/RunProcess', runner)
+      axios.post(config.WebApi.ApiUrl + '/api/wf/RunProcess', runner)
         .then((response) => {
           var result = response.data
           if (result.Status === 1) {

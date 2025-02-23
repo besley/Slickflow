@@ -14,9 +14,9 @@ namespace Slickflow.Engine.Delegate
         #region Property, Abstract and Constructor
         private ActivityResource _activityResource = null;
         public string AppInstanceID { get; set; }
-        public string ProcessGUID { get; set; }
+        public string ProcessID { get; set; }
         public int ProcessInstanceID { get; set; }
-        public string ActivityGUID { get; set; }
+        public string ActivityID { get; set; }
         public string ActivityName { get; set; }
         public IDbSession Session { get; set; }
 
@@ -27,9 +27,9 @@ namespace Slickflow.Engine.Delegate
         {
             Session = session;
             AppInstanceID = context.AppInstanceID;
-            ProcessGUID = context.ProcessGUID;
+            ProcessID = context.ProcessID;
             ProcessInstanceID = context.ProcessInstanceID;
-            ActivityGUID = context.ActivityGUID;
+            ActivityID = context.ActivityID;
             ActivityName = context.ActivityName;
         }
         #endregion
@@ -103,7 +103,7 @@ namespace Slickflow.Engine.Delegate
                 {
                     VariableType = ProcessVariableTypeEnum.Process.ToString(),
                     AppInstanceID = this.AppInstanceID,
-                    ProcessGUID = this.ProcessGUID,
+                    ProcessID = this.ProcessID,
                     ProcessInstanceID = this.ProcessInstanceID,
                     Name = name,
                     Value = value,
@@ -116,9 +116,9 @@ namespace Slickflow.Engine.Delegate
                 {
                     VariableType = ProcessVariableTypeEnum.Activity.ToString(),
                     AppInstanceID = this.AppInstanceID,
-                    ProcessGUID = this.ProcessGUID,
+                    ProcessID = this.ProcessID,
                     ProcessInstanceID = this.ProcessInstanceID,
-                    ActivityGUID = this.ActivityGUID,
+                    ActivityID = this.ActivityID,
                     ActivityName = this.ActivityName,
                     Name = name,
                     Value = value,
@@ -157,7 +157,7 @@ namespace Slickflow.Engine.Delegate
                 {
                     VariableType = ProcessVariableTypeEnum.Activity,
                     ProcessInstanceID = this.ProcessInstanceID,
-                    ActivityGUID = this.ActivityGUID,
+                    ActivityID = this.ActivityID,
                     Name = name
                 };
                 value = pvm.GetVariableValue(Session.Connection, query, Session.Transaction);

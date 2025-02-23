@@ -48,21 +48,20 @@
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
-    "@bpmn-io/properties-panel": "^1.1.0",
+    "@bpmn-io/properties-panel": "^2.0.0",
     "@popperjs/core": "^2.11.5",
     "ag-grid-community": "^33.0.2",
     "bootstrap": "^4.5.0",
     "bootstrap-icons": "^1.8.1",
     "bootstrap5-dialog": "^5.0.1",
-    "bpmn-js": "^9.0.3",
-    "bpmn-js-properties-panel": "^1.0.0-alpha.5",
+    "bpmn-auto-layout": "^1.0.0",
+    "bpmn-js": "^17.1.1",
+    "bpmn-js-properties-panel": "^2.0.0",
     "codemirror": "^5.65.3",
     "cron-expression-input": "^1.2.7",
     "fine-uploader": "^5.16.2",
     "jquery": "^3.5.1",
     "min-dash": "^3.7.0",
-    "uuid": "^8.3.2",
-    "vue": "^3.2.38",
-    "vue-cron-editor-buefy": "^0.2.17"
+    "uuid": "^8.3.2"
   }
 }

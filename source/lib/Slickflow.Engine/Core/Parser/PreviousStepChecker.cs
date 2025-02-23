@@ -84,7 +84,7 @@ namespace Slickflow.Engine.Core.Parser
                     {
                         //并行会签节点读取所有完成的子节点
                         //Parallel row signing node reads all completed child nodes
-                        var activityInstanceList = aim.GetPreviousParallelMultipleInstanceListCompleted(runningNode, activity.ActivityGUID);
+                        var activityInstanceList = aim.GetPreviousParallelMultipleInstanceListCompleted(runningNode, activity.ActivityID);
                         foreach (var ai in activityInstanceList)
                         {
                             AppendNodeViewList(nodeList, activity, ai.EndedByUserID, ai.EndedByUserName);
@@ -94,11 +94,11 @@ namespace Slickflow.Engine.Core.Parser
                     {
                         //是两个不同节点之间的退回处理，取前一节点的最后一个完成的多实例节点
                         //It is a return process between two different nodes, taking the last completed multi instance node from the previous node
-                        if (activity.ActivityGUID != runningNode.ActivityGUID)
+                        if (activity.ActivityID != runningNode.ActivityID)
                         {
                             //退回到会签节点的最后一步
                             //Return to the final step of the co signing node
-                            var activityInstance = aim.GetPreviousActivityInstanceSimple(runningNode, activity.ActivityGUID);
+                            var activityInstance = aim.GetPreviousActivityInstanceSimple(runningNode, activity.ActivityID);
                             if (activityInstance != null)
                             {
                                 AppendNodeViewList(nodeList, activity, activityInstance.EndedByUserID, activityInstance.EndedByUserName);
@@ -127,7 +127,7 @@ namespace Slickflow.Engine.Core.Parser
                     {
                         //跨越网关类型
                         //Cross gateway type
-                        var activityInstanceList = aim.GetActivityInstanceListCompletedSimple(runningNode.ProcessInstanceID, activity.ActivityGUID);
+                        var activityInstanceList = aim.GetActivityInstanceListCompletedSimple(runningNode.ProcessInstanceID, activity.ActivityID);
                         foreach (var a in activityInstanceList)
                         {
                             AppendNodeViewList(nodeList, activity, a.EndedByUserID, a.EndedByUserName);
@@ -137,7 +137,7 @@ namespace Slickflow.Engine.Core.Parser
                     {
                         //普通任务节点
                         //Normal task node
-                        var activityInstance = aim.GetPreviousActivityInstanceSimple(runningNode, activity.ActivityGUID);
+                        var activityInstance = aim.GetPreviousActivityInstanceSimple(runningNode, activity.ActivityID);
                         if (activityInstance != null)
                         {
                             AppendNodeViewList(nodeList, activity, activityInstance.EndedByUserID, activityInstance.EndedByUserName);
@@ -164,14 +164,14 @@ namespace Slickflow.Engine.Core.Parser
             NodeView nodeView = null;
             if (nodeList.Count > 0)
             {
-                nodeView = nodeList.FirstOrDefault(n => n.ActivityGUID == activity.ActivityGUID);
+                nodeView = nodeList.FirstOrDefault(n => n.ActivityID == activity.ActivityID);
             }
             
             if (nodeView == null)
             {
                 nodeView = new NodeView
                 {
-                    ActivityGUID = activity.ActivityGUID,
+                    ActivityID = activity.ActivityID,
                     ActivityName = activity.ActivityName,
                     ActivityCode = activity.ActivityCode,
                     ActivityUrl = activity.ActivityUrl,
@@ -275,13 +275,13 @@ namespace Slickflow.Engine.Core.Parser
                 var entity = GetPreviousOfMultipleInstanceNode(runningNode.MIHostActivityInstanceID.Value,
                     runningNode.ID,
                     runningNode.CompleteOrder.Value);
-                var activity = processModel.GetActivity(entity.ActivityGUID);
+                var activity = processModel.GetActivity(entity.ActivityID);
 
                 activityList.Add(activity);
             }
             else
             {
-                activityList = processModel.GetPreviousActivityList(runningNode.ActivityGUID, out hasGatewayPassed);
+                activityList = processModel.GetPreviousActivityList(runningNode.ActivityID, out hasGatewayPassed);
             }
             return activityList;
         }
@@ -331,7 +331,7 @@ namespace Slickflow.Engine.Core.Parser
             hasPassedGatewayNode = false;
             var tim = new TransitionInstanceManager();
             var transitionList = tim.GetTransitionInstanceList(runningNode.AppInstanceID,
-                runningNode.ProcessGUID,
+                runningNode.ProcessID,
                 runningNode.ProcessInstanceID).ToList();
 
             var backSrcActivityInstanceId = 0;

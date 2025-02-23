@@ -275,19 +275,12 @@
             Get Activity Instance Latest
             获取活动节点实例
             </summary>
-            <param name="processInstanceID"></param>
-            <param name="activityGUID"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.GetActivityInstanceLatest(System.Int32,System.String,Slickflow.Data.IDbSession)">
             <summary>
             Get Activity Instance Latest
             获取最近的节点实例
             </summary>
-            <param name="processInstanceID"></param>
-            <param name="activityGUID"></param>
-            <param name="session"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.GetActivityInstanceLatest(System.String,System.String,System.String)">
             <summary>
@@ -295,8 +288,8 @@
             获取最近的节点实例
             </summary>
             <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <param name="activityGUID"></param>
+            <param name="processID"></param>
+            <param name="activityID"></param>
             <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.GetActivityInstanceList(System.String,System.String,System.String)">
@@ -304,9 +297,9 @@
             Get Activity Instance List Latest
             获取最近的节点实例
             </summary>
-            <param name="processGUID"></param>
+            <param name="processID"></param>
             <param name="version"></param>
-            <param name="activityGUID"></param>
+            <param name="activityID"></param>
             <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.GetActivityRunning(System.Int32,System.String,Slickflow.Data.IDbSession)">
@@ -314,21 +307,12 @@
             Get activity instances with running status
             获取运行状态的活动实例
             </summary>
-            <param name="activityGUID"></param>
-            <param name="processInstanceID"></param>
-            <param name="session"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.GetActivityByState(System.Int32,System.String,Slickflow.Engine.Common.ActivityStateEnum,Slickflow.Data.IDbSession)">
             <summary>
             Obtain activity instances based on states
             根据状态获取活动实例
             </summary>
-            <param name="processInstanceID"></param>
-            <param name="activityGUID"></param>
-            <param name="activityState"></param>
-            <param name="session"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.GetActivityInstanceListCompleted(System.String,System.String)">
             <summary>
@@ -336,7 +320,7 @@
             获取已经运行完成的节点
             </summary>
             <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
+            <param name="processID"></param>
             <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.GetPreviousActivityInstanceSimple(Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String)">
@@ -344,38 +328,24 @@
             Obtain instances of activities that have already been completed in the previous step
             获取上一步已经完成活动的实例
             </summary>
-            <param name="runningNode"></param>
-            <param name="previousActivityGUID"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.GetPreviousActivityInstanceSimple(Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Data.IDbSession)">
             <summary>
             Obtain instances of activities that have already been completed in the previous step
             获取上一步已经完成活动的实例
             </summary>
-            <param name="runningNode"></param>
-            <param name="previousActivityGUID">previous activity guid</param>
-            <param name="session"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.GetActivityInstanceListCompletedSimple(System.Int32,System.String)">
             <summary>
             Obtain activity instances with completion status
             获取完成状态的活动实例
             </summary>
-            <param name="processInstanceID"></param>
-            <param name="activityGUID"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.GetActivityInstanceListCompletedSimple(System.Int32,System.String,Slickflow.Data.IDbSession)">
             <summary>
             Obtain activity instances with completion status
             获取完成状态的活动实例
             </summary>
-            <param name="processInstanceID"></param>
-            <param name="activityGUID"></param>
-            <param name="session"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.GetByTask(System.Int32,Slickflow.Data.IDbSession)">
             <summary>
@@ -399,10 +369,6 @@
             Get the activity nodes running in the process instance
             获取流程实例中运行的活动节点
             </summary>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <param name="version"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.GetRunningActivityInstanceList(System.String,System.String,System.String,Slickflow.Data.IDbSession)">
             <summary>
@@ -410,7 +376,7 @@
             获取流程实例中运行的活动节点
             </summary>
             <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
+            <param name="processID"></param>
             <param name="version"></param>
             <param name="session"></param>
             <returns></returns>
@@ -437,19 +403,12 @@
             Retrieve completed multi instance nodes
             获取已经完成的多实例子节点
             </summary>
-            <param name="runningNode"></param>
-            <param name="previousActivityGUID"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.GetPreviousParallelMultipleInstanceListCompleted(Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Data.IDbSession)">
             <summary>
             Retrieve completed multi instance nodes
             获取已经完成的多实例子节点
             </summary>
-            <param name="runningNode"></param>
-            <param name="previousActivityGUID"></param>
-            <param name="session"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.IsAssignedUserInActivityInstance(Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.Int32)">
             <summary>
@@ -515,11 +474,6 @@
             Query the number of branch instances
             查询分支实例的个数
             </summary>
-            <param name="splitActivityGUID"></param>
-            <param name="splitActivityInstanceID"></param>
-            <param name="processInstanceID"></param>
-            <param name="session"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.GetValidSplitedActivityInstanceList(System.Int32,System.Int32,Slickflow.Data.IDbSession)">
             <summary>
@@ -558,7 +512,7 @@
             <param name="appName"></param>
             <param name="appInstanceID"></param>
             <param name="appInstanceCode"></param>
-            <param name="processGUID"></param>
+            <param name="processID"></param>
             <param name="processInstanceID"></param>
             <param name="activity"></param>
             <param name="runner"></param>
@@ -588,17 +542,6 @@
             Create an object for the activity instance
             创建活动实例的对象
             </summary>
-            <param name="appName"></param>
-            <param name="appInstanceID"></param>
-            <param name="appInstanceCode"></param>
-            <param name="processInstanceID"></param>
-            <param name="processGUID"></param>
-            <param name="activity"></param>
-            <param name="backwardType"></param>
-            <param name="backSrcActivityInstanceID"></param>
-            <param name="backOrgActivityInstanceID"></param>
-            <param name="runner"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.IncreaseTokensHad(System.Int32,Slickflow.Engine.Common.WfAppRunner,Slickflow.Data.IDbSession)">
             <summary>
@@ -688,9 +631,6 @@
             Update the activities in the activity to block status
             更新活动里面的活动为阻止状态
             </summary>
-            <param name="processInstanceID"></param>
-            <param name="taskActivityList"></param>
-            <param name="session"></param>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ActivityInstanceManager.Insert(Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Data.IDbSession)">
             <summary>
@@ -901,22 +841,12 @@
             Get the current running process instance latest
             获取当前运行的流程实例
             </summary>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <param name="version"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetProcessInstanceLatest(System.Data.IDbConnection,System.String,System.String,System.String,System.Data.IDbTransaction)">
             <summary>
             Get the current running process instance latest
             获取当前运行的流程实例
             </summary>
-            <param name="conn"></param>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <param name="version"></param>
-            <param name="trans"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetById(System.Int32)">
             <summary>
@@ -941,9 +871,6 @@
             Obtain process instance data by Version
             根据版本获取流程实例
             </summary>
-            <param name="processGUID"></param>
-            <param name="version"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetByActivity(System.Data.IDbConnection,System.Int32,System.Data.IDbTransaction)">
             <summary>
@@ -986,29 +913,19 @@
             Get the current process running instance
             获取当前的流程运行实例
             </summary>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <param name="version"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetProcessInstanceCurrent(System.Data.IDbConnection,System.String,System.String,System.String,System.Data.IDbTransaction)">
             <summary>
             Get the current process running instance
             获取当前的流程运行实例
             </summary>
-            <param name="conn"></param>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <param name="version"></param>
-            <param name="trans"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetProcessInstance(System.String)">
             <summary>
             Query process instances based on application instance IDs
             Explanation: The appInstanceID here only determines uniqueness if it is of type UUID. Otherwise, ProcessUID is added to determine uniqueness
             根据应用实例ID查询流程实例
-            说明：此处appInstanceID 只有GUID类型，才确定唯一性，否则就加入ProcessGUID来确定唯一性
+            说明：此处appInstanceID 只有GUID类型，才确定唯一性，否则就加入ProcessID来确定唯一性
             </summary>
             <param name="appInstanceID"></param>
             <returns></returns>
@@ -1018,53 +935,30 @@
             Query process instance
             查询流程实例
             </summary>
-            <param name="conn"></param>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <param name="version"></param>
-            <param name="trans"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetSubProcessInstance(System.Data.IDbConnection,System.String,System.String,System.String,System.Data.IDbTransaction)">
             <summary>
             Obtain sub process data
             获取子流程数据
             </summary>
-            <param name="conn"></param>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <param name="subProcessGUID"></param>
-            <param name="trans"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetRunningProcessInstance(System.String,System.String)">
             <summary>
             Get process instances in running state
             获取处于运行状态的流程实例
             </summary>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.GetProcessInstanceCount(System.String,System.String)">
             <summary>
             Obtain the number of process instances
             获取流程实例的数目
             </summary>
-            <param name="processGUID"></param>
-            <param name="version"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.CheckSubProcessInstanceCompleted(System.Data.IDbConnection,System.Int32,System.String,System.Data.IDbTransaction)">
             <summary>
             Check if the sub process has ended
             检查子流程是否结束
             </summary>
-            <param name="conn"></param>
-            <param name="activityInstanceID"></param>
-            <param name="activityGUID"></param>
-            <param name="trans"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.Insert(System.Data.IDbConnection,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.Data.IDbTransaction)">
             <summary>
@@ -1179,8 +1073,6 @@
             Discard process instance
             废弃单据下所有流程的信息
             </summary>
-            <param name="runner"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessInstanceManager.Terminate(Slickflow.Engine.Common.WfAppRunner)">
             <summary>
@@ -1229,7 +1121,7 @@
             Delete process instance
             删除流程实例
             </summary>
-            <param name="processGUID"></param>
+            <param name="processID"></param>
             <param name="version"></param>
             <returns></returns>
         </member>
@@ -1259,49 +1151,31 @@
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetByVersion(System.String,System.String,System.Boolean)">
             <summary>
-            Obtain the process based on the processGUID and version number
+            Obtain the process based on the processID and version number
             Notes: throwException means whether to throw an exception if the query cannot be found
             根据流程GUID和版本标识获取流程
             说明:throwException 为如果查询不到，是否抛出异常
             </summary>
-            <param name="processGUID"></param>
-            <param name="version"></param>
-            <param name="throwException"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetByVersion(System.Data.IDbConnection,System.String,System.String,System.Boolean,System.Data.IDbTransaction)">
             <summary>
-            Obtain the process based on the processGUID and version number
+            Obtain the process based on the processID and version number
             Notes: throwException means whether to throw an exception if the query cannot be found
             根据流程GUID和版本标识获取流程
             说明:throwException 为如果查询不到，是否抛出异常
             </summary>
-            <param name="conn"></param>
-            <param name="processGUID"></param>
-            <param name="version"></param>
-            <param name="throwException"></param>
-            <param name="trans"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetVersionUsing(System.String,System.Boolean)">
             <summary>
             Get the current version of the process being used
             获取当前使用的流程版本
             </summary>
-            <param name="processGUID"></param>
-            <param name="isNotThrownException"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetVersionUsing(System.Data.IDbConnection,System.String,System.Boolean,System.Data.IDbTransaction)">
             <summary>
             Get the current version of the process being used
             获取当前使用的流程版本
             </summary>
-            <param name="conn"></param>
-            <param name="processGUID"></param>
-            <param name="isNotThrownException"></param>
-            <param name="trans"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetByName(System.String,System.String)">
             <summary>
@@ -1327,7 +1201,7 @@
             按照版本获取流程记录
             </summary>
             <param name="conn"></param>
-            <param name="processGUID"></param>
+            <param name="processID"></param>
             <param name="version"></param>
             <param name="trans"></param>
             <returns></returns>
@@ -1400,19 +1274,12 @@
             Update process version IsUsing=0
             更新流程版本IsUsing=0
             </summary>
-            <param name="processGUID"></param>
-            <param name="version"></param>
-            <param name="usingState"></param>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.Upgrade(System.String,System.String,System.String)">
             <summary>
             Upgrade process version
             升级流程记录
             </summary>
-            <param name="processGUID"></param>
-            <param name="version"></param>
-            <param name="newVersion"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.UpgradePoolProcess(System.Data.IDbConnection,System.Int32,System.Int32,System.String,System.Data.IDbTransaction)">
             <summary>
@@ -1430,33 +1297,30 @@
             Delete process
             删除流程记录
             </summary>
-            <param name="processGUID"></param>
-            <param name="version"></param>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.Delete(System.Data.IDbConnection,System.String,System.Data.IDbTransaction)">
             <summary>
             Delete process
             删除流程记录
             </summary>
-            <param name="conn"></param>
-            <param name="processGUID"></param>
-            <param name="trans"></param>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.DeleteProcess(System.String,System.String)">
             <summary>
             Delete process
             删除流程记录
             </summary>
-            <param name="processGUID"></param>
-            <param name="version"></param>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.CreateProcess(Slickflow.Engine.Business.Entity.ProcessEntity)">
             <summary>
             Process XML file operation
             流程定义的创建方法
             </summary>
-            <param name="entity"></param>
-            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.CreateProcessByXML(System.String)">
+            <summary>
+            Create process by xml content
+            根据XML创建新流程
+            </summary>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.SaveProcessFile(Slickflow.Engine.Business.Entity.ProcessFileEntity)">
             <summary>
@@ -1486,8 +1350,6 @@
             Set process timer 
             更新流程定时器信息
             </summary>
-            <param name="processGUID"></param>
-            <param name="version"></param>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetPoolProcessList(System.Data.IDbConnection,System.Int32,System.Data.IDbTransaction)">
             <summary>
@@ -1504,8 +1366,6 @@
             Import XML document to generate process records
             导入XML文档生成流程记录
             </summary>
-            <param name="xmlContent"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.DeletePoolProcess(System.Data.IDbConnection,System.Int32,System.Collections.Generic.List{System.Int32},System.Data.IDbTransaction)">
             <summary>
@@ -1531,10 +1391,6 @@
             Read the content of the process XML file
             读取流程XML文件内容
             </summary>
-            <param name="processGUID"></param>
-            <param name="version"></param>
-            <param name="extStorage"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessManager.GetProcessFileByID(System.Int32,Slickflow.Engine.Business.Manager.IXPDLStorage)">
             <summary>
@@ -1559,10 +1415,6 @@
             Read xml content
             读取Xml文档
             </summary>
-            <param name="processGUID"></param>
-            <param name="version"></param>
-            <param name="extStorage"></param>
-            <returns></returns>
         </member>
         <member name="T:Slickflow.Engine.Business.Manager.ProcessVariableManager">
             <summary>
@@ -1620,8 +1472,6 @@
             Retrieve the list of process variables
             获取流程变量列表
             </summary>
-            <param name="processInstanceID"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessVariableManager.GetVariableEntity(Slickflow.Engine.Business.Entity.ProcessVariableQuery)">
             <summary>
@@ -1683,12 +1533,6 @@
             Query process variable
             流程变量查询
             </summary>
-            <param name="conn"></param>
-            <param name="processInstanceID"></param>
-            <param name="activityGUID"></param>
-            <param name="name"></param>
-            <param name="trans"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessVariableManager.GetVariableOfProcess(System.Data.IDbConnection,System.Int32,System.String,System.Data.IDbTransaction)">
             <summary>
@@ -1706,23 +1550,12 @@
             Query activity variable
             活动变量查询
             </summary>
-            <param name="conn"></param>
-            <param name="processInstanceID"></param>
-            <param name="activityGUID"></param>
-            <param name="name"></param>
-            <param name="trans"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.ProcessVariableManager.ValidateProcessVariable(System.Data.IDbConnection,System.Int32,System.String,System.Data.IDbTransaction)">
             <summary>
             Verify if the trigger expression satisfies
             验证触发表达式是否满足
             </summary>
-            <param name="conn"></param>
-            <param name="processInstanceID"></param>
-            <param name="expression"></param>
-            <param name="trans"></param>
-            <returns></returns>
         </member>
         <member name="T:Slickflow.Engine.Business.Manager.TaskManager">
             <summary>
@@ -1892,22 +1725,12 @@
             Based on the application instance and process UID, process the user ID to obtain the task list
             根据应用实例、流程GUID，办理用户Id获取任务列表
             </summary>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <param name="userID"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.TaskManager.GetTaskOfMine(System.Data.IDbConnection,System.String,System.String,System.String,System.Data.IDbTransaction)">
             <summary>
             Based on the application instance and process UID, process the user ID to obtain the task list
             根据应用实例、流程GUID，办理用户Id获取任务列表
             </summary>
-            <param name="conn"></param>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <param name="userID"></param>
-            <param name="trans"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.TaskManager.GetTaskOfMine(Slickflow.Engine.Common.WfAppRunner)">
             <summary>
@@ -1940,6 +1763,14 @@
             <summary>
             Determine if the task is in a running state
             判断任务处于运行状态
+            </summary>
+            <param name="task"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Business.Manager.TaskManager.CheckTaskStateInToDoState(Slickflow.Engine.Business.Entity.TaskViewEntity)">
+            <summary>
+            Determine if the task is in a todo state
+            判断任务处于待办或运行状态
             </summary>
             <param name="task"></param>
             <returns></returns>
@@ -2096,7 +1927,7 @@
             创建新的委托任务
             </summary>
             <param name="entity"></param>
-            <param name="cancalOriginalTask"></param>
+            <param name="cancelOriginalTask"></param>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.TaskManager.Replace(System.Int32,System.Collections.Generic.List{Slickflow.Engine.Business.Entity.TaskReplacedEntity},Slickflow.Engine.Common.WfAppRunner)">
             <summary>
@@ -2194,59 +2025,36 @@
             Get End transition Data
             获取结束转移数据
             </summary>
-            <param name="appName"></param>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.TransitionInstanceManager.GetLastTaskTransition(System.String,System.String,System.String)">
             <summary>
             Obtain the final transition entity data
             获取最后的转移实体数据
             </summary>
-            <param name="appName"></param>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.TransitionInstanceManager.GetWorkItemTransitonInstance(System.String,System.String)">
             <summary>
             Obtain a transition list of WorkItem type destination nodes
             获得去向节点是WorkItem类型的转移列表
             </summary>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.TransitionInstanceManager.GetTransitonInstance(System.String,System.String,Slickflow.Engine.Common.ActivityTypeEnum)">
             <summary>
             Select data transition based on destination node type
             根据去向节点类型选择转移数据
             </summary>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <param name="toActivityType"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.TransitionInstanceManager.GetTransitionInstanceList(System.String,System.String,System.String)">
             <summary>
             Obtain the list of transition data
             获取转移数据列表
             </summary>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <param name="version"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.TransitionInstanceManager.GetTransitionInstanceList(System.String,System.String,System.Int32)">
             <summary>
             Get transition list
             获取转移数据列表
             </summary>
-            <param name="appInstanceID"></param>
-            <param name="processGUID"></param>
-            <param name="processInstanceID"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Business.Manager.TransitionInstanceManager.GetTargetActivityInstanceList(System.Int32)">
             <summary>
@@ -2327,19 +2135,12 @@
             Obtain the list of performers handling the previous step
             获取上一步骤的办理人员列表
             </summary>
-            <param name="previousActivityPerformers"></param>
-            <param name="activityGUID"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Common.ActivityResource.CreateNextActivityPerformers(System.String,System.String,System.String)">
             <summary>、
             Create a list of next activity performers
             创建下一步活动执行者列表
             </summary>
-            <param name="activityGUID"></param>
-            <param name="userID"></param>
-            <param name="userName"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Common.ActivityResource.CreateNextActivityPerformers(System.Collections.Generic.IList{Slickflow.Engine.Common.NodeView},System.String,System.String)">
             <summary>
@@ -2356,27 +2157,18 @@
             Create a list of next activity performers
             创建下一步活动执行者列表
             </summary>
-            <param name="activityGUID"></param>
-            <param name="roleList"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Common.ActivityResource.CreateNextActivityPerformers(System.Collections.Generic.IDictionary{System.String,Slickflow.Engine.Common.PerformerList},System.String,System.Collections.Generic.IList{Slickflow.Module.Resource.Role})">
             <summary>
             Create a list of next activity performers
             创建下一步活动执行者列表
             </summary>
-            <param name="nextActivityPerformers"></param>
-            <param name="activityGUID"></param>
-            <param name="roleList"></param>
         </member>
         <member name="M:Slickflow.Engine.Common.ActivityResource.CreateNextActivityPerformers(System.String,Slickflow.Engine.Common.PerformerList)">
             <summary>
             Create a list of next activity performers
             创建下一步活动执行者列表
             </summary>
-            <param name="activityGUID"></param>
-            <param name="performerList"></param>
-            <returns></returns>
         </member>
         <member name="T:Slickflow.Engine.Common.ActivityStateEnum">
             <summary>
@@ -3012,9 +2804,9 @@
             Key value pair wrapper for Webapi
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Common.KeyValuePairWrapper.ActivityGUID">
+        <member name="P:Slickflow.Engine.Common.KeyValuePairWrapper.ActivityID">
             <summary>
-            ActivityGUID
+            ActivityID
             </summary>
         </member>
         <member name="P:Slickflow.Engine.Common.KeyValuePairWrapper.PerformerList">
@@ -3031,8 +2823,6 @@
             <summary>
             a convenience method which allows you to set the values while sorting
             </summary>
-            <param name="activityGUID"></param>
-            <param name="performerList"></param>
         </member>
         <member name="T:Slickflow.Engine.Common.LogEventType">
             <summary>
@@ -3190,10 +2980,6 @@
             Generate the next step performer list
             生成下一步人员列表
             </summary>
-            <param name="activityGUID"></param>
-            <param name="userID"></param>
-            <param name="userName"></param>
-            <returns></returns>
         </member>
         <member name="T:Slickflow.Engine.Common.NodeImage">
             <summary>
@@ -3284,10 +3070,10 @@
             工作流流转节点的视图对象
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Common.NodeView.ActivityGUID">
+        <member name="P:Slickflow.Engine.Common.NodeView.ActivityID">
             <summary>
-            ActivityGUID
-            活动节点GUID
+            ActivityID
+            活动节点ID
             </summary>
         </member>
         <member name="P:Slickflow.Engine.Common.NodeView.ActivityName">
@@ -3761,12 +3547,12 @@
             Sub Process Info
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Common.SubInfo.SubID">
+        <member name="P:Slickflow.Engine.Common.SubInfo.SubProcessDefID">
             <summary>
             Sub Process ID
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Common.SubInfo.SubProcessGUID">
+        <member name="P:Slickflow.Engine.Common.SubInfo.SubProcessID">
             <summary>
             Sub Process GUID
             </summary>
@@ -4012,7 +3798,7 @@
                 "UserName":"Long",
                 "AppName":"SamplePrice",
                 "AppInstanceID":"100",
-                "ProcessGUID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"
+                "ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"
             }
             流程执行人(业务应用的办理者)
             说明：WfAppRunner是流程流转参数的传递对象，传递引擎执行需要的业务数据、资源数据和流程定义数据等。
@@ -4036,7 +3822,7 @@
             业务数据：应用实例ID（比如单据票据代码）
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Common.WfAppRunner.ProcessGUID">
+        <member name="P:Slickflow.Engine.Common.WfAppRunner.ProcessID">
             <summary>
             Process data: Process GUID
             流程数据：流程GUID
@@ -4858,10 +4644,6 @@
             Add role users using process defined resources
             使用流程定义资源添加角色用户
             </summary>
-            <param name="mainActivityInstanceID"></param>
-            <param name="mainActivityGUID"></param>
-            <param name="session"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgCatch.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
             <summary>
@@ -4893,10 +4675,6 @@
             Add role users using process defined resources
             使用流程定义资源添加角色用户
             </summary>
-            <param name="mainActivityInstanceID"></param>
-            <param name="mainActivityGUID"></param>
-            <param name="session"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgThrow.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
             <summary>
@@ -5067,10 +4845,6 @@
             Add role users using process defined resources
             使用流程定义资源添加角色用户
             </summary>
-            <param name="mainActivityInstanceID"></param>
-            <param name="mainActivityGUID"></param>
-            <param name="session"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.Event.NodeMediatorEnd.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
             <summary>
@@ -5335,10 +5109,6 @@
             Add role users using process defined resources
             使用流程定义资源添加角色用户
             </summary>
-            <param name="mainActivityInstanceID"></param>
-            <param name="mainActivityGUID"></param>
-            <param name="session"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.Event.Timer.NodeMediatorEndTimer.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
             <summary>
@@ -7476,7 +7246,7 @@
             Coding Example：
             var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
                             .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-                            .UseProcess(runner.ProcessGUID, runner.Version)
+                            .UseProcess(runner.ProcessID, runner.Version)
                             .Start();
             </summary>
         </member>
@@ -7491,7 +7261,7 @@
             Coding Example：
             var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
                             .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-                            .UseProcess(runner.ProcessGUID, runner.Version)
+                            .UseProcess(runner.ProcessID, runner.Version)
                             .Start(conn, trans);
             </summary>
         </member>
@@ -7557,7 +7327,7 @@
             Coding example:
             var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
                             .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-                            .UseProcess(runner.ProcessGUID, runner.Version)
+                            .UseProcess(runner.ProcessID, runner.Version)
                             .Run();
             </summary>
         </member>
@@ -7567,7 +7337,7 @@
             Coding example:
             var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
                             .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-                            .UseProcess(runner.ProcessGUID, runner.Version)
+                            .UseProcess(runner.ProcessID, runner.Version)
                             .Run(conn, trans);
             </summary>
         </member>
@@ -8169,6 +7939,12 @@
             创建流程定义记录新版本
             </summary>
         </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.CreateProcessByXML(System.String)">
+            <summary>
+            Create process by xml content
+            根据XML创建新流程
+            </summary>
+        </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.UpdateProcess(Slickflow.Engine.Business.Entity.ProcessEntity)">
             <summary>
             Update process
@@ -8222,8 +7998,6 @@
             Reset Cachae
             重置缓存中的流程定义信息
             </summary>
-            <param name="processGUID">流程Guid编号</param>
-            <param name="version">流程版本</param>
         </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.GetProcessInstance(System.Int32)">
             <summary>
@@ -9285,20 +9059,11 @@
             <summary>
             Convert XmlNode to Activity Entity
             </summary>
-            <param name="xmlNode">Xml Node</param>
-            <param name="xnpmgr">XML namespace manager</param>
-            <param name="processGUID">ProcessGUID</param>
-            <returns>Activity Entity</returns>
         </member>
         <member name="M:Slickflow.Engine.Xpdl.ConvertHelper.ComnvertXmlFormNodeToFormEntity(System.Xml.XmlNode,System.Xml.XmlNamespaceManager,System.String)">
             <summary>
             Convert nodt to Form
             </summary>
-            <param name="xmlNode">Xml Node</param>
-            <param name="xnpmgr">XML namespace manager</param>
-            <param name="processGUID">ProcessGUID</param>
-            <returns>Form</returns>
-            <exception cref="T:Slickflow.Engine.Common.WfXpdlException"></exception>
         </member>
         <member name="T:Slickflow.Engine.Xpdl.ConvertorFactory">
             <summary>
@@ -9650,14 +9415,9 @@
             Activity
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.ID">
+        <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.ActivityID">
             <summary>
-            ID
-            </summary>
-        </member>
-        <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.ActivityGUID">
-            <summary>
-            ActivityGUID
+            ActivityID
             </summary>
         </member>
         <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.ActivityName">
@@ -9681,9 +9441,9 @@
             Description
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.ProcessGUID">
+        <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.ProcessID">
             <summary>
-            ProcessGUID
+            ProcessID
             </summary>
         </member>
         <member name="P:Slickflow.Engine.Xpdl.Entity.Activity.ActivityType">
@@ -10039,14 +9799,14 @@
             子流程节点
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Xpdl.Node.SubProcessNode.SubProcessID">
+        <member name="P:Slickflow.Engine.Xpdl.Node.SubProcessNode.SubProcessDefID">
             <summary>
             SubProcessID
             </summary>
         </member>
-        <member name="P:Slickflow.Engine.Xpdl.Node.SubProcessNode.SubProcessGUID">
+        <member name="P:Slickflow.Engine.Xpdl.Node.SubProcessNode.SubProcessID">
             <summary>
-            SubProcessGUID
+            SubProcessID
             </summary>
         </member>
         <member name="P:Slickflow.Engine.Xpdl.Node.SubProcessNode.SubVarName">
@@ -10063,7 +9823,7 @@
         </member>
         <member name="T:Slickflow.Engine.Xpdl.ProcessModelBPMN">
             <summary>
-            BPMN2 Process Model
+            BPMN Process Model
             </summary>
         </member>
         <member name="P:Slickflow.Engine.Xpdl.ProcessModelBPMN.Process">
@@ -10092,8 +9852,6 @@
             <summary>
             Get Activity
             </summary>
-            <param name="activityGUID"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Xpdl.ProcessModelBPMN.GetActivityList">
             <summary>
@@ -10106,9 +9864,6 @@
             Recursive traversal of predecessor nodes on transfer
             递归遍历转移上的前置节点
             </summary>
-            <param name="activityList"></param>
-            <param name="fromActivityGUID"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Xpdl.ProcessModelBPMN.GetAllTaskActivityList">
             <summary>

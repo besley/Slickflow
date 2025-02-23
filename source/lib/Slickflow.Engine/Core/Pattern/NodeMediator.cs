@@ -175,21 +175,21 @@ namespace Slickflow.Engine.Core.Pattern
             if (_delegateService == null)
             {
                 int? fromActivityInstanceID = null;
-                string fromActivityGUID = string.Empty;
+                string fromActivityID = string.Empty;
                 string fromActivityName = string.Empty;
                 if (IsNotNodeMediatorStart(this) == true)
                 {
                     fromActivityInstanceID = ActivityForwardContext.FromActivityInstance.ID;
-                    fromActivityGUID = ActivityForwardContext.FromActivityInstance.ActivityGUID;
+                    fromActivityID = ActivityForwardContext.FromActivityInstance.ActivityID;
                     fromActivityName = ActivityForwardContext.FromActivityInstance.ActivityName;
                 }
 
                 var delegateContext = new DelegateContext
                 {
                     AppInstanceID = ActivityForwardContext.ProcessInstance.AppInstanceID,
-                    ProcessGUID = ActivityForwardContext.ProcessInstance.ProcessGUID,
+                    ProcessID = ActivityForwardContext.ProcessInstance.ProcessID,
                     ProcessInstanceID = ActivityForwardContext.ProcessInstance.ID,
-                    ActivityGUID = fromActivityGUID,
+                    ActivityID = fromActivityID,
                     ActivityName = fromActivityName
                 };
                 _delegateService = DelegateServiceFactory.CreateDelegateService(DelegateScopeTypeEnum.Activity,
@@ -325,11 +325,11 @@ namespace Slickflow.Engine.Core.Pattern
                     //普通正常运行
                     //Normal running
                     var nextActivityMatchedResult = this.ActivityForwardContext.ProcessModel.GetNextActivityList(
-                        this.LinkContext.FromActivityInstance.ActivityGUID,
+                        this.LinkContext.FromActivityInstance.ActivityID,
                         ActivityForwardContext.TaskID,
                         activityResource.ConditionKeyValuePair,
                         activityResource,
-                        (a, b) => a.NextActivityPerformers.ContainsKey(b.ActivityGUID),
+                        (a, b) => a.NextActivityPerformers.ContainsKey(b.ActivityID),
                         session);
 
                     if (nextActivityMatchedResult.MatchedType != NextActivityMatchedType.Successed
@@ -392,7 +392,7 @@ namespace Slickflow.Engine.Core.Pattern
 
                             ICompleteGatewayAutomaticlly autoGateway = (ICompleteGatewayAutomaticlly)gatewayNodeMediator;
                             nodeExecutedResult = autoGateway.CompleteAutomaticlly(ActivityForwardContext.ProcessInstance,
-                                comp.Transition.TransitionGUID,
+                                comp.Transition.TransitionID,
                                 fromActivity,
                                 fromActivityInstance,
                                 ActivityForwardContext.ActivityResource.AppRunner,
@@ -465,7 +465,7 @@ namespace Slickflow.Engine.Core.Pattern
 
                         ICompleteAutomaticlly autoEvent = (ICompleteAutomaticlly)eventNodeMediator;
                         nodeExecutedResult = autoEvent.CompleteAutomaticlly(ActivityForwardContext.ProcessInstance,
-                            comp.Transition.TransitionGUID,
+                            comp.Transition.TransitionID,
                             fromActivity,
                             fromActivityInstance,
                             comp.Activity,
@@ -519,7 +519,7 @@ namespace Slickflow.Engine.Core.Pattern
                         taskNodeMediator.CreateActivityTaskTransitionInstance(comp.Activity,
                             ActivityForwardContext.ProcessInstance,
                             fromActivityInstance,
-                            comp.Transition.TransitionGUID,
+                            comp.Transition.TransitionID,
                             comp.Transition.DirectionType == TransitionDirectionTypeEnum.Loop ?
                                 TransitionTypeEnum.Loop : TransitionTypeEnum.Forward, 
                             isNotParsedForward == true ?
@@ -568,7 +568,7 @@ namespace Slickflow.Engine.Core.Pattern
 
                     ICompleteAutomaticlly autoEvent = (ICompleteAutomaticlly)serviceNodeMediator;
                     serviceExecutedResult = autoEvent.CompleteAutomaticlly(ActivityForwardContext.ProcessInstance,
-                        comp.Transition.TransitionGUID,
+                        comp.Transition.TransitionID,
                         fromActivity,
                         fromActivityInstance,
                         comp.Activity,
@@ -610,7 +610,7 @@ namespace Slickflow.Engine.Core.Pattern
 
                     ICompleteAutomaticlly autoEvent = (ICompleteAutomaticlly)scriptNodeMediator;
                     scriptExecutedResult = autoEvent.CompleteAutomaticlly(ActivityForwardContext.ProcessInstance,
-                        comp.Transition.TransitionGUID,
+                        comp.Transition.TransitionID,
                         fromActivity,
                         fromActivityInstance,
                         comp.Activity,
@@ -646,7 +646,7 @@ namespace Slickflow.Engine.Core.Pattern
                         mediatorMICreator.CreateActivityTaskTransitionInstance(comp.Activity,
                             ActivityForwardContext.ProcessInstance,
                             fromActivityInstance,
-                            comp.Transition.TransitionGUID,
+                            comp.Transition.TransitionID,
                             comp.Transition.DirectionType == TransitionDirectionTypeEnum.Loop ?
                                 TransitionTypeEnum.Loop : TransitionTypeEnum.Forward, 
                             isNotParsedForward == true ?
@@ -690,7 +690,7 @@ namespace Slickflow.Engine.Core.Pattern
                         subNodeMediator.CreateActivityTaskTransitionInstance(comp.Activity,
                             ActivityForwardContext.ProcessInstance,
                             fromActivityInstance,
-                            comp.Transition.TransitionGUID,
+                            comp.Transition.TransitionID,
                             comp.Transition.DirectionType == TransitionDirectionTypeEnum.Loop ?
                                 TransitionTypeEnum.Loop : TransitionTypeEnum.Forward,
                             TransitionFlyingTypeEnum.NotFlying,
@@ -710,7 +710,7 @@ namespace Slickflow.Engine.Core.Pattern
                         //创建结束节点实例及转移数据
                         //Create end node instance and transitioni data
                         endMediator.CreateActivityTaskTransitionInstance(comp.Activity, ActivityForwardContext.ProcessInstance,
-                            fromActivityInstance, comp.Transition.TransitionGUID, TransitionTypeEnum.Forward,
+                            fromActivityInstance, comp.Transition.TransitionID, TransitionTypeEnum.Forward,
                             TransitionFlyingTypeEnum.NotFlying,
                             ActivityForwardContext.ActivityResource,
                             Session);
@@ -820,7 +820,7 @@ namespace Slickflow.Engine.Core.Pattern
             }
 
             TaskManager.Insert(toActivityInstance,
-                activityResource.NextActivityPerformers[toActivityInstance.ActivityGUID],
+                activityResource.NextActivityPerformers[toActivityInstance.ActivityID],
                 activityResource.AppRunner,
                 session);
         }
@@ -838,7 +838,7 @@ namespace Slickflow.Engine.Core.Pattern
             ActivityInstanceEntity entity = ActivityInstanceManager.CreateActivityInstanceObject(processInstance.AppName,
                 processInstance.AppInstanceID,
                 processInstance.AppInstanceCode,
-                processInstance.ProcessGUID,
+                processInstance.ProcessID,
                 processInstance.ID,
                 activity,
                 runner);
@@ -899,9 +899,9 @@ namespace Slickflow.Engine.Core.Pattern
             toActivityInstance.CompleteOrder = toActivity.MultiSignDetail.CompleteOrder;
 
             toActivityInstance.AssignedToUserIDs = PerformerBuilder.GenerateActivityAssignedUserIDs(
-                activityResource.NextActivityPerformers[toActivity.ActivityGUID]);
+                activityResource.NextActivityPerformers[toActivity.ActivityID]);
             toActivityInstance.AssignedToUserNames = PerformerBuilder.GenerateActivityAssignedUserNames(
-                activityResource.NextActivityPerformers[toActivity.ActivityGUID]);
+                activityResource.NextActivityPerformers[toActivity.ActivityID]);
 
             ActivityInstanceManager.Insert(toActivityInstance, session);
             InsertTransitionInstance(processInstance,
@@ -915,7 +915,7 @@ namespace Slickflow.Engine.Core.Pattern
 
             //插入会签子节点实例数据
             //Insert signature sub node instance data
-            var plist = activityResource.NextActivityPerformers[toActivity.ActivityGUID];
+            var plist = activityResource.NextActivityPerformers[toActivity.ActivityID];
             ActivityInstanceEntity entity = new ActivityInstanceEntity();
             for (short i = 0; i < plist.Count; i++)
             {
@@ -964,7 +964,7 @@ namespace Slickflow.Engine.Core.Pattern
                 processInstance.AppInstanceID,
                 processInstance.AppInstanceCode,
                 processInstance.ID,
-                processInstance.ProcessGUID,
+                processInstance.ProcessID,
                 this.BackwardContext.BackwardToTaskActivity,
                 backwardType,
                 backSrcActivityInstanceID,
@@ -1016,27 +1016,27 @@ namespace Slickflow.Engine.Core.Pattern
                 //前端显式指定下一步骤的执行用户列表
                 //The front-end explicitly specifies the list of executing users for the next step
                 toActivityInstance.AssignedToUserIDs = PerformerBuilder.GenerateActivityAssignedUserIDs(
-                    activityResource.NextActivityPerformers[toActivityInstance.ActivityGUID]);
+                    activityResource.NextActivityPerformers[toActivityInstance.ActivityID]);
                 toActivityInstance.AssignedToUserNames = PerformerBuilder.GenerateActivityAssignedUserNames(
-                    activityResource.NextActivityPerformers[toActivityInstance.ActivityGUID]);
+                    activityResource.NextActivityPerformers[toActivityInstance.ActivityID]);
             }
             else if (activityResource.AppRunner.NextPerformerType ==  NextPerformerIntTypeEnum.Definition)
             {
                 //根据节点上的角色定义获取下一步骤的执行用户列表
                 //Obtain the list of executing users for the next step based on the role definition on the node
-                var performers = ActivityForwardContext.ProcessModel.GetActivityPerformers(toActivityInstance.ActivityGUID);
+                var performers = ActivityForwardContext.ProcessModel.GetActivityPerformers(toActivityInstance.ActivityID);
                 activityResource.NextActivityPerformers = performers;
 
                 toActivityInstance.AssignedToUserIDs = PerformerBuilder.GenerateActivityAssignedUserIDs(
-                    performers[toActivityInstance.ActivityGUID]);
+                    performers[toActivityInstance.ActivityID]);
                 toActivityInstance.AssignedToUserNames = PerformerBuilder.GenerateActivityAssignedUserNames(
-                    performers[toActivityInstance.ActivityGUID]);
+                    performers[toActivityInstance.ActivityID]);
             }
             else if (activityResource.AppRunner.NextPerformerType == NextPerformerIntTypeEnum.Single)
             {
                 //用于测试使用的单一用户列表
                 //Single user list for testing purposes
-                activityResource.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(toActivityInstance.ActivityGUID,
+                activityResource.NextActivityPerformers = ActivityResource.CreateNextActivityPerformers(toActivityInstance.ActivityID,
                     activityResource.AppRunner.UserID,
                     activityResource.AppRunner.UserName);
 

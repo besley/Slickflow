@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCopyrightAttribute("@2014-2025")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("Open Source Workflow Engine based on .NET")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("2.4.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("2.4.0.0+6e048cf6fef356bf8aebee210a8775084cce1d33")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("3.0.0.0+f7b89b91924db44a4a01dda25f59b686807edc3d")]
 [assembly: System.Reflection.AssemblyProductAttribute("Slickflow.NET")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Slickflow.Engine")]
 [assembly: System.Reflection.AssemblyVersionAttribute("2.4.0.0")]

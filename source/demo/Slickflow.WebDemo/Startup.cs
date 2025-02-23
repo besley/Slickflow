@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json.Serialization;
-using VueCliMiddleware;
 
 namespace Slickflow.WebDemo
 {
@@ -41,10 +39,10 @@ namespace Slickflow.WebDemo
                         {
                             //设定允许跨域访问的地址，有多个的话用 `,` 隔开
                             policy
-                            .WithOrigins("http://localhost:8080")   //这里对应前端站点地址
+                            .WithOrigins("http://localhost:8080/")   //这里对应前端站点地址
                                 .AllowAnyMethod()
                                 .AllowAnyHeader()
-                                .AllowCredentials();
+                                .AllowAnyOrigin();          // 仅用于测试，生产环境务必关闭
                         });
             });
             var dbType = ConfigurationExtensions.GetConnectionString(Configuration, "WfDBConnectionType");
@@ -63,12 +61,11 @@ namespace Slickflow.WebDemo
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("AllowAll");
             app.UseRouting();
             app.UseSpaStaticFiles();
-            app.UseAuthorization()
-                .UseCors("AllowAll");
-
-
+            app.UseAuthorization();
+                
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -76,15 +73,6 @@ namespace Slickflow.WebDemo
                     name: "default",
                     pattern: "api/{controller=Home}/{action=Index}/{id?}");
             });
-            app.UseSpa(spa =>
-           {
-               spa.Options.SourcePath = "ClientApp";
-
-               if (env.IsDevelopment())
-               {
-                   spa.UseVueCli(npmScript: "serve", forceKill: true);
-               }
-           });
         }
     }
 }

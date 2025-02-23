@@ -58,22 +58,22 @@ namespace Slickflow.Engine.Service
         /// <summary>
         /// Use Process Definition
         /// </summary>
-        public IWorkflowService UseProcess(string processCodeOrProcessGUID, string version = null)
+        public IWorkflowService UseProcess(string processCodeOrProcessID, string version = null)
         {
             if (string.IsNullOrEmpty(version)) version = "1";
 
             Guid newGUID = Guid.Empty;
-            bool isProcessGUID = Guid.TryParse(processCodeOrProcessGUID, out newGUID);
-            if (isProcessGUID == true)
+            bool isProcessID = Guid.TryParse(processCodeOrProcessID, out newGUID);
+            if (isProcessID == true)
             {
-                _wfAppRunner.ProcessGUID = processCodeOrProcessGUID;
+                _wfAppRunner.ProcessID = processCodeOrProcessID;
                 _wfAppRunner.Version = version;
             }
             else
             {
                 var pm = new ProcessManager();
-                var entity = pm.GetByCode(processCodeOrProcessGUID, version);
-                _wfAppRunner.ProcessGUID = entity.ProcessGUID;
+                var entity = pm.GetByCode(processCodeOrProcessID, version);
+                _wfAppRunner.ProcessID = entity.ProcessID;
                 _wfAppRunner.Version = entity.Version;
             }
 
@@ -102,7 +102,7 @@ namespace Slickflow.Engine.Service
             {
                 if (Xpdl.XPDLHelper.IsSimpleComponentNode(node.ActivityType) == true)
                 {
-                    nextStep.Add(node.ActivityGUID, performerList);
+                    nextStep.Add(node.ActivityID, performerList);
                 }
             }
             _wfAppRunner.NextActivityPerformers = nextStep;
@@ -147,11 +147,11 @@ namespace Slickflow.Engine.Service
         /// Next step information
         /// 下一步活动
         /// </summary>
-        public IWorkflowService NextStep(string activityGUID, PerformerList performerList)
+        public IWorkflowService NextStep(string activityID, PerformerList performerList)
         {
             if (performerList != null && performerList.Count() > 0)
             {
-                _wfAppRunner.NextActivityPerformers.Add(activityGUID, performerList);
+                _wfAppRunner.NextActivityPerformers.Add(activityID, performerList);
             }
             else
             {

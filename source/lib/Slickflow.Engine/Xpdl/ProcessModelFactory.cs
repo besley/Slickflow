@@ -33,11 +33,11 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// Create by Process version
         /// </summary>
-        public static IProcessModel CreateByProcess(string processGUID, string version)
+        public static IProcessModel CreateByProcess(string processID, string version)
         {
             using (var session = SessionFactory.CreateSession())
             {
-                var processModel = CreateByProcess(session.Connection, processGUID, version, session.Transaction);
+                var processModel = CreateByProcess(session.Connection, processID, version, session.Transaction);
                 return processModel;
             }
         }
@@ -46,18 +46,18 @@ namespace Slickflow.Engine.Xpdl
         /// Create by Process version
         /// </summary>
         private static IProcessModel CreateByProcess(IDbConnection conn,
-            string processGUID,
+            string processID,
             string version,
             IDbTransaction trans)
         {
-            if (string.IsNullOrEmpty(processGUID)
+            if (string.IsNullOrEmpty(processID)
                 || string.IsNullOrEmpty(version))
             {
                 throw new WfXpdlException(LocalizeHelper.GetEngineMessage("processmodel.factory.processnullexception"));
             }
 
             var pm = new ProcessManager();
-            var entity = pm.GetByVersion(conn, processGUID, version, false, trans);
+            var entity = pm.GetByVersion(conn, processID, version, false, trans);
 
             if (entity == null)
             {
@@ -91,10 +91,10 @@ namespace Slickflow.Engine.Xpdl
             if (processInstance.SubProcessType == null)
             {
                 //Single process
-                processModel = CreateByProcess(conn, processInstance.ProcessGUID, processInstance.Version, trans);
+                processModel = CreateByProcess(conn, processInstance.ProcessID, processInstance.Version, trans);
             }
             else if (processInstance.SubProcessType != null
-                && !string.IsNullOrEmpty(processInstance.SubProcessGUID))
+                && !string.IsNullOrEmpty(processInstance.SubProcessID))
             {
                 //Sub process
                 processModel = CreateSubByProcessInstance(conn, processInstance, trans);
@@ -123,10 +123,10 @@ namespace Slickflow.Engine.Xpdl
             if (taskView.SubProcessType == null)
             {
                 //Single process
-                processModel = CreateByProcess(conn, taskView.ProcessGUID, taskView.Version, trans);
+                processModel = CreateByProcess(conn, taskView.ProcessID, taskView.Version, trans);
             }
             else if (taskView.SubProcessType != null
-                && !string.IsNullOrEmpty(taskView.SubProcessGUID))
+                && !string.IsNullOrEmpty(taskView.SubProcessID))
             {
                 //Sub process
                 processModel = CreateSubByTask(conn, taskView, trans);
@@ -148,7 +148,7 @@ namespace Slickflow.Engine.Xpdl
                 {
                     //Referenced from outer
                     var pm = new ProcessManager();
-                    entity = pm.GetByID(subProcessNode.SubProcessID);
+                    entity = pm.GetByID(subProcessNode.SubProcessDefID);
                 }
                 else
                 {
@@ -173,7 +173,7 @@ namespace Slickflow.Engine.Xpdl
         private static ProcessEntity BuildProcessEntityFromXpdl(Xpdl.Entity.Process subProcess)
         {
             var processEntity = new ProcessEntity();
-            processEntity.ProcessGUID = subProcess.ProcessGUID;
+            processEntity.ProcessID = subProcess.ProcessID;
             processEntity.ProcessName = subProcess.Name;
             processEntity.ProcessCode = subProcess.Code;
             processEntity.Version = "1";
@@ -191,8 +191,8 @@ namespace Slickflow.Engine.Xpdl
             var subProcessType = SubProcessTypeEnum.None;
             if (processInstance.SubProcessType != null) subProcessType = EnumHelper.TryParseEnum<SubProcessTypeEnum>(
                 processInstance.SubProcessType.ToString());
-            var processModel = CreateSubInternal(conn, processInstance.ProcessGUID, processInstance.Version, subProcessType, processInstance.SubProcessID,
-                processInstance.SubProcessGUID, trans);
+            var processModel = CreateSubInternal(conn, processInstance.ProcessID, processInstance.Version, subProcessType, processInstance.SubProcessDefID,
+                processInstance.SubProcessID, trans);
             return processModel;
         }
 
@@ -206,8 +206,8 @@ namespace Slickflow.Engine.Xpdl
             var subProcessType = SubProcessTypeEnum.None;
             if (taskView.SubProcessType != null) subProcessType = EnumHelper.TryParseEnum<SubProcessTypeEnum>(
                 taskView.SubProcessType.ToString());
-            var processModel = CreateSubInternal(conn, taskView.ProcessGUID, taskView.Version, subProcessType, taskView.SubProcessID,
-                taskView.SubProcessGUID, trans);
+            var processModel = CreateSubInternal(conn, taskView.ProcessID, taskView.Version, subProcessType, taskView.SubProcessDefID,
+                taskView.SubProcessID, trans);
             return processModel;
         }
 
@@ -215,11 +215,11 @@ namespace Slickflow.Engine.Xpdl
         /// Create sub process internal
         /// </summary>
         private static IProcessModel CreateSubInternal(IDbConnection conn,
-            string processGUID,
+            string processID,
             string version,
             Nullable<SubProcessTypeEnum> subProcessType,
-            int subProcessID,
-            string subProcessGUID,
+            int subProcessDefID,
+            string subProcessID,
             IDbTransaction trans)
         {
             var pm = new ProcessManager();
@@ -227,12 +227,12 @@ namespace Slickflow.Engine.Xpdl
             if (subProcessType.HasValue 
                 && subProcessType.Value == SubProcessTypeEnum.Referenced)
             {
-                processEntity = pm.GetByID(conn, subProcessID, trans);
+                processEntity = pm.GetByID(conn, subProcessDefID, trans);
             }
             else if (subProcessType.HasValue
                 && subProcessType.Value == SubProcessTypeEnum.Nested)
             {
-                processEntity = pm.GetByVersion(conn, processGUID, version, true, trans);
+                processEntity = pm.GetByVersion(conn, processID, version, true, trans);
                 //取出子流程节点对象
                 //Retrieve sub process node objects
                 var xmlContent = processEntity.XmlContent;
@@ -243,10 +243,10 @@ namespace Slickflow.Engine.Xpdl
                 //Find sub process nodes
                 var strSubProcessPath = XPDLHelper.GetXmlPathOfProcess(true);
                 XmlNode xmlSubProcessNode = xmlDoc.DocumentElement.SelectSingleNode(
-                    string.Format("{0}[@sf:guid='" + subProcessGUID + "']", strSubProcessPath),
+                    string.Format("{0}[@id='" + subProcessID + "']", strSubProcessPath),
                     XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
 
-                processEntity.ProcessGUID = XMLHelper.GetXmlAttribute(xmlSubProcessNode, "guid");
+                processEntity.ProcessID = XMLHelper.GetXmlAttribute(xmlSubProcessNode, "id");
                 processEntity.ProcessName = XMLHelper.GetXmlAttribute(xmlSubProcessNode, "name");
                 processEntity.ProcessCode = XMLHelper.GetXmlAttribute(xmlSubProcessNode, "code");
                 processEntity.Version = "1";

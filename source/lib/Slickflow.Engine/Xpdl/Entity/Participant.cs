@@ -14,7 +14,7 @@ namespace Slickflow.Engine.Xpdl.Entity
         public string ID { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
-        public string ParticipantGUID { get; set; }
+        public string ParticipantID { get; set; }
         public string ProcessRef { get; set; }
         public Process Process { get; set; }
     }

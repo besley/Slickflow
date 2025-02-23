@@ -127,7 +127,7 @@ function executeMultiCommand(element, bpmnFactory, commandStack) {
     if (mxSubProcessSelected !== null) {
         const newSubInfo = createElement('sf:SubInfo', {
             subId: mxSubProcessSelected.ID,
-            subProcessGUID: mxSubProcessSelected.ProcessGUID,
+            subProcessID: mxSubProcessSelected.ProcessID,
             subProcessName: mxSubProcessSelected.ProcessName,
             subType: '',
             subVar: ''

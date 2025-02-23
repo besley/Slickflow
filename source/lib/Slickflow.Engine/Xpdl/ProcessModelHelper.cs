@@ -42,10 +42,10 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// Get activity
         /// </summary>
-        public static Activity GetActivity(Process process, string activityGUID)
+        public static Activity GetActivity(Process process, string activityID)
         {
             var activityList = process.ActivityList.ToList();
-            var activity = activityList.SingleOrDefault<Activity>(a => a.ActivityGUID == activityGUID);
+            var activity = activityList.SingleOrDefault<Activity>(a => a.ActivityID == activityID);
             return activity;
         }
 
@@ -58,7 +58,7 @@ namespace Slickflow.Engine.Xpdl
             var activity = activityList.SingleOrDefault<Activity>(a => a.ActivityType == ActivityTypeEnum.StartNode);
 
             var transitionList = process.TransitionList.ToList();
-            var transition = transitionList.SingleOrDefault<Transition>(t=>t.FromActivityGUID == activity.ActivityGUID);
+            var transition = transitionList.SingleOrDefault<Transition>(t=>t.FromActivityID == activity.ActivityID);
             var firstActivity = transition.ToActivity;
 
             return firstActivity;
@@ -67,10 +67,10 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// Get Next Activity by from
         /// </summary>
-        public static Activity GetNextActivity(Process process, string fromActivityGUID)
+        public static Activity GetNextActivity(Process process, string fromActivityID)
         {
             var transitionList = process.TransitionList.ToList();
-            var transition = transitionList.SingleOrDefault<Transition>(t => t.FromActivityGUID == fromActivityGUID);
+            var transition = transitionList.SingleOrDefault<Transition>(t => t.FromActivityID == fromActivityID);
             var nextActivity = transition.ToActivity;
 
             return nextActivity;
@@ -82,7 +82,7 @@ namespace Slickflow.Engine.Xpdl
         public static ActivityView ConvertFromActivityEntity(Activity entity)
         {
             var view = new ActivityView();
-            view.ActivityGUID = entity.ActivityGUID;
+            view.ActivityID = entity.ActivityID;
             view.ActivityName = entity.ActivityName;
             view.ActivityCode = entity.ActivityCode;
             view.ActivityType = entity.ActivityType.ToString();
@@ -100,28 +100,28 @@ namespace Slickflow.Engine.Xpdl
         /// <summary>
         /// Get transition list
         /// </summary>
-        public static IList<Transition> GetForwardTransitionList(Process process, string fromActivityGUID)
+        public static IList<Transition> GetForwardTransitionList(Process process, string fromActivityID)
         {
-            var transitionList = process.TransitionList.Where<Transition>(t => t.FromActivityGUID == fromActivityGUID).ToList();
+            var transitionList = process.TransitionList.Where<Transition>(t => t.FromActivityID == fromActivityID).ToList();
             return transitionList;
         }
 
         /// <summary>
         /// Get transition
         /// </summary>
-        public static Transition GetForwardTransition(Process process, string fromActivityGUID, string toActivityGUID)
+        public static Transition GetForwardTransition(Process process, string fromActivityID, string toActivityID)
         {
-            var transiton = process.TransitionList.SingleOrDefault<Transition>(t => t.FromActivityGUID == fromActivityGUID
-                && t.ToActivityGUID == toActivityGUID);
+            var transiton = process.TransitionList.SingleOrDefault<Transition>(t => t.FromActivityID == fromActivityID
+                && t.ToActivityID == toActivityID);
             return transiton;
         }
 
         /// <summary>
         /// Get backward transition list
         /// </summary>
-        public static IList<Transition> GetBackwardTransitionList(Process process, string toActivityGUID)
+        public static IList<Transition> GetBackwardTransitionList(Process process, string toActivityID)
         {
-            var transitionList = process.TransitionList.Where<Transition>(t => t.ToActivityGUID == toActivityGUID).ToList();
+            var transitionList = process.TransitionList.Where<Transition>(t => t.ToActivityID == toActivityID).ToList();
             return transitionList;
         }
         #endregion
@@ -133,8 +133,10 @@ namespace Slickflow.Engine.Xpdl
         public static ProcessFileEntity ConvertFromXmlNodeProcess(XmlNode xmlNodeProcess)
         {
             var process = new ProcessFileEntity();
-            process.ProcessGUID = XMLHelper.GetXmlAttribute(xmlNodeProcess, "sf:guid");
+            process.ProcessID = XMLHelper.GetXmlAttribute(xmlNodeProcess, "id");
             process.ProcessName = XMLHelper.GetXmlAttribute(xmlNodeProcess, "name");
+            if (string.IsNullOrEmpty(process.ProcessName)) process.ProcessName = process.ProcessID;
+
             process.ProcessCode = XMLHelper.GetXmlAttribute(xmlNodeProcess, "sf:code");
             process.Version = "1";
             process.IsUsing = 1;
@@ -148,7 +150,7 @@ namespace Slickflow.Engine.Xpdl
         public static Xpdl.Entity.Process ConvertToXPDLProcess(XmlDocument xmlDoc)
         {
             var root = xmlDoc.DocumentElement;
-            var xmlNodeProcess = root.SelectSingleNode(XPDLDefinition.BPMN2_StrXmlPath_Process,
+            var xmlNodeProcess = root.SelectSingleNode(XPDLDefinition.BPMN_StrXmlPath_Process,
                     XPDLHelper.GetSlickflowXmlNamespaceManager(xmlDoc));
             var process = ProcessModelConvertor.ConvertProcessModelFromXML(xmlNodeProcess);
             return process;

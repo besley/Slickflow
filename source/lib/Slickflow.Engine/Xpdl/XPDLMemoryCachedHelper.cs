@@ -28,9 +28,9 @@ namespace Slickflow.Engine.Xpdl
         /// Set xpdl cache
         /// 设置流程缓存
         /// </summary>
-        internal static void SetXpdlCache(string processGUID, string version, Process process)
+        internal static void SetXpdlCache(string processID, string version, Process process)
         {
-            var str = string.Format("{0}-{1}", processGUID, version);
+            var str = string.Format("{0}-{1}", processID, version);
             var strMD5 = MD5Helper.GetMD5(str);
 
             _xpdlCache.Set<Process>(strMD5, process);
@@ -40,9 +40,9 @@ namespace Slickflow.Engine.Xpdl
         /// Get xpdl cache
         /// 获取流程缓存
         /// </summary>
-        internal static Process GetXpdlCache(string processGUID, string version)
+        internal static Process GetXpdlCache(string processID, string version)
         {
-            var str = string.Format("{0}-{1}", processGUID, version);
+            var str = string.Format("{0}-{1}", processID, version);
             var strMD5 = MD5Helper.GetMD5(str);
             Process process = null;
 
@@ -54,9 +54,9 @@ namespace Slickflow.Engine.Xpdl
         /// Update xpdl cache
         /// 更新流程缓存
         /// </summary>
-        internal static Boolean TryUpdate(string processGUID, string version, Process process)
+        internal static Boolean TryUpdate(string processID, string version, Process process)
         {
-            var str = string.Format("{0}-{1}", processGUID, version);
+            var str = string.Format("{0}-{1}", processID, version);
             var strMD5 = MD5Helper.GetMD5(str);
             Process processCached = null;
 

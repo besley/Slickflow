@@ -290,7 +290,7 @@ var process = pmb.Start(""Start"")
 
                 //initialize a runner object
                 WfAppRunner runner = new WfAppRunner();
-                runner.ProcessGUID = "caa31df6-d4a4-49a1-8d39-7036db142363";
+                runner.ProcessID = "caa31df6-d4a4-49a1-8d39-7036db142363";
                 runner.Version = "1";
                 runner.UserID = "10";
                 runner.UserName = "Jack";
@@ -303,7 +303,7 @@ var process = pmb.Start(""Start"")
                 IWorkflowService wfService = new WorkflowService();
                 var wfResultStart = wfService.CreateRunner(runner.UserID, runner.UserName)
                     .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-                    .UseProcess(runner.ProcessGUID, runner.Version)
+                    .UseProcess(runner.ProcessID, runner.Version)
                     .Start();
 
                 var wfResultRun = Forward(runner, wfService);
@@ -334,7 +334,7 @@ var process = pmb.Start(""Start"")
             //the second task "Deliver Books" will be in ready status
             var wfResultRun = wfService.CreateRunner(runner.UserID, runner.UserName)
                 .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-                .UseProcess(runner.ProcessGUID, runner.Version)
+                .UseProcess(runner.ProcessID, runner.Version)
                 .NextStepInt("10", "Jack")      //this method is only for tutorial, OnTask() should be called normally before using it.
                 .Run();
             return wfResultRun;

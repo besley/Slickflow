@@ -568,10 +568,10 @@ namespace Slickflow.Engine.Business.Manager
                 parameters.Add("@appInstanceID", query.AppInstanceID);
             }
 
-            if (!string.IsNullOrEmpty(query.ProcessGUID))
+            if (!string.IsNullOrEmpty(query.ProcessID))
             {
-                sqlBuilder.And("ProcessGUID", Data.Operator.Eq, "@processGUID");
-                parameters.Add("@processGUID", query.ProcessGUID);
+                sqlBuilder.And("ProcessID", Data.Operator.Eq, "@processID");
+                parameters.Add("@processID", query.ProcessID);
             }
 
             if (!string.IsNullOrEmpty(query.Version))
@@ -779,7 +779,7 @@ namespace Slickflow.Engine.Business.Manager
                                 AND AssignedToUserID=@userID 
                                 AND ProcessState=2 
                                 AND (ActivityType=4 OR ActivityType=5 OR ActivityType=6) 
-                                AND (ActivityState=1 OR ActivityState=2) 
+                                AND (ActivityState=1 OR ActivityState=2)
                             ORDER BY TASKID DESC";
             sql = SqlDataProviderFactory.GetSqlTaskOfMineByAtcitivityInstance(sql);
             var list = Repository.Query<TaskViewEntity>(conn, sql,
@@ -820,17 +820,13 @@ namespace Slickflow.Engine.Business.Manager
         /// Based on the application instance and process UID, process the user ID to obtain the task list
         /// 根据应用实例、流程GUID，办理用户Id获取任务列表
         /// </summary>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <param name="userID"></param>
-        /// <returns></returns>
         internal TaskViewEntity GetTaskOfMine(string appInstanceID, 
-            string processGUID, 
+            string processID, 
             string userID)
         {
             using (var session = SessionFactory.CreateSession())
             {
-                return GetTaskOfMine(session.Connection, appInstanceID, processGUID, userID, session.Transaction);
+                return GetTaskOfMine(session.Connection, appInstanceID, processID, userID, session.Transaction);
             }
         }
 
@@ -838,15 +834,9 @@ namespace Slickflow.Engine.Business.Manager
         /// Based on the application instance and process UID, process the user ID to obtain the task list
         /// 根据应用实例、流程GUID，办理用户Id获取任务列表
         /// </summary>
-        /// <param name="conn"></param>
-        /// <param name="appInstanceID"></param>
-        /// <param name="processGUID"></param>
-        /// <param name="userID"></param>
-        /// <param name="trans"></param>
-        /// <returns></returns>
         internal TaskViewEntity GetTaskOfMine(IDbConnection conn,
             string appInstanceID,
-            string processGUID,
+            string processID,
             string userID,
             IDbTransaction trans)
         {
@@ -860,7 +850,7 @@ namespace Slickflow.Engine.Business.Manager
                             TOP 1 * 
                        FROM vwWfActivityInstanceTasks 
                        WHERE AppInstanceID=@appInstanceID 
-                            AND ProcessGUID=@processGUID 
+                            AND ProcessID=@processID 
                             AND AssignedToUserID=@userID 
                             AND ProcessState=2 
                             AND (ActivityType=4 OR ActivityType=5 OR ActivityType=6 OR WorkItemType=1)
@@ -872,7 +862,7 @@ namespace Slickflow.Engine.Business.Manager
                new
                {
                    appInstanceID = appInstanceID,
-                   processGUID = processGUID,
+                   processID = processID,
                    userID = userID
                },
                trans).ToList();
@@ -892,7 +882,7 @@ namespace Slickflow.Engine.Business.Manager
             //var pgAll = new PredicateGroup { Operator = GroupOperator.And, Predicates = new List<IPredicate>() };
             //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessState, Operator.Eq, 2));
             //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.AssignedToUserID, Operator.Eq, userID));
-            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessGUID, Operator.Eq, processGUID));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessID, Operator.Eq, processID));
             //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.AppInstanceID, Operator.Eq, appInstanceID));
             //pgAll.Predicates.Add(pgActivityType);
             //pgAll.Predicates.Add(pgActivityState);
@@ -953,7 +943,7 @@ namespace Slickflow.Engine.Business.Manager
             }
             else
             {
-                taskView = GetTaskOfMine(conn, runner.AppInstanceID, runner.ProcessGUID, runner.UserID, trans);
+                taskView = GetTaskOfMine(conn, runner.AppInstanceID, runner.ProcessID, runner.UserID, trans);
             }
             return taskView;
         }
@@ -992,6 +982,23 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         /// <summary>
+        /// Determine if the task is in a todo state
+        /// 判断任务处于待办或运行状态
+        /// </summary>
+        /// <param name="task"></param>
+        /// <returns></returns>
+        private Boolean CheckTaskStateInToDoState(TaskViewEntity task)
+        {
+            var isInToDoState = false;
+            if (task != null && (task.TaskState == (short)TaskStateEnum.Waiting
+                    || task.TaskState == (short)TaskStateEnum.Reading))
+            {
+                isInToDoState = true;
+            }
+            return isInToDoState;
+        }
+
+        /// <summary>
         /// Retrieve pending tasks (business instances)
         /// 获取待办任务(业务实例)
         /// </summary>
@@ -1006,7 +1013,7 @@ namespace Slickflow.Engine.Business.Manager
                                 * 
                            FROM vwWfActivityInstanceTasks 
                            WHERE AppInstanceID=@appInstanceID 
-                                AND ProcessGUID=@processGUID 
+                                AND ProcessID=@processID 
                                 AND ProcessState=2 
                                 AND (ActivityType=4 OR WorkItemType=1)
                                 AND ActivityState=1
@@ -1015,7 +1022,7 @@ namespace Slickflow.Engine.Business.Manager
                 new
                 {
                     appInstanceID = runner.AppInstanceID,
-                    processGUID = runner.ProcessGUID
+                    processID = runner.ProcessID
                 });
 
             #region ORMapping style to support multiple databases
@@ -1027,7 +1034,7 @@ namespace Slickflow.Engine.Business.Manager
             //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessState, Operator.Eq, 2));
             //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ActivityState, Operator.Eq, 1));
             //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.AppInstanceID, Operator.Eq, runner.AppInstanceID));
-            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessGUID, Operator.Eq, runner.ProcessGUID));
+            //pgAll.Predicates.Add(Predicates.Field<TaskViewEntity>(f => f.ProcessID, Operator.Eq, runner.ProcessID));
             //pgAll.Predicates.Add(pgActivityType);
 
             ////var sortList = new List<DapperExtensions.ISort>();
@@ -1151,9 +1158,9 @@ namespace Slickflow.Engine.Business.Manager
             entity.AppInstanceID = activityInstance.AppInstanceID;
             entity.ActivityInstanceID = activityInstance.ID;
             entity.ProcessInstanceID = activityInstance.ProcessInstanceID;
-            entity.ActivityGUID = activityInstance.ActivityGUID;
+            entity.ActivityID = activityInstance.ActivityID;
             entity.ActivityName = activityInstance.ActivityName;
-            entity.ProcessGUID = activityInstance.ProcessGUID;
+            entity.ProcessID = activityInstance.ProcessID;
             entity.TaskType = (short)TaskTypeEnum.Manual;
             entity.AssignedToUserID = performerID;
             entity.AssignedToUserName = performerName;
@@ -1407,8 +1414,8 @@ namespace Slickflow.Engine.Business.Manager
         /// 创建新的委托任务
         /// </summary>
         /// <param name="entity"></param>
-        /// <param name="cancalOriginalTask"></param>
-        internal bool Entrust(TaskEntrustedEntity entity, bool cancalOriginalTask = true)
+        /// <param name="cancelOriginalTask"></param>
+        internal bool Entrust(TaskEntrustedEntity entity, bool cancelOriginalTask = true)
         {
             var isOk = false;
             var session = SessionFactory.CreateSession();
@@ -1434,18 +1441,18 @@ namespace Slickflow.Engine.Business.Manager
 
                 //更新原委托任务的状态为关闭
                 //Update the status of the original delegated task to closed
-                if (cancalOriginalTask == true)
+                if (cancelOriginalTask == true)
                 {
                     var task = GetTask(entity.TaskID);
                     task.TaskState = (short)TaskStateEnum.Closed;
                     Update(task, session);
                 }
 
-
                 //查询被委托人是否已经有待办任务存在
                 //Check if the delegated person already has pending tasks
                 var todoTask = GetTaskOfMine(session.Connection, activityInstance.ID, entity.EntrustToUserID, true, session.Transaction);
-                if (todoTask != null)
+                var isInToDoRunningState = CheckTaskStateInToDoState(todoTask);
+                if (isInToDoRunningState)
                 {
                     //更新委托用户信息
                     //Update entrusted user information
@@ -1458,7 +1465,7 @@ namespace Slickflow.Engine.Business.Manager
                 }
                 else
                 {
-                    //插入委托任务
+                    //插入委托任务                                      
                     //Insert delegated task
                     Insert(activityInstance, entity.EntrustToUserID, entity.EntrustToUserName,
                         entity.RunnerID, entity.RunnerName, session, entity.TaskID);

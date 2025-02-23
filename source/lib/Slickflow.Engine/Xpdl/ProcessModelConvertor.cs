@@ -34,7 +34,7 @@ namespace Slickflow.Engine.Xpdl
                 var childNodeList = xmlNodeProcess.ChildNodes;
                 foreach (XmlNode child in childNodeList)
                 {
-                    if (child.Name != XPDLDefinition.BPMN2_ElementName_SequenceFlow)
+                    if (child.Name != XPDLDefinition.BPMN_ElementName_SequenceFlow)
                     {
                         ConvertXmlChildNode(child, process);
                     }
@@ -43,7 +43,7 @@ namespace Slickflow.Engine.Xpdl
                 //process transition
                 foreach (XmlNode child in childNodeList)
                 {
-                    if (child.Name == XPDLDefinition.BPMN2_ElementName_SequenceFlow)
+                    if (child.Name == XPDLDefinition.BPMN_ElementName_SequenceFlow)
                     {
                         ConvertXmlChildNode(child, process);
                     }
@@ -58,8 +58,7 @@ namespace Slickflow.Engine.Xpdl
         private static Process ConvertProcessAttribute(XmlNode xmlNode)
         {
             var process = new Process();
-            process.ID = XMLHelper.GetXmlAttribute(xmlNode, "id");
-            process.ProcessGUID = XMLHelper.GetXmlAttribute(xmlNode, "sf:guid");
+            process.ProcessID = XMLHelper.GetXmlAttribute(xmlNode, "id");
             process.Name = XMLHelper.GetXmlAttribute(xmlNode, "name");
             process.Code = XMLHelper.GetXmlAttribute(xmlNode, "sf:code");
             return process;
@@ -70,7 +69,7 @@ namespace Slickflow.Engine.Xpdl
         /// </summary>
         private static void ConvertXmlChildNode(XmlNode node, Process process)
         {
-            if (node.Name == XPDLDefinition.BPMN2_ElementName_ExtensionElements)
+            if (node.Name == XPDLDefinition.BPMN_ElementName_ExtensionElements)
             {
                 var formsXmlElement = node.SelectSingleNode(XPDLDefinition.Sf_ElementName_Forms, XPDLHelper.GetSlickflowXmlNamespaceManager(node.OwnerDocument));
                 if (formsXmlElement != null)
@@ -79,7 +78,7 @@ namespace Slickflow.Engine.Xpdl
                     foreach (XmlNode child in childNodes)
                     {
                         var form = ConvertHelper.ComnvertXmlFormNodeToFormEntity(child,
-                            XPDLHelper.GetSlickflowXmlNamespaceManager(node.OwnerDocument), process.ProcessGUID);
+                            XPDLHelper.GetSlickflowXmlNamespaceManager(node.OwnerDocument), process.ProcessID);
                         process.FormList.Add(form);
                     }
                 }
@@ -88,25 +87,25 @@ namespace Slickflow.Engine.Xpdl
                     throw new NotImplementedException("NOT supported extension xml element");
                 }
             }
-            else if (node.Name == XPDLDefinition.BPMN2_ElementName_SubProcess)
+            else if (node.Name == XPDLDefinition.BPMN_ElementName_SubProcess)
             {
                 ActivityTypeEnum subProcessActivityType = ActivityTypeEnum.Unknown;
                 var subConvertor = ConvertorFactory.CreateConvertor(node, XPDLHelper.GetSlickflowXmlNamespaceManager(node.OwnerDocument), out subProcessActivityType);
                 var subProcessActivity = subConvertor.Convert();
                 subProcessActivity.ActivityType = subProcessActivityType;
-                subProcessActivity.ProcessGUID = process.ProcessGUID;
+                subProcessActivity.ProcessID = process.ProcessID;
 
                 //add subprocess into activitylist
                 process.ActivityList.Add(subProcessActivity);
             }
-            else if (node.Name == XPDLDefinition.BPMN2_ElementName_SequenceFlow)
+            else if (node.Name == XPDLDefinition.BPMN_ElementName_SequenceFlow)
             {
                 var transition = ConvertTransition(node, process);
                 process.TransitionList.Add(transition);
             }
-            else if(node.Name == XPDLDefinition.BPMN2_StrXmlPath_Incoming
-                || node.Name == XPDLDefinition.BPMN2_StrXmlPath_Outgoing
-                || node.Name == XPDLDefinition.BPMN2_StrXmlPath_LaneSet)
+            else if(node.Name == XPDLDefinition.BPMN_StrXmlPath_Incoming
+                || node.Name == XPDLDefinition.BPMN_StrXmlPath_Outgoing
+                || node.Name == XPDLDefinition.BPMN_StrXmlPath_LaneSet)
             {
                 ;
             }
@@ -119,7 +118,7 @@ namespace Slickflow.Engine.Xpdl
                 var activity = convertor.Convert();
                 activity.ActivityType = activityType;
                 activity.WorkItemType = GetWorkItemType(activityType);
-                activity.ProcessGUID = process.ProcessGUID;
+                activity.ProcessID = process.ProcessID;
 
                 process.ActivityList.Add(activity);
             }
@@ -154,7 +153,7 @@ namespace Slickflow.Engine.Xpdl
             var childNodeList = node.ChildNodes;
             foreach (XmlNode child in childNodeList)
             {
-                if (child.Name != XPDLDefinition.BPMN2_ElementName_SequenceFlow)
+                if (child.Name != XPDLDefinition.BPMN_ElementName_SequenceFlow)
                 {
                     ConvertXmlChildNode(child, subProcess);
                 }
@@ -163,7 +162,7 @@ namespace Slickflow.Engine.Xpdl
             //transitions
             foreach (XmlNode child in childNodeList)
             {
-                if (child.Name == XPDLDefinition.BPMN2_ElementName_SequenceFlow)
+                if (child.Name == XPDLDefinition.BPMN_ElementName_SequenceFlow)
                 {
                     ConvertXmlChildNode(child, subProcess);
                 }
@@ -177,16 +176,15 @@ namespace Slickflow.Engine.Xpdl
         public static Transition ConvertTransition(XmlNode node, Process process)
         {
             Transition transition = new Transition();
-            transition.ID = XMLHelper.GetXmlAttribute(node, "id");
-            transition.TransitionGUID = XMLHelper.GetXmlAttribute(node, "sf:guid");
-            transition.FromActivityGUID = XMLHelper.GetXmlAttribute(node, "sf:from");
-            transition.ToActivityGUID = XMLHelper.GetXmlAttribute(node, "sf:to");
+            transition.TransitionID = XMLHelper.GetXmlAttribute(node, "id");
+            transition.FromActivityID = XMLHelper.GetXmlAttribute(node, "sourceRef");
+            transition.ToActivityID = XMLHelper.GetXmlAttribute(node, "targetRef");
 
-            transition.FromActivity = ProcessModelHelper.GetActivity(process, transition.FromActivityGUID);
-            transition.ToActivity = ProcessModelHelper.GetActivity(process, transition.ToActivityGUID);
+            transition.FromActivity = ProcessModelHelper.GetActivity(process, transition.FromActivityID);
+            transition.ToActivity = ProcessModelHelper.GetActivity(process, transition.ToActivityID);
 
             //Condition node
-            var conditionNode = node.SelectSingleNode(XPDLDefinition.BPMN2_ElementName_ConditionExpression,
+            var conditionNode = node.SelectSingleNode(XPDLDefinition.BPMN_ElementName_ConditionExpression,
                 XPDLHelper.GetSlickflowXmlNamespaceManager(node.OwnerDocument));
             if (conditionNode != null)
             {
@@ -197,7 +195,7 @@ namespace Slickflow.Engine.Xpdl
             }
 
             //Group behavious
-            var groupBehavioursNode = node.SelectSingleNode(XPDLDefinition.BPMN2_StrXmlPath_SequenceFlow_GroupBehaviours,
+            var groupBehavioursNode = node.SelectSingleNode(XPDLDefinition.BPMN_StrXmlPath_SequenceFlow_GroupBehaviours,
                 XPDLHelper.GetSlickflowXmlNamespaceManager(node.OwnerDocument));
             if (groupBehavioursNode != null)
             {

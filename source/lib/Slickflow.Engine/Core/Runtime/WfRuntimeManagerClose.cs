@@ -29,8 +29,8 @@ namespace Slickflow.Engine.Core.Runtime
             var aim = new ActivityInstanceManager();
             aim.Complete(base.RunningActivityInstance.ID, this.AppRunner, session);
 
-            var jumpActivityGUID = base.AppRunner.NextActivityPerformers.First().Key;
-            var jumpforwardActivity = base.ProcessModel.GetActivity(jumpActivityGUID);
+            var jumpActivityID = base.AppRunner.NextActivityPerformers.First().Key;
+            var jumpforwardActivity = base.ProcessModel.GetActivity(jumpActivityID);
             var processInstance = (new ProcessInstanceManager()).GetById(base.RunningActivityInstance.ProcessInstanceID);
             var jumpforwardExecutionContext = ActivityForwardContext.CreateJumpforwardContext(jumpforwardActivity,
                 base.ProcessModel, processInstance, base.ActivityResource);

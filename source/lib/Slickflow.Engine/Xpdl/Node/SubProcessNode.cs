@@ -17,11 +17,11 @@ namespace Slickflow.Engine.Xpdl.Node
         /// <summary>
         /// SubProcessID
         /// </summary>
-        public int SubProcessID { get; set; }
+        public int SubProcessDefID { get; set; }
         /// <summary>
-        /// SubProcessGUID
+        /// SubProcessID
         /// </summary>
-        public string SubProcessGUID { get; set; }
+        public string SubProcessID { get; set; }
         /// <summary>
         /// Dynamically bound variable name for subprocess ID
         /// 子流程ID的动态绑定变量名称

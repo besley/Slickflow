@@ -36,8 +36,8 @@ namespace Slickflow.Engine.Core.Runtime
                 sendbackOperation.CurrentNodeOperationType = SendBackOperationTypeEnum.Normal;
                 foreach (var step in runner.NextActivityPerformers)
                 {
-                    var prevActivityGUID = step.Key;
-                    var prevActivity = this.ProcessModel.GetActivity(prevActivityGUID);
+                    var prevActivityID = step.Key;
+                    var prevActivity = this.ProcessModel.GetActivity(prevActivityID);
                     sendbackOperation.BackwardToTaskActivity = prevActivity;
 
                     if (this.ProcessModel.IsTaskNode(prevActivity))
@@ -49,7 +49,7 @@ namespace Slickflow.Engine.Core.Runtime
                     else if (this.ProcessModel.IsMINode(prevActivity) == true)
                     {
                         var aim = new ActivityInstanceManager();
-                        var prevActivityInstance = aim.GetActivityInstanceLatest(runningNode.ProcessInstanceID, prevActivityGUID, session);
+                        var prevActivityInstance = aim.GetActivityInstanceLatest(runningNode.ProcessInstanceID, prevActivityID, session);
                         if (prevActivityInstance.MIHostActivityInstanceID == null)
                         {
                             //虽然流程定义是加签节点，但是运行时没有加签实例，就当做普通任务节点处理
@@ -97,8 +97,8 @@ namespace Slickflow.Engine.Core.Runtime
                 sendbackOperation.CurrentNodeOperationType = SendBackOperationTypeEnum.MultipleInstance;
                 foreach (var step in runner.NextActivityPerformers)
                 {
-                    var prevActivityGUID = step.Key;
-                    var prevActivity = this.ProcessModel.GetActivity(prevActivityGUID);
+                    var prevActivityID = step.Key;
+                    var prevActivity = this.ProcessModel.GetActivity(prevActivityID);
                     sendbackOperation.BackwardToTaskActivity = prevActivity;
 
                     //判断会签模式的子类型，然后进行退回处理

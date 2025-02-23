@@ -14,7 +14,7 @@ namespace Slickflow.HrsService.Entity
         public int ID { get; set; }
         public string AppInstanceID { get; set; }
         public string ActivityName { get; set; }
-        public string ActivityGUID { get; set; }
+        public string ActivityID { get; set; }
         public string Remark { get; set; }
         public DateTime ChangedTime { get; set; }
         public string ChangedUserID { get; set; }

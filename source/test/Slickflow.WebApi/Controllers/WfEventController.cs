@@ -19,12 +19,12 @@ namespace Slickflow.WebApi.Controllers
     //Process Name: Event Testing Interaction Process
     //GUID:  4be58a96-926c-4aff-a383-fe71185572e5
     //startup process:
-    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"4be58a96-926c-4aff-a383-fe71185572e5"}
+    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"4be58a96-926c-4aff-a383-fe71185572e5"}
 
     //run process app:
     ////Order processing node:
     ////The next step is to end the node
-    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessGUID":"4be58a96-926c-4aff-a383-fe71185572e5","UserID":"10","UserName":"Long","NextActivityPerformers":{"de50335a-034c-4c58-db72-ddd00c1aebfe":[{"UserID":10,"UserName":"Long"}]}}
+    //{"AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"4be58a96-926c-4aff-a383-fe71185572e5","UserID":"10","UserName":"Long","NextActivityPerformers":{"de50335a-034c-4c58-db72-ddd00c1aebfe":[{"UserID":10,"UserName":"Long"}]}}
 
     /// <summary>
     /// Event Controller
@@ -42,7 +42,7 @@ namespace Slickflow.WebApi.Controllers
                 //            .Start();
                 var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
                          .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-                         .UseProcess(runner.ProcessGUID, runner.Version)
+                         .UseProcess(runner.ProcessID, runner.Version)
                          .Subscribe(EventFireTypeEnum.OnProcessStarted, (delegateContext, delegateService) => {
                              var processInstanceID = delegateContext.ProcessInstanceID;
                              delegateService.SaveVariable(ProcessVariableTypeEnum.Process, "name", "book");
@@ -75,7 +75,7 @@ namespace Slickflow.WebApi.Controllers
                 //            .Start(conn, trans);
                 var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
                          .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-                         .UseProcess(runner.ProcessGUID, runner.Version)
+                         .UseProcess(runner.ProcessID, runner.Version)
                          .Subscribe(EventFireTypeEnum.OnProcessStarted, (delegateContext, delegateService) => {
                              delegateService.SaveVariable(ProcessVariableTypeEnum.Process, "product", "toy");
                              delegateService.SaveVariable(ProcessVariableTypeEnum.Process, "country", "china");
@@ -121,7 +121,7 @@ namespace Slickflow.WebApi.Controllers
                 IWorkflowService wfService = new WorkflowService();
                 var wfResult = wfService.CreateRunner(runner.UserID, runner.UserName)
                          .UseApp(runner.AppInstanceID, runner.AppName, runner.AppInstanceCode)
-                         .UseProcess(runner.ProcessGUID, runner.Version)
+                         .UseProcess(runner.ProcessID, runner.Version)
                          .NextStep(runner.NextActivityPerformers)
                          .IfCondition(runner.Conditions)
                          .Subscribe(EventFireTypeEnum.OnActivityExecuting, (delegateContext, delegateService) => {

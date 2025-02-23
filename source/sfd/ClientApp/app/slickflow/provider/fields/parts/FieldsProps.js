@@ -13,23 +13,22 @@ export default function FieldsProps({ element, injector, event }) {
 
 function addFactory({ element, bpmnFactory, commandStack }) {
     const businessObject = getBusinessObject(element);
-    var activityGUID = businessObject.get("guid");
+    var activityID = businessObject.get("id");
     var activityName = businessObject.get("name");
-    var activityCode = businessObject.get('id');
+    var activityCode = businessObject.get('code');
 
     var processElement = element.parent;
     var processBusinessObject = getBusinessObject(processElement);
-    var processGUID = processBusinessObject.get("guid");
-    var processCode = processBusinessObject.get("id");
+    var processID = processBusinessObject.get("id");
+    var processCode = processBusinessObject.get("code");
     var processName = processBusinessObject.get("name");
 
     var fieldActivityInfo = {
-        "ProcessID": processlist.pselectedProcessEntity.ID,
-        "ProcessGUID": processGUID,
+        "ProcessID": processID,
         "ProcessCode": processCode,
         "ProcessName": processName,
-        "ProcessVersion": processlist.pselectedProcessEntity.Version,
-        "ActivityGUID": activityGUID,
+        "ProcessVersion": processlist.pselectedProcessEntity !== null ? processlist.pselectedProcessEntity.Version : "1",
+        "ActivityID": activityID,
         "ActivityCode": activityCode,
         "ActivityName": activityName
     }

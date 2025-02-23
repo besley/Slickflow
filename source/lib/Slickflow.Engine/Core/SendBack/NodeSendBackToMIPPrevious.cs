@@ -24,7 +24,7 @@ namespace Slickflow.Engine.Core.SendBack
             var runner = base.SendBackOperation.ActivityResource.AppRunner;
             var runningNode = base.SendBackOperation.BackwardFromActivityInstance;
             var previousActivityInstance = base.ActivityInstanceManager.GetPreviousActivityInstanceSimple(runningNode,
-                base.SendBackOperation.BackwardToTaskActivity.ActivityGUID,
+                base.SendBackOperation.BackwardToTaskActivity.ActivityID,
                 base.Session);
 
             //只退回到最后一个实例子节点的办理位置
@@ -64,7 +64,7 @@ namespace Slickflow.Engine.Core.SendBack
                 processInstance.AppInstanceID,
                 processInstance.AppInstanceCode,
                 processInstance.ID,
-                processInstance.ProcessGUID,
+                processInstance.ProcessID,
                 this.SendBackOperation.BackwardToTaskActivity,
                 backwardType,
                 fromActivityInstance.ID,

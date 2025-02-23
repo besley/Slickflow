@@ -106,9 +106,9 @@ namespace Slickflow.Engine.Core.Pattern.Event
             var delegateContext = new DelegateContext
             {
                 AppInstanceID = ActivityForwardContext.ProcessInstance.AppInstanceID,
-                ProcessGUID = ActivityForwardContext.ProcessInstance.ProcessGUID,
+                ProcessID = ActivityForwardContext.ProcessInstance.ProcessID,
                 ProcessInstanceID = ActivityForwardContext.ProcessInstance.ID,
-                ActivityGUID = ActivityForwardContext.FromActivityInstance.ActivityGUID,
+                ActivityID = ActivityForwardContext.FromActivityInstance.ActivityID,
                 ActivityName = ActivityForwardContext.FromActivityInstance.ActivityName
             };
 
@@ -173,7 +173,7 @@ namespace Slickflow.Engine.Core.Pattern.Event
             this.EventActivityInstance = aim.CreateActivityInstanceObject(processInstance.AppName,
                 processInstance.AppInstanceID,
                 processInstance.AppInstanceCode,
-                processInstance.ProcessGUID,
+                processInstance.ProcessID,
                 processInstance.ID,
                 activity,
                 runner);
