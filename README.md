@@ -30,8 +30,10 @@
     **http://localhost:5000**
 
 **.NET/.NETCore Workflow Engine With Full Source Code** 
+0. **AI deepseek service supported**  
+ Slickflow can use AI deepsesk service to generate BPMN flow chart through sending request by users.  
 1. **.NET, .NET CORE version both supported**  
- Slickflow is an open-source project based on .NET6; It's easy to use engine product into the cross-platform application.  
+ Slickflow is an open-source project based on .NET8; It's easy to use engine product into the cross-platform application.  
 2. **BPMN graphic style process diagram**   
  Slickflow is using BPMN2 notation to describe process diagram, the Slickflow designer is HTML5 graph editor and user-friendly to business process communication and business analysis.  
 3. **High performance with Dapper.NET library**  
@@ -169,12 +171,13 @@ https://www.youtube.com/@besley7836
 
 ![AskForLeave Form Approval](https://github.com/besley/besley.github.io/blob/master/Gif/SlickQua-Ask4Leave-Demo.gif)  
 
-**Slickflow(2.0.0.0) 企业版：** 
+**Slickflow(3.0.0.0) 企业版：** 
 
 
-1. 集成BpmnJS 设计器，XML模式转换为BPMN2;
+0. 支持AI模型DeepSeek生成BPMN流程图;
+1. 集成BpmnJS 设计器，XML模式为BPMN2;
 2. 重构Slickflow.Engine项目;
-3. 重写ProcessModelBPMN，适应BPMN2模型;
+3. 演示项目为MvcDemo和WebDemo；
 4. 全部项目 .NET8 版本实现；
 5. 技术开发文档网站发布
 	http://doc.slickflow.com (中文) 
