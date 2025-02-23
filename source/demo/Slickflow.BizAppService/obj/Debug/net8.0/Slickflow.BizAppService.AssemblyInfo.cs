@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Slickflow.BizAppService")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f7b89b91924db44a4a01dda25f59b686807edc3d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d780040e9dd7aa51f3061350af4b996c85f46192")]
 [assembly: System.Reflection.AssemblyProductAttribute("Slickflow.BizAppService")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Slickflow.BizAppService")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
