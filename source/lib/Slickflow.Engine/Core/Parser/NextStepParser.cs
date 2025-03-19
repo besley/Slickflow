@@ -34,7 +34,10 @@ namespace Slickflow.Engine.Core.Parser
             var nextResult = GetNextActivityRoleUserTree(resourceService, runner, condition);
             nextStepInfo.Message = nextResult.Message;
             nextStepInfo.NextActivityRoleUserTree = nextResult.StepList;
-            nextStepInfo.NextActivityPerformers = GetNextActivityPerformersPriliminary(runner);
+            if (nextResult.StepList != null && nextResult.StepList.Count > 0)
+            {
+                nextStepInfo.NextActivityPerformers = GetNextActivityPerformersPriliminary(runner);
+            }
 
             return nextStepInfo;
         }
