@@ -35,7 +35,7 @@ namespace Slickflow.Engine.Xpdl
         public static Activity GetEndActivity(Process process)
         {
             var activityList = process.ActivityList.ToList();
-            var activity = activityList.SingleOrDefault<Activity>(a => a.ActivityType == ActivityTypeEnum.EndNode);
+            var activity = activityList.FirstOrDefault<Activity>(a => a.ActivityType == ActivityTypeEnum.EndNode);
             return activity;
         }
 

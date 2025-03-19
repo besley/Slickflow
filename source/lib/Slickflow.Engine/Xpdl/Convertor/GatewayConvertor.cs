@@ -31,8 +31,17 @@ namespace Slickflow.Engine.Xpdl.Convertor
 
             //区分Split和Join的类型
             //Distinguish between Split and Join types
-            var incomingCount = gatewayNode.SelectNodes(XPDLDefinition.BPMN_StrXmlPath_Incoming, base.XMLNamespaceManager).Count;
-            var outgoingCount = gatewayNode.SelectNodes(XPDLDefinition.BPMN_StrXmlPath_Outgoing, base.XMLNamespaceManager).Count;
+
+            //Select sequenceflow list
+            var xmlProcessNode = gatewayNode.ParentNode;
+            var xmlPathIncoming = string.Format("{0}[@targetRef='{1}']", XPDLDefinition.BPMN_ElementName_SequenceFlow, entity.ActivityID);
+            var xmlPathOutgoing = string.Format("{0}[@sourceRef='{1}']", XPDLDefinition.BPMN_ElementName_SequenceFlow, entity.ActivityID);
+            var incomingCount = xmlProcessNode.SelectNodes(xmlPathIncoming, base.XMLNamespaceManager).Count;
+            var outgoingCount = xmlProcessNode.SelectNodes(xmlPathOutgoing, base.XMLNamespaceManager).Count;
+
+            //Select incoming and outgoing within the childnodes of the activity xml element
+            //var incomingCount = gatewayNode.SelectNodes(XPDLDefinition.BPMN_StrXmlPath_Incoming, base.XMLNamespaceManager).Count;
+            //var outgoingCount = gatewayNode.SelectNodes(XPDLDefinition.BPMN_StrXmlPath_Outgoing, base.XMLNamespaceManager).Count;
 
             if (incomingCount == 1
                 && outgoingCount > 1)
