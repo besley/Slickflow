@@ -34,7 +34,7 @@
 0. **Deepseek/QWen-Plus AI service supported**  
  Slickflow can use AI deepsesk service to generate BPMN flow chart through text description by users.  
 1. **.NET, .NET CORE version both supported**  
- Slickflow is an open-source project based on .NET8; It's easy to use engine product into the cross-platform application.  
+ Slickflow is an open-source project based on .NET8; It's easy to use engine product into the cross-platform application, such as Linux, MacOS
 2. **BPMN graphic style process diagram**   
  Slickflow is using BPMN2 notation to describe process diagram, the Slickflow designer is HTML5 graph editor and user-friendly to business process communication and business analysis.  
 3. **High performance with Dapper.NET library**  
