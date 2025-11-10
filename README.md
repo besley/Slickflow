@@ -175,7 +175,7 @@ https://www.youtube.com/@besley7836
 **Slickflow(3.0.0.0) 企业版：** 
 
 
-0. 支持AI模型DeepSeek生成BPMN流程图;
+0. 支持AI模型DeepSeek/QWen-Plus生成BPMN流程图;
 1. 集成BpmnJS 设计器，XML模式为BPMN2;
 2. 重构Slickflow.Engine项目;
 3. 演示项目为MvcDemo和WebDemo；
