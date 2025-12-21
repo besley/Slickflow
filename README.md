@@ -167,9 +167,6 @@ The formbuilder project:http://github.com/besley/formbuilder/
 **YouTube Workflow Pattern Video**
 https://www.youtube.com/@besley7836
 
-![AskForLeave Form Approval](https://github.com/besley/besley.github.io/blob/master/Gif/SlickQua-Ask4Leave-Demo.gif)  
-
-
 **EMail: sales@ruochisoft.com**  
 **QQ(Author): 47743901**  
 **WeChat(Author): besley2008**  
