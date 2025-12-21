@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:sf="http://www.slickflow.com/schema/sf" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" id="bpmn-diagram" targetNamespace="http://bpmn.io/schema/bpmn" schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn:process id="Process_8754_2583" sf:code="MultipleInstance_Code_8754_2583" name="MultipleInstance_8754_2583" isExecutable="true" sf:version="1">
+    <bpmn:startEvent id="StartNode_7969" sf:code="Start" name="Start">
+      <bpmn:outgoing>Flow_5825</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="TaskNode_7521" sf:code="task001" name="Task-001">
+      <bpmn:incoming>Flow_5825</bpmn:incoming>
+      <bpmn:outgoing>Flow_1548</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="MultiSignNode_5897" sf:code="MI001" name="Sign Together">
+      <bpmn:incoming>Flow_1548</bpmn:incoming>
+      <bpmn:outgoing>Flow_4383</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics />
+    </bpmn:task>
+    <bpmn:task id="TaskNode_8262" sf:code="task003" name="Task-003">
+      <bpmn:incoming>Flow_4383</bpmn:incoming>
+      <bpmn:outgoing>Flow_5331</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="EndNode_8541" sf:code="End" name="End">
+      <bpmn:incoming>Flow_5331</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_5825" name="" sourceRef="StartNode_7969" targetRef="TaskNode_7521" />
+    <bpmn:sequenceFlow id="Flow_1548" name="" sourceRef="TaskNode_7521" targetRef="MultiSignNode_5897" />
+    <bpmn:sequenceFlow id="Flow_4383" name="" sourceRef="MultiSignNode_5897" targetRef="TaskNode_8262" />
+    <bpmn:sequenceFlow id="Flow_5331" name="" sourceRef="TaskNode_8262" targetRef="EndNode_8541" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_8754_2583">
+      <bpmndi:BPMNShape id="BPMNShape_15m5mdf_di" bpmnElement="StartNode_7969">
+        <dc:Bounds x="240" y="180" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_88d2v80_di" bpmnElement="TaskNode_7521">
+        <dc:Bounds x="356" y="158" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_vgctb22_di" bpmnElement="MultiSignNode_5897">
+        <dc:Bounds x="536" y="158" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_h5r1v3b_di" bpmnElement="TaskNode_8262">
+        <dc:Bounds x="716" y="158" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_zc7r5yn_di" bpmnElement="EndNode_8541">
+        <dc:Bounds x="896" y="180" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_5825_di" bpmnElement="Flow_5825">
+        <di:waypoint x="276" y="198" />
+        <di:waypoint x="356" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1548_di" bpmnElement="Flow_1548">
+        <di:waypoint x="456" y="198" />
+        <di:waypoint x="536" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4383_di" bpmnElement="Flow_4383">
+        <di:waypoint x="636" y="198" />
+        <di:waypoint x="716" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5331_di" bpmnElement="Flow_5331">
+        <di:waypoint x="816" y="198" />
+        <di:waypoint x="896" y="198" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -2,8 +2,8 @@
     function pordermanager() {
     }
 
-    pordermanager.mProductOrderProcessID = config.ProcessID;
-    pordermanager.mcurrentProcessInstanceID = 0;
+    pordermanager.mProductOrderProcessId = config.ProcessId;
+    pordermanager.mcurrentProcessInstanceId = 0;
     pordermanager.mcurrentAppName = "ProductOrder";
 
     var porderStatus = {};
@@ -29,7 +29,7 @@
 
     pordermanager.mgridProductOrder = null;
     pordermanager.mdvProductOrder = null;
-    pordermanager.selectedProductOrderID = 0;
+    pordermanager.selectedProductOrderId = 0;
 
     var selectedRow = null;
     var selectedRowIndex = 0;
@@ -48,11 +48,11 @@
         }
 
         var runner = {
-            "UserID": user.UserID,
+            "UserId": user.UserId,
             "UserName": user.UserName,
             "AppName": "ProductOrder",
-            "AppInstanceID": pordermanager.selectedProductOrderID.toString(),
-            "ProcessID": pordermanager.mProductOrderProcessID,
+            "AppInstanceId": pordermanager.selectedProductOrderId.toString(),
+            "ProcessId": pordermanager.mProductOrderProcessId,
             "Version": "1"
         };
         return runner;
@@ -109,7 +109,7 @@
         var statusTextArray = ["Ready", "toDispatch", "toSample", "toManufature", "toQCCheck", "toWeight", "toDeliverty", "Completed"];
         //grid column define
         var columnProductOrder = [
-                    { id: "ID", name: "ID", field: "ID", width: 40, cssClass: "bg-gray" },
+                    { id: "Id", name: "Id", field: "Id", width: 40, cssClass: "bg-gray" },
                     { id: "OrderCode", name: "OrderCode", field: "OrderCode", width: 80, cssClass: "bg-gray" },
                     { id: "ProductName", name: "OrderName", field: "ProductName", width: 90, cssClass: "bg-gray" },
                     { id: "Status", name: "Status", field: "Status", width: 70, cssClass: "bg-gray", formatter: Slick.Formatters.EnmuabledText, enumabledTextArray: statusTextArray },
@@ -121,7 +121,7 @@
                     { id: "CustomerName", name: "CustomerName", field: "CustomerName", width: 120, cssClass: "bg-gray" },
                     { id: "Address", name: "Address", field: "Address", width: 120, cssClass: "bg-gray" },
                     { id: "Mobile", name: "Mobile", field: "Mobile", width: 100, cssClass: "bg-gray" },
-                    { id: "LastUpdatedTime", name: "LastUpdatedTime", field: "LastUpdatedTime", width: 120, cssClass: "bg-gray", formatter: Slick.Formatters.DataTime },
+                    { id: "UpdatedTime", name: "UpdatedTime", field: "UpdatedTime", width: 120, cssClass: "bg-gray", formatter: Slick.Formatters.DataTime },
         ];
 
         var optionsProductOrder = {
@@ -148,7 +148,7 @@
         });
 
         dvProductOrder.beginUpdate();
-        dvProductOrder.setItems(dsProductOrder, "ID");
+        dvProductOrder.setItems(dsProductOrder, "Id");
         gridProductOrder.setSelectionModel(new Slick.RowSelectionModel());
         gridProductOrder.autosizeColumns();
         dvProductOrder.endUpdate();
@@ -160,11 +160,11 @@
             if (row) {
                 pordermanager.selectedRow = row;
                 pordermanager.selectedRowIndex = selectedRowIndex;
-                pordermanager.selectedProductOrderID = row.ID;
+                pordermanager.selectedProductOrderId = row.Id;
                 pordermanager.selectedProductOrderCode = row.OrderCode;
 
-                pordermanager.getReadyActivityInstance(row.ID.toString(), pordermanager.mProductOrderProcessID);
-                pordermanager.getAppFlowList(row.ID);
+                pordermanager.getReadyActivityInstance(row.Id.toString(), pordermanager.mProductOrderProcessId);
+                pordermanager.getAppFlowList(row.Id);
 
                 var status = row.Status;
                 if (status === "1") {
@@ -202,7 +202,7 @@
         pordermanager.mgridProductOrder.invalidateRow(rowIndex);
         row[pordermanager.mgridProductOrder.getColumns()[3].id] = status;
         row[pordermanager.mgridProductOrder.getColumns()[4].id] = status;
-        pordermanager.mdvProductOrder.updateItem(row.ID, row);
+        pordermanager.mdvProductOrder.updateItem(row.Id, row);
         pordermanager.mgridProductOrder.render();
     }
 
@@ -234,23 +234,23 @@
         if (user === undefined) return false;
 
         var runner = {
-            "UserID": user.UserID,
+            "UserId": user.UserId,
             "UserName": user.UserName,
             "AppName": pordermanager.mcurrentAppName,
-            "AppInstanceID": pordermanager.selectedProductOrderID.toString(),
-            "ProcessID": pordermanager.mProductOrderProcessID,
+            "AppInstanceId": pordermanager.selectedProductOrderId.toString(),
+            "ProcessId": pordermanager.mProductOrderProcessId,
             "Version": "1"
         };
 
         var productOrder = {
-            "ID": pordermanager.selectedProductOrderID,
+            "Id": pordermanager.selectedProductOrderId,
             "OrderCode": pordermanager.selectedProductOrderCode,
         };
 
         if (step === "dispatch") {
             //判断是否是重复派单
             //Determine whether it is a duplicate dispatch
-            jshelper.ajaxGet("api/productorder/checkdispatched/" + pordermanager.selectedProductOrderID,
+            jshelper.ajaxGet("api/productorder/checkdispatched/" + pordermanager.selectedProductOrderId,
                         null,
                         function (result) {
                             if (result.Status === 1) {
@@ -293,19 +293,17 @@
     //#endregion
 
     //#region 业务流程数据记录
-    pordermanager.getReadyActivityInstance = function (appInstanceID, processID) {
+    pordermanager.getReadyActivityInstance = function (appInstanceId, processId) {
         var query = {};
-        query.AppInstanceID = appInstanceID.toString();
-        query.ProcessID = processID;
-
-        window.console.log(query);
+        query.AppInstanceId = appInstanceId.toString();
+        query.ProcessId = processId;
 
         jshelper.ajaxPost('api/Wf/QueryReadyActivityInstance',
             JSON.stringify(query), function (result) {
             if (result.Status === 1) {
                 var columnReadyActivityInstance = [
-                    { id: "ID", name: "ID", field: "ID", width: 40, cssClass: "bg-gray" },
-                    { id: "AppInstanceID", name: "OrderID", field: "AppInstanceID", width: 40, cssClass: "bg-gray" },
+                    { id: "Id", name: "Id", field: "Id", width: 40, cssClass: "bg-gray" },
+                    { id: "AppInstanceId", name: "OrderId", field: "AppInstanceId", width: 40, cssClass: "bg-gray" },
                     { id: "ActivityName", name: "ActivityName", field: "ActivityName", width: 80, cssClass: "bg-gray" },
                     { id: "CreatedDateTime", name: "CreatedDateTiem", field: "CreatedDateTime", width: 120, cssClass: "bg-gray", formatter: Slick.Formatters.DataTime },
                     { id: "AssignedToUserNames", name: "AssignedToUser", field: "AssignedToUserNames", width: 320, cssClass: "bg-gray" },
@@ -336,7 +334,7 @@
                 });
 
                 dvReadyActivityInstance.beginUpdate();
-                dvReadyActivityInstance.setItems(dsReadyActivityInstance, "ID");
+                dvReadyActivityInstance.setItems(dsReadyActivityInstance, "Id");
                 gridReadyActivityInstance.setSelectionModel(new Slick.RowSelectionModel());
                 gridReadyActivityInstance.autosizeColumns();
                 dvReadyActivityInstance.endUpdate();
@@ -350,17 +348,17 @@
         });
     }
 
-    pordermanager.getAppFlowList = function (appInstanceID) {
+    pordermanager.getAppFlowList = function (appInstanceId) {
         var query = {
             "PageIndex": 0,
             "PageSize": 20,
-            "AppInstanceID": appInstanceID.toString()
+            "AppInstanceId": appInstanceId.toString()
         };
 
         jshelper.ajaxPost('api/AppFlow/QueryPaged', JSON.stringify(query), function (result) {
             if (result.Status === 1) {
                 var columnAppFlow = [
-                    { id: "ID", name: "ID", field: "ID", width: 40, cssClass: "bg-gray" },
+                    { id: "Id", name: "Id", field: "Id", width: 40, cssClass: "bg-gray" },
                     { id: "ActivityName", name: "ActivityName", field: "ActivityName", width: 80, cssClass: "bg-gray" },
                     { id: "ChangedTime", name: "ChangedTime", field: "ChangedTime", width: 120, cssClass: "bg-gray", formatter: Slick.Formatters.DataTime },
                     { id: "ChangedUserName", name: "ChangedUser", field: "ChangedUserName", width: 120, cssClass: "bg-gray" },
@@ -391,7 +389,7 @@
                 });
 
                 dvAppFlow.beginUpdate();
-                dvAppFlow.setItems(dsAppFlow, "ID");
+                dvAppFlow.setItems(dsAppFlow, "Id");
                 gridAppFlow.setSelectionModel(new Slick.RowSelectionModel());
                 gridAppFlow.autosizeColumns();
                 dvAppFlow.endUpdate();

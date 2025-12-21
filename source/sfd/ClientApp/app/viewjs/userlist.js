@@ -15,7 +15,7 @@ const userlist = (function () {
                 var gridOptions = {
                     theme: themeBalham,
                     columnDefs: [
-                        { headerName: 'ID', field: 'UserID', width: 60 },
+                        { headerName: 'Id', field: 'UserId', width: 60 },
                         { headerName: kresource.getItem('username'), field: 'UserName', width: 200 },
                         { headerName: kresource.getItem('email'), field: 'EMail', width: 200 }
                     ],

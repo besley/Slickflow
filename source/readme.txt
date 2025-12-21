@@ -1,0 +1,3 @@
+Slickflow 3.5.0.0
+
+The latest version of the Slickflow community has added an AI big model node, which is a major change in the product's complete shift towards AI. Enterprise level customers can build application development based on AI big models on this version, and the enterprise version will also include Agent intelligent agent function, further enhancing Slickflow's deep learning based practice and project implementation

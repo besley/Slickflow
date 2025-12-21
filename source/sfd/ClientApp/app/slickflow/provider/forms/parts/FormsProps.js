@@ -67,7 +67,7 @@ function isFormSelectedExisted(element) {
     const formSelected = mxFormSelected;
     if (formSelected !== null) {
         forms.forEach(function (item, index) {
-            if (item.outerId === formSelected.FormID) {
+            if (item.outerId === formSelected.FormId) {
                 isExisted = true;
             }
         })
@@ -126,7 +126,7 @@ function executeMultiCommad(element, bpmnFactory, commandStack) {
     if (mxFormSelected !== null) {
         const newForm = createElement('sf:Form', {
             name: mxFormSelected.FormName,
-            outerId: mxFormSelected.FormID,
+            outerId: mxFormSelected.FormId,
             outerCode: mxFormSelected.FormCode
         }, extension, bpmnFactory);
 

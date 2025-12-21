@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using Microsoft.AspNetCore.Mvc;
-using SlickOne.WebUtility;
 using Slickflow.Data;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Core.Result;
@@ -12,6 +11,8 @@ using Slickflow.Engine.Service;
 using static IronPython.Modules._ast;
 using System.Threading.Tasks;
 using RabbitMQ.Client.Impl;
+using Slickflow.Engine.Business.Result;
+using Slickflow.WebUtility;
 
 namespace Slickflow.WebApi.Controllers
 {
@@ -143,18 +144,18 @@ namespace Slickflow.WebApi.Controllers
                     //1) If there are pending tasks for the current user
                     //2) The process is executed only once and will no longer be called in a loop
                     var transactionContinue = session.BeginTrans();
-                    var myTask = wfService.GetTaskView(session.Connection, runner.AppInstanceID, runner.ProcessID, runner.UserID, session.Transaction);
+                    var myTask = wfService.GetTaskView(session.Connection, runner.AppInstanceId, runner.ProcessId, runner.UserId, session.Transaction);
                     if (myTask != null)
                     {
                         //构造执行用户信息
                         var runnerContinue = new WfAppRunner
                         {
-                            AppInstanceID = runner.AppInstanceID,
+                            AppInstanceId = runner.AppInstanceId,
                             AppName = runner.AppName,
-                            ProcessID = runner.ProcessID,
+                            ProcessId = runner.ProcessId,
                             Version = runner.Version,
-                            TaskID = myTask.TaskID,
-                            UserID = runner.UserID,
+                            TaskId = myTask.Id,
+                            UserId = runner.UserId,
                             UserName = runner.UserName
                         };
 
@@ -168,10 +169,10 @@ namespace Slickflow.WebApi.Controllers
                             var performerList = new PerformerList();
                             foreach (var user in nodeview.Users)
                             {
-                                var performer = new Performer(user.UserID, user.UserName);
+                                var performer = new Performer(user.UserId, user.UserName);
                                 performerList.Add(performer);
                             }
-                            nextActivityPerformers.Add(nodeview.ActivityID, performerList);
+                            nextActivityPerformers.Add(nodeview.ActivityId, performerList);
                         }
 
                         runnerContinue.NextActivityPerformers = nextActivityPerformers;
@@ -421,7 +422,7 @@ namespace Slickflow.WebApi.Controllers
             {
                 var taskQuery = new TaskQuery
                 {
-                    UserID = "10"
+                    UserId = "10"
                 };
                 var wfService = new WorkflowService();
                 var entity = wfService.GetCompletedTasks(taskQuery).ToList();
@@ -444,32 +445,30 @@ namespace Slickflow.WebApi.Controllers
         ///Test script:
         ///1) Start the process
         ///  http://localhost/sfapi2/api/wfunittest/startprocess
-        /// {"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
+        /// {"UserId":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceId":"100","ProcessId":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
         /// 
         ///2) Operation process
         ///  http://localhost/sfapi2/api/wfunittest/runprocessapp
-        /// {"AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserID":"10","UserName":"Long","NextActivityPerformers":{"eb833577-abb5-4239-875a-5f2e2fcb6d57":[{"UserID":"20","UserName":"Jack"},{"UserID":"30","UserName":"Smith"},{"UserID":"40","UserName":"Tom"}]}}
+        /// {"AppName":"SamplePrice","AppInstanceId":"100","ProcessId":"072af8c3-482a-4b1c-890b-685ce2fcc75d","UserId":"10","UserName":"Long","NextActivityPerformers":{"eb833577-abb5-4239-875a-5f2e2fcb6d57":[{"UserId":"20","UserName":"Jack"},{"UserId":"30","UserName":"Smith"},{"UserId":"40","UserName":"Tom"}]}}
         /// 
         ///3) Commissioned tasks
         ///  http://localhost/sfapi2/api/wfunittest/entrust
-        /// {"TaskID":"210","RunnerID":"40","RunnerName":"Tom","EntrustToUserID":"30","EntrustToUserName":"smith"}
+        /// {"TaskId":"210","RunnerId":"40","RunnerName":"Tom","EntrustToUserId":"30","EntrustToUserName":"smith"}
         /// 
         /// </summary>
-        /// <param name="runner"></param>
-        /// <returns></returns>
         [HttpPost]
-        public ResponseResult Entrust([FromBody] TaskEntrustedEntity task)
+        public ResponseResult<WfDataManagedResult> Entrust([FromBody] TaskEntrustedEntity task)
         {
             var wfService = new WorkflowService();
-            var isEntrusted = wfService.EntrustTask(task, true);
+            var entrustedResult = wfService.EntrustTask(task, true);
 
-            if (isEntrusted)
+            if (entrustedResult.Status == WfDataManagedStatusEnum.Success)
             {
-                return ResponseResult.Success();
+                return ResponseResult<WfDataManagedResult>.Success(entrustedResult);
             }
             else
             {
-                return ResponseResult.Error("Entrust task failture...");
+                return ResponseResult<WfDataManagedResult>.Error(entrustedResult.Message);
             }
         }
         #endregion

@@ -5,15 +5,15 @@ const kdiagram = (function () {
     function kdiagram() {
     }
 
-    kdiagram.loadXml = function (appInstanceID, processID, version) {
+    kdiagram.loadXml = function (appInstanceId, processId, version) {
         var processQuery = {
-            ProcessID: processID,
+            ProcessId: processId,
             Version: version
         };
 
         var taskQuery = {
-            AppInstanceID: appInstanceID,
-            ProcessID: processID,
+            AppInstanceId: appInstanceId,
+            ProcessId: processId,
             Version: version
         };
 
@@ -77,7 +77,7 @@ const kdiagram = (function () {
     function isReadyTask(activityList, element) {
         var isOk = false;
         $.each(activityList, function (idnex, item) {
-            if (element.businessObject.$attrs["id"] === item.ActivityID) {
+            if (element.businessObject.$attrs["id"] === item.ActivityId) {
                 isOk = true;
                 return false;
             }
@@ -101,7 +101,7 @@ const kdiagram = (function () {
     function isCompletedTransition(transitionList, element) {
         var isOk = false;
         $.each(transitionList, function (idnex, item) {
-            if (element.businessObject.$attrs["id"] === item.TransitionID) {
+            if (element.businessObject.$attrs["id"] === item.TransitionId) {
                 isOk = true;
                 return false;
             }

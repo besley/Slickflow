@@ -14,6 +14,16 @@
         "name": "url",
         "isAttr": true,
         "type": "String"
+      },
+      {
+        "name": "uuid",
+        "isAttr": true,
+        "type": "String"
+      },
+      {
+        "name": "type",
+        "isAttr": true,
+        "type": "String"
       }
     ]
   }

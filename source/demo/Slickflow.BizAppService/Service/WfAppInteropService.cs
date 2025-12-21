@@ -43,7 +43,7 @@ namespace Slickflow.BizAppService.Service
             {
                 var performerList = wfService.GetPerformerList(node);      
                 Dictionary<string, PerformerList> dict = new Dictionary<string, PerformerList>();
-                dict.Add(node.ActivityID, performerList);
+                dict.Add(node.ActivityId, performerList);
                 runner.NextActivityPerformers = dict;
 
                 result = wfService.RunProcessApp(session.Connection, runner, session.Transaction);
@@ -69,10 +69,10 @@ namespace Slickflow.BizAppService.Service
         /// <summary>
         /// Get Activity
         /// </summary>
-        public Activity GetActivity(string processID, string version, string activityID)
+        public Activity GetActivity(string processId, string version, string activityId)
         {
             var wfService = new WorkflowService();
-            var activityEntity = wfService.GetActivityEntity(processID, version, activityID);
+            var activityEntity = wfService.GetActivityEntity(processId, version, activityId);
 
             return activityEntity;
         }

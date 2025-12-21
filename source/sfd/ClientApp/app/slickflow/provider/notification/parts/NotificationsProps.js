@@ -71,7 +71,7 @@ function isRecipientExisted(element) {
     const recipient = mxRecipientSelected;
     if (recipient !== null) {
         notifications.forEach(function (item, index) {
-            if (item.outerId === recipient.ID) {
+            if (item.outerId === recipient.Id) {
                 isExisted = true;
             }
         })
@@ -131,7 +131,7 @@ function executeMultiCommad(element, bpmnFactory, commandStack) {
     if (mxRecipientSelected !== null) {
         const newNotification = createElement('sf:Notification', {
             name: mxRecipientSelected.UserName,
-            outerId: mxRecipientSelected.UserID,
+            outerId: mxRecipientSelected.UserId,
             outerCode: mxRecipientSelected.UserCode ? mxRecipientSelected.UserCode : '',
             outerType: mxRecipientType    //user
         }, extension, bpmnFactory);

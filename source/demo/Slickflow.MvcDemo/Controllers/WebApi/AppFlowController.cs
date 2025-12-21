@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Slickflow.Module.Resource;
-using Slickflow.Engine.Common;
-using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Service;
-using SlickOne.WebUtility;
 using Slickflow.BizAppService.Entity;
 using Slickflow.BizAppService.Interface;
 using Slickflow.BizAppService.Service;
+using Slickflow.WebUtility;
 
 namespace Slickflow.MvcDemo.Controllers.WebApi
 {

@@ -1,4 +1,4 @@
-import jquery from 'jquery';
+﻿import jquery from 'jquery';
 var $ = require("jquery");
 window.$ = $;
 
@@ -15,8 +15,8 @@ ModuleRegistry.registerModules([AllCommunityModule])
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
 import {
-  BpmnPropertiesPanelModule,
-  BpmnPropertiesProviderModule
+    BpmnPropertiesPanelModule,
+    BpmnPropertiesProviderModule
 } from 'bpmn-js-properties-panel';
 
 import sfModdleDescriptor from './slickflow/descriptors/sf';
@@ -27,12 +27,14 @@ import sectionModdleDescriptor from './slickflow/descriptors/section';
 import boundaryModdleDescriptor from './slickflow/descriptors/boundary';
 import transitionModdleDescriptor from './slickflow/descriptors/transition';
 import performersModdleDescriptor from './slickflow/descriptors/performers';
-/*import formsModdleDescriptor from './slickflow/descriptors/forms';*/
+import formsModdleDescriptor from './slickflow/descriptors/forms';
 import notificationModdleDescriptor from './slickflow/descriptors/notification';
+import variableModdleDescriptor from './slickflow/descriptors/variable';
 import gatewayModdleDescriptor from './slickflow/descriptors/gateway';
 import multisignModdleDescriptor from './slickflow/descriptors/multisign';
 import subinfoesModdleDescriptor from './slickflow/descriptors/subinfoes';
 import servicetaskModdleDescriptor from './slickflow/descriptors/servicetask';
+import aiservicetaskModdleDescriptor from './slickflow/descriptors/aiservicetask';
 import scripttaskModdleDescriptor from './slickflow/descriptors/scripttask';
 
 sfModdleDescriptor.types.push(identityModdleDescriptor.identity);
@@ -43,10 +45,12 @@ sfModdleDescriptor.types = sfModdleDescriptor.types.concat(actionModdleDescripto
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(sectionModdleDescriptor.section);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(boundaryModdleDescriptor.boundary);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(servicetaskModdleDescriptor.service);
+sfModdleDescriptor.types = sfModdleDescriptor.types.concat(aiservicetaskModdleDescriptor.aiService);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(scripttaskModdleDescriptor.script);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(performersModdleDescriptor.performers);
-/*sfModdleDescriptor.types = sfModdleDescriptor.types.concat(formsModdleDescriptor.forms);*/
+sfModdleDescriptor.types = sfModdleDescriptor.types.concat(formsModdleDescriptor.forms);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(notificationModdleDescriptor.notifications);
+sfModdleDescriptor.types = sfModdleDescriptor.types.concat(variableModdleDescriptor.variables);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(subinfoesModdleDescriptor.subinfoes);
 
 //import external property panel
@@ -62,98 +66,107 @@ import multisignPropertiesProviderModule from './slickflow/provider/multisign/';
 import subinfoesPropertiesProviderModule from './slickflow/provider/subinfoes/';
 import triggerPropertiesProviderModule from './slickflow/provider/trigger/';
 import servicetaskPropertiesProviderModule from './slickflow/provider/servicetask/';
+import aiservicetaskPropertiesProviderModule from './slickflow/provider/aiservicetask/';
+
 import scripttaskPropertiesProviderModule from './slickflow/provider/scripttask/';
 import performersPropertiesProviderModule from './slickflow/provider/performers/';
-/*import formsPropertiesProviderModule from './slickflow/provider/forms/';*/
+import formsPropertiesProviderModule from './slickflow/provider/forms/';
 import fieldsPropertiesProviderModule from './slickflow/provider/fields/';
 import notificationPropertiesProviderModule from './slickflow/provider/notification/';
+import variablePropertiesProviderModule from './slickflow/provider/variable/';
 import identityPropertiesProviderModule from './slickflow/provider/identity';
-/*import customContextModule from './slickflow/context';*/
+import customContextModule from './slickflow/context';
 
 
 
 import {
-  debounce
+    debounce
 } from 'min-dash';
-
-import '../styles/app.less';
 
 var container = $('#js-drop-zone');
 
 var bpmnModeler = new BpmnModeler({
-  container: '#js-canvas',
-  propertiesPanel: {
-    parent: '#js-properties-panel'
+    container: '#js-canvas',
+    propertiesPanel: {
+        parent: '#js-properties-panel'
     },
     moddleExtensions: {
         sf: sfModdleDescriptor,
         magic: magicModdleDescriptor
     },
-  additionalModules: [
-    BpmnPropertiesPanelModule,
-      SfCommandInterceptor,
-      SfCommandExtension,
-      identityPropertiesProviderModule,
-      actionPropertiesProviderModule,
-      transitionPropertiesProviderModule,
-      sectionPropertiesProviderModule,
-      boundaryPropertiesProviderModule,
-      gatewayPropertiesProviderModule,
-      multisignPropertiesProviderModule,
-      triggerPropertiesProviderModule,
-      servicetaskPropertiesProviderModule,
-      scripttaskPropertiesProviderModule,
-      notificationPropertiesProviderModule,
-/*      formsPropertiesProviderModule,*/
-      fieldsPropertiesProviderModule,
-      subinfoesPropertiesProviderModule,
-      performersPropertiesProviderModule,
-      //customContextModule
-  ]
+    additionalModules: [
+        BpmnPropertiesPanelModule,
+        SfCommandInterceptor,
+        SfCommandExtension,
+        identityPropertiesProviderModule,
+        actionPropertiesProviderModule,
+        transitionPropertiesProviderModule,
+        sectionPropertiesProviderModule,
+        boundaryPropertiesProviderModule,
+        gatewayPropertiesProviderModule,
+        multisignPropertiesProviderModule,
+        triggerPropertiesProviderModule,
+        servicetaskPropertiesProviderModule,
+        aiservicetaskPropertiesProviderModule,
+        scripttaskPropertiesProviderModule,
+        notificationPropertiesProviderModule,
+        variablePropertiesProviderModule,
+        formsPropertiesProviderModule,
+        fieldsPropertiesProviderModule,
+        subinfoesPropertiesProviderModule,
+        performersPropertiesProviderModule,
+        customContextModule
+    ]
 });
 
 const propertiesPanel = bpmnModeler.get('propertiesPanel');
 
 //import kmain js file
-import kmain from '/app/viewjs/kmain.js'
+import kmain from './viewjs/kmain.js'
 window.kmain = kmain;
 kmain.init(bpmnModeler);
 
-import ktemplate from '/app/viewjs/ktemplate.js'
+import ktemplate from './viewjs/ktemplate.js'
 window.ktemplate = ktemplate;
+
+import kaidialog from './viewjs/kaidialog.js'
+window.kaidialog = kaidialog;
+
+import setting from './viewjs/setting.js'
+window.setting = setting;
 
 //#region File Drops
 function registerFileDrop(container, callback) {
 
-  function handleFileSelect(e) {
-    e.stopPropagation();
-    e.preventDefault();
+    function handleFileSelect(e) {
+        e.stopPropagation();
+        e.preventDefault();
 
-    var files = e.dataTransfer.files;
+        var files = e.dataTransfer.files;
 
-    var file = files[0];
+        var file = files[0];
 
-    var reader = new FileReader();
+        var reader = new FileReader();
 
-    reader.onload = function(e) {
+        reader.onload = function (e) {
 
-      var xml = e.target.result;
+            var xml = e.target.result;
 
-      callback(xml);
-    };
+            callback(xml);
+        };
 
-    reader.readAsText(file);
-  }
+        reader.readAsText(file);
+    }
 
-  function handleDragOver(e) {
-    e.stopPropagation();
-    e.preventDefault();
+    function handleDragOver(e) {
+        e.stopPropagation();
+        e.preventDefault();
 
-    e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-  }
+        e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+    }
 
-  container.get(0).addEventListener('dragover', handleDragOver, false);
-  container.get(0).addEventListener('drop', handleFileSelect, false);
+    container.get(0).addEventListener('dragover', handleDragOver, false);
+    container.get(0).addEventListener('drop', handleFileSelect, false);
 }
 
 
@@ -161,9 +174,9 @@ function registerFileDrop(container, callback) {
 
 // check file api availability
 if (!window.FileList || !window.FileReader) {
-  window.alert(
-    'Looks like you use an older browser that does not support drag and drop. ' +
-    'Try using Chrome, Firefox or the Internet Explorer > 10.');
+    window.alert(
+        'Looks like you use an older browser that does not support drag and drop. ' +
+        'Try using Chrome, Firefox or the Internet Explorer > 10.');
 } else {
     registerFileDrop(container, kmain.openDiagramFile);
 }
@@ -171,13 +184,13 @@ if (!window.FileList || !window.FileReader) {
 
 //#region render functions and button event
 // bootstrap diagram functions
-$(function() {
-  $('#js-create-diagram').click(function(e) {
-    e.stopPropagation();
-    e.preventDefault();
+$(function () {
+    $('#js-create-diagram').click(function (e) {
+        e.stopPropagation();
+        e.preventDefault();
 
-      kmain.createNewDiagram();
-  });
+        kmain.createNewDiagram();
+    });
 
     $('#js-open-process-list').click(function (e) {
         e.stopPropagation();

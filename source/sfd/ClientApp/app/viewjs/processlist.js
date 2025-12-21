@@ -2,7 +2,10 @@
 import kconfig from '../config/kconfig.js';
 window.slick = slick;
 
-import ClipboardJS from '../script/clipboard.min.js'
+import ClipboardJS from '../script/clipboard.min.js';
+import jquery from 'jquery';
+import kmsgbox from '../script/kmsgbox.js';
+const $ = jquery;
 window.ClipboardJS = ClipboardJS;
 
 const processlist = (function () {
@@ -17,8 +20,8 @@ const processlist = (function () {
     processlist.afterSubProcessSelected = new slick.Event();
 
     processlist.getProcessList = function () {
-        /* $('#loading-indicator').show();*/
-        jshelper.ajaxGet(kconfig.webApiUrl + 'api/Wf2Xml/GetProcessListSimple', null, function (result) {
+        //get process simple list data
+        processapi.getListSimple(function (result) {
             if (result.Status === 1) {
                 var divProcessGrid = document.querySelector('#myProcessGrid');
                 $(divProcessGrid).empty();
@@ -26,19 +29,20 @@ const processlist = (function () {
                 var gridOptions = {
                     theme: themeBalham,
                     columnDefs: [
-                        { headerName: 'ID', field: 'ID', width: 80 },
-                        { headerName: kresource.getItem('processid'), field: 'ProcessID', width: 240 },
+                        { headerName: 'Id', field: 'Id', width: 80 },
+                        { headerName: kresource.getItem('processid'), field: 'ProcessId', width: 240 },
                         { headerName: kresource.getItem('processname'), field: 'ProcessName', width: 200 },
                         { headerName: kresource.getItem('version'), field: 'Version', width: 80 },
                         { headerName: kresource.getItem('processcode'), field: 'ProcessCode', width: 200 },
                         { headerName: kresource.getItem('packagetype'), field: 'PackageType', width: 80, cellRenderer: onPackageTypeRenderer },
-                        { headerName: kresource.getItem('packageid'), field: 'PackageID', width: 80 },
-                        { headerName: kresource.getItem('status'), field: 'IsUsing', width: 80, cellRenderer: onIsUsingCellRenderer },
-                        { headerName: kresource.getItem('starttype'), field: 'StartType', width: 80, cellRenderer: onStartTypeCellRenderer },
-                        { headerName: kresource.getItem('startexpression'), field: 'StartExpression', width: 140 },
-                        { headerName: kresource.getItem('endtype'), field: 'EndType', width: 80, cellRenderer: onEndTypeCellRenderer },
-                        { headerName: kresource.getItem('endexpression'), field: 'EndExpression', width: 140 },
+                        { headerName: kresource.getItem('packageid'), field: 'PackageId', width: 80 },
+                        { headerName: kresource.getItem('status'), field: 'Status', width: 80, cellRenderer: onStatusCellRenderer },
+                        //{ headerName: kresource.getItem('starttype'), field: 'StartType', width: 80, cellRenderer: onStartTypeCellRenderer },
+                        //{ headerName: kresource.getItem('startexpression'), field: 'StartExpression', width: 140 },
+                        //{ headerName: kresource.getItem('endtype'), field: 'EndType', width: 80, cellRenderer: onEndTypeCellRenderer },
+                        //{ headerName: kresource.getItem('endexpression'), field: 'EndExpression', width: 140 },
                         { headerName: kresource.getItem('createddatetime'), field: 'CreatedDateTime', width: 220 },
+                        { headerName: kresource.getItem('updateddatetime'), field: 'UpdatedDateTime', width: 220 },
                     ],
                     rowSelection: {
                         mode: 'singleRow',
@@ -49,8 +53,17 @@ const processlist = (function () {
                     onRowDoubleClicked: onRowDoubleClicked
                 };
 
-                function onIsUsingCellRenderer(params) {
-                    return params.value === 1 ? kresource.getItem('active') : kresource.getItem('unactive');
+                function onStatusCellRenderer(params) {
+                    var txtStatus = '';
+                    var status = parseInt(params.value);
+                    if (status === 0) {
+                        txtStatus = kresource.getItem('unactive');
+                    } else if (status === 1) {
+                        txtStatus = kresource.getItem('active');
+                    } else if (status === 2) {
+                        txtStatus = kresource.getItem('stopactive');
+                    }
+                    return txtStatus;
                 }
 
                 function onPackageTypeRenderer(params) {
@@ -82,8 +95,6 @@ const processlist = (function () {
 
                 gridOptions.rowData = result.Entity;
                 const gridApi = createGrid(divProcessGrid, gridOptions);
-
-                $('#loading-indicator').hide();
 
                 function onSelectionChanged() {
                     var selectedRows = gridApi.getSelectedRows();
@@ -118,15 +129,15 @@ const processlist = (function () {
     processlist.loadProcess = function () {
         var entity = processlist.pselectedProcessEntity;
         if (entity !== null) {
-            $("#txtProcessID").val(entity.ProcessID);
+            $("#txtProcessId").val(entity.ProcessId);
             $("#txtProcessName").val(entity.ProcessName);
             $("#txtProcessCode").val(entity.ProcessCode);
             $("#txtVersion").val(entity.Version);
-            $("#ddlIsUsing").val(entity.IsUsing);
+            $("#ddlStatus").val(entity.Status);
             $("#txtDescription").val(entity.Description);
         } else {
             var strProcessGUID = jshelper.getUUID();
-            $("#txtProcessGUID").val(strProcessGUID);
+            $("#txtProcessId").val(strProcessGUID);
             $("#txtProcessName").val("");
             $("#txtProcessCode").val("");
             $("#txtVersion").val("1");
@@ -141,12 +152,10 @@ const processlist = (function () {
             kmsgbox.warn(kresource.getItem('processselectedwarnmsg'));
             return false;
         } else {
-            //泳道流程只能用主流程编辑
             //The lane process can only be edited using the main process
             if (process.PackageType === 2) {
                 kmsgbox.warn(kresource.getItem('processpoolopendiagramwarnmsg'));
             } else {
-                //单一流程编辑页面
                 //Single process editing page
                 BootstrapDialog.show({
                     message: $('<div id="popupContent-edit"></div>'),
@@ -160,7 +169,6 @@ const processlist = (function () {
         }
     }
 
-    //先拖动控件，在主界面创建流程图形，然后保存
     //First, drag the control to create a process graphic on the main interface, and then save it
     processlist.saveDiagram = function () {
         if ($.trim($("#txtProcessName").val()) === ""
@@ -170,11 +178,11 @@ const processlist = (function () {
             return false;
         }
         var entity = {
-            "ProcessID": kmain.mxSelectedProcessEntity.ProcessID,
+            "ProcessId": kmain.mxSelectedProcessEntity.ProcessId,
             "ProcessName": $("#txtProcessName").val(),
             "ProcessCode": $("#txtProcessCode").val(),
             "Version": $("#txtVersion").val(),
-            "IsUsing": $("#ddlIsUsing").val(),
+            "Status": $("#ddlStatus").val(),
             "Description": $("#txtDescription").val()
         };
 
@@ -207,7 +215,7 @@ const processlist = (function () {
         } else {
             kmsgbox.confirm(kresource.getItem('processupgrademsg'), function () {
                 var entity = {
-                    "ID": processlist.pselectedProcessEntity.ID
+                    "Id": processlist.pselectedProcessEntity.Id
                 };
                 processapi.upgrade(entity);
                 return;
@@ -223,7 +231,7 @@ const processlist = (function () {
         } else {
             var msgConfirm = '';
             var usingState = 0;
-            if (processlist.pselectedProcessEntity.IsUsing === 0) {
+            if (processlist.pselectedProcessEntity.Status === 0) {
                 usingState = 1;
                 msgConfirm = kresource.getItem('processusingenablemsg');
             } else {
@@ -233,9 +241,9 @@ const processlist = (function () {
 
             kmsgbox.confirm(msgConfirm, function () {
                 var entity = {
-                    "ProcessID": processlist.pselectedProcessEntity.ProcessID,
+                    "ProcessId": processlist.pselectedProcessEntity.ProcessId,
                     "Version": processlist.pselectedProcessEntity.Version,
-                    "IsUsing": usingState
+                    "Status": usingState
                 };
                 processapi.updateUsingState(entity);
                 return;
@@ -256,11 +264,11 @@ const processlist = (function () {
         }
 
         var entity = {
-            "ProcessID": $("#txtProcessID").val(),
+            "ProcessId": $("#txtProcessId").val(),
             "ProcessName": $("#txtProcessName").val(),
             "ProcessCode": $("#txtProcessCode").val(),
             "Version": $("#txtVersion").val(),
-            "IsUsing": $("#ddlIsUsing").val(),
+            "Status": $("#ddlStatus").val(),
             "Description": $("#txtDescription").val(),
             "TemplateType": processlist.mprocessTemplateType === '' ? "Blank" : processlist.mprocessTemplateType
         };
@@ -305,7 +313,7 @@ const processlist = (function () {
 
         kmsgbox.confirm(content, function () {
             var entity = {
-                "ProcessID": processlist.pselectedProcessEntity.ProcessID,
+                "ProcessId": processlist.pselectedProcessEntity.ProcessId,
                 "Version": processlist.pselectedProcessEntity.Version
             };
             processapi.delete(entity);
@@ -349,6 +357,26 @@ const processlist = (function () {
 
     //show process xml content
     processlist.showXmlContent = function () {
+        // Check if BPMN Modeler exists
+        if (!kmain.mBpmnModeler) {
+            kmsgbox.warn(kresource.getItem('xmlpreviewwarnmsg') || 'Please open or create a process diagram first');
+            return;
+        }
+
+        // Check if process diagram definition has been loaded
+        try {
+            var canvas = kmain.mBpmnModeler.get("canvas");
+            var rootElement = canvas.getRootElement();
+            if (!rootElement || !rootElement.businessObject) {
+                kmsgbox.warn(kresource.getItem('xmlpreviewwarnmsg') || 'Please open or create a process diagram first');
+                return;
+            }
+        } catch (error) {
+            kmsgbox.warn(kresource.getItem('xmlpreviewwarnmsg') || 'Please open or create a process diagram first');
+            return;
+        }
+
+        // Save XML and handle the result
         kmain.mBpmnModeler.saveXML({ format: true }).then(function (result) {
             if (result && result.xml) {
                 var xmlContent = result.xml;
@@ -363,6 +391,10 @@ const processlist = (function () {
             } else {
                 kmsgbox.warn(kresource.getItem('xmlprevieexceptionmsg'), result.message);
             }
+        }).catch(function (error) {
+            // Catch saveXML errors, such as "no definitions loaded"
+            console.error('Error saving XML:', error);
+            kmsgbox.warn(kresource.getItem('xmlpreviewwarnmsg') || 'Please open or create a process diagram first');
         });
     }
 
@@ -448,7 +480,22 @@ const processlist = (function () {
         });
     }
 
+    processlist.deleteInstance = function () {
+        var instanceQuery = {};
+        instanceQuery.ProcessId = processlist.pselectedProcessEntity.ProcessId;
+        instanceQuery.Version = processlist.pselectedProcessEntity.Version;
+
+        processapi.deleteInstance(instanceQuery, function (result) {
+            if (result.Status === 1) {
+                //console.log(result.Status)
+            } else {
+                kmsgbox.error(kresource.getItem("processinstanceclearerrormsg"), result.Message);
+            }
+        });
+    };
+
     return processlist;
 })()
 
 export default processlist
+

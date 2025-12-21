@@ -15,7 +15,7 @@ const rolelist = (function () {
                 var gridOptions = {
                     theme: themeBalham,
         			columnDefs: [
-                        { headerName: 'ID', field: 'ID', width: 60 },
+                        { headerName: 'Id', field: 'Id', width: 60 },
                         { headerName: kresource.getItem('rolename'), field: 'RoleName', width: 200 },
                         { headerName: kresource.getItem('rolecode'), field: 'RoleCode', width: 200 }
         			],

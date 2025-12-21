@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <title>Slickflow Designer</title>
@@ -10,11 +10,12 @@
     <link rel="stylesheet" href="vendor/bpmn-js/assets/bpmn-js.css" />
     <link rel="stylesheet" href="vendor/bpmn-js/assets/bpmn-font/css/bpmn-embedded.css" />
     <link rel="stylesheet" href="vendor/bpmn-js-properties-panel/assets/properties-panel.css" />
+    <link rel="stylesheet" href="vendor/fortawesome/fontawesome-free/css/all.min.css" />
 
-    <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="css/app.css?v=1.0.1" />
 </head>
 <body>
-    <div class="row" style="margin-left:160px;">
+    <div class="row top-toolbar">
         <div style="float:left;">
             <a href="#" class="btn btn-info" id="btnCreateProcess"><span class="bi bi-file-earmark lang" as="new"> </span> </a>
             <a href="#" class="btn btn-info" id="btnOpenProcess"><span class="bi bi-folder lang" as="open"> </span></a>
@@ -28,7 +29,7 @@
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLinkOptions">
                 <a class="dropdown-item" href="#"><span class="lang" as="simutest" onclick="kmain.simuTest();"></span></a>
-                <li class="divider">&nbsp</li>
+                <li class="divider">&nbsp;</li>
                 <li>
                     <a class="dropdown-item" href="#">
                         <span class="lang" as="slickflowdemo"></span> &raquo;
@@ -37,7 +38,7 @@
                         <li>
                             <a class="dropdown-item" href="#" onclick="kmain.openDemo('sequence');"><span class="lang" as="wf-sequence"></span></a>
                         </li>
-                        <li class="divider">&nbsp</li>
+                        <li class="divider">&nbsp;</li>
                         <li>
                             <a class="dropdown-item" href="#" onclick="kmain.openDemo('andsplit');"><span class="lang" as="wf-andsplit"></span></a>
                         </li>
@@ -50,21 +51,21 @@
                         <li>
                             <a class="dropdown-item" href="#" onclick="kmain.openDemo('approvalorsplit');"><span class="lang" as="wf-approvalorsplit"></span></a>
                         </li>
-                        <li class="divider">&nbsp</li>
+                        <li class="divider">&nbsp;</li>
                         <li>
                             <a class="dropdown-item" href="#" onclick="kmain.openDemo('eorjoinbranchcount');"><span class="lang" as="wf-eorjoinbranchcount"></span></a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="#" onclick="kmain.openDemo('eorjoinbranchforced');"><span class="lang" as="wf-eorjoinbranchforced"></span></a>
                         </li>
-                        <li class="divider">&nbsp</li>
+                        <li class="divider">&nbsp;</li>
                         <li>
                             <a class="dropdown-item" href="#" onclick="kmain.openDemo('startconditional');"><span class="lang" as="wf-startconditional"></span></a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="#" onclick="kmain.openDemo('startsplit');"><span class="lang" as="wf-startsplit"></span></a>
                         </li>
-                        <li class="divider">&nbsp</li>
+                        <li class="divider">&nbsp;</li>
                         <li>
                             <a class="dropdown-item" href="#" onclick="kmain.openDemo('misequence');"><span class="lang" as="wf-misequence"></span></a>
                         </li>
@@ -80,13 +81,12 @@
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLinkTool">
                 <a class="dropdown-item" href="#"><span class="lang" as="importxml" onclick="kmain.importDiagram();"></span></a>
                 <!--<a class="dropdown-item" href="#"><span class="lang" as="importmxgraphxml" onclick="kmain.importMxGraphDiagram();"></span></a>-->
-                <li class="divider">&nbsp</li>
+                <li class="divider">&nbsp;</li>
                 <a class="dropdown-item" href="#"><span class="lang" as="content" onclick="kmain.previewXml();"></span></a>
-                <li class="divider">&nbsp</li>
+                <li class="divider">&nbsp;</li>
                 <a class="dropdown-item" href="#" id="btnValidateProcess"><span class="lang" as="validate"></span></a>
-                <li class="divider">&nbsp</li>
-                <a class="dropdown-item download" href="#" id="js-download-diagram"><span class="lang" as="downgram" onclick="kmain.downloadXml();"></span></a>
-                <a class="dropdown-item download" href="#" id="js-download-svg"><span class="lang" as="downsvg" onclick="kmain.downloadSvg();"></span></a>
+                <li class="divider">&nbsp;</li>
+                <a class="dropdown-item" href="#"><span class="lang" as="setting" onclick="kmain.openSetting();"></span></a>
 
                 <!--
                 <a class="dropdown-item" href="#"><span class="lang" as="adminboard" onclick="kmain.webJob();"></span></a>-->
@@ -99,7 +99,7 @@
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLinkOptions">
                 <a class="dropdown-item" href="#"><span class="lang" as="en" onclick="kmain.changeLang('en');"></span></a>
-                <li class="divider">&nbsp</li>
+                <li class="divider">&nbsp;</li>
                 <a class="dropdown-item" href="#"><span class="lang" as="zh" onclick="kmain.changeLang('zh');"></span></a>
             </div>
         </div>
@@ -139,10 +139,38 @@
         <div id="js-properties-panel"></div>
 
         <!-- ai dialog -->
-        <div id="aiDialog" class="dialog-container">
+        <div id="aiDialog" class="dialog-container" style="display:none;">
             <div class="dialog-header">
-                <span class="dialog-title lang" as="aiassistant"></span>
-                <button class="btn btn-close" onclick="closeDialog()">x</button>
+                <div class="dialog-title lang" as="aiassistant"></div>
+                <div class="header-actions">
+                    <div class="hint-icon">
+                        <button class="btn hint-btn" title="Tips">i</button>
+                        <div class="hint-box">
+                            <div class="hint-title lang" as="promptionhint"></div>
+                            <div class="markdown-content">
+                                <h2 class="lang" as="processdescription"></h2>
+                                <p class="lang" as="processsummary"></p>
+
+                                <h2 class="lang" as="ruledescription"></h2>
+                                <ol>
+                                    <li>
+                                        <strong class="lang" as="ticketamountless"></strong>
+                                        <span class="lang" as="deptmanagerapproval"></span>
+                                    </li>
+                                    <li>
+                                        <strong class="lang" as="ticketamountmore"></strong>
+                                        <span class="lang" as="generalmanagerapproval"></span>
+                                    </li>
+                                    <li>
+                                        <strong class="lang" as="finalapproval"></strong>
+                                        <span class="lang" as="finacialmanagersign"></span>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-close" onclick="closeDialog()">x</button>
+                </div>
             </div>
             <div class="progress-container-ai" id="progressBar">
                 <div class="progress-bar-ai"></div>
@@ -161,20 +189,147 @@
         </div>
     </div>
 
+    <!-- ai test chat dialog -->
+    <div class="modal-aiChatDialog" id="modal-aiChatDialog">
+        <div class="modal-aiChatDialog-content">
+            <div class="container">
+                <div class="header">
+                    <h1>AI试运行对话框</h1>
+                    <div class="header-controls">
+                        <div class="status">
+                            <div class="status-dot"></div>
+                            <span>已连接</span>
+                        </div>
+                        <button class="close-btn" id="closeModal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
 
+                <div class="chat-container" id="chatContainer">
+                    <div class="message ai-message">
+                        <div class="avatar ai-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <p>您好！我是AI助手，您可以输入文本内容或者上传图片文件，然后跟我进行多轮会话式交互。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <div class="input-actions">
+                        <button class="action-btn" id="uploadBtn">
+                            <i class="fas fa-image"></i> 上传图片
+                        </button>
+                        <button class="action-btn" id="clearBtn">
+                            <i class="fas fa-history"></i> 清除记录
+                        </button>
+                        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                    </div>
+
+                    <div class="input-area">
+                        <textarea class="text-input" id="messageInput" placeholder="输入消息..." rows="1"></textarea>
+                        <button class="send-btn" id="sendBtn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图片模态框 -->
+    <div class="image-modal" id="imageModal">
+        <img class="modal-content" id="modalImage" src="">
+        <button class="close-modal" id="closeImageModal">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- 实际使用的底部操作面板 -->
+    <div id="aiButtonPanel" class="bottom-panel" draggable="true">
+        <div class="panel-buttons">
+            <button class="panel-button" id="aiNodeConfigButton">
+                <div class="btn-content">
+                    <div class="btn-icon"><i class="fas fa-cog"></i></div>
+                    <div class="btn-text lang" as="ainodesetting"></div>
+                </div>
+            </button>
+            <button class="panel-button" id="downloadXmlButton">
+                <div class="btn-content">
+                    <div class="btn-icon"><i class="far fa-file-text"></i></div>
+                    <div class="btn-text lang" as="downloadxml"></div>
+                </div>
+            </button>
+            <button class="panel-button" id="downloadSvgButton">
+                <div class="btn-content">
+                    <div class="btn-icon"><i class="far fa-image"></i></div>
+                    <div class="btn-text lang" as="downloadsvg"></div>
+                </div>
+            </button>
+            <button class="panel-button" id="zoomInButton">
+                <div class="btn-content">
+                    <div class="btn-icon"><i class="bi bi-zoom-out"></i></div>
+                    <div class="btn-text lang" as="zoomin"></div>
+                </div>
+            </button>
+            <button class="panel-button" id="zoomOutButton">
+                <div class="btn-content">
+                    <div class="btn-icon"><i class="bi bi-zoom-in"></i></div>
+                    <div class="btn-text lang" as="zoomout"></div>
+                </div>
+            </button>
+            <button class="panel-button" id="tryButton">
+                <div class="btn-content">
+                    <div class="btn-icon"><i class="fas fa-play-circle"></i></div>
+                    <div class="btn-text lang" as="trytest"></div>
+                </div>
+            </button>
+        </div>
+    </div>
 
     <script type="module">
         import kconfig from './config/kconfig.js'
         window.kconfig = kconfig;
     </script>
 
-    <script type="text/javascript" src="index.js"></script>
+    <script type="module" src="index.js"></script>
     <script type="text/javascript" src="vendor/codemirror/lib/codemirror.js"></script>
 
     <script type="text/javascript">
-        $(function () {
-            kresource.localize();
-        });
+        // 等待 jQuery 和 kresource 加载完成
+        // 由于 index.js 是 ES6 模块，需要等待模块加载完成
+        (function() {
+            var maxRetries = 100; // 最多重试 100 次（约 5 秒）
+            var retryCount = 0;
+            
+            function init() {
+                if (typeof window.$ !== 'undefined' && typeof window.kresource !== 'undefined') {
+                    $(function () {
+                        kresource.localize();
+                    });
+                } else if (retryCount < maxRetries) {
+                    // 如果还没加载完成，延迟重试
+                    retryCount++;
+                    setTimeout(init, 50);
+                } else {
+                    console.warn('Waiting for jQuery or kresource to load...', {
+                        hasJQuery: typeof window.$ !== 'undefined',
+                        hasKresource: typeof window.kresource !== 'undefined'
+                    });
+                }
+            }
+            
+            // 等待页面和模块加载完成
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(init, 100); // 额外延迟确保模块加载
+                });
+            } else {
+                setTimeout(init, 100); // 额外延迟确保模块加载
+            }
+        })();
 
         async function sendRequest() {
             const input = document.getElementById('userInput');
@@ -190,6 +345,8 @@
                 kmain.createByAI(input.value, function () {
                     input.value = '';
                     responseArea.innerHTML = "";
+                    //close current pop window
+                    closeDialog();
                 });
             } catch (error) {
                 kmsgbox.error(kresource.getItem("aidialogresponseerrormsg") + error.message);

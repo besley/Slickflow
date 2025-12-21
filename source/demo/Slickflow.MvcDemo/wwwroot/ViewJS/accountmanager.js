@@ -8,7 +8,7 @@
         $('#loading-indicator').show();
 
         var query = {};
-        query.ProcessID = config.ProcessID;
+        query.ProcessId = config.ProcessId;
         query.Version = "1";
 
         jshelper.ajaxPost('api/wf/QueryProcessRoleUserList',
@@ -54,7 +54,7 @@
         //Reload
         $.each(userlist, function (i, user) {
             $('#ddlUsers').append($('<option>', {
-                value: user.UserID,
+                value: user.UserId,
                 text: user.UserName
             }));
         });
@@ -69,9 +69,12 @@
         var selectedText = $('#ddlUsers').find(":selected").text();
         var selectedValue = $('#ddlUsers').find(":selected").val();
 
+        console.log(selectedText)
+        console.log(selectedValue)
+
         if (selectedValue > 0) {
             var user = {};
-            user.UserID = selectedValue;
+            user.UserId = selectedValue;
             user.UserName = selectedText;
 
             lsm.saveUserIdentity(user);

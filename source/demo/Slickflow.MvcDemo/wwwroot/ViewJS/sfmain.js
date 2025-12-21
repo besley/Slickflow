@@ -11,14 +11,14 @@
     sfmain.initWfAppRunner = function () {
         var user = lsm.getUserIdentity();
 
-        sfmain.WfAppRunner.UserID = user.UserID;
+        sfmain.WfAppRunner.UserId = user.UserId;
         sfmain.WfAppRunner.UserName = user.UserName;
     }
 
     sfmain.checkWfAppRunner = function () {
         var isOk = false;
         var user = lsm.getUserIdentity();
-        if (user && $.trim(user.UserID) != "" && $.trim(user.UserName) != "") isOk = true;
+        if (user && $.trim(user.UserId) != "" && $.trim(user.UserName) != "") isOk = true;
         return isOk;
     }
 
@@ -29,7 +29,7 @@
     //显示流程图
     //Display flowchart
     sfmain.showKGraph = function () {
-        if (pordermanager.mProductOrderProcessID === "") {
+        if (pordermanager.mProductOrderProcessId === "") {
             $.msgBox({
                 title: "DynamicFlow / KGraph",
                 content: "Please select a form with process information！",
@@ -37,8 +37,8 @@
             });
             return false;
         } else {
-        	window.open('/sfd/Diagram?AppInstanceID=' + pordermanager.selectedProductOrderID.toString()
-				+ '&ProcessID=' + pordermanager.mProductOrderProcessID + '&Mode=' + 'READONLY');
+        	window.open('/sfd/Diagram?AppInstanceId=' + pordermanager.selectedProductOrderId.toString()
+				+ '&ProcessId=' + pordermanager.mProductOrderProcessId + '&Mode=' + 'READONLY');
         }
     }
 

@@ -1,0 +1,363 @@
+﻿<!DOCTYPE html>
+<head>
+    <title>智能体属性配置</title>
+    <link rel="stylesheet" href="css/agent.css?v=1.0.1" />
+</head>
+<body>
+    <div class="agent-config-container">
+        <div class="config-header">
+            <div class="header-content">
+                <div class="agent-title">
+                    <i class="fas fa-robot"></i>
+                    需求分析智能体
+                </div>
+                <div class="header-actions">
+                    <button class="header-btn">
+                        <i class="fas fa-history"></i>
+                        版本历史
+                    </button>
+                    <button class="header-btn primary">
+                        <i class="fas fa-play"></i>
+                        测试运行
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="config-tabs">
+            <div class="tab active lang" data-tab="basic" as="basicconfig"></div>
+            <!--<div class="tab" data-tab="model">模型参数</div>-->
+            <div class="tab" data-tab="data">数据定义</div>
+            <div class="tab" data-tab="prompt">提示词</div>
+            <!--<div class="tab" data-tab="advanced">高级设置</div>-->
+        </div>
+
+        <div class="tab-content">
+            <!-- 基本设置 -->
+            <div class="tab-pane active" id="basic-tab">
+                <div class="form-grid">
+                    <div class="form-group half-width">
+                        <label>智能体名称 <span class="required">*</span></label>
+                        <input type="text" value="需求分析智能体" placeholder="输入名称">
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label>标识符</label>
+                        <input type="text" value="requirement_analyzer" placeholder="唯一标识">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>描述</label>
+                        <textarea placeholder="描述智能体功能">分析用户需求并生成清晰、结构化的需求规格文档。能够理解自然语言描述的业务需求。</textarea>
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label>分类</label>
+                        <select>
+                            <option>业务分析</option>
+                            <option selected>需求分析</option>
+                            <option>代码生成</option>
+                            <option>内容创作</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label>版本</label>
+                        <input type="text" value="1.2.0" placeholder="输入版本号">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 模型配置 -->
+            <div class="tab-pane" id="model-tab">
+                <div class="form-grid">
+                    <div class="form-group half-width">
+                        <label>模型服务 <span class="required">*</span></label>
+                        <select>
+                            <option>OpenAI</option>
+                            <option selected>Azure OpenAI</option>
+                            <option>Anthropic</option>
+                            <option>Cohere</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label>模型版本 <span class="required">*</span></label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-tag"></i>
+                            <input type="text" value="gpt-4-turbo" placeholder="模型Id">
+                        </div>
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label>温度</label>
+                        <div class="slider-container">
+                            <input type="range" min="0" max="1" step="0.1" value="0.3">
+                            <span class="slider-value">0.3</span>
+                        </div>
+                        <div class="form-note">较低值使输出更稳定，较高值更有创意</div>
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label>最大Token</label>
+                        <input type="number" value="4096" placeholder="最大Token数">
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label>API端点</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-link"></i>
+                            <input type="text" value="https://api.example.com/v1" placeholder="API地址">
+                        </div>
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label>API密钥</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-key"></i>
+                            <input type="text" value="sk-****************" placeholder="API密钥">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group full-width" style="margin-top: 16px;">
+                    <label>响应格式</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="json" name="format" checked>
+                            <label for="json">JSON</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="text" name="format">
+                            <label for="text">文本</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="xml" name="format">
+                            <label for="xml">XML</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="markdown" name="format">
+                            <label for="markdown">Markdown</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 数据定义 -->
+            <div class="tab-pane" id="data-tab">
+                <div class="compact-section">
+                    <div class="compact-section-title">
+                        <i class="fas fa-sign-in-alt"></i>
+                        输入参数
+                    </div>
+
+                    <table class="param-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">参数名 <span class="required-star">*</span></th>
+                                <th style="width: 20%;">数据类型 <span class="required-star">*</span></th>
+                                <th style="width: 15%;">必填</th>
+                                <th style="width: 30%;">描述</th>
+                                <th style="width: 10%;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" value="user_query" placeholder="输入参数名"></td>
+                                <td>
+                                    <select>
+                                        <option>string</option>
+                                        <option>number</option>
+                                        <option selected>object</option>
+                                        <option>array</option>
+                                    </select>
+                                </td>
+                                <td style="text-align: center;">
+                                    <input type="checkbox" checked>
+                                </td>
+                                <td><input type="text" value="用户原始需求描述" placeholder="参数描述"></td>
+                                <td class="actions">
+                                    <button><i class="fas fa-times"></i></button>
+                                </td>
+                            </tr>
+                            <!--<tr>
+                                <td><input type="text" value="domain" placeholder="输入参数名"></td>
+                                <td>
+                                    <select>
+                                        <option selected>string</option>
+                                        <option>number</option>
+                                        <option>object</option>
+                                        <option>array</option>
+                                    </select>
+                                </td>
+                                <td style="text-align: center;">
+                                    <input type="checkbox">
+                                </td>
+                                <td><input type="text" value="业务领域（如电商、金融）" placeholder="参数描述"></td>
+                                <td class="actions">
+                                    <button><i class="fas fa-times"></i></button>
+                                </td>
+                            </tr>-->
+                        </tbody>
+                    </table>
+
+                    <button class="add-param-btn">
+                        <i class="fas fa-plus"></i>
+                        添加输入参数
+                    </button>
+                </div>
+
+                <div class="compact-section">
+                    <div class="compact-section-title">
+                        <i class="fas fa-sign-out-alt"></i>
+                        输出参数
+                    </div>
+
+                    <table class="param-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">参数名 <span class="required-star">*</span></th>
+                                <th style="width: 20%;">数据类型 <span class="required-star">*</span></th>
+                                <th style="width: 45%;">描述</th>
+                                <th style="width: 10%;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" value="specification" placeholder="输出参数名"></td>
+                                <td>
+                                    <select>
+                                        <option>string</option>
+                                        <option selected>object</option>
+                                        <option>array</option>
+                                        <option>number</option>
+                                    </select>
+                                </td>
+                                <td><input type="text" value="结构化的需求规格文档" placeholder="参数描述"></td>
+                                <td class="actions">
+                                    <button><i class="fas fa-times"></i></button>
+                                </td>
+                            </tr>
+                            <!--<tr>
+                                <td><input type="text" value="questions" placeholder="输出参数名"></td>
+                                <td>
+                                    <select>
+                                        <option>string</option>
+                                        <option selected>array</option>
+                                    </select>
+                                </td>
+                                <td><input type="text" value="需要澄清的问题列表" placeholder="参数描述"></td>
+                                <td class="actions">
+                                    <button><i class="fas fa-times"></i></button>
+                                </td>
+                            </tr>-->
+                        </tbody>
+                    </table>
+
+                    <button class="add-param-btn">
+                        <i class="fas fa-plus"></i>
+                        添加输出参数
+                    </button>
+                </div>
+            </div>
+
+            <!-- 提示词设置 -->
+            <div class="tab-pane" id="prompt-tab">
+                <div class="form-group">
+                    <label>系统提示词 <span class="required">*</span></label>
+                    <textarea style="min-height: 180px;" placeholder="定义智能体的角色和行为...">你是一个资深产品经理，负责将模糊的用户需求转化为清晰的需求规格文档。你需要：
+
+1. 理解用户描述的业务需求
+2. 识别关键业务流程和功能点
+3. 将需求分解为具体的用户故事和功能点
+4. 输出结构化的需求规格文档（JSON格式）</textarea>
+                    <div class="form-note">提示词质量直接影响智能体输出效果，请明确角色和任务目标</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Few-Shot示例</label>
+                    <textarea placeholder="输入示例对话...">用户输入：我需要一个电商网站，用户可以浏览商品、加入购物车和下单。
+
+输出示例：
+{
+  "功能列表": ["商品浏览", "购物车管理", "下单流程"],
+  "用户故事": [
+    {"角色": "访客", "操作": "浏览商品列表"},
+    {"角色": "用户", "操作": "将商品加入购物车"}
+  ]
+}</textarea>
+                    <div class="form-note">提供示例对话可帮助模型理解预期的输入输出格式</div>
+                </div>
+            </div>
+
+            <!-- 高级设置 -->
+            <div class="tab-pane" id="advanced-tab">
+                <div class="form-grid">
+                    <div class="form-group half-width">
+                        <label>超时时间（秒）</label>
+                        <input type="number" value="30" placeholder="超时时间">
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label>最大重试次数</label>
+                        <input type="number" value="3" placeholder="重试次数">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>错误处理策略</label>
+                        <select>
+                            <option>中止流程</option>
+                            <option selected>自动重试</option>
+                            <option>使用备选智能体</option>
+                            <option>忽略错误继续</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>备选智能体</label>
+                        <select>
+                            <option>无</option>
+                            <option selected>需求分析备用智能体</option>
+                            <option>通用分析智能体</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>日志级别</label>
+                        <select>
+                            <option>调试</option>
+                            <option>信息</option>
+                            <option selected>警告</option>
+                            <option>错误</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>自定义指令</label>
+                        <textarea placeholder="特定场景下的额外指令">在处理金融领域需求时，特别关注合规性和安全性要求。</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <!--<button class="btn btn-secondary">
+                <i class="fas fa-times"></i>
+                取消
+            </button>-->
+            <button class="btn btn-secondary lang" data-dismiss="modal" aria-hidden="true" as="cancel"></button>
+            <button class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                保存配置
+            </button>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            kresource.localize();
+            agentlist.init();
+        });
+    </script>
+</body>
+</html>

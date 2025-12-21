@@ -1,34 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using SlickOne.WebUtility;
+﻿using Microsoft.AspNetCore.Mvc;
 using Slickflow.Data;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Service;
+using Slickflow.WebUtility;
 
 namespace Slickflow.WebApi.Controllers
 {
     //Basic testing of branch processes
     //Process call JSON format description:
-    //Process record ID: 205
+    //Process record Id: 205
     //Process Name: Parallel Process
     //GUID:  0eb141e3-cd17-4def-aa70-98ae654351a3
     //startup process:
-    //{"UserID":"10","UserName":"Long","AppName":"OfficeIn","AppInstanceID":"123","ProcessID":"0eb141e3-cd17-4def-aa70-98ae654351a3"}
+    //{"UserId":"10","UserName":"Long","AppName":"OfficeIn","AppInstanceId":"123","ProcessId":"0eb141e3-cd17-4def-aa70-98ae654351a3"}
 
     //Instantiation of 3 parallel branches
-    //{"AppName":"OfficeIn","AppInstanceID":"123","ProcessID":"0eb141e3-cd17-4def-aa70-98ae654351a3","UserID":"10","UserName":"Long", "NextActivityPerformers":{"01a79ac7-af2f-49e3-fc23-bc8ad13483cc":[{"UserID":10,"UserName":"Long"}], "f32fd26e-626b-4613-9715-8a60964eddf9":[{"UserID":20,"UserName":"Jack"}], "f186d8c5-859d-4edb-a392-034dadfd2395":[{"UserID":30,"UserName":"Melinda"}]}}
+    //{"AppName":"OfficeIn","AppInstanceId":"123","ProcessId":"0eb141e3-cd17-4def-aa70-98ae654351a3","UserId":"10","UserName":"Long", "NextActivityPerformers":{"01a79ac7-af2f-49e3-fc23-bc8ad13483cc":[{"UserId":10,"UserName":"Long"}], "f32fd26e-626b-4613-9715-8a60964eddf9":[{"UserId":20,"UserName":"Jack"}], "f186d8c5-859d-4edb-a392-034dadfd2395":[{"UserId":30,"UserName":"Melinda"}]}}
 
     //The first parallel node executes
-    //{"AppName":"OfficeIn","AppInstanceID":"123","ProcessID":"0eb141e3-cd17-4def-aa70-98ae654351a3","UserID":"10","UserName":"Long", "NextActivityPerformers":{"0ae0c551-0b8b-42f2-ad34-133543beed33":[{"UserID":40,"UserName":"Smith"}]}}
+    //{"AppName":"OfficeIn","AppInstanceId":"123","ProcessId":"0eb141e3-cd17-4def-aa70-98ae654351a3","UserId":"10","UserName":"Long", "NextActivityPerformers":{"0ae0c551-0b8b-42f2-ad34-133543beed33":[{"UserId":40,"UserName":"Smith"}]}}
 
     //The second parallel node executes
-    //{"AppName":"OfficeIn","AppInstanceID":"123","ProcessID":"0eb141e3-cd17-4def-aa70-98ae654351a3","UserID":"20","UserName":"Jack", "NextActivityPerformers":{"0ae0c551-0b8b-42f2-ad34-133543beed33":[{"UserID":40,"UserName":"Smith"}]}}
+    //{"AppName":"OfficeIn","AppInstanceId":"123","ProcessId":"0eb141e3-cd17-4def-aa70-98ae654351a3","UserId":"20","UserName":"Jack", "NextActivityPerformers":{"0ae0c551-0b8b-42f2-ad34-133543beed33":[{"UserId":40,"UserName":"Smith"}]}}
 
 
     //Third parallel node execution
@@ -36,11 +30,11 @@ namespace Slickflow.WebApi.Controllers
 
     //cross andjoin
     //Execution of nodes after merging (signed by the general manager)
-    //{"AppName":"OfficeIn","AppInstanceID":"123","ProcessID":"0eb141e3-cd17-4def-aa70-98ae654351a3","UserID":"10","UserName":"Long", "NextActivityPerformers":{"0fdff3c0-be97-43d6-b4ff-90d52efb5d6f":[{"UserID":10,"UserName":"Long"}]}}
+    //{"AppName":"OfficeIn","AppInstanceId":"123","ProcessId":"0eb141e3-cd17-4def-aa70-98ae654351a3","UserId":"10","UserName":"Long", "NextActivityPerformers":{"0fdff3c0-be97-43d6-b4ff-90d52efb5d6f":[{"UserId":10,"UserName":"Long"}]}}
 
     //end node
     //End Node
-    //{"AppName":"OfficeIn","AppInstanceID":"123","ProcessID":"0eb141e3-cd17-4def-aa70-98ae654351a3","UserID":"10","UserName":"Long", "NextActivityPerformers":{"76f7ef75-b538-40c8-b529-0849ca777b94":[{"UserID":10,"UserName":"Long"}]}}
+    //{"AppName":"OfficeIn","AppInstanceId":"123","ProcessId":"0eb141e3-cd17-4def-aa70-98ae654351a3","UserId":"10","UserName":"Long", "NextActivityPerformers":{"76f7ef75-b538-40c8-b529-0849ca777b94":[{"UserId":10,"UserName":"Long"}]}}
 
     /// <summary>
     /// Process test
@@ -66,9 +60,9 @@ namespace Slickflow.WebApi.Controllers
                     //runner.NextActivityPerformers = new Dictionary<string, PerformerList>();
 
                     //var performerList = new PerformerList();
-                    //performerList.Add(new Performer(runner.UserID, runner.UserID));
+                    //performerList.Add(new Performer(runner.UserId, runner.UserId));
 
-                    //runner.NextActivityPerformers.Add(nextSteps[0].ActivityID, performerList);
+                    //runner.NextActivityPerformers.Add(nextSteps[0].ActivityId, performerList);
                     //var result2 = wfService.RunProcess(session.Connection, runner, session.Transaction);
 
                     transaction.Commit();
@@ -138,7 +132,7 @@ namespace Slickflow.WebApi.Controllers
                      .UseApp("DS-100", "Book-Order", "DS-100-LX")
                      .UseProcess("PriceProcessCode")
                      .PrevStepInt()
-                     .OnTask(id)             //TaskID
+                     .OnTask(id)             //TaskId
                      .SendBack();
             return wfResult.Status.ToString();
         }
@@ -150,7 +144,7 @@ namespace Slickflow.WebApi.Controllers
             var wfResult = wfService.CreateRunner("10", "Jack")
                      .UseApp("DS-100", "Book-Order", "DS-100-LX")
                      .UseProcess("PriceProcessCode")
-                     .OnTask(id)             //TaskID
+                     .OnTask(id)             //TaskId
                      .Withdraw();
             return wfResult.Status.ToString();
         }

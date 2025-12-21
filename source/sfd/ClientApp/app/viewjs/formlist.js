@@ -13,7 +13,7 @@ const formlist = (function () {
                 var gridOptions = {
                     theme: themeBalham,
                     columnDefs: [
-                        { headerName: "ID", field: "FormID", width: 60 },
+                        { headerName: "Id", field: "FormId", width: 60 },
                         { headerName: kresource.getItem('formName'), field: "FormName", width: 200 },
                         { headerName: kresource.getItem('formCode'), field: "FormCode", width: 200 }
                     ],

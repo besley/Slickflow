@@ -5,11 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Slickflow.Data;
-using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Service;
-using SlickOne.WebUtility;
+using Slickflow.WebUtility;
 using Slickflow.BizAppService.Entity;
 using Slickflow.BizAppService.Interface;
 using Slickflow.BizAppService.Service;
@@ -191,7 +188,7 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             var appRunner = new WfAppRunner();
             appRunner.MessageTopic = topic;
             appRunner.AppName = entity.ProductName;
-            appRunner.AppInstanceID = entity.ID.ToString();
+            appRunner.AppInstanceId = entity.Id.ToString();
             appRunner.AppInstanceCode = entity.OrderCode;
 
             //var mqService = new MessageQueueService();

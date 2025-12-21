@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<head>
+    <title>AI Service Configuration</title>
+    <link rel="stylesheet" href="css/axconfig.css?v=1.0.2" />
+</head>
+<body>
+    <div class="axconfig-config-container">
+        <div class="config-tabs">
+            <div class="tab active lang" data-tab="model" as="axconfig.tab.model"></div>
+            <div class="tab lang" data-tab="prompt" as="axconfig.tab.prompt"></div>
+            <div class="tab lang" data-tab="notes" as="axconfig.tab.notes"></div>
+            <!-- Advanced Setting tab hidden for next version -->
+            <!-- <div class="tab lang" data-tab="advanced" as="axconfig.tab.advanced"></div> -->
+        </div>
+
+        <div class="tab-content">
+            <!-- Hidden fields for JavaScript access (previously in Basic Property tab) -->
+            <input type="hidden" id="activity-name">
+            <input type="hidden" id="config-uuid">
+
+            <!-- 模型配置 -->
+            <div class="tab-pane active" id="model-tab">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label><span class="lang" as="axconfig.account.credential"></span></label>
+                        <div class="enhanced-select-container" style="display: flex; gap: 8px; align-items: center;">
+                            <select id="account-credential" class="form-control" style="flex: 1; height: 40px;">
+                                <option value="">-- <span class="lang" as="selectplaceholder"></span> --</option>
+                            </select>
+                            <button type="button" id="btn-add-credential" class="btn btn-sm btn-primary" title="Add new credential">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button type="button" id="btn-edit-credential" class="btn btn-sm btn-secondary" title="Edit selected credential" disabled>
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label><span class="lang" as="axconfig.model"></span></label>
+                        <input type="text" id="model-version" class="form-control" placeholder="e.g., deepseek3.2, gpt5" />
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label><span class="lang" as="axconfig.temperature"></span></label>
+                        <div class="slider-container">
+                            <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.3">
+                            <span class="slider-value">0.3</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label><span class="lang" as="axconfig.max.tokens"></span></label>
+                        <input type="number" id="max-tokens" value="4096" placeholder="">
+                    </div>
+
+                    <div class="form-group full-width" style="margin-top: 16px;">
+                        <label><span class="lang" as="axconfig.response.format"></span></label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="json" name="format" value="json" checked>
+                                <label for="json">JSON</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="text" name="format" value="text">
+                                <label for="text"><span class="lang" as="axconfig.format.text"></span></label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="xml" name="format" value="xml">
+                                <label for="xml">XML</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="markdown" name="format" value="markdown">
+                                <label for="markdown">Markdown</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 提示词设置 -->
+            <div class="tab-pane" id="prompt-tab">
+                <div class="form-group">
+                    <label><span class="lang" as="axconfig.system.prompt"></span> <span class="required">*</span></label>
+                    <textarea id="system-prompt" style="min-height: 180px;" placeholder=""></textarea>
+                    <div class="form-note"><span class="lang" as="axconfig.system.prompt.note"></span></div>
+                </div>
+
+                <div class="form-group">
+                    <label><span class="lang" as="axconfig.user.message"></span></label>
+                    <textarea id="user-message-prompt" placeholder=""></textarea>
+                    <div class="form-note"><span class="lang" as="axconfig.user.message.note"></span></div>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="tab-pane" id="notes-tab">
+                <div class="form-group">
+                    <label><span class="lang" as="axconfig.notes"></span></label>
+                    <textarea id="axconfig-description" style="min-height: 200px;" placeholder=""></textarea>
+                    <div class="form-note"><span class="lang" as="axconfig.notes.note"></span></div>
+                </div>
+            </div>
+
+            <!-- 高级设置 -->
+            <div class="tab-pane" id="advanced-tab">
+                <div class="form-grid">
+                    <div class="form-group half-width">
+                        <label><span class="lang" as="axconfig.timeout"></span></label>
+                        <input type="number" id="timeout" value="60" placeholder="">
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label><span class="lang" as="axconfig.max.retries"></span></label>
+                        <input type="number" id="max-retries" value="3" placeholder="">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label><span class="lang" as="axconfig.error.handling"></span></label>
+                        <select id="error-handling">
+                            <option value="abort" data-lang="axconfig.error.handling.abort">中止流程</option>
+                            <option value="retry" selected data-lang="axconfig.error.handling.retry">自动重试</option>
+                            <option value="fallback" data-lang="axconfig.error.handling.fallback">使用备选智能体</option>
+                            <option value="ignore" data-lang="axconfig.error.handling.ignore">忽略错误继续</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label><span class="lang" as="axconfig.fallback.agent"></span></label>
+                        <input type="text" id="fallback-agent" placeholder="">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label><span class="lang" as="axconfig.log.level"></span></label>
+                        <select id="log-level">
+                            <option value="debug" data-lang="axconfig.log.level.debug">调试</option>
+                            <option value="info" data-lang="axconfig.log.level.info">信息</option>
+                            <option value="warn" selected data-lang="axconfig.log.level.warn">警告</option>
+                            <option value="error" data-lang="axconfig.log.level.error">错误</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label><span class="lang" as="axconfig.custom.instructions"></span></label>
+                        <textarea id="custom-instructions" placeholder=""></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="notification" id="notification"></div>
+
+        <div class="form-footer">
+            <button class="btn btn-secondary lang" data-dismiss="modal" aria-hidden="true" as="cancel"></button>
+            <button class="btn btn-primary" id="save-btn">
+                <i class="fas fa-save"></i>
+                <span class="lang" as="save"></span>
+            </button>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            kresource.localize();
+            axconfig.init();
+        });
+    </script>
+</body>
+</html>

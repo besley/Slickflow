@@ -22,14 +22,17 @@
         });
     }
 
-    jshelper.ajaxPost = function(url, data, fn) {
+    jshelper.ajaxPost = function(url, data, fn, errFn) {
         $.ajax({
             url: url,
             type: 'POST',
             data: data,
             dataType: 'json',
             contentType: 'application/json;charset=utf-8',
-            success: fn
+            success: fn,
+            error: errFn || function (xhr, status, error) {
+                console.error('ajaxPost error:', status, error);
+            }
         });
     }
 

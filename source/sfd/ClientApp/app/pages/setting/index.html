@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<head>
+    <title>AI Model Setting</title>
+    <style>
+        /* Scope all styles to popupSetting container to avoid affecting main page */
+        #popupSetting .setting-layout {
+            display: flex;
+            align-items: stretch; /* 确保左右两边高度一致 */
+            min-height: 400px;
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        #popupSetting .setting-sidebar {
+            width: 30%;
+            min-width: 200px;
+            max-width: 400px;
+            padding: 12px;
+            flex-shrink: 0;
+            background-color: #fafafa;
+            position: relative;
+            overflow: hidden; /* 移除滚动，让内部元素处理 */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* 确保侧边栏填满布局容器的高度 */
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+        }
+
+        #popupSetting .setting-divider {
+            width: 4px;
+            background-color: #d9d9d9;
+            flex-shrink: 0;
+            margin: 0 12px;
+            cursor: col-resize;
+            position: relative;
+            user-select: none;
+        }
+
+        #popupSetting .setting-divider:hover {
+            background-color: #1890ff;
+        }
+
+        #popupSetting .setting-divider::before {
+            content: '';
+            position: absolute;
+            left: -2px;
+            right: -2px;
+            top: 0;
+            bottom: 0;
+            cursor: col-resize;
+        }
+
+        #popupSetting .setting-divider.dragging {
+            background-color: #1890ff;
+        }
+
+        #popupSetting .setting-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #fff;
+        }
+
+        #popupSetting .setting-menu-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #e8e8e8;
+            color: #333;
+            transition: all 0.2s;
+            background-color: #fff;
+            position: relative;
+        }
+
+        #popupSetting .setting-menu-item:last-child {
+            border-bottom: none;
+        }
+
+        #popupSetting .setting-menu-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        #popupSetting .setting-menu-item.active {
+            background-color: #e6f7ff;
+            color: #1890ff;
+            border-right: 3px solid #1890ff;
+            font-weight: 600;
+            position: relative;
+        }
+
+        #popupSetting .setting-menu-item.active::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: #1890ff;
+        }
+
+        /* 树形列表样式 */
+        #popupSetting .setting-tree {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border: none;
+            border-radius: 0;
+            overflow-y: auto; /* 允许树形控件内部滚动 */
+            overflow-x: hidden;
+            background-color: transparent;
+            flex: 1; /* 让树形控件填满侧边栏的全部高度 */
+            display: flex;
+            flex-direction: column;
+            min-height: 0; /* 允许 flex 子项缩小 */
+        }
+
+        #popupSetting .setting-tree-item {
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            flex-direction: column;
+            flex: 1; /* 让树项可以扩展以填满可用空间 */
+            min-height: 0; /* 允许 flex 子项缩小 */
+        }
+
+        #popupSetting .setting-tree-item:last-child {
+            border-bottom: none;
+        }
+
+        #popupSetting .setting-tree-parent {
+            padding: 12px 15px;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.2s;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            user-select: none;
+        }
+
+        #popupSetting .setting-tree-parent:hover {
+            background-color: #f5f5f5;
+        }
+
+        #popupSetting .setting-tree-expand {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            display: inline-block;
+            text-align: center;
+            line-height: 16px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        #popupSetting .setting-tree-expand::before {
+            content: '▶';
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        #popupSetting .setting-tree-parent.expanded .setting-tree-expand::before {
+            transform: rotate(90deg);
+        }
+
+        #popupSetting .setting-tree-children {
+            display: none;
+            background-color: #fafafa;
+            overflow-y: auto;
+            flex: 1; /* 让子节点区域可以扩展 */
+            min-height: 0; /* 允许 flex 子项缩小 */
+        }
+
+        #popupSetting .setting-tree-parent.expanded + .setting-tree-children {
+            display: block;
+        }
+
+        #popupSetting .setting-tree-child {
+            padding: 10px 15px 10px 40px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        #popupSetting .setting-tree-child:hover {
+            background-color: #f0f0f0;
+        }
+
+        #popupSetting .setting-tree-child.active {
+            background-color: #e6f7ff;
+            color: #1890ff;
+            font-weight: 500;
+        }
+
+        #popupSetting .setting-tree-child.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: #1890ff;
+        }
+
+        #popupSetting .setting-tree-child-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #popupSetting .setting-tree-child-delete {
+            width: 20px;
+            height: 20px;
+            margin-left: 8px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            color: #ff4d4f;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 20px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+            flex-shrink: 0;
+        }
+
+        #popupSetting .setting-tree-child:hover .setting-tree-child-delete {
+            opacity: 1;
+        }
+
+        #popupSetting .setting-tree-child-delete:hover {
+            color: #ff7875;
+            background-color: #fff1f0;
+            border-radius: 2px;
+        }
+
+        #popupSetting .setting-content {
+            width: 70%;
+            min-width: 300px;
+            padding: 12px 20px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            flex: 1;
+            box-sizing: border-box;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        #popupSetting .form-group {
+            margin-bottom: 15px;
+        }
+
+        #popupSetting .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        #popupSetting .form-group label .required {
+            color: #dc3545;
+            margin-left: 4px;
+        }
+
+        #popupSetting .form-group select,
+        #popupSetting .form-group input[type="text"],
+        #popupSetting .form-group input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Disable Firefox password generation prompt */
+        #popupSetting .form-group input[type="password"][autocomplete="off"] {
+            -moz-appearance: none;
+        }
+
+        #popupSetting .form-group select:focus,
+        #popupSetting .form-group input[type="text"]:focus,
+        #popupSetting .form-group input[type="password"]:focus {
+            outline: none;
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+
+        #popupSetting .notification {
+            display: none;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        #popupSetting .notification.show {
+            display: block;
+        }
+
+        #popupSetting .notification.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        #popupSetting .notification.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        #popupSetting .setting-panel {
+            display: none;
+        }
+
+        #popupSetting .setting-panel.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-body">
+        <div class="setting-layout">
+            <!-- Left Sidebar Menu -->
+            <div class="setting-sidebar">
+                <ul class="setting-tree" id="setting-tree">
+                    <li class="setting-tree-item">
+                        <div class="setting-tree-parent expanded" data-panel="ai-model-provider">
+                            <span class="setting-tree-expand"></span>
+                            <span class="lang" as="aimodel">AI Model</span>
+                        </div>
+                        <ul class="setting-tree-children" id="ai-model-provider-children">
+                            <!-- 子集项目将动态加载 -->
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Vertical Divider -->
+            <div class="setting-divider"></div>
+
+            <!-- Right Content Area -->
+            <div class="setting-content">
+                <!-- AI Model Configuration Panel -->
+                <div class="setting-panel active" id="ai-model-provider-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h4 style="margin: 0;"><span class="lang" as="aimodel">AI Model</span></h4>
+                        <button type="button" class="btn btn-primary" id="add-new-btn" style="padding: 6px 16px;">
+                            <span class="lang" as="addnew">Add New</span>
+                        </button>
+                    </div>
+
+                    <div class="notification" id="notification"></div>
+
+                    <form id="setting-form">
+                        <div class="form-group">
+                            <label>
+                                <span class="lang" as="modelprovider"></span> <span class="required">*</span>
+                            </label>
+                            <input type="text" id="model-provider" list="model-provider-list" class="form-control" placeholder="Select or enter model provider" required />
+                            <datalist id="model-provider-list">
+                                <option value="OpenAI">OpenAI</option>
+                                <option value="Azure OpenAI">Azure OpenAI</option>
+                                <option value="Anthropic">Anthropic (Claude)</option>
+                                <option value="Google">Google (Gemini)</option>
+                                <option value="Baidu">Baidu (文心一言)</option>
+                                <option value="Alibaba">Alibaba (通义千问)</option>
+                                <option value="DeepSeek">DeepSeek</option>
+                                <option value="Moonshot">Moonshot (月之暗面)</option>
+                                <option value="Zhipu">Zhipu (智谱AI)</option>
+                            </datalist>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <span class="lang" as="baseurl"></span> <span class="required">*</span>
+                            </label>
+                            <input type="text" id="base-url" class="form-control" placeholder="e.g., https://api.openai.com/v1" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <span class="lang" as="apikey"></span> <span class="required">*</span>
+                            </label>
+                            <input type="password" id="api-key" class="form-control" placeholder="Enter your API key" autocomplete="off" data-password-autocomplete="off" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="lang" as="description"></span></label>
+                            <textarea id="description" class="form-control" rows="4" placeholder="Optional description" style="resize: vertical; min-height: 80px;"></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; margin-right: auto;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                <button type="button" class="btn btn-info" id="test-btn">
+                    <span class="lang" as="test.connection">Test Connection</span>
+                </button>
+                <div id="test-result" style="display: none; padding: 8px 12px; border-radius: 4px; font-size: 13px; max-width: 500px; word-wrap: break-word;">
+                    <span id="test-result-icon" style="margin-right: 6px;"></span>
+                    <span id="test-result-text"></span>
+                </div>
+            </div>
+            <div id="test-result-details" style="display: none; width: 100%; max-width: 500px; margin-top: 8px; padding: 10px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; font-size: 12px; color: #495057; max-height: 200px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word;">
+            </div>
+        </div>
+        <div>
+            <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">
+                <span class="lang" as="cancel">Cancel</span>
+            </button>
+            <button type="button" class="btn btn-primary" id="save-btn">
+                <span class="lang" as="save">Save</span>
+            </button>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            kresource.localize();
+            
+            // Wait for setting module to be available (for dynamic loading scenarios)
+            var initAttempts = 0;
+            var maxAttempts = 50;
+            var initInterval = setInterval(function () {
+                initAttempts++;
+                if (typeof window.setting !== 'undefined' && typeof window.setting.init === 'function') {
+                    window.setting.init();
+                    // 初始化可拖动分隔条
+                    initResizableDivider();
+                    clearInterval(initInterval);
+                } else if (initAttempts >= maxAttempts) {
+                    console.error("Setting module not available after timeout");
+                    clearInterval(initInterval);
+                }
+            }, 100);
+        });
+
+        function initResizableDivider() {
+            var $divider = $('#popupSetting .setting-divider');
+            var $layout = $('#popupSetting .setting-layout');
+            var $sidebar = $('#popupSetting .setting-sidebar');
+            var $content = $('#popupSetting .setting-content');
+            var isDragging = false;
+            var startX = 0;
+            var startSidebarWidth = 0;
+            var layoutWidth = 0;
+
+            $divider.on('mousedown', function(e) {
+                isDragging = true;
+                $divider.addClass('dragging');
+                startX = e.pageX;
+                layoutWidth = $layout.width();
+                startSidebarWidth = $sidebar.outerWidth();
+                
+                // 防止文本选择
+                $('body').css({
+                    'user-select': 'none',
+                    'cursor': 'col-resize'
+                });
+                
+                e.preventDefault();
+            });
+
+            $(document).on('mousemove', function(e) {
+                if (!isDragging) return;
+                
+                var diffX = e.pageX - startX;
+                var newSidebarWidth = startSidebarWidth + diffX;
+                var minSidebarWidth = 150;
+                var maxSidebarWidth = layoutWidth * 0.6; // 最多占60%
+                var dividerWidth = $divider.outerWidth();
+                var minContentWidth = 300;
+                
+                // 限制宽度范围
+                if (newSidebarWidth < minSidebarWidth) {
+                    newSidebarWidth = minSidebarWidth;
+                } else if (newSidebarWidth > maxSidebarWidth) {
+                    newSidebarWidth = maxSidebarWidth;
+                }
+                
+                // 计算内容区域可用宽度
+                var availableContentWidth = layoutWidth - newSidebarWidth - dividerWidth;
+                if (availableContentWidth < minContentWidth) {
+                    // 如果内容区域太小，调整侧边栏宽度
+                    newSidebarWidth = layoutWidth - minContentWidth - dividerWidth;
+                    if (newSidebarWidth < minSidebarWidth) {
+                        newSidebarWidth = minSidebarWidth;
+                    }
+                    availableContentWidth = layoutWidth - newSidebarWidth - dividerWidth;
+                }
+                
+                $sidebar.css('width', newSidebarWidth + 'px');
+                $content.css('width', availableContentWidth + 'px');
+            });
+
+            $(document).on('mouseup', function() {
+                if (isDragging) {
+                    isDragging = false;
+                    $divider.removeClass('dragging');
+                    $('body').css({
+                        'user-select': '',
+                        'cursor': ''
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+

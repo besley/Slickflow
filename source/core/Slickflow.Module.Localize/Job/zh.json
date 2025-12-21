@@ -1,0 +1,23 @@
+﻿{
+  "LanguageController.SetLang.Error": "设置本地化语言失败,详细错误",
+  "FireSchedulerController.GetJobScheduleList.Error": "获取作业列表数据失败,详细错误",
+  "FireSchedulerController.TerminateOverdueProcessInstance.Error": "终结过期流程实例发生错误,详细信息",
+  "FireSchedulerController.TerminateOverdueActivityInstance.Error": "终结过期活动实例发生错误,详细信息",
+  "FireSchedulerController.TriggerTimingStartupProcess.Error": "定时启动流程失败:错误信息",
+  "FireSchedulerController.SendTaskEMail.Error": "发送任务邮件失败:错误信息",
+  "HangFireController.AddJobIntoQueue.Error": "定时作业加入队列发生错误,详细信息",
+  "HangFireController.RemoveJobFromQueue.Error": "定时作业移除队列发生错误,详细信息",
+  "HangFireController.FindQueueJobByName.Error": "查找作业信息发生错误,详细信息",
+  "JobInfoController.GetAll.Error": "获取作业列表发生错误,详细信息",
+  "JobInfoController.Subscribe.Error": "订阅作业消息主题发生错误,详细信息",
+  "JobInfoController.Unsubscribe.Error": "退订作业消息主题发生错误,详细信息",
+  "JobInfoController.Resubscribe.Error": "订阅作业消息主题发生错误,详细信息",
+  "JobInfoController.Reunsubscribe.Error": "退订作业消息主题发生错误,详细信息",
+  "JobInfoController.GetAllQueueNames.Error": "获取队列名字发生错误,详细信息",
+  "Wf2XmlController.GetProcessListByTrigger.Error": "获取有触发类型的流程列表发生错误,详细信息",
+  "Wf2XmlController.GetProcessByStartType.Error": "根据启动类型获取流程记录失败,详细错误",
+  "Wf2XmlController.GetTriggerEventList.Error": "获取触发类型的活动节点列表出错,详细信息",
+  "Wf2XmlController.GetJobTimerProcessInstanceList.Error": "读取定时类型的流程实例列表发生错误,详细信息",
+  "Wf2XmlController.GetJobTimerActivityInstanceList.Error": "读取定时类型的活动实例列表发生错误,详细信息",
+  "Wf2XmlController.GetActivityChartItemList.Error": "读取活动图表数据发生错误,详细信息"
+}

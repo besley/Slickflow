@@ -17,10 +17,10 @@ const fieldlist = (function () {
 
     function onFireFormListChanged() {
         $("#ddlFormList").on("change", function () {
-            var selectedFormID = $(this).val(); 
+            var selectedFormId = $(this).val(); 
             //fill form list into dropdown box
             fieldlist.pmxFormList.forEach(function (form, index) {
-                if (form.FormID === selectedFormID) {
+                if (form.FormId === selectedFormId) {
                     var fieldEditDataSource = fieldlist.pmxFormList[index].FieldActivityEditList;
                     fillFieldActivityEditList(fieldEditDataSource);
                     return;
@@ -41,7 +41,7 @@ const fieldlist = (function () {
                     $('#ddlFormList')
                         .append($('<option>')
                             .text(form.FormName)
-                            .attr('value', form.FormID)
+                            .attr('value', form.FormId)
                         );
                 })
 
@@ -104,7 +104,7 @@ const fieldlist = (function () {
         }
 
         var index = $('#ddlFormList option:selected').index();
-        var selectedFormID = $('#ddlFormList').val();
+        var selectedFormId = $('#ddlFormList').val();
         var selectedFormName = $('#ddlFormList').text();
         var fieldEditDataSource = fieldlist.pmxFormList[index].FieldActivityEditList;
 
@@ -113,13 +113,13 @@ const fieldlist = (function () {
             kmsgbox.confirm(kresource.getItem('fieldactivityeditlistsaveconfirmmsg'), function () {
                 var activity = fieldlist.FieldActivityInfo;
                 var entity = {
-                    "ProcessID": activity.ProcessID,
-                    "ProcessID": activity.ProcessID,
+                    "ProcessId": activity.ProcessId,
+                    "ProcessId": activity.ProcessId,
                     "ProcessVersion": activity.ProcessVersion,
                     "ProcessName": activity.ProcessName,
-                    "ActivityID": activity.ActivityID,
+                    "ActivityId": activity.ActivityId,
                     "ActivityName": activity.ActivityName,
-                    "FormID": selectedFormID,
+                    "FormId": selectedFormId,
                     "FormName": selectedFormName,
                     "FieldActivityEditList": fieldEditDataSource
                 };

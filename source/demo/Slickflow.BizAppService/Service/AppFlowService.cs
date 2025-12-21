@@ -28,11 +28,11 @@ namespace Slickflow.BizAppService.Service
             try
             {
                 var sortList = new List<DapperExtensions.ISort>();
-                sortList.Add(new DapperExtensions.Sort { PropertyName = "ID", Ascending = false });
+                sortList.Add(new DapperExtensions.Sort { PropertyName = "Id", Ascending = false });
 
                 IFieldPredicate predicate = null;
-                if (!string.IsNullOrEmpty(query.AppInstanceID))
-                    predicate = Predicates.Field<AppFlowEntity>(f => f.AppInstanceID, DapperExtensions.Operator.Eq, query.AppInstanceID);
+                if (!string.IsNullOrEmpty(query.AppInstanceId))
+                    predicate = Predicates.Field<AppFlowEntity>(f => f.AppInstanceId, DapperExtensions.Operator.Eq, query.AppInstanceId);
 
                 count = QuickRepository.Count<AppFlowEntity>(conn, predicate);
                 list = QuickRepository.GetPaged<AppFlowEntity>(conn, query.PageIndex, query.PageSize,

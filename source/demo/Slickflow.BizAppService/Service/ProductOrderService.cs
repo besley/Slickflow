@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using DapperExtensions;
-using SlickOne.WebUtility;
 using Slickflow.BizAppService.Common;
 using Slickflow.BizAppService.Entity;
 using Slickflow.BizAppService.Interface;
@@ -58,7 +57,7 @@ namespace Slickflow.BizAppService.Service
             try
             {
                 var sortList = new List<DapperExtensions.ISort>();
-                sortList.Add(new DapperExtensions.Sort { PropertyName = "ID", Ascending = false });
+                sortList.Add(new DapperExtensions.Sort { PropertyName = "Id", Ascending = false });
 
                 IFieldPredicate predicate = null;
                 if (query.Status > 0){
@@ -141,7 +140,7 @@ namespace Slickflow.BizAppService.Service
 
             entity.Mobile = rnd.Next(100000, 999999).ToString();
             entity.Remark = shoptype[rnd.Next(1, 6)-1];
-            entity.CreatedTime = System.DateTime.Now;
+            entity.CreatedTime = System.DateTime.UtcNow;
 
             QuickRepository.Insert<ProductOrderEntity>(conn, entity, trans);
 
@@ -194,13 +193,13 @@ namespace Slickflow.BizAppService.Service
 
                     //写步骤记录表
                     //Write a step record table
-                    Write(session, WfAppRunner, "Disptach", entity.ID.ToString(), entity.OrderCode, "Dispatch Completed");
+                    Write(session, WfAppRunner, "Disptach", entity.Id.ToString(), entity.OrderCode, "Dispatch Completed");
 
                     //业务数据处理部分，此处是简单示例...
                     //The business data processing part, here is a simple example
-                    short status = GetProductOrderStatusByActivityCode(WfAppRunner.ProcessID, WfAppRunner.Version,
+                    short status = GetProductOrderStatusByActivityCode(WfAppRunner.ProcessId, WfAppRunner.Version,
                         WfAppRunner.NextActivityPerformers.Keys.ElementAt<string>(0));
-                    UpdateStatus(entity.ID, status, session);
+                    UpdateStatus(entity.Id, status, session);
                     session.Commit();
                     appResult = WfAppResult.Success();
                 }
@@ -242,13 +241,13 @@ namespace Slickflow.BizAppService.Service
                 {
                     //写步骤记录表
                     //Write a step record table
-                    Write(session, WfAppRunner, "Sample", entity.ID.ToString(), entity.OrderCode, "Sample Completed");
+                    Write(session, WfAppRunner, "Sample", entity.Id.ToString(), entity.OrderCode, "Sample Completed");
 
                     //业务数据处理部分，此处是简单示例...
                     //The business data processing part, here is a simple example
-                    short status = GetProductOrderStatusByActivityCode(WfAppRunner.ProcessID, WfAppRunner.Version,
+                    short status = GetProductOrderStatusByActivityCode(WfAppRunner.ProcessId, WfAppRunner.Version,
                         WfAppRunner.NextActivityPerformers.Keys.ElementAt<string>(0));
-                    UpdateStatus(entity.ID, status, session);
+                    UpdateStatus(entity.Id, status, session);
                     
                     session.Commit();
                     appResult = WfAppResult.Success();
@@ -258,14 +257,14 @@ namespace Slickflow.BizAppService.Service
                         //调用工厂作业流程节点：
                         //Call the factory workflow node
                         //Activity:OrderFactoryMessageCaught
-                        //ProcessID:0f5829c7-17df-43eb-bfe5-1f2870fb2a0e Version:1
+                        //ProcessId:0f5829c7-17df-43eb-bfe5-1f2870fb2a0e Version:1
                         var invokeAppRunner = new WfAppRunner();
-                        invokeAppRunner.UserID = WfAppRunner.UserID;
+                        invokeAppRunner.UserId = WfAppRunner.UserId;
                         invokeAppRunner.UserName = WfAppRunner.UserName;
-                        invokeAppRunner.ProcessID = "0f5829c7-17df-43eb-bfe5-1f2870fb2a0e";
+                        invokeAppRunner.ProcessId = "0f5829c7-17df-43eb-bfe5-1f2870fb2a0e";
                         invokeAppRunner.Version = "1";
                         invokeAppRunner.AppName = WfAppRunner.AppName;
-                        invokeAppRunner.AppInstanceID = WfAppRunner.AppInstanceID;
+                        invokeAppRunner.AppInstanceId = WfAppRunner.AppInstanceId;
                         invokeAppRunner.AppInstanceCode = WfAppRunner.AppInstanceCode;
                         //invokeAppRunner.DynamicVariables["ActivityCode"] = "OrderFactoryMessageCaught";
 
@@ -317,13 +316,13 @@ namespace Slickflow.BizAppService.Service
                 {
                     //写步骤记录表
                     //Write step log data
-                    Write(session, WfAppRunner, "Manufacture", entity.ID.ToString(), entity.OrderCode, "Manufacture Completed");
+                    Write(session, WfAppRunner, "Manufacture", entity.Id.ToString(), entity.OrderCode, "Manufacture Completed");
 
                     //业务数据处理部分，此处是简单示例...
                     //The business data processing part, here is a simple example
-                    short status = GetProductOrderStatusByActivityCode(WfAppRunner.ProcessID, WfAppRunner.Version,
+                    short status = GetProductOrderStatusByActivityCode(WfAppRunner.ProcessId, WfAppRunner.Version,
                         WfAppRunner.NextActivityPerformers.Keys.ElementAt<string>(0));
-                    UpdateStatus(entity.ID, status, session);
+                    UpdateStatus(entity.Id, status, session);
                     session.Commit();
                     appResult = WfAppResult.Success();
                 }
@@ -365,13 +364,13 @@ namespace Slickflow.BizAppService.Service
                 {
                     //写步骤记录表
                     //Write step log data
-                    Write(session, WfAppRunner, "QC check", entity.ID.ToString(), entity.OrderCode, "QC check complted");
+                    Write(session, WfAppRunner, "QC check", entity.Id.ToString(), entity.OrderCode, "QC check complted");
 
                     //业务数据处理部分，此处是简单示例...
                     //The business data processing part, here is a simple example
-                    short status = GetProductOrderStatusByActivityCode(WfAppRunner.ProcessID, WfAppRunner.Version,
+                    short status = GetProductOrderStatusByActivityCode(WfAppRunner.ProcessId, WfAppRunner.Version,
                         WfAppRunner.NextActivityPerformers.Keys.ElementAt<string>(0));
-                    UpdateStatus(entity.ID, status, session);
+                    UpdateStatus(entity.Id, status, session);
                     session.Commit();
                     appResult = WfAppResult.Success();
                 }
@@ -413,13 +412,13 @@ namespace Slickflow.BizAppService.Service
                 {
                     //写步骤记录表
                     //Write step log data
-                    Write(session, WfAppRunner, "Weight", entity.ID.ToString(), entity.OrderCode, "Weight Completed");
+                    Write(session, WfAppRunner, "Weight", entity.Id.ToString(), entity.OrderCode, "Weight Completed");
 
                     //业务数据处理部分，此处是简单示例...
                     //The business data processing part, here is a simple example
-                    short status = GetProductOrderStatusByActivityCode(WfAppRunner.ProcessID, WfAppRunner.Version,
+                    short status = GetProductOrderStatusByActivityCode(WfAppRunner.ProcessId, WfAppRunner.Version,
                         WfAppRunner.NextActivityPerformers.Keys.ElementAt<string>(0));
-                    UpdateStatus(entity.ID, status, session);
+                    UpdateStatus(entity.Id, status, session);
                     session.Commit();
                     appResult = WfAppResult.Success();
                 }
@@ -462,13 +461,13 @@ namespace Slickflow.BizAppService.Service
                 {
                     //写步骤记录表
                     //Write step log data
-                    Write(session, WfAppRunner, "Delivery", entity.ID.ToString(), entity.OrderCode, "Delivery Completed");
+                    Write(session, WfAppRunner, "Delivery", entity.Id.ToString(), entity.OrderCode, "Delivery Completed");
 
                     //业务数据处理部分，此处是简单示例...
                     //The business data processing part, here is a simple example
-                    short status = GetProductOrderStatusByActivityCode(WfAppRunner.ProcessID, WfAppRunner.Version, 
+                    short status = GetProductOrderStatusByActivityCode(WfAppRunner.ProcessId, WfAppRunner.Version, 
                         WfAppRunner.NextActivityPerformers.Keys.ElementAt<string>(0));
-                    UpdateStatus(entity.ID, status, session);
+                    UpdateStatus(entity.Id, status, session);
                     session.Commit();
                     appResult = WfAppResult.Success();
                 }
@@ -496,16 +495,16 @@ namespace Slickflow.BizAppService.Service
         /// </summary>
         private int UpdateStatus(int id, short status, IDbSession session)
         {
-            var sql = @"UPDATE ManProductOrder
-                        SET Status=@status,
-                            LastUpdatedTime=@lastUpdatedTime
-                        WHERE ID=@id";
+            var sql = @"UPDATE man_product_order
+                        SET status=@status,
+                            updated_time=@updatedTime
+                        WHERE id=@id";
 
             var rows = QuickRepository.Execute(session.Connection, sql,
                     new
                     {
                         status = status,
-                        lastUpdatedTime = System.DateTime.Now,
+                        updatedTime = System.DateTime.UtcNow,
                         id = id
                     },
                     session.Transaction);
@@ -518,17 +517,17 @@ namespace Slickflow.BizAppService.Service
         /// 写业务流程记录日志信息
         /// </summary>
         private void Write(IDbSession session, WfAppRunner runner, string activityName, 
-            string appInstanceID, string appInstanceCode = null, string remark = null)
+            string appInstanceId, string appInstanceCode = null, string remark = null)
         {
-            //"Dispatch", entity.ID.ToString(), entity.OrderCode, "Dispatch Completed")
+            //"Dispatch", entity.Id.ToString(), entity.OrderCode, "Dispatch Completed")
             var flow = new AppFlowEntity();
 
-            flow.AppInstanceID = appInstanceID;
+            flow.AppInstanceId = appInstanceId;
             flow.AppInstanceCode = appInstanceCode;
             flow.AppName = runner.AppName;
             flow.ActivityName = activityName;
-            flow.ChangedTime = System.DateTime.Now;
-            flow.ChangedUserID = runner.UserID;
+            flow.ChangedTime = System.DateTime.UtcNow;
+            flow.ChangedUserId = runner.UserId;
             flow.ChangedUserName = runner.UserName;
             flow.Remark = remark;
 
@@ -539,10 +538,10 @@ namespace Slickflow.BizAppService.Service
         /// Obtain the corresponding product status based on the activity code
         /// 根据活动Code获取对应产品状态
         /// </summary>
-        private short GetProductOrderStatusByActivityCode(string processID, string verison, string activityID)
+        private short GetProductOrderStatusByActivityCode(string processId, string verison, string activityId)
         {
             var wfas = new WfAppInteropService();
-            var activityNode = wfas.GetActivity(processID, WfAppRunner.Version, activityID);
+            var activityNode = wfas.GetActivity(processId, WfAppRunner.Version, activityId);
             if (activityNode.ActivityType == ActivityTypeEnum.EndNode)
             {
                 return (short)ProductOrderStatusEnum.Completed;
