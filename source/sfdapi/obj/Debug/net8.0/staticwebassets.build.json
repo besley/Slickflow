@@ -1,12 +1,1 @@
-{
-  "Version": 1,
-  "Hash": "+MUzPg9Ia5yseBtdPqo/3Q7Akn3T7+QY+72aqj0LyJA=",
-  "Source": "sfdapi",
-  "BasePath": "_content/sfdapi",
-  "Mode": "Default",
-  "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
-}
+{"Version":1,"Hash":"0M+6tpRJqCiFZLjFpaSeQiyWPn/SxMjS8B30Qu+X4HI=","Source":"sfdapi","BasePath":"/","Mode":"Root","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}

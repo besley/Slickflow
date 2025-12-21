@@ -31,9 +31,9 @@ namespace SlickOne.WebUtility
         }
 
         /// <summary>
-        /// New ID Value
+        /// New Id Value
         /// </summary>
-        public dynamic NewID
+        public dynamic NewId
         {
             get;
             set;
@@ -78,7 +78,7 @@ namespace SlickOne.WebUtility
         public static ResponseResult Success(dynamic newId, string message = null)
         {
             var result = new ResponseResult();
-            result.NewID = newId;
+            result.NewId = newId;
             result.Status = 1;
             result.Message = message;
 
@@ -121,9 +121,9 @@ namespace SlickOne.WebUtility
         }
 
         /// <summary>
-        /// New ID Value
+        /// New Id Value
         /// </summary>
-        public dynamic NewID
+        public dynamic NewId
         {
             get;
             set;
@@ -188,7 +188,7 @@ namespace SlickOne.WebUtility
         public static ResponseResult<T> Success(int newId, string message = null)
         {
             var result = new ResponseResult<T>();
-            result.NewID = newId;
+            result.NewId = newId;
             result.Status = 1;
             result.Message = message;
             return result;

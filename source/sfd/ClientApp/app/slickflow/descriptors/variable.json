@@ -1,0 +1,76 @@
+{
+  "variables": [
+    {
+      "name": "Variables",
+      "superClass": [ "Element" ],
+      "properties": [
+        {
+          "name": "inputVariables",
+          "isMany": true,
+          "type": "Variable"
+        },
+        {
+          "name": "outputVariables",
+          "isMany": true,
+          "type": "Variable"
+        }
+      ]
+    },
+    {
+      "name": "Variable",
+      "properties": [
+        {
+          "name": "name",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "type",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "defaultValue",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "direction",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "isReferenced",
+          "isAttr": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "varRefDetail",
+          "isMany": true,
+          "type": "varRefDetail"
+        },
+        {
+          "name": "isRequired",
+          "isAttr": true,
+          "type": "Boolean"
+        }
+      ]
+    },
+    {
+      "name": "varRefDetail",
+      "properties": [
+        {
+          "name": "sourceRef",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "variableName",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}
+

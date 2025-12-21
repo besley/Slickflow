@@ -14,22 +14,58 @@ export default class CustomPalette {
             translate
         } = this;
 
-        function createByAI(event) {
-            //const shape = elementFactory.createShape({ type: 'bpmn:AI' });
-            //create.start(event, shape);
-            console.log('hello')
+        function createLLMServiceTask() {
+            return elementFactory.createShape({
+                type: 'bpmn:ServiceTask',
+                name: 'LLMService',
+                sfType: 'LLM'
+            });
+        }
+
+        // 创建插件节点的工厂函数
+        function createPluginTask() {
+            return elementFactory.createShape({
+                type: 'bpmn:ServiceTask',
+                name: 'PlugInService',
+                sfType: 'PlugIn'
+            });
         }
 
         return {
-            'create.ai': {
-                group: 'artifact',
-                className: 'bpmn-icon-ai',
-                title: translate('create ai'),
+            'llm-service-separator': {
+                group: 'activity',
+                separator: true
+            },
+            'create.llm-service': {
+                group: 'activity',
+                className: 'bpmn-icon-service-task llm-service-task',
+                title: translate('llm'),
                 action: {
-                    dragstart: createByAI,
-                    click:createByAI
+                    dragstart: function (event) {
+                        var taskShape = createLLMServiceTask();
+                        create.start(event, taskShape);
+                    },
+                    click: function (event) {
+                        var taskShape = createLLMServiceTask();
+                        create.start(event, taskShape);
+                    }
                 }
             },
+            'create.plugin-service': {
+                group: 'activity',
+                className: 'bpmn-icon-service-task plugin-service-task',
+                title: translate('plugin'),
+                action: {
+                    dragstart: function (event) {
+                        var taskShape = createPluginTask();
+                        create.start(event, taskShape);
+                    },
+                    click: function (event) {
+                        var taskShape = createPluginTask();
+                        create.start(event, taskShape);
+                    }
+                }
+            }
         }
     }
 }

@@ -85,6 +85,14 @@ const kmsgbox = (function () {
              }]
         });
     }
+
+    kmsgbox.showProgressBar = function(){
+        $('#loading-indicator').show();
+    }
+
+    kmsgbox.hideProgressBar = function () {
+        $('#loading-indicator').hide();
+    }
     return kmsgbox;
 })();
 

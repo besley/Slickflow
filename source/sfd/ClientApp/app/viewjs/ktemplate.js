@@ -1,4 +1,6 @@
-﻿const ktemplate = (function () {
+﻿import kmsgbox from "../script/kmsgbox";
+
+const ktemplate = (function () {
     function ktemplate() {
     }
 
@@ -41,17 +43,17 @@
 
     ktemplate.init = function () {
         $("li.menuItemTemplate").on('click', function (e) {
-            var templateTypeID = $(e.target).data("id");
+            var templateTypeId = $(e.target).data("id");
 
-            if (templateTypeID === 'business') {
+            if (templateTypeId === 'business') {
                 $('#divBusinessTemplate').show();
                 $('#divStandardTemplate').hide();
                 $('#divCodeTextTemplate').hide();
-            } else if (templateTypeID === 'standard') {
+            } else if (templateTypeId === 'standard') {
                 $('#divStandardTemplate').show();
                 $('#divBusinessTemplate').hide();
                 $('#divCodeTextTemplate').hide();
-            } else if (templateTypeID === 'codetext') {
+            } else if (templateTypeId === 'codetext') {
                 $('#divCodeTextTemplate').show();
                 $('#divBusinessTemplate').hide();
                 $('#divStandardTemplate').hide();
@@ -59,13 +61,15 @@
         })
 
         $("div.btnAddToWorkSpace").on('click', function (e) {
+            kmsgbox.showProgressBar();
+
             var templateName = '';
             var templateType = $(e.target).data("type");
-            var templateID = $(e.target).data("id");
+            var templateId = $(e.target).data("id");
             if (templateType === "std") {
-                templateName = ktemplate.mxTemplateGallery[templateType][templateID];
+                templateName = ktemplate.mxTemplateGallery[templateType][templateId];
             } else if (templateType === "biz") {
-                templateName = ktemplate.mxTemplateGallery[templateType][templateID];
+                templateName = ktemplate.mxTemplateGallery[templateType][templateId];
             }
 
             //create a new process
@@ -81,10 +85,12 @@
                     kmain.mxSelectedProcessEntity = result.Entity;
                     //render process into graph canvas
                     kmain.openDiagramFile(result.Entity.XmlContent);
+                } else {
+                    kmsgbox.warn(result.Message);
                 }
+                kmain.templateDialog.close();
+                kmsgbox.hideProgressBar();
             });
-
-            kmain.templateDialog.close();
         })
 
         $("#ddlTemplateType").change(function (i, o) {
@@ -110,21 +116,41 @@
         });
     }
 
+    //trial feature
     ktemplate.executeGraph = function () {
-        $('#loading-indicator').show();
         var text = $("#txtCode")[0].value;
 
         if (text !== "") {
             var entity = { "Body": text };
-            processapi.executeProcessGraph(entity, function (entity) {
-                var xml = entity.XmlContent;
-                processlist.pselectedProcessEntity = entity;
-                kmain.mxSelectedProcessEntity = entity;
-                //render process into graph canvas
-                kmain.openDiagramFile(xml);
-                kmain.templateDialog.close();
+            processapi.executeProcessGraph(entity, function (result) {
+                kmsgbox.info(result.Message);
+                //kmain.templateDialog.close();
+            });
+        }
+        else {
+            kmsgbox.warn(kresource.getItem('domainlangwwarnmsg'));
+        }
+    }
 
-                $('#loading-indicator').hide();
+    ktemplate.executeGraphAdvanced = function () {
+        kmsgbox.showProgressBar();
+
+        var text = $("#txtCode")[0].value;
+
+        if (text !== "") {
+            var entity = { "Body": text };
+            processapi.executeProcessGraph(entity, function (result) {
+                if (result.Status === 1) {
+                    var xml = entity.XmlContent;
+                    processlist.pselectedProcessEntity = entity;
+                    kmain.mxSelectedProcessEntity = entity;
+                    //render process into graph canvas
+                    kmain.openDiagramFile(xml);
+                    kmain.templateDialog.close();
+                } else {
+                    kmsgbox.warn(result.Message);
+                }
+                kmsgbox.hideProgressBar();
             });
         }
         else {

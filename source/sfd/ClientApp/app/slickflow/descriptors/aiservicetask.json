@@ -1,0 +1,30 @@
+{
+  "aiService": [
+    {
+      "name": "AIServices",
+      "superClass": [ "Element" ],
+      "properties": [
+        {
+          "name": "aiServices",
+          "isMany": true,
+          "type": "AIService"
+        }
+      ]
+    },
+    {
+      "name": "AIService",
+      "properties": [
+        {
+          "name": "configUUID",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "type",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}

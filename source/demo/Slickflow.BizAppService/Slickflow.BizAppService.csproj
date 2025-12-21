@@ -5,8 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Lib\Slickflow.Engine\Slickflow.Engine.csproj" />
-    <ProjectReference Include="..\..\utility\SlickOne.WebUtility\SlickOne.WebUtility.csproj" />
+    <ProjectReference Include="..\..\core\Slickflow.Engine\Slickflow.Engine.csproj" />
   </ItemGroup>
 
 </Project>

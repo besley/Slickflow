@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data;
-using System.Threading;
-using System.Threading.Tasks;
+﻿
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using SlickOne.WebUtility;
 using Slickflow.Data;
-using Slickflow.Engine.Common;
-using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Service;
+using Slickflow.WebUtility;
 
 namespace Slickflow.WebApi.Controllers
 {
@@ -26,12 +19,12 @@ namespace Slickflow.WebApi.Controllers
         {
             var result = ResponseResult.Default();
             var wfService = new WorkflowService();
-            var processInstanceID = 5492;
-            var activityInstanceID = 46593;
+            var processInstanceId = 5492;
+            var activityInstanceId = 46593;
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            var task = wfService.GetTaskView(processInstanceID, activityInstanceID);
+            var task = wfService.GetTaskView(processInstanceId, activityInstanceId);
             stopWatch.Stop();
             var time = stopWatch.Elapsed;
             result = ResponseResult.Success(time.ToString());
@@ -41,7 +34,7 @@ namespace Slickflow.WebApi.Controllers
 
         /// <summary>
         /// Get Ready Tasks
-        /// {"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"SEQ-C-1099","ProcessID":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
+        /// {"UserId":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceId":"SEQ-C-1099","ProcessId":"072af8c3-482a-4b1c-890b-685ce2fcc75d"}
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>

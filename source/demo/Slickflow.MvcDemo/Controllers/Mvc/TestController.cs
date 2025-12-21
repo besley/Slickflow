@@ -12,13 +12,13 @@ namespace Slickflow.MvcDemo.Controllers.Mvc
     /// </summary>
     public class Performer
     {
-        public Performer(string userID, string userName)
+        public Performer(string userId, string userName)
         {
-            UserID = userID;
+            UserId = userId;
             UserName = userName;
         }
 
-        public string UserID
+        public string UserId
         {
             get;
             set;
@@ -47,12 +47,12 @@ namespace Slickflow.MvcDemo.Controllers.Mvc
     public class WfAppRunner
     {
         public string AppName { get; set; }
-        public string AppInstanceID { get; set; }
+        public string AppInstanceId { get; set; }
         public string AppInstanceCode { get; set; }
-        public string ProcessID { get; set; }
+        public string ProcessId { get; set; }
         public string Version { get; set; }
         public string FlowStatus { get; set; }
-        public string UserID { get; set; }
+        public string UserId { get; set; }
         public string UserName { get; set; }
         public IDictionary<string, PerformerList> NextActivityPerformers { get; set; }
     }

@@ -1,26 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using SlickOne.WebUtility;
+﻿using Microsoft.AspNetCore.Mvc;
 using Slickflow.Data;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Service;
+using Slickflow.WebUtility;
 
 namespace Slickflow.WebApi.Controllers
 {
     //webapi: http://localhost/sfapi/api/wfsequence/
-    //Database table: WfProcess
+    //Database table: wf_process
     //Conditional start process testing
-    //Process record ID: 870
+    //Process record Id: 870
     //Process Name: Quotation Process
     //GUID: 444db0c2-4dcb-4f86-c75d-43719b28cbb4
     //startup process:
-    //{"UserID":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceID":"100","ProcessID":"52023958-996d-48ac-b9a7-ba51e48d4821","Version":"1","ControlParameterSheet":{"ConditionalVariables":{"days":"10"}}}
+    //{"UserId":"10","UserName":"Long","AppName":"SamplePrice","AppInstanceId":"100","ProcessId":"52023958-996d-48ac-b9a7-ba51e48d4821","Version":"1","ControlParameterSheet":{"ConditionalVariables":{"days":"10"}}}
 
 
     /// <summary>
@@ -46,9 +40,9 @@ namespace Slickflow.WebApi.Controllers
                     //runner.NextActivityPerformers = new Dictionary<string, PerformerList>();
 
                     //var performerList = new PerformerList();
-                    //performerList.Add(new Performer(runner.UserID, runner.UserID));
+                    //performerList.Add(new Performer(runner.UserId, runner.UserId));
 
-                    //runner.NextActivityPerformers.Add(nextSteps[0].ActivityID, performerList);
+                    //runner.NextActivityPerformers.Add(nextSteps[0].ActivityId, performerList);
                     //var result2 = wfService.RunProcess(session.Connection, runner, session.Transaction);
 
                     transaction.Commit();
@@ -143,7 +137,7 @@ namespace Slickflow.WebApi.Controllers
                      .UseApp("DS-100", "Book-Order", "DS-100-LX")
                      .UseProcess("PriceProcessCode")
                      .PrevStepInt()
-                     .OnTask(id)             //TaskID
+                     .OnTask(id)             //TaskId
                      .SendBack();
             return wfResult.Status.ToString();
         }
@@ -155,7 +149,7 @@ namespace Slickflow.WebApi.Controllers
             var wfResult = wfService.CreateRunner("10", "Jack")
                      .UseApp("DS-100", "Book-Order", "DS-100-LX")
                      .UseProcess("PriceProcessCode")
-                     .OnTask(id)             //TaskID
+                     .OnTask(id)             //TaskId
                      .Withdraw();
             return wfResult.Status.ToString();
         }

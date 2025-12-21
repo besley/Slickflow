@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using Microsoft.AspNetCore.Mvc;
-using SlickOne.WebUtility;
 using Slickflow.Data;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Service;
+using Slickflow.WebUtility;
 
 namespace Slickflow.WebApi.Controllers
 {
@@ -337,7 +337,7 @@ namespace Slickflow.WebApi.Controllers
             try
             {
                 var wfService = new WorkflowService();
-                var entity = wfService.GetProcessByVersion(query.ProcessID, query.Version);
+                var entity = wfService.GetProcessByVersion(query.ProcessId, query.Version);
 
                 result = ResponseResult<ProcessEntity>.Success(entity);
             }
@@ -405,7 +405,7 @@ namespace Slickflow.WebApi.Controllers
             try
             {
                 var wfService = new WorkflowService();
-                var entity = wfService.GetAllTaskActivityList(query.ProcessID, query.Version).ToList();
+                var entity = wfService.GetAllTaskActivityList(query.ProcessId, query.Version).ToList();
 
                 result = ResponseResult<List<Activity>>.Success(entity);
             }

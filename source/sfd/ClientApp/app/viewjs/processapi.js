@@ -7,6 +7,18 @@ const processapi = (function () {
     function processapi() {
     }
 
+    processapi.getListSimple = function (callback) {
+        jshelper.ajaxGet(kconfig.webApiUrl + 'api/Wf2Xml/GetProcessListSimple', null, function (result) {
+            if (result.Status === 1) {
+                if (callback !== null) {
+                    callback(result);
+                }
+            } else {
+                kmsgbox.error(kresource.getItem("processlisterrormsg"));
+            }
+        })
+    }
+
     processapi.create = function (entity, isPopupMessage, callback) {
         jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/CreateProcess',
             JSON.stringify(entity),
@@ -24,12 +36,11 @@ const processapi = (function () {
     }
 
     processapi.executeProcessGraph = function (entity, callback) {
-        jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/ExecuteProcessGraph',
+        jshelper.ajaxPost(kconfig.webApiUrl + 'api/WfTrial/ExecuteProcessGraph',
             JSON.stringify(entity),
             function (result) {
                 if (result.Status === 1) {
-                    //kmsgbox.info(result.Message);
-                    callback(result.Entity);
+                    callback(result);
                 } else {
                     kmsgbox.warn(result.Message);
                 }
@@ -91,6 +102,15 @@ const processapi = (function () {
             });
     }
 
+    processapi.deleteById = function (id, callback) {
+        //delete the selected row
+        jshelper.ajaxGet(kconfig.webApiUrl + 'api/Wf2Xml/DeleteProcessById/' + id,
+            null,
+            function (result) {
+                callback(result);
+            });
+    }
+
     processapi.InitNewBPMNFile = function (callback) {
         jshelper.ajaxGet(kconfig.webApiUrl + 'api/Wf2Xml/InitNewBPMNFile', null,
             function (result) {
@@ -99,8 +119,17 @@ const processapi = (function () {
         );
     }
 
-    processapi.queryProcessFile = function (query, callback) {
-        jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/QueryProcessFile',
+    processapi.queryProcessFile = function (entity, callback) {
+        jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/GetProcessFile',
+            JSON.stringify(query),
+            function (result) {
+                callback(result);
+            }
+        );
+    }
+
+    processapi.getFirstStepInfo = function (query, callback) {
+        jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/GetFirstActivity',
             JSON.stringify(query),
             function (result) {
                 callback(result);
@@ -117,9 +146,9 @@ const processapi = (function () {
         );
     }
 
-    processapi.queryProcessFileByID = function (query, callback) {
-        jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/QueryProcessFileByID',
-            JSON.stringify(query),
+    processapi.queryProcessFileById = function (id, callback) {
+        jshelper.ajaxGet(kconfig.webApiUrl + 'api/Wf2Xml/GetProcessFile/' + id,
+            null,
             function (result) {
                 callback(result);
             }
@@ -133,7 +162,7 @@ const processapi = (function () {
     }
 
     processapi.createByTemplate = function (entity, isPopupMessage, callback) {
-        jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/CreateProcessByTemplateName',
+        jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/CreateProcessByTemplate',
             JSON.stringify(entity),
             function (result) {
                 if (result.Status === 1) {
@@ -149,7 +178,7 @@ const processapi = (function () {
     }
 
     processapi.loadTemplate = function (option, callback) {
-        jshelper.ajaxGet(kconfig.webApiUrl + 'api/Wf2Xml/LoadProcessTemplate/' + option, null, function (result) {
+        jshelper.ajaxGet(kconfig.webApiUrl + 'api/Wf2Xml/LoadProcessTemplateCode/' + option, null, function (result) {
             if (result.Status === 1) {
                 var template = result.Entity;
                 //callback function
@@ -159,6 +188,24 @@ const processapi = (function () {
             }
         });
     }
+
+    //流程运行时接口
+    processapi.start = function (query, callback) {
+        jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/StartProcess',
+            JSON.stringify(query),
+            function (result) {
+                callback(result);
+            });
+    }
+
+    processapi.run = function (query, callback) {
+        jshelper.ajaxPost(kconfig.webApiUrl + 'api/Wf2Xml/RunProcess',
+            JSON.stringify(query),
+            function (result) {
+                callback(result);
+            });
+    }
+
     return processapi;
 })()
 

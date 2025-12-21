@@ -5,8 +5,8 @@ using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
-using SlickOne.WebUtility;
 using Slickflow.Data;
+using Slickflow.WebUtility;
 
 namespace Slickflow.MvcDemo.Controllers.WebApi
 {
@@ -29,7 +29,7 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
         }
 
         /// <summary>
-        /// Get by ID
+        /// Get by Id
         /// 按主键查询实体
         /// </summary>
         [HttpGet]

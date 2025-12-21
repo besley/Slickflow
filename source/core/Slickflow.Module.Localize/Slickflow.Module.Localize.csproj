@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <PackageId>2.4.0.0</PackageId>
+    <Title>Slickflow Localization for Global Users</Title>
+    <Version>2.4.0.0</Version>
+    <Authors>Besley</Authors>
+    <Company>Hangzhou, Ligong</Company>
+    <Description>Localization for global users, multiple laungage support</Description>
+    <Copyright>@2014-2025</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Resource\**" />
+    <EmbeddedResource Remove="Resource\**" />
+    <None Remove="Resource\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Designer\en.json" />
+    <None Remove="Designer\zh.json" />
+    <None Remove="Engine\en.json" />
+    <None Remove="Engine\zh.json" />
+    <None Remove="Job\en.json" />
+    <None Remove="Job\zh.json" />
+    <None Remove="Web\en.json" />
+    <None Remove="Web\zh.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Designer\en.json" />
+    <EmbeddedResource Include="Designer\zh.json" />
+    <EmbeddedResource Include="Engine\en.json" />
+    <EmbeddedResource Include="Engine\zh.json" />
+    <EmbeddedResource Include="Job\en.json" />
+    <EmbeddedResource Include="Job\zh.json" />
+    <EmbeddedResource Include="Web\en.json" />
+    <EmbeddedResource Include="Web\zh.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>

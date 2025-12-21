@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:sf="http://www.slickflow.com/schema/sf" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" id="bpmn-diagram" targetNamespace="http://bpmn.io/schema/bpmn" schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn:process id="Process_8143_3053" sf:code="OfficeIn_Code_8143_3053" name="OfficeIn_8143_3053" isExecutable="true" sf:version="1">
+    <bpmn:startEvent id="StartNode_1851" sf:code="Start" name="start">
+      <bpmn:outgoing>Flow_3829</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="TaskNode_9220" sf:code="task001" name="Warehouse Signature">
+      <bpmn:incoming>Flow_3829</bpmn:incoming>
+      <bpmn:outgoing>Flow_5644</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:inclusiveGateway id="GatewayNode_2925" sf:code="orsplit001" name="Or-Split">
+      <bpmn:incoming>Flow_5644</bpmn:incoming>
+      <bpmn:outgoing>Flow_9952</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1369</bpmn:outgoing>
+      <bpmn:outgoing>Flow_9194</bpmn:outgoing>
+    </bpmn:inclusiveGateway>
+    <bpmn:task id="TaskNode_1327" sf:code="task010" name="Signature of Administrative Department">
+      <bpmn:incoming>Flow_9952</bpmn:incoming>
+      <bpmn:outgoing>Flow_2915</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="TaskNode_8129" sf:code="task020" name="Financial Signature">
+      <bpmn:incoming>Flow_1369</bpmn:incoming>
+      <bpmn:outgoing>Flow_6693</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="TaskNode_2593" sf:code="task030" name="CEO Signature">
+      <bpmn:incoming>Flow_9194</bpmn:incoming>
+      <bpmn:outgoing>Flow_4864</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:inclusiveGateway id="GatewayNode_1656" sf:code="orjoin001" name="Or-Join">
+      <bpmn:incoming>Flow_4864</bpmn:incoming>
+      <bpmn:incoming>Flow_6693</bpmn:incoming>
+      <bpmn:incoming>Flow_2915</bpmn:incoming>
+      <bpmn:outgoing>Flow_8015</bpmn:outgoing>
+    </bpmn:inclusiveGateway>
+    <bpmn:task id="TaskNode_5580" sf:code="task007" name="Finance Signature">
+      <bpmn:incoming>Flow_8015</bpmn:incoming>
+      <bpmn:outgoing>Flow_9491</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="EndNode_7346" sf:code="End" name="end">
+      <bpmn:incoming>Flow_9491</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_3829" name="" sourceRef="StartNode_1851" targetRef="TaskNode_9220" />
+    <bpmn:sequenceFlow id="Flow_5644" name="" sourceRef="TaskNode_9220" targetRef="GatewayNode_2925" />
+    <bpmn:sequenceFlow id="Flow_9952" name="surplus = &#34;normal&#34;" sourceRef="GatewayNode_2925" targetRef="TaskNode_1327">
+      <bpmn:conditionExpression>surplus = "normal"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1369" name="surplus = &#34;normal&#34;" sourceRef="GatewayNode_2925" targetRef="TaskNode_8129">
+      <bpmn:conditionExpression>surplus = "normal"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_9194" name="surplus = &#34;overamount&#34;" sourceRef="GatewayNode_2925" targetRef="TaskNode_2593">
+      <bpmn:conditionExpression>surplus = "overamount"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_4864" name="" sourceRef="TaskNode_2593" targetRef="GatewayNode_1656" />
+    <bpmn:sequenceFlow id="Flow_6693" name="" sourceRef="TaskNode_8129" targetRef="GatewayNode_1656" />
+    <bpmn:sequenceFlow id="Flow_2915" name="" sourceRef="TaskNode_1327" targetRef="GatewayNode_1656" />
+    <bpmn:sequenceFlow id="Flow_8015" name="" sourceRef="GatewayNode_1656" targetRef="TaskNode_5580" />
+    <bpmn:sequenceFlow id="Flow_9491" name="" sourceRef="TaskNode_5580" targetRef="EndNode_7346" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_8143_3053">
+      <bpmndi:BPMNShape id="BPMNShape_xx4ro8c_di" bpmnElement="StartNode_1851">
+        <dc:Bounds x="240" y="180" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_rfdfw1t_di" bpmnElement="TaskNode_9220">
+        <dc:Bounds x="356" y="158" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_39cyoqg_di" bpmnElement="GatewayNode_2925">
+        <dc:Bounds x="536" y="180" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_39u54j1_di" bpmnElement="TaskNode_1327">
+        <dc:Bounds x="652" y="390" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_2jagtq4_di" bpmnElement="TaskNode_8129">
+        <dc:Bounds x="652" y="230" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_jwmmbtu_di" bpmnElement="TaskNode_2593">
+        <dc:Bounds x="652" y="70" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0mx5s3o_di" bpmnElement="GatewayNode_1656">
+        <dc:Bounds x="832" y="180" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_r8ioj15_di" bpmnElement="TaskNode_5580">
+        <dc:Bounds x="948" y="158" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_mfke6ek_di" bpmnElement="EndNode_7346">
+        <dc:Bounds x="1128" y="180" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_3829_di" bpmnElement="Flow_3829">
+        <di:waypoint x="276" y="198" />
+        <di:waypoint x="356" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5644_di" bpmnElement="Flow_5644">
+        <di:waypoint x="456" y="198" />
+        <di:waypoint x="536" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_9952_di" bpmnElement="Flow_9952">
+        <di:waypoint x="554" y="216" />
+        <di:waypoint x="554" y="430" />
+        <di:waypoint x="652" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1369_di" bpmnElement="Flow_1369">
+        <di:waypoint x="554" y="216" />
+        <di:waypoint x="554" y="270" />
+        <di:waypoint x="652" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_9194_di" bpmnElement="Flow_9194">
+        <di:waypoint x="554" y="180" />
+        <di:waypoint x="554" y="110" />
+        <di:waypoint x="652" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4864_di" bpmnElement="Flow_4864">
+        <di:waypoint x="752" y="110" />
+        <di:waypoint x="850" y="110" />
+        <di:waypoint x="850" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6693_di" bpmnElement="Flow_6693">
+        <di:waypoint x="752" y="270" />
+        <di:waypoint x="850" y="270" />
+        <di:waypoint x="850" y="216" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2915_di" bpmnElement="Flow_2915">
+        <di:waypoint x="752" y="430" />
+        <di:waypoint x="850" y="430" />
+        <di:waypoint x="850" y="216" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8015_di" bpmnElement="Flow_8015">
+        <di:waypoint x="868" y="198" />
+        <di:waypoint x="948" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_9491_di" bpmnElement="Flow_9491">
+        <di:waypoint x="1048" y="198" />
+        <di:waypoint x="1128" y="198" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

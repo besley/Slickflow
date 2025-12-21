@@ -64,7 +64,7 @@
                              id: 1,
                              pId: 0,
                              name: nextStep.ActivityName,
-                             activityID: nextStep.ActivityID,
+                             activityId: nextStep.ActivityId,
                              activityName: nextStep.ActivityName,
                              type: "activity",
                              open: false
@@ -79,7 +79,7 @@
                                 id: id,
                                 pId: 1,
                                 name: o.UserName,
-                                uid: o.UserID,
+                                uid: o.UserId,
                                 type: "user"
                             };
                             zNodes.push(userNode);
@@ -117,25 +117,25 @@
         //Single step optional example
         var nextStep = {};
         nextStep.Users = [];
-        var activityID = "", activityName="";
+        var activityId = "", activityName="";
         var user = null;
         var userlist = [];
         $.each(selectedNodes, function (i, o) {
             if (o.type === "activity") {
-                activityID = o.activityID;
+                activityId = o.activityId;
                 activityName = o.activityName;
             } else if (o.type === "user") {
-                user = { UserID: o.uid, UserName: o.name };
+                user = { UserId: o.uid, UserName: o.name };
                 userlist.push(user);
             }
         });
 
         var WfAppRunner = nextactivitytree.mEntity.WfAppRunner;
         WfAppRunner.NextActivityPerformers = {};
-        WfAppRunner.NextActivityPerformers[activityID] = userlist;
+        WfAppRunner.NextActivityPerformers[activityId] = userlist;
 
-        console.log(nextactivitytree.mstepName);
-        console.log(nextactivitytree.mEntity);
+        //console.log(nextactivitytree.mstepName);
+        //console.log(nextactivitytree.mEntity);
         
         $.msgBox({
             title: "Are You Sure",

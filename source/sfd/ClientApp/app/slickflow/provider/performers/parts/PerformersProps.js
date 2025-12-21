@@ -71,7 +71,7 @@ function isPartakerExisted(element) {
     const partaker = mxPartakerSelected;
     if (partaker !== null) {
         performers.forEach(function (item, index) {
-            if (item.outerId === partaker.ID) {
+            if (item.outerId === partaker.Id) {
                 isExisted = true;
             }
         })
@@ -131,7 +131,7 @@ function executeMultiCommad(element, bpmnFactory, commandStack) {
     if (mxPartakerSelected !== null) {
         const newPerformer = createElement('sf:Performer', {
             name: mxPartakerSelected.RoleName,
-            outerId: mxPartakerSelected.ID,
+            outerId: mxPartakerSelected.Id,
             outerCode: mxPartakerSelected.RoleCode,
             outerType: mxPartakerType    //role
         }, extension, bpmnFactory);

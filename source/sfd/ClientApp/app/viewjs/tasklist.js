@@ -1,4 +1,5 @@
-﻿import processapi from './processapi.js';
+﻿import kmsgbox from '../script/kmsgbox.js';
+import processapi from './processapi.js';
 
 const tasklist = (function () {
     function tasklist() {
@@ -10,7 +11,7 @@ const tasklist = (function () {
     }
 
     function getTaskList() {
-        $('#loading-indicator').show();
+        kmsgbox.showProgressBar();
 
         jshelper.ajaxGet(kconfig.webApiUrl + 'api/Wf2Xml/GetTaskToDoListTop', null, function (result) {
             if (result.Status === 1) {
@@ -20,12 +21,12 @@ const tasklist = (function () {
                 var gridOptions = {
                     theme: themeBalham,
                     columnDefs: [
-                        { headerName: 'ID', field: 'TaskID', width: 50 },
+                        { headerName: 'Id', field: 'TaskId', width: 50 },
                         { headerName: kresource.getItem('appname'), field: 'AppName', width: 120 },
-                        { headerName: kresource.getItem('appinstanceid'), field: 'AppInstanceID', width: 120 },
+                        { headerName: kresource.getItem('appinstanceid'), field: 'AppInstanceId', width: 120 },
                         { headerName: kresource.getItem('activityname'), field: 'ActivityName', width: 160 },
-                        { headerName: kresource.getItem('assigneduserid'), field: 'AssignedToUserID', width: 100 },
-                        { headerName: kresource.getItem('assignedusername'), field: 'AssignedToUserName', width: 100 },
+                        { headerName: kresource.getItem('assigneduserid'), field: 'AssignedUserId', width: 100 },
+                        { headerName: kresource.getItem('assignedusername'), field: 'AssignedUserName', width: 100 },
                         { headerName: kresource.getItem('createddatetime'), field: 'CreatedDateTime', width: 200 },
                     ],
                     rowSelection: {
@@ -37,16 +38,15 @@ const tasklist = (function () {
 
                 gridOptions.rowData = result.Entity;
                 const gridApi = createGrid(divTaskGrid, gridOptions);
-
-                $('#loading-indicator').hide();
             } else {
                 kmsgbox.error(kresource.getItem("tasklistloaderrormsg"), result.Message);
             }
+            kmsgbox.hideProgressBar();
         });
     };
 
     function getDoneList() {
-        $('#loading-indicator').show();
+        kmsgbox.showProgressBar();
 
         jshelper.ajaxGet(kconfig.webApiUrl + 'api/Wf2Xml/GetTaskDoneListTop', null, function (result) {
             if (result.Status === 1) {
@@ -56,12 +56,12 @@ const tasklist = (function () {
                 var gridOptions = {
                     theme: themeBalham,
                     columnDefs: [
-                        { headerName: 'ID', field: 'TaskID', width: 50 },
+                        { headerName: 'Id', field: 'TaskId', width: 50 },
                         { headerName: kresource.getItem('appname'), field: 'AppName', width: 120 },
-                        { headerName: kresource.getItem('appinstanceid'), field: 'AppInstanceID', width: 120 },
+                        { headerName: kresource.getItem('appinstanceid'), field: 'AppInstanceId', width: 120 },
                         { headerName: kresource.getItem('activityname'), field: 'ActivityName', width: 160 },
-                        { headerName: kresource.getItem('endedbyuserid'), field: 'EndedByUserID', width: 100 },
-                        { headerName: kresource.getItem('endedbyusername'), field: 'EndedByUserName', width: 100 },
+                        { headerName: kresource.getItem('endeduserid'), field: 'EndedUserId', width: 100 },
+                        { headerName: kresource.getItem('endedusername'), field: 'EndedUserName', width: 100 },
                         { headerName: kresource.getItem('endeddatetime'), field: 'EndedDateTime', width: 200 },
                     ],
                     rowSelection: {
@@ -73,11 +73,10 @@ const tasklist = (function () {
 
                 gridOptions.rowData = result.Entity;
                 const gridApi = createGrid(divTaskGrid, gridOptions);
-
-                $('#loading-indicator').hide();
             } else {
                 kmsgbox.error(kresource.getItem("tasklistloaderrormsg"), result.Message);
             }
+            kmsgbox.hideProgressBar();
         });
     }
 

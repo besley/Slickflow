@@ -37,7 +37,11 @@ const kresource = (function () {
                 kresource.mxCurrentLanguageJSON = json;
                 $(".lang").each(function (o) {
                     var key = $(this).attr("as");
-                    $(this).text(json[key]);
+                    var text = json[key];
+                    if (text !== undefined) {
+                        text = unescapeHtml(text);
+                        $(this).text(text);
+                    }
                 });
             });
 
@@ -51,9 +55,30 @@ const kresource = (function () {
     kresource.getItem = function (key) {
         var json = kresource.mxCurrentLanguageJSON;
         var text = json[key];
-        return text;
+        if (text !== undefined) {
+            text = unescapeHtml(text);
+            return text;
+        }
+        return '';
     }
-    
+
+    function unescapeHtml(text) {
+        return text
+            .replace(/&amp;/g, "&")
+            .replace(/&lt;/g, "<")
+            .replace(/&gt;/g, ">")
+            .replace(/&quot;/g, '"')
+            .replace(/&#39;/g, "'");
+    }
+
+    function escapeHtml(text) {
+        return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    }
     return kresource;
 })()
 

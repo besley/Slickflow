@@ -1,0 +1,308 @@
+.expression-editor-container {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.editor-header {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 15px;
+}
+
+.editor-header h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.editor-description {
+    margin: 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.editor-content {
+    margin-bottom: 20px;
+}
+
+/* Expression Group */
+.expression-group {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.expression-group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.expression-group-title {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+.expression-group-operator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.expression-group-operator label {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+}
+
+.expression-group-operator select {
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+    min-width: 80px;
+}
+
+.expression-group-remove {
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.expression-group-remove:hover {
+    background: #c82333;
+}
+
+/* Expression Items */
+.expression-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.expression-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.expression-item-left-bracket {
+    font-weight: bold;
+    color: #666;
+    font-size: 16px;
+}
+
+.expression-item-field {
+    flex: 1;
+    min-width: 120px;
+}
+
+.expression-item-field input,
+.expression-item-field select {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.expression-item-operator {
+    min-width: 100px;
+}
+
+.expression-item-operator select {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.expression-item-value {
+    flex: 1;
+    min-width: 120px;
+}
+
+.expression-item-value input {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.expression-item-right-bracket {
+    font-weight: bold;
+    color: #666;
+    font-size: 16px;
+}
+
+.expression-item-remove {
+    background: #ffc107;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 12px;
+    min-width: 30px;
+}
+
+.expression-item-remove:hover {
+    background: #e0a800;
+}
+
+.expression-item-logic {
+    min-width: 60px;
+}
+
+.expression-item-logic select {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+    background: #fff3cd;
+}
+
+/* Add Item Button */
+.add-item-container {
+    margin-top: 10px;
+}
+
+.btn-add-item {
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.btn-add-item:hover {
+    background: #218838;
+}
+
+/* Add Group Button */
+.add-group-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.btn-add-group {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-add-group:hover {
+    background: #0056b3;
+}
+
+/* Preview Section */
+.preview-section {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f0f0f0;
+    border-radius: 6px;
+}
+
+.preview-section label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 14px;
+}
+
+.expression-preview {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: #333;
+    min-height: 60px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.expression-preview.empty {
+    color: #999;
+    font-style: italic;
+}
+
+/* Footer */
+.editor-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.editor-footer .btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.editor-footer .btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.editor-footer .btn-primary:hover {
+    background: #0056b3;
+}
+
+.editor-footer .btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.editor-footer .btn-secondary:hover {
+    background: #5a6268;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .expression-item {
+        flex-wrap: wrap;
+    }
+
+    .expression-item-field,
+    .expression-item-operator,
+    .expression-item-value {
+        min-width: 100%;
+        margin-bottom: 8px;
+    }
+}

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Slickflow.WebUtility;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Service;
-using SlickOne.WebUtility;
 
 namespace Slickflow.MvcDemo.Controllers.WebApi
 {
@@ -28,7 +28,7 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             try
             {
                 var wfService = new WorkflowService();
-                var entity = wfService.GetProcessFile(query.ProcessID, query.Version);
+                var entity = wfService.GetProcessFile(query.ProcessId, query.Version);
 
                 result = ResponseResult<ProcessFileEntity>.Success(entity);
             }
@@ -119,7 +119,7 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
             try
             {
                 var wfService = new WorkflowService();
-                var roleList = wfService.GetRoleByProcess(query.ProcessID, query.Version).ToList();
+                var roleList = wfService.GetRoleByProcess(query.ProcessId, query.Version).ToList();
                 result = ResponseResult<List<Role>>.Success(roleList);
             }
             catch (System.Exception ex)
@@ -140,7 +140,7 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
                         try
             {
                 var wfService = new WorkflowService();
-                var roleList = wfService.GetRoleUserListByProcess(query.ProcessID, query.Version).ToList();
+                var roleList = wfService.GetRoleUserListByProcess(query.ProcessId, query.Version).ToList();
                 result = ResponseResult<List<Role>>.Success(roleList);
             }
             catch (System.Exception ex)
@@ -165,7 +165,7 @@ namespace Slickflow.MvcDemo.Controllers.WebApi
                 var itemList = wfService.GetUserListByRole(id).ToList();
                 foreach (var item in itemList)
                 {
-                    Performer performer = new Performer(item.UserID.ToString(), item.UserName);
+                    Performer performer = new Performer(item.UserId.ToString(), item.UserName);
                     performList.Add(performer);
                 }
                 result = ResponseResult<List<Performer>>.Success(performList);

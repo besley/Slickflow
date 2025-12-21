@@ -69,7 +69,7 @@ function isSubInfoExisted(element) {
     const subInfo = mxSubProcessSelected;
     if (subInfoes !== null) {
         subInfoes.forEach(function (item, index) {
-            if (item.ID === subInfo.ID) {
+            if (item.Id === subInfo.Id) {
                 isExisted = true;
             }
         })
@@ -126,8 +126,8 @@ function executeMultiCommand(element, bpmnFactory, commandStack) {
 
     if (mxSubProcessSelected !== null) {
         const newSubInfo = createElement('sf:SubInfo', {
-            subId: mxSubProcessSelected.ID,
-            subProcessID: mxSubProcessSelected.ProcessID,
+            subId: mxSubProcessSelected.Id,
+            subProcessId: mxSubProcessSelected.ProcessId,
             subProcessName: mxSubProcessSelected.ProcessName,
             subType: '',
             subVar: ''

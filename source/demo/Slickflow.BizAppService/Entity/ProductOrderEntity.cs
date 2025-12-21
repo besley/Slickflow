@@ -10,21 +10,34 @@ namespace Slickflow.BizAppService.Entity
     /// Product Order Entity
     /// 生产订单实体
     /// </summary>
-    [Table("ManProductOrder")]
+    [Table("man_product_order")]
     public class ProductOrderEntity
     {
-        public int ID { get; set; }
+        [Column("id")]
+        public int Id { get; set; }
+        [Column("order_code")]
         public string OrderCode { get; set; }
+        [Column("status")]
         public int Status { get; set; }
+        [Column("product_name")]
         public string ProductName { get; set; }
+        [Column("quantity")]
         public int Quantity { get; set; }
+        [Column("unit_price")]
         public decimal UnitPrice { get; set; }
+        [Column("total_price")]
         public decimal TotalPrice { get; set; }
+        [Column("created_time")]
         public DateTime CreatedTime { get; set; }
+        [Column("customer_name")]
         public string CustomerName { get; set; }
+        [Column("address")]
         public string Address { get; set; }
+        [Column("mobile")]
         public string Mobile { get; set; }
+        [Column("remark")]
         public string Remark { get; set; }
-        public Nullable<DateTime> LastUpdatedTime { get; set; }
+        [Column("updated_time")]
+        public Nullable<DateTime> UpdatedTime { get; set; }
     }
 }

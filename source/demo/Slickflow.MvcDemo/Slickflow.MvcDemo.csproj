@@ -8,7 +8,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" NoWarn="NU1605" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" NoWarn="NU1605" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.15.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Npgsql" Version="10.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
@@ -17,17 +19,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Lib\Slickflow.Data\Slickflow.Data.csproj" />
-    <ProjectReference Include="..\..\Lib\Slickflow.Engine\Slickflow.Engine.csproj" />
-    <ProjectReference Include="..\..\lib\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj" />
-    <ProjectReference Include="..\..\Lib\Slickflow.Module\Slickflow.Module.csproj" />
+    <ProjectReference Include="..\..\core\Slickflow.Data\Slickflow.Data.csproj" />
+    <ProjectReference Include="..\..\core\Slickflow.Engine\Slickflow.Engine.csproj" />
+    <ProjectReference Include="..\..\core\Slickflow.Module.Localize\Slickflow.Module.Localize.csproj" />
+    <ProjectReference Include="..\..\core\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj" />
+    <ProjectReference Include="..\..\core\Slickflow.Module\Slickflow.Module.csproj" />
     <ProjectReference Include="..\Slickflow.BizAppService\Slickflow.BizAppService.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Slickflow.Module.Localize">
-      <HintPath>..\..\lib\References\Slickflow.Module.Localize.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

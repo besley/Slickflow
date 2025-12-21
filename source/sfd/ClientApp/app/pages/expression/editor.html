@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Expression Editor</title>
+    <link rel="stylesheet" href="../../css/expression-editor.css?v=1.0.0" />
+</head>
+<body>
+    <div class="expression-editor-container">
+        <div class="editor-header">
+            <p class="editor-description lang" as="expression.editor.description">Build complex expressions by combining multiple conditions with logical operators (AND/OR)</p>
+        </div>
+
+        <div class="editor-content">
+            <!-- Expression Groups -->
+            <div id="expression-groups" class="expression-groups">
+                <!-- Expression groups will be dynamically added here -->
+            </div>
+
+            <!-- Add Group Button -->
+            <div class="add-group-container">
+                <button type="button" id="btn-add-group" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i>
+                    <span class="lang" as="expression.editor.add.group">Add Expression Group</span>
+                </button>
+            </div>
+
+            <!-- Preview -->
+            <div class="preview-section">
+                <label class="lang" as="expression.editor.preview">Preview:</label>
+                <div id="expression-preview" class="expression-preview"></div>
+            </div>
+        </div>
+
+        <!-- Footer buttons are handled by BootstrapDialog, but we keep them for standalone use -->
+        <div class="editor-footer" id="editor-footer" style="display: none;">
+            <button type="button" id="btn-cancel" class="btn btn-secondary lang" as="cancel">Cancel</button>
+            <button type="button" id="btn-clear" class="btn btn-secondary lang" as="expression.editor.clear">Clear</button>
+            <button type="button" id="btn-ok" class="btn btn-primary lang" as="expression.editor.ok">OK</button>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../../viewjs/expression-editor.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            if (typeof kresource !== 'undefined' && kresource.localize) {
+                kresource.localize();
+            }
+            // Initialize expression editor
+            // If there's a current value from parent, use it; otherwise start fresh
+            if (typeof window.expressionEditor !== 'undefined') {
+                if (window.__expressionEditorCurrentValue) {
+                    window.expressionEditor.setExpression(window.__expressionEditorCurrentValue);
+                } else {
+                    window.expressionEditor.init();
+                }
+                
+                // Ensure button event is bound after initialization
+                setTimeout(function() {
+                    $('#btn-add-group').off('click').on('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (typeof window.expressionEditor !== 'undefined' && window.expressionEditor.addExpressionGroup) {
+                            window.expressionEditor.addExpressionGroup();
+                        } else {
+                            // Fallback to direct call
+                            if (typeof addExpressionGroup === 'function') {
+                                addExpressionGroup();
+                            }
+                        }
+                        return false;
+                    });
+                }, 200);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -11,6 +11,6 @@ namespace Slickflow.BizAppService.Entity
     /// </summary>
     public class AppFlowQuery : QueryBase
     {
-        public string AppInstanceID { get; set; }
+        public string AppInstanceId { get; set; }
     }
 }

@@ -1,0 +1,86 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Reflection;
+using System.Diagnostics;
+using Slickflow.Engine.Common;
+using Slickflow.Engine.Utility;
+using Slickflow.Data;
+using Slickflow.Engine.Xpdl;
+using Slickflow.Engine.Xpdl.Node;
+using Slickflow.Engine.Business.Entity;
+using Slickflow.Engine.Business.Manager;
+
+namespace Slickflow.Engine.Core.Pattern.Event.Message
+{
+    /// <summary>
+    /// Start message node catch
+    /// 开始节点执行器
+    /// </summary>
+    internal class NodeMediatorStartMsgCatch : NodeMediator
+    {
+        internal NodeMediatorStartMsgCatch(ActivityForwardContext forwardContext, IDbSession session)
+            : base(forwardContext, session)
+        {
+
+        }
+
+        /// <summary>
+        /// Execute work item
+        /// </summary>
+        internal override void ExecuteWorkItem(ActivityInstanceEntity activityInstance)
+        {
+            try
+            {
+                ProcessInstanceManager pim = new ProcessInstanceManager();
+                var newId = pim.Insert(Session.Connection, ActivityForwardContext.ProcessInstance,
+                    Session.Transaction);
+                ActivityForwardContext.ProcessInstance.Id = newId;
+
+                OnBeforeExecuteWorkItem();
+
+                CompleteAutomaticlly(ActivityForwardContext.ProcessInstance,
+                    ActivityForwardContext.ActivityResource,
+                    Session);
+
+                OnAfterExecuteWorkItem();
+
+                //执行开始节点之后的节点集合
+                //Collection of nodes after executing the start node
+                ContinueForwardCurrentNode(ActivityForwardContext.IsNotParsedByTransition, Session);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Complete automatically
+        /// 置开始节点为结束状态
+        /// </summary>
+        /// <param name="processInstance"></param>
+        /// <param name="activityResource"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        private NodeAutoExecutedResult CompleteAutomaticlly(ProcessInstanceEntity processInstance,
+            ActivityResource activityResource,
+            IDbSession session)
+        {
+            var fromActivityInstance = CreateActivityInstanceObject(LinkContext.FromActivity, processInstance, activityResource.AppRunner);
+
+            ActivityInstanceManager.Insert(fromActivityInstance, session);
+
+            ActivityInstanceManager.Complete(fromActivityInstance.Id,
+                activityResource.AppRunner,
+                session);
+
+            fromActivityInstance.ActivityState = (short)ActivityStateEnum.Completed;
+            LinkContext.FromActivityInstance = fromActivityInstance;
+
+            NodeAutoExecutedResult result = NodeAutoExecutedResult.CreateGatewayExecutedResult(NodeAutoExecutedStatus.Successed);
+            return result;
+        }
+    }
+}
