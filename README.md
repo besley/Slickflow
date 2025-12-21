@@ -147,9 +147,6 @@
  
  if you have any further inquiry, please feel free to contact us:   
 
-**Email: sales@ruochisoft.com**  
-**QQ(Author): 47743901**
-
 **Document:**  
 http://doc.slickflow.net  
 **Wiki Page:**  
@@ -171,23 +168,6 @@ The formbuilder project:http://github.com/besley/formbuilder/
 https://www.youtube.com/@besley7836
 
 ![AskForLeave Form Approval](https://github.com/besley/besley.github.io/blob/master/Gif/SlickQua-Ask4Leave-Demo.gif)  
-
-**Slickflow(3.0.0.0) 企业版：** 
-
-
-0. 支持AI模型DeepSeek/QWen-Plus生成BPMN流程图;
-1. 集成BpmnJS 设计器，XML模式为BPMN2;
-2. 重构Slickflow.Engine项目;
-3. 演示项目为MvcDemo和WebDemo；
-4. 全部项目 .NET8 版本实现；
-5. 技术开发文档网站发布
-	http://doc.slickflow.com (中文) 
-	http://doc.slickflow.net(English) 
-	
-
-引擎功能各个版本描述见产品页面：
-
-http://www.slickflow.com/product/index 
 
 
 **EMail: sales@ruochisoft.com**  
