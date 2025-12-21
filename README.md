@@ -9,7 +9,7 @@
 ![](https://img.shields.io/github/issues/besley/slickflow.svg) 
 
 
-**A Quick Design and Testing Demo:**  
+**AI Image Classification Process Demo:**  
 ![AI Image Classification Demo](https://github.com/besley/besley.github.io/blob/master/Gif/slickflow-ai-image-classification.gif)
 
 **Quick Start Tutorial for Designer Project:**  
