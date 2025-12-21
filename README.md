@@ -10,7 +10,7 @@
 
 
 **A Quick Design and Testing Demo:**  
-![And Split Demo](https://github.com/besley/besley.github.io/blob/master/Gif/slickflow-andsplit-demo.gif)
+![AI Image Classification Demo](https://github.com/besley/besley.github.io/blob/master/Gif/slickflow-ai-image-classification.gif)
 
 **Quick Start Tutorial for Designer Project:**  
 1). In the command console, using the command **npm install** to download the node package.
