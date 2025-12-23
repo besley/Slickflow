@@ -9,6 +9,25 @@
 ![](https://img.shields.io/github/issues/besley/slickflow.svg) 
 
 
+**SlickFlow: Intelligent Workflow Automation with Large Language Models**<br>
+SlickFlow now integrates cutting-edge Large Language Model (LLM) nodes, empowering your workflows with advanced conversational reasoning and intelligent automation capabilities. This enhancement transforms traditional workflow systems into dynamic, AI-driven orchestration platforms.
+
+🚀 Key Features<br>
+🤖 Native LLM Node Integration<br>
+Seamlessly incorporate LLM nodes directly into your workflow diagrams. Configure and connect AI-powered steps alongside traditional business logic for end-to-end intelligent automation.
+
+🔌 Multi-LLM Provider Support<br>
+Flexible integration with leading AI services:<br>
+OpenAI API​ (GPT-4, GPT-3.5, and beyond)<br>
+QianWen​ (Alibaba's large language model)<br>
+Extensible architecture for additional providers
+
+**Image Classification & Analysis:**<br>
+Upload and process images directly through LLM nodes
+
+**Retrieval-Augmented Generation (RAG):**<br>
+Enhance LLM responses with real-time data retrieval from your knowledge bases
+
 **AI Image Classification Process Demo:**  
 ![AI Image Classification Demo](https://github.com/besley/besley.github.io/blob/master/Gif/slickflow-ai-image-classification.gif)
 
