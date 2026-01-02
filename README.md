@@ -156,13 +156,9 @@ Enhance LLM responses with real-time data retrieval from your knowledge bases
 **11. Suggestions**  
   Slickflow is suggested to give programmers a flexible way to integrate workflow engine components into their products or customer projects. The programmers can write their own code segments based on the engine component.   
 **12. Open Source Project License**    
- The product is under **Slickflow Open Source Project license**.    
- 1). Slickflow software must be legally used, and should not be used in violation of the law, morality and other acts that endanger social interests;  
- 2). Non-transferable, non-transferable and indivisible authorization of this software;  
- 3). The source code can be modified to apply Slickflow components in their own projects or products, but Slickflow source code can not be separately encapsulated for sale or distributed to third-party users;  
- 4). The intellectual property rights of Slickflow software shall be protected by law, and no documents such as technical data shall be made public or sold.  
-**13. Commercial license**  
- The enterprise, ultimate and universe version can be provided with a commercial license, technical support and upgrade service.
+Slickflow follows MIT open source protocol and can be used for commercial purposes.
+**13. Tchnical support **  
+ The enterprise, ultimate and universe version can be provided with a technical support and upgrade service.
  
  if you have any further inquiry, please feel free to contact us:   
 
