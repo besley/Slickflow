@@ -156,11 +156,14 @@ Enhance LLM responses with real-time data retrieval from your knowledge bases
 **11. Suggestions**  
   Slickflow is suggested to give programmers a flexible way to integrate workflow engine components into their products or customer projects. The programmers can write their own code segments based on the engine component.   
 **12. Open Source Project License**    
-Slickflow follows MIT open source protocol and can be used for commercial purposes. 
-**13. Tchnical support **  
- The enterprise, ultimate and universe version can be provided with a technical support and upgrade service.
+Slickflow follows MIT open source protocol and can be used for commercial purposes.    
+**13. Tchnical support **   
+ The enterprise, ultimate and universe version can be provided with a technical support and upgrade service.   
  
- if you have any further inquiry, please feel free to contact us:   
+If you have any further inquiry, please feel free to contact us with:
+
+sales@ruochisoft.com
+support@ruochisoft.com
 
 **Document:**  
 http://doc.slickflow.net  
