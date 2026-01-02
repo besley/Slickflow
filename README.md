@@ -162,7 +162,6 @@ Slickflow follows MIT open source protocol and can be used for commercial purpos
  
 If you have any further inquiry, please feel free to contact us with:
 
-sales@ruochisoft.com
 support@ruochisoft.com
 
 **Document:**  
