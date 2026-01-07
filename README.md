@@ -38,7 +38,7 @@ Upload and process images directly through LLM nodes
 Enhance LLM responses with real-time data retrieval from your knowledge bases
 
 ## 📚 AI Features Description
-![Slickflow.AI Document](https://medium.com/@slickflow/ai-large-language-model-integration-in-slickflow-net-7a75a069aa3a)
+[Slickflow.AI Document](https://medium.com/@slickflow/ai-large-language-model-integration-in-slickflow-net-7a75a069aa3a)
 
 ## 📸 Demo
 
@@ -264,8 +264,8 @@ https://github.com/besley/Slickflow/wiki
 
 ### CodeProject Articles
 
-- https://www.codeproject.com/Articles/5246528/Slickflow-NET-Core-Open-Source-Workflow-Engine
-- https://www.codeproject.com/Articles/5252483/Slickflow-Coding-Graphic-Model-User-Manual
+- [Tourial](https://www.codeproject.com/Articles/5246528/Slickflow-NET-Core-Open-Source-Workflow-Engine)
+- [User Manual](https://www.codeproject.com/Articles/5252483/Slickflow-Coding-Graphic-Model-User-Manual)
 
 ### Slickflow Website
 
