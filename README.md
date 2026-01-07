@@ -37,6 +37,9 @@ Upload and process images directly through LLM nodes
 
 Enhance LLM responses with real-time data retrieval from your knowledge bases
 
+## 📚 AI Features Description
+![Slickflow.AI Document](https://medium.com/@slickflow/ai-large-language-model-integration-in-slickflow-net-7a75a069aa3a)
+
 ## 📸 Demo
 
 **AI Image Classification Process Demo:**  
