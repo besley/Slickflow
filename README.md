@@ -391,9 +391,10 @@ API and WebTest containers require database configuration. Supported databases: 
 
 ## 💰 Donation
 
+Your donation will be used for the continuous research and development of the product and community building
+
 您的捐赠将用于产品的持续研发和社区建设
 
-Your donation will be used for the continuous research and development of the product and community building
 
 [![Donate with PayPal](https://github.com/besley/besley.github.io/blob/master/Images/paypal/donation.png)](https://paypal.me/slickflownet)
 
