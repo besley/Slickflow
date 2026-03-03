@@ -1,12 +1,14 @@
-﻿import kconfig from '../config/kconfig.js';
+import kconfig from '../config/kconfig.js';
 import axconfigapi from '../viewjs/axconfigapi.js';
 
 const axconfig = (function () {
     function axconfig() {
     }
 
+    /**
+     * Initialize axconfig module
+     */
     axconfig.init = function () {
-        // 标签页切换
         $('.tab').on('click', function () {
             const tabId = $(this).data('tab');
             $('.tab').removeClass('active');
@@ -15,21 +17,47 @@ const axconfig = (function () {
             $(`#${tabId}-tab`).addClass('active');
         });
 
-        // 温度滑块值显示
         $('#temperature').on('input', function () {
             $(this).next('.slider-value').text($(this).val());
         });
 
-        // 保存配置（仅保存 AxConfigEntity，不再包含变量列表）
+        $('#similarity-threshold').on('input', function () {
+            const value = parseFloat($(this).val()).toFixed(2);
+            $('#similarity-value').text(value);
+        });
+
         $('#save-btn').on('click', function () {
-            // 收集表单数据
+            var currentElement = kmain.currentSelectedElement;
+            if (!currentElement || !currentElement.businessObject) {
+                showNotification(kresource.getItem('axconfig.error.no.element') || 'No element selected', 'error');
+                return;
+            }
+            var businessObject = currentElement.businessObject;
+
+            const searchModes = [];
+            if ($('#search-mode-semantic').is(':checked')) {
+                searchModes.push('semantic');
+            }
+            if ($('#search-mode-keyword').is(':checked')) {
+                searchModes.push('keyword');
+            }
+            if ($('#search-mode-metadata').is(':checked')) {
+                searchModes.push('metadata');
+            }
+            
+            var serviceType = axconfig.getServiceType(businessObject) || 'LLM';
+            var $modelSelect = $('#model-select');
+            var selectedId = $modelSelect.val();
+            var selectedOpt = selectedId ? $modelSelect.find('option:selected') : null;
+            var modelNameFromOpt = selectedOpt && selectedOpt.length ? (selectedOpt.data('model-name') || selectedOpt.data('modelName') || '') : '';
             const configData = {
-                ConfigUUID: $('#config-uuid').val(),
-                ModelProviderId: parseInt($('#account-credential').val()) || null,
-                ModelName: $('#model-version').val().trim() || null,
+                ServiceType: serviceType,
+                ModelProviderId: (selectedId && selectedId !== '') ? parseInt(selectedId, 10) : null,
+                ModelName: (modelNameFromOpt || '').trim() || (selectedOpt ? selectedOpt.text().split(' - ')[0].trim() : '') || null,
                 Description: $('#axconfig-description').val(),
                 Temperature: parseFloat($('#temperature').val()) || 0,
                 MaxTokens: parseInt($('#max-tokens').val()) || 0,
+                MemoryTurns: parseInt($('#memory-turns').val()) || 10,
                 SystemPrompt: $('#system-prompt').val(),
                 UserMessage: $('#user-message-prompt').val(),
                 ResponseFormat: $('input[name="format"]:checked').val(),
@@ -38,10 +66,16 @@ const axconfig = (function () {
                 ErrorHandling: $('#error-handling').val(),
                 FallbackAgent: $('#fallback-agent').val(),
                 LogLevel: $('#log-level').val(),
-                CustomInstructions: $('#custom-instructions').val()
+                CustomInstructions: $('#custom-instructions').val(),
+                RagSearchStrategy: $('#knowledge-search-strategy').val() || 'similarity',
+                RagSearchCount: parseInt($('#knowledge-search-count').val()) || null,
+                RagSimilarityThreshold: parseFloat($('#similarity-threshold').val()) || null,
+                RagSearchMode: searchModes.join(',') || null,
+                RagFunction: $('#knowledge-function-name').val().trim() || null,
+                RagEmbeddingModelId: ($('#knowledge-embedding-model').val() && $('#knowledge-embedding-model').val() !== '') ? parseInt($('#knowledge-embedding-model').val(), 10) : null,
+                RagEmbeddingDimensions: parseInt($('#knowledge-embedding-dimensions').val()) || 1536
             };
 
-            // 验证必填字段
             var activityName = $('#activity-name').val();
             if (!activityName) {
                 showNotification(kresource.getItem('axconfig.validation.service.name'), 'error');
@@ -53,54 +87,44 @@ const axconfig = (function () {
                 return;
             }
 
-            // 验证 ModelProviderId（账号凭证）
             if (!configData.ModelProviderId || configData.ModelProviderId === null) {
                 showNotification(kresource.getItem('axconfig.validation.model.provider.id') || 'Please select an account credential', 'error');
                 return;
             }
 
-            // 验证 ModelName（模型名称）
             if (!configData.ModelName || configData.ModelName.trim() === '') {
                 showNotification(kresource.getItem('axconfig.validation.model.name') || 'Model name is required', 'error');
                 return;
             }
 
-            // 发送数据到后端API（仅 AxConfigEntity）
             saveAxConfig(configData);
         });
 
-        // Account credential dropdown change handler
-        $('#account-credential').on('change', function () {
-            var selectedValue = $(this).val();
-            $('#btn-edit-credential').prop('disabled', !selectedValue);
-        });
-
-        // Add credential button click handler
-        $('#btn-add-credential').on('click', function () {
-            openSettingPage(null, function () {
-                // Reload account credential list after setting page closes
-                loadAccountCredentialList();
-            });
-        });
-
-        // Edit credential button click handler
-        $('#btn-edit-credential').on('click', function () {
-            var selectedId = $('#account-credential').val();
-            if (selectedId) {
-                openSettingPage(parseInt(selectedId), function () {
-                    // Reload account credential list after setting page closes
-                    loadAccountCredentialList();
-                });
-            }
-        });
-
-        //load service data
         loadAxConfigData();
-        
-        //load account credential list
-        loadAccountCredentialList();
+        loadModelSelectList();
+        loadEmbeddingModelList();
     }
 
+    function toggleKnowledgeBaseTab(serviceType) {
+        const knowledgeTab = $('.tab[data-tab="knowledge"]');
+        const knowledgePane = $('#knowledge-tab');
+        
+        if (serviceType === 'RAG') {
+            knowledgeTab.show();
+        } else {
+            knowledgeTab.hide();
+            if (knowledgeTab.hasClass('active')) {
+                knowledgeTab.removeClass('active');
+                knowledgePane.removeClass('active');
+                $('.tab[data-tab="basic"]').addClass('active');
+                $('#basic-tab').addClass('active');
+            }
+        }
+    }
+
+    /**
+     * Load AI node configuration data
+     */
     function loadAxConfigData() {
         var currentElement = kmain.currentSelectedElement;
         if (currentElement === undefined || currentElement.businessObject === null) {
@@ -109,57 +133,94 @@ const axconfig = (function () {
         
         var businessObject = currentElement.businessObject;
         var activityName = businessObject.name;
-        var configUUID = axconfig.getConfigUUID(businessObject);
+        var activityId = businessObject.id;
 
-        // 写入活动名称（只用于显示，不保存）
         document.getElementById('activity-name').value = activityName || '';
-        // 写入配置UUID
-        document.getElementById('config-uuid').value = configUUID || '';
 
-        if (configUUID && configUUID !== '') {
-            axconfigapi.getByUUID(configUUID, function (result) {
+        var serviceTypeFromNode = axconfig.getServiceType(businessObject);
+        if (serviceTypeFromNode) {
+            document.getElementById('service-type').value = serviceTypeFromNode;
+            toggleKnowledgeBaseTab(serviceTypeFromNode);
+        } else {
+            document.getElementById('service-type').value = 'LLM';
+            toggleKnowledgeBaseTab('LLM');
+        }
+
+        var processId = kmain.mxSelectedProcessEntity ? kmain.mxSelectedProcessEntity.ProcessId : null;
+        var version = kmain.mxSelectedProcessEntity ? kmain.mxSelectedProcessEntity.Version : null;
+
+        if (processId && version && activityId) {
+            axconfigapi.getByProcessVersionActivity(processId, version, activityId, function (result) {
                 if (result.Status === 1) {
-                    // 从后端返回的是 AxConfigEntity 对象
                     var axConfigEntity = result.Entity;
 
                     if (axConfigEntity) {
-                        // 保存 AxConfigEntity 到缓存
                         axconfig.mcurrentAxConfigEntity = axConfigEntity;
-
-                        // 渲染表单数据：仅传递 AxConfigEntity
-                        renderAxConfigData(axConfigEntity);
+                        try {
+                            renderAxConfigData(axConfigEntity);
+                        } catch (renderEx) {
+                            console.error('renderAxConfigData error:', renderEx);
+                            kmsgbox.error((kresource.getItem("axconfigerrormsg") || '') + ' ' + (renderEx && renderEx.message ? renderEx.message : ''));
+                        }
+                    } else {
+                        axconfig.mcurrentAxConfigEntity = null;
+                        if (serviceTypeFromNode) {
+                            document.getElementById('service-type').value = serviceTypeFromNode;
+                            toggleKnowledgeBaseTab(serviceTypeFromNode);
+                        }
                     }
                 } else {
-                    kmsgbox.error(kresource.getItem("axconfigerrormsg"));
+                    var errMsg = (result && result.Message) ? result.Message : kresource.getItem("axconfigerrormsg");
+                    kmsgbox.error(errMsg);
                 }
+            }, function (xhr, status, error) {
+                var errMsg = kresource.getItem("axconfigerrormsg") + (xhr && xhr.responseJSON && xhr.responseJSON.Message ? ': ' + xhr.responseJSON.Message : (error ? ': ' + error : ''));
+                kmsgbox.error(errMsg);
             });
+        } else {
+            if (serviceTypeFromNode) {
+                document.getElementById('service-type').value = serviceTypeFromNode;
+                toggleKnowledgeBaseTab(serviceTypeFromNode);
+            }
         }
     }
 
+    /**
+     * Render AI node configuration data to form
+     */
     function renderAxConfigData(axConfigEntity) {
         if (!axConfigEntity) return false;
 
-        // 填充基本设置（activity_name 不保存，只显示当前元素名称）
-        document.getElementById('config-uuid').value = axConfigEntity.ConfigUUID || '';
-        document.getElementById('axconfig-description').value = axConfigEntity.Description || '';
-
-        // 填充模型配置
-        if (axConfigEntity.ModelProviderId) {
-            // 设置 account-credential
-            var credentialSelect = document.getElementById('account-credential');
-            var modelId = axConfigEntity.ModelProviderId;
-            
-            // 找到对应的 credential
-            var matchingOption = $(credentialSelect).find('option[value="' + modelId + '"]');
-            if (matchingOption.length > 0) {
-                credentialSelect.value = modelId;
-                $('#btn-edit-credential').prop('disabled', false);
+        if (axConfigEntity.ServiceType) {
+            document.getElementById('service-type').value = axConfigEntity.ServiceType;
+            toggleKnowledgeBaseTab(axConfigEntity.ServiceType);
+        } else {
+            var currentElement = kmain.currentSelectedElement;
+            if (currentElement && currentElement.businessObject) {
+                var serviceTypeFromNode = axconfig.getServiceType(currentElement.businessObject);
+                if (serviceTypeFromNode) {
+                    document.getElementById('service-type').value = serviceTypeFromNode;
+                    toggleKnowledgeBaseTab(serviceTypeFromNode);
+                } else {
+                    document.getElementById('service-type').value = 'LLM';
+                    toggleKnowledgeBaseTab('LLM');
+                }
+            } else {
+                document.getElementById('service-type').value = 'LLM';
+                toggleKnowledgeBaseTab('LLM');
             }
         }
-        
-        // 填充模型版本号
-        if (axConfigEntity.ModelName) {
-            document.getElementById('model-version').value = axConfigEntity.ModelName;
+        document.getElementById('axconfig-description').value = axConfigEntity.Description || '';
+
+        var modelSelect = document.getElementById('model-select');
+        if (modelSelect) {
+            if (axConfigEntity.ModelProviderId) {
+                var modelId = axConfigEntity.ModelProviderId;
+                var opt = modelSelect.querySelector('option[value="' + modelId + '"]');
+                modelSelect.value = opt ? String(modelId) : '';
+            } else {
+                modelSelect.value = '';
+            }
         }
         if (axConfigEntity.Temperature !== undefined && axConfigEntity.Temperature !== null) {
             document.getElementById('temperature').value = axConfigEntity.Temperature;
@@ -169,6 +230,7 @@ const axconfig = (function () {
             }
         }
         document.getElementById('max-tokens').value = axConfigEntity.MaxTokens || '';
+        document.getElementById('memory-turns').value = (axConfigEntity.MemoryTurns !== undefined && axConfigEntity.MemoryTurns !== null) ? axConfigEntity.MemoryTurns : 10;
         if (axConfigEntity.ResponseFormat) {
             const formatRadio = document.querySelector(`input[name="format"][value="${axConfigEntity.ResponseFormat}"]`);
             if (formatRadio) {
@@ -176,20 +238,55 @@ const axconfig = (function () {
             }
         }
 
-        // 填充提示词
         document.getElementById('system-prompt').value = axConfigEntity.SystemPrompt || '';
         document.getElementById('user-message-prompt').value = axConfigEntity.UserMessage || '';
 
-        // 填充高级设置
         document.getElementById('timeout').value = axConfigEntity.Timeout || '';
         document.getElementById('max-retries').value = axConfigEntity.MaxRetries || '';
         document.getElementById('error-handling').value = axConfigEntity.ErrorHandling || 'retry';
         document.getElementById('fallback-agent').value = axConfigEntity.FallbackAgent || '';
         document.getElementById('log-level').value = axConfigEntity.LogLevel || 'warn';
         document.getElementById('custom-instructions').value = axConfigEntity.CustomInstructions || '';
+
+        var embeddingSelect = document.getElementById('knowledge-embedding-model');
+        if (embeddingSelect) {
+            if (axConfigEntity.RagEmbeddingModelId) {
+                var opt = embeddingSelect.querySelector('option[value="' + axConfigEntity.RagEmbeddingModelId + '"]');
+                embeddingSelect.value = opt ? String(axConfigEntity.RagEmbeddingModelId) : '';
+            } else {
+                embeddingSelect.value = '';
+            }
+        }
+        var embDimEl = document.getElementById('knowledge-embedding-dimensions');
+        if (embDimEl) {
+            embDimEl.value = (axConfigEntity.RagEmbeddingDimensions !== undefined && axConfigEntity.RagEmbeddingDimensions !== null) ? axConfigEntity.RagEmbeddingDimensions : '1536';
+        }
+        var searchStrategyEl = document.getElementById('knowledge-search-strategy');
+        if (searchStrategyEl) searchStrategyEl.value = 'similarity';
+        var searchCountEl = document.getElementById('knowledge-search-count');
+        if (searchCountEl && axConfigEntity.RagSearchCount !== undefined && axConfigEntity.RagSearchCount !== null) {
+            searchCountEl.value = axConfigEntity.RagSearchCount;
+        }
+        if (axConfigEntity.RagSimilarityThreshold !== undefined && axConfigEntity.RagSimilarityThreshold !== null) {
+            document.getElementById('similarity-threshold').value = axConfigEntity.RagSimilarityThreshold;
+            var similarityValueElement = document.getElementById('similarity-value');
+            if (similarityValueElement) {
+                similarityValueElement.textContent = parseFloat(axConfigEntity.RagSimilarityThreshold).toFixed(2);
+            }
+        }
+        if (axConfigEntity.RagSearchMode) {
+            const modes = axConfigEntity.RagSearchMode.split(',');
+            var semEl = document.getElementById('search-mode-semantic');
+            if (semEl) semEl.checked = modes.includes('semantic');
+            var kwEl = document.getElementById('search-mode-keyword');
+            if (kwEl) kwEl.checked = modes.includes('keyword');
+            var metaEl = document.getElementById('search-mode-metadata');
+            if (metaEl) metaEl.checked = modes.includes('metadata');
+        }
+        var fnEl = document.getElementById('knowledge-function-name');
+        if (fnEl && axConfigEntity.RagFunction) fnEl.value = axConfigEntity.RagFunction;
     }
 
-    // 显示通知
     function showNotification(message, type) {
         const notification = $('#notification');
         notification.text(message);
@@ -202,7 +299,9 @@ const axconfig = (function () {
         }, 3000);
     }
 
-    // 保存 AXConfig 配置（仅 AxConfigEntity）
+    /**
+     * Save AI node configuration
+     */
     function saveAxConfig(configData) {
         var currentElement = kmain.currentSelectedElement;
         if (!currentElement || !currentElement.businessObject) {
@@ -211,21 +310,18 @@ const axconfig = (function () {
         }
 
         var businessObject = currentElement.businessObject;
-        var configUUID = axconfig.getConfigUUID(businessObject);
-        var activityName = businessObject.name; // 只用于显示，不保存
         var activityId = businessObject.id;
 
-        // 获取或创建 AxConfigEntity
         var axConfigEntity = axconfig.mcurrentAxConfigEntity;
         if (axConfigEntity === null || axConfigEntity === undefined) {
             axConfigEntity = {};
-            axConfigEntity.ProcessId = kmain.mxSelectedProcessEntity.ProcessId;
-            axConfigEntity.Version = kmain.mxSelectedProcessEntity.Version;
-            axConfigEntity.ActivityId = activityId;
         }
 
-        // 更新 AXConfig 实体（不包含 activity_name）
-        axConfigEntity.ConfigUUID = configUUID || configData.ConfigUUID;
+        axConfigEntity.ProcessId = kmain.mxSelectedProcessEntity.ProcessId;
+        axConfigEntity.Version = kmain.mxSelectedProcessEntity.Version;
+        axConfigEntity.ActivityId = activityId;
+
+        axConfigEntity.ServiceType = configData.ServiceType || 'LLM';
         axConfigEntity.ModelProviderId = configData.ModelProviderId;
         axConfigEntity.Description = configData.Description;
         axConfigEntity.Temperature = configData.Temperature;
@@ -235,35 +331,53 @@ const axconfig = (function () {
         axConfigEntity.ResponseFormat = configData.ResponseFormat;
         axConfigEntity.Timeout = configData.Timeout;
         axConfigEntity.MaxRetries = configData.MaxRetries;
+        axConfigEntity.MemoryTurns = configData.MemoryTurns !== undefined && configData.MemoryTurns !== null ? configData.MemoryTurns : 10;
         axConfigEntity.ErrorHandling = configData.ErrorHandling;
         axConfigEntity.FallbackAgent = configData.FallbackAgent;
         axConfigEntity.LogLevel = configData.LogLevel;
         axConfigEntity.CustomInstructions = configData.CustomInstructions;
         axConfigEntity.ModelName = configData.ModelName;
+        axConfigEntity.RagSearchStrategy = configData.RagSearchStrategy || 'similarity';
+        axConfigEntity.RagSearchCount = configData.RagSearchCount;
+        axConfigEntity.RagSimilarityThreshold = configData.RagSimilarityThreshold;
+        axConfigEntity.RagSearchMode = configData.RagSearchMode;
+        axConfigEntity.RagFunction = configData.RagFunction;
+        axConfigEntity.RagEmbeddingModelId = configData.RagEmbeddingModelId || null;
+        axConfigEntity.RagEmbeddingDimensions = configData.RagEmbeddingDimensions !== undefined && configData.RagEmbeddingDimensions !== null ? configData.RagEmbeddingDimensions : 1536;
 
-        // 直接传递 AxConfigEntity 到后端
         axconfigapi.save(axConfigEntity, function (result) {
             if (result.Status === 1) {
-                // 更新本地缓存的实体
                 if (result.Entity) {
                     axconfig.mcurrentAxConfigEntity = result.Entity;
                 }
-                showNotification(kresource.getItem('axconfig.save.success') || '配置保存成功！', 'success');
+                showNotification(kresource.getItem('axconfig.save.success') || 'Configuration saved successfully', 'success');
+                
+                try {
+                    var $modal = $('#save-btn').closest('.modal');
+                    if ($modal && $modal.length && typeof $modal.modal === 'function') {
+                        $modal.modal('hide');
+                    } else if (typeof window.BootstrapDialog !== 'undefined' &&
+                               typeof window.BootstrapDialog.closeAll === 'function') {
+                        window.BootstrapDialog.closeAll();
+                    }
+                } catch (e) {
+                    console && console.warn && console.warn('Close ai node property dialog failed:', e);
+                }
             } else {
                 kmsgbox.error(result.Message);
             }
         });
     }
 
-    // 获取服务类型
+    /**
+     * Get service type from business object
+     */
     axconfig.getServiceType = function (businessObject) {
-        // 1. 首先尝试从扩展元素获取
         var aiServiceConfig = getAIServiceConfig(businessObject);
         if (aiServiceConfig && aiServiceConfig.type) {
             return aiServiceConfig.type;
         }
 
-        // 2. 从 businessObject 直接属性获取
         if (businessObject && businessObject.type) {
             return businessObject.type;
         }
@@ -271,84 +385,128 @@ const axconfig = (function () {
         return null;
     }
 
-    // 获取配置 UUID
-    axconfig.getConfigUUID = function (businessObject) {
-        var aiServiceConfig = getAIServiceConfig(businessObject);
-        if (aiServiceConfig && aiServiceConfig.configUUID) {
-            return aiServiceConfig.configUUID;
-        }
-
-        return businessObject.uuid || null;
-    }
-
-    // 读取 AI 服务配置函数
+    /**
+     * Get AI service configuration from business object
+     */
     function getAIServiceConfig(businessObject) {
         if (!businessObject) {
-            console.warn('businessObject is null');
             return null;
         }
 
         if (!businessObject.extensionElements) {
-            console.log('none extension elements');
             return null;
         }
 
         var extensionElements = businessObject.extensionElements;
 
         if (!extensionElements.values || extensionElements.values.length === 0) {
-            console.log('extension elements is null');
             return null;
         }
 
-        // 查找 sf:AIServices
         var aiServices = extensionElements.values.find(function (value) {
-            return value && value.$type === 'sf:AIServices';
+            return value && value.$type === 'sf:AiServices';
         });
 
         if (!aiServices) {
-            console.log('not found sf:AIServices');
             return null;
         }
 
-        // 获取 AI Service 配置
         if (aiServices.aiServices && aiServices.aiServices.length > 0) {
             var aiService = aiServices.aiServices[0];
             return aiService;
         }
 
-        console.log('AI Service array is empty');
         return null;
     }
 
 
-    // 加载账号凭证列表（Account Credential）
+
+    /**
+     * Load model select list (ai_model_provider for LLM/RAG node)
+     */
+    function loadModelSelectList() {
+        axconfigapi.getModelList(function (result) {
+            if (result.Status === 1 && result.Entity && Array.isArray(result.Entity)) {
+                var selectEl = document.getElementById('model-select');
+                if (!selectEl) return;
+                var currentVal = selectEl.value;
+                selectEl.innerHTML = '<option value="">-- <span class="lang" as="selectplaceholder"></span> --</option>';
+                var entity = axconfig.mcurrentAxConfigEntity;
+                result.Entity.forEach(function (model) {
+                    var idVal = model.ID || model.Id || model.id;
+                    if (idVal === undefined || idVal === null) return;
+                    var modelName = (model.ModelName || model.modelName || '').trim();
+                    var provider = (model.ModelProvider || model.modelProvider || '').trim();
+                    var displayText = modelName ? (modelName + (provider ? ' - ' + provider : '')) : (provider || 'Unnamed');
+                    var option = document.createElement('option');
+                    option.value = idVal;
+                    option.textContent = displayText;
+                    $(option).data('model-name', modelName || provider || '');
+                    selectEl.appendChild(option);
+                });
+                if (currentVal) selectEl.value = currentVal;
+                else if (entity && entity.ModelProviderId) {
+                    var opt = selectEl.querySelector('option[value="' + entity.ModelProviderId + '"]');
+                    if (opt) selectEl.value = String(entity.ModelProviderId);
+                }
+                if (typeof kresource !== 'undefined' && kresource.localize) kresource.localize();
+            }
+        });
+    }
+
+    /**
+     * Load embedding model list (vector_model type from ai_model_provider)
+     */
+    function loadEmbeddingModelList() {
+        axconfigapi.getEmbeddingModelList(function (result) {
+            if (result.Status === 1 && result.Entity && Array.isArray(result.Entity)) {
+                const selectEl = document.getElementById('knowledge-embedding-model');
+                if (!selectEl) return;
+                selectEl.innerHTML = '<option value="">-- <span class="lang" as="selectplaceholder"></span> --</option>';
+                result.Entity.forEach(function (model) {
+                    const idVal = model.ID || model.Id || model.id;
+                    if (idVal === undefined || idVal === null) return;
+                    const option = document.createElement('option');
+                    option.value = idVal;
+                    option.textContent = (model.ModelProvider || model.modelProvider || '') + (model.Description ? ' - ' + model.Description : '');
+                    selectEl.appendChild(option);
+                });
+                var entity = axconfig.mcurrentAxConfigEntity;
+                var targetId = entity && (entity.RagEmbeddingModelId || entity.ragEmbeddingModelId);
+                if (targetId) {
+                    var opt = selectEl.querySelector('option[value="' + targetId + '"]');
+                    if (opt) selectEl.value = String(targetId);
+                }
+                if (typeof kresource !== 'undefined' && kresource.localize) kresource.localize();
+            }
+        });
+    }
+
+    /**
+     * Load account credential list
+     */
     function loadAccountCredentialList() {
         axconfigapi.getModelList(function (result) {
             if (result.Status === 1 && result.Entity && Array.isArray(result.Entity)) {
                 const credentialSelect = document.getElementById('account-credential');
                 const currentValue = credentialSelect.value;
-                // 如果当前没值，则尝试从已加载的 AxConfigEntity 中获取 ModelProviderId
                 const existingEntity = axconfig.mcurrentAxConfigEntity;
                 const targetId = currentValue ||
                     (existingEntity && (existingEntity.ModelProviderId || existingEntity.modelProviderId || existingEntity.model_provider_id)) ||
                     '';
                 
-                // 清空现有选项（保留第一个请选择选项）
                 credentialSelect.innerHTML = '<option value="">-- <span class="lang" as="selectplaceholder"></span> --</option>';
                 
-                // 填充账号凭证列表：绑定 model_provider_id (Id) 和 model_provider (ModelProvider)
                 result.Entity.forEach(function (model) {
                     const option = document.createElement('option');
                     const idVal = model.ID || model.Id || model.id;
                     if (idVal === undefined || idVal === null) return;
                     option.value = idVal;
-                    // 显示 model_provider 名称
                     option.textContent = model.ModelProvider || model.modelProvider || model.model_provider || 'Unnamed';
                     $(option).data('provider', option.textContent);
                     credentialSelect.appendChild(option);
                 });
                 
-                // 恢复之前选择的值（含后端现有配置）
                 if (targetId) {
                     credentialSelect.value = targetId;
                     $('#btn-edit-credential').prop('disabled', false);
@@ -356,7 +514,6 @@ const axconfig = (function () {
                     $('#btn-edit-credential').prop('disabled', true);
                 }
                 
-                // 触发本地化更新
                 if (typeof kresource !== 'undefined' && kresource.localize) {
                     kresource.localize();
                 }
@@ -364,7 +521,9 @@ const axconfig = (function () {
         });
     }
 
-    // 打开 Setting 页面
+    /**
+     * Open setting page dialog
+     */
     function openSettingPage(modelId, callback) {
         var BootstrapDialog = require('bootstrap5-dialog');
         var dialog = BootstrapDialog.show({
@@ -379,20 +538,16 @@ const axconfig = (function () {
                         return;
                     }
                     
-                    // 等待 setting 模块和 DOM 都加载完成
                     var checkCount = 0;
-                    var maxChecks = 50; // 最多检查 5 秒（50 * 100ms）
+                    var maxChecks = 50;
                     var checkInterval = setInterval(function () {
                         checkCount++;
-                        // 检查 setting 模块是否已加载，以及 DOM 元素是否存在
                         if (typeof window.setting !== 'undefined' && 
                             typeof window.setting.init === 'function' &&
                             $('#popupSetting #save-btn').length > 0) {
                             
-                            // 确保 setting 已初始化（如果还没有初始化）
                             if (!$('#popupSetting #save-btn').data('initialized')) {
                                 try {
-                                    // 重新初始化 setting（如果 DOM 已加载但未初始化）
                                     window.setting.init();
                                     $('#popupSetting #save-btn').data('initialized', true);
                                 } catch (e) {
@@ -400,7 +555,6 @@ const axconfig = (function () {
                                 }
                             }
                             
-                            // 如果提供了 modelId，则选中该模型
                             if (modelId && typeof window.setting.selectModel === 'function') {
                                 window.setting.selectModel(modelId);
                             }
@@ -414,7 +568,6 @@ const axconfig = (function () {
                 });
             },
             onhidden: function () {
-                // 当对话框关闭时，执行回调
                 if (callback && typeof callback === 'function') {
                     callback();
                 }
@@ -423,8 +576,8 @@ const axconfig = (function () {
         });
     }
 
-    axconfig.delete = function (serviceIdentifier) {
-        axconfigapi.delete(serviceIdentifier, function (result) {
+    axconfig.delete = function (processId, version, activityId) {
+        axconfigapi.delete(processId, version, activityId, function (result) {
             if (result.Status === 1) {
                 ;
             } else {

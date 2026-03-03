@@ -52,7 +52,7 @@ namespace Slickflow.Engine.Common
         /// <param name="runner"></param>
         /// <param name="nextActivityPerformers"></param>
         /// <param name="conditionKeyValuePair"></param>
-        internal ActivityResource(WfAppRunner runner,
+        public ActivityResource(WfAppRunner runner,
             IDictionary<string, PerformerList> nextActivityPerformers,
             IDictionary<string, string> conditionKeyValuePair = null)
         {

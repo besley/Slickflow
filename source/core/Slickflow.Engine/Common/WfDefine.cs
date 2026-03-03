@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +16,8 @@ namespace Slickflow.Engine.Common
         public const string WF_XPDL_ERROR = "XPDL DEFINITION ERROR";
         public const string WF_PROCESS_START_ERROR = "PROCESS STARTUP ERROR";
         public const string WF_PROCESS_RUN_ERROR = "PROCESS RUN ERROR";
+        /// <summary>WorkflowExecutor.Run execution failed.</summary>
+        public const string WF_WORKFLOW_EXECUTOR_RUN_ERROR = "WORKFLOW EXECUTOR RUN ERROR";
         public const string WF_PROCESS_WITHDRAW_ERROR = "PROCESS WITHDRAW ERROR";
         public const string WF_PROCESS_SENDBACK_ERROR = "PROCESS SENDBACK ERROR";
         public const string WF_PROCESS_RESEND_ERROR = "PROCESS RESEND ERROR";

@@ -66,7 +66,7 @@ import multisignPropertiesProviderModule from './slickflow/provider/multisign/';
 import subinfoesPropertiesProviderModule from './slickflow/provider/subinfoes/';
 import triggerPropertiesProviderModule from './slickflow/provider/trigger/';
 import servicetaskPropertiesProviderModule from './slickflow/provider/servicetask/';
-import aiservicetaskPropertiesProviderModule from './slickflow/provider/aiservicetask/';
+// import aiservicetaskPropertiesProviderModule from './slickflow/provider/aiservicetask/'; // Removed: aidetai property group is no longer needed
 
 import scripttaskPropertiesProviderModule from './slickflow/provider/scripttask/';
 import performersPropertiesProviderModule from './slickflow/provider/performers/';
@@ -107,7 +107,7 @@ var bpmnModeler = new BpmnModeler({
         multisignPropertiesProviderModule,
         triggerPropertiesProviderModule,
         servicetaskPropertiesProviderModule,
-        aiservicetaskPropertiesProviderModule,
+        // aiservicetaskPropertiesProviderModule, // Removed: aidetai property group is no longer needed
         scripttaskPropertiesProviderModule,
         notificationPropertiesProviderModule,
         variablePropertiesProviderModule,
@@ -134,6 +134,9 @@ window.kaidialog = kaidialog;
 
 import setting from './viewjs/setting.js'
 window.setting = setting;
+
+import kbmanager from './viewjs/kbmanager.js'
+window.kbmanager = kbmanager;
 
 //#region File Drops
 function registerFileDrop(container, callback) {
@@ -227,12 +230,6 @@ $('#btnSaveProcess').click(async function (e) {
     kmain.saveProcessFile(kmain.mxSelectedProcessEntity, xml);
 });
 
-$('#btnOpenTemplateGallery').click(async function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    kmain.createByTemplate()
-})
 
 $('#btnValidateProcess').click(async function (e) {
     const { xml } = await bpmnModeler.saveXML({ format: true });

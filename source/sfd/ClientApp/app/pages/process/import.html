@@ -1,4 +1,4 @@
-﻿<html>
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +7,26 @@
     <!-- Fine Uploader New/Modern CSS file
     ====================================================================== -->
     <link href="vendor/fine-uploader/fine-uploader/fine-uploader.min.css" rel="stylesheet">
+    <!-- CodeMirror for XML syntax highlighting -->
+    <link href="vendor/codemirror/lib/codemirror.css" rel="stylesheet">
+    <link href="vendor/codemirror/theme/eclipse.css" rel="stylesheet">
+    <style>
+        .import-mode-selector { display: flex; gap: 8px; margin-bottom: 16px; }
+        .import-mode-option {
+            flex: 1; padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 6px;
+            cursor: pointer; text-align: center; transition: all 0.2s ease;
+            background: #fff;
+        }
+        .import-mode-option:hover { border-color: #adb5bd; background: #f8f9fa; }
+        .import-mode-option.active { border-color: #0d6efd; background: #e7f1ff; }
+        .import-mode-option .mode-icon { font-size: 18px; margin-bottom: 4px; opacity: 0.8; }
+        .import-mode-option .mode-label { font-weight: 500; font-size: 13px; color: #212529; }
+        .import-mode-option.active .mode-label { color: #0d6efd; }
+        .import-panel { display: none; }
+        .import-panel.active { display: block; }
+        .import-xml-codemirror-wrap { border: 1px solid #ced4da; border-radius: 4px; overflow: hidden; min-height: 280px; }
+        .import-xml-codemirror-wrap .CodeMirror { min-height: 280px; font-size: 13px; border: none; }
+    </style>
 
     <!-- Fine Uploader JS file
     ====================================================================== -->
@@ -74,19 +94,41 @@
 <body>
 
     <div class="modal-body">
-        <div class="row">
-            <!-- Fine Uploader DOM Element
-                ====================================================================== -->
-            <div id="fine-uploader-validation"></div>
+        <!-- Import mode selector (card-style) -->
+        <div class="import-mode-selector" role="group" aria-label="Import method">
+            <div class="import-mode-option active" id="modeOptionFile" data-mode="file">
+                <div class="mode-icon">📁</div>
+                <div class="mode-label"><span class="lang" as="importfromfile"></span></div>
+            </div>
+            <div class="import-mode-option" id="modeOptionPaste" data-mode="paste">
+                <div class="mode-icon">📋</div>
+                <div class="mode-label"><span class="lang" as="importfrompaste"></span></div>
+            </div>
+        </div>
+        <!-- From file panel -->
+        <div class="import-panel active" id="panelFromFile">
+            <div class="row">
+                <div id="fine-uploader-validation"></div>
+            </div>
+            <p class="mt-2 small text-muted"><span class="lang" as="xmlfileformatremark"></span></p>
+        </div>
+        <!-- From paste panel -->
+        <div class="import-panel" id="panelFromPaste">
+            <p class="text-muted small mb-2"><span class="lang" as="pastexmlremark"></span></p>
+            <div class="import-xml-codemirror-wrap">
+                <textarea id="importXmlTextarea" spellcheck="false" rows="12"></textarea>
+            </div>
         </div>
     </div>
-    <div class="modal-footer">
-        <div class="row" style="float:left;">
-            <p><span class="lang" as="xmlfileformatremark"></span></p>
-        </div>
-        <button class="btn btn-primary lang" as="close" data-dismiss="modal" aria-hidden="true"></button>
+    <div class="modal-footer d-flex justify-content-end align-items-center">
+        <button type="button" class="btn btn-primary d-none mr-2" id="btnImportFromPaste">
+            <span class="lang" as="btnimport"></span>
+        </button>
+        <button class="btn btn-secondary lang" as="close" data-dismiss="modal" aria-hidden="true"></button>
     </div>
 
+    <!-- CodeMirror xml mode (codemirror.js loaded in main page) -->
+    <script src="vendor/codemirror/mode/xml/xml.js"></script>
     <!-- Your code to create an instance of Fine Uploader and bind to the DOM/template
     ====================================================================== -->
     <script type="text/javascript">

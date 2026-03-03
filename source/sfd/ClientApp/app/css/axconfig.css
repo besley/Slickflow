@@ -98,10 +98,10 @@ a:link {
             opacity: 1.0;
         }
 
-/* ===== AI�ڵ�����ҳ�����ʽ ===== */
+/* ===== AI node configuration page styles ===== */
 .axconfig-config-container {
-    max-width: 1400px;
-    width: 95%;
+    max-width: 1600px;
+    width: 98%;
     margin: 20px auto;
     background: #ffffff;
     border-radius: 4px;
@@ -176,6 +176,7 @@ a:link {
     background: #f1f5f9;
     border-bottom: 1px solid #e2e8f0;
     padding: 0 16px;
+    justify-content: flex-start;
 }
 
 .tab {
@@ -186,6 +187,21 @@ a:link {
     position: relative;
     transition: all 0.2s;
     font-size: 12px;
+    text-align: left !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+    .tab.lang {
+        text-align: left !important;
+        justify-content: flex-start !important;
+    }
+
+    .tab > * {
+        text-align: left !important;
+        display: inline-block;
+        width: 100%;
 }
 
     .tab.active {
@@ -299,6 +315,26 @@ a:link {
         resize: vertical;
         font-size: 12px;
     }
+
+    /* 只读输入框样式 */
+    .form-group input[type="text"].form-control-readonly,
+    .form-group input[type="text"][readonly],
+    .form-group input[type="number"][readonly],
+    .form-group textarea[readonly] {
+        background-color: #f1f5f9;
+        color: #64748b;
+        cursor: not-allowed;
+        border-color: #cbd5e1;
+    }
+
+        .form-group input[type="text"].form-control-readonly:focus,
+        .form-group input[type="text"][readonly]:focus,
+        .form-group input[type="number"][readonly]:focus,
+        .form-group textarea[readonly]:focus {
+            border-color: #cbd5e1;
+            box-shadow: none;
+            outline: none;
+        }
 
 .slider-container {
     display: flex;
@@ -579,5 +615,70 @@ a:link {
 
     .notification.error {
         background: #ff5252;
+    }
+
+.config-section {
+    margin-bottom: 24px;
+}
+
+.section-header {
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+    .section-header h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #334155;
+        margin: 0;
+    }
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+    .checkbox-item input[type="checkbox"] {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    .checkbox-item span {
+        font-size: 12px;
+        color: #475569;
+    }
+
+.form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.slider-with-input {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: #e2e8f0;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+    .slider-with-input::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #4b6cb7;
+        cursor: pointer;
     }
 

@@ -140,8 +140,6 @@
                             </li>
                             <li class="menuItemTemplate lang" as="businessprocess" data-id="business">
                             </li>
-                            <li class="menuItemTemplate lang" as="codetextprocess" data-id="codetext">
-                            </li>
                         </ul>
 
                     </div>
@@ -264,25 +262,6 @@
                                 <div class="dc-diagram-name"><span class="lang" as="wf-contract"></span></div>
                             </div>
                         </div>
-                    </div>
-                    <div id="divCodeTextTemplate" class="col-md-8" style="display:none;">
-                        <div class="row"  style="float:right">
-                            <span class="a_tit lang" as="templatetype"></span>
-                            <select id="ddlTemplateType" class="form-control" style="width:180px;">
-                                <option value="Default" class="lang" as="optiondefault"></option>
-                                <option value="Sequence" class="lang" as="templatesequence"></option>
-                                <option value="Parallel" class="lang" as="templateparallel"></option>
-                                <option value="Conditional" class="lang" as="templateconditional"></option>
-                                <option value="ProcessModify" class="lang" as="templateprocessmodify"></option>
-                            </select>
-                        </div>
-                        <div class="row">
-                            <button class="btn btn-primary lang" as="run" onclick="ktemplate.executeGraph();"></button>
-                        </div>
-                        <div class="row" style="margin-top:20px;margin-bottom:60px;border:1px solid black">
-                            <textarea id="txtCode" spellcheck="false" class="codeTextArea"></textarea>
-                        </div>
-                        <img src="images/ajax-loader.gif" id="loading-indicator" style="position: fixed; left: 40%; top: 40%; display: none;" />
                     </div>
                 </div>
             </div>

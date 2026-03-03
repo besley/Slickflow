@@ -1,4 +1,4 @@
-﻿import jshelper from '../script/jshelper.js'
+import jshelper from '../script/jshelper.js'
 import kconfig from '../config/kconfig.js'
 import kmsgbox from '../script/kmsgbox.js';
 
@@ -7,12 +7,24 @@ const axconfigapi = (function () {
     function axconfigapi() {
     }
 
-    axconfigapi.getByUUID = function (uuid, callback) {
-        jshelper.ajaxGet(kconfig.webApiUrl + 'api/Wf2Ai/GetAxConfig/' + uuid,
-            null,
-            function (result) {
+    axconfigapi.getByProcessVersionActivity = function (processId, version, activityId, callback, errorCallback) {
+        var url = kconfig.webApiUrl + 'api/Wf2Ai/GetAxConfig?processId=' + encodeURIComponent(processId) + '&version=' + encodeURIComponent(version) + '&activityId=' + encodeURIComponent(activityId);
+        $.ajax({
+            url: url,
+            type: 'GET',
+            cache: false,
+            dataType: 'json',
+            contentType: 'application/json;charset=utf-8',
+            success: function (result) {
                 callback(result);
-            })
+            },
+            error: errorCallback || function (xhr, status, error) {
+                var msg = (xhr && xhr.responseJSON && xhr.responseJSON.Message) ? xhr.responseJSON.Message : (error || status || 'Request failed');
+                if (typeof callback === 'function') {
+                    callback({ Status: -1, Message: msg });
+                }
+            }
+        });
     }
 
     axconfigapi.save = function (entity, callback) {
@@ -23,9 +35,10 @@ const axconfigapi = (function () {
             });
     }
 
-    axconfigapi.delete = function (uuid, callback) {
+    axconfigapi.delete = function (processId, version, activityId, callback) {
         //delete the selected row
-        jshelper.ajaxGet(kconfig.webApiUrl + 'api/Wf2Ai/DeleteAxConfig/' + uuid,
+        var url = kconfig.webApiUrl + 'api/Wf2Ai/DeleteAxConfig?processId=' + encodeURIComponent(processId) + '&version=' + encodeURIComponent(version) + '&activityId=' + encodeURIComponent(activityId);
+        jshelper.ajaxGet(url,
             null,
             function (result) {
                 callback(result);
@@ -34,6 +47,22 @@ const axconfigapi = (function () {
 
     axconfigapi.getModelList = function (callback) {
         jshelper.ajaxGet(kconfig.webApiUrl + 'api/Wf2Ai/GetModelList',
+            null,
+            function (result) {
+                callback(result);
+            });
+    }
+
+    axconfigapi.getEmbeddingModelList = function (callback) {
+        jshelper.ajaxGet(kconfig.webApiUrl + 'api/Wf2Ai/GetModelListByType?modelType=vector_model',
+            null,
+            function (result) {
+                callback(result);
+            });
+    }
+
+    axconfigapi.getTableNames = function (callback) {
+        jshelper.ajaxGet(kconfig.webApiUrl + 'api/Wf2Ai/GetTableNames',
             null,
             function (result) {
                 callback(result);

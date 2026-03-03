@@ -1,4 +1,4 @@
-﻿* {
+* {
     box-sizing: border-box;
 }
 
@@ -1209,5 +1209,20 @@ a:link {
     .bottom-panel:active {
         cursor: grabbing;
     }
+
+/* Extra Properties JSON 编辑器主题：使用墨绿色，与弹窗蓝色标题区分 */
+.extra-props-json-dialog #extra-props-json-editor-container,
+.extra-props-json-dialog .extra-props-json-editor-body {
+    --jse-theme-color: #0d9488;
+    --jse-theme-color-highlight: #14b8a6;
+    --jse-menu-color: #fff;
+    --jse-button-primary-background: #0d9488;
+    --jse-button-primary-background-highlight: #14b8a6;
+    --jse-input-border-focus: 1px solid #0d9488;
+    --jse-item-is-active-bg: #0d9488;
+    --jse-a-color: #0f766e;
+    --jse-a-color-highlight: #0d9488;
+    --jse-message-info-background: #0d9488;
+}
 
 

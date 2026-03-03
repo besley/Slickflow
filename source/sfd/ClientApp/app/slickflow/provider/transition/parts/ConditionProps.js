@@ -146,7 +146,7 @@ function Condition(props) {
                         }
                     },
                     {
-                        label: kresource.getItem('expression.editor.ok') || 'OK',
+                        label: kresource.getItem('expression.editor.save') || 'Save',
                         cssClass: 'btn-primary',
                         action: function(dlg) {
                             // Get expression from editor

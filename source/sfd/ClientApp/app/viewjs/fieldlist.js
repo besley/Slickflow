@@ -69,10 +69,11 @@ const fieldlist = (function () {
 
         var gridOptions = {
             theme: themeBalham,
+            suppressNoRowsOverlay: true,
             columnDefs: [
-                { headerName: kresource.getItem("fieldName"), field: "FieldName", width: 240 },
-                { headerName: kresource.getItem('isNotVisible'), field: "IsNotVisible", cellDataType: 'boolean', editable: true, cellRenderer: 'agCheckboxCellRenderer', cellEditor: "agCheckboxCellEditor", width: 120 },
-                { headerName: kresource.getItem('isReadOnly'), field: "IsReadOnly", cellDataType: 'boolean', editable: true, cellRenderer: 'agCheckboxCellRenderer', cellEditor: 'agCheckboxCellEditor', width: 120 }
+                { headerName: kresource.getItem("fieldname") || "Field Name", field: "FieldName", width: 240 },
+                { headerName: kresource.getItem("isnotvisible") || "Is Not Visible", field: "IsNotVisible", cellDataType: 'boolean', editable: true, cellRenderer: 'agCheckboxCellRenderer', cellEditor: "agCheckboxCellEditor", width: 120 },
+                { headerName: kresource.getItem("isreadonly") || "Is Read Only", field: "IsReadOnly", cellDataType: 'boolean', editable: true, cellRenderer: 'agCheckboxCellRenderer', cellEditor: 'agCheckboxCellEditor', width: 120 }
             ],
             rowSelection: {
                 mode: 'singleRow',
@@ -83,7 +84,7 @@ const fieldlist = (function () {
             onCellValueChanged: onCellValueChanged
         };
 
-        gridOptions.rowData = fieldDataSource;
+        gridOptions.rowData = fieldDataSource || [];
         const gridApi = createGrid(divFieldActivityEditGrid, gridOptions);
 
         function onSelectionChanged() {

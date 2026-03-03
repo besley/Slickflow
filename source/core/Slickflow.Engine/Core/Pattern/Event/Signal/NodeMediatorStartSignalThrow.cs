@@ -4,7 +4,7 @@ using Slickflow.Data;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
-using Slickflow.Engine.Essential;
+using Slickflow.Engine.Message;
 using System.CodeDom.Compiler;
 
 namespace Slickflow.Engine.Core.Pattern.Event.Signal

@@ -3,7 +3,7 @@ using MongoDB.Driver;
 using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Delegate;
+using Slickflow.Engine.Event;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Module.Localize;
@@ -38,27 +38,27 @@ namespace Slickflow.Engine.Business.Manager
         }
 
         internal string GetVariable(IDbConnection conn, ProcessVariableScopeEnum variableType, string name,
-            DelegateContext delegateContext, IDbTransaction trans)
+            EventContext eventContext, IDbTransaction trans)
         {
             var variableValue = string.Empty;
             if (variableType == ProcessVariableScopeEnum.Activity)
             {
-                var activityVariableEntity = GetVariableByActivity(conn, delegateContext.ProcessInstanceId, delegateContext.ActivityInstanceId, name, trans);
+                var activityVariableEntity = GetVariableByActivity(conn, eventContext.ProcessInstanceId, eventContext.ActivityInstanceId, name, trans);
                 if (activityVariableEntity != null) variableValue = activityVariableEntity.Value;
             }
             else
             {
-                var processVariableEntity = GetVariableByProcess(conn, delegateContext.ProcessInstanceId, name, trans);
+                var processVariableEntity = GetVariableByProcess(conn, eventContext.ProcessInstanceId, name, trans);
                 if (processVariableEntity != null)  variableValue = processVariableEntity.Value;
             }
             return variableValue;
         }
 
         internal string GetVariableByScopePriority(IDbConnection conn, string name,
-                DelegateContext delegateContext, IDbTransaction trans)
+                EventContext eventContext, IDbTransaction trans)
         {
             var variableValue = string.Empty;
-            var activityVariableEntity = GetVariableByActivity(conn, delegateContext.ProcessInstanceId, delegateContext.ActivityInstanceId, name, trans);
+            var activityVariableEntity = GetVariableByActivity(conn, eventContext.ProcessInstanceId, eventContext.ActivityInstanceId, name, trans);
             if (activityVariableEntity != null)
             {
                 variableValue = activityVariableEntity.Value;
@@ -66,7 +66,7 @@ namespace Slickflow.Engine.Business.Manager
             }
             else
             {
-                var processVariableEntity = GetVariableByProcess(conn, delegateContext.ProcessInstanceId, name, trans);
+                var processVariableEntity = GetVariableByProcess(conn, eventContext.ProcessInstanceId, name, trans);
                 if (processVariableEntity != null) variableValue = processVariableEntity.Value;
                 return variableValue;
             }
@@ -305,9 +305,13 @@ namespace Slickflow.Engine.Business.Manager
             //    .OrderByDescending(v => v.Id)
             //    .ToList();
 
-            List<ProcessVariableEntity> list = null;
+            List<ProcessVariableEntity> list = new List<ProcessVariableEntity>();
             var sql = string.Empty;
-            if (variableNameList.Count == 1)
+            if (variableNameList.Count == 0)
+            {
+                ;
+            }
+            else if (variableNameList.Count == 1)
             {
                 sql = @"SELECT 
                           * 

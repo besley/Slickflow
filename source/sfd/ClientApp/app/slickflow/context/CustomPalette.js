@@ -23,11 +23,11 @@ export default class CustomPalette {
         }
 
         // 创建插件节点的工厂函数
-        function createPluginTask() {
+        function createRAGTask() {
             return elementFactory.createShape({
                 type: 'bpmn:ServiceTask',
-                name: 'PlugInService',
-                sfType: 'PlugIn'
+                name: 'RAGService',
+                sfType: 'RAG'
             });
         }
 
@@ -51,17 +51,17 @@ export default class CustomPalette {
                     }
                 }
             },
-            'create.plugin-service': {
+            'create.rag-service': {
                 group: 'activity',
-                className: 'bpmn-icon-service-task plugin-service-task',
-                title: translate('plugin'),
+                className: 'bpmn-icon-service-task rag-service-task',
+                title: translate('rag'),
                 action: {
                     dragstart: function (event) {
-                        var taskShape = createPluginTask();
+                        var taskShape = createRAGTask();
                         create.start(event, taskShape);
                     },
                     click: function (event) {
-                        var taskShape = createPluginTask();
+                        var taskShape = createRAGTask();
                         create.start(event, taskShape);
                     }
                 }

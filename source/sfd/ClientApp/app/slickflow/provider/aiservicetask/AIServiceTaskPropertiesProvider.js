@@ -5,11 +5,11 @@ import { is } from 'bpmn-js/lib/util/ModelUtil';
 
 const LOW_PRIORITY = 500;
 
-export default function AIServiceTaskPropertiesProvider(propertiesPanel, translate) {
+export default function AiServiceTaskPropertiesProvider(propertiesPanel, translate) {
     this.getGroups = function (element) {
         return function (groups) {
             // skip AI detail for LLM / PlugIn service tasks
-            if (is(element, 'bpmn:ServiceTask') && isLLMOrPlugIn(element)) {
+            if (is(element, 'bpmn:ServiceTask') && isAiServiceType(element)) {
                 groups.push(createAIServiceTaskGroup(element, translate));
             }
             return groups;
@@ -19,7 +19,7 @@ export default function AIServiceTaskPropertiesProvider(propertiesPanel, transla
     propertiesPanel.registerProvider(LOW_PRIORITY, this);
 }
 
-AIServiceTaskPropertiesProvider.$inject = ['propertiesPanel', 'translate'];
+AiServiceTaskPropertiesProvider.$inject = ['propertiesPanel', 'translate'];
 
 function createAIServiceTaskGroup(element, translate) {
     const aiTaskGroup = {
@@ -32,7 +32,7 @@ function createAIServiceTaskGroup(element, translate) {
     return aiTaskGroup
 }
 
-function isLLMOrPlugIn(element) {
+function isAiServiceType(element) {
     const sfType = element?.sfType || element?.businessObject?.sfType;
-    return sfType === 'LLM' || sfType === 'PlugIn';
+    return sfType === 'LLM' || sfType === 'RAG';
 }

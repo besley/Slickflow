@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Dynamic;
@@ -13,25 +13,26 @@ using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Xpdl.Entity;
-using Slickflow.Engine.Delegate;
+using Slickflow.Engine.Event;
 using Slickflow.WebUtility;
+using Slickflow.Engine.External;
 
 namespace Slickflow.Engine.Core.Pattern
 {
     /// <summary>
     /// Action Executor
-    /// Action 执行器类
+    /// Action 执行器
     /// </summary>
     internal class ActionExecutor
     {
         /// <summary>
         /// Execute Action List
-        /// Action 的执行方法
+        /// Action 列表执行方法
         /// </summary>
         /// <param name="actionList"></param>
-        /// <param name="delegateService"></param>
+        /// <param name="eventService"></param>
         internal static void ExecuteActionList(IList<Xpdl.Entity.Action> actionList, 
-            IDelegateService delegateService)
+            IEventService eventService)
         {
             if (actionList != null && actionList.Count > 0)
             {
@@ -40,7 +41,7 @@ namespace Slickflow.Engine.Core.Pattern
                     if (action.FireType != FireTypeEnum.None
                         && (action.ActionMethod != ActionMethodEnum.None))
                     {
-                        Execute(action, delegateService);
+                        Execute(action, eventService);
                     }
                 }
             }
@@ -51,16 +52,16 @@ namespace Slickflow.Engine.Core.Pattern
         /// 触发前执行外部操作的方法
         /// </summary>
         /// <param name="actionList"></param>
-        /// <param name="delegateService"></param>
+        /// <param name="eventService"></param>
         internal static void ExecuteActionListBefore(IList<Xpdl.Entity.Action> actionList,
-            IDelegateService delegateService)
+            IEventService eventService)
         {
             if (actionList != null && actionList.Count > 0)
             {
                 var list = actionList.Where(a => a.FireType == FireTypeEnum.Before).ToList();
                 if (list != null && list.Count > 0)
                 {
-                    ExecuteActionList(list, delegateService);
+                    ExecuteActionList(list, eventService);
                 }
             }
         }
@@ -70,16 +71,16 @@ namespace Slickflow.Engine.Core.Pattern
         /// 触发后执行外部操作的方法
         /// </summary>
         /// <param name="actionList"></param>
-        /// <param name="delegateService"></param>
+        /// <param name="eventService"></param>
         internal static void ExecuteActionListAfter(IList<Xpdl.Entity.Action> actionList,
-            IDelegateService delegateService)
+            IEventService eventService)
         {
             if (actionList != null && actionList.Count > 0)
             {
                 var list = actionList.Where(a => a.FireType == FireTypeEnum.After).ToList();
                 if (list != null && list.Count > 0)
                 {
-                    ExecuteActionList(list, delegateService);
+                    ExecuteActionList(list, eventService);
                 }
             }
         }
@@ -89,34 +90,34 @@ namespace Slickflow.Engine.Core.Pattern
         /// 执行外部服务实现类
         /// </summary>
         /// <param name="action"></param>
-        /// <param name="delegateService"></param>
-        private static void Execute(Xpdl.Entity.Action action, IDelegateService delegateService)
+        /// <param name="eventService"></param>
+        private static void Execute(Xpdl.Entity.Action action, IEventService eventService)
         {
             if (action.ActionType == ActionTypeEnum.Event)
             {
                 if (action.ActionMethod == ActionMethodEnum.LocalService)
                 {
-                    ExecuteLocalService(action, delegateService);
+                    ExecuteLocalService(action, eventService);
                 }
                 else if (action.ActionMethod == ActionMethodEnum.CSharpLibrary)
                 {
-                    ExecuteCSharpLibraryMethod(action, delegateService);
+                    ExecuteCSharpLibraryMethod(action, eventService);
                 }
                 else if (action.ActionMethod == ActionMethodEnum.WebApi)
                 {
-                    ExecuteWebApiMethod(action, delegateService);
+                    ExecuteWebApiMethod(action, eventService);
                 }
                 else if (action.ActionMethod == ActionMethodEnum.SQL)
                 {
-                    ExecuteSQLMethod(action, delegateService);
+                    ExecuteSQLMethod(action, eventService);
                 }
                 else if (action.ActionMethod == ActionMethodEnum.StoreProcedure)
                 {
-                    ExecuteStoreProcedureMethod(action, delegateService);
+                    ExecuteStoreProcedureMethod(action, eventService);
                 }
                 else if (action.ActionMethod == ActionMethodEnum.Python)
                 {
-                    ExecutePythonMethod(action, delegateService);
+                    ExecutePythonMethod(action, eventService);
                 }
                 else
                 {
@@ -127,21 +128,21 @@ namespace Slickflow.Engine.Core.Pattern
 
         /// <summary>
         /// Execute local service
-        /// 执行外部方法
+        /// 执行本地服务
         /// </summary>
         /// <param name="action"></param>
-        /// <param name="delegateService"></param>
-        private static void ExecuteLocalService(Xpdl.Entity.Action action, IDelegateService delegateService)
+        /// <param name="eventService"></param>
+        private static void ExecuteLocalService(Xpdl.Entity.Action action, IEventService eventService)
         {
             try
             {
-                //先获取具体实现类
-                //First, obtain the specific implementation class
+                // 先获取具体实现类
+                // First, obtain the specific implementation class
                 var instance = ReflectionHelper.GetSpecialInstance<IExternalService>(action.Expression);
-                //再调用基类可执行方法
-                //Call the base class executable method again
-                var exterableInstance = instance as IExternable;
-                exterableInstance.Executable(delegateService);
+                // 再调用基类可执行方法
+                // Call the base class executable method again
+                var executableInstance = instance as IExecutable;
+                executableInstance.Executable(eventService);
             }
             catch (System.Exception ex)
             {
@@ -151,18 +152,18 @@ namespace Slickflow.Engine.Core.Pattern
 
         /// <summary>
         /// Execute WebApi Method
-        /// 执行外部方法
+        /// 执行 WebAPI 方法
         /// </summary>
         /// <param name="action"></param>
-        /// <param name="delegateService"></param>
-        private static void ExecuteWebApiMethod(Xpdl.Entity.Action action, IDelegateService delegateService)
+        /// <param name="eventService"></param>
+        private static void ExecuteWebApiMethod(Xpdl.Entity.Action action, IEventService eventService)
         {
             try
             {
                 object result = null;
                 if (action.SubMethod == SubMethodEnum.HttpGet)
                 {
-                    var jsonGetValue = delegateService.GetVariableByScopePriority(action.Arguments);
+                    var jsonGetValue = eventService.GetVariableByScopePriority(action.Arguments);
                     var url = string.Format("{0}/{1}", action.Expression, jsonGetValue);
                     var httpGetClient = HttpClientHelper.CreateHelper(url);
                     result = httpGetClient.Get();
@@ -171,19 +172,19 @@ namespace Slickflow.Engine.Core.Pattern
                 {
                     string url = action.Expression;
                     var httpClientHelper = HttpClientHelper.CreateHelper(url);
-                    var jsonValue = CompositeJsonValue(action.Arguments, delegateService);
+                    var jsonValue = CompositeJsonValue(action.Arguments, eventService);
                     result = httpClientHelper.Post(jsonValue);
                 }
                 else if (action.SubMethod == SubMethodEnum.HttpPut)
                 {
                     string url = action.Expression;
                     var httpClientHelper = HttpClientHelper.CreateHelper(url);
-                    var jsonValue = CompositeJsonValue(action.Arguments, delegateService);
+                    var jsonValue = CompositeJsonValue(action.Arguments, eventService);
                     result = httpClientHelper.Put(jsonValue);
                 }
                 else if (action.SubMethod == SubMethodEnum.HttpDelete)
                 {
-                    var jsonGetValue = delegateService.GetVariableByScopePriority(action.Arguments);
+                    var jsonGetValue = eventService.GetVariableByScopePriority(action.Arguments);
                     var url = string.Format("{0}/{1}", action.Expression, jsonGetValue);
                     var httpClientHelper = HttpClientHelper.CreateHelper(url);
                     result = httpClientHelper.Delete();
@@ -197,20 +198,20 @@ namespace Slickflow.Engine.Core.Pattern
 
         /// <summary>
         /// Execute SQL Method
-        /// 执行外部方法
+        /// 执行 SQL 方法
         /// </summary>
         /// <param name="action"></param>
-        /// <param name="delegateService"></param>
-        private static void ExecuteSQLMethod(Xpdl.Entity.Action action, IDelegateService delegateService)
+        /// <param name="eventService"></param>
+        private static void ExecuteSQLMethod(Xpdl.Entity.Action action, IEventService eventService)
         {
             try
             {
-                var parameters = CompositeSqlParametersValue(action.Arguments, delegateService);
+                var parameters = CompositeSqlParametersValue(action.Arguments, eventService);
                 if (action.CodeInfo != null 
                     && !string.IsNullOrEmpty(action.CodeInfo.CodeText))
                 {
                     var sqlScript = action.CodeInfo.CodeText;        //modified by Besley in 12/26/2019, body is nodetext rather than attribute
-                    var session = delegateService.GetSession();
+                    var session = eventService.GetSession();
                     var repository = new Repository();
                     repository.Execute(session.Connection, sqlScript, parameters, session.Transaction);
                 }
@@ -227,17 +228,17 @@ namespace Slickflow.Engine.Core.Pattern
 
         /// <summary>
         /// Execute sql store procedure
-        /// 执行外部方法
+        /// 执行 SQL 存储过程
         /// </summary>
         /// <param name="action"></param>
-        /// <param name="delegateService"></param>
-        private static void ExecuteStoreProcedureMethod(Xpdl.Entity.Action action, IDelegateService delegateService)
+        /// <param name="eventService"></param>
+        private static void ExecuteStoreProcedureMethod(Xpdl.Entity.Action action, IEventService eventService)
         {
             try
             {
-                var parameters = CompositeSqlParametersValue(action.Arguments, delegateService);
+                var parameters = CompositeSqlParametersValue(action.Arguments, eventService);
                 var procedureName = action.Expression;
-                var session = delegateService.GetSession();
+                var session = eventService.GetSession();
                 var repository = new Repository();
                 repository.ExecuteProc(session.Connection, procedureName, parameters, session.Transaction);
             }
@@ -249,13 +250,13 @@ namespace Slickflow.Engine.Core.Pattern
 
         /// <summary>
         /// Execute python script
-        /// 执行外部方法
+        /// 执行 Python 脚本
         /// SetVariable:
         /// https://stackoverflow.com/questions/26426955/setting-and-getting-variables-in-net-hosted-ironpython-script/45734097
         /// </summary>
         /// <param name="action"></param>
-        /// <param name="delegateService"></param>
-        private static void ExecutePythonMethod(Xpdl.Entity.Action action, IDelegateService delegateService)
+        /// <param name="eventService"></param>
+        private static void ExecutePythonMethod(Xpdl.Entity.Action action, IEventService eventService)
         {
             try
             {
@@ -266,7 +267,7 @@ namespace Slickflow.Engine.Core.Pattern
                     var pythonScript = action.CodeInfo.CodeText;         //modified by Besley in 12/26/2019, body is nodetext rather than attribute
                     var engine = Python.CreateEngine();
                     var scope = engine.CreateScope();
-                    var dictionary = CompositeKeyValue(action.Arguments, delegateService);
+                    var dictionary = CompositeKeyValue(action.Arguments, eventService);
                     foreach (var item in dictionary)
                     {
                         scope.SetVariable(item.Key, item.Value);
@@ -287,16 +288,16 @@ namespace Slickflow.Engine.Core.Pattern
 
         /// <summary>
         /// Execute c# library
-        /// 执行插件方法
+        /// 执行 C# 库方法
         /// </summary>
         /// <param name="action"></param>
-        /// <param name="delegateService"></param>
-        private static void ExecuteCSharpLibraryMethod(Xpdl.Entity.Action action, IDelegateService delegateService)
+        /// <param name="eventService"></param>
+        private static void ExecuteCSharpLibraryMethod(Xpdl.Entity.Action action, IEventService eventService)
         {
             try
             {
-                //取出当前应用程序执行路径
-                //Retrieve the current application execution path
+                // 获取当前应用程序执行路径
+                // Retrieve the current application execution path
                 var methodInfo = action.MethodInfo;
                 var assemblyFullName = methodInfo.AssemblyFullName;
                 var methodName = methodInfo.MethodName;
@@ -312,7 +313,7 @@ namespace Slickflow.Engine.Core.Pattern
                 object[] methodParams = null;
                 if (!string.IsNullOrEmpty(action.Arguments.Trim()))
                 {
-                    methodParams = CompositeParameterValues(action.Arguments, delegateService);
+                    methodParams = CompositeParameterValues(action.Arguments, eventService);
                 }
                 var result = mi.Invoke(instance, methodParams);
             }
@@ -324,12 +325,12 @@ namespace Slickflow.Engine.Core.Pattern
 
         /// <summary>
         /// Construct JSON string for the final object
-        /// 构造最终对象的Json字符串
+        /// 构造最终对象的 Json 字符串
         /// </summary>
         /// <param name="arguments"></param>
-        /// <param name="delegateService"></param>
+        /// <param name="eventService"></param>
         /// <returns></returns>
-        private static string CompositeJsonValue(string arguments, IDelegateService delegateService)
+        private static string CompositeJsonValue(string arguments, IEventService eventService)
         {
             var jsonValue = string.Empty;
             var arguValue = string.Empty;
@@ -340,7 +341,7 @@ namespace Slickflow.Engine.Core.Pattern
             {
                 if (strBuilder.ToString() != string.Empty) strBuilder.Append(",");
 
-                arguValue = delegateService.GetVariableByScopePriority(name);
+                arguValue = eventService.GetVariableByScopePriority(name);
                 arguValue = FormatJsonStringIfSimple(arguValue);
                 strBuilder.Append(string.Format("{0}:{1}", name, arguValue));
             }
@@ -354,7 +355,7 @@ namespace Slickflow.Engine.Core.Pattern
 
         /// <summary>
         /// If it is a simple string, add double quotation marks
-        /// 如果是简单字符串, 加双引号
+        /// 如果是简单字符串，加双引号
         /// jack => "jack"
         /// </summary>
         /// <param name="jsonValue"></param>
@@ -374,13 +375,13 @@ namespace Slickflow.Engine.Core.Pattern
         }
 
         /// <summary>
-        /// Construct JSON string for the final object
-        /// 构造最终对象的Json字符串
+        /// Construct SQL parameters value
+        /// 构造 SQL 参数值
         /// </summary>
         /// <param name="arguments"></param>
-        /// <param name="delegateService"></param>
+        /// <param name="eventService"></param>
         /// <returns></returns>
-        private static DynamicParameters CompositeSqlParametersValue(string arguments, IDelegateService delegateService)
+        private static DynamicParameters CompositeSqlParametersValue(string arguments, IEventService eventService)
         {
             DynamicParameters parameters = new DynamicParameters();
 
@@ -388,27 +389,27 @@ namespace Slickflow.Engine.Core.Pattern
             var arguList = arguments.Split(',');
             foreach (var name in arguList)
             {
-                arguValue = delegateService.GetVariableByScopePriority(name);
+                arguValue = eventService.GetVariableByScopePriority(name);
                 parameters.Add(string.Format("@{0}",name), arguValue);
             }
             return parameters;
         }
 
         /// <summary>
-        /// Construct JSON string for the final object
-        /// 构造最终对象的Json字符串
+        /// Construct key-value dictionary
+        /// 构造键值对字典
         /// </summary>
         /// <param name="arguments"></param>
-        /// <param name="delegateService"></param>
+        /// <param name="eventService"></param>
         /// <returns></returns>
-        private static IDictionary<string, string> CompositeKeyValue(string arguments, IDelegateService delegateService)
+        private static IDictionary<string, string> CompositeKeyValue(string arguments, IEventService eventService)
         {
             var dictionary = new Dictionary<string, string>();
             var arguValue = string.Empty;
             var arguList = arguments.Split(',');
             foreach (var name in arguList)
             {
-                arguValue = delegateService.GetVariableByScopePriority(name);
+                arguValue = eventService.GetVariableByScopePriority(name);
                 dictionary.Add(name, arguValue);
             }
             return dictionary;
@@ -416,18 +417,18 @@ namespace Slickflow.Engine.Core.Pattern
 
         /// <summary>
         /// Construct Parameters value
-        /// 构造可变数值列表
+        /// 构造参数值列表
         /// </summary>
         /// <param name="arguments"></param>
-        /// <param name="delegateService"></param>
+        /// <param name="eventService"></param>
         /// <returns></returns>
-        private static object[] CompositeParameterValues(string arguments, IDelegateService delegateService)
+        private static object[] CompositeParameterValues(string arguments, IEventService eventService)
         {
             var arguList = arguments.Split(',');
             object[] valueArray = new object[arguList.Length];
             for (var i = 0; i < arguList.Length; i++)
             {
-                valueArray[i] = delegateService.GetVariableByScopePriority(arguList[i]);
+                valueArray[i] = eventService.GetVariableByScopePriority(arguList[i]);
             }
             return valueArray;
         }

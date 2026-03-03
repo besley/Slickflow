@@ -33,13 +33,13 @@ namespace Slickflow.Engine.Xpdl
         public static readonly string Sf_StrXmlPath_SubInfoes = "bpmn:extensionElements/sf:subInfoes";
         public static readonly string Sf_StrXmlPath_Sections = "bpmn:extensionElements/sf:sections";
         public static readonly string Sf_StrXmlPath_Services = "bpmn:extensionElements/sf:services";
-        public static readonly string Sf_StrXmlPath_AIServices = "bpmn:extensionElements/sf:aIServices";
+        public static readonly string Sf_StrXmlPath_AiServices = "bpmn:extensionElements/sf:aiServices";
         public static readonly string Sf_StrXmlPath_Scripts = "bpmn:extensionElements/sf:scripts";
         public static readonly string Sf_StrXmlPath_Notifications = "bpmn:extensionElements/sf:notifications";
         public static readonly string Sf_StrXmlPath_SequenceFlow = "bpmn:sequenceFlow";
         public static readonly string Sf_ElementName_Forms= "sf:forms";
         public static readonly string Sf_ElementName_Services = "sf:services";
-        public static readonly string Sf_ElementName_AIServices = "sf:aIServices";
+        public static readonly string Sf_ElementName_AiServices = "sf:aiServices";
 
         public static readonly string BPMN_ElementName_Definitions = "bpmn:definitions";
         public static readonly string BPMN_ElementName_Collaboration = "bpmn:collaboration";

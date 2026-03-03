@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +14,8 @@ namespace Slickflow.Engine.Core.Result
     {
         public WfExecutedStatus Status { get; set; }
         public String Message { get; set; }
+        /// <summary>Optional AI reply from RAG/LLM node (e.g. ai_response variable). Used by workflow_completed so clients get business reply instead of engine status.</summary>
+        public String AiResponse { get; set; }
         public String ExceptionType { get; set; }
 
         /// <summary>

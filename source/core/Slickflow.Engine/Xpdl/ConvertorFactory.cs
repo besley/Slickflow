@@ -98,7 +98,7 @@ namespace Slickflow.Engine.Xpdl
             {
                 if (node.FirstChild != null 
                     && node.FirstChild.FirstChild != null 
-                    && node.FirstChild.FirstChild.Name == XPDLDefinition.Sf_ElementName_AIServices)
+                    && node.FirstChild.FirstChild.Name == XPDLDefinition.Sf_ElementName_AiServices)
                 {
                     activityType = ActivityTypeEnum.AIServiceNode;
                 }

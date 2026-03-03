@@ -82,7 +82,7 @@ const setting = (function () {
         });
 
         // Model provider change handler - update default base URL - use event delegation
-        $(document).on('change input', '#popupSetting #model-provider, #model-provider', function () {
+        $(document).on('change', '#popupSetting #model-provider, #model-provider', function () {
             updateDefaultBaseUrl($(this).val());
         });
     }
@@ -100,13 +100,14 @@ const setting = (function () {
 
     function updateDefaultBaseUrl(provider) {
         const defaultUrls = {
+            'QWen': 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+            'DeepSeek': 'https://api.deepseek.com/v1',
             'OpenAI': 'https://api.openai.com/v1',
             'Azure OpenAI': 'https://your-resource.openai.azure.com/',
             'Anthropic': 'https://api.anthropic.com/v1',
             'Google': 'https://generativelanguage.googleapis.com/v1',
             'Baidu': 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1',
             'Alibaba': 'https://dashscope.aliyuncs.com/api/v1',
-            'DeepSeek': 'https://api.deepseek.com/v1',
             'Moonshot': 'https://api.moonshot.cn/v1',
             'Zhipu': 'https://open.bigmodel.cn/api/paas/v4'
         };
@@ -136,23 +137,36 @@ const setting = (function () {
     }
 
     function renderModelList(models) {
-        // Support both popup and direct page contexts
         var $children = $('#popupSetting #ai-model-provider-children, #ai-model-provider-children');
         $children.empty();
 
         if (models && models.length > 0) {
-            // 去重：按 Id 过滤，避免重复记录（有用户反馈重复条目）
             var seen = {};
+            var byProvider = {};
             models.forEach(function (model) {
                 if (!model || seen[model.Id]) return;
                 seen[model.Id] = true;
-
-                var displayName = (model.ModelProvider || 'Unnamed') + (model.Description ? ' - ' + model.Description : '');
-                var $child = $('<li class="setting-tree-child" data-model-id="' + model.Id + '">' +
-                    '<span class="setting-tree-child-name">' + displayName + '</span>' +
-                    '<button class="setting-tree-child-delete" title="Delete">×</button>' +
-                    '</li>');
-                $children.append($child);
+                var provider = (model.ModelProvider || 'Other').trim() || 'Other';
+                if (!byProvider[provider]) byProvider[provider] = [];
+                byProvider[provider].push(model);
+            });
+            var providers = Object.keys(byProvider).sort();
+            providers.forEach(function (provider) {
+                var items = byProvider[provider];
+                var $parentItem = $('<li class="setting-tree-item"></li>');
+                var $expandSpan = $('<span class="setting-tree-expand"></span>');
+                var $parentDiv = $('<div class="setting-tree-parent expanded"></div>').append($expandSpan).append(document.createTextNode(provider));
+                var $childList = $('<ul class="setting-tree-children"></ul>');
+                items.forEach(function (model) {
+                    var displayName = (model.ModelName || model.Description || 'Unnamed').trim() || 'Unnamed';
+                    var $child = $('<li class="setting-tree-child" data-model-id="' + model.Id + '">' +
+                        '<span class="setting-tree-child-name">' + displayName + '</span>' +
+                        '<button class="setting-tree-child-delete" title="Delete">×</button>' +
+                        '</li>');
+                    $childList.append($child);
+                });
+                $parentItem.append($parentDiv).append($childList);
+                $children.append($parentItem);
             });
         }
     }
@@ -161,8 +175,10 @@ const setting = (function () {
         var $container = getContainer();
         // Remove active class from all children
         $container.find('.setting-tree-child').removeClass('active');
-        // Add active class to selected child
-        $container.find('.setting-tree-child[data-model-id="' + modelId + '"]').addClass('active');
+        var $selected = $container.find('.setting-tree-child[data-model-id="' + modelId + '"]');
+        $selected.addClass('active');
+        // Expand parent provider node when selecting a child
+        $selected.closest('.setting-tree-item').find('> .setting-tree-parent').addClass('expanded');
 
         // Load model data
         settingapi.getById(modelId, function (result) {
@@ -209,6 +225,8 @@ const setting = (function () {
         $testResultDetails.hide();
         
         $container.find('#model-provider').val('');
+        $container.find('#model-name').val('');
+        $container.find('#model-type').val('');
         $container.find('#base-url').val('');
         $container.find('#api-key').val('');
         $container.find('#api-key').attr('placeholder', 'Enter your API key');
@@ -221,6 +239,8 @@ const setting = (function () {
 
         var $container = getContainer();
         $container.find('#model-provider').val(model.ModelProvider || '');
+        $container.find('#model-name').val(model.ModelName || '');
+        $container.find('#model-type').val(model.ModelType || '');
         $container.find('#base-url').val(model.BaseUrl || '');
         // Show masked API key if it exists
         if (model.ApiKey && model.ApiKey.length > 0) {
@@ -396,6 +416,7 @@ const setting = (function () {
         
         // Validate form - use || '' to handle undefined values
         var modelProvider = ($container.find('#model-provider').val() || '').trim();
+        var modelType = ($container.find('#model-type').val() || '').trim();
         var baseUrl = ($container.find('#base-url').val() || '').trim();
         var apiKeyInput = ($container.find('#api-key').val() || '').trim();
         var description = ($container.find('#description').val() || '').trim();
@@ -407,6 +428,12 @@ const setting = (function () {
 
         if (!modelProvider) {
             showNotification('Please select or enter a model provider', 'error');
+            return;
+        }
+
+        if (!modelType) {
+            var msg = (typeof kresource !== 'undefined' && kresource.getItem) ? (kresource.getItem('modeltype.validation') || 'Please select model type') : 'Please select model type';
+            showNotification(msg, 'error');
             return;
         }
 
@@ -422,13 +449,17 @@ const setting = (function () {
         }
 
         // Proceed with save
-        proceedSave(modelProvider, baseUrl, apiKey, description);
+        proceedSave(modelProvider, modelType, baseUrl, apiKey, description);
     }
 
-    function proceedSave(modelProvider, baseUrl, apiKey, description) {
+    function proceedSave(modelProvider, modelType, baseUrl, apiKey, description) {
+        var modelName = ($container.find('#model-name').val() || '').trim();
+
         // Prepare entity
         var modelEntity = setting.mcurrentModelEntity || {};
         modelEntity.ModelProvider = modelProvider;
+        modelEntity.ModelName = modelName;
+        modelEntity.ModelType = modelType;
         modelEntity.BaseUrl = baseUrl;
         // Only update APIKey if user entered a new one (not the mask)
         // apiKey is already filtered in saveModelConfig, so if it's not empty, use it

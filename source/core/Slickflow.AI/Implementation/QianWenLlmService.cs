@@ -1,4 +1,5 @@
-﻿using Slickflow.AI.Utility;
+using Slickflow.AI.Entity;
+using Slickflow.AI.Utility;
 using Slickflow.WebUtility;
 using System.Text;
 using System.Text.Json;
@@ -6,21 +7,27 @@ using System.Text.Json.Serialization;
 
 namespace Slickflow.AI.Implementation
 {
+    /// <summary>
+    /// 千问 LLM 服务。baseUrl 由调用方传入，调用方需严格区分配置来源：
+    /// - 工作流节点：从 ai_activity_config → ai_model_provider 传入
+    /// - 文字生成工作流等：从 AiAppConfiguration (appsettings) 传入，通过 InvokeWithLocalConfigAsync
+    /// </summary>
     public class QianWenLlmService : IAiLlmService
     {
-        public async Task<ResponseResult<AIResponse>> InvokeAIChatServiceAsync(string baseUrl, 
-            string apiKey, 
-            string modelName, 
-            string systemPrompt, 
-            string userMessage,
+        public async Task<ResponseResult<AIResponse>> InvokeAIChatServiceAsync(string baseUrl,
+            string apiKey,
             IList<MultiMediaFile> mediaFileList,
-            decimal temperature, 
-            int maxTokens, 
-            int timeout)
+            AiActivityConfigEntity axConfig)
         {
+            var modelName = axConfig.ModelName;
+            var systemPrompt = axConfig.SystemPrompt;
+            var userMessage = axConfig.UserMessage;
+            var temperature = axConfig.Temperature;
+            var maxTokens = axConfig.MaxTokens;
+            var timeout = axConfig.Timeout;
             var responseResult = ResponseResult<AIResponse>.Default();
 
-            // 4. Prepare model parameters
+            // Prepare model parameters
             temperature = temperature > 0 ? temperature : (decimal)0.3;
             maxTokens = maxTokens > 0 ? maxTokens : 2000;
 
@@ -29,40 +36,17 @@ namespace Slickflow.AI.Implementation
                 throw new InvalidOperationException("UserMessage is not set in AxConfig");
             }
 
-            // 5. Build API endpoint URL
-            baseUrl = baseUrl.TrimEnd('/');
-            var baseUri = new Uri(baseUrl);
-            var basePath = baseUri.AbsolutePath.Trim('/').ToLower();
+            var apiEndpoint = baseUrl.TrimEnd('/');
+            if (!apiEndpoint.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                apiEndpoint = "https://" + apiEndpoint;
 
-            string apiEndpoint;
-            if (basePath.EndsWith("chat/completions"))
-            {
-                // BaseUrl already includes the full path
-                apiEndpoint = baseUrl;
-            }
-            else if (basePath.EndsWith("v1") || basePath == "v1")
-            {
-                // BaseUrl contains /v1, append chat/completions
-                apiEndpoint = $"{baseUrl}/chat/completions";
-            }
-            else if (string.IsNullOrEmpty(basePath))
-            {
-                // BaseUrl is only the domain, append v1/chat/completions
-                apiEndpoint = $"{baseUrl}/v1/chat/completions";
-            }
-            else
-            {
-                // Otherwise assume baseUrl is already complete
-                apiEndpoint = baseUrl;
-            }
-
-            // 6. Create HttpClient (consistent with BpmnApiClient)
+            // Create HttpClient (consistent with BpmnApiClient)
             using var httpClient = new HttpClient();
             httpClient.Timeout = TimeSpan.FromSeconds(timeout > 0 ? timeout : 60);
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
             httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
-            // 7. Build request message list
+            // Build request message list
             var messages = new List<ChatMessage>();
             if (!string.IsNullOrWhiteSpace(systemPrompt))
             {
@@ -78,7 +62,7 @@ namespace Slickflow.AI.Implementation
                 Content = userMessage
             });
 
-            // 8. Build request payload (per BpmnApiClient)
+            // Build request payload (per BpmnApiClient)
             var chatRequest = new ChatRequest
             {
                 Model = modelName,
@@ -87,7 +71,7 @@ namespace Slickflow.AI.Implementation
                 max_tokens = maxTokens
             };
 
-            // 9. Serialize request and send
+            // Serialize request and send
             // Use CancellationToken to enforce timeout
             var timeoutSeconds = timeout > 0 ? timeout : 60;
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeoutSeconds));
@@ -113,7 +97,7 @@ namespace Slickflow.AI.Implementation
 
                 var responseContent = await response.Content.ReadAsStringAsync();
 
-                // 10. Parse response JSON (per BpmnApiClient)
+                // Parse response JSON (per BpmnApiClient)
                 using var jsonDoc = JsonDocument.Parse(responseContent);
                 var root = jsonDoc.RootElement;
 
@@ -190,45 +174,84 @@ namespace Slickflow.AI.Implementation
             }
         }
 
+        public async Task<ResponseResult<AIResponse>> InvokeAIChatServiceWithMessagesAsync(string baseUrl,
+            string apiKey,
+            IList<CustomApiMessage> messages,
+            AiActivityConfigEntity axConfig)
+        {
+            if (messages == null || messages.Count == 0)
+                throw new ArgumentException("Messages cannot be null or empty", nameof(messages));
+            var modelName = axConfig?.ModelName ?? throw new ArgumentNullException(nameof(axConfig));
+            var temperature = (axConfig.Temperature > 0 ? axConfig.Temperature : 0.3m);
+            var maxTokens = (axConfig.MaxTokens > 0 ? axConfig.MaxTokens : 2048);
+            var timeout = (axConfig.Timeout > 0 ? axConfig.Timeout : 60);
+
+            var apiEndpoint = baseUrl.TrimEnd('/');
+            if (!apiEndpoint.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                apiEndpoint = "https://" + apiEndpoint;
+
+            using var httpClient = new HttpClient();
+            httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+
+            var request = new CustomApiChatRequest
+            {
+                Model = modelName,
+                Messages = messages.ToArray(),
+                Temperature = (double)temperature,
+                MaxTokens = maxTokens,
+                ResponseFormat = null
+            };
+            var jsonOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
+            try
+            {
+                var jsonContent = new StringContent(JsonSerializer.Serialize(request, jsonOptions), Encoding.UTF8, "application/json");
+                var httpRequest = new HttpRequestMessage(HttpMethod.Post, apiEndpoint) { Content = jsonContent };
+                var response = await httpClient.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead, cts.Token);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync(cts.Token);
+                    throw new HttpRequestException($"API call failed: {response.StatusCode}. {errorContent}");
+                }
+                var responseContent = await response.Content.ReadAsStringAsync(cts.Token);
+                var result = JsonSerializer.Deserialize<CustomApiChatResponse>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                if (result?.Error != null)
+                    throw new InvalidOperationException($"API returned error: {result.Error.Message}");
+                var content = result?.Choices?[0]?.Message?.Content?.ToString() ?? string.Empty;
+                if (string.IsNullOrWhiteSpace(content) && result?.Choices?[0]?.Message?.Content != null)
+                {
+                    if (result.Choices[0].Message.Content is JsonElement je)
+                        content = je.GetString() ?? string.Empty;
+                }
+                if (string.IsNullOrWhiteSpace(content))
+                    throw new InvalidOperationException("API returned empty content");
+                return ResponseResult<AIResponse>.Success(new AIResponse { Content = content, StatusCode = "200" });
+            }
+            finally { cts?.Dispose(); }
+        }
+
         /// <summary>
         /// Test model connectivity (per BpmnApiClient)
         /// </summary>
         public async Task<string> TestConnectionAsync(string baseUrl, string apiKey, string modelName)
         {
-            // 1. Build API endpoint URL
-            var normalizedBaseUrl = baseUrl.TrimEnd('/');
-            var baseUri = new Uri(normalizedBaseUrl);
-            var basePath = baseUri.AbsolutePath.Trim('/').ToLower();
+            var apiEndpoint = baseUrl.TrimEnd('/');
+            if (!apiEndpoint.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                apiEndpoint = "https://" + apiEndpoint;
 
-            string apiEndpoint;
-            if (basePath.EndsWith("chat/completions"))
-            {
-                // BaseUrl already includes the full path
-                apiEndpoint = normalizedBaseUrl;
-            }
-            else if (basePath.EndsWith("v1") || basePath == "v1")
-            {
-                // BaseUrl contains /v1, append chat/completions
-                apiEndpoint = $"{normalizedBaseUrl}/chat/completions";
-            }
-            else if (string.IsNullOrEmpty(basePath))
-            {
-                // BaseUrl is only the domain, append v1/chat/completions
-                apiEndpoint = $"{normalizedBaseUrl}/v1/chat/completions";
-            }
-            else
-            {
-                // Otherwise assume baseUrl is already complete
-                apiEndpoint = normalizedBaseUrl;
-            }
-
-            // 2. Create HttpClient (per BpmnApiClient)
+            // Create HttpClient (per BpmnApiClient)
             using var httpClient = new HttpClient();
             httpClient.Timeout = TimeSpan.FromSeconds(30); // Use shorter timeout for connectivity test
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
             httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
-            // 3. Build request message list
+            // Build request message list
             var messages = new List<ChatMessage>
             {
                 new ChatMessage
@@ -243,7 +266,7 @@ namespace Slickflow.AI.Implementation
                 }
             };
 
-            // 4. Build request payload (per BpmnApiClient)
+            // Build request payload (per BpmnApiClient)
             var chatRequest = new ChatRequest
             {
                 Model = modelName,
@@ -252,7 +275,7 @@ namespace Slickflow.AI.Implementation
                 max_tokens = 50
             };
 
-            // 5. Serialize request and send
+            // Serialize request and send
             // Use CancellationToken to enforce timeout
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             
@@ -277,7 +300,7 @@ namespace Slickflow.AI.Implementation
 
                 var responseContent = await response.Content.ReadAsStringAsync();
 
-                // 6. Parse response JSON (per BpmnApiClient)
+                //Parse response JSON (per BpmnApiClient)
                 using var jsonDoc = JsonDocument.Parse(responseContent);
                 var root = jsonDoc.RootElement;
 

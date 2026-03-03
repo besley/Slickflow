@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace Slickflow.AI.Configuration
 {
@@ -9,6 +9,13 @@ namespace Slickflow.AI.Configuration
     {
         private const string SectionName = "AiModelProvider";
         public string MasterKeyDb { get; set; } = string.Empty;
+        public string SupabaseProjectUrl {  get; set; } = string.Empty;
+        public string SupabaseServiceRoleKey { get; set; }  = string.Empty;
+        public string AiChatMessageWebHook { get; set;  } = string.Empty;
+        /// <summary>RAG embedding provider: "OpenAI" (default) or "QWen3"</summary>
+        public string RagEmbeddingProvider { get; set; } = "OpenAI";
+        /// <summary>RAG 向量查询输出维度，默认 1536</summary>
+        public int RagEmbeddingDimensions { get; set; } = 1536;
         public SfAIOptions? SfAI { get; set; }
         public QianWenOptions? QianWen { get; set; }
         public OpenAIOptions? OpenAI { get; set; }

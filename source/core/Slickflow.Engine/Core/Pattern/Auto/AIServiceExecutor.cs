@@ -1,9 +1,9 @@
-ï»¿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Delegate;
+using Slickflow.Engine.Event;
 using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Manager;
@@ -15,7 +15,7 @@ using Slickflow.WebUtility;
 
 namespace Slickflow.Engine.Core.Pattern.Auto
 {
-    internal class AIServiceExecutor
+    internal class AiServiceExecutor
     {
         /// <summary>
         /// Execute service list
@@ -25,16 +25,16 @@ namespace Slickflow.Engine.Core.Pattern.Auto
             Activity currentActivity,
             ActivityInstanceEntity currentActivityInstance,
             ActivityForwardContext activityForwardContext,
-            IDelegateService delegateService)
+            IEventService eventService)
         {
-            IList<AIServiceDetail> aiServiceList = currentActivity.AIServiceList;
+            IList<AiServiceDetail> aiServiceList = currentActivity.AIServiceList;
             if (aiServiceList != null && aiServiceList.Count > 0)
             {
                 foreach (var service in aiServiceList)
                 {
-                    if (service.AIServiceType != AIServiceTypeEnum.None)
+                    if (service.AIServiceType != AiServiceTypeEnum.None)
                     {
-                        Execute(fromActivity, fromActivityInstance, currentActivity, service, currentActivityInstance, activityForwardContext, delegateService).GetAwaiter().GetResult();
+                        Execute(fromActivity, fromActivityInstance, currentActivity, service, currentActivityInstance, activityForwardContext, eventService).GetAwaiter().GetResult();
                     }
                 }
             }
@@ -46,18 +46,18 @@ namespace Slickflow.Engine.Core.Pattern.Auto
         private static async Task Execute(Activity fromActivity,
             ActivityInstanceEntity fromActivityInstance,
             Activity currentActivity,
-            AIServiceDetail service,
+            AiServiceDetail service,
             ActivityInstanceEntity currentActivityInstance,
             ActivityForwardContext activityForwardContext,
-            IDelegateService delegateService)
+            IEventService eventService)
         {
-            if (service.AIServiceType == AIServiceTypeEnum.LLM)
+            if (service.AIServiceType == AiServiceTypeEnum.LLM)
             {
-                await ExecuteLlmService(fromActivity, fromActivityInstance, currentActivity, service, currentActivityInstance, activityForwardContext, delegateService);
+                await ExecuteLlmService(fromActivity, fromActivityInstance, currentActivity, service, currentActivityInstance, activityForwardContext, eventService);
             }
-            else if (service.AIServiceType == AIServiceTypeEnum.PlugIn)
+            else if (service.AIServiceType == AiServiceTypeEnum.RAG)
             {
-                await ExecutePlugInService(fromActivity, fromActivityInstance, currentActivity, service, currentActivityInstance, activityForwardContext, delegateService);
+                await ExecuteLlmService(fromActivity, fromActivityInstance, currentActivity, service, currentActivityInstance, activityForwardContext, eventService);
             }
             else
             {
@@ -71,53 +71,56 @@ namespace Slickflow.Engine.Core.Pattern.Auto
         private static async Task ExecuteLlmService(Activity fromActivity,
             ActivityInstanceEntity fromActivityInstance,
             Activity currentActivity,
-            AIServiceDetail service,
+            AiServiceDetail service,
             ActivityInstanceEntity currentActivityInstance,
             ActivityForwardContext activityForwardContext,
-            IDelegateService delegateService)
+            IEventService eventService)
         {
             try
             {
-                var session = delegateService.GetSession();
-                var processInstanceId = delegateService.GetProcessInstanceId();
+                var session = eventService.GetSession();
+                var processInstanceId = eventService.GetProcessInstanceId();
 
-                //è·å–è¾“å…¥å‚æ•°
+                //»ñÈ¡ÊäÈë²ÎÊı
                 //Getting input variable
                 var pvm = new ProcessVariableManager();
                 List<MultiMediaFile> mediaFileList = null;
 
-                //ä¸Šä¸€æ­¥çš„è¾“å‡ºå˜é‡ï¼Œå°±æ˜¯å½“å‰èŠ‚ç‚¹çš„è¾“å…¥å˜é‡
+                //ÉÏÒ»²½µÄÊä³ö±äÁ¿£¬¾ÍÊÇµ±Ç°½ÚµãµÄÊäÈë±äÁ¿
                 //The output variable of the previous step is the input variable of the current node
                 var outputVarialbeNameList = activityForwardContext.ProcessModel.GetActivityOutputVarialbeNameList(fromActivity);
                 if (outputVarialbeNameList != null)
                 {
-                    //æ‰§è¡Œå¤§æ¨¡å‹è¿ç®—æ—¶å€™ï¼Œéœ€è¦ç”¨åˆ°è¾“å…¥å˜é‡ï¼Œä½œä¸ºå¤§æ¨¡å‹çš„è¾“å…¥åˆ¤æ–­æ¡ä»¶
+                    //Ö´ĞĞ´óÄ£ĞÍÔËËãÊ±ºò£¬ĞèÒªÓÃµ½ÊäÈë±äÁ¿£¬×÷Îª´óÄ£ĞÍµÄÊäÈëÅĞ¶ÏÌõ¼ş
                     //When performing large model operations, input variables are needed as input judgment conditions for the large model
                     var inputVarialbeValueList = pvm.GetVariableListByActivity(session.Connection, processInstanceId, fromActivityInstance.Id, outputVarialbeNameList, session.Transaction);
 
-                    //å¤šæ¨¡æ€æ–‡ä»¶åŒæ ·éœ€è¦åŠ å…¥å¤§æ¨¡å‹çš„è¾“å…¥å‚æ•°é‡Œé¢å»
+                    //¶àÄ£Ì¬ÎÄ¼şÍ¬ÑùĞèÒª¼ÓÈë´óÄ£ĞÍµÄÊäÈë²ÎÊıÀïÃæÈ¥
                     //Multimodal files also need to be added to the input parameters of the large model
                     mediaFileList = inputVarialbeValueList.Select<ProcessVariableEntity, MultiMediaFile>(a => new MultiMediaFile
                     {
                         Name = a.Name,
                         MeidaType = EnumHelper.TryParseEnum<MultiMediaTypeEnum>(a.MediaType),
-                        base64Content = a.Value
+                        Content = a.Value
                     }).ToList();
                 }
 
-                //è¯»å–å¤§æ¨¡å‹é…ç½®ä¿¡æ¯
+                //»ñÈ¡Á÷³ÌÊµÀıĞÅÏ¢
+                //Getting process instance info
+                var processInstance = (new ProcessInstanceManager()).GetById(session.Connection, processInstanceId, session.Transaction);
+
+                //¶ÁÈ¡´óÄ£ĞÍÅäÖÃĞÅÏ¢
                 //Reading AxConfig Setting info
                 var aiModelDataService = new AiModelDataService();
-                var axConfigEntity = aiModelDataService.GetAiActivityConfigByUUID(service.ConfigUUID);
+                var axConfigEntity = aiModelDataService.GetAiActivityConfigByProcessVersionActivity(processInstance.ProcessId, processInstance.Version, currentActivity.ActivityId);
 
-                //è°ƒç”¨å¤§æ¨¡å‹æœåŠ¡
+                //µ÷ÓÃ´óÄ£ĞÍ·şÎñ
                 //Calling llm executing service
                 var aiFastCallingService = new AiFastCallingService();
                 var aiResponseMessage = await aiFastCallingService.InvokeAIServiceAsync(axConfigEntity, mediaFileList);
 
-                //ä¿å­˜èŠ‚ç‚¹å˜é‡
+                //±£´æ½Úµã±äÁ¿
                 //Saving output variable
-                var processInstance = (new ProcessInstanceManager()).GetById(session.Connection, processInstanceId, session.Transaction);
 
                 var currentVariableList = currentActivity.VariableList;
                 var currentOutputVariable = currentVariableList.FirstOrDefault(
@@ -146,13 +149,13 @@ namespace Slickflow.Engine.Core.Pattern.Auto
         /// <summary>
         /// Execute Local Service
         /// </summary>
-        private static async Task ExecutePlugInService(Activity fromActivity,
+        private static async Task ExecuteRagService(Activity fromActivity,
             ActivityInstanceEntity fromActivityInstance,
             Activity currentActivity,
-            AIServiceDetail service,
+            AiServiceDetail service,
             ActivityInstanceEntity activityInstance,
             ActivityForwardContext activityForwardContext,
-            IDelegateService delegateService)
+            IEventService eventService)
         {
             try
             {

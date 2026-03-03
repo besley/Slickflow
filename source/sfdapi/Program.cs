@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 using Slickflow.AI.Service;
 using Slickflow.AI.Configuration;
 using Slickflow.Engine.Service;
-using sfdapi.Services;
+using sfdapi.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +40,7 @@ builder.Services.AddScoped<IAiModelDataService, AiModelDataService>();
 builder.Services.AddScoped<IAiFastCallingService, AiFastCallingService>();
 builder.Services.AddScoped<IWorkflowService, WorkflowService>();
 builder.Services.AddScoped<SfBpmnServiceBuilder>();
+builder.Services.AddHttpClient();
 
 builder.Services.AddControllers();
 

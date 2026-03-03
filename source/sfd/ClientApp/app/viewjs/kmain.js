@@ -71,9 +71,6 @@ const kmain = (function () {
 
         //init agent propery page
         initializeBottomPanelActions();
-
-        //init ai testdialog
-        initializedAiTestDialog();
     }
 
     function initializeElementEvent() {
@@ -98,7 +95,7 @@ const kmain = (function () {
             const aiNodeConfigButton = document.getElementById('aiNodeConfigButton');
             var businessObject = element.businessObject;
             var serviceType = axconfig.getServiceType(businessObject);
-            if (serviceType === "LLM" || serviceType === "PlugIn") {
+            if (serviceType === "LLM" || serviceType === "RAG") {
                 aiNodeConfigButton.disabled = false;
                 aiNodeConfigButton.classList.remove('disabled');
                 aiNodeConfigButton.title = kresource.getItem("aibuttonconfigtitleenabled");
@@ -138,14 +135,12 @@ const kmain = (function () {
     }
 
     var initializeCreateByAiHintBox = function () {
-        // 提示框显示/隐藏逻辑
         document.querySelector('.hint-btn').addEventListener('click', function (e) {
             e.stopPropagation();
             const hintBox = document.querySelector('.hint-box');
             hintBox.style.display = hintBox.style.display === 'block' ? 'none' : 'block';
         });
 
-        // 点击外部区域关闭提示框
         document.addEventListener('click', function (e) {
             const hintBox = document.querySelector('.hint-box');
             if (hintBox.style.display === 'block' &&
@@ -157,17 +152,17 @@ const kmain = (function () {
     }
 
     var initializeBottomPanelActions = function () {
-        //底部按钮条可以拖动
+        //make botton button panel draggable
         makeButtonPanelDraggable();
 
-        //各类按钮事件
+        //button event
         const aiNodeConfigButton = document.getElementById('aiNodeConfigButton');
         const downloadXmlButton = document.getElementById('downloadXmlButton');
         const downloadSvgButton = document.getElementById('downloadSvgButton');
         const zoomInButton = document.getElementById('zoomInButton');
         const zoomOutButton = document.getElementById('zoomOutButton');
+        const tryButton = document.getElementById('tryButton');
 
-        // 打开属性页框
         aiNodeConfigButton.addEventListener('click', () => {
             var BootstrapDialog = require('bootstrap5-dialog');
             BootstrapDialog.show({
@@ -180,28 +175,28 @@ const kmain = (function () {
             });
         });
 
-        // 执行下载XML操作
         downloadXmlButton.addEventListener('click', () => {
             kmain.downloadXml();
         });
 
-        // 执行下载SVG操作
         downloadSvgButton.addEventListener('click', () => {
             kmain.downloadSvg();
         });
 
-        // 执行缩小操作
         zoomInButton.addEventListener('click', () => {
             var canvas = kmain.mBpmnModeler.get("canvas");
             const zoom = canvas.zoom();
             canvas.zoom(Math.max(zoom * 0.8, 0.2));
         });
 
-        // 执行放大操作
         zoomOutButton.addEventListener('click', () => {
             var canvas = kmain.mBpmnModeler.get("canvas");
             const zoom = canvas.zoom();
             canvas.zoom(Math.min(zoom * 1.2, 4.0));
+        });
+
+        tryButton.addEventListener('click', () => {
+            kmain.simuTest();
         });
     }
 
@@ -211,7 +206,6 @@ const kmain = (function () {
         let startX, startY, initialLeft, initialTop;
 
         panel.addEventListener('mousedown', (e) => {
-            // 检查是否点击了按钮，如果是则不允许拖动
             if (e.target.closest('.panel-button')) {
                 return;
             }
@@ -220,12 +214,12 @@ const kmain = (function () {
             startX = e.clientX;
             startY = e.clientY;
 
-            // 获取当前位置
+            // get current position
             const rect = panel.getBoundingClientRect();
             initialLeft = rect.left;
             initialTop = rect.top;
 
-            // 应用拖动样式
+            // apply css
             panel.style.opacity = '0.7';
             panel.style.cursor = 'grabbing';
 
@@ -238,11 +232,11 @@ const kmain = (function () {
             const deltaX = e.clientX - startX;
             const deltaY = e.clientY - startY;
 
-            // 更新位置
+            // update position
             panel.style.left = (initialLeft + deltaX) + 'px';
             panel.style.top = (initialTop + deltaY) + 'px';
-            panel.style.transform = 'none'; // 移除初始的 transform
-            panel.style.bottom = 'auto'; // 移除初始的 bottom
+            panel.style.transform = 'none'; // remove initial transform
+            panel.style.bottom = 'auto'; // remove initial bottom
         });
 
         document.addEventListener('mouseup', (e) => {
@@ -259,341 +253,6 @@ const kmain = (function () {
                 e.preventDefault();
             }
         });
-    }
-
-    var initializedAiTestDialog = function () {
-        const tryButton = document.getElementById('tryButton');
-        const modalAiChatDialog = document.getElementById('modal-aiChatDialog');
-        const closeModal = document.getElementById('closeModal');
-        const chatContainer = document.getElementById('chatContainer');
-        const messageInput = document.getElementById('messageInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const fileInput = document.getElementById('fileInput');
-        const clearBtn = document.getElementById('clearBtn');
-        const imageModal = document.getElementById('imageModal');
-        const modalImage = document.getElementById('modalImage');
-        const closeImageModal = document.getElementById('closeImageModal');
-
-        let messageHistory = [];
-        // 打开模态框
-        tryButton.addEventListener('click', () => {
-            kmain.simuTest();
-        });
-
-        // 关闭模态框
-        closeModal.addEventListener('click', () => {
-            modalAiChatDialog.classList.remove('active');
-            setTimeout(() => {
-                modalAiChatDialog.style.display = 'none';
-            }, 300);
-        });
-
-        // 点击模态框背景关闭
-        modalAiChatDialog.addEventListener('click', (e) => {
-            if (e.target === modalAiChatDialog) {
-                modalAiChatDialog.classList.remove('active');
-                setTimeout(() => {
-                    modalAiChatDialog.style.display = 'none';
-                }, 300);
-            }
-        });
-
-        // 调整文本区域高度
-        messageInput.addEventListener('input', function () {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        });
-
-        // 发送消息
-        sendBtn.addEventListener('click', sendMessage);
-        messageInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-
-        // 上传图片
-        uploadBtn.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', handleImageUpload);
-
-        // 清除记录
-        clearBtn.addEventListener('click', clearChat);
-
-        // 关闭图片模态框
-        closeImageModal.addEventListener('click', () => {
-            imageModal.classList.remove('active');
-        });
-
-        // 点击图片模态框背景关闭
-        imageModal.addEventListener('click', (e) => {
-            if (e.target === imageModal) {
-                imageModal.classList.remove('active');
-            }
-        });
-
-        function sendMessage() {
-            const message = messageInput.value.trim();
-            if (message) {
-                addMessage(message, 'user');
-                messageInput.value = '';
-                messageInput.style.height = 'auto';
-
-                // 模拟AI响应
-                simulateAIResponse(message);
-            }
-        }
-
-        function addMessage(content, sender, imageUrl = null) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}-message`;
-
-            const avatarDiv = document.createElement('div');
-            avatarDiv.className = `avatar ${sender}-avatar`;
-            avatarDiv.innerHTML = sender === 'user' ?
-                '<i class="fas fa-user"></i>' :
-                '<i class="fas fa-robot"></i>';
-
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'message-content';
-
-            if (imageUrl) {
-                const imageContainer = document.createElement('div');
-                imageContainer.className = 'uploaded-image-container';
-
-                const img = document.createElement('img');
-                img.src = imageUrl;
-                img.className = 'uploaded-image';
-                img.addEventListener('click', () => openImageModal(imageUrl));
-
-                const zoomButton = document.createElement('button');
-                zoomButton.className = 'zoom-btn';
-                zoomButton.innerHTML = '<i class="fas fa-expand"></i>';
-                zoomButton.addEventListener('click', () => openImageModal(imageUrl));
-
-                imageContainer.appendChild(img);
-                imageContainer.appendChild(zoomButton);
-                contentDiv.appendChild(imageContainer);
-            }
-
-            if (content) {
-                const p = document.createElement('p');
-                p.textContent = content;
-                contentDiv.appendChild(p);
-            }
-
-            messageDiv.appendChild(avatarDiv);
-            messageDiv.appendChild(contentDiv);
-
-            chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            // 添加到历史记录
-            messageHistory.push({
-                sender,
-                content,
-                imageUrl,
-                timestamp: new Date()
-            });
-        }
-
-        function handleImageUpload(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    addMessage('已上传图片,准备下一步处理!', 'user', event.target.result);
-                    var matchedStep = kmain.mxTaskAssistant.findMostSimilarTask("上传图片");
-                    if (matchedStep !== null) {
-                        var content = kresource.getItem('handlefileuploadedconfirmmsg');
-
-                        console.log(matchedStep);
-                        var taskNodeName = matchedStep.task.businessObject.name;
-
-                        //图片上传按钮触发流程启动
-                        if (taskNodeName === kmain.mxFirstActivity.ActivityName) {
-                            content = "图片上传后触发启动流程操作" + content + taskNodeName;
-                            kmsgbox.confirm(content, function () {
-                                var runner = {};
-                                runner["AppName"] = "Order-Books";
-                                runner["AppInstanceId"] = "123";
-                                runner["AppInstanceCode"] = "123-code";
-                                runner["UserId"] = "01";
-                                runner["UserName"] = "Zero";
-                                runner["ProcessId"] = kmain.mxSelectedProcessEntity.ProcessId;
-                                runner["Version"] = kmain.mxSelectedProcessEntity.Version;
-
-                                processapi.start(runner, function (result) {
-                                    if (result.Status === 1) {
-                                        kmsgbox.info(kresource.getItem('processstartedokmsg'));
-                                    } else {
-                                        kmsgbox.error(kresource.getItem('processstartederrormsg'), result.Message);
-                                    }
-                                })
-                            });
-                        }
-                    }
-
-                    // 模拟AI对图片的响应
-                    simulateImageResponse(event.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-            // 清除文件输入值，允许再次选择相同文件
-            e.target.value = '';
-        }
-
-        function clearChat() {
-            // 清除聊天记录
-            chatContainer.innerHTML = '';
-            messageHistory = [];
-
-            // 添加初始AI消息
-            const initialMessage = document.createElement('div');
-            initialMessage.className = 'message ai-message';
-            initialMessage.innerHTML = `
-                <div class="avatar ai-avatar">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="message-content">
-                    <p>您好！我是AI助手，您可以输入文本内容或者上传图片文件，然后跟我进行多轮会话式交互。</p>
-                </div>
-            `;
-            chatContainer.appendChild(initialMessage);
-        }
-
-        // 打开图片模态框
-        function openImageModal(imageUrl) {
-            modalImage.src = imageUrl;
-            imageModal.classList.add('active');
-        }
-
-        function simulateAIResponse(userMessage) {
-            // 显示正在输入指示器
-            const typingIndicator = document.createElement('div');
-            typingIndicator.className = 'message ai-message';
-            typingIndicator.innerHTML = `
-                <div class="avatar ai-avatar">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="message-content">
-                    <div class="typing-indicator">
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
-                    </div>
-                </div>
-            `;
-            chatContainer.appendChild(typingIndicator);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            // 模拟AI处理时间
-            setTimeout(() => {
-                chatContainer.removeChild(typingIndicator);
-
-                // 根据用户消息生成响应
-                let response;
-                if (userMessage.toLowerCase().includes('你好') || userMessage.toLowerCase().includes('hi')) {
-                    response = '您好！很高兴为您服务。请问有什么我可以帮助您的？';
-                } else if (userMessage.toLowerCase().includes('天气')) {
-                    response = '目前无法直接获取实时天气信息，但我可以帮您分析天气数据或提供一般性建议。';
-                } else if (userMessage.toLowerCase().includes('清除')) {
-                    response = '聊天记录已清除，我们可以开始新的对话。';
-                } else {
-                    response = '感谢您的消息。我已经收到您的请求，正在处理中。';
-                }
-
-                addMessage(response, 'ai');
-
-                // 随机模拟Agent执行后续操作
-                if (Math.random() > 0.5) {
-                    simulateAgentAction();
-                }
-            }, 1500);
-        }
-
-        function simulateImageResponse(imageUrl) {
-            // 显示正在输入指示器
-            const typingIndicator = document.createElement('div');
-            typingIndicator.className = 'message ai-message';
-            typingIndicator.innerHTML = `
-                <div class="avatar ai-avatar">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="message-content">
-                    <div class="typing-indicator">
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
-                    </div>
-                </div>
-            `;
-            chatContainer.appendChild(typingIndicator);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            // 模拟AI处理时间
-            setTimeout(() => {
-                chatContainer.removeChild(typingIndicator);
-
-                addMessage('感谢分享图片！我已经接收到您上传的图片，正在分析其中的内容。', 'ai');
-
-                // 模拟Agent执行图片相关操作
-                simulateImageAgentAction();
-            }, 2000);
-        }
-
-        function simulateAgentAction() {
-            const actions = [
-                '正在执行数据查询...',
-                '调用分析API处理您的请求...',
-                '生成可视化报告...',
-                '更新知识图谱...',
-                '执行模型训练任务...'
-            ];
-
-            const action = actions[Math.floor(Math.random() * actions.length)];
-
-            const actionDiv = document.createElement('div');
-            actionDiv.className = 'agent-action';
-            actionDiv.innerHTML = `
-                <div><strong>Agent操作:</strong> ${action}</div>
-                <div style="margin-top: 8px; color: #64748b; font-size: 0.8em;">
-                    <i class="fas fa-clock"></i> 已完成于 ${new Date().toLocaleTimeString()}
-                </div>
-            `;
-
-            const lastMessage = chatContainer.lastChild;
-            lastMessage.appendChild(actionDiv);
-
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        function simulateImageAgentAction() {
-            const actions = [
-                '执行图像识别分析...',
-                '提取图像中的关键特征...',
-                '与图库进行匹配比较...',
-                '生成图像描述...',
-                '执行图像增强处理...'
-            ];
-
-            const action = actions[Math.floor(Math.random() * actions.length)];
-
-            const actionDiv = document.createElement('div');
-            actionDiv.className = 'agent-action';
-            actionDiv.innerHTML = `
-                <div><strong>图像处理Agent:</strong> ${action}</div>
-                <div style="margin-top: 8px; color: #64748b; font-size: 0.8em;">
-                    <i class="fas fa-clock"></i> 已完成于 ${new Date().toLocaleTimeString()}
-                </div>
-            `;
-
-            const lastMessage = chatContainer.lastChild;
-            lastMessage.appendChild(actionDiv);
-
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
     }
 
     kmain.createNewDiagram = function () {
@@ -939,13 +598,8 @@ const kmain = (function () {
         });
     }
 
-    kmain.createByTemplate = function () {
+    kmain.openTemplateGallery = function () {
         var BootstrapDialog = require('bootstrap5-dialog');
-        
-        // 在弹窗打开前，保存 body 的原始样式
-        var $body = $('body');
-        var originalBodyPaddingRight = $body.css('padding-right');
-        var originalBodyOverflow = $body.css('overflow');
         
         kmain.templateDialog = BootstrapDialog.show({
             size: BootstrapDialog.SIZE_LARGE,
@@ -953,47 +607,28 @@ const kmain = (function () {
             message: $('<div id="openTemplateGallery"></div>'),
             title: kresource.getItem("templategallery"),
             onshown: function (dialog) {
-                // 防止 body padding-right 影响工具栏
-                // Bootstrap modal 可能会给 body 添加 padding-right 来防止滚动条闪烁
-                // 我们需要确保这个 padding 不影响 fixed 定位的工具栏
-                var $currentBody = $('body');
-                $currentBody.css({
-                    'padding-right': '0',
-                    'overflow': 'hidden'
-                });
-                
-                // 确保按钮栏位置不受影响
-                $('.top-toolbar').css({
-                    'right': '0',
-                    'margin-right': '0',
-                    'padding-right': '0',
-                    'width': '100%'
-                });
-                
                 $("#openTemplateGallery").load('pages/template/index.html', function() {
-                    // 调整弹窗宽度以适应Template Gallery页面内容
+                    // adjust Template Gallery page
                     var $modalDialog = $('#openTemplateGallery').closest('.modal-dialog');
                     if ($modalDialog.length) {
                         $modalDialog.css('max-width', '1200px');
                         $modalDialog.css('width', '90%');
                     }
                     
-                    // 设置焦点到 Standard Process 菜单项
+                    // set focus to Standard Process menu
                     setTimeout(function() {
                         var $standardProcessItem = $('.menuItemTemplate[data-id="standard"]');
                         if ($standardProcessItem.length) {
-                            // 确保该菜单项是激活状态
+                            // ensure this menu active
                             $standardProcessItem.addClass('active').siblings().removeClass('active');
                             
-                            // 设置 tabindex 使其可聚焦
                             if (!$standardProcessItem.attr('tabindex')) {
                                 $standardProcessItem.attr('tabindex', '0');
                             }
                             
-                            // 设置焦点
                             $standardProcessItem.focus();
                             
-                            // 确保菜单项在可视区域内
+                            // ensure visible
                             var elementTop = $standardProcessItem.offset().top;
                             var elementHeight = $standardProcessItem.outerHeight();
                             var windowTop = $(window).scrollTop();
@@ -1006,24 +641,480 @@ const kmain = (function () {
                     }, 200);
                 });
             },
-            onhidden: function(dialog) {
-                // 弹窗关闭时，恢复 body 的原始样式（如果需要）
-                // BootstrapDialog 会自动处理，这里作为额外保障
-                var $currentBody = $('body');
-                $currentBody.css({
-                    'padding-right': originalBodyPaddingRight,
-                    'overflow': originalBodyOverflow
+            draggable: true
+        });
+    }
+
+    // Keep backward compatibility
+    kmain.createByTemplate = function () {
+        kmain.openTemplateGallery();
+    }
+
+    kmain.openCodeStudio = function () {
+        var BootstrapDialog = require('bootstrap5-dialog');
+        
+        // Clean up previous CodeMirror instance if exists
+        // 清理之前的 CodeMirror 实例（如果存在）
+        if (kmain.codeMirrorEditor) {
+            var editorElement = kmain.codeMirrorEditor.getWrapperElement();
+            if (editorElement && editorElement.parentNode) {
+                editorElement.parentNode.removeChild(editorElement);
+            }
+            kmain.codeMirrorEditor = null;
+        }
+        
+        kmain.codeStudioDialog = BootstrapDialog.show({
+            size: BootstrapDialog.SIZE_LARGE,
+            closable: true,
+            message: $('<div id="openCodeStudio"></div>'),
+            title: kresource.getItem("codestudio"),
+            onshown: function (dialog) {
+                $("#openCodeStudio").load('pages/codestudio/index.html', function() {
+                    // adjust Code Studio page
+                    var $modalDialog = $('#openCodeStudio').closest('.modal-dialog');
+                    if ($modalDialog.length) {
+                        $modalDialog.css('max-width', '1000px');
+                        $modalDialog.css('width', '90%');
+                    }
+                    
+                    // Initialize Code Studio after page is loaded
+                    kresource.localize();
+                    kmain.initCodeStudio();
                 });
+            },
+            onhidden: function (dialog) {
+                // Clean up CodeMirror instance when dialog is closed
+                // 对话框关闭时清理 CodeMirror 实例
+                if (kmain.codeMirrorEditor) {
+                    var editorElement = kmain.codeMirrorEditor.getWrapperElement();
+                    if (editorElement && editorElement.parentNode) {
+                        editorElement.parentNode.removeChild(editorElement);
+                    }
+                    kmain.codeMirrorEditor = null;
+                }
             },
             draggable: true
         });
     }
+
+    kmain.initCodeStudio = function () {
+        // Initialize CodeMirror for C# syntax highlighting
+        // 初始化 CodeMirror 以支持 C# 语法高亮
+        if (typeof CodeMirror !== 'undefined' && !kmain.codeMirrorEditor) {
+            var txtCodeElement = document.getElementById('txtCode');
+            if (txtCodeElement) {
+                kmain.codeMirrorEditor = CodeMirror.fromTextArea(txtCodeElement, {
+                    mode: 'text/x-csharp',  // C# syntax mode
+                    theme: 'monokai',        // Dark theme with syntax highlighting
+                    lineNumbers: true,       // Show line numbers
+                    indentUnit: 4,           // Indent with 4 spaces
+                    indentWithTabs: false,   // Use spaces instead of tabs
+                    smartIndent: true,       // Smart indentation
+                    lineWrapping: true,      // Wrap long lines
+                    matchBrackets: true,     // Highlight matching brackets
+                    autoCloseBrackets: true, // Auto-close brackets
+                    foldGutter: true,        // Enable code folding
+                    gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+                    extraKeys: {
+                        "Ctrl-Space": "autocomplete",  // Autocomplete with Ctrl+Space
+                        "Ctrl-/": "toggleComment",     // Toggle comment with Ctrl+/
+                        "Shift-Tab": "indentLess",     // Shift+Tab to unindent
+                        "Tab": "indentMore"            // Tab to indent
+                    },
+                    viewportMargin: Infinity // Allow scrolling beyond end of document
+                });
+
+                // Refresh CodeMirror after a short delay to ensure proper rendering
+                setTimeout(function() {
+                    if (kmain.codeMirrorEditor) {
+                        kmain.codeMirrorEditor.refresh();
+                    }
+                }, 100);
+            }
+        }
+
+        $("#ddlTemplateType").change(function (i, o) {
+            var option = $(this).val();
+            //load template content
+            kmain.loadCodeStudioTemplate(option);
+        });
+
+        //init code mirror textarea
+        kmain.loadCodeStudioTemplate('Default');
+    }
+
+    kmain.loadCodeStudioTemplate = function (option) {
+        processapi.loadTemplate(option, function (template) {
+            // Use CodeMirror API if available, otherwise fallback to textarea
+            // 如果 CodeMirror 可用则使用其 API，否则回退到 textarea
+            if (kmain.codeMirrorEditor) {
+                kmain.codeMirrorEditor.setValue(template.Content || '');
+                // Refresh to ensure proper rendering
+                setTimeout(function() {
+                    kmain.codeMirrorEditor.refresh();
+                }, 50);
+            } else {
+                $("#txtCode").val(template.Content);
+            }
+        });
+    }
+
+    kmain.executeCodeStudio = function () {
+        // Get code from CodeMirror if available, otherwise from textarea
+        // 如果 CodeMirror 可用则从其获取代码，否则从 textarea 获取
+        var text = '';
+        if (kmain.codeMirrorEditor) {
+            text = kmain.codeMirrorEditor.getValue();
+        } else {
+            var txtCodeElement = document.getElementById('txtCode');
+            text = txtCodeElement ? txtCodeElement.value : '';
+        }
+
+        if (text !== "") {
+            // Security check: Validate namespace requirements
+            // 安全检查：验证命名空间要求
+            var validationResult = kmain.validateCodeNamespaces(text);
+            if (!validationResult.isValid) {
+                kmsgbox.warn(validationResult.message || 'Code validation failed: Namespace requirements not met.');
+                return;
+            }
+            
+            kmsgbox.showProgressBar();
+            var entity = { "Body": text };
+            processapi.executeProcessGraph(entity, function (result) {
+                if (result.Status === 1) { 
+                    var processEntity = result.Entity
+                    processlist.pselectedProcessEntity = processEntity;
+                    kmain.mxSelectedProcessEntity = processEntity;
+                    //render process into graph canvas
+                    var xml = processEntity.XmlContent;
+                    kmain.openDiagramFile(xml);
+                    if (kmain.codeStudioDialog) {
+                        kmain.codeStudioDialog.close();
+                    }
+                } else {
+                    kmsgbox.warn(result.Message || kresource.getItem('processopenerrormsg') || 'Failed to execute process graph');
+                }
+                kmsgbox.hideProgressBar();
+            });
+        }
+        else {
+            kmsgbox.warn(kresource.getItem('domainlangwwarnmsg'));
+        }
+    }
+
+    /**
+     * Validate code namespace requirements
+     * 验证代码命名空间要求
+     * @param {string} codeText - The code text to validate
+     * @returns {object} - {isValid: boolean, message: string}
+     */
+    kmain.validateCodeNamespaces = function (codeText) {
+        if (!codeText || typeof codeText !== 'string') {
+            return { isValid: false, message: 'Code text is empty or invalid.' };
+        }
+
+        // Required namespaces (must be in first two lines)
+        // 必需的命名空间（必须在前两行）
+        var requiredNamespaces = [
+            'using Slickflow.Graph.Model;',
+            'using Slickflow.Engine.Common;'
+        ];
+
+        // Normalize line endings and split into lines
+        // 标准化换行符并分割成行
+        var lines = codeText.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+        
+        // Check first two non-empty lines
+        // 检查前两个非空行
+        var nonEmptyLines = lines.filter(function(line) {
+            return line.trim().length > 0;
+        });
+
+        if (nonEmptyLines.length < 2) {
+            return { 
+                isValid: false, 
+                message: 'Code must contain at least two non-empty lines with required namespace declarations.' 
+            };
+        }
+
+        var firstLine = nonEmptyLines[0].trim();
+        var secondLine = nonEmptyLines[1].trim();
+
+        // Check if first two lines contain required namespaces (order may vary)
+        // 检查前两行是否包含必需的命名空间（顺序可能不同）
+        var hasFirstNamespace = false;
+        var hasSecondNamespace = false;
+
+        if (firstLine === requiredNamespaces[0] || firstLine === requiredNamespaces[1]) {
+            if (firstLine === requiredNamespaces[0]) {
+                hasFirstNamespace = true;
+            } else {
+                hasSecondNamespace = true;
+            }
+        }
+
+        if (secondLine === requiredNamespaces[0] || secondLine === requiredNamespaces[1]) {
+            if (secondLine === requiredNamespaces[0]) {
+                hasFirstNamespace = true;
+            } else {
+                hasSecondNamespace = true;
+            }
+        }
+
+        if (!hasFirstNamespace || !hasSecondNamespace) {
+            return { 
+                isValid: false, 
+                message: 'Code must start with the following two namespace declarations:\n' +
+                         '  ' + requiredNamespaces[0] + '\n' +
+                         '  ' + requiredNamespaces[1] 
+            };
+        }
+
+        // Check for additional using statements that are not allowed
+        // 检查是否有不允许的其他 using 语句
+        var allowedNamespaces = [
+            'Slickflow.Graph.Model',
+            'Slickflow.Engine.Common'
+        ];
+
+        var usingPattern = /^\s*using\s+([^;]+);/;
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            var match = line.match(usingPattern);
+            if (match) {
+                var namespace = match[1].trim();
+                var isAllowed = false;
+                for (var j = 0; j < allowedNamespaces.length; j++) {
+                    if (namespace === allowedNamespaces[j] || namespace.startsWith(allowedNamespaces[j] + '.')) {
+                        isAllowed = true;
+                        break;
+                    }
+                }
+                if (!isAllowed) {
+                    return { 
+                        isValid: false, 
+                        message: 'Security violation: Unauthorized namespace "' + namespace + '" is not allowed. ' +
+                                 'Only namespaces starting with "Slickflow.Graph.Model" or "Slickflow.Engine.Common" are permitted.' 
+                    };
+                }
+            }
+        }
+
+        // Security check: Only Workflow methods are allowed
+        // 安全检查：只允许 Workflow 方法调用
+        var securityCheckResult = kmain.validateOnlyWorkflowMethods(codeText);
+        if (!securityCheckResult.isValid) {
+            return securityCheckResult;
+        }
+
+        return { isValid: true, message: 'Code validation passed.' };
+    };
+
+    /**
+     * Validate that code only contains Workflow method calls
+     * 验证代码只包含 Workflow 方法调用
+     * @param {string} codeText - The code text to validate
+     * @returns {object} - {isValid: boolean, message: string}
+     */
+    kmain.validateOnlyWorkflowMethods = function (codeText) {
+        // Remove using statements and comments for analysis
+        // 移除 using 语句和注释以便分析
+        var codeWithoutUsings = codeText
+            .replace(/\/\/.*/g, '')  // Remove single-line comments
+            .replace(/\/\*[\s\S]*?\*\//g, '')  // Remove multi-line comments
+            .replace(/^\s*using\s+[^;]+;\s*$/gm, '');  // Remove using statements
+
+        // 1. Check for System. calls (except allowed namespaces)
+        // 检查 System. 调用（除了允许的命名空间）
+        var systemCallPattern = /\bSystem\.\w+/gi;
+        var systemMatches = codeWithoutUsings.match(systemCallPattern);
+        if (systemMatches) {
+            for (var i = 0; i < systemMatches.length; i++) {
+                var systemCall = systemMatches[i];
+                return { 
+                    isValid: false, 
+                    message: 'Security violation: Unauthorized System call "' + systemCall + '" is not allowed. ' +
+                             'Only Workflow method calls are permitted.' 
+                };
+            }
+        }
+
+        // 2. Check for variable declarations other than Workflow declarations
+        // 检查除了 Workflow 声明之外的其他变量声明
+        var variablePattern = /\b(string|int|bool|double|float|object|var)\s+\w+\s*=/gi;
+        var variableMatches = codeWithoutUsings.match(variablePattern);
+        if (variableMatches) {
+            for (var i = 0; i < variableMatches.length; i++) {
+                var variableDecl = variableMatches[i];
+                // Check if it's an allowed Workflow declaration
+                // 检查是否是允许的 Workflow 声明
+                var matchIndex = codeWithoutUsings.indexOf(variableDecl);
+                var contextStart = Math.max(0, matchIndex - 100);
+                var contextLength = Math.min(200, codeWithoutUsings.length - contextStart);
+                var context = codeWithoutUsings.substring(contextStart, contextStart + contextLength);
+                
+                // Allow new Workflow(...) or Workflow.LoadProcess(...)
+                // 允许 new Workflow(...) 或 Workflow.LoadProcess(...)
+                if (context.indexOf('new Workflow') === -1 &&
+                    context.indexOf('Workflow.LoadProcess') === -1) {
+                    return { 
+                        isValid: false, 
+                        message: 'Security violation: Unauthorized variable declaration "' + variableDecl.trim() + '" is not allowed. ' +
+                                 'Only ProcessModelBuilder declarations (CreateProcess or LoadProcess) are permitted.' 
+                    };
+                }
+            }
+        }
+
+        // 3. Check for method calls that are not Workflow/NodeBuilder/EdgeBuilder methods
+        // 检查不是 Workflow/NodeBuilder/EdgeBuilder 方法的方法调用
+        var allowedMethodNames = [
+            // Workflow class name (for new Workflow(...) and Workflow.LoadProcess(...))
+            'Workflow',
+            // Workflow static methods
+            'CreateProcess', 'LoadProcess', 'Create',
+            // Workflow instance methods
+            'Start', 'Task', 'End', 'AndSplit', 'AndJoin',
+            'XOrSplit', 'XOrJoin', 'Parallels', 'Branch', 'Connect', 'Build', 'Update',
+            'Add', 'Insert', 'Set', 'Replace', 'Exchange', 'Fork', 'Remove',
+            'GetBuilder', 'SetUrl', 'SetName', 'Serialize',
+            // NodeBuilder methods
+            'NodeBuilder', 'CreateTask', 'CreateStart', 'CreateEnd', 'CreateGateway',
+            // EdgeBuilder methods
+            'EdgeBuilder', 'CreateEdge', 'AddCondition',
+            // Variable names
+            'wf', 'wf2'
+        ];
+        
+        var methodCallPattern = /\b\w+\s*\(/g;
+        var methodMatches = codeWithoutUsings.match(methodCallPattern);
+        if (methodMatches) {
+            for (var i = 0; i < methodMatches.length; i++) {
+                var methodCall = methodMatches[i];
+                var methodName = methodCall.replace(/\s*\(/, '').trim();
+                
+                // Check if it's an allowed method
+                // 检查是否是允许的方法
+                var isAllowed = false;
+                for (var j = 0; j < allowedMethodNames.length; j++) {
+                    if (methodName.toLowerCase() === allowedMethodNames[j].toLowerCase()) {
+                        isAllowed = true;
+                        break;
+                    }
+                }
+                
+                if (!isAllowed) {
+                    // Check if it's part of a Workflow/NodeBuilder/EdgeBuilder chain
+                    // 检查是否是 Workflow/NodeBuilder/EdgeBuilder 链的一部分
+                    var matchIndex = codeWithoutUsings.indexOf(methodCall);
+                    var beforeMatch = Math.max(0, matchIndex - 50);
+                    var contextBefore = codeWithoutUsings.substring(beforeMatch, matchIndex);
+                    
+                    // Allow methods called on wf, new Workflow(...), Workflow.LoadProcess(...), NodeBuilder, or EdgeBuilder
+                    // 允许在 wf、new Workflow(...)、Workflow.LoadProcess(...)、NodeBuilder 或 EdgeBuilder 上调用的方法
+                    if (contextBefore.toLowerCase().indexOf('wf') === -1 &&
+                        contextBefore.toLowerCase().indexOf('new workflow') === -1 &&
+                        contextBefore.toLowerCase().indexOf('workflow.') === -1 &&
+                        contextBefore.toLowerCase().indexOf('workflow(') === -1 &&
+                        contextBefore.toLowerCase().indexOf('processmodelbuilder') === -1 &&
+                        contextBefore.toLowerCase().indexOf('vertexbuilder') === -1 &&
+                        contextBefore.toLowerCase().indexOf('linkbuilder') === -1) {
+                        return { 
+                            isValid: false, 
+                            message: 'Security violation: Unauthorized method call "' + methodName + '" is not allowed. ' +
+                                     'Only Workflow, NodeBuilder, and EdgeBuilder method calls are permitted.' 
+                        };
+                    }
+                }
+            }
+        }
+
+        // 4. Check for foreach, for, while, if, etc. control structures
+        // 检查 foreach, for, while, if 等控制结构
+        // Note: Match "for" only when it's a standalone keyword, not part of "Fork" method name
+        // 注意：只匹配独立的 "for" 关键字，不匹配 "Fork" 方法名中的 "for"
+        var controlStructurePattern = /\b(foreach|for|while|if|switch|try|catch|finally|using\s*\()/gi;
+        var controlMatches = [];
+        var regex = new RegExp(controlStructurePattern);
+        var match;
+        var lastIndex = 0;
+        
+        while ((match = regex.exec(codeWithoutUsings)) !== null) {
+            var matchValue = match[0];
+            var matchIndex = match.index;
+            
+            // Double-check: if matched "for", make sure it's not part of "Fork" method
+            // 双重检查：如果匹配到 "for"，确保它不是 "Fork" 方法的一部分
+            if (matchValue.toLowerCase() === 'for' && !matchValue.toLowerCase().includes('foreach')) {
+                // Check if it's followed by 'k' (part of "Fork")
+                // 检查它后面是否是 'k'（"Fork" 的一部分）
+                if (matchIndex + matchValue.length < codeWithoutUsings.length) {
+                    var nextChar = codeWithoutUsings[matchIndex + matchValue.length];
+                    if (/[a-zA-Z]/.test(nextChar) && nextChar.toLowerCase() === 'k') {
+                        // This is part of "Fork", skip it
+                        // 这是 "Fork" 的一部分，跳过它
+                        continue;
+                    }
+                }
+            }
+            controlMatches.push({ value: matchValue, index: matchIndex });
+        }
+        
+        if (controlMatches.length > 0) {
+            for (var i = 0; i < controlMatches.length; i++) {
+                var matchValue = controlMatches[i].value;
+                return { 
+                    isValid: false, 
+                    message: 'Security violation: Control structure "' + matchValue + '" is not allowed. ' +
+                             'Only Workflow method calls are permitted.' 
+                };
+            }
+        }
+
+        // 5. Check for class, struct, interface, enum declarations
+        // 检查 class, struct, interface, enum 声明
+        var typeDeclarationPattern = /\b(class|struct|interface|enum|namespace)\s+\w+/gi;
+        var typeMatches = codeWithoutUsings.match(typeDeclarationPattern);
+        if (typeMatches) {
+            for (var i = 0; i < typeMatches.length; i++) {
+                return { 
+                    isValid: false, 
+                    message: 'Security violation: Type declaration "' + typeMatches[i] + '" is not allowed. ' +
+                             'Only Workflow method calls are permitted.' 
+                };
+            }
+        }
+
+        return { isValid: true, message: 'Code validation passed.' };
+    };
 
     kmain.gotoTutorial = function () {
         var lang = kresource.getLang();
         var url = (lang === "zh") ? "https://www.cnblogs.com/slickflow/p/11936786.html"
             : "https://www.codeproject.com/Articles/5252483/Slickflow-Coding-Graphic-Model-User-Manual";
         window.open(url, "_blank");
+    }
+
+    kmain.openKnowledgeBase = function () {
+        var BootstrapDialog = require('bootstrap5-dialog');
+        BootstrapDialog.show({
+            size: BootstrapDialog.SIZE_LARGE,
+            closable: true,
+            message: $('<div id="knowledgeBaseContent"></div>'),
+            title: kresource.getItem("knowledgebase"),
+            onshown: function (dialog) {
+                $("#knowledgeBaseContent").load('pages/knowledgebase/index.html', function() {
+                    // Adjust dialog width
+                    var $modalDialog = $('#knowledgeBaseContent').closest('.modal-dialog');
+                    if ($modalDialog.length) {
+                        $modalDialog.css('max-width', '1100px');
+                        $modalDialog.css('width', '85%');
+                    }
+                });
+            },
+            draggable: true
+        });
     }
 
     kmain.simuTest = function () {

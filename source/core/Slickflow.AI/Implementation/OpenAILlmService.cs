@@ -1,4 +1,5 @@
-﻿using Slickflow.WebUtility;
+using Slickflow.AI.Entity;
+using Slickflow.WebUtility;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -7,9 +8,15 @@ using System.Security.Authentication;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Slickflow.AI.Common;
 
 namespace Slickflow.AI.Implementation
 {
+    /// <summary>
+    /// OpenAI 兼容 LLM 服务。baseUrl 由调用方传入，调用方需严格区分配置来源：
+    /// - 工作流节点：从 ai_activity_config → ai_model_provider 传入
+    /// - 文字生成工作流等：从 AiAppConfiguration (appsettings) 传入，通过 InvokeWithLocalConfigAsync
+    /// </summary>
     internal class OpenAILlmService : IAiLlmService
     {
         private static readonly HttpClient _httpClient;
@@ -20,9 +27,19 @@ namespace Slickflow.AI.Implementation
             _httpClient.Timeout = TimeSpan.FromSeconds(60);
         }
 
-        public async Task<ResponseResult<AIResponse>> InvokeAIChatServiceAsync(string baseUrl, string apiKey, string modelName, string systemPrompt, string userMessage,
-            IList<MultiMediaFile> mediaFileList, decimal temperature, int maxTokens, int timeout)
+        public async Task<ResponseResult<AIResponse>> InvokeAIChatServiceAsync(string baseUrl,
+            string apiKey,
+            IList<MultiMediaFile> mediaFileList,
+            AiActivityConfigEntity axConfig)
         {
+            var modelName = axConfig.ModelName;
+            var systemPrompt = axConfig.SystemPrompt;
+            var userMessage = axConfig.UserMessage;
+            var temperature = axConfig.Temperature;
+            var maxTokens = axConfig.MaxTokens;
+            var timeout = axConfig.Timeout;
+            var serviceType = EnumHelper.TryParseEnum<AiServiceTypeEnum>(axConfig.ServiceType);
+
             var responseResult = ResponseResult<AIResponse>.Default();
             // Validate parameters
             if (string.IsNullOrWhiteSpace(baseUrl))
@@ -44,115 +61,24 @@ namespace Slickflow.AI.Implementation
             if (timeout <= 0)
                 throw new ArgumentException("Timeout must be greater than 0 seconds", nameof(timeout));
 
-            // Define variables outside try so they are available in catch
-            Uri fullUri = null;
-            string normalizedBaseUrl = baseUrl.TrimEnd('/');
-            if (!normalizedBaseUrl.StartsWith("http"))
-                normalizedBaseUrl = "https://" + normalizedBaseUrl;
+            var apiUrl = baseUrl.TrimEnd('/');
+            if (!apiUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                apiUrl = "https://" + apiUrl;
+            if (!Uri.TryCreate(apiUrl, UriKind.Absolute, out var fullUri))
+                throw new InvalidOperationException($"Invalid API URL: {apiUrl}");
 
-            // Use CancellationToken to control timeout
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
 
             try
             {
-                // 修复：必须使用正确的OpenAI API路径
-                var endpoint = "v1/chat/completions";
 
-                if (_httpClient.BaseAddress != null)
-                {
-                    // 如果HttpClient有BaseAddress，使用相对路径
-                    fullUri = new Uri(_httpClient.BaseAddress, endpoint);
-                }
-                else
-                {
-                    // 否则构建完整URL
-                    // 确保baseUrl不包含v1路径
-                    if (normalizedBaseUrl.EndsWith("/v1"))
-                    {
-                        // 如果baseUrl已经包含/v1，移除它
-                        normalizedBaseUrl = normalizedBaseUrl.Substring(0, normalizedBaseUrl.Length - 3);
-                    }
-                    else if (normalizedBaseUrl.EndsWith("/v1/"))
-                    {
-                        normalizedBaseUrl = normalizedBaseUrl.Substring(0, normalizedBaseUrl.Length - 4);
-                    }
-
-                    var fullUrlString = $"{normalizedBaseUrl}/{endpoint}";
-
-                    Console.WriteLine($"Debug: Building URL - BaseURL: {normalizedBaseUrl}, Endpoint: {endpoint}");
-                    Console.WriteLine($"Debug: Full URL: {fullUrlString}");
-
-                    if (!Uri.TryCreate(fullUrlString, UriKind.Absolute, out fullUri))
-                    {
-                        throw new InvalidOperationException($"无法构建有效的API URL: {fullUrlString}");
-                    }
-                }
-
-                Console.WriteLine($"Debug: Request URL: {fullUri}");
-
-                // Prepare request message list
-                var messages = new List<CustomApiMessage>();
-
-                // Add system prompt when present
-                if (!string.IsNullOrWhiteSpace(systemPrompt))
-                {
-                    messages.Add(new CustomApiMessage
-                    {
-                        Role = "system",
-                        Content = systemPrompt
-                    });
-                }
-
-                // 构建多模态消息内容（支持图片+文本）
-                // OpenAI 格式：先 text 后 image_url
-                var imageFileData = mediaFileList[0];
-
-                // 1. 清洗 base64 内容：如果前端已经带了 data: 前缀，这里需要去掉，只保留纯 base64
-                var rawBase64 = imageFileData.base64Content ?? string.Empty;
-                if (rawBase64.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
-                {
-                    var commaIndex = rawBase64.IndexOf(',');
-                    if (commaIndex > 0 && commaIndex < rawBase64.Length - 1)
-                    {
-                        rawBase64 = rawBase64.Substring(commaIndex + 1);
-                    }
-                }
-
-                // 2. 根据文件名或媒体类型推断正确的 MIME Type（避免所有图片都用 image/jpeg 导致 400）
-                var fileName = imageFileData.Name?.ToLowerInvariant() ?? string.Empty;
-                var mimeType = "image/jpeg";   // 默认按 jpeg 处理
-
-                if (fileName.EndsWith(".png"))
-                    mimeType = "image/png";
-                else if (fileName.EndsWith(".gif"))
-                    mimeType = "image/gif";
-                else if (fileName.EndsWith(".webp"))
-                    mimeType = "image/webp";
-                else if (fileName.EndsWith(".bmp"))
-                    mimeType = "image/bmp";
-
-                // 如果 Name 中没有后缀，可以根据 MultiMediaTypeEnum 再兜底判断（预留扩展）
-                // 当前仅处理图片类型，其他类型暂不支持传给 vision 模型
-
-                var imageUrl = $"data:{mimeType};base64,{rawBase64}";
-
-                var multiModalContent = new List<object>
-                    {
-                        new { type = "text", text = userMessage },
-                        new {
-                            type = "image_url",
-                            image_url = new {
-                                url = imageUrl,
-                                detail = "auto"
-                            }
-                        }
-                    };
-
-                messages.Add(new CustomApiMessage
-                {
-                    Role = "user",
-                    Content = multiModalContent
-                });
+                // Build chat message for different agent types, such as LLM / RAG / Agent
+                var messages = await LlmChatMessageBuilder.BuildChatMessageContentAsync(
+                    serviceType,
+                    mediaFileList,
+                    systemPrompt,
+                    userMessage,
+                    axConfig);
 
                 // Build request object
                 var request = new CustomApiChatRequest
@@ -167,14 +93,10 @@ namespace Slickflow.AI.Implementation
                 var jsonOptions = new JsonSerializerOptions
                 {
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
                 };
 
                 var jsonString = JsonSerializer.Serialize(request, jsonOptions);
-
-                // 调试：打印请求JSON
-                Console.WriteLine($"Debug: Request JSON: {jsonString}");
-
                 var jsonContent = new StringContent(
                     jsonString,
                     Encoding.UTF8,
@@ -186,28 +108,12 @@ namespace Slickflow.AI.Implementation
                     Content = jsonContent
                 };
 
-                // 设置正确的Authorization header
+                // Setting Authorization header
                 httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
                 httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                // 添加OpenAI-Organization头部（如果需要）
-                // httpRequest.Headers.Add("OpenAI-Organization", "your-organization-id");
-
-                // 调试：打印请求头
-                Console.WriteLine($"Debug: Request Headers:");
-                foreach (var header in httpRequest.Headers)
-                {
-                    if (header.Key == "Authorization")
-                    {
-                        Console.WriteLine($"  {header.Key}: Bearer ***");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"  {header.Key}: {string.Join(", ", header.Value)}");
-                    }
-                }
-
-                // Send request
+                // Send request for llm
+                // The main code for request processing of AI big model
                 HttpResponseMessage? response = null;
                 try
                 {
@@ -226,17 +132,6 @@ namespace Slickflow.AI.Implementation
                 if (!response.IsSuccessStatusCode)
                 {
                     var errorContent = await response.Content.ReadAsStringAsync(cts.Token);
-
-                    // 添加详细的错误信息输出
-                    Console.WriteLine($"API Error Response: {errorContent}");
-
-                    // 调试：打印响应头
-                    Console.WriteLine($"Debug: Response Headers:");
-                    foreach (var header in response.Headers)
-                    {
-                        Console.WriteLine($"  {header.Key}: {string.Join(", ", header.Value)}");
-                    }
-
                     if (response.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         throw new UnauthorizedAccessException(
@@ -244,7 +139,7 @@ namespace Slickflow.AI.Implementation
                     }
                     else if (response.StatusCode == HttpStatusCode.BadRequest)
                     {
-                        // 400错误通常表示请求格式有问题
+                        // 400 error with the wrong format
                         throw new HttpRequestException(
                             $"Bad Request (400). This usually indicates an issue with the request format. API url: {fullUri}, model: {modelName}. Details: {errorContent}");
                     }
@@ -287,13 +182,13 @@ namespace Slickflow.AI.Implementation
             }
             catch (TaskCanceledException ex) when (ex.InnerException is TimeoutException || ex.CancellationToken.IsCancellationRequested || cts.Token.IsCancellationRequested)
             {
-                var requestUrl = fullUri?.ToString() ?? normalizedBaseUrl;
+                var requestUrl = fullUri?.ToString() ?? apiUrl;
                 throw new HttpRequestException(
                     $"API request timed out (over {timeout} seconds). Request url: {requestUrl}, model name: {modelName}. Please check connectivity or increase the timeout.", ex);
             }
             catch (HttpRequestException ex)
             {
-                var requestUrl = fullUri?.ToString() ?? normalizedBaseUrl;
+                var requestUrl = fullUri?.ToString() ?? apiUrl;
                 var innerExceptionInfo = ex.InnerException != null
                     ? $" ({ex.InnerException.GetType().Name}: {ex.InnerException.Message})"
                     : "";
@@ -303,15 +198,77 @@ namespace Slickflow.AI.Implementation
             }
             catch (Exception ex)
             {
-                var requestUrl = fullUri?.ToString() ?? normalizedBaseUrl;
+                var requestUrl = fullUri?.ToString() ?? apiUrl;
                 throw new Exception(
                     $"An error occurred while calling the AI service: {ex.Message}. Request url: {requestUrl}, model name: {modelName}.", ex);
             }
             finally
             {
-                // Dispose CancellationTokenSource
                 cts?.Dispose();
             }
+        }
+
+        /// <summary>
+        /// Invokes the LLM with a pre-built message list (used by RagMultiTurnService for multi-turn RAG with history).
+        /// </summary>
+        public async Task<ResponseResult<AIResponse>> InvokeAIChatServiceWithMessagesAsync(string baseUrl,
+            string apiKey,
+            IList<CustomApiMessage> messages,
+            AiActivityConfigEntity axConfig)
+        {
+            if (messages == null || messages.Count == 0)
+                throw new ArgumentException("Messages cannot be null or empty", nameof(messages));
+            var modelName = axConfig?.ModelName ?? throw new ArgumentNullException(nameof(axConfig));
+            var temperature = axConfig.Temperature;
+            var maxTokens = axConfig.MaxTokens;
+            var timeout = axConfig.Timeout;
+            if (temperature < 0 || temperature > 2) temperature = 0.3m;
+            if (maxTokens <= 0) maxTokens = 2048;
+            if (timeout <= 0) timeout = 60;
+
+            var apiUrl = baseUrl.TrimEnd('/');
+            if (!apiUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                apiUrl = "https://" + apiUrl;
+            if (!Uri.TryCreate(apiUrl, UriKind.Absolute, out var fullUri))
+                throw new InvalidOperationException($"Invalid API URL: {apiUrl}");
+
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
+            try
+            {
+                var request = new CustomApiChatRequest
+                {
+                    Model = modelName,
+                    Messages = messages.ToArray(),
+                    Temperature = (double)temperature,
+                    MaxTokens = maxTokens,
+                    ResponseFormat = null
+                };
+                var jsonOptions = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                };
+                var jsonContent = new StringContent(JsonSerializer.Serialize(request, jsonOptions), Encoding.UTF8, "application/json");
+                var httpRequest = new HttpRequestMessage(HttpMethod.Post, fullUri) { Content = jsonContent };
+                httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+                httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var response = await _httpClient.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead, cts.Token);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync(cts.Token);
+                    throw new HttpRequestException($"API call failed: {response.StatusCode}. {errorContent}");
+                }
+                var responseContent = await response.Content.ReadAsStringAsync(cts.Token);
+                var result = JsonSerializer.Deserialize<CustomApiChatResponse>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                if (result?.Error != null)
+                    throw new InvalidOperationException($"API returned error: {result.Error.Message}");
+                var content = result?.Choices?[0]?.Message?.Content?.ToString() ?? string.Empty;
+                if (string.IsNullOrWhiteSpace(content))
+                    throw new InvalidOperationException("API returned empty content");
+                return ResponseResult<AIResponse>.Success(new AIResponse { Content = content, StatusCode = "200" });
+            }
+            finally { cts?.Dispose(); }
         }
 
         /// <summary>
@@ -327,39 +284,16 @@ namespace Slickflow.AI.Implementation
             if (string.IsNullOrWhiteSpace(modelName))
                 throw new ArgumentException("Model name cannot be empty", nameof(modelName));
 
-            // Define variables outside try so they are available in catch
-            Uri fullUri = null;
-            string normalizedBaseUrl = baseUrl.TrimEnd('/');
-            if (!normalizedBaseUrl.StartsWith("http"))
-                normalizedBaseUrl = "https://" + normalizedBaseUrl;
-            
-            // Use CancellationToken to control timeout
+            var apiUrl = baseUrl.TrimEnd('/');
+            if (!apiUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                apiUrl = "https://" + apiUrl;
+            if (!Uri.TryCreate(apiUrl, UriKind.Absolute, out var fullUri))
+                throw new InvalidOperationException($"Invalid API URL: {apiUrl}");
+
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(60));
             
             try
             {
-                // Build the correct URL
-                var baseUri = new Uri(normalizedBaseUrl);
-                var basePath = baseUri.AbsolutePath.Trim('/').ToLower();
-
-                // Decide full URL based on baseUrl path
-                if (basePath.EndsWith("chat/completions"))
-                {
-                    fullUri = baseUri;
-                }
-                else if (basePath.EndsWith("v1") || basePath == "v1")
-                {
-                    fullUri = new Uri($"{normalizedBaseUrl}/chat/completions");
-                }
-                else if (string.IsNullOrEmpty(basePath))
-                {
-                    fullUri = new Uri($"{normalizedBaseUrl}/v1/chat/completions");
-                }
-                else
-                {
-                    fullUri = new Uri($"{normalizedBaseUrl}/chat/completions");
-                }
-
                 // Prepare request payload
                 var messages = new List<CustomApiMessage>
                 {
@@ -452,13 +386,13 @@ namespace Slickflow.AI.Implementation
             }
             catch (TaskCanceledException ex) when (ex.InnerException is TimeoutException || ex.CancellationToken.IsCancellationRequested || cts.Token.IsCancellationRequested)
             {
-                var requestUrl = fullUri?.ToString() ?? normalizedBaseUrl;
+                var requestUrl = fullUri?.ToString() ?? apiUrl;
                 throw new HttpRequestException(
                     $"API request timed out (over 60 seconds). Request url: {requestUrl}, model name: {modelName}. Please check connectivity or increase the timeout.", ex);
             }
             catch (HttpRequestException ex)
             {
-                var requestUrl = fullUri?.ToString() ?? normalizedBaseUrl;
+                var requestUrl = fullUri?.ToString() ?? apiUrl;
                 var innerExceptionInfo = ex.InnerException != null 
                     ? $" ({ex.InnerException.GetType().Name}: {ex.InnerException.Message})" 
                     : "";
@@ -468,7 +402,7 @@ namespace Slickflow.AI.Implementation
             }
             catch (Exception ex)
             {
-                var requestUrl = fullUri?.ToString() ?? normalizedBaseUrl;
+                var requestUrl = fullUri?.ToString() ?? apiUrl;
                 throw new Exception(
                     $"Error occurred while testing the connection: {ex.Message}. Request url: {requestUrl}, model name: {modelName}.", ex);
             }

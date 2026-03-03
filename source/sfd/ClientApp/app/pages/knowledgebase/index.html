@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Knowledge Base</title>
+    <!-- AG Grid v33: theme applied via grid option - do not include legacy theme CSS -->
+    <style type="text/css">
+        .ag-header-cell {
+            background-color: #49afcd;
+        }
+        .kb-container {
+            display: flex;
+            height: 600px;
+            width: 100%;
+        }
+        .kb-left-panel {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            border-right: 2px solid #ddd;
+            padding: 10px;
+            overflow-x: auto; /* 添加水平滚动条 */
+        }
+        .kb-right-panel {
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .kb-divider {
+            width: 4px;
+            background-color: #ddd;
+            cursor: col-resize;
+            user-select: none;
+        }
+        .kb-divider:hover {
+            background-color: #49afcd;
+        }
+        .kb-toolbar {
+            margin-bottom: 10px;
+        }
+        .kb-form-group {
+            margin-bottom: 15px;
+        }
+        .kb-form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .kb-form-group input,
+        .kb-form-group textarea {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .kb-form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        #kbMetadataTextarea {
+            min-height: 200px;
+            font-family: monospace;
+            background-color: #fffacd; /* 淡黄色背景 */
+        }
+        #kbDocumentGrid {
+            flex: 1;
+            width: 100%;
+            min-width: 400px; /* 确保有最小宽度，触发滚动条 */
+            overflow-x: auto; /* 添加水平滚动条 */
+        }
+        /* 确保ag-grid容器可以水平滚动 */
+        .kb-left-panel .ag-root-wrapper {
+            overflow-x: auto;
+        }
+        /* 进度条覆盖层 - 只覆盖DataGrid区域 */
+        .kb-loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            pointer-events: none; /* 允许点击穿透，不影响下方内容 */
+        }
+        .kb-loading-overlay.show {
+            display: flex;
+        }
+        /* Bootstrap style progress bar with stripes */
+        .kb-loading-progress {
+            width: 60%;
+            max-width: 400px;
+            height: 6px;
+            margin-bottom: 0;
+            overflow: hidden;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .kb-loading-progress-bar {
+            float: left;
+            width: 100%;
+            height: 100%;
+            background-color: #49afcd;
+            background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+            background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+            background-size: 40px 40px;
+            -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+            box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+            -webkit-animation: progress-bar-stripes 2s linear infinite;
+            animation: progress-bar-stripes 2s linear infinite;
+        }
+        @-webkit-keyframes progress-bar-stripes {
+            from {
+                background-position: 40px 0;
+            }
+            to {
+                background-position: 0 0;
+            }
+        }
+        @keyframes progress-bar-stripes {
+            from {
+                background-position: 40px 0;
+            }
+            to {
+                background-position: 0 0;
+            }
+        }
+        .kb-left-panel {
+            position: relative; /* 为进度条覆盖层提供定位上下文 */
+        }
+        /* 进度条只覆盖DataGrid区域，不覆盖工具栏 */
+        #kbDocumentGrid {
+            position: relative; /* 为进度条覆盖层提供定位上下文 */
+        }
+        /* 确保ag-grid不会遮挡进度条 */
+        #kbDocumentGrid .ag-root-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+        /* 进度条要在ag-grid之上 */
+        #kbDocumentGrid #kbLoadingOverlay {
+            position: absolute !important;
+            z-index: 9999 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-body" style="padding: 0;">
+        <div class="kb-container">
+            <div class="kb-left-panel">
+                <div class="kb-toolbar">
+                    <button class="btn btn-primary btn-sm" onclick="kbmanager.search();">
+                        <span class="lang" as="kb.search"></span>
+                    </button>
+                    <button class="btn btn-default btn-sm" onclick="kbmanager.refresh();" style="margin-left: 5px;">
+                        <span class="lang" as="refresh"></span>
+                    </button>
+                </div>
+                <div id="kbDocumentGrid" class="ag-theme-bootstrap">
+                    <div id="kbLoadingOverlay" class="kb-loading-overlay">
+                        <div class="kb-loading-progress">
+                            <div class="kb-loading-progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="kb-divider" id="kbDivider"></div>
+            <div class="kb-right-panel">
+                <form id="kbDocumentForm">
+                    <div class="kb-form-group">
+                        <label><span class="lang" as="kb.question"></span></label>
+                        <input type="text" id="kbQuestion" class="form-control" />
+                    </div>
+                    <div class="kb-form-group">
+                        <label><span class="lang" as="kb.intent"></span></label>
+                        <input type="text" id="kbIntent" class="form-control" />
+                    </div>
+                    <div class="kb-form-group">
+                        <label><span class="lang" as="kb.answer"></span></label>
+                        <textarea id="kbAnswer" class="form-control"></textarea>
+                    </div>
+                    <div class="kb-form-group">
+                        <label>
+                            <span class="lang" as="kb.metadata"></span>
+                        </label>
+                        <textarea id="kbMetadataTextarea" class="form-control" readonly></textarea>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">       
+        $(function () {
+            kresource.localize();
+            kbmanager.init();
+        });
+    </script>
+</body>
+</html>
+

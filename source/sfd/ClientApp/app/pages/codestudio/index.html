@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Slickflow Code Studio</title>
+    <meta http-equiv="Content-Type" content="text/html;width=device-width;charset=UTF-8" />
+    <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="vendor/bootstrap5-dialog/dist/css/bootstrap-dialog.css" />
+    <link rel="stylesheet" href="vendor/codemirror/lib/codemirror.css" />
+    <link rel="stylesheet" href="vendor/codemirror/theme/monokai.css" />
+    <link rel="stylesheet" href="vendor/codemirror/theme/eclipse.css" />
+
+    <style type="text/css" media="screen">
+        .container {
+            margin-bottom: 20px;
+        }
+
+        .code-studio-textarea-container {
+            min-height: 400px;
+            height: 400px;
+        }
+
+        .codeTextArea {
+            width: 100%;
+            min-height: 400px;
+            height: 400px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+        }
+
+        /* CodeMirror specific styles */
+        .CodeMirror {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            height: 400px;
+            font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .CodeMirror-scroll {
+            min-height: 400px;
+        }
+
+        /* C# syntax highlighting background */
+        .CodeMirror.cm-s-monokai {
+            background-color: #272822;
+            color: #f8f8f2;
+        }
+
+        .CodeMirror.cm-s-eclipse {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .CodeMirror.cm-s-default {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .code-studio-header {
+            margin-bottom: 20px;
+        }
+
+        .code-studio-controls {
+            margin-bottom: 15px;
+        }
+
+        /* Only apply to Code Studio page modal-body, not to BootstrapDialog */
+        #openCodeStudio .modal-body,
+        .code-studio-page .modal-body {
+            min-height: 480px;
+        }
+
+        .code-studio-footer-btn {
+            min-width: 80px;
+            width: auto;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+    </style>
+</head>
+<body style="padding: 20px;">
+    <!-- Modal -->
+    <div class="modal-body code-studio-page">
+        <div class="container">
+            <div class="code-studio-header">
+                <h3 class="lang" as="codestudio"></h3>
+            </div>
+            <div class="code-studio-controls">
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="a_tit lang" as="templatetype"></span>
+                        <select id="ddlTemplateType" class="form-control" style="width:180px;display:inline-block;margin-left:10px;">
+                            <option value="Default" class="lang" as="optiondefault"></option>
+                            <option value="Sequence" class="lang" as="templatesequence"></option>
+                            <option value="Parallel" class="lang" as="templateparallel"></option>
+                            <option value="Conditional" class="lang" as="templateconditional"></option>
+                            <option value="ProcessModify" class="lang" as="templateprocessmodify"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row code-studio-textarea-container">
+                <div class="col-md-12">
+                    <textarea id="txtCode" spellcheck="false" class="codeTextArea form-control"></textarea>
+                </div>
+            </div>
+            <img src="images/ajax-loader.gif" id="loading-indicator" style="position: fixed; left: 40%; top: 40%; display: none;" />
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="row">
+            <button class="btn btn-primary lang code-studio-footer-btn" as="run" onclick="kmain.executeCodeStudio();" style="margin-right:10px;"></button>
+            <button type="button" class="btn btn-primary lang code-studio-footer-btn" as="close" data-dismiss="modal" aria-hidden="true"></button>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // Note: Initialization is handled in kmain.openCodeStudio() after page load
+        // This script block is kept for backward compatibility
+    </script>
+</body>
+
+</html>

@@ -52,7 +52,7 @@ namespace Slickflow.Engine.Xpdl
                         }
                         else if (XPDLHelper.IsGatewayComponentNode(transition.ToActivity.ActivityType) == true)
                         {
-                            NextActivityScheduleBase activitySchedule = NextActivityScheduleFactory.CreateActivitySchedule(processModel,
+                            NextActivityScheduleBase activitySchedule = NextActivityScheduleFactory.CreateActivityScheduleGateway(processModel,
                                 transition.ToActivity.GatewayDetail.SplitJoinType,
                                 activityInstanceId);
 

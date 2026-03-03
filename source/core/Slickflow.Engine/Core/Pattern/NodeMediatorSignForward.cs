@@ -8,8 +8,7 @@ using Slickflow.Data;
 using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
-using Slickflow.Engine.Utility;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Slickflow.WebUtility;
 
 namespace Slickflow.Engine.Core.Pattern
 {

@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using System;
 using Slickflow.Data;
 using System.Data;
@@ -32,6 +32,19 @@ namespace Slickflow.AI.Manager
         public List<AiModelProviderEntity> GetAll()
         {
             var list = Repository.GetAll<AiModelProviderEntity>().ToList<AiModelProviderEntity>();
+            return list;
+        }
+
+        /// <summary>
+        /// Get models by model_type (e.g. vector_model for embedding models)
+        /// </summary>
+        public List<AiModelProviderEntity> GetByModelType(string modelType)
+        {
+            if (string.IsNullOrWhiteSpace(modelType))
+                return new List<AiModelProviderEntity>();
+            var list = Repository.GetAll<AiModelProviderEntity>()
+                .Where<AiModelProviderEntity>(x => x.ModelType == modelType && x.IsActive)
+                .ToList();
             return list;
         }
         #endregion

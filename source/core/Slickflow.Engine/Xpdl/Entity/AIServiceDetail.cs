@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Slickflow.Engine.Xpdl.Entity
 {
-    public class AIServiceDetail
+    public class AiServiceDetail
     {
-        public AIServiceTypeEnum AIServiceType { get; set; }
+        public AiServiceTypeEnum AIServiceType { get; set; }
         public string ConfigUUID { get; set; }
     }
 }

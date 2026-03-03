@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using Slickflow.Data;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Delegate;
+using Slickflow.Engine.Event;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
@@ -11,7 +11,7 @@ namespace Slickflow.Engine.Core.Pattern
 {
     /// <summary>
     /// Node Mediator Task
-    /// 任务节点执行器
+    /// ����ڵ�ִ����
     /// </summary>
     internal class NodeMediatorTask : NodeMediator
     {
@@ -42,7 +42,7 @@ namespace Slickflow.Engine.Core.Pattern
 
                 OnAfterExecuteWorkItem();
 
-                //获取下一步节点列表：并继续执行
+                //��ȡ��һ���ڵ��б���������ִ��
                 //Get the next node list: and continue execution
                 if (canContinueForwardCurrentNode)
                 {
@@ -57,7 +57,7 @@ namespace Slickflow.Engine.Core.Pattern
 
         /// <summary>
         /// Complete work item
-        /// 完成节点实例
+        /// ��ɽڵ�ʵ��
         /// </summary>   
         internal bool CompleteWorkItem(int? taskId,
             ActivityResource activityResource,
@@ -71,13 +71,13 @@ namespace Slickflow.Engine.Core.Pattern
 
             if (taskId != null)
             {
-                //完成本任务，返回任务已经转移到下一个会签任务，不继续执行其它节点
+                //��ɱ����񣬷��������Ѿ�ת�Ƶ���һ����ǩ���񣬲�����ִ�������ڵ�
                 //Complete this task, return that the task has been transferred to the next co signing task,
                 //and do not continue to execute other nodes
                 base.TaskManager.Complete(taskId.Value, activityResource.AppRunner, session);
             }
 
-            //设置活动节点的状态为完成状态
+            //���û�ڵ��״̬Ϊ���״̬
             //Set the status of the activity node to complete status
             base.ActivityInstanceManager.Complete(base.LinkContext.FromActivityInstance.Id,
                 activityResource.AppRunner,
@@ -91,7 +91,7 @@ namespace Slickflow.Engine.Core.Pattern
 
         /// <summary>
         /// Create activity task transition instance
-        /// 创建活动任务转移实例数据
+        /// ���������ת��ʵ������
         /// </summary>
         internal override void CreateActivityTaskTransitionInstance(Activity toActivity,
             ProcessInstanceEntity processInstance,
@@ -105,7 +105,7 @@ namespace Slickflow.Engine.Core.Pattern
             Boolean isParallel = false;
             if (fromActivityInstance.ActivityType == (short)ActivityTypeEnum.GatewayNode)
             {
-                //并发多实例分支判断(AndSplit Multiple)
+                //������ʵ����֧�ж�(AndSplit Multiple)
                 //Concurrent multi instance branch judgment (AndSplit Multiple)
                 var processModel = ProcessModelFactory.CreateByProcessInstance(session.Connection, processInstance, session.Transaction);
                 var activityNode = processModel.GetActivity(fromActivityInstance.ActivityId);
@@ -114,12 +114,12 @@ namespace Slickflow.Engine.Core.Pattern
 
             if (isParallel)
             {
-                //并行多实例容器
+                //���ж�ʵ������
                 //Parallel mutiple instance container
                 ActivityInstanceEntity entity = null;
                 var plist = activityResource.NextActivityPerformers[toActivity.ActivityId];
 
-                //创建并行多实例分支
+                //�������ж�ʵ����֧
                 //Create parallel multi instance branches
                 for (var i = 0; i < plist.Count; i++)
                 {
@@ -144,11 +144,11 @@ namespace Slickflow.Engine.Core.Pattern
             }
             else
             {
-                //普通任务节点
+                //��ͨ����ڵ�
                 //Normal Task Node
                 var toActivityInstance = base.CreateActivityInstanceObject(toActivity, processInstance, activityResource.AppRunner);
 
-                //处理多次退回后的返送
+                //��������˻غ�ķ���
                 //Handling returns after multiple returns
                 WriteBackSrcOrgInformation(toActivityInstance, fromActivityInstance, session);
 
@@ -168,9 +168,9 @@ namespace Slickflow.Engine.Core.Pattern
                     activityResource.AppRunner,
                     session);
 
-                //调用外部事件的注册方法
+                //�����ⲿ�¼���ע�᷽��
                 //Call the registration method for external events
-                var delegateContext = new DelegateContext
+                var EventContext = new EventContext
                 {
                     AppInstanceId = processInstance.AppInstanceId,
                     ProcessId = processInstance.ProcessId,
@@ -179,16 +179,16 @@ namespace Slickflow.Engine.Core.Pattern
                     ActivityCode = toActivity.ActivityCode,
                     ActivityResource = activityResource
                 };
-                DelegateExecutor.InvokeExternalDelegate(session,
+                EventExecutor.InvokeExternalEvent(session,
                     EventFireTypeEnum.OnActivityCreated,
-                    activityResource.AppRunner.DelegateEventList,
-                    delegateContext);
+                    activityResource.AppRunner.EventSubscriptionList,
+                    EventContext);
             }
         }
 
         /// <summary>
         /// Maintain source node information for multiple returns
-        /// 维护多次退回时的源节点信息
+        /// ά������˻�ʱ��Դ�ڵ���Ϣ
         /// </summary>
         /// <param name="toActivityInstance"></param>
         /// <param name="fromActivityInstance"></param>

@@ -8,6 +8,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="7.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.0.1" />
   </ItemGroup>
@@ -15,6 +16,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\core\Slickflow.Data\Slickflow.Data.csproj" />
     <ProjectReference Include="..\..\core\Slickflow.Engine\Slickflow.Engine.csproj" />
+    <ProjectReference Include="..\..\core\Slickflow.Module.Localize\Slickflow.Module.Localize.csproj" />
+    <ProjectReference Include="..\..\core\Slickflow.Module\Slickflow.Module.csproj" />
+    <ProjectReference Include="..\..\core\Slickflow.WebUtility\Slickflow.WebUtility.csproj" />
   </ItemGroup>
 
 </Project>

@@ -10,7 +10,7 @@ using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Core.Runtime;
-using Slickflow.Engine.Essential;
+using Slickflow.Engine.Message;
 
 namespace Slickflow.Engine.Core.Pattern.Event.Timer
 {

@@ -2,22 +2,36 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <PackageId>Slickflow.Engine</PackageId>
     <Authors>Besley</Authors>
     <Company>Hangzhou, Ligong</Company>
     <Product>Slickflow.NET</Product>
-    <Copyright>@2014-2025</Copyright>
+    <Copyright>@2014-2026</Copyright>
     <AssemblyVersion>3.5.0.0</AssemblyVersion>
-    <FileVersion>3.5.0.0</FileVersion>
-    <Description>Open Source Workflow Engine based on .NET</Description>
-    <Version>3.5.0.0</Version>
+    <FileVersion>5.0.0.0</FileVersion>
+    <Description>Open Source Workflow Engine based on .NET. Slickflow.NET 3.5.0 adds AI big model integration, marking an important milestone version. The integration includes three core features: Text-to-BPMN Flowchart Generation, Image Classification, and RAG-Enhanced Retrieval.</Description>
+    <Version>5.0.0</Version>
     <Title>Slickflow.NET</Title>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/besley/slickflow</PackageProjectUrl>
     <PackageIcon>slickflow80.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <!-- <PackageReadmeFile>README.md</PackageReadmeFile> -->
     <RepositoryUrl>https://github.com/besley/Slickflow.git</RepositoryUrl>
-    <PackageReleaseNotes>Slickflow.NET 3.0.0 has been released, and the ability to generate flowcharts using DeepSeek's reasoner model with the help of AI toolkit has been implemented</PackageReleaseNotes>
+    <PackageReleaseNotes>Slickflow.NET 3.5.0 adds AI big model integration, marking an important milestone version. The integration includes three core features:
+
+1. Text-to-BPMN Flowchart Generation
+   Uses text descriptions to generate corresponding BPMN flowcharts after semantic search and analysis by the big model.
+
+2. Image Classification
+   Uses the big model to identify specific category attributes of images. Configure prompt word information, and the big model analyzes and identifies image classification. The processing process for multimodal files is similar and can be extended.
+
+3. RAG-Enhanced Retrieval
+   Integrates vector database, compares the similarity of knowledge base records according to the vector value of user's search terms, and then generates response information from the large model.
+
+Project: https://github.com/besley/slickflow</PackageReleaseNotes>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>false</IncludeSource>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -35,13 +49,53 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Slickflow.AI\Slickflow.AI.csproj" />
-    <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj" />
-    <ProjectReference Include="..\Slickflow.Module.Form\Slickflow.Module.Form.csproj" />
-    <ProjectReference Include="..\Slickflow.Module.Localize\Slickflow.Module.Localize.csproj" />
-    <ProjectReference Include="..\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj" />
-    <ProjectReference Include="..\Slickflow.Module\Slickflow.Module.csproj" />
-    <ProjectReference Include="..\Slickflow.WebUtility\Slickflow.WebUtility.csproj" />
+    <ProjectReference Include="..\Slickflow.AI\Slickflow.AI.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <IncludeAssets>All</IncludeAssets>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Slickflow.Data\Slickflow.Data.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <IncludeAssets>All</IncludeAssets>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Slickflow.Module.Form\Slickflow.Module.Form.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <IncludeAssets>All</IncludeAssets>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Slickflow.Module.Localize\Slickflow.Module.Localize.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <IncludeAssets>All</IncludeAssets>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <IncludeAssets>All</IncludeAssets>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Slickflow.Module\Slickflow.Module.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <IncludeAssets>All</IncludeAssets>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Slickflow.WebUtility\Slickflow.WebUtility.csproj">
+      <PrivateAssets>All</PrivateAssets>
+      <IncludeAssets>All</IncludeAssets>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="slickflow80.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <!-- Bundle Package Strategy -->
+  <!-- In development: Use ProjectReference for faster builds -->
+  <!-- When packing: Script will convert ProjectReference to PackageReference -->
+  <!-- This allows Slickflow.Engine to depend on other packages instead of including assemblies -->
+  
+  <!-- Note: The pack-bundle.ps1 script will temporarily convert ProjectReference to PackageReference during packing -->
+  <!-- This ensures Slickflow.Engine is a metapackage that depends on all other Slickflow packages -->
 
 </Project>

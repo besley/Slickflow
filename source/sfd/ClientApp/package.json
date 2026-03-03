@@ -11,7 +11,9 @@
     "build:watch": "cross-env KCONFIG_ENV=dev webpack --watch",
     "start": "run-s build serve",
     "dev": "run-p build:watch serve",
-    "serve": "sirv public --dev"
+    "serve": "sirv public --dev --port 5000",
+    "kill-port": "node scripts/kill-port.js || powershell -ExecutionPolicy Bypass -File scripts/kill-port.ps1",
+    "dev:clean": "npm run kill-port && npm run dev"
   },
   "repository": {
     "type": "git",
@@ -67,6 +69,7 @@
     "fine-uploader": "^5.16.2",
     "jquery": "^3.5.1",
     "min-dash": "^3.7.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "vanilla-jsoneditor": "^3.11.0"
   }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Linq;
 using System.Linq.Expressions;
@@ -22,23 +22,32 @@ namespace Slickflow.Engine.Utility
             var serviceFile = Path.Combine(directory, WfConfig.EXTERNAL_SERVICE_FILE_PATH);
             var assembly = Assembly.LoadFrom(serviceFile);
 
+            var trimmed = fullName.Trim();
             var list = assembly.GetTypes().Where(x => typeof(T).IsAssignableFrom(x)
                         && !x.IsInterface
                         && !x.IsAbstract
-                        && x.FullName.ToLower() == fullName.Trim().ToLower()
+                        && x.FullName != null
+                        && x.FullName.Equals(trimmed, StringComparison.OrdinalIgnoreCase)
                         ).ToList();
 
-            if (list != null && list.Count() > 0)
+            // Fallback: resolve by short class name in BPMN (e.g. MessageService, CustomerSaveService)
+            if (list == null || list.Count == 0)
+                list = assembly.GetTypes().Where(x => typeof(T).IsAssignableFrom(x)
+                            && !x.IsInterface
+                            && !x.IsAbstract
+                            && x.Name != null
+                            && x.Name.Equals(trimmed, StringComparison.OrdinalIgnoreCase)
+                            ).ToList();
+
+            if (list != null && list.Count > 0)
             {
                 var type = list[0];
                 var instance = Activator.CreateInstance(type, true);
 
                 return instance as T;
             }
-            else
-            {
-                throw new ApplicationException(LocalizeHelper.GetEngineMessage("reflectionhelper.GetSpecialInstance.error", fullName));
-            }
+
+            throw new ApplicationException(LocalizeHelper.GetEngineMessage("reflectionhelper.GetSpecialInstance.error", fullName));
         }
 
         /// <summary>

@@ -673,19 +673,23 @@ namespace Slickflow.Engine.Xpdl
                     {
                         //前端用户明确指定下一步的执行用户列表
                         //Front end users clearly specify the list of executing users for the next step
-                        if (activityResource.AppRunner.NextPerformerType == NextPerformerIntTypeEnum.Specific
-                            && activityResource.NextActivityPerformers != null)
+                        var runner = activityResource.AppRunner;
+                        if (runner != null) 
                         {
-                            if (expression.Compile().Invoke(activityResource, c.Activity))
+                            if (runner.NextPerformerType == NextPerformerIntTypeEnum.Specific
+                             && activityResource.NextActivityPerformers != null)
                             {
+                                if (expression.Compile().Invoke(activityResource, c.Activity))
+                                {
+                                    newRoot.Add(c);
+                                }
+                            }
+                            else if (IsInternalNextPerformerType(runner.NextPerformerType) == true)
+                            {
+                                //系统内部定义的测试使用方式，直接添加下一步步骤到下一步列表
+                                //The testing usage method defined within the system can be directly added to the next step list
                                 newRoot.Add(c);
                             }
-                        }
-                        else if (IsInternalNextPerformerType(activityResource.AppRunner.NextPerformerType) == true)
-                        {
-                            //系统内部定义的测试使用方式，直接添加下一步步骤到下一步列表
-                            //The testing usage method defined within the system can be directly added to the next step list
-                            newRoot.Add(c);
                         }
                         else
                         {
@@ -763,6 +767,7 @@ namespace Slickflow.Engine.Xpdl
         {
             bool isInternal = false;
             if (performerType == NextPerformerIntTypeEnum.Definition
+                    || performerType == NextPerformerIntTypeEnum.Unattented
                     || performerType == NextPerformerIntTypeEnum.Single)
             {
                 isInternal = true;

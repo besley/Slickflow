@@ -1,31 +1,56 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Field List</title>
-    <link rel="stylesheet" href="vendor/ag-grid-community/dist/styles/ag-grid.css" />
-    <link rel="stylesheet" href="vendor/ag-grid-community/dist/styles/ag-theme-bootstrap.css" />
-    <link rel="stylesheet" href="vendor/ag-grid-community/dist/styles/ag-theme-alpine-dark.css" />
+    <!-- AG Grid v33: theme applied via grid option theme: themeBalham - do not include ag-grid.css or legacy theme CSS -->
     <style type="text/css">
-        .ag-header-cell {
-            background-color: #49afcd
+        .field-permissions-body {
+            padding: 4px 0;
+            min-width: 420px;
         }
-
-        .ag-row-selected {
-            background-color: #bde2e5
+        .field-permissions-form-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .field-permissions-form-row .a_tit {
+            flex-shrink: 0;
+            width: 72px;
+            font-weight: 500;
+        }
+        .field-permissions-form-row #ddlFormList {
+            flex: 1;
+            min-width: 0;
+            max-width: 100%;
+            height: 34px;
+        }
+        .field-permissions-grid-wrap {
+            width: 100%;
+            height: 320px;
+        }
+        #myFieldActivityEditGrid.ag-theme-balham {
+            width: 100%;
+            height: 320px;
+        }
+        .field-permissions-body .ag-header-cell {
+            background-color: #49afcd;
+        }
+        .field-permissions-body .ag-row-selected {
+            background-color: #bde2e5;
         }
     </style>
 </head>
 <body>
     <!-- Modal -->
-    <div class="modal-body">
-        <div class="row">
+    <div class="modal-body field-permissions-body">
+        <div class="field-permissions-form-row">
             <span class="a_tit lang" as="formlist"></span>
-
-            <select id="ddlFormList" class="form-control" style="width:340px;float:left;margin-left:20px;">
+            <select id="ddlFormList" class="form-control">
             </select>
         </div>
-        <div class="row">
-            <div id="myFieldActivityEditGrid" class="ag-bootstrap" style="width:100%;height:260px;float:left;"></div>
+        <div class="field-permissions-grid-wrap">
+            <div id="myFieldActivityEditGrid" class="ag-theme-balham" style="width:100%;height:320px;"></div>
         </div>
     </div>
     <div class="modal-footer">

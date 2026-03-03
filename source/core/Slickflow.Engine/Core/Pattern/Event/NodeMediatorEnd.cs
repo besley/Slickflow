@@ -9,7 +9,7 @@ using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
-using Slickflow.Engine.Delegate;
+using Slickflow.Engine.Event;
 using Slickflow.Engine.Core.Runtime;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Core.Event;
@@ -84,9 +84,9 @@ namespace Slickflow.Engine.Core.Pattern.Event
 
             void runtimeInstance_OnWfProcessRunning(object sender, WfEventArgs args)
             {
-                Delegate.DelegateExecutor.InvokeExternalDelegate(session,
-                    Delegate.EventFireTypeEnum.OnProcessRunning,
-                    runner.DelegateEventList,
+                EventExecutor.InvokeExternalEvent(session,
+                    EventFireTypeEnum.OnProcessRunning,
+                    runner.EventSubscriptionList,
                     runtimeInstance.ProcessInstanceId);
             }
 
@@ -95,9 +95,9 @@ namespace Slickflow.Engine.Core.Pattern.Event
                 runAppResult = args.WfExecutedResult;
                 if (runAppResult.Status == WfExecutedStatus.Success)
                 {
-                    Delegate.DelegateExecutor.InvokeExternalDelegate(session,
-                        Delegate.EventFireTypeEnum.OnProcessContinued,
-                        runner.DelegateEventList,
+                    EventExecutor.InvokeExternalEvent(session,
+                        EventFireTypeEnum.OnProcessContinued,
+                        runner.EventSubscriptionList,
                         runtimeInstance.ProcessInstanceId);
                 }
             }

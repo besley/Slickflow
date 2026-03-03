@@ -13,15 +13,20 @@ namespace Slickflow.Engine.Common
     public enum ProcessVariableScopeEnum
     {
         /// <summary>
+        /// System
+        /// 系统
+        /// </summary>
+        System = 1,
+        /// <summary>
         /// Process
         /// 流程
         /// </summary>
-        Process = 1,
+        Process = 4,
 
         /// <summary>
         /// Activity
         /// 活动
         /// </summary>
-        Activity = 2,
+        Activity = 6,
     }
 }

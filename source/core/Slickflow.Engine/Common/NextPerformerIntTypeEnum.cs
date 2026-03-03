@@ -29,6 +29,12 @@ namespace Slickflow.Engine.Common
         Definition = 1,
 
         /// <summary>
+        /// Nobody attentend
+        /// 无人值守
+        /// </summary>
+        Unattented = 2,
+
+        /// <summary>
         /// Simulate testing using a single user
         /// 模拟使用单一用户进行的测试
         /// </summary>

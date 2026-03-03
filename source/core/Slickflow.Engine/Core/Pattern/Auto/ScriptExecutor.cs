@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Dynamic;
@@ -13,13 +13,13 @@ using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Xpdl.Entity;
-using Slickflow.Engine.Delegate;
+using Slickflow.Engine.Event;
 
 namespace Slickflow.Engine.Core.Pattern.Auto
 {
     /// <summary>
     /// Script Executor
-    /// è„šæœ¬æ‰§è¡Œå™¨
+    /// ½Å±¾Ö´ÐÐÆ÷
     /// </summary>
     internal class ScriptExecutor
     {
@@ -27,7 +27,7 @@ namespace Slickflow.Engine.Core.Pattern.Auto
         /// Execute script list
         /// </summary>
         internal static void ExecuteScriptList(IList<ScriptDetail> scriptList,
-            IDelegateService delegateService)
+            IEventService eventService)
         {
             if (scriptList != null && scriptList.Count > 0)
             {
@@ -35,7 +35,7 @@ namespace Slickflow.Engine.Core.Pattern.Auto
                 {
                     if (script.Method != ScriptMethodEnum.None)
                     {
-                        Execute(script, delegateService);
+                        Execute(script, eventService);
                     }
                 }
             }
@@ -44,15 +44,15 @@ namespace Slickflow.Engine.Core.Pattern.Auto
         /// <summary>
         /// Execute
         /// </summary>
-        private static void Execute(ScriptDetail script, IDelegateService delegateService)
+        private static void Execute(ScriptDetail script, IEventService eventService)
         {
             if (script.Method == ScriptMethodEnum.SQL)
             {
-                ExecuteSQLMethod(script, delegateService);
+                ExecuteSQLMethod(script, eventService);
             }
             else if (script.Method == ScriptMethodEnum.Python)
             {
-                ExecutePythonMethod(script, delegateService);
+                ExecutePythonMethod(script, eventService);
             }
             else
             {
@@ -63,11 +63,11 @@ namespace Slickflow.Engine.Core.Pattern.Auto
 
         /// <summary>
         /// Execute Python script
-        /// æ‰§è¡Œå¤–éƒ¨æ–¹æ³•
+        /// Ö´ÐÐÍâ²¿·½·¨
         /// SetVariable:
         /// https://stackoverflow.com/questions/26426955/setting-and-getting-variables-in-net-hosted-ironpython-script/45734097
         /// </summary>
-        private static void ExecutePythonMethod(ScriptDetail script, IDelegateService delegateService)
+        private static void ExecutePythonMethod(ScriptDetail script, IEventService eventService)
         {
             try
             {
@@ -77,7 +77,7 @@ namespace Slickflow.Engine.Core.Pattern.Auto
                     var pythonScript = script.ScriptText;         //modified by Besley in 12/26/2019, body is nodetext rather than attribute
                     var engine = Python.CreateEngine();
                     var scope = engine.CreateScope();
-                    var dictionary = DelegateUtil.CompositeKeyValue(script.Arguments, delegateService);
+                    var dictionary = EventUtil.CompositeKeyValue(script.Arguments, eventService);
                     foreach (var item in dictionary)
                     {
                         scope.SetVariable(item.Key, item.Value);
@@ -99,16 +99,16 @@ namespace Slickflow.Engine.Core.Pattern.Auto
         /// <summary>
         /// Excute sql method
         /// </summary>
-        private static void ExecuteSQLMethod(ScriptDetail script, IDelegateService delegateService)
+        private static void ExecuteSQLMethod(ScriptDetail script, IEventService eventService)
         {
             try
             {
-                var parameters = DelegateUtil.CompositeSqlParametersValue(script.Arguments, delegateService);
+                var parameters = EventUtil.CompositeSqlParametersValue(script.Arguments, eventService);
                 if (!string.IsNullOrEmpty(script.ScriptText))
                 {
                     //var sqlScript = action.Expression;
                     var sqlScript = script.ScriptText;        //modified by Besley in 12/26/2019, body is nodetext rather than attribute
-                    var session = delegateService.GetSession();
+                    var session = eventService.GetSession();
                     var repository = new Repository();
                     repository.Execute(session.Connection, sqlScript, parameters, session.Transaction);
                 }

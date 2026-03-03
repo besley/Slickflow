@@ -26,12 +26,12 @@ namespace Slickflow.AI.Manager
             return entity;
         }
 
-        public AiActivityConfigEntity GetByUUID(string configUUID)
+        public AiActivityConfigEntity GetByProcessVersionActivity(string processId, string version, string activityId)
         {
             AiActivityConfigEntity entity = null;
             var list = Repository.GetAll<AiActivityConfigEntity>()
                 .Where<AiActivityConfigEntity>(
-                    p => p.ConfigUUID == configUUID)
+                    p => p.ProcessId == processId && p.Version == version && p.ActivityId == activityId)
                 .ToList();
 
             if (list.Count() == 1)
@@ -41,12 +41,12 @@ namespace Slickflow.AI.Manager
             return entity;
         }
 
-        public AiActivityConfigEntity GetByUUID(IDbConnection conn, string configUUID, IDbTransaction trans)
+        public AiActivityConfigEntity GetByProcessVersionActivity(IDbConnection conn, string processId, string version, string activityId, IDbTransaction trans)
         {
             AiActivityConfigEntity entity = null;
             var list = Repository.GetAll<AiActivityConfigEntity>(conn, trans)
                 .Where<AiActivityConfigEntity>(
-                    p => p.ConfigUUID == configUUID)
+                    p => p.ProcessId == processId && p.Version == version && p.ActivityId == activityId)
                 .ToList();
 
             if (list.Count() == 1)
@@ -88,10 +88,10 @@ namespace Slickflow.AI.Manager
 
         public int Insert(IDbConnection conn, AiActivityConfigEntity entity, IDbTransaction trans)
         {
-            var entityExisted = GetByUUID(conn, entity.ConfigUUID, trans);
+            var entityExisted = GetByProcessVersionActivity(conn, entity.ProcessId, entity.Version, entity.ActivityId, trans);
             if (entityExisted != null)
             {
-                throw new ApplicationException("AxConfigManager.Insert: A service record with the same name already exists!");
+                throw new ApplicationException("AxConfigManager.Insert: A service record with the same process_id, version, and activity_id already exists!");
             }
 
             // 验证必填字段
@@ -160,7 +160,7 @@ namespace Slickflow.AI.Manager
         /// Delete AxConfig
         /// 删除AI节点配置记录
         /// </summary>
-        public void Delete(string configUUID)
+        public void Delete(string processId, string version, string activityId)
         {
             IDbSession session = SessionFactory.CreateSession();
             try
@@ -169,10 +169,10 @@ namespace Slickflow.AI.Manager
 
                 //delete axconfig data
                 string strSql = @"DELETE FROM ai_activity_config
-                                WHERE config_uuid=@configUUID";
+                                WHERE process_id=@processId AND version=@version AND activity_id=@activityId";
 
                 Repository.Execute(session.Connection, strSql,
-                    new { configUUID = configUUID },
+                    new { processId = processId, version = version, activityId = activityId },
                     session.Transaction);
 
                 session.Commit();

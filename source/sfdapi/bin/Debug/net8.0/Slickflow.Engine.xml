@@ -2505,6 +2505,12 @@
             包括系统定义的角色及用户列表
             </summary>
         </member>
+        <member name="F:Slickflow.Engine.Common.NextPerformerIntTypeEnum.Unattented">
+            <summary>
+            Nobody attentend
+            无人值守
+            </summary>
+        </member>
         <member name="F:Slickflow.Engine.Common.NextPerformerIntTypeEnum.Single">
             <summary>
             Simulate testing using a single user
@@ -2987,6 +2993,12 @@
             <summary>
             Process Variable Type
             变量范围类型
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Common.ProcessVariableScopeEnum.System">
+            <summary>
+            System
+            系统
             </summary>
         </member>
         <member name="F:Slickflow.Engine.Common.ProcessVariableScopeEnum.Process">
@@ -3496,10 +3508,10 @@
             流程数据：下一步执行类型
             </summary>
         </member>
-        <member name="F:Slickflow.Engine.Common.WfAppRunner.DelegateEventList">
+        <member name="F:Slickflow.Engine.Common.WfAppRunner.EventSubscriptionList">
             <summary>
-            Deleage Event
-            委托事件
+            Event Subscription List
+            事件订阅列表
             </summary>
         </member>
         <member name="P:Slickflow.Engine.Common.WfAppRunner.MessageTopic">
@@ -3543,6 +3555,9 @@
             Common Definition Classes
             常用定义类
             </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Common.WfDefine.WF_WORKFLOW_EXECUTOR_RUN_ERROR">
+            <summary>WorkflowExecutor.Run execution failed.</summary>
         </member>
         <member name="T:Slickflow.Engine.Common.WfXpdlException">
             <summary>
@@ -3977,134 +3992,134 @@
         <member name="T:Slickflow.Engine.Core.Pattern.ActionExecutor">
             <summary>
             Action Executor
-            Action 执行器类
+            Action 执行器
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteActionList(System.Collections.Generic.IList{Slickflow.Engine.Xpdl.Entity.Action},Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteActionList(System.Collections.Generic.IList{Slickflow.Engine.Xpdl.Entity.Action},Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute Action List
-            Action 的执行方法
+            Action 列表执行方法
             </summary>
             <param name="actionList"></param>
-            <param name="delegateService"></param>
+            <param name="eventService"></param>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteActionListBefore(System.Collections.Generic.IList{Slickflow.Engine.Xpdl.Entity.Action},Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteActionListBefore(System.Collections.Generic.IList{Slickflow.Engine.Xpdl.Entity.Action},Slickflow.Engine.Event.IEventService)">
             <summary>
             Method for executing external operations before triggering
             触发前执行外部操作的方法
             </summary>
             <param name="actionList"></param>
-            <param name="delegateService"></param>
+            <param name="eventService"></param>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteActionListAfter(System.Collections.Generic.IList{Slickflow.Engine.Xpdl.Entity.Action},Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteActionListAfter(System.Collections.Generic.IList{Slickflow.Engine.Xpdl.Entity.Action},Slickflow.Engine.Event.IEventService)">
             <summary>
             Method for executing external operations after triggering
             触发后执行外部操作的方法
             </summary>
             <param name="actionList"></param>
-            <param name="delegateService"></param>
+            <param name="eventService"></param>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.Execute(Slickflow.Engine.Xpdl.Entity.Action,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.Execute(Slickflow.Engine.Xpdl.Entity.Action,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute external service implementation class
             执行外部服务实现类
             </summary>
             <param name="action"></param>
-            <param name="delegateService"></param>
+            <param name="eventService"></param>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteLocalService(Slickflow.Engine.Xpdl.Entity.Action,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteLocalService(Slickflow.Engine.Xpdl.Entity.Action,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute local service
-            执行外部方法
+            执行本地服务
             </summary>
             <param name="action"></param>
-            <param name="delegateService"></param>
+            <param name="eventService"></param>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteWebApiMethod(Slickflow.Engine.Xpdl.Entity.Action,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteWebApiMethod(Slickflow.Engine.Xpdl.Entity.Action,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute WebApi Method
-            执行外部方法
+            执行 WebAPI 方法
             </summary>
             <param name="action"></param>
-            <param name="delegateService"></param>
+            <param name="eventService"></param>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteSQLMethod(Slickflow.Engine.Xpdl.Entity.Action,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteSQLMethod(Slickflow.Engine.Xpdl.Entity.Action,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute SQL Method
-            执行外部方法
+            执行 SQL 方法
             </summary>
             <param name="action"></param>
-            <param name="delegateService"></param>
+            <param name="eventService"></param>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteStoreProcedureMethod(Slickflow.Engine.Xpdl.Entity.Action,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteStoreProcedureMethod(Slickflow.Engine.Xpdl.Entity.Action,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute sql store procedure
-            执行外部方法
+            执行 SQL 存储过程
             </summary>
             <param name="action"></param>
-            <param name="delegateService"></param>
+            <param name="eventService"></param>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecutePythonMethod(Slickflow.Engine.Xpdl.Entity.Action,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecutePythonMethod(Slickflow.Engine.Xpdl.Entity.Action,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute python script
-            执行外部方法
+            执行 Python 脚本
             SetVariable:
             https://stackoverflow.com/questions/26426955/setting-and-getting-variables-in-net-hosted-ironpython-script/45734097
             </summary>
             <param name="action"></param>
-            <param name="delegateService"></param>
+            <param name="eventService"></param>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteCSharpLibraryMethod(Slickflow.Engine.Xpdl.Entity.Action,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.ExecuteCSharpLibraryMethod(Slickflow.Engine.Xpdl.Entity.Action,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute c# library
-            执行插件方法
+            执行 C# 库方法
             </summary>
             <param name="action"></param>
-            <param name="delegateService"></param>
+            <param name="eventService"></param>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.CompositeJsonValue(System.String,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.CompositeJsonValue(System.String,Slickflow.Engine.Event.IEventService)">
             <summary>
             Construct JSON string for the final object
-            构造最终对象的Json字符串
+            构造最终对象的 Json 字符串
             </summary>
             <param name="arguments"></param>
-            <param name="delegateService"></param>
+            <param name="eventService"></param>
             <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.FormatJsonStringIfSimple(System.String)">
             <summary>
             If it is a simple string, add double quotation marks
-            如果是简单字符串, 加双引号
+            如果是简单字符串，加双引号
             jack => "jack"
             </summary>
             <param name="jsonValue"></param>
             <returns></returns>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.CompositeSqlParametersValue(System.String,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.CompositeSqlParametersValue(System.String,Slickflow.Engine.Event.IEventService)">
             <summary>
-            Construct JSON string for the final object
-            构造最终对象的Json字符串
+            Construct SQL parameters value
+            构造 SQL 参数值
             </summary>
             <param name="arguments"></param>
-            <param name="delegateService"></param>
+            <param name="eventService"></param>
             <returns></returns>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.CompositeKeyValue(System.String,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.CompositeKeyValue(System.String,Slickflow.Engine.Event.IEventService)">
             <summary>
-            Construct JSON string for the final object
-            构造最终对象的Json字符串
+            Construct key-value dictionary
+            构造键值对字典
             </summary>
             <param name="arguments"></param>
-            <param name="delegateService"></param>
+            <param name="eventService"></param>
             <returns></returns>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.CompositeParameterValues(System.String,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.ActionExecutor.CompositeParameterValues(System.String,Slickflow.Engine.Event.IEventService)">
             <summary>
             Construct Parameters value
-            构造可变数值列表
+            构造参数值列表
             </summary>
             <param name="arguments"></param>
-            <param name="delegateService"></param>
+            <param name="eventService"></param>
             <returns></returns>
         </member>
         <member name="T:Slickflow.Engine.Core.Pattern.ActivityResourceFactory">
@@ -4112,22 +4127,22 @@
             Create Activity Resource
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Auto.AIServiceExecutor.ExecuteAIServiceList(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Core.ActivityForwardContext,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Auto.AiServiceExecutor.ExecuteAIServiceList(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Core.ActivityForwardContext,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute service list
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Auto.AIServiceExecutor.Execute(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Xpdl.Entity.AIServiceDetail,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Core.ActivityForwardContext,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Auto.AiServiceExecutor.Execute(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Xpdl.Entity.AiServiceDetail,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Core.ActivityForwardContext,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Auto.AIServiceExecutor.ExecuteLlmService(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Xpdl.Entity.AIServiceDetail,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Core.ActivityForwardContext,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Auto.AiServiceExecutor.ExecuteLlmService(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Xpdl.Entity.AiServiceDetail,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Core.ActivityForwardContext,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute Local Service
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Auto.AIServiceExecutor.ExecutePlugInService(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Xpdl.Entity.AIServiceDetail,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Core.ActivityForwardContext,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Auto.AiServiceExecutor.ExecuteRagService(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Xpdl.Entity.AiServiceDetail,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Core.ActivityForwardContext,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute Local Service
             </summary>
@@ -4201,17 +4216,17 @@
             脚本执行器
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ScriptExecutor.ExecuteScriptList(System.Collections.Generic.IList{Slickflow.Engine.Xpdl.Entity.ScriptDetail},Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ScriptExecutor.ExecuteScriptList(System.Collections.Generic.IList{Slickflow.Engine.Xpdl.Entity.ScriptDetail},Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute script list
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ScriptExecutor.Execute(Slickflow.Engine.Xpdl.Entity.ScriptDetail,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ScriptExecutor.Execute(Slickflow.Engine.Xpdl.Entity.ScriptDetail,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ScriptExecutor.ExecutePythonMethod(Slickflow.Engine.Xpdl.Entity.ScriptDetail,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ScriptExecutor.ExecutePythonMethod(Slickflow.Engine.Xpdl.Entity.ScriptDetail,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute Python script
             执行外部方法
@@ -4219,7 +4234,7 @@
             https://stackoverflow.com/questions/26426955/setting-and-getting-variables-in-net-hosted-ironpython-script/45734097
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ScriptExecutor.ExecuteSQLMethod(Slickflow.Engine.Xpdl.Entity.ScriptDetail,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ScriptExecutor.ExecuteSQLMethod(Slickflow.Engine.Xpdl.Entity.ScriptDetail,Slickflow.Engine.Event.IEventService)">
             <summary>
             Excute sql method
             </summary>
@@ -4230,32 +4245,32 @@
             自动服务方法类
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ServiceExecutor.ExecuteServiceList(System.Collections.Generic.IList{Slickflow.Engine.Xpdl.Entity.ServiceDetail},Slickflow.Engine.Core.ActivityForwardContext,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ServiceExecutor.ExecuteServiceList(System.Collections.Generic.IList{Slickflow.Engine.Xpdl.Entity.ServiceDetail},Slickflow.Engine.Core.ActivityForwardContext,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute service list
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ServiceExecutor.Execute(Slickflow.Engine.Xpdl.Entity.ServiceDetail,Slickflow.Engine.Core.ActivityForwardContext,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ServiceExecutor.Execute(Slickflow.Engine.Xpdl.Entity.ServiceDetail,Slickflow.Engine.Core.ActivityForwardContext,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ServiceExecutor.ExecuteLocalService(Slickflow.Engine.Xpdl.Entity.ServiceDetail,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ServiceExecutor.ExecuteLocalService(Slickflow.Engine.Xpdl.Entity.ServiceDetail,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute Local Service
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ServiceExecutor.ExecuteWebApiMethod(Slickflow.Engine.Xpdl.Entity.ServiceDetail,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ServiceExecutor.ExecuteWebApiMethod(Slickflow.Engine.Xpdl.Entity.ServiceDetail,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute WebApi Method
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ServiceExecutor.ExecuteStoreProcedureMethod(Slickflow.Engine.Xpdl.Entity.ServiceDetail,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ServiceExecutor.ExecuteStoreProcedureMethod(Slickflow.Engine.Xpdl.Entity.ServiceDetail,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute Store procedure
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ServiceExecutor.ExecuteCSharpLibraryMethod(Slickflow.Engine.Xpdl.Entity.ServiceDetail,Slickflow.Engine.Delegate.IDelegateService)">
+        <member name="M:Slickflow.Engine.Core.Pattern.Auto.ServiceExecutor.ExecuteCSharpLibraryMethod(Slickflow.Engine.Xpdl.Entity.ServiceDetail,Slickflow.Engine.Event.IEventService)">
             <summary>
             Execute library
             </summary>
@@ -4361,7 +4376,7 @@
         <member name="T:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgThrow">
             <summary>
             End node mediator message throw
-            结束节点处理类
+            �����ڵ㴦����
             </summary>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgThrow.ExecuteWorkItem(Slickflow.Engine.Business.Entity.ActivityInstanceEntity)">
@@ -4372,7 +4387,7 @@
         <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgThrow.ContinueMainProcessRunning(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Data.IDbSession)">
             <summary>
             Continue to execute the main process
-            继续执行主流程
+            ����ִ��������
             </summary>
             <param name="processInstance"></param>
             <param name="session"></param>
@@ -4380,13 +4395,13 @@
         <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgThrow.FillNextActivityPerformersByRoleList(System.Int32,System.String,Slickflow.Data.IDbSession)">
             <summary>
             Add role users using process defined resources
-            使用流程定义资源添加角色用户
+            ʹ�����̶�����Դ���ӽ�ɫ�û�
             </summary>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorEndMsgThrow.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
             <summary>
             End node activity and transfer instantiation, no task data available
-            结束节点活动及转移实例化，没有任务数据
+            �����ڵ���ת��ʵ������û����������
             </summary>
         </member>
         <member name="T:Slickflow.Engine.Core.Pattern.Event.Message.NodeMediatorInterMessageGo">
@@ -5076,16 +5091,17 @@
             节点执行器的抽象类
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.GetDelegateService">
+        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.GetEventService">
             <summary>
-            Get Delegate Servide
+            Get Event Service
+            获取事件服务
             </summary>
             <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.IsNotNodeMediatorStart(Slickflow.Engine.Core.Pattern.NodeMediator)">
             <summary>
             Determine whether it is a starting type node
-            判断是否是起始类型的节点
+            判断是否为开始类型的节点
             </summary>
             <param name="nodeMediator"></param>
             <returns></returns>
@@ -5093,24 +5109,19 @@
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.OnBeforeExecuteWorkItem">
             <summary>
             On before execute work item
-            触发前执行
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.OnAfterExecuteWorkItem">
-            <summary>
-            On after execute work item
-            触发后执行
+            执行工作项前
             </summary>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.OnExecutingServiceItem">
             <summary>
             Execute code to automatically serve content
-            执行代码自动服务内容
+            执行代码以自动服务内容
             </summary>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.OnExecutingScriptItem">
             <summary>
             Executing script item
+            执行脚本项
             </summary>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.ContinueForwardCurrentNode(System.Boolean,Slickflow.Data.IDbSession)">
@@ -5119,12 +5130,10 @@
             Normal operation: Transition parsing flow is required
             Other methods are directly specified, such as jump, return, etc., 
             which do not require parsing and cannot be equated with normal flow parsing
-            遍历执行当前节点后面的节点
-            正常运行：需要走Transition的解析流转
-            其它方式为直接指定：比如跳转，返送等，不需要解析，不能等同于正常流转解析
+            遍历并执行当前节点后续的节点
+            正常运行：需要转换解析流程
+            其他方法直接指定，如跳转、返回等，不需要解析，不能等同于正常流程解析
             </summary>
-            <param name="isNotParsedByTransition"></param>
-            <param name="session"></param>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.ContinueForwardCurrentNodeRecurisivly(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Xpdl.Schedule.NextActivityComponent,System.Collections.Generic.IDictionary{System.String,System.String},System.Boolean,Slickflow.Engine.Common.ActivityResource,System.Collections.Generic.List{Slickflow.Engine.Core.Result.WfNodeMediatedResult}@)">
             <summary>
@@ -5132,14 +5141,13 @@
             1) Task of creating regular nodes
             2) Task of creating a countersignature node
             递归执行节点
-            1)创建普通节点的任务
-            2)创建会签节点的任务
+            1) 创建常规节点的任务
+            2) 创建会签节点的任务
             </summary>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.IsWaitingOneOfJoin(Slickflow.Engine.Xpdl.Entity.GatewayDetail)">
             <summary>
             Determine whether it is a merger situation
-            判断是否是合并情况
             </summary>
             <param name="gatewayDetail"></param>
             <returns></returns>
@@ -5147,7 +5155,6 @@
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
             <summary>
             Create activity task transtion instance
-            创建工作项及转移数据
             </summary>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.CreateNewTask(Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
@@ -5155,9 +5162,6 @@
             Virtual method for creating tasks
             1.  For automatically executed work items, there is no need to rewrite this method
             2.  For manually executed work items, the method needs to be rewritten to insert pending task data
-            创建任务的虚方法
-            1. 对于自动执行的工作项，无需重写该方法
-            2. 对于人工执行的工作项，需要重写该方法，插入待办的任务数据
             </summary>
             <param name="activityResource"></param>
             <param name="toActivityInstance"></param>
@@ -5171,50 +5175,15 @@
             <param name="activity"></param>
             <param name="runner"></param>
         </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.InsertActivityInstance(Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Data.IDbSession)">
-            <summary>
-            Insert activity instance
-            </summary>
-            <param name="activityInstance"></param>
-            <param name="session"></param>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.CompleteActivityInstance(System.Int32,Slickflow.Engine.Common.WfAppRunner,Slickflow.Data.IDbSession)">
-            <summary>
-            Complete activity instance
-            </summary>
-        </member>
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.CreateMultipleInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
             <summary>
             Master node of countersignature type, handling multiple instance nodes
             Create the master node for the countersignature node and record the instance child nodes under the countersignature master node
-            会签类型的主节点, 多实例节点处理
-            创建会签节点的主节点，以及会签主节点下的实例子节点记录
             </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.CreateBackwardToActivityInstanceObject(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Common.BackwardTypeEnum,System.Int32,System.Int32,Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Create backward activity instance object
-            创建退回类型的活动实例对象
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.InsertTransitionInstance(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.String,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.WfAppRunner,Slickflow.Data.IDbSession)">
-            <summary>
-            Insert transition instance
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.GenerateActivityAssignedUserInfo(Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Common.ActivityResource)">
-            <summary>
-            Generate activity user allocation information
-            生成活动用户分配信息
-            </summary>
-            <param name="toActivityInstance"></param>
-            <param name="activityResource"></param>
-            <returns></returns>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.AntiGenerateActivityPerformerList(Slickflow.Engine.Business.Entity.ActivityInstanceEntity)">
             <summary>
             Generate PerformerList data structure based on personnel information assigned by nodes
-            由节点分配的人员信息生成PerformerList数据结构
             </summary>
             <param name="activityInstance"></param>
             <returns></returns>
@@ -5222,7 +5191,6 @@
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediator.GetNodeMediatedMessage">
             <summary>
             Generate messages based on the type of node execution result
-            根据节点执行结果类型，生成消息
             </summary>
             <returns></returns>
         </member>
@@ -5524,7 +5492,7 @@
         <member name="T:Slickflow.Engine.Core.Pattern.NodeMediatorTask">
             <summary>
             Node Mediator Task
-            任务节点执行器
+            ����ڵ�ִ����
             </summary>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorTask.ExecuteWorkItem(Slickflow.Engine.Business.Entity.ActivityInstanceEntity)">
@@ -5535,19 +5503,19 @@
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorTask.CompleteWorkItem(System.Nullable{System.Int32},Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
             <summary>
             Complete work item
-            完成节点实例
+            ��ɽڵ�ʵ��
             </summary>   
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorTask.CreateActivityTaskTransitionInstance(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,System.String,Slickflow.Engine.Common.TransitionTypeEnum,Slickflow.Engine.Common.TransitionFlyingTypeEnum,Slickflow.Engine.Common.ActivityResource,Slickflow.Data.IDbSession)">
             <summary>
             Create activity task transition instance
-            创建活动任务转移实例数据
+            ���������ת��ʵ������
             </summary>
         </member>
         <member name="M:Slickflow.Engine.Core.Pattern.NodeMediatorTask.WriteBackSrcOrgInformation(Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity,Slickflow.Data.IDbSession)">
             <summary>
             Maintain source node information for multiple returns
-            维护多次退回时的源节点信息
+            ά������˻�ʱ��Դ�ڵ���Ϣ
             </summary>
             <param name="toActivityInstance"></param>
             <param name="fromActivityInstance"></param>
@@ -5557,6 +5525,9 @@
             <summary>
             执行结果对象封装
             </summary>
+        </member>
+        <member name="P:Slickflow.Engine.Core.Result.WfExecutedResult.AiResponse">
+            <summary>Optional AI reply from RAG/LLM node (e.g. ai_response variable). Used by workflow_completed so clients get business reply instead of engine status.</summary>
         </member>
         <member name="P:Slickflow.Engine.Core.Result.WfExecutedResult.ProcessInstanceIdStarted">
             <summary>
@@ -6178,193 +6149,49 @@
             Sendback Operation Data
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Delegate.DelegateContext">
+        <member name="T:Slickflow.Engine.Event.EventContext">
             <summary>
-            Delegate execution context
-            代理执行上下文
+            Event execution context
+            事件执行上下文
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Delegate.DelegateExecutor">
+        <member name="T:Slickflow.Engine.Event.EventExecutor">
             <summary>
-            Delegate Agent Executor
-            委托代理执行器
+            Event Executor
+            事件执行器
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateExecutor.InvokeExternalDelegate(Slickflow.Data.IDbSession,Slickflow.Engine.Delegate.EventFireTypeEnum,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Core.ActivityForwardContext)">
-            <summary>
-            Call program methods for external business applications
-            调用外部业务应用的程序方法
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateExecutor.InvokeExternalDelegate(Slickflow.Data.IDbSession,Slickflow.Engine.Delegate.EventFireTypeEnum,Slickflow.Engine.Delegate.DelegateEventList,System.Int32)">
+        <member name="M:Slickflow.Engine.Event.EventExecutor.InvokeExternalEvent(Slickflow.Data.IDbSession,Slickflow.Engine.Event.EventFireTypeEnum,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Core.ActivityForwardContext)">
             <summary>
             Call program methods for external business applications
             调用外部业务应用的程序方法
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateExecutor.InvokeExternalDelegate(Slickflow.Data.IDbSession,Slickflow.Engine.Delegate.EventFireTypeEnum,Slickflow.Engine.Delegate.DelegateEventList,Slickflow.Engine.Delegate.DelegateContext)">
+        <member name="M:Slickflow.Engine.Event.EventExecutor.InvokeExternalEvent(Slickflow.Data.IDbSession,Slickflow.Engine.Event.EventFireTypeEnum,Slickflow.Engine.Event.EventSubscriptionList,System.Int32)">
             <summary>
             Call program methods for external business applications
             调用外部业务应用的程序方法
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateExecutor.Execute(Slickflow.Data.IDbSession,Slickflow.Engine.Delegate.DelegateContext,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{Slickflow.Engine.Delegate.EventFireTypeEnum,System.Func{Slickflow.Engine.Delegate.DelegateContext,Slickflow.Engine.Delegate.IDelegateService,System.Boolean}}})">
+        <member name="M:Slickflow.Engine.Event.EventExecutor.InvokeExternalEvent(Slickflow.Data.IDbSession,Slickflow.Engine.Event.EventFireTypeEnum,Slickflow.Engine.Event.EventSubscriptionList,Slickflow.Engine.Event.EventContext)">
             <summary>
-            Execution delegation list method
-            执行委托列表方法
+            Call program methods for external business applications
+            调用外部业务应用的程序方法
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateExecutor.Execute(Slickflow.Data.IDbSession,Slickflow.Engine.Delegate.DelegateContext,System.Collections.Generic.KeyValuePair{Slickflow.Engine.Delegate.EventFireTypeEnum,System.Func{Slickflow.Engine.Delegate.DelegateContext,Slickflow.Engine.Delegate.IDelegateService,System.Boolean}})">
+        <member name="M:Slickflow.Engine.Event.EventExecutor.Execute(Slickflow.Data.IDbSession,Slickflow.Engine.Event.EventContext,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{Slickflow.Engine.Event.EventFireTypeEnum,System.Func{Slickflow.Engine.Event.EventContext,Slickflow.Engine.Event.IEventService,System.Boolean}}})">
             <summary>
-            Execution delegation method
-            执行委托方法
+            Execution event subscription list method
+            执行事件订阅列表方法
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Delegate.DelegateScopeTypeEnum">
+        <member name="M:Slickflow.Engine.Event.EventExecutor.Execute(Slickflow.Data.IDbSession,Slickflow.Engine.Event.EventContext,System.Collections.Generic.KeyValuePair{Slickflow.Engine.Event.EventFireTypeEnum,System.Func{Slickflow.Engine.Event.EventContext,Slickflow.Engine.Event.IEventService,System.Boolean}})">
             <summary>
-            Delegate Scope Type
+            Execution event subscription method
+            执行事件订阅方法
             </summary>
         </member>
-        <member name="F:Slickflow.Engine.Delegate.DelegateScopeTypeEnum.Process">
-            <summary>
-            Process Level
-            </summary>
-        </member>
-        <member name="F:Slickflow.Engine.Delegate.DelegateScopeTypeEnum.Activity">
-            <summary>
-            Activity Level
-            </summary>
-        </member>
-        <member name="T:Slickflow.Engine.Delegate.DelegateServiceBase">
-            <summary>
-            Delegate Service Base
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateServiceBase.GetProcessInstanceId">
-            <summary>
-            Read instance primary key Id
-            读取实例主键Id
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateServiceBase.GetSession">
-            <summary>
-            Get Session
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateServiceBase.GetCondition(System.String)">
-            <summary>
-            Get Condition Value
-            获取条件参数数值
-            </summary>
-            <param name="name"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateServiceBase.SetCondition(System.String,System.String)">
-            <summary>
-            Set Condition Value
-            设置条件
-            </summary>
-            <param name="name"></param>
-            <param name="value"></param>
-        </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateServiceBase.SetActivityResource(Slickflow.Engine.Common.ActivityResource)">
-            <summary>
-            Set Activity Resource
-            设置活动资源
-            </summary>
-            <param name="activityResource"></param>
-        </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateServiceBase.SaveVariable(Slickflow.Engine.Common.ProcessVariableScopeEnum,System.String,System.String)">
-            <summary>
-            Save Variable
-            保存变量
-            </summary>
-            <param name="name"></param>
-            <param name="value"></param>
-            <param name="variableType"></param>
-        </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateServiceBase.GetVariable(Slickflow.Engine.Common.ProcessVariableScopeEnum,System.String)">
-            <summary>
-            Get Variable
-            获取变量
-            </summary>
-            <param name="name"></param>
-            <param name="variableType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateServiceBase.GetVariableByScopePriority(System.String)">
-            <summary>
-            Get Variable Throughtly
-            获取变量内容
-            </summary>
-            <param name="name"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Slickflow.Engine.Delegate.DelegateServiceFactory">
-            <summary>
-            Delegate Service Factory
-            委托服务创建类
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateServiceFactory.CreateDelegateService(Slickflow.Engine.Delegate.DelegateScopeTypeEnum,Slickflow.Data.IDbSession,Slickflow.Engine.Delegate.DelegateContext)">
-            <summary>
-            Create Delegate Service
-            创建委托服务
-            </summary>
-        </member>
-        <member name="T:Slickflow.Engine.Delegate.DelegateUtil">
-            <summary>
-            Delegate Utility
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateUtil.CompositeJsonValue(System.String,Slickflow.Engine.Delegate.IDelegateService)">
-            <summary>
-            Construct JSON string for the final object
-            构造最终对象的Json字符串
-            </summary>
-            <param name="arguments"></param>
-            <param name="delegateService"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateUtil.FormatJsonStringIfSimple(System.String)">
-            <summary>
-            If it is a simple string, add double quotation marks
-            如果是简单字符串, 加双引号
-            jack => "jack"
-            </summary>
-            <param name="jsonValue"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateUtil.CompositeSqlParametersValue(System.String,Slickflow.Engine.Delegate.IDelegateService)">
-            <summary>
-            Construct JSON string for the final object
-            构造最终对象的Json字符串
-            </summary>
-            <param name="arguments"></param>
-            <param name="delegateService"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateUtil.CompositeKeyValue(System.String,Slickflow.Engine.Delegate.IDelegateService)">
-            <summary>
-            Construct JSON string for the final object
-            构造最终对象的Json字符串
-            </summary>
-            <param name="arguments"></param>
-            <param name="delegateService"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Slickflow.Engine.Delegate.DelegateUtil.CompositeParameterValues(System.String,Slickflow.Engine.Delegate.IDelegateService)">
-            <summary>
-            Construct a variable value list
-            构造可变数值列表
-            </summary>
-            <param name="arguments"></param>
-            <param name="delegateService"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Slickflow.Engine.Delegate.EventFireTypeEnum">
+        <member name="T:Slickflow.Engine.Event.EventFireTypeEnum">
             <summary>
             External event interaction trigger type
              1.  Process event:
@@ -6382,20 +6209,169 @@
              分配->完成
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Delegate.Event.ActivityEventService">
+        <member name="T:Slickflow.Engine.Event.EventScopeTypeEnum">
             <summary>
-            Activity Delegate Service
-            活动委托服务类
+            Event Scope Type
+            事件作用域类型
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Delegate.Event.ActivityEventService.#ctor(Slickflow.Data.IDbSession,Slickflow.Engine.Delegate.DelegateContext)">
+        <member name="F:Slickflow.Engine.Event.EventScopeTypeEnum.Process">
+            <summary>
+            Process Level
+            流程级别
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Event.EventScopeTypeEnum.Activity">
+            <summary>
+            Activity Level
+            活动级别
+            </summary>
+        </member>
+        <member name="T:Slickflow.Engine.Event.EventServiceBase">
+            <summary>
+            Event Service Base
+            事件服务基类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Event.EventServiceBase.GetProcessInstanceId">
+            <summary>
+            Read instance primary key Id
+            读取实例主键Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Event.EventServiceBase.GetSession">
+            <summary>
+            Get Session
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Event.EventServiceBase.GetCondition(System.String)">
+            <summary>
+            Get Condition Value
+            获取条件参数数值
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Event.EventServiceBase.SetCondition(System.String,System.String)">
+            <summary>
+            Set Condition Value
+            设置条件
+            </summary>
+            <param name="name"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:Slickflow.Engine.Event.EventServiceBase.SetActivityResource(Slickflow.Engine.Common.ActivityResource)">
+            <summary>
+            Set Activity Resource
+            设置活动资源
+            </summary>
+            <param name="activityResource"></param>
+        </member>
+        <member name="M:Slickflow.Engine.Event.EventServiceBase.SaveVariable(Slickflow.Engine.Common.ProcessVariableScopeEnum,System.String,System.String)">
+            <summary>
+            Save Variable
+            保存变量
+            </summary>
+            <param name="name"></param>
+            <param name="value"></param>
+            <param name="variableType"></param>
+        </member>
+        <member name="M:Slickflow.Engine.Event.EventServiceBase.GetVariable(Slickflow.Engine.Common.ProcessVariableScopeEnum,System.String)">
+            <summary>
+            Get Variable
+            获取变量
+            </summary>
+            <param name="name"></param>
+            <param name="variableType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Event.EventServiceBase.GetVariableByScopePriority(System.String)">
+            <summary>
+            Get Variable Throughtly
+            获取变量内容
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Slickflow.Engine.Event.EventServiceFactory">
+            <summary>
+            Event Service Factory
+            事件服务创建类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Event.EventServiceFactory.CreateEventService(Slickflow.Engine.Event.EventScopeTypeEnum,Slickflow.Data.IDbSession,Slickflow.Engine.Event.EventContext)">
+            <summary>
+            Create Event Service
+            创建事件服务
+            </summary>
+        </member>
+        <member name="T:Slickflow.Engine.Event.EventUtil">
+            <summary>
+            Event Utility
+            事件工具类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Event.EventUtil.CompositeJsonValue(System.String,Slickflow.Engine.Event.IEventService)">
+            <summary>
+            Construct JSON string for the final object
+            构造最终对象的Json字符串
+            </summary>
+            <param name="arguments"></param>
+            <param name="eventService"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Event.EventUtil.FormatJsonStringIfSimple(System.String)">
+            <summary>
+            If it is a simple string, add double quotation marks
+            如果是简单字符串, 加双引号
+            jack => "jack"
+            </summary>
+            <param name="jsonValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Event.EventUtil.CompositeSqlParametersValue(System.String,Slickflow.Engine.Event.IEventService)">
+            <summary>
+            Construct JSON string for the final object
+            构造最终对象的Json字符串
+            </summary>
+            <param name="arguments"></param>
+            <param name="eventService"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Event.EventUtil.CompositeKeyValue(System.String,Slickflow.Engine.Event.IEventService)">
+            <summary>
+            Construct JSON string for the final object
+            构造最终对象的Json字符串
+            </summary>
+            <param name="arguments"></param>
+            <param name="eventService"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Slickflow.Engine.Event.EventUtil.CompositeParameterValues(System.String,Slickflow.Engine.Event.IEventService)">
+            <summary>
+            Construct a variable value list
+            构造可变数值列表
+            </summary>
+            <param name="arguments"></param>
+            <param name="eventService"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Slickflow.Engine.Event.Handlers.ActivityEventService">
+            <summary>
+            Activity Event Service
+            活动事件服务类
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Event.Handlers.ActivityEventService.#ctor(Slickflow.Data.IDbSession,Slickflow.Engine.Event.EventContext)">
             <summary>
             Constructor
             </summary>
             <param name="session"></param>
             <param name="context"></param>
         </member>
-        <member name="M:Slickflow.Engine.Delegate.Event.ActivityEventService.GetInstance``1(System.Int32)">
+        <member name="M:Slickflow.Engine.Event.Handlers.ActivityEventService.GetInstance``1(System.Int32)">
             <summary>
             Get Instance
             </summary>
@@ -6403,13 +6379,13 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="T:Slickflow.Engine.Delegate.Event.ProcessEventService">
+        <member name="T:Slickflow.Engine.Event.Handlers.ProcessEventService">
             <summary>
-            Process Delegate Service
-            流程委托服务类
+            Process Event Service
+            流程事件服务类
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Delegate.Event.ProcessEventService.GetInstance``1(System.Int32)">
+        <member name="M:Slickflow.Engine.Event.Handlers.ProcessEventService.GetInstance``1(System.Int32)">
             <summary>
             Get Instance
             </summary>
@@ -6417,35 +6393,289 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="T:Slickflow.Engine.Delegate.IDelegateService">
+        <member name="T:Slickflow.Engine.Event.IEventService">
             <summary>
-            Delegate Service Interface
+            Event Service Interface
+            事件服务接口
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Delegate.DelegateEventList">
+        <member name="T:Slickflow.Engine.Event.EventSubscriptionList">
             <summary>
-            Delegate Event List
+            Event Subscription List
+            事件订阅列表
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Delegate.IExternable">
+        <member name="T:Slickflow.Engine.Executor.AutoExecutionContext">
+            <summary>
+            Execution context for auto (non-persistent) workflow run.
+            自动执行（非持久化）工作流的执行上下文。
+            </summary>
+        </member>
+        <member name="P:Slickflow.Engine.Executor.AutoExecutionContext.ExecutedActivityIds">
+            <summary>
+            Track executed activity IDs to avoid executing the same node multiple times
+            when multiple branches converge (e.g. join gateway, end node).
+            已执行活动ID集合，避免汇聚节点（如汇聚网关、结束节点）被多次执行
+            </summary>
+        </member>
+        <member name="P:Slickflow.Engine.Executor.AutoExecutionContext.JoinReachedCounts">
+            <summary>
+            For join nodes (multiple incoming branches): count how many branches have reached.
+            Execute join (and nodes after it) only when all branches have arrived, so End runs last.
+            汇聚节点：记录已到达的分支数，等所有分支到达后再执行，保证 End 最后执行
+            </summary>
+        </member>
+        <member name="P:Slickflow.Engine.Executor.AutoExecutionContext.DelegateRegistry">
+            <summary>
+            Delegate registry for LocalMethod ServiceTask (BPMN2 ##DelegateExpression semantic).
+            When null, ServiceTaskDelegateRegistry.Global is used.
+            </summary>
+        </member>
+        <member name="T:Slickflow.Engine.Executor.AutoRunEventServiceAdapter">
+            <summary>
+            IEventService adapter for auto-run: variable resolution from AutoExecutionContext.Variables only.
+            自动执行时的事件服务适配器：仅从 AutoExecutionContext.Variables 解析变量。
+            </summary>
+        </member>
+        <member name="T:Slickflow.Engine.Executor.IWorkflowActivityExecutor">
+            <summary>
+            Executes a single workflow activity (services, AI, script, end).
+            执行单个工作流活动节点（服务、AI、脚本、结束）。
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.IWorkflowActivityExecutor.ExecuteActivity(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Executor.AutoExecutionContext,Slickflow.Engine.Core.Result.WfExecutedResult)">
+            <summary>
+            Execute one activity: service node, AI service node, script, etc.
+            执行单个活动：服务节点、AI 服务节点、脚本等
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.IWorkflowActivityExecutor.ExecuteEndActivity(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Executor.AutoExecutionContext)">
+            <summary>
+            Execute end activity / 执行结束节点
+            </summary>
+        </member>
+        <member name="T:Slickflow.Engine.Executor.IServiceTaskDelegateRegistry">
+            <summary>
+            Registry for ServiceTask LocalMethod binding (BPMN2 ##DelegateExpression semantic).
+            服务任务本地方法注册表，用于将 ServiceTask 节点绑定到本地方法。
+            </summary>
+        </member>
+        <member name="P:Slickflow.Engine.Executor.IServiceTaskDelegateRegistry.DefaultResultVariableName">
+            <summary>
+            Default variable name when Func returns plain object (not ServiceTaskResult).
+            当 Func 返回普通 object 时，引擎写入的默认变量名。调用方可用此常量读取，避免硬编码。
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.IServiceTaskDelegateRegistry.Register(System.String,System.Action{Slickflow.Engine.Event.IEventService})">
+            <summary>Register an Action delegate.</summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.IServiceTaskDelegateRegistry.Register(System.String,System.Func{Slickflow.Engine.Event.IEventService,System.Object})">
+            <summary>
+            Register a Func delegate. Return value is written to a variable:
+            - If delegate returns <see cref="T:Slickflow.Engine.Executor.ServiceTaskResult"/>, uses its VariableName;
+            - Otherwise uses <see cref="P:Slickflow.Engine.Executor.IServiceTaskDelegateRegistry.DefaultResultVariableName"/>.
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.IServiceTaskDelegateRegistry.TryResolve(System.String,System.Delegate@)">
+            <summary>Resolve delegate by key.</summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.IServiceTaskDelegateRegistry.Unregister(System.String)">
+            <summary>Unregister by key.</summary>
+        </member>
+        <member name="T:Slickflow.Engine.Executor.ServiceTaskDelegateRegistry">
+            <summary>
+            Thread-safe default implementation of delegate registry.
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Executor.ServiceTaskDelegateRegistry.DefaultResultVariableName">
+            <summary>
+            Default variable name when Func returns plain object. Use this constant when reading
+            the result to avoid hardcoding the internal name.
+            当 Func 返回普通 object 时的默认变量名。读取结果时请使用此常量，避免硬编码。
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Executor.ServiceTaskDelegateRegistry.Global">
+            <summary>Global singleton for process-level registration.</summary>
+        </member>
+        <member name="T:Slickflow.Engine.Executor.ServiceTaskResult">
+            <summary>
+            Result wrapper for Func delegate: lets the delegate explicitly specify
+            the output variable name instead of using the engine default.
+            Func 委托的返回值包装：允许显式指定输出变量名，避免依赖引擎内部的默认约定。
+            </summary>
+            <example>
+            <code>
+            reg.Register("CalcAmount", (IEventService svc) =>
+            {
+                var total = 100.5;
+                return new ServiceTaskResult("OrderTotal", total);  // 写入 OrderTotal，而非 ServiceResult
+            });
+            </code>
+            </example>
+        </member>
+        <member name="P:Slickflow.Engine.Executor.ServiceTaskResult.VariableName">
+            <summary>
+            Variable name to write the value into.
+            写入的变量名。
+            </summary>
+        </member>
+        <member name="P:Slickflow.Engine.Executor.ServiceTaskResult.Value">
+            <summary>
+            The value to write.
+            要写入的值。
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.ServiceTaskResult.#ctor(System.String,System.Object)">
+            <summary>
+            Creates a result with explicit variable name.
+            </summary>
+            <param name="variableName">Variable name for the result (e.g. "OrderTotal").</param>
+            <param name="value">The value to write.</param>
+        </member>
+        <member name="T:Slickflow.Engine.Executor.WorkflowActivityExecutor">
+            <summary>
+            Executes a single workflow activity: service, AI service, script, end.
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowActivityExecutor.ExecuteActivity(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Executor.AutoExecutionContext,Slickflow.Engine.Core.Result.WfExecutedResult)">
+            <summary>
+            Execute a single activity (service, AI, script, or end node).
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowActivityExecutor.ExecuteServiceNode(Slickflow.Engine.Xpdl.Entity.Activity,System.Collections.Generic.List{Slickflow.Engine.Xpdl.Entity.ServiceDetail},Slickflow.Engine.Executor.AutoExecutionContext)">
+            <summary>
+            Execute service list (aligned with Engine Core.Pattern.Auto.ServiceExecutor.ExecuteServiceList).
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowActivityExecutor.ExecuteLocalMethodInExecutor(Slickflow.Engine.Xpdl.Entity.ServiceDetail,Slickflow.Engine.Executor.AutoExecutionContext)">
+            <summary>
+            Execute LocalMethod ServiceTask: resolve delegate from registry by key and invoke.
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowActivityExecutor.GetChatHistoryFromContext(Slickflow.Engine.Executor.AutoExecutionContext)">
+            <summary>
+            Reads chat_history (JSON array) from process variables and deserializes to history message list for multi-turn RAG.
+            Example format: [{"role":"user","content":"..."},{"role":"assistant","content":"..."}]
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowActivityExecutor.UpdateChatHistoryInContext(Slickflow.Engine.Executor.AutoExecutionContext,System.String,System.String)">
+            <summary>
+            Appends the current turn (user message + AI response) to chat_history
+            and writes it back to process variables as JSON.
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowActivityExecutor.ExecuteEndActivity(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Executor.AutoExecutionContext)">
+            <summary>
+            Execute end activity (end node).
+            </summary>
+        </member>
+        <member name="T:Slickflow.Engine.Executor.WorkflowExecutor">
+            <summary>
+            Workflow executor with chain-style API. Delegates graph run to WorkflowNodeRunner and activity execution to WorkflowActivityExecutor.
+            链式工作流执行器：图遍历委托给 WorkflowNodeRunner，节点执行委托给 WorkflowActivityExecutor。
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowExecutor.UseApp(System.String,System.String,System.String)">
+            <summary>
+            User application / 绑定业务票据
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowExecutor.UseProcess(System.String,System.String)">
+            <summary>
+            Use Process Definition / 使用流程定义
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowExecutor.UseProcess(Slickflow.Engine.Business.Entity.ProcessEntity)">
+            <summary>
+            Use Process Definition from an in-memory ProcessEntity (no database lookup).
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowExecutor.AddVariable(System.String,System.String)">
+            <summary>
+            Add process variable / 添加流程变量
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowExecutor.SetNotifyClient(System.String,System.Action{System.String,System.Object})">
+            <summary>
+            Set callback to push RAG node response to client when isNotifyClient is true.
+            当节点扩展属性 isNotifyClient 为 true 时，将 RAG 节点结果推送到前端。
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowExecutor.WithDelegateRegistry(Slickflow.Engine.Executor.IServiceTaskDelegateRegistry)">
+            <summary>
+            Inject delegate registry for LocalMethod ServiceTask. When null, ServiceTaskDelegateRegistry.Global is used.
+            注入委托注册表，用于 LocalMethod 类型的 ServiceTask。为空时使用全局注册表。
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowExecutor.Run">
+            <summary>
+            Execute workflow automatically from start to end / 自动执行流程从开始到结束
+            </summary>
+        </member>
+        <member name="T:Slickflow.Engine.Executor.WorkflowNodeRunner">
+            <summary>
+            Runs the workflow graph: traverses activities, handles gateways, delegates single-activity execution.
+            工作流图执行器：遍历活动节点、处理网关、委托单节点执行。
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowNodeRunner.Run(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Executor.AutoExecutionContext,Slickflow.Engine.Core.Result.WfExecutedResult)">
+            <summary>
+            Run from the given start activity through the graph.
+            从给定开始节点沿图执行
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowNodeRunner.RunThroughlyCurrentNode(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Executor.AutoExecutionContext,Slickflow.Engine.Core.Result.WfExecutedResult)">
+            <summary>
+            Recursively execute activities
+            递归执行活动节点
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowNodeRunner.ContinueRunForwardRecursively(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Xpdl.Schedule.NextActivityComponent,Slickflow.Engine.Executor.AutoExecutionContext,Slickflow.Engine.Core.Result.WfExecutedResult)">
+            <summary>
+            Traverse next activity tree recursively
+            按树递归遍历下一节点
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowNodeRunner.GetNextActivityTree(Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Executor.AutoExecutionContext)">
+            <summary>
+            Get next activity tree (same API as Engine WorkflowService / NodeMediator).
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowNodeRunner.GetNextActivitiesFromRoot(Slickflow.Engine.Xpdl.Schedule.NextActivityComponent)">
+            <summary>
+            Collect immediate children activities from root
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Executor.WorkflowNodeRunner.HandleGatewayNode(Slickflow.Engine.Xpdl.Entity.Activity,System.Collections.Generic.IList{Slickflow.Engine.Xpdl.Entity.Activity},Slickflow.Engine.Executor.AutoExecutionContext,Slickflow.Engine.Core.Result.WfExecutedResult)">
+            <summary>
+            Handle gateway node by DirectionType
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.External.ExternalServiceBase.Executable(Slickflow.Engine.Event.IEventService)">
+            <summary>
+            设置委托服务
+            </summary>
+            <param name="eventService">委托服务</param>
+        </member>
+        <member name="T:Slickflow.Engine.External.IExecutable">
             <summary>
             Externally executable interface
             可外部执行接口
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Delegate.IExternalService">
+        <member name="T:Slickflow.Engine.External.IExternalService">
             <summary>
             External Service Interface
             外部服务接口
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Essential.MessageDelegateService">
+        <member name="T:Slickflow.Engine.Message.MessageDelegateService">
             <summary>
             Message delegation function in the message queue
             消息队列中的消息委托函数
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Essential.MessageDelegateService.PublishMessage(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity)">
+        <member name="M:Slickflow.Engine.Message.MessageDelegateService.PublishMessage(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity)">
             <summary>
             Build the message to be published
             构建要发布的消息
@@ -6454,7 +6684,7 @@
             <param name="throwActivity"></param>
             <param name="throwActivityInstance"></param>
         </member>
-        <member name="M:Slickflow.Engine.Essential.MessageDelegateService.ConsumeMessage(Slickflow.Module.Essential.Entity.MessageEntity)">
+        <member name="M:Slickflow.Engine.Message.MessageDelegateService.ConsumeMessage(Slickflow.Module.Essential.Entity.MessageEntity)">
             <summary>
             Message consumption function
             消息消费函数
@@ -6462,7 +6692,7 @@
             <param name="entity"></param>
             <returns></returns>
         </member>
-        <member name="M:Slickflow.Engine.Essential.MessageDelegateService.GetRunnerFromMessagExchange(Slickflow.Engine.Essential.MessageRunnerView)">
+        <member name="M:Slickflow.Engine.Message.MessageDelegateService.GetRunnerFromMessagExchange(Slickflow.Engine.Message.MessageRunnerView)">
             <summary>
             Encapsulate the operator object from the message view
             从消息视图中封装运行者对象
@@ -6470,19 +6700,19 @@
             <param name="msgRunnerView"></param>
             <returns></returns>
         </member>
-        <member name="T:Slickflow.Engine.Essential.MessageRunnerView">
+        <member name="T:Slickflow.Engine.Message.MessageRunnerView">
             <summary>
             Message Runner View
             消息运行者对象视图
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Essential.SignalDelegateService">
+        <member name="T:Slickflow.Engine.Message.SignalDelegateService">
             <summary>
             Signal Delegate Service
             消息队列中的信号委托函数
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Essential.SignalDelegateService.PublishSignal(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity)">
+        <member name="M:Slickflow.Engine.Message.SignalDelegateService.PublishSignal(Slickflow.Engine.Business.Entity.ProcessInstanceEntity,Slickflow.Engine.Xpdl.Entity.Activity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity)">
             <summary>
             Build Singal Published
             构建要发布的消息
@@ -6491,7 +6721,7 @@
             <param name="throwActivity"></param>
             <param name="throwActivityInstance"></param>
         </member>
-        <member name="M:Slickflow.Engine.Essential.SignalDelegateService.ConsumeSignal(Slickflow.Module.Essential.Entity.SignalEntity)">
+        <member name="M:Slickflow.Engine.Message.SignalDelegateService.ConsumeSignal(Slickflow.Module.Essential.Entity.SignalEntity)">
             <summary>
             Singal Consume function
             消息消费函数
@@ -6499,7 +6729,7 @@
             <param name="entity"></param>
             <returns></returns>
         </member>
-        <member name="M:Slickflow.Engine.Essential.SignalDelegateService.GetStartRunnerFromSignalExchange(Slickflow.Engine.Essential.SignalRunnerView,Slickflow.Engine.Business.Entity.JobInfoEntity)">
+        <member name="M:Slickflow.Engine.Message.SignalDelegateService.GetStartRunnerFromSignalExchange(Slickflow.Engine.Message.SignalRunnerView,Slickflow.Engine.Business.Entity.JobInfoEntity)">
             <summary>
             Get start info from signal exchange
             从信号交换获取启动信息
@@ -6508,7 +6738,7 @@
             <param name="jobInfo"></param>
             <returns></returns>
         </member>
-        <member name="M:Slickflow.Engine.Essential.SignalDelegateService.RunProcessSignalCatchEventOneByOne(Slickflow.Engine.Essential.SignalRunnerView,Slickflow.Engine.Business.Entity.JobInfoEntity)">
+        <member name="M:Slickflow.Engine.Message.SignalDelegateService.RunProcessSignalCatchEventOneByOne(Slickflow.Engine.Message.SignalRunnerView,Slickflow.Engine.Business.Entity.JobInfoEntity)">
             <summary>
             Run the process belonging to the SignalCatch node
             运行属于SignalCatch节点的流程
@@ -6516,7 +6746,7 @@
             <param name="signalRunner"></param>
             <param name="jobInfo"></param>
         </member>
-        <member name="M:Slickflow.Engine.Essential.SignalDelegateService.GetRunnerFromActivityInstance(Slickflow.Engine.Essential.SignalRunnerView,Slickflow.Engine.Business.Entity.JobInfoEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity)">
+        <member name="M:Slickflow.Engine.Message.SignalDelegateService.GetRunnerFromActivityInstance(Slickflow.Engine.Message.SignalRunnerView,Slickflow.Engine.Business.Entity.JobInfoEntity,Slickflow.Engine.Business.Entity.ActivityInstanceEntity)">
             <summary>
             Get runner info from activity instance
             从活动实例获取运行者信息
@@ -6525,19 +6755,19 @@
             <param name="jobInfo"></param>
             <returns></returns>
         </member>
-        <member name="T:Slickflow.Engine.Essential.SignalRunnerView">
+        <member name="T:Slickflow.Engine.Message.SignalRunnerView">
             <summary>
             Signal Runner View
             信号运行者对象视图
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Essential.WfMessageDelegationException">
+        <member name="T:Slickflow.Engine.Message.WfMessageDelegationException">
             <summary>
             Message Delegation Exception
             消息代理服务异常类
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Essential.WfSignalDelegationException">
+        <member name="T:Slickflow.Engine.Message.WfSignalDelegationException">
             <summary>
             Singal Delegattion Exception
             </summary>
@@ -6546,6 +6776,42 @@
             <summary>
             Workflow Service Interface
             工作流服务接口
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.IWorkflowService.GetNextActivityList(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String},System.Data.IDbTransaction)">
+            <summary>
+            Obtain the next activity list according to the application process
+            根据应用获取流程下一步活动列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.IWorkflowService.GetNextActivityListAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String},System.Data.IDbTransaction)">
+            <summary>
+            Obtain the next activity list according to the application process
+            根据应用获取流程下一步活动列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.IWorkflowService.GetNextActivityList(System.Int32,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Obtain the next activity list according to the application process
+            获取下一步活动列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.IWorkflowService.GetNextActivityListAsync(System.Int32,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Obtain the next activity list according to the application process
+            获取下一步活动列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.IWorkflowService.GetNextActivityList(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Obtain the next activity list according to the application process
+            根据应用获取流程下一步活动列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.IWorkflowService.GetNextActivityListAsync(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Obtain the next activity list according to the application process
+            根据应用获取流程下一步活动列表
             </summary>
         </member>
         <member name="M:Slickflow.Engine.Service.IWorkflowService.GetNextStepInfo(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
@@ -6558,20 +6824,132 @@
         </member>
         <member name="T:Slickflow.Engine.Service.WorkflowService">
             <summary>
-            Process operation flow service (execution part)
-            流程运行流转服务(执行部分)
+            Workflow Service - Chain Interface
+            工作流服务 - 链式接口
             </summary>
             <summary>
-            Process Definition Data Service Class
-            流程定义数据服务类
+            Workflow Service - Main Entry
+            工作流服务 - 主入口
             </summary>
             <summary>
-            Workflow Service (Data Query)
-            工作流服务(数据查询)
+            Workflow Service - Process Definition
+            工作流服务 - 流程定义读取
             </summary>
             <summary>
-            Chain interface service class
-            链式接口服务类
+            Workflow Service - Process Execution
+            工作流服务 - 流程执行部分
+            </summary>
+            <summary>
+            Workflow Service - Query Methods
+            工作流服务 - 查询方法
+            </summary>
+            <summary>
+            Workflow Service - Resource and Form
+            工作流服务 - 资源和表单查询
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Service.WorkflowService._wfAppRunner">
+            <summary>
+            Workflow App Runner (used for chain interface)
+            工作流应用运行器（用于链式接口）
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.CreateRunner(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Create runner
+            创建运行用户身份
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.CreateRunner(System.String,System.String)">
+            <summary>
+            Create runner
+            创建运行用户身份
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.UseApp(System.String,System.String,System.String)">
+            <summary>
+            User application
+            绑定业务票据
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.UseProcess(System.String,System.String)">
+            <summary>
+            Use Process Definition
+            使用流程定义
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.NextStepInt(Slickflow.Engine.Common.PerformerList)">
+            <summary>
+            Next activity (Internal method for testing)
+            This method is used for internal testing
+            Special note: Do not use this method in formal production environments
+            下一步活动（内部测试方法）
+            内部测试时用到此方法
+            特别注意：正式生产环境，不要使用该方法
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.NextStepInt(System.String,System.String)">
+            <summary>
+            Next activity (Internal method for testing)
+            This method is used for internal testing
+            Special note: Do not use this method in formal production environments
+            下一步活动（内部测试方法）
+            内部测试时用到此方法
+            特别注意：正式生产环境，不要使用该方法
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.NextStep(System.Collections.Generic.IDictionary{System.String,Slickflow.Engine.Common.PerformerList})">
+            <summary>
+            Next step information
+            下一步活动
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.NextStep(System.String,Slickflow.Engine.Common.PerformerList)">
+            <summary>
+            Next step information
+            下一步活动
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.PrevStepInt">
+            <summary>
+            Previous step internal
+            指定上一步类型
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.IfCondition(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Set condition
+            设置变量条件
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.IfCondition(System.String,System.String)">
+            <summary>
+            Set condition
+            添加条件变量
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.OnTask(System.Int32)">
+            <summary>
+            Set task
+            传递任务Id
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SetVariable(System.String,System.String)">
+            <summary>
+            Set variable
+            添加动态变量
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SetVariable(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Set variable
+            添加动态变量
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Subscribe(Slickflow.Engine.Event.EventFireTypeEnum,System.Func{Slickflow.Engine.Event.EventContext,Slickflow.Engine.Event.IEventService,System.Boolean})">
+            <summary>
+            Subscribe
+            活动事件订阅
             </summary>
         </member>
         <member name="P:Slickflow.Engine.Service.WorkflowService.ResourceService">
@@ -6591,819 +6969,6 @@
             Constructor
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetFirstActivity(System.String,System.String)">
-            <summary>
-            Obtain the first feasible node of the process
-            获取流程的第一个可办理节点
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetTaskActivityList(System.String,System.String)">
-            <summary>
-            Get the node list of task types
-            获取任务类型的节点列表
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetTaskActivityList(System.Int32)">
-            <summary>
-            Get the node list of task types
-            获取任务类型的节点列表
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetAllTaskActivityList(System.String,System.String)">
-            <summary>
-            Get a list of nodes for all task types (including countersignature and subprocesses)
-            获取全部任务类型的节点列表（包含会签和子流程）
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivity(System.String,System.String,System.String)">
-            <summary>
-            Get the next node information of the current node
-            获取当前节点的下一个节点信息
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityTree(System.String,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            Get the next node information of the current node
-            获取当前节点的下一个节点信息
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivity(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            Simple mode: Obtain the next node of the process based on the application 
-            (without considering the situation of multiple subsequent nodes)
-            简单模式：根据应用获取流程下一步节点(不考虑有多个后续节点的情况）
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivity(System.Int32,System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            Simple mode: Obtain the next node of the process based on the application 
-            (without considering the situation of multiple subsequent nodes)
-            简单模式：根据应用获取流程下一步节点(不考虑有多个后续节点的情况）
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityTree(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            Obtain the next node list according to the application process
-            根据应用获取流程下一步节点列表
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityTreeAsync(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            Obtain the next node list according to the application process
-            根据应用获取流程下一步节点列表
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityTree(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String},System.Data.IDbTransaction)">
-            <summary>
-            Obtain the next node list according to the application process
-            根据应用获取流程下一步节点列表
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityTreeAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String},System.Data.IDbTransaction)">
-            <summary>
-            Obtain the next node list according to the application process
-            根据应用获取流程下一步节点列表
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityTree(System.Int32,System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            Obtain the next node list according to the application process
-            获取下一步活动列表树
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityTreeAsync(System.Int32,System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            Obtain the next node list according to the application process
-            获取下一步活动列表树
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityRoleUserTree(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            According to the application, obtain the next node list of the process, including role users
-            根据应用获取流程下一步节点列表，包含角色用户
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityRoleUserTreeAsync(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            According to the application, obtain the next node list of the process, including role users
-            根据应用获取流程下一步节点列表，包含角色用户
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextStepInfo(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            According to the application, obtain the next node list of the process, including role users
-            Includes:
-            1) The next step for the gateway is to add a pre loaded user list of personnel;
-            2) The next step in the co signing mode is to add a pre loaded user list of personnel;
-            根据应用获取流程下一步节点列表，包含角色用户
-            包含：
-            1) 网关下一步添加人员的预加载用户列表；
-            2) 会签模式的下一步添加人员的预加载用户列表；
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextStepInfoAsync(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            Asynchronous retrieval of next step list
-            异步获取下一步列表
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetFirstActivityRoleUserTree(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            Get the list of node roles and personnel for the next step of the starting node when the process starts
-            Unified integration into: GetNextActivityRoleUserTree()
-            流程启动时获取开始节点下一步的节点角色人员列表
-            统一整合到: GetNextActivityRoleUserTree()
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetFirstActivityRoleUserTreeAsync(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            Get the list of node roles and personnel for the next step of the starting node when the process starts
-            Unified integration into: GetNextActivityRoleUserTree()
-            流程启动时获取开始节点下一步的节点角色人员列表
-            统一整合到: GetNextActivityRoleUserTree()
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetActivityInstanceCompleted(System.Int32)">
-            <summary>
-            Get activity instance completed
-            获取已经完成的节点
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetActivityInstanceCompleted(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Get activity instance completed
-            获取已经完成的节点记录
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetTransitionInstanceList(Slickflow.Engine.Business.Entity.TransitionInstanceQuery)">
-            <summary>
-            Get transition instance list
-            获取转移实例记录
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetActivityEntity(System.String,System.String,System.String)">
-            <summary>
-            Get activity entity
-            获取当前活动实体
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetActivityRoles(System.String,System.String,System.String)">
-            <summary>
-            Get activity roles
-            获取活动节点下的角色数据
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetPreviousActivityTree(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Get previous activity list
-            获取上一步节点信息
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetPreviousActivityTreeAsync(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Get previous activity list
-            获取上一步节点信息
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetPreviousStepInfo(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Get previous activity list
-            获取上一步节点信息
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetPreviousStepInfoAsync(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Get previous activity list
-            异步获取上一步节点信息
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetSignForwardStepInfo(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Obtain performer information for the signing process
-            获取加签步骤人员信息
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Start">
-            <summary>
-            Process Startup
-            Coding Example：
-            var wfResult = wfService.CreateRunner(runner.UserId, runner.UserName)
-                            .UseApp(runner.AppInstanceId, runner.AppName, runner.AppInstanceCode)
-                            .UseProcess(runner.ProcessId, runner.Version)
-                            .Start();
-            </summary>
-        </member>
-        <member name="F:Slickflow.Engine.Service.WorkflowService.startLock">
-            <summary>
-            Lock object
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Start(System.Data.IDbConnection,System.Data.IDbTransaction)">
-            <summary>
-            Process Startup
-            Coding Example：
-            var wfResult = wfService.CreateRunner(runner.UserId, runner.UserName)
-                            .UseApp(runner.AppInstanceId, runner.AppName, runner.AppInstanceCode)
-                            .UseProcess(runner.ProcessId, runner.Version)
-                            .Start(conn, trans);
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcess(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Start process
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Start process async
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Start process
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Start process async
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.StartByMessage">
-            <summary>
-            Start by Message
-            消息启动流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.StartByMessage(System.Data.IDbConnection,System.Data.IDbTransaction)">
-            <summary>
-            Start by Message
-            消息启动流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcessByMessage(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Start by Message
-            启动流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcessByMessageAsync(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Start by Message Async
-            异步消息启动流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcessByMessage(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Start by Message
-            流程启动
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcessByMessageAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Start by Message Async
-            异步流程启动
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Run">
-            <summary>
-            Running process
-            Coding example:
-            var wfResult = wfService.CreateRunner(runner.UserId, runner.UserName)
-                            .UseApp(runner.AppInstanceId, runner.AppName, runner.AppInstanceCode)
-                            .UseProcess(runner.ProcessId, runner.Version)
-                            .Run();
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Run(System.Data.IDbConnection,System.Data.IDbTransaction)">
-            <summary>
-            Running process
-            Coding example:
-            var wfResult = wfService.CreateRunner(runner.UserId, runner.UserName)
-                            .UseApp(runner.AppInstanceId, runner.AppName, runner.AppInstanceCode)
-                            .UseProcess(runner.ProcessId, runner.Version)
-                            .Run(conn, trans);
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessApp(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process Run
-            Explanation: The new method uniformly calls RunProcess()
-            流程流转
-            说明：新方法统一调用RunProcess()
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessApp(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Process Run
-            Explanation: The new method uniformly calls RunProcess()
-            流程流转
-            说明：新方法统一调用RunProcess()
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcess(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Run Process
-            流程流转
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Run Process Async
-            异步执行流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Run Process
-            流程流转
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Run Process Async
-            异步流程流转
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RunAuto">
-            <summary>
-            Run Automatically
-            自动运行
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RunAuto(System.Data.IDbConnection,System.Data.IDbTransaction)">
-            <summary>
-            Run Automatically
-            自动运行
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAuto(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Run process auto
-            流程流转
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAutoAsync(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Run process auto async
-            异步执行流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAuto(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Run Process auto
-            流程流转
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAutoAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Run process auto async
-            异步流程流转
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Withdraw">
-            <summary>
-            Process withdraw
-            流程撤销
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Withdraw(System.Data.IDbConnection,System.Data.IDbTransaction)">
-            <summary>
-            Process withdraw
-            流程撤销
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.WithdrawProcess(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process withdraw
-            流程撤销
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.WithdrawProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process withdraw async
-            异步撤销流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.WithdrawProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Process withdraw
-            撤销流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.WithdrawProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Process withdraw async
-            异步撤销流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SendBack">
-            <summary>
-            Process sendback
-            流程退回
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SendBack(System.Data.IDbConnection,System.Data.IDbTransaction)">
-            <summary>
-            Process sendback
-            流程退回
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SendBackProcess(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process sendback
-            退回到上一步
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SendBackProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process sendback async
-            异步退回流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SendBackProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Process sendback
-            退回到上一步
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SendBackProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Process sendback async
-            异步退回流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Resend">
-            <summary>
-            Process Resend
-            流程返送
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Resend(System.Data.IDbConnection,System.Data.IDbTransaction)">
-            <summary>
-            Process Resend
-            流程返送
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.ResendProcess(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process Resend
-            从新返送(来自sendback的节点)
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.ResendProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process Resend Async
-            异步返送流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.ResendProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Process Resend
-            从新返送(来自sendback的节点)
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.ResendProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Process Resend Async
-            异步返送流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Revise">
-            <summary>
-            Process revise
-            (Reassignment of tasks to returned nodes)
-            流程修订
-            (退回后的节点重新指派任务)
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Revise(System.Data.IDbConnection,System.Data.IDbTransaction)">
-            <summary>
-            Process revise
-            流程修订
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.ReviseProcess(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process revise
-            从新修订(来自sendback的节点)
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.ReviseProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process revise async
-            异步修订流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.ReviseProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Process revise
-            从新修订(来自sendback的节点)
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.ReviseProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Process revise async
-            异步修订流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Reverse">
-            <summary>
-            Process reverse
-            (Completed processes can be reversed)
-            流程返签
-            (已经结束的流程可以被复活）
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Reverse(System.Data.IDbConnection,System.Data.IDbTransaction)">
-            <summary>
-            Process reverse
-            流程返签
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.ReverseProcess(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process reverse
-            流程返签
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.ReverseProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process reverse async
-            异步返签流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.ReverseProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Process reverse
-            流程返签
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.ReverseProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Process reverse async
-            异步返签流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Reject">
-            <summary>
-            Process reject
-            流程驳回
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Reject(System.Data.IDbConnection,System.Data.IDbTransaction)">
-            <summary>
-            Process reject
-            流程驳回
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RejectProcess(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process reject
-            流程驳回
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RejectProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process reject async
-            异步驳回流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RejectProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Process reject
-            流程驳回
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RejectProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Process reject async
-            异步驳回流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Close">
-            <summary>
-            Process Close
-            流程关闭
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Close(System.Data.IDbConnection,System.Data.IDbTransaction)">
-            <summary>
-             Process Close
-            流程关闭
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.CloseProcess(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-             Process Close
-            流程关闭
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.CloseProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-             Process Close Async
-            异步关闭流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.CloseProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-             Process Close
-            流程关闭
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.CloseProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-             Process Close Async
-            异步关闭流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Jump(Slickflow.Engine.Common.JumpOptionEnum)">
-            <summary>
-            Process Jump
-            流程跳转
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Jump(System.Data.IDbConnection,System.Data.IDbTransaction,Slickflow.Engine.Common.JumpOptionEnum)">
-            <summary>
-            Process Jump
-            流程跳转
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.JumpProcess(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Common.JumpOptionEnum)">
-            <summary>
-            Process Jump
-            流程跳转
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.JumpProcessAsync(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Common.JumpOptionEnum)">
-            <summary>
-            Process Jump Async
-            异步流程跳转
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.JumpProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction,Slickflow.Engine.Common.JumpOptionEnum)">
-            <summary>
-            Process Jump
-            流程跳转
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.JumpProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction,Slickflow.Engine.Common.JumpOptionEnum)">
-            <summary>
-            Process Jump Async
-            异步流程跳转
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.FillNextActivityPerforms(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Common.JumpOptionEnum)">
-            <summary>
-            Regenerate the list of performers for the jump activity
-            重新生成跳转活动的执行人员列表
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForward">
-            <summary>
-            Process Signforward
-            流程加签
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForward(System.Data.IDbConnection,System.Data.IDbTransaction)">
-            <summary>
-            Process Signforward
-            流程加签
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForwardProcess(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process Signforward
-            加签
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForwardProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process Signforward Async
-            异步流程加签
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForwardProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Process Signforward
-            流程加签
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForwardProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
-            <summary>
-            Process Signforward Async
-            异步流程加签
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.ResumeProcess(System.Int32,Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Resume process instance (only applicable to suspended operations)
-            Suspend (restore) processes, cancel (run) processes, discard processes in progress or completed
-            恢复流程实例(只针对挂起操作）
-            挂起(恢复)流程成、取消(运行的)流程、废弃执行中或执行完的流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SuspendProcess(System.Int32,Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process Suspend
-            挂起流程实例
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.CancelProcess(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process Cancel
-            取消流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.DiscardProcess(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process Discard
-            废弃流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.TerminateProcess(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Process Terminate
-            终结流程
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.TerminateProcess(System.Data.IDbConnection,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.String,System.String,System.Data.IDbTransaction)">
-            <summary>
-            Process Terminate
-            终结流程实例
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.AgreeTask(System.Int32)">
-            <summary>
-            Agree
-            同意
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.RefuseTask(System.Int32)">
-            <summary>
-            Refuse
-            拒绝
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SetTaskRead(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Set task to read status (retrieve task based on task Id)
-            设置任务为已读状态(根据任务ID获取任务)
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SetTaskEMailSent(System.Int32)">
-            <summary>
-            Set task email send status
-            更新任务邮件发送状态
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetTaskView(System.Int32)">
-            <summary>
-            Get task view
-            获取任务视图
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetTaskView(System.Int32,System.Int32)">
-            <summary>
-            Get task view
-            获取任务视图
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetTaskView(System.Data.IDbConnection,System.String,System.String,System.String,System.Data.IDbTransaction)">
-            <summary>
-            Get task view
-            获取任务视图
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetRunningTasks(Slickflow.Engine.Business.Entity.TaskQuery)">
-            <summary>
-            Get running tasks
-            获取运行中的任务
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetFirstRunningTask(System.Int32)">
-            <summary>
-            Get first runnint task of activity instance
-            获取活动实例下的第一个任务记录
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetReadyTasks(Slickflow.Engine.Business.Entity.TaskQuery)">
-            <summary>
-            Get tasks in ready status
-            获取待办任务
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetCompletedTasks(Slickflow.Engine.Business.Entity.TaskQuery)">
-            <summary>
-            Get tasks in completed status
-            获取办结任务列表
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.GetTaskListEMailUnSent">
-            <summary>
-            Get task list about email unsent
-            获取未发送邮件通知的待办任务列表
-            </summary>
-        </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.GetProcessByVersion(System.String,System.String)">
             <summary>
             Get Process by Version
@@ -7412,14 +6977,14 @@
         </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.GetProcessByName(System.String,System.String)">
             <summary>
-            Get Process by Version
-            流程定义数据读取
+            Get Process by Name
+            根据流程名称获取流程定义
             </summary>
         </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.GetProcessByCode(System.String,System.String)">
             <summary>
-            Get Process by Version
-            流程定义数据读取
+            Get Process by Code
+            根据流程代码获取流程定义
             </summary>
         </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.GetProcessUsing(System.String)">
@@ -7538,8 +7103,803 @@
         </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.ResetCache(System.String,System.String)">
             <summary>
-            Reset Cachae
+            Reset Cache
             重置缓存中的流程定义信息
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Service.WorkflowService.startLock">
+            <summary>
+            Lock object
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Start">
+            <summary>
+            Process Startup
+            Coding Example:
+            var wfResult = wfService.CreateRunner(runner.UserId, runner.UserName)
+                            .UseApp(runner.AppInstanceId, runner.AppName, runner.AppInstanceCode)
+                            .UseProcess(runner.ProcessId, runner.Version)
+                            .Start();
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Start(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            Process Startup
+            Coding Example:
+            var wfResult = wfService.CreateRunner(runner.UserId, runner.UserName)
+                            .UseApp(runner.AppInstanceId, runner.AppName, runner.AppInstanceCode)
+                            .UseProcess(runner.ProcessId, runner.Version)
+                            .Start(conn, trans);
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Start process
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Start process async
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Start process
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Start process async
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.StartByMessage">
+            <summary>
+            Start by Message
+            消息启动流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.StartByMessage(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            Start by Message
+            消息启动流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcessByMessage(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Start by Message
+            流程流转
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcessByMessageAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Start by Message Async
+            异步消息启动流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcessByMessage(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Start by Message
+            流程流转
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.StartProcessByMessageAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Start by Message Async
+            异步启动流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Run">
+            <summary>
+            Running process
+            Coding example:
+            var wfResult = wfService.CreateRunner(runner.UserId, runner.UserName)
+                            .UseApp(runner.AppInstanceId, runner.AppName, runner.AppInstanceCode)
+                            .UseProcess(runner.ProcessId, runner.Version)
+                            .Run();
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Run(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            Running process
+            Coding example:
+            var wfResult = wfService.CreateRunner(runner.UserId, runner.UserName)
+                            .UseApp(runner.AppInstanceId, runner.AppName, runner.AppInstanceCode)
+                            .UseProcess(runner.ProcessId, runner.Version)
+                            .Run(conn, trans);
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessApp(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process Run
+            Explanation: The new method uniformly calls RunProcess()
+            流程流转
+            说明：新方法统一调用 RunProcess()
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessApp(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Process Run
+            Explanation: The new method uniformly calls RunProcess()
+            流程流转
+            说明：新方法统一调用 RunProcess()
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Run Process
+            流程流转
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Run Process Async
+            异步执行流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Run Process
+            流程流转
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Run Process Async
+            异步流程流转
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunAuto">
+            <summary>
+            Run Automatically
+            自动运行
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunAuto(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            Run Automatically
+            自动运行
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAuto(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Run process auto
+            流程执行自动
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAutoAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Run process auto async
+            异步执行自动
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAuto(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Run Process auto
+            流程执行自动
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RunProcessAutoAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Run process auto async
+            异步流程执行自动
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Withdraw">
+            <summary>
+            Process withdraw
+            流程撤回
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Withdraw(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            Process withdraw
+            流程撤回
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.WithdrawProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process withdraw
+            流程撤回
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.WithdrawProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process withdraw async
+            异步撤回流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.WithdrawProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Process withdraw
+            流程流转
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.WithdrawProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Process withdraw async
+            异步撤回流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SendBack">
+            <summary>
+            Process sendback
+            流程退回
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SendBack(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            Process sendback
+            流程退回
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SendBackProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process sendback
+            退回到下一步
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SendBackProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process sendback async
+            异步退回到下一步
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SendBackProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Process sendback
+            退回到下一步
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SendBackProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Process sendback async
+            异步退回到下一步
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Resend">
+            <summary>
+            Process Resend
+            流程转发
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Resend(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            Process Resend
+            流程转发
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ResendProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process Resend
+            重新转发（退回到的节点）
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ResendProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process Resend Async
+            异步转发流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ResendProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Process Resend
+            重新转发（退回到的节点）
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ResendProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Process Resend Async
+            异步转发流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Revise">
+            <summary>
+            Process revise
+            (Reassignment of tasks to returned nodes)
+            流程修订
+            (�˻غ�Ľڵ�����ָ������)
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Revise(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            Process revise
+            流程修订
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ReviseProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process revise
+            流程修订（退回后的节点重新指派任务）
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ReviseProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process revise async
+            异步修订流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ReviseProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Process revise
+            流程修订（退回后的节点重新指派任务）
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ReviseProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Process revise async
+            异步修订流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Reverse">
+            <summary>
+            Process reverse
+            (Completed processes can be reversed)
+            流程反签
+            (�Ѿ����������̿��Ա����
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Reverse(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            Process reverse
+            流程反签
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ReverseProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process reverse
+            流程反签
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ReverseProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process reverse async
+            异步反签流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ReverseProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Process reverse
+            流程反签
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ReverseProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Process reverse async
+            异步反签流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Reject">
+            <summary>
+            Process reject
+            流程驳回
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Reject(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            Process reject
+            流程驳回
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RejectProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process reject
+            流程驳回
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RejectProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process reject async
+            异步驳回流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RejectProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Process reject
+            流程驳回
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RejectProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Process reject async
+            异步驳回流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Close">
+            <summary>
+            Process Close
+            流程关闭
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Close(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+             Process Close
+            流程关闭
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.CloseProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+             Process Close
+            流程关闭
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.CloseProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+             Process Close Async
+            异步关闭流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.CloseProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+             Process Close
+            流程关闭
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.CloseProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+             Process Close Async
+            异步关闭流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Jump(Slickflow.Engine.Common.JumpOptionEnum)">
+            <summary>
+            Process Jump
+            流程跳转
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.Jump(System.Data.IDbConnection,System.Data.IDbTransaction,Slickflow.Engine.Common.JumpOptionEnum)">
+            <summary>
+            Process Jump
+            流程跳转
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.JumpProcess(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Common.JumpOptionEnum)">
+            <summary>
+            Process Jump
+            流程跳转
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.JumpProcessAsync(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Common.JumpOptionEnum)">
+            <summary>
+            Process Jump Async
+            异步跳转流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.JumpProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction,Slickflow.Engine.Common.JumpOptionEnum)">
+            <summary>
+            Process Jump
+            流程跳转
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.JumpProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction,Slickflow.Engine.Common.JumpOptionEnum)">
+            <summary>
+            Process Jump Async
+            异步跳转流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.FillNextActivityPerforms(Slickflow.Engine.Common.WfAppRunner,Slickflow.Engine.Common.JumpOptionEnum)">
+            <summary>
+            Regenerate the list of performers for the jump activity
+            流程跳转动作执行人员列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForward">
+            <summary>
+            Process Signforward
+            流程会签
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForward(System.Data.IDbConnection,System.Data.IDbTransaction)">
+            <summary>
+            Process Signforward
+            流程会签
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForwardProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process Signforward
+            会签
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForwardProcessAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process Signforward Async
+            异步流程会签
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForwardProcess(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Process Signforward
+            流程会签
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SignForwardProcessAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Data.IDbTransaction)">
+            <summary>
+            Process Signforward Async
+            异步流程会签
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ResumeProcess(System.Int32,Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Resume process instance (only applicable to suspended operations)
+            Suspend (restore) processes, cancel (run) processes, discard processes in progress or completed
+            恢复流程实例(只针对已挂起)
+            挂起(恢复)流程、取消(运行)流程、撤回执行或执行中的流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SuspendProcess(System.Int32,Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process Suspend
+            流程挂起实例
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.CancelProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process Cancel
+            取消流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.DiscardProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process Discard
+            流程流转
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.TerminateProcess(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Process Terminate
+            终止流程
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.TerminateProcess(System.Data.IDbConnection,Slickflow.Engine.Business.Entity.ProcessInstanceEntity,System.String,System.String,System.Data.IDbTransaction)">
+            <summary>
+            Process Terminate
+            终止流程实例
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.AgreeTask(System.Int32)">
+            <summary>
+            Agree
+            同意
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.RefuseTask(System.Int32)">
+            <summary>
+            Refuse
+            拒绝
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetFirstActivity(System.String,System.String)">
+            <summary>
+            Obtain the first feasible node of the process
+            获取流程的第一个可办理节点
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetTaskActivityList(System.String,System.String)">
+            <summary>
+            Get the node list of task types
+            获取任务类型的节点列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetTaskActivityList(System.Int32)">
+            <summary>
+            Get the node list of task types
+            获取任务类型的节点列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetAllTaskActivityList(System.String,System.String)">
+            <summary>
+            Get a list of nodes for all task types (including countersignature and subprocesses)
+            获取全部任务类型的节点列表（包含会签和子流程）
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivity(System.String,System.String,System.String)">
+            <summary>
+            Get the next node information of the current node
+            获取当前节点的下一个节点信息
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityTree(System.String,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Get the next node information of the current node
+            获取当前节点的下一个节点信息
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivity(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Simple mode: Obtain the next node of the process based on the application 
+            (without considering the situation of multiple subsequent nodes)
+            简单模式：根据应用获取流程下一步节点(不考虑有多个后续节点的情况）
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivity(System.Int32,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Simple mode: Obtain the next node of the process based on the application 
+            (without considering the situation of multiple subsequent nodes)
+            简单模式：根据应用获取流程下一步节点(不考虑有多个后续节点的情况）
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityTree(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Obtain the next node list according to the application process
+            根据应用获取流程下一步节点列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityTreeAsync(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Obtain the next node list according to the application process
+            根据应用获取流程下一步节点列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityTree(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String},System.Data.IDbTransaction)">
+            <summary>
+            Obtain the next node list according to the application process
+            根据应用获取流程下一步节点列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityTreeAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String},System.Data.IDbTransaction)">
+            <summary>
+            Obtain the next node list according to the application process
+            根据应用获取流程下一步节点列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityTree(System.Int32,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Obtain the next node list according to the application process
+            获取下一步活动列表树
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityTreeAsync(System.Int32,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Obtain the next node list according to the application process
+            获取下一步活动列表树
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityList(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String},System.Data.IDbTransaction)">
+            <summary>
+            Obtain the next activity list according to the application process
+            根据应用获取流程下一步活动列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityListAsync(System.Data.IDbConnection,Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String},System.Data.IDbTransaction)">
+            <summary>
+            Obtain the next activity list according to the application process
+            根据应用获取流程下一步活动列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityList(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Obtain the next activity list according to the application process
+            根据应用获取流程下一步活动列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityListAsync(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Obtain the next activity list according to the application process
+            根据应用获取流程下一步活动列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityList(System.Int32,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Obtain the next activity list according to the application process
+            获取下一步活动列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityListAsync(System.Int32,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Obtain the next activity list according to the application process
+            获取下一步活动列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.ConvertNodeViewListToActivityList(System.Collections.Generic.IList{Slickflow.Engine.Common.NodeView},System.String,System.String)">
+            <summary>
+            Convert NodeView list to Activity list
+            将 NodeView 列表转换为 Activity 列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityRoleUserTree(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            According to the application, obtain the next node list of the process, including role users
+            根据应用获取流程下一步节点列表，包含角色用户
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextActivityRoleUserTreeAsync(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            According to the application, obtain the next node list of the process, including role users
+            根据应用获取流程下一步节点列表，包含角色用户
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextStepInfo(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            According to the application, obtain the next node list of the process, including role users
+            Includes:
+            1) The next step for the gateway is to add a pre loaded user list of personnel;
+            2) The next step in the co signing mode is to add a pre loaded user list of personnel;
+            根据应用获取流程下一步节点列表，包含角色用户
+            包含：
+            1) 网关下一步添加人员的预加载用户列表；
+            2) 会签模式的下一步添加人员的预加载用户列表；
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetNextStepInfoAsync(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Asynchronous retrieval of next step list
+            异步获取下一步列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetFirstActivityRoleUserTree(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Get the list of node roles and personnel for the next step of the starting node when the process starts
+            Unified integration into: GetNextActivityRoleUserTree()
+            流程启动时获取开始节点下一步的节点角色人员列表
+            统一整合到: GetNextActivityRoleUserTree()
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetFirstActivityRoleUserTreeAsync(Slickflow.Engine.Common.WfAppRunner,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Get the list of node roles and personnel for the next step of the starting node when the process starts
+            Unified integration into: GetNextActivityRoleUserTree()
+            流程启动时获取开始节点下一步的节点角色人员列表
+            统一整合到: GetNextActivityRoleUserTree()
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetActivityInstanceCompleted(System.Int32)">
+            <summary>
+            Get activity instance completed
+            获取已经完成的节点
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetActivityInstanceCompleted(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Get activity instance completed
+            获取已经完成的节点记录
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetTransitionInstanceList(Slickflow.Engine.Business.Entity.TransitionInstanceQuery)">
+            <summary>
+            Get transition instance list
+            获取转移实例记录
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetActivityEntity(System.String,System.String,System.String)">
+            <summary>
+            Get activity entity
+            获取当前活动实体
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetActivityRoles(System.String,System.String,System.String)">
+            <summary>
+            Get activity roles
+            获取活动节点下的角色数据
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetPreviousActivityTree(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Get previous activity list
+            获取上一步节点信息
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetPreviousActivityTreeAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Get previous activity list
+            获取上一步节点信息
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetPreviousStepInfo(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Get previous activity list
+            获取上一步节点信息
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetPreviousStepInfoAsync(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Get previous activity list
+            异步获取上一步节点信息
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetSignForwardStepInfo(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Obtain performer information for the signing process
+            获取加签步骤人员信息
             </summary>
         </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.GetProcessInstance(System.Int32)">
@@ -7710,6 +8070,66 @@
             保存流程变量
             </summary>
         </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SetTaskRead(Slickflow.Engine.Common.WfAppRunner)">
+            <summary>
+            Set task to read status (retrieve task based on task Id)
+            设置任务为已读状态(根据任务ID获取任务)
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.SetTaskEMailSent(System.Int32)">
+            <summary>
+            Set task email send status
+            更新任务邮件发送状态
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetTaskView(System.Int32)">
+            <summary>
+            Get task view
+            获取任务视图
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetTaskView(System.Int32,System.Int32)">
+            <summary>
+            Get task view
+            获取任务视图
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetTaskView(System.Data.IDbConnection,System.String,System.String,System.String,System.Data.IDbTransaction)">
+            <summary>
+            Get task view
+            获取任务视图
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetRunningTasks(Slickflow.Engine.Business.Entity.TaskQuery)">
+            <summary>
+            Get running tasks
+            获取运行中的任务
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetFirstRunningTask(System.Int32)">
+            <summary>
+            Get first runnint task of activity instance
+            获取活动实例下的第一个任务记录
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetReadyTasks(Slickflow.Engine.Business.Entity.TaskQuery)">
+            <summary>
+            Get tasks in ready status
+            获取待办任务
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetCompletedTasks(Slickflow.Engine.Business.Entity.TaskQuery)">
+            <summary>
+            Get tasks in completed status
+            获取办结任务列表
+            </summary>
+        </member>
+        <member name="M:Slickflow.Engine.Service.WorkflowService.GetTaskListEMailUnSent">
+            <summary>
+            Get task list about email unsent
+            获取未发送邮件通知的待办任务列表
+            </summary>
+        </member>
         <member name="M:Slickflow.Engine.Service.WorkflowService.GetRoleAll">
             <summary>
             Get role all
@@ -7762,103 +8182,6 @@
             <summary>
             Get Field Edit Permission List By Process
             根据流程查询表单及字段编辑权限
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.CreateRunner(Slickflow.Engine.Common.WfAppRunner)">
-            <summary>
-            Create runner
-            创建运行用户身份
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.CreateRunner(System.String,System.String)">
-            <summary>
-            Create runner
-            创建运行用户身份
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.UseApp(System.String,System.String,System.String)">
-            <summary>
-            User application
-            绑定业务票据
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.UseProcess(System.String,System.String)">
-            <summary>
-            Use Process Definition
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.NextStepInt(Slickflow.Engine.Common.PerformerList)">
-            <summary>
-            Next activity
-            This method is used for internal testing
-            Special note: Do not use this method in formal production environments
-            下一步活动
-            内部测试时用到此方法
-            特别注意：正式生产环境，不要使用该方法
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.NextStepInt(System.String,System.String)">
-            <summary>
-            Next activity
-            This method is used for internal testing
-            Special note: Do not use this method in formal production environments
-            下一步活动
-            内部测试时用到此方法
-            特别注意：正式生产环境，不要使用该方法
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.NextStep(System.Collections.Generic.IDictionary{System.String,Slickflow.Engine.Common.PerformerList})">
-            <summary>
-            Next step information
-            下一步活动
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.NextStep(System.String,Slickflow.Engine.Common.PerformerList)">
-            <summary>
-            Next step information
-            下一步活动
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.PrevStepInt">
-            <summary>
-            Previous step internal
-            指定上一步类型
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.IfCondition(System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            Set condition
-            设置变量条件
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.IfCondition(System.String,System.String)">
-            <summary>
-            Set condition
-            添加条件变量
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.OnTask(System.Int32)">
-            <summary>
-            Set task
-            传递任务Id
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SetVariable(System.String,System.String)">
-            <summary>
-            Set variable
-            添加动态变量
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.SetVariable(System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            Set variable
-            添加动态变量
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Service.WorkflowService.Subscribe(Slickflow.Engine.Delegate.EventFireTypeEnum,System.Func{Slickflow.Engine.Delegate.DelegateContext,Slickflow.Engine.Delegate.IDelegateService,System.Boolean})">
-            <summary>
-            Subscribe
-            活动事件订阅
             </summary>
         </member>
         <member name="T:Slickflow.Engine.Storage.XPDLLocalStorage">
@@ -7973,30 +8296,6 @@
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
-        </member>
-        <member name="T:Slickflow.Engine.Utility.EnumHelper">
-            <summary>
-            Convert enumeration types based on string conversion
-            根据字符串转换枚举类型
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Utility.EnumHelper.ParseEnum``1(System.String)">
-            <summary>
-            Parse Enum
-            枚举类型解析
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Utility.EnumHelper.TryParseEnum``1(System.String)">
-            <summary>
-            Parse Enum
-            枚举类型解析
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Utility.EnumHelper.GetFirst``1(System.Collections.Generic.List{``0})">
-            <summary>
-            Get the first element of a non empty list
-            获取非空列表的首个元素
-            </summary>
         </member>
         <member name="T:Slickflow.Engine.Utility.MD5Helper">
             <summary>
@@ -8252,24 +8551,24 @@
             Action Type
             </summary>
         </member>
-        <member name="T:Slickflow.Engine.Xpdl.Common.AIServiceTypeEnum">
+        <member name="T:Slickflow.Engine.Xpdl.Common.AiServiceTypeEnum">
             <summary>
             AI Service Type
             </summary>
         </member>
-        <member name="F:Slickflow.Engine.Xpdl.Common.AIServiceTypeEnum.None">
+        <member name="F:Slickflow.Engine.Xpdl.Common.AiServiceTypeEnum.None">
             <summary>
             None
             </summary>
         </member>
-        <member name="F:Slickflow.Engine.Xpdl.Common.AIServiceTypeEnum.LLM">
+        <member name="F:Slickflow.Engine.Xpdl.Common.AiServiceTypeEnum.LLM">
             <summary>
             Large Language Model
             </summary>
         </member>
-        <member name="F:Slickflow.Engine.Xpdl.Common.AIServiceTypeEnum.PlugIn">
+        <member name="F:Slickflow.Engine.Xpdl.Common.AiServiceTypeEnum.RAG">
             <summary>
-            PlugIn: such as OCR, auto gen...
+            RAG: such as OCR, auto gen...
             </summary>
         </member>
         <member name="T:Slickflow.Engine.Xpdl.Common.CompareTypeEnum">
@@ -8419,6 +8718,12 @@
         <member name="T:Slickflow.Engine.Xpdl.Common.ServiceMethodEnum">
             <summary>
             Service Method Type
+            </summary>
+        </member>
+        <member name="F:Slickflow.Engine.Xpdl.Common.ServiceMethodEnum.LocalMethod">
+            <summary>
+            Local method resolved from registry by key (BPMN2 ##DelegateExpression semantic).
+            从委托注册表按 key 解析并调用的本地方法。
             </summary>
         </member>
         <member name="T:Slickflow.Engine.Xpdl.Common.SignForwardTypeEnum">
@@ -10255,7 +10560,7 @@
             Next Activity Schedule Factory
             </summary>
         </member>
-        <member name="M:Slickflow.Engine.Xpdl.Schedule.NextActivityScheduleFactory.CreateActivitySchedule(Slickflow.Engine.Xpdl.IProcessModel,Slickflow.Engine.Common.GatewaySplitJoinTypeEnum,System.Nullable{System.Int32})">
+        <member name="M:Slickflow.Engine.Xpdl.Schedule.NextActivityScheduleFactory.CreateActivityScheduleGateway(Slickflow.Engine.Xpdl.IProcessModel,Slickflow.Engine.Common.GatewaySplitJoinTypeEnum,System.Nullable{System.Int32})">
             <summary>
             Create ActivitySchedule
             </summary>
@@ -10306,30 +10611,6 @@
             <summary>
             Previous Activity Mathced Result
             上一步节点匹配结果
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Xpdl.Template.ProcessXmlInitializer.InitNewBPMNFile">
-            <summary>
-            Initialize bpmn file
-            初始化流程实体
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Xpdl.Template.ProcessXmlInitializer.InitNewBPMNFileBlank(Slickflow.Engine.Business.Entity.ProcessFileEntity)">
-            <summary>
-            Intialize bpmn file blank
-            初始化流程实体
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Xpdl.Template.ProcessXmlInitializer.GenerateXmlContentWithStartNode(System.String,System.String,System.String,System.String)">
-            <summary>
-            Generate xml content with start node
-            生成基本XML文档
-            </summary>
-        </member>
-        <member name="M:Slickflow.Engine.Xpdl.Template.ProcessXmlInitializer.CreateDocumentRoot">
-            <summary>
-            Create document root element
-            创建根流程文档
             </summary>
         </member>
         <member name="T:Slickflow.Engine.Xpdl.XPDLDefinition">

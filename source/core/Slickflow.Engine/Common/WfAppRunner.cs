@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Slickflow.Engine.Delegate;
+using Slickflow.Engine.Event;
 
 namespace Slickflow.Engine.Common
 {
@@ -147,10 +147,10 @@ namespace Slickflow.Engine.Common
         public NextPerformerIntTypeEnum NextPerformerType { get; set; }
 
         /// <summary>
-        /// Deleage Event
-        /// 委托事件
+        /// Event Subscription List
+        /// 事件订阅列表
         /// </summary>
-        internal DelegateEventList DelegateEventList = new DelegateEventList();
+        internal EventSubscriptionList EventSubscriptionList = new EventSubscriptionList();
 
         /// <summary>
         /// Topic used for message initiation

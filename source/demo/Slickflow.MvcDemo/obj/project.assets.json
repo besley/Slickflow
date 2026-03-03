@@ -5622,11 +5622,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\Slickflow.MvcDemo.csproj",
+      "projectUniqueName": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\demo\\Slickflow.MvcDemo\\Slickflow.MvcDemo.csproj",
       "projectName": "Slickflow.MvcDemo",
-      "projectPath": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\Slickflow.MvcDemo.csproj",
+      "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\demo\\Slickflow.MvcDemo\\Slickflow.MvcDemo.csproj",
       "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-      "outputPath": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.MvcDemo\\obj\\",
+      "outputPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\demo\\Slickflow.MvcDemo\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -5648,23 +5648,23 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj": {
-              "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj"
+            "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj": {
+              "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj"
             },
-            "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Engine\\Slickflow.Engine.csproj": {
-              "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Engine\\Slickflow.Engine.csproj"
+            "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Engine\\Slickflow.Engine.csproj": {
+              "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Engine\\Slickflow.Engine.csproj"
             },
-            "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj": {
-              "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj"
+            "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj": {
+              "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj"
             },
-            "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj": {
-              "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj"
+            "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj": {
+              "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj"
             },
-            "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj": {
-              "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj"
+            "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj": {
+              "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj"
             },
-            "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj": {
-              "projectPath": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj"
+            "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj": {
+              "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj"
             }
           }
         }

@@ -1,18 +1,27 @@
-﻿using Slickflow.AI.Entity;
+using Slickflow.AI.Entity;
 using Slickflow.AI.Implementation;
 using Slickflow.AI.Manager;
 using Slickflow.AI.Configuration;
+using Slickflow.AI.Common;
 using Slickflow.WebUtility;
 
 namespace Slickflow.AI.Service
 {
+    /// <summary>
+    /// AI 大模型调用服务。严格区分两种配置来源：
+    /// 1) InvokeAIServiceAsync：工作流节点执行，从 ai_activity_config → ai_model_provider 读取
+    /// 2) InvokeWithLocalConfigAsync：文字生成工作流等，从 appsettings (AiModelProvider:OpenAI/QianWen) 读取
+    /// </summary>
     public class AiFastCallingService : IAiFastCallingService
     {
         public AiFastCallingService()
         {
         }
 
-        #region Calling AI Service, mainly include LLLM
+        #region 工作流节点执行 - 从 ai_activity_config、ai_model_provider 读取
+        /// <summary>
+        /// 工作流节点执行：BaseUrl、ApiKey 等仅从 ai_activity_config → ai_model_provider 读取，不使用 AiAppConfiguration
+        /// </summary>
         public async Task<string> InvokeAIServiceAsync(AiActivityConfigEntity axConfig, IList<MultiMediaFile> mediaFileList)
         {
             if (axConfig == null)
@@ -20,19 +29,19 @@ namespace Slickflow.AI.Service
                 throw new ArgumentNullException(nameof(axConfig), "configInfo cannot be null");
             }
 
-            // 1. 验证 AxConfig 基本配置
-            if (string.IsNullOrWhiteSpace(axConfig.ConfigUUID))
+            // Verify the basic configuration of AxConfig
+            if (string.IsNullOrWhiteSpace(axConfig.ProcessId) || string.IsNullOrWhiteSpace(axConfig.Version) || string.IsNullOrWhiteSpace(axConfig.ActivityId))
             {
-                throw new InvalidOperationException("ConfigUUID is not set in AxConfig");
+                throw new InvalidOperationException("ProcessId, Version, and ActivityId are required in AxConfig");
             }
 
-            // 2. 根据 model_provider_id 查询 ai_model_provider 表获取 baseUrl 和 apiKey
+            // Query the ai_model_provider table according to model_provider_id to obtain the baseUrl and apiKey
             if (!axConfig.ModelProviderId.HasValue)
             {
-                throw new InvalidOperationException($"ModelProviderId is not set in AxConfig for configUUID: {axConfig.ConfigUUID}");
+                throw new InvalidOperationException($"ModelProviderId is not set in AxConfig for ProcessId: {axConfig.ProcessId}, Version: {axConfig.Version}, ActivityId: {axConfig.ActivityId}");
             }
 
-            // 3. 获取模型提供者配置
+            // Get model provider configuration
             var modelProviderManager = new AiModelProviderManager();
             var modelProvider = modelProviderManager.GetById(axConfig.ModelProviderId.Value);
 
@@ -73,8 +82,7 @@ namespace Slickflow.AI.Service
             var timeout = axConfig.Timeout;
 
             //using decryptedApiKey
-            var response = await aiLargeModelService.InvokeAIChatServiceAsync(baseUrl, decryptedApiKey, modelName, systemPrompt, userMessage,
-                mediaFileList, temperature, maxTokens, timeout);
+            var response = await aiLargeModelService.InvokeAIChatServiceAsync(baseUrl, decryptedApiKey, mediaFileList, axConfig);
 
             if (response.Status == 1)
             {
@@ -85,6 +93,60 @@ namespace Slickflow.AI.Service
                 return string.Empty;
             }
         }
+        #endregion
+
+        #region 本地配置场景 - 从 appsettings (AiAppConfiguration) 读取
+        /// <summary>
+        /// 文字生成工作流等场景：BaseUrl、Endpoint 从 appsettings AiModelProvider:OpenAI 或 QianWen 读取，不使用 ai_activity_config
+        /// </summary>
+        public async Task<string> InvokeWithLocalConfigAsync(string userMessage, string systemPrompt = null, string provider = "OpenAI")
+        {
+            var configOptions = ApiKeyCryptoHelper.AiAppConfigOptions ?? throw new InvalidOperationException("AiAppConfiguration 未配置，请检查 appsettings.json AiModelProvider 节。");
+            string apiUrl;
+            string apiKey;
+            string modelName;
+            IAiLlmService aiLlmService;
+
+            if (string.Equals(provider, "QianWen", StringComparison.OrdinalIgnoreCase))
+            {
+                var qw = configOptions.QianWen ?? throw new InvalidOperationException("AiModelProvider:QianWen 未配置。");
+                if (string.IsNullOrWhiteSpace(qw.ApiKey) || string.IsNullOrWhiteSpace(qw.BaseUrl) || string.IsNullOrWhiteSpace(qw.Endpoint))
+                    throw new InvalidOperationException("QianWen 需配置 ApiKey、BaseUrl、Endpoint。");
+                apiUrl = qw.ChatApiUrl;
+                apiKey = qw.ApiKey;
+                modelName = qw.Model ?? "gpt-4o";
+                aiLlmService = AiLlmServiceFactory.CreateLargeModelServcie("QianWen");
+            }
+            else
+            {
+                var openAi = configOptions.OpenAI ?? throw new InvalidOperationException("AiModelProvider:OpenAI 未配置。");
+                if (string.IsNullOrWhiteSpace(openAi.ApiKey) || string.IsNullOrWhiteSpace(openAi.BaseUrl) || string.IsNullOrWhiteSpace(openAi.ApiUrl))
+                    throw new InvalidOperationException("OpenAI 需配置 ApiKey、BaseUrl、ApiUrl。");
+                apiUrl = openAi.ChatApiUrl;
+                apiKey = openAi.ApiKey;
+                modelName = openAi.Model ?? "gpt-4o";
+                aiLlmService = AiLlmServiceFactory.CreateLargeModelServcie("OpenAI");
+            }
+
+            var messages = new List<CustomApiMessage>();
+            if (!string.IsNullOrWhiteSpace(systemPrompt))
+                messages.Add(new CustomApiMessage { Role = "system", Content = systemPrompt });
+            messages.Add(new CustomApiMessage { Role = "user", Content = userMessage });
+
+            var axConfig = new AiActivityConfigEntity
+            {
+                ModelName = modelName,
+                Temperature = 0.3m,
+                MaxTokens = 2048,
+                Timeout = 60
+            };
+
+            var response = await aiLlmService.InvokeAIChatServiceWithMessagesAsync(apiUrl, apiKey, messages, axConfig);
+            if (response?.Status == 1 && response.Entity != null)
+                return response.Entity.Content ?? string.Empty;
+            return string.Empty;
+        }
+        #endregion
 
         public async Task<string> TestModelConnectionAsync(string baseUrl, string apiUUID, string apiKey, string modelProvider)
         {
@@ -111,6 +173,5 @@ namespace Slickflow.AI.Service
 
             return response;
         }
-        #endregion
     }
 }

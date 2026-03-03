@@ -9,7 +9,7 @@ namespace Slickflow.Engine.Xpdl.Common
     /// <summary>
     /// AI Service Type
     /// </summary>
-    public enum AIServiceTypeEnum
+    public enum AiServiceTypeEnum
     {
         /// <summary>
         /// None
@@ -22,8 +22,8 @@ namespace Slickflow.Engine.Xpdl.Common
         LLM = 1,
 
         /// <summary>
-        /// PlugIn: such as OCR, auto gen...
+        /// RAG: such as OCR, auto gen...
         /// </summary>
-        PlugIn = 2,
+        RAG = 2,
     }
 }

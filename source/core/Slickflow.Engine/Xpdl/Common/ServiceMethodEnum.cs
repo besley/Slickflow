@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,6 +17,12 @@ namespace Slickflow.Engine.Xpdl.Common
 
         CSharpLibrary = 3,
 
-        StoreProcedure = 4
+        StoreProcedure = 4,
+
+        /// <summary>
+        /// Local method resolved from registry by key (BPMN2 ##DelegateExpression semantic).
+        /// 从委托注册表按 key 解析并调用的本地方法。
+        /// </summary>
+        LocalMethod = 5
     }
 }

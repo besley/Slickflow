@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj": {}
+    "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj": {}
   },
   "projects": {
-    "D:\\GitHub\\Slickflow\\source\\core\\Dapper\\Dapper.csproj": {
+    "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Dapper\\Dapper.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\core\\Dapper\\Dapper.csproj",
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Dapper\\Dapper.csproj",
         "projectName": "Dapper",
-        "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Dapper\\Dapper.csproj",
+        "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Dapper\\Dapper.csproj",
         "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\source\\core\\Dapper\\obj\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Dapper\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -76,14 +76,14 @@
         }
       }
     },
-    "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.AI\\Slickflow.AI.csproj": {
+    "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.AI\\Slickflow.AI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.AI\\Slickflow.AI.csproj",
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.AI\\Slickflow.AI.csproj",
         "projectName": "Slickflow.AI",
-        "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.AI\\Slickflow.AI.csproj",
+        "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.AI\\Slickflow.AI.csproj",
         "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.AI\\obj\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.AI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -105,14 +105,14 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\GitHub\\Slickflow\\source\\core\\Dapper\\Dapper.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Dapper\\Dapper.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Dapper\\Dapper.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Dapper\\Dapper.csproj"
               },
-              "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj"
               },
-              "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.WebUtility\\Slickflow.WebUtility.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.WebUtility\\Slickflow.WebUtility.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.WebUtility\\Slickflow.WebUtility.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.WebUtility\\Slickflow.WebUtility.csproj"
               }
             }
           }
@@ -162,14 +162,14 @@
         }
       }
     },
-    "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj": {
+    "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj",
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj",
         "projectName": "Slickflow.Data",
-        "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj",
+        "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj",
         "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\obj\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -191,8 +191,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\GitHub\\Slickflow\\source\\core\\Dapper\\Dapper.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Dapper\\Dapper.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Dapper\\Dapper.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Dapper\\Dapper.csproj"
               }
             }
           }
@@ -262,14 +262,14 @@
         }
       }
     },
-    "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Engine\\Slickflow.Engine.csproj": {
+    "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Engine\\Slickflow.Engine.csproj": {
       "version": "3.5.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Engine\\Slickflow.Engine.csproj",
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Engine\\Slickflow.Engine.csproj",
         "projectName": "Slickflow.Engine",
-        "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Engine\\Slickflow.Engine.csproj",
+        "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Engine\\Slickflow.Engine.csproj",
         "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Engine\\obj\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Engine\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -291,26 +291,26 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.AI\\Slickflow.AI.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.AI\\Slickflow.AI.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.AI\\Slickflow.AI.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.AI\\Slickflow.AI.csproj"
               },
-              "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj"
               },
-              "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Form\\Slickflow.Module.Form.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Form\\Slickflow.Module.Form.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Form\\Slickflow.Module.Form.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Form\\Slickflow.Module.Form.csproj"
               },
-              "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj"
               },
-              "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj"
               },
-              "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj"
               },
-              "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.WebUtility\\Slickflow.WebUtility.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.WebUtility\\Slickflow.WebUtility.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.WebUtility\\Slickflow.WebUtility.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.WebUtility\\Slickflow.WebUtility.csproj"
               }
             }
           }
@@ -380,14 +380,14 @@
         }
       }
     },
-    "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Form\\Slickflow.Module.Form.csproj": {
+    "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Form\\Slickflow.Module.Form.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Form\\Slickflow.Module.Form.csproj",
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Form\\Slickflow.Module.Form.csproj",
         "projectName": "Slickflow.Module.Form",
-        "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Form\\Slickflow.Module.Form.csproj",
+        "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Form\\Slickflow.Module.Form.csproj",
         "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Form\\obj\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Form\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -409,11 +409,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj"
               },
-              "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj"
               }
             }
           }
@@ -471,14 +471,14 @@
         }
       }
     },
-    "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj": {
+    "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj": {
       "version": "2.4.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj",
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj",
         "projectName": "2.4.0.0",
-        "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj",
+        "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Localize\\Slickflow.Module.Localize.csproj",
         "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Localize\\obj\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Localize\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -547,14 +547,14 @@
         }
       }
     },
-    "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj": {
+    "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj",
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj",
         "projectName": "Slickflow.Module.Resource",
-        "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj",
+        "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Resource\\Slickflow.Module.Resource.csproj",
         "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module.Resource\\obj\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module.Resource\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -576,11 +576,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj"
               },
-              "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj"
               }
             }
           }
@@ -638,14 +638,14 @@
         }
       }
     },
-    "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj": {
+    "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj",
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj",
         "projectName": "Slickflow.Module",
-        "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj",
+        "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module\\Slickflow.Module.csproj",
         "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Module\\obj\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Module\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -667,8 +667,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Data\\Slickflow.Data.csproj"
               }
             }
           }
@@ -718,14 +718,14 @@
         }
       }
     },
-    "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.WebUtility\\Slickflow.WebUtility.csproj": {
+    "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.WebUtility\\Slickflow.WebUtility.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.WebUtility\\Slickflow.WebUtility.csproj",
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.WebUtility\\Slickflow.WebUtility.csproj",
         "projectName": "Slickflow.WebUtility",
-        "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.WebUtility\\Slickflow.WebUtility.csproj",
+        "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.WebUtility\\Slickflow.WebUtility.csproj",
         "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.WebUtility\\obj\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.WebUtility\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -790,14 +790,14 @@
         }
       }
     },
-    "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj": {
+    "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj",
+        "projectUniqueName": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj",
         "projectName": "Slickflow.BizAppService",
-        "projectPath": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj",
+        "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\demo\\Slickflow.BizAppService\\Slickflow.BizAppService.csproj",
         "packagesPath": "C:\\Users\\lg\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\Slickflow\\source\\demo\\Slickflow.BizAppService\\obj\\",
+        "outputPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\demo\\Slickflow.BizAppService\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -819,8 +819,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Engine\\Slickflow.Engine.csproj": {
-                "projectPath": "D:\\GitHub\\Slickflow\\source\\core\\Slickflow.Engine\\Slickflow.Engine.csproj"
+              "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Engine\\Slickflow.Engine.csproj": {
+                "projectPath": "D:\\Cloud365\\GitHomeCore-20250120\\SfBpmn2\\source\\core\\Slickflow.Engine\\Slickflow.Engine.csproj"
               }
             }
           }

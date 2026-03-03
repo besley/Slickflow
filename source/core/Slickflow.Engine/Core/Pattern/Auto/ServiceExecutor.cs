@@ -1,4 +1,4 @@
-Ôªø
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +14,15 @@ using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Xpdl.Entity;
-using Slickflow.Engine.Delegate;
+using Slickflow.Engine.Event;
 using Slickflow.WebUtility;
+using Slickflow.Engine.External;
 
 namespace Slickflow.Engine.Core.Pattern.Auto
 {
     /// <summary>
     /// Service Executor
-    /// Ëá™Âä®ÊúçÂä°ÊñπÊ≥ïÁ±ª
+    /// ◊‘∂Ø∑˛ŒÒ∑Ω∑®¿‡
     /// </summary>
     internal class ServiceExecutor
     {
@@ -30,7 +31,7 @@ namespace Slickflow.Engine.Core.Pattern.Auto
         /// </summary>
         internal static void ExecuteServiceList(IList<ServiceDetail> serviceList,
             ActivityForwardContext forwardContext,
-            IDelegateService delegateService)
+            IEventService eventService)
         {
             if (serviceList != null && serviceList.Count > 0)
             {
@@ -38,7 +39,7 @@ namespace Slickflow.Engine.Core.Pattern.Auto
                 {
                     if (service.Method != ServiceMethodEnum.None)
                     {
-                        Execute(service, forwardContext, delegateService);
+                        Execute(service, forwardContext, eventService);
                     }
                 }
             }
@@ -49,23 +50,23 @@ namespace Slickflow.Engine.Core.Pattern.Auto
         /// </summary>
         private static void Execute(ServiceDetail service, 
             ActivityForwardContext forwardContext,
-            IDelegateService delegateService)
+            IEventService eventService)
         {
             if (service.Method == ServiceMethodEnum.LocalService)
             {
-                ExecuteLocalService(service, delegateService);
+                ExecuteLocalService(service, eventService);
             }
             else if (service.Method == ServiceMethodEnum.CSharpLibrary)
             {
-                ExecuteCSharpLibraryMethod(service, delegateService);
+                ExecuteCSharpLibraryMethod(service, eventService);
             }
             else if (service.Method == ServiceMethodEnum.WebApi)
             {
-                ExecuteWebApiMethod(service, delegateService);
+                ExecuteWebApiMethod(service, eventService);
             }
             else if (service.Method == ServiceMethodEnum.StoreProcedure)
             {
-                ExecuteStoreProcedureMethod(service, delegateService);
+                ExecuteStoreProcedureMethod(service, eventService);
             }
             else
             {
@@ -76,17 +77,17 @@ namespace Slickflow.Engine.Core.Pattern.Auto
         /// <summary>
         /// Execute Local Service
         /// </summary>
-        private static void ExecuteLocalService(ServiceDetail service, IDelegateService delegateService)
+        private static void ExecuteLocalService(ServiceDetail service, IEventService eventService)
         {
             try
             {
-                //ÂÖàËé∑ÂèñÂÖ∑‰ΩìÂÆûÁé∞Á±ª
+                //œ»ªÒ»°æﬂÃÂ µœ÷¿‡
                 //First, obtain the specific implementation class
                 var instance = ReflectionHelper.GetSpecialInstance<IExternalService>(service.Expression);
-                //ÂÜçË∞ÉÁî®Âü∫Á±ªÂèØÊâßË°åÊñπÊ≥ï
+                //‘Ÿµ˜”√ª˘¿‡ø…÷¥––∑Ω∑®
                 //Call the base class executable method again
-                var exterableInstance = instance as IExternable;
-                exterableInstance.Executable(delegateService);
+                var executableInstance = instance as IExecutable;
+                executableInstance.Executable(eventService);
             }
             catch (Exception ex)
             {
@@ -97,14 +98,14 @@ namespace Slickflow.Engine.Core.Pattern.Auto
         /// <summary>
         /// Execute WebApi Method
         /// </summary>
-        private static void ExecuteWebApiMethod(ServiceDetail service, IDelegateService delegateService)
+        private static void ExecuteWebApiMethod(ServiceDetail service, IEventService eventService)
         {
             try
             {
                 object result = null;
                 if (service.SubMethod == SubMethodEnum.HttpGet)
                 {
-                    var jsonGetValue = delegateService.GetVariableByScopePriority(service.Arguments);
+                    var jsonGetValue = eventService.GetVariableByScopePriority(service.Arguments);
                     var url = string.Format("{0}/{1}", service.Expression, jsonGetValue);
                     var httpGetClient = HttpClientHelper.CreateHelper(url);
                     result = httpGetClient.Get();
@@ -113,7 +114,7 @@ namespace Slickflow.Engine.Core.Pattern.Auto
                 {
                     string url = service.Expression;
                     var httpClientHelper = HttpClientHelper.CreateHelper(url);
-                    var jsonValue = DelegateUtil.CompositeJsonValue(service.Arguments, delegateService);
+                    var jsonValue = EventUtil.CompositeJsonValue(service.Arguments, eventService);
                     var httpPostClient = HttpClientHelper.CreateHelper(url);
                     result = httpClientHelper.Post(jsonValue);
                 }
@@ -121,13 +122,13 @@ namespace Slickflow.Engine.Core.Pattern.Auto
                 {
                     string url = service.Expression;
                     var httpClientHelper = HttpClientHelper.CreateHelper(url);
-                    var jsonValue = DelegateUtil.CompositeJsonValue(service.Arguments, delegateService);
+                    var jsonValue = EventUtil.CompositeJsonValue(service.Arguments, eventService);
                     var httpPostClient = HttpClientHelper.CreateHelper(url);
                     result = httpClientHelper.Put(jsonValue);
                 }
                 else if (service.SubMethod == SubMethodEnum.HttpDelete)
                 {
-                    var jsonGetValue = delegateService.GetVariableByScopePriority(service.Arguments);
+                    var jsonGetValue = eventService.GetVariableByScopePriority(service.Arguments);
                     var url = string.Format("{0}/{1}", service.Expression, jsonGetValue);
                     var httpGetClient = HttpClientHelper.CreateHelper(url);
                     result = httpGetClient.Delete();
@@ -142,13 +143,13 @@ namespace Slickflow.Engine.Core.Pattern.Auto
         /// <summary>
         /// Execute Store procedure
         /// </summary>
-        private static void ExecuteStoreProcedureMethod(ServiceDetail service, IDelegateService delegateService)
+        private static void ExecuteStoreProcedureMethod(ServiceDetail service, IEventService eventService)
         {
             try
             {
-                var parameters = DelegateUtil.CompositeSqlParametersValue(service.Arguments, delegateService);
+                var parameters = EventUtil.CompositeSqlParametersValue(service.Arguments, eventService);
                 var procedureName = service.Expression;
-                var session = delegateService.GetSession();
+                var session = eventService.GetSession();
                 var repository = new Repository();
                 repository.ExecuteProc(session.Connection, procedureName, parameters, session.Transaction);
             }
@@ -161,11 +162,11 @@ namespace Slickflow.Engine.Core.Pattern.Auto
         /// <summary>
         /// Execute library
         /// </summary>
-        private static void ExecuteCSharpLibraryMethod(ServiceDetail service, IDelegateService delegateService)
+        private static void ExecuteCSharpLibraryMethod(ServiceDetail service, IEventService eventService)
         {
             try
             {
-                //ÂèñÂá∫ÂΩìÂâçÂ∫îÁî®Á®ãÂ∫èÊâßË°åË∑ØÂæÑ
+                //»°≥ˆµ±«∞”¶”√≥Ã–Ú÷¥––¬∑æ∂
                 //Retrieve the current application execution path
                 var methodInfo = service.MethodInfo;
                 var assemblyFullName = methodInfo.AssemblyFullName;
@@ -182,7 +183,7 @@ namespace Slickflow.Engine.Core.Pattern.Auto
                 object[] methodParams = null;
                 if (!string.IsNullOrEmpty(service.Arguments.Trim()))
                 {
-                    methodParams = DelegateUtil.CompositeParameterValues(service.Arguments, delegateService);
+                    methodParams = EventUtil.CompositeParameterValues(service.Arguments, eventService);
                 }
                 var result = mi.Invoke(instance, methodParams);
             }

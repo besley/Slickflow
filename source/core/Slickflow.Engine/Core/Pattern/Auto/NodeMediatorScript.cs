@@ -1,7 +1,7 @@
-ï»¿using System;
+using System;
 using Slickflow.Data;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Delegate;
+using Slickflow.Engine.Event;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Entity;
 using Slickflow.Engine.Business.Entity;
@@ -11,7 +11,7 @@ namespace Slickflow.Engine.Core.Pattern.Auto
 {
     /// <summary>
     /// Script node mediator
-    /// ä»»åŠ¡èŠ‚ç‚¹æ‰§è¡Œå™¨
+    /// ÈÎÎñ½ÚµãÖ´ĞĞÆ÷
     /// </summary>
     internal class NodeMediatorScript : NodeMediator, ICreatedAutomaticlly, ICompletedAutomaticlly
     {
@@ -45,7 +45,7 @@ namespace Slickflow.Engine.Core.Pattern.Auto
         {
             try
             {
-                //å®ŒæˆèŠ‚ç‚¹ä¸Šç»‘å®šçš„å¤–éƒ¨ç¨‹åºé€»è¾‘æˆ–æœåŠ¡
+                //Íê³É½ÚµãÉÏ°ó¶¨µÄÍâ²¿³ÌĞòÂß¼­»ò·şÎñ
                 //Complete the external program logic or service bound on the node
                 OnExecutingServiceItem();
             }

@@ -1,7 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <PackageId>Slickflow.Module.Resource</PackageId>
+    <Version>3.5.0</Version>
+    <Title>Slickflow Resource Module</Title>
+    <Description>Resource management module for Slickflow.NET. Provides user, role, department, and organizational structure management capabilities.</Description>
+    <Product>Slickflow.NET</Product>
+    <PackageProjectUrl>https://github.com/besley/slickflow</PackageProjectUrl>
+    <Copyright>@2014-2025</Copyright>
+    <RepositoryUrl>https://github.com/besley/Slickflow.git</RepositoryUrl>
+    <Company>Hangzhou, Ligong</Company>
+    <Authors>Besley</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>

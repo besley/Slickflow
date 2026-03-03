@@ -20,7 +20,17 @@
             <a href="#" class="btn btn-info" id="btnCreateProcess"><span class="bi bi-file-earmark lang" as="new"> </span> </a>
             <a href="#" class="btn btn-info" id="btnOpenProcess"><span class="bi bi-folder lang" as="open"> </span></a>
             <a href="#" class="btn btn-info" id="btnSaveProcess"><span class="bi bi-check-lg lang" as="save"> </span></a>
-            <a href="#" class="btn btn-info" id="btnOpenTemplateGallery"><span class="bi bi-boxes lang" as="modeling"> </span></a>
+        </div>
+        <div class="dropdown" style="float:left;margin-left:5px;">
+            <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLinkModeling" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="bi bi-diagram-3 lang" as="modeling"> </span><span class="caret"></span>
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLinkModeling">
+                <a class="dropdown-item" href="#" onclick="kmain.openTemplateGallery();"><span class="lang" as="templategallery"></span></a>
+                <li class="divider">&nbsp;</li>
+                <a class="dropdown-item" href="#" onclick="kmain.openCodeStudio();"><span class="lang" as="codestudio"></span></a>
+            </div>
         </div>
         <div class="dropdown" style="float:left;margin-left:5px;">
             <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLinkOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -87,6 +97,8 @@
                 <a class="dropdown-item" href="#" id="btnValidateProcess"><span class="lang" as="validate"></span></a>
                 <li class="divider">&nbsp;</li>
                 <a class="dropdown-item" href="#"><span class="lang" as="setting" onclick="kmain.openSetting();"></span></a>
+                <li class="divider">&nbsp;</li>
+                <a class="dropdown-item" href="#"><span class="lang" as="knowledgebase" onclick="kmain.openKnowledgeBase();"></span></a>
 
                 <!--
                 <a class="dropdown-item" href="#"><span class="lang" as="adminboard" onclick="kmain.webJob();"></span></a>-->
@@ -183,68 +195,10 @@
                     <!-- 响应内容将显示在这里 -->
                 </div>
                 <div class="button-group">
-                    <button class="btn btn-primary lang" as="send" onclick="sendRequest()"></button>
+                    <button id="sendButton" class="btn btn-primary lang" as="send" onclick="sendRequest()"></button>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- ai test chat dialog -->
-    <div class="modal-aiChatDialog" id="modal-aiChatDialog">
-        <div class="modal-aiChatDialog-content">
-            <div class="container">
-                <div class="header">
-                    <h1>AI试运行对话框</h1>
-                    <div class="header-controls">
-                        <div class="status">
-                            <div class="status-dot"></div>
-                            <span>已连接</span>
-                        </div>
-                        <button class="close-btn" id="closeModal">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="chat-container" id="chatContainer">
-                    <div class="message ai-message">
-                        <div class="avatar ai-avatar">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="message-content">
-                            <p>您好！我是AI助手，您可以输入文本内容或者上传图片文件，然后跟我进行多轮会话式交互。</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="input-container">
-                    <div class="input-actions">
-                        <button class="action-btn" id="uploadBtn">
-                            <i class="fas fa-image"></i> 上传图片
-                        </button>
-                        <button class="action-btn" id="clearBtn">
-                            <i class="fas fa-history"></i> 清除记录
-                        </button>
-                        <input type="file" id="fileInput" accept="image/*" style="display: none;">
-                    </div>
-
-                    <div class="input-area">
-                        <textarea class="text-input" id="messageInput" placeholder="输入消息..." rows="1"></textarea>
-                        <button class="send-btn" id="sendBtn">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 图片模态框 -->
-    <div class="image-modal" id="imageModal">
-        <img class="modal-content" id="modalImage" src="">
-        <button class="close-modal" id="closeImageModal">
-            <i class="fas fa-times"></i>
-        </button>
     </div>
 
     <!-- 实际使用的底部操作面板 -->
@@ -296,6 +250,7 @@
 
     <script type="module" src="index.js"></script>
     <script type="text/javascript" src="vendor/codemirror/lib/codemirror.js"></script>
+    <script type="text/javascript" src="vendor/codemirror/mode/clike/clike.js"></script>
 
     <script type="text/javascript">
         // 等待 jQuery 和 kresource 加载完成
@@ -331,31 +286,63 @@
             }
         })();
 
+        // 标记是否正在处理请求
+        let isRequestInProgress = false;
+
+        // 重新启用发送按钮的函数
+        function enableSendButton() {
+            const sendButton = document.getElementById('sendButton');
+            if (sendButton) {
+                isRequestInProgress = false;
+                sendButton.disabled = false;
+                sendButton.style.opacity = '1';
+                sendButton.style.cursor = 'pointer';
+            }
+        }
+
         async function sendRequest() {
+            // 如果请求正在进行中，直接返回
+            if (isRequestInProgress) {
+                return;
+            }
+
             const input = document.getElementById('userInput');
             const responseArea = document.getElementById('responseArea');
+            const sendButton = document.getElementById('sendButton');
 
             if (!input.value.trim()) {
                 kmsgbox.info(kresource.getItem("aidialoginputnullwarnmsg"));
                 return;
             }
 
+            // 标记请求开始，禁用按钮
+            isRequestInProgress = true;
+            sendButton.disabled = true;
+            sendButton.style.opacity = '0.6';
+            sendButton.style.cursor = 'not-allowed';
+
             try {
                 responseArea.innerHTML = kresource.getItem("deepseekprocessingmsg");
                 kmain.createByAI(input.value, function () {
                     input.value = '';
                     responseArea.innerHTML = "";
+                    // 重新启用按钮（在回调中）
+                    enableSendButton();
                     //close current pop window
                     closeDialog();
                 });
             } catch (error) {
                 kmsgbox.error(kresource.getItem("aidialogresponseerrormsg") + error.message);
-            } finally {
-                ;
+                // 如果出现异常，也要重新启用按钮
+                enableSendButton();
             }
         }
 
         function closeDialog() {
+            // 如果对话框关闭时请求正在进行，重新启用按钮
+            if (isRequestInProgress) {
+                enableSendButton();
+            }
             document.querySelector('.dialog-container').style.display = 'none';
         }
     </script>

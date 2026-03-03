@@ -533,6 +533,9 @@ function openVariablesDialog({ element, injector, bpmnFactory, commandStack, ini
                     window.$(`#source-display-${idx}`).val(`${selection.varName} (${selection.varType}) from "${selection.nodeName}"`);
                     window.$(`#source-node-${idx}`).val(selection.nodeId);
                     window.$(`#source-name-${idx}`).val(selection.varName);
+                    // 引用前置变量时，自动把变量名称和类型填充到当前输入变量
+                    window.$(`#name-${idx}`).val(selection.varName || '');
+                    window.$(`#type-${idx}`).val(selection.varType || '');
                 });
             });
 

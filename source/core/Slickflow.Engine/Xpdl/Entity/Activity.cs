@@ -120,7 +120,7 @@ namespace Slickflow.Engine.Xpdl.Entity
         /// <summary>
         /// AI Service List
         /// </summary>
-        public List<AIServiceDetail> AIServiceList { get; set; }
+        public List<AiServiceDetail> AIServiceList { get; set; }
 
         /// <summary>
         /// Script List

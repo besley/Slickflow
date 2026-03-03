@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Slickflow.Engine.Common;
@@ -12,13 +12,14 @@ using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Core.Runtime;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Core.Event;
-using Slickflow.Engine.Essential;
+using Slickflow.Engine.Event;
+using Slickflow.Engine.Message;
 
 namespace Slickflow.Engine.Core.Pattern.Event.Message
 {
     /// <summary>
     /// End node mediator message throw
-    /// 结束节点处理类
+    /// �����ڵ㴦����
     /// </summary>
     internal class NodeMediatorEndMsgThrow : NodeMediator
     {
@@ -33,23 +34,23 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
         /// </summary>
         internal override void ExecuteWorkItem(ActivityInstanceEntity activityInstance)
         {
-            //执行前Action列表
+            //ִ��ǰAction�б�
             //On before execute work item
             OnBeforeExecuteWorkItem();
 
-            //设置流程完成
+            //�����������
             //Set process instance completed
             ProcessInstanceManager pim = new ProcessInstanceManager();
             var processInstance = pim.Complete(ActivityForwardContext.ProcessInstance.Id,
                 ActivityForwardContext.ActivityResource.AppRunner,
                 Session);
 
-            //执行节点上的消息发布
+            //ִ�нڵ��ϵ���Ϣ����
             //Publish messages on the execution node
             var msgDelegateService = new MessageDelegateService();
             msgDelegateService.PublishMessage(processInstance, LinkContext.CurrentActivity, ActivityForwardContext.FromActivityInstance);
 
-            //如果当前流程是子流程，则子流程完成，主流程流转到下一节点
+            //�����ǰ�����������̣�����������ɣ���������ת����һ�ڵ�
             //If the current process is a subprocess,
             //then the subprocess is completed and the main process flows to the next node
             if (pim.IsSubProcess(processInstance) == true)
@@ -57,27 +58,27 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
                 ContinueMainProcessRunning(processInstance, Session);
             }
 
-            //执行后Action列表
+            //ִ�к�Action�б�
             //On after execute work item
             OnAfterExecuteWorkItem();
         }
 
         /// <summary>
         /// Continue to execute the main process
-        /// 继续执行主流程
+        /// ����ִ��������
         /// </summary>
         /// <param name="processInstance"></param>
         /// <param name="session"></param>
         private void ContinueMainProcessRunning(ProcessInstanceEntity processInstance,
             IDbSession session)
         {
-            //读取流程下一步办理人员列表信息
+            //��ȡ������һ��������Ա�б���Ϣ
             //Read the personnel list information for the next step in the process
             var runner = FillNextActivityPerformersByRoleList(processInstance.InvokedActivityInstanceId,
                 processInstance.InvokedActivityId,
                 session);
 
-            //开始执行下一步
+            //��ʼִ����һ��
             //Start executing the next step
             var runAppResult = WfExecutedResult.Default();
             var runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceAppRunning(runner, session, ref runAppResult);
@@ -86,7 +87,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
                 throw new WfRuntimeException(LocalizeHelper.GetEngineMessage("nodemediatorend.ContinueMainProcessRunning.warn", runAppResult.Message));
             }
 
-            //注册事件并运行
+            //ע���¼�������
             //Register the event and run it
             WfRuntimeManagerFactory.RegisterEvent(runtimeInstance,
                 runtimeInstance_OnWfProcessRunning,
@@ -95,9 +96,9 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
 
             void runtimeInstance_OnWfProcessRunning(object sender, WfEventArgs args)
             {
-                Delegate.DelegateExecutor.InvokeExternalDelegate(session,
-                    Delegate.EventFireTypeEnum.OnProcessRunning,
-                    runner.DelegateEventList,
+                Slickflow.Engine.Event.EventExecutor.InvokeExternalEvent(session,
+                    EventFireTypeEnum.OnProcessRunning,
+                    runner.EventSubscriptionList,
                     runtimeInstance.ProcessInstanceId);
             }
 
@@ -106,9 +107,9 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
                 runAppResult = args.WfExecutedResult;
                 if (runAppResult.Status == WfExecutedStatus.Success)
                 {
-                    Delegate.DelegateExecutor.InvokeExternalDelegate(session,
-                        Delegate.EventFireTypeEnum.OnProcessContinued,
-                        runner.DelegateEventList,
+                    Slickflow.Engine.Event.EventExecutor.InvokeExternalEvent(session,
+                        EventFireTypeEnum.OnProcessContinued,
+                        runner.EventSubscriptionList,
                         runtimeInstance.ProcessInstanceId);
                 }
             }
@@ -116,7 +117,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
 
         /// <summary>
         /// Add role users using process defined resources
-        /// 使用流程定义资源添加角色用户
+        /// ʹ�����̶�����Դ���ӽ�ɫ�û�
         /// </summary>
         private WfAppRunner FillNextActivityPerformersByRoleList(int mainActivityInstanceId,
             string mainActivityId,
@@ -129,7 +130,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
                 session.Transaction);
             var nextSteps = processModel.GetNextActivityTreeView(mainActivityId);
 
-            //获取主流程的任务
+            //��ȡ�����̵�����
             //The task of obtaining the mainstream process
             var task = new TaskManager().GetTaskByActivity(session.Connection, mainProcessInstance.Id, mainActivityInstanceId, session.Transaction);
             var runner = new WfAppRunner
@@ -163,7 +164,7 @@ namespace Slickflow.Engine.Core.Pattern.Event.Message
 
         /// <summary>
         /// End node activity and transfer instantiation, no task data available
-        /// 结束节点活动及转移实例化，没有任务数据
+        /// �����ڵ���ת��ʵ������û����������
         /// </summary>
         internal override void CreateActivityTaskTransitionInstance(Activity toActivity,
             ProcessInstanceEntity processInstance,

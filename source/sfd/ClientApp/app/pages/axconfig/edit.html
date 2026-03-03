@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <head>
     <title>AI Service Configuration</title>
     <link rel="stylesheet" href="css/axconfig.css?v=1.0.2" />
@@ -6,9 +6,10 @@
 <body>
     <div class="axconfig-config-container">
         <div class="config-tabs">
-            <div class="tab active lang" data-tab="model" as="axconfig.tab.model"></div>
+            <div class="tab active lang" data-tab="basic" as="axconfig.tab.basic"></div>
+            <div class="tab lang" data-tab="model" as="axconfig.tab.model"></div>
             <div class="tab lang" data-tab="prompt" as="axconfig.tab.prompt"></div>
-            <div class="tab lang" data-tab="notes" as="axconfig.tab.notes"></div>
+            <div class="tab lang" data-tab="knowledge" as="axconfig.tab.knowledge" style="display: none;"></div>
             <!-- Advanced Setting tab hidden for next version -->
             <!-- <div class="tab lang" data-tab="advanced" as="axconfig.tab.advanced"></div> -->
         </div>
@@ -18,27 +19,29 @@
             <input type="hidden" id="activity-name">
             <input type="hidden" id="config-uuid">
 
-            <!-- 模型配置 -->
-            <div class="tab-pane active" id="model-tab">
+            <!-- Basic Property -->
+            <div class="tab-pane active" id="basic-tab">
                 <div class="form-grid">
                     <div class="form-group full-width">
-                        <label><span class="lang" as="axconfig.account.credential"></span></label>
-                        <div class="enhanced-select-container" style="display: flex; gap: 8px; align-items: center;">
-                            <select id="account-credential" class="form-control" style="flex: 1; height: 40px;">
-                                <option value="">-- <span class="lang" as="selectplaceholder"></span> --</option>
-                            </select>
-                            <button type="button" id="btn-add-credential" class="btn btn-sm btn-primary" title="Add new credential">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                            <button type="button" id="btn-edit-credential" class="btn btn-sm btn-secondary" title="Edit selected credential" disabled>
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </div>
+                        <label><span class="lang" as="axconfig.service.type"></span></label>
+                        <input type="text" id="service-type" class="form-control form-control-readonly" readonly>
                     </div>
-
                     <div class="form-group full-width">
-                        <label><span class="lang" as="axconfig.model"></span></label>
-                        <input type="text" id="model-version" class="form-control" placeholder="e.g., deepseek3.2, gpt5" />
+                        <label><span class="lang" as="axconfig.description"></span></label>
+                        <textarea id="axconfig-description" style="min-height: 150px;" placeholder=""></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 模型配置 -->
+            <div class="tab-pane" id="model-tab">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label><span class="lang" as="axconfig.model"></span> <span class="required">*</span></label>
+                        <select id="model-select" class="form-control" style="height: 40px;">
+                            <option value="">-- <span class="lang" as="selectplaceholder"></span> --</option>
+                        </select>
+                        <small class="form-text text-muted"><span class="lang" as="axconfig.model.hint"></span></small>
                     </div>
 
                     <div class="form-group half-width">
@@ -54,7 +57,13 @@
                         <input type="number" id="max-tokens" value="4096" placeholder="">
                     </div>
 
-                    <div class="form-group full-width" style="margin-top: 16px;">
+                    <div class="form-group half-width">
+                        <label><span class="lang" as="axconfig.memory.turns"></span></label>
+                        <input type="number" id="memory-turns" min="1" max="50" value="10" placeholder="8">
+                        <small class="form-text text-muted"><span class="lang" as="axconfig.memory.turns.hint"></span></small>
+                    </div>
+
+                    <div class="form-group half-width">
                         <label><span class="lang" as="axconfig.response.format"></span></label>
                         <div class="radio-group">
                             <div class="radio-item">
@@ -93,12 +102,79 @@
                 </div>
             </div>
 
-            <!-- Notes -->
-            <div class="tab-pane" id="notes-tab">
-                <div class="form-group">
-                    <label><span class="lang" as="axconfig.notes"></span></label>
-                    <textarea id="axconfig-description" style="min-height: 200px;" placeholder=""></textarea>
-                    <div class="form-note"><span class="lang" as="axconfig.notes.note"></span></div>
+            <!-- Knowledge Base -->
+            <div class="tab-pane" id="knowledge-tab">
+                <div class="config-section">
+                    <div class="section-header">
+                        <h3 class="lang" as="axconfig.knowledge.embedding.section"></h3>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group half-width">
+                            <label><span class="lang" as="axconfig.knowledge.embedding.model"></span></label>
+                            <select id="knowledge-embedding-model" class="form-control">
+                                <option value="">-- <span class="lang" as="selectplaceholder"></span> --</option>
+                            </select>
+                            <div class="form-note"><span class="lang" as="axconfig.knowledge.embedding.model.note"></span></div>
+                        </div>
+                        <div class="form-group half-width">
+                            <label><span class="lang" as="axconfig.knowledge.embedding.dimensions"></span></label>
+                            <input type="number" id="knowledge-embedding-dimensions" class="form-control" value="1536" min="128" max="4096" placeholder="1536">
+                            <div class="form-note"><span class="lang" as="axconfig.knowledge.embedding.dimensions.note"></span></div>
+                        </div>
+                    </div>
+                    <div class="section-header">
+                        <h3 class="lang" as="axconfig.knowledge.search.strategy"></h3>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group half-width">
+                            <label><span class="lang" as="axconfig.knowledge.search.strategy"></span></label>
+                            <select id="knowledge-search-strategy" class="form-control" disabled>
+                                <option value="similarity" selected data-lang="axconfig.knowledge.search.strategy.similarity">相似度检索</option>
+                                <option value="hybrid" data-lang="axconfig.knowledge.search.strategy.hybrid">混合检索</option>
+                                <option value="rerank" data-lang="axconfig.knowledge.search.strategy.rerank">重排序检索</option>
+                            </select>
+                        </div>
+                        <div class="form-group half-width">
+                            <label><span class="lang" as="axconfig.knowledge.search.count"></span></label>
+                            <input type="number" id="knowledge-search-count" class="form-control" value="3" min="1" max="10">
+                            <div class="form-note"><span class="lang" as="axconfig.knowledge.search.count.note"></span></div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group half-width">
+                            <label><span class="lang" as="axconfig.knowledge.similarity.threshold"></span></label>
+                            <div class="slider-container">
+                                <input type="range" id="similarity-threshold" min="0" max="1" step="0.05" value="0.7">
+                                <span class="slider-value" id="similarity-value">0.70</span>
+                            </div>
+                            <div class="form-note"><span class="lang" as="axconfig.knowledge.similarity.threshold.note"></span></div>
+                        </div>
+                        <div class="form-group half-width">
+                            <label><span class="lang" as="axconfig.knowledge.search.mode"></span></label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="search-mode-semantic" checked>
+                                    <span class="lang" as="axconfig.knowledge.search.mode.semantic"></span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="search-mode-keyword" checked>
+                                    <span class="lang" as="axconfig.knowledge.search.mode.keyword"></span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="search-mode-metadata">
+                                    <span class="lang" as="axconfig.knowledge.search.mode.metadata"></span>
+                                </label>
+                            </div>
+                </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group half-width">
+                            <label><span class="lang" as="axconfig.knowledge.function.name"></span></label>
+                            <input type="text" id="knowledge-function-name" class="form-control" placeholder="">
+                        </div>
+                    </div>
                 </div>
             </div>
 

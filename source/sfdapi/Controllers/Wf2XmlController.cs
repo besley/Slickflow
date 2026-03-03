@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using sfdapi.Services;
+using sfdapi.Service;
 using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
@@ -15,6 +15,7 @@ using Slickflow.Module.Form;
 using Slickflow.Module.Localize;
 using Slickflow.Module.Resource;
 using Slickflow.WebUtility;
+using Slickflow.Graph.Model;
 
 namespace sfdapi.Controllers
 {
@@ -142,7 +143,10 @@ namespace sfdapi.Controllers
 
                 //生成XML内容
                 //Generate XML content
-                fileEntity = ProcessXmlInitializer.InitNewBPMNFileBlank(fileEntity);
+                fileEntity.XmlContent = ProcessXmlBuilder.GenerateXmlContentWithStartNode(fileEntity.ProcessId, 
+                    fileEntity.ProcessName, 
+                    fileEntity.ProcessCode, 
+                    fileEntity.Version);
                 entity.XmlContent = fileEntity.XmlContent;
 
                 //插入XML文档
@@ -474,7 +478,7 @@ namespace sfdapi.Controllers
             var result = new ResponseResult<ProcessFileEntity>();
             try
             {
-                var entity = ProcessXmlInitializer.InitNewBPMNFile();
+                var entity = ProcessXmlBuilder.InitNewBPMNFile();
                 result = ResponseResult<ProcessFileEntity>.Success(entity);
             }
             catch (System.Exception ex)

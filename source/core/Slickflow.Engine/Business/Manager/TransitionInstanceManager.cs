@@ -7,6 +7,7 @@ using System.Data;
 using Slickflow.Data;
 using Slickflow.Module.Localize;
 using Slickflow.Engine.Common;
+using Slickflow.Engine.Config;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Utility;
 

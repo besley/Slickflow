@@ -12,7 +12,7 @@ namespace Slickflow.Engine.Xpdl.Schedule
         /// <summary>
         /// Create ActivitySchedule
         /// </summary>
-        internal static NextActivityScheduleBase CreateActivitySchedule(IProcessModel processModel,
+        internal static NextActivityScheduleBase CreateActivityScheduleGateway(IProcessModel processModel,
             GatewaySplitJoinTypeEnum splitJoinType,
             Nullable<int> activityInstanceId = null)
         {

@@ -52,6 +52,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slickflow.AI", "core\Slickf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slickflow.WebUtility", "core\Slickflow.WebUtility\Slickflow.WebUtility.csproj", "{8508FC81-4AD7-8508-96DE-5A4DAD1C1CED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slickflow.Graph", "..\..\..\Cloud365\GitHomeCore-20250120\SfBpmn2\source\core\Slickflow.Graph\Slickflow.Graph.csproj", "{861CD99E-2F02-FEF2-00A0-55E8B82E71FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,6 +104,10 @@ Global
 		{8508FC81-4AD7-8508-96DE-5A4DAD1C1CED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8508FC81-4AD7-8508-96DE-5A4DAD1C1CED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8508FC81-4AD7-8508-96DE-5A4DAD1C1CED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{861CD99E-2F02-FEF2-00A0-55E8B82E71FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{861CD99E-2F02-FEF2-00A0-55E8B82E71FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{861CD99E-2F02-FEF2-00A0-55E8B82E71FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{861CD99E-2F02-FEF2-00A0-55E8B82E71FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -118,6 +124,7 @@ Global
 		{A99043F3-78A0-AF39-F763-34EE1478E617} = {8B60029A-29B1-4D3C-B5CD-D577DBB63CAE}
 		{00BBC9BB-AD82-4F2B-8500-B94A128C0ED2} = {21EBDD8F-B8EC-4ACF-A231-8479FDC11581}
 		{8508FC81-4AD7-8508-96DE-5A4DAD1C1CED} = {21EBDD8F-B8EC-4ACF-A231-8479FDC11581}
+		{861CD99E-2F02-FEF2-00A0-55E8B82E71FB} = {21EBDD8F-B8EC-4ACF-A231-8479FDC11581}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C8EB2B9-51FD-4473-9181-DBEB3074C90D}

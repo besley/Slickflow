@@ -1,7 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <PackageId>Slickflow.Module.Form</PackageId>
+    <Version>3.5.0</Version>
+    <Title>Slickflow Form Module</Title>
+    <Description>Form management module for Slickflow.NET. Provides form definition, field management, and form service capabilities for workflow processes.</Description>
+    <Product>Slickflow.NET</Product>
+    <PackageProjectUrl>https://github.com/besley/slickflow</PackageProjectUrl>
+    <Copyright>@2014-2025</Copyright>
+    <RepositoryUrl>https://github.com/besley/Slickflow.git</RepositoryUrl>
+    <Company>Hangzhou, Ligong</Company>
+    <Authors>Besley</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>

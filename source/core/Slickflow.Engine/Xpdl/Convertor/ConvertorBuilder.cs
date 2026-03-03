@@ -5,6 +5,7 @@ using Slickflow.Engine.Xpdl.Entity;
 using System;
 using System.Collections.Generic;
 using System.Xml;
+using Slickflow.WebUtility;
 
 namespace Slickflow.Engine.Xpdl.Convertor
 {
@@ -130,7 +131,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         /// <returns></returns>
         protected XmlNode GetAIServicesNode()
         {
-            var aiServicesNode = XMLNode.SelectSingleNode(XPDLDefinition.Sf_StrXmlPath_AIServices, XMLNamespaceManager);
+            var aiServicesNode = XMLNode.SelectSingleNode(XPDLDefinition.Sf_StrXmlPath_AiServices, XMLNamespaceManager);
             return aiServicesNode;
         }
 
@@ -313,7 +314,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
             if (aiServicesNode != null)
             {
                 var xmlAIServiceList = aiServicesNode.ChildNodes;
-                var aiServiceList = new List<AIServiceDetail>();
+                var aiServiceList = new List<AiServiceDetail>();
                 foreach (XmlNode element in xmlAIServiceList)
                 {
                     aiServiceList.Add(ConvertXmlAIServiceNodeToAIServiceEntity(element));
@@ -498,7 +499,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
         {
             var service = new ServiceDetail();
 
-            var serviceMethod = XMLHelper.GetXmlAttribute(node, "method");
+            var serviceMethod = XMLHelper.GetXmlAttribute(node, "methodType");
             service.Method = EnumHelper.TryParseEnum<ServiceMethodEnum>(serviceMethod);
 
             var subMethod = XMLHelper.GetXmlAttribute(node, "subMethod");
@@ -529,14 +530,14 @@ namespace Slickflow.Engine.Xpdl.Convertor
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        private AIServiceDetail ConvertXmlAIServiceNodeToAIServiceEntity(XmlNode node)
+        private AiServiceDetail ConvertXmlAIServiceNodeToAIServiceEntity(XmlNode node)
         {
-            var aIServiceDetail = new AIServiceDetail();
+            var aIServiceDetail = new AiServiceDetail();
             var configUUID = XMLHelper.GetXmlAttribute(node, "configUUID");
             aIServiceDetail.ConfigUUID = configUUID;
 
             var aiServiceType = XMLHelper.GetXmlAttribute(node, "type");
-            aIServiceDetail.AIServiceType = EnumHelper.TryParseEnum<AIServiceTypeEnum>(aiServiceType);
+            aIServiceDetail.AIServiceType = EnumHelper.TryParseEnum<AiServiceTypeEnum>(aiServiceType);
 
             return aIServiceDetail;
         }

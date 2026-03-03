@@ -18,9 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Cloud365\GitHomeCore-20250120\SfBpmn2\source\core\Slickflow.Graph\Slickflow.Graph.csproj" />
     <ProjectReference Include="..\core\Slickflow.AI\Slickflow.AI.csproj" />
     <ProjectReference Include="..\core\Slickflow.Data\Slickflow.Data.csproj" />
     <ProjectReference Include="..\core\Slickflow.Engine\Slickflow.Engine.csproj" />
+    <ProjectReference Include="..\core\Slickflow.Module.Form\Slickflow.Module.Form.csproj" />
     <ProjectReference Include="..\core\Slickflow.Module.Localize\Slickflow.Module.Localize.csproj" />
     <ProjectReference Include="..\core\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj" />
     <ProjectReference Include="..\core\Slickflow.Module\Slickflow.Module.csproj" />
@@ -74,5 +76,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
 </Project>

@@ -1,4 +1,4 @@
-ï»¿
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +8,13 @@ using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Xpdl;
 using Slickflow.Engine.Xpdl.Entity;
-using Slickflow.Engine.Delegate;
+using Slickflow.Engine.Event;
 
 namespace Slickflow.Engine.Core.Pattern.Event
 {
     /// <summary>
     /// Intermediate node mediator
-    /// ä¸­é—´äº‹ä»¶èŠ‚ç‚¹å¤„ç†ç±»
+    /// ÖĞ¼äÊÂ¼ş½Úµã´¦ÀíÀà
     /// </summary>
     internal class NodeMediatorIntermediate : NodeMediator, ICreatedAutomaticlly, ICompletedAutomaticlly
     {

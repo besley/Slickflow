@@ -1,8 +1,10 @@
-﻿import { SelectEntry, isTextFieldEntryEdited } from '@bpmn-io/properties-panel';
+import { useEffect } from 'react';
+import { SelectEntry, isTextFieldEntryEdited } from '@bpmn-io/properties-panel';
 import { useService } from 'bpmn-js-properties-panel';
 import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
 
 import { forEach } from "min-dash";
+import entryFieldSetting from '../../EntryFieldSetting';
 
 export default function (element, onChange) {
     var methodTypeProperty =
@@ -119,6 +121,17 @@ function MethodType(props) {
         })
         return value;
     }
+
+    // 初次渲染或切换节点时，按当前 methodType 显隐字段（LocalService 时隐藏 WebApi list）
+    useEffect(() => {
+        const val = getValue();
+        const name = getOptionName(val);
+        if (name && typeof entryFieldSetting.show === 'function') {
+            try {
+                entryFieldSetting.show(name);
+            } catch (e) {}
+        }
+    }, [ element ]);
 
     return <SelectEntry
         id={id}

@@ -35,8 +35,18 @@ const kresource = (function () {
         jshelper.ajaxGet(fileName, null,
             function (json) {
                 kresource.mxCurrentLanguageJSON = json;
+                // Localize elements with .lang class
                 $(".lang").each(function (o) {
                     var key = $(this).attr("as");
+                    var text = json[key];
+                    if (text !== undefined) {
+                        text = unescapeHtml(text);
+                        $(this).text(text);
+                    }
+                });
+                // Localize option elements with data-lang attribute
+                $("option[data-lang]").each(function () {
+                    var key = $(this).attr("data-lang");
                     var text = json[key];
                     if (text !== undefined) {
                         text = unescapeHtml(text);

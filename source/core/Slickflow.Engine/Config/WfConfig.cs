@@ -27,6 +27,6 @@ namespace Slickflow.Engine.Config
         /// will fire to the external method
         /// 本地服务文件路径设置，用于调用外部服务dll
         /// </summary>
-        internal static readonly string EXTERNAL_SERVICE_FILE_PATH = "Plugin\\Slickflow.Module.External.dll";
+        internal static readonly string EXTERNAL_SERVICE_FILE_PATH = "Plugins\\Slickflow.Module.External.dll";
     }
 }

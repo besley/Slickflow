@@ -13,27 +13,28 @@
         }
 
         #popupSetting .setting-sidebar {
-            width: 30%;
-            min-width: 200px;
-            max-width: 400px;
-            padding: 12px;
+            width: 40%;
+            min-width: 160px;
+            max-width: 360px;
+            padding: 6px;
             flex-shrink: 0;
+            align-self: stretch;
             background-color: #fafafa;
             position: relative;
-            overflow: hidden; /* 移除滚动，让内部元素处理 */
+            overflow: hidden;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            height: 100%; /* 确保侧边栏填满布局容器的高度 */
             border: 1px solid #d9d9d9;
             border-radius: 4px;
         }
 
         #popupSetting .setting-divider {
             width: 4px;
-            background-color: #d9d9d9;
             flex-shrink: 0;
+            align-self: stretch;
             margin: 0 12px;
+            background-color: #d9d9d9;
             cursor: col-resize;
             position: relative;
             user-select: none;
@@ -103,43 +104,47 @@
             background-color: #1890ff;
         }
 
-        /* 树形列表样式 */
+        /* 树形列表样式 - 紧凑型 */
         #popupSetting .setting-tree {
             list-style: none;
-            padding: 0;
+            padding: 2px 0;
             margin: 0;
             border: none;
             border-radius: 0;
-            overflow-y: auto; /* 允许树形控件内部滚动 */
+            overflow-y: auto;
             overflow-x: hidden;
             background-color: transparent;
-            flex: 1; /* 让树形控件填满侧边栏的全部高度 */
+            flex: 1;
             display: flex;
             flex-direction: column;
-            min-height: 0; /* 允许 flex 子项缩小 */
+            min-height: 0;
         }
 
         #popupSetting .setting-tree-item {
             border-bottom: 1px solid #e8e8e8;
             display: flex;
             flex-direction: column;
-            flex: 1; /* 让树项可以扩展以填满可用空间 */
-            min-height: 0; /* 允许 flex 子项缩小 */
+            flex-shrink: 0;
+            min-height: 0;
         }
 
         #popupSetting .setting-tree-item:last-child {
             border-bottom: none;
         }
 
+        /* 可折叠的父节点 */
         #popupSetting .setting-tree-parent {
-            padding: 12px 15px;
+            padding: 4px 6px;
             cursor: pointer;
             color: #333;
-            transition: all 0.2s;
+            transition: all 0.15s;
             background-color: #fff;
             display: flex;
             align-items: center;
             user-select: none;
+            font-size: 13px;
+            line-height: 20px;
+            min-height: 28px;
         }
 
         #popupSetting .setting-tree-parent:hover {
@@ -147,13 +152,14 @@
         }
 
         #popupSetting .setting-tree-expand {
-            width: 16px;
-            height: 16px;
-            margin-right: 8px;
-            display: inline-block;
-            text-align: center;
-            line-height: 16px;
-            font-size: 12px;
+            width: 12px;
+            height: 12px;
+            margin-right: 4px;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
             color: #666;
         }
 
@@ -171,8 +177,9 @@
             display: none;
             background-color: #fafafa;
             overflow-y: auto;
-            flex: 1; /* 让子节点区域可以扩展 */
-            min-height: 0; /* 允许 flex 子项缩小 */
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
         #popupSetting .setting-tree-parent.expanded + .setting-tree-children {
@@ -180,14 +187,17 @@
         }
 
         #popupSetting .setting-tree-child {
-            padding: 10px 15px 10px 40px;
+            padding: 3px 6px 3px 22px;
             cursor: pointer;
-            color: #666;
-            transition: all 0.2s;
+            color: #555;
+            transition: all 0.15s;
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: relative;
+            font-size: 12px;
+            line-height: 22px;
+            min-height: 26px;
         }
 
         #popupSetting .setting-tree-child:hover {
@@ -215,12 +225,13 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            min-width: 0;
         }
 
         #popupSetting .setting-tree-child-delete {
-            width: 20px;
-            height: 20px;
-            margin-left: 8px;
+            width: 16px;
+            height: 16px;
+            margin-left: 4px;
             padding: 0;
             border: none;
             background: transparent;
@@ -245,12 +256,13 @@
         }
 
         #popupSetting .setting-content {
-            width: 70%;
+            width: 60%;
             min-width: 300px;
             padding: 12px 20px;
             overflow-x: hidden;
             overflow-y: auto;
             flex: 1;
+            align-self: stretch;
             box-sizing: border-box;
             border: 1px solid #d9d9d9;
             border-radius: 4px;
@@ -341,7 +353,7 @@
                             <span class="lang" as="aimodel">AI Model</span>
                         </div>
                         <ul class="setting-tree-children" id="ai-model-provider-children">
-                            <!-- 子集项目将动态加载 -->
+                            <!-- Tree grouped by model_provider, children loaded dynamically -->
                         </ul>
                     </li>
                 </ul>
@@ -368,18 +380,41 @@
                             <label>
                                 <span class="lang" as="modelprovider"></span> <span class="required">*</span>
                             </label>
-                            <input type="text" id="model-provider" list="model-provider-list" class="form-control" placeholder="Select or enter model provider" required />
-                            <datalist id="model-provider-list">
+                            <select id="model-provider" class="form-control" required>
+                                <option value="">-- <span class="lang" as="selectplaceholder"></span> --</option>
+                                <option value="QWen">QWen (通义千问)</option>
+                                <option value="DeepSeek">DeepSeek</option>
                                 <option value="OpenAI">OpenAI</option>
                                 <option value="Azure OpenAI">Azure OpenAI</option>
                                 <option value="Anthropic">Anthropic (Claude)</option>
                                 <option value="Google">Google (Gemini)</option>
                                 <option value="Baidu">Baidu (文心一言)</option>
                                 <option value="Alibaba">Alibaba (通义千问)</option>
-                                <option value="DeepSeek">DeepSeek</option>
                                 <option value="Moonshot">Moonshot (月之暗面)</option>
                                 <option value="Zhipu">Zhipu (智谱AI)</option>
-                            </datalist>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="lang" as="modelname"></span></label>
+                            <input type="text" id="model-name" class="form-control" placeholder="e.g. deepseek-v3, gpt-4o" />
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="lang" as="modeltype"></span> <span class="required">*</span></label>
+                            <select id="model-type" class="form-control" required>
+                                <option value="">-- <span class="lang" as="selectplaceholder"></span> --</option>
+                                <option value="text_generation" data-lang="modeltype.text_generation">Text Generation</option>
+                                <option value="multimodal" data-lang="modeltype.multimodal">Multimodal</option>
+                                <option value="reasoning_model" data-lang="modeltype.reasoning_model">Reasoning Model</option>
+                                <option value="audio_speech" data-lang="modeltype.audio_speech">Audio/Speech</option>
+                                <option value="video_generation" data-lang="modeltype.video_generation">Video Generation</option>
+                                <option value="image_generation" data-lang="modeltype.image_generation">Image Generation</option>
+                                <option value="vector_model" data-lang="modeltype.vector_model">Vector Model</option>
+                                <option value="ranking_model" data-lang="modeltype.ranking_model">Ranking Model</option>
+                                <option value="other" data-lang="modeltype.other">Other</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -459,6 +494,20 @@
             var startX = 0;
             var startSidebarWidth = 0;
             var layoutWidth = 0;
+
+            // 初始比例 4:6（侧边栏40%，内容区60%）
+            function applyInitialRatio() {
+                var w = $layout.width();
+                if (w > 0) {
+                    var dividerW = $divider.outerWidth() || 4;
+                    var sidebarW = Math.round(w * 0.4);
+                    var contentW = w - sidebarW - dividerW;
+                    $sidebar.css('width', sidebarW + 'px');
+                    $content.css('width', contentW + 'px');
+                }
+            }
+            applyInitialRatio();
+            setTimeout(applyInitialRatio, 50);
 
             $divider.on('mousedown', function(e) {
                 isDragging = true;

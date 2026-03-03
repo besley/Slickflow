@@ -26,6 +26,7 @@ namespace Slickflow.Engine.Xpdl
         public static Boolean IsSimpleComponentNode(ActivityTypeEnum activityType)
         {
             if (activityType == ActivityTypeEnum.TaskNode
+                    || activityType == ActivityTypeEnum.ServiceNode
                     || activityType == ActivityTypeEnum.AIServiceNode
                     || activityType == ActivityTypeEnum.MultiSignNode
                     || activityType == ActivityTypeEnum.SubProcessNode

@@ -1,6 +1,6 @@
-﻿import AIServiceTaskPropertiesProvider from './AIServiceTaskPropertiesProvider';
+﻿import AiServiceTaskPropertiesProvider from './AiServiceTaskPropertiesProvider';
 
 export default {
     __init__: ['aiServiceTaskPropertiesProvider'],
-    aiServiceTaskPropertiesProvider: ['type', AIServiceTaskPropertiesProvider]
+    aiServiceTaskPropertiesProvider: ['type', AiServiceTaskPropertiesProvider]
 };

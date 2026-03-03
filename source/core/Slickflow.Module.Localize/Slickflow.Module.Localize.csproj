@@ -1,14 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <PackageId>2.4.0.0</PackageId>
-    <Title>Slickflow Localization for Global Users</Title>
-    <Version>2.4.0.0</Version>
+    <PackageId>Slickflow.Module.Localize</PackageId>
+    <Version>3.5.0</Version>
+    <Title>Slickflow Localization Module</Title>
     <Authors>Besley</Authors>
     <Company>Hangzhou, Ligong</Company>
-    <Description>Localization for global users, multiple laungage support</Description>
+    <Description>Localization module for Slickflow.NET with multiple language support. Provides internationalization capabilities for global users, supporting multiple languages including English and Chinese.</Description>
+    <Product>Slickflow.NET</Product>
     <Copyright>@2014-2025</Copyright>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/besley/slickflow</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/besley/Slickflow.git</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

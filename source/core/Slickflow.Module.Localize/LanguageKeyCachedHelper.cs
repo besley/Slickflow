@@ -39,6 +39,10 @@ namespace Slickflow.Module.Localize
         internal static LangTypeEnum GetLang()
         {
             var lang = _languageCache.Get<LangTypeEnum>("LANG");
+            if (lang == LangTypeEnum.none)
+            {
+                lang = LangTypeEnum.en;
+            }
             return lang;
         }
     }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Slickflow.Engine.Test")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a75a3cccdd75cabadec5cf7d73f6313f9361b48a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+30f3a5c04bbc6622dbe87b2be3cb7302464954e2")]
 [assembly: System.Reflection.AssemblyProductAttribute("Slickflow.Engine.Test")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Slickflow.Engine.Test")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

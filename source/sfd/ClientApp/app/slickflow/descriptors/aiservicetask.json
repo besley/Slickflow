@@ -1,18 +1,18 @@
 {
   "aiService": [
     {
-      "name": "AIServices",
+      "name": "AiServices",
       "superClass": [ "Element" ],
       "properties": [
         {
           "name": "aiServices",
           "isMany": true,
-          "type": "AIService"
+          "type": "AiService"
         }
       ]
     },
     {
-      "name": "AIService",
+      "name": "AiService",
       "properties": [
         {
           "name": "configUUID",

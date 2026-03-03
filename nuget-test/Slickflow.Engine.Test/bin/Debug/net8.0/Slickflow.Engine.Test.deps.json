@@ -10,7 +10,7 @@
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.0",
           "Microsoft.Extensions.Configuration.Json": "10.0.0",
-          "Slickflow.Engine": "3.5.0"
+          "Slickflow.Engine": "3.5.1"
         },
         "runtime": {
           "Slickflow.Engine.Test.dll": {}
@@ -786,14 +786,14 @@
           }
         }
       },
-      "Slickflow.AI/3.5.0": {
+      "Slickflow.AI/3.5.1": {
         "dependencies": {
           "LiteDB": "5.0.21",
           "Microsoft.Extensions.Http": "10.0.0",
           "Newtonsoft.Json": "13.0.3",
-          "Slickflow.Dapper": "3.5.0",
-          "Slickflow.Data": "3.5.0",
-          "Slickflow.WebUtility": "3.5.0"
+          "Slickflow.Dapper": "3.5.1",
+          "Slickflow.Data": "3.5.1",
+          "Slickflow.WebUtility": "3.5.1"
         },
         "runtime": {
           "lib/net8.0/Slickflow.AI.dll": {
@@ -802,7 +802,7 @@
           }
         }
       },
-      "Slickflow.Dapper/3.5.0": {
+      "Slickflow.Dapper/3.5.1": {
         "dependencies": {
           "System.Data.SqlClient": "4.8.6"
         },
@@ -813,13 +813,13 @@
           }
         }
       },
-      "Slickflow.Data/3.5.0": {
+      "Slickflow.Data/3.5.1": {
         "dependencies": {
           "MongoDB.Driver": "2.28.0",
           "MySql.Data": "9.4.0",
           "Npgsql": "8.0.3",
           "Oracle.ManagedDataAccess.Core": "23.9.1",
-          "Slickflow.Dapper": "3.5.0",
+          "Slickflow.Dapper": "3.5.1",
           "System.Configuration.ConfigurationManager": "9.0.2",
           "System.Data.SqlClient": "4.8.6"
         },
@@ -830,34 +830,34 @@
           }
         }
       },
-      "Slickflow.Engine/3.5.0": {
+      "Slickflow.Engine/3.5.1": {
         "dependencies": {
           "Devart.Data.Oracle.EFCore": "10.3.21.8",
           "IronPython": "3.4.1",
           "Microsoft.Extensions.Caching.Memory": "9.0.3",
           "Newtonsoft.Json": "13.0.3",
           "Pomelo.EntityFrameworkCore.MySql": "8.0.2",
-          "Slickflow.AI": "3.5.0",
-          "Slickflow.Data": "3.5.0",
-          "Slickflow.Module": "3.5.0",
-          "Slickflow.Module.Form": "3.5.0",
-          "Slickflow.Module.Localize": "3.5.0",
-          "Slickflow.Module.Resource": "3.5.0",
-          "Slickflow.WebUtility": "3.5.0",
+          "Slickflow.AI": "3.5.1",
+          "Slickflow.Data": "3.5.1",
+          "Slickflow.Module": "3.5.1",
+          "Slickflow.Module.Form": "3.5.1",
+          "Slickflow.Module.Localize": "3.5.1",
+          "Slickflow.Module.Resource": "3.5.1",
+          "Slickflow.WebUtility": "3.5.1",
           "System.Configuration.ConfigurationManager": "9.0.2"
         },
         "runtime": {
           "lib/net8.0/Slickflow.Engine.dll": {
-            "assemblyVersion": "3.5.0.0",
-            "fileVersion": "3.5.0.0"
+            "assemblyVersion": "3.5.1.0",
+            "fileVersion": "3.5.1.0"
           }
         }
       },
-      "Slickflow.Module/3.5.0": {
+      "Slickflow.Module/3.5.1": {
         "dependencies": {
           "MailKit": "4.8.0",
           "RabbitMQ.Client": "6.8.1",
-          "Slickflow.Data": "3.5.0"
+          "Slickflow.Data": "3.5.1"
         },
         "runtime": {
           "lib/net8.0/Slickflow.Module.dll": {
@@ -866,13 +866,13 @@
           }
         }
       },
-      "Slickflow.Module.Form/3.5.0": {
+      "Slickflow.Module.Form/3.5.1": {
         "dependencies": {
           "Devart.Data.Oracle.EFCore": "10.3.21.8",
           "Newtonsoft.Json": "13.0.3",
           "Pomelo.EntityFrameworkCore.MySql": "8.0.2",
-          "Slickflow.Data": "3.5.0",
-          "Slickflow.Module": "3.5.0"
+          "Slickflow.Data": "3.5.1",
+          "Slickflow.Module": "3.5.1"
         },
         "runtime": {
           "lib/net8.0/Slickflow.Module.Form.dll": {
@@ -881,7 +881,7 @@
           }
         }
       },
-      "Slickflow.Module.Localize/3.5.0": {
+      "Slickflow.Module.Localize/3.5.1": {
         "dependencies": {
           "Microsoft.Extensions.Caching.Memory": "9.0.3",
           "Newtonsoft.Json": "13.0.3"
@@ -893,13 +893,13 @@
           }
         }
       },
-      "Slickflow.Module.Resource/3.5.0": {
+      "Slickflow.Module.Resource/3.5.1": {
         "dependencies": {
           "Devart.Data.Oracle.EFCore": "10.3.21.8",
           "Newtonsoft.Json": "13.0.3",
           "Pomelo.EntityFrameworkCore.MySql": "8.0.2",
-          "Slickflow.Data": "3.5.0",
-          "Slickflow.Module": "3.5.0"
+          "Slickflow.Data": "3.5.1",
+          "Slickflow.Module": "3.5.1"
         },
         "runtime": {
           "lib/net8.0/Slickflow.Module.Resource.dll": {
@@ -908,7 +908,7 @@
           }
         }
       },
-      "Slickflow.WebUtility/3.5.0": {
+      "Slickflow.WebUtility/3.5.1": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.3"
         },
@@ -1544,68 +1544,68 @@
       "path": "sharpcompress/0.30.1",
       "hashPath": "sharpcompress.0.30.1.nupkg.sha512"
     },
-    "Slickflow.AI/3.5.0": {
+    "Slickflow.AI/3.5.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-GvNrYv1bBrtrYZJt9hHKk20A67ZlrNEdD/jCC69L5CqNj+iQQcKEhafJxPE8W0dI3M8LdA7HXZfWA3dTAYACYA==",
-      "path": "slickflow.ai/3.5.0",
-      "hashPath": "slickflow.ai.3.5.0.nupkg.sha512"
+      "sha512": "sha512-8r2i2qA4cwYLtTDmQLkr/P46VNUP/gQJnLFLmzqF+8Dxm8nW3fwHfm3erH24A2OJ7gCpvOc8gXQBTLU41SVYSQ==",
+      "path": "slickflow.ai/3.5.1",
+      "hashPath": "slickflow.ai.3.5.1.nupkg.sha512"
     },
-    "Slickflow.Dapper/3.5.0": {
+    "Slickflow.Dapper/3.5.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-4VuR/Om80lbKfaRbpJuFhFn1buTkiRrpulFn4eho3zO+TPekMUgoC1rw5iPbnqenrbfc517nY0LX5PIBIitmtA==",
-      "path": "slickflow.dapper/3.5.0",
-      "hashPath": "slickflow.dapper.3.5.0.nupkg.sha512"
+      "sha512": "sha512-qP8+QddtQjPRZAfALYTchURnGfUtjafeBHmkmukBSC9wjg0ylShp6f8OW4oS732ifNAGmcq1RU4M6VeAq8DouQ==",
+      "path": "slickflow.dapper/3.5.1",
+      "hashPath": "slickflow.dapper.3.5.1.nupkg.sha512"
     },
-    "Slickflow.Data/3.5.0": {
+    "Slickflow.Data/3.5.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-rWVgDd+/w8UDUPE+PqHjxtotF/F3wUaNyh7sJV8vT3QlUqqPwMH671f+9hs0qavdofGCv5jwlj00Mcg0EDKKig==",
-      "path": "slickflow.data/3.5.0",
-      "hashPath": "slickflow.data.3.5.0.nupkg.sha512"
+      "sha512": "sha512-QbQdCE3riq40+Ie8IzPbUI4Twyj0jw5TrkG5pH9t2D67kOvjgnQUB/BAXooXqXrPpxWpVNWkvHCFlZTASrf0CQ==",
+      "path": "slickflow.data/3.5.1",
+      "hashPath": "slickflow.data.3.5.1.nupkg.sha512"
     },
-    "Slickflow.Engine/3.5.0": {
+    "Slickflow.Engine/3.5.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-IwNsl2mPmfs94R6XWPP9URJ27U8gPH/ZZb1Wn2PTelNADaPirwlHgv7IBDRAgou96kagnHUOjpl/cBaiTY43HA==",
-      "path": "slickflow.engine/3.5.0",
-      "hashPath": "slickflow.engine.3.5.0.nupkg.sha512"
+      "sha512": "sha512-cG23Tzl0ATEetCCkhlrdlowBrLfznggwwLOTChMxx122+y0mMtyCik/DKGiT0FEWFKws/lUYlvhmgfqtlS3r/w==",
+      "path": "slickflow.engine/3.5.1",
+      "hashPath": "slickflow.engine.3.5.1.nupkg.sha512"
     },
-    "Slickflow.Module/3.5.0": {
+    "Slickflow.Module/3.5.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-C2VlC3gaPrcSK1LhgBrghXsB9RzMf0nSUyOrJBKcyx38RKClbSPAPbjcYXIo0w4nCWMwfXpa5UyOCKJop1wcqw==",
-      "path": "slickflow.module/3.5.0",
-      "hashPath": "slickflow.module.3.5.0.nupkg.sha512"
+      "sha512": "sha512-IM1aBDs3xKFB57WW0xUqXvgWgvmNfXMYcGDsHI5tsFVpARLVA5EE9+iYimwmfCvvbYF4XWOOK6NXr/wrS3BADg==",
+      "path": "slickflow.module/3.5.1",
+      "hashPath": "slickflow.module.3.5.1.nupkg.sha512"
     },
-    "Slickflow.Module.Form/3.5.0": {
+    "Slickflow.Module.Form/3.5.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Jt/7Th4L15kbN8W6p2C0YlGUcpPL7Y4hJQI+wJqWp+SB9tFZhElW5k58Ul7hfvfM8TqbaVLy9sQgm4Zc8hjWYA==",
-      "path": "slickflow.module.form/3.5.0",
-      "hashPath": "slickflow.module.form.3.5.0.nupkg.sha512"
+      "sha512": "sha512-uJq1/LzfvDp0QTC8ZWBqaasHlHWDvenMVAfNjezLn0e5d0s8UYcUGTGT+797Ql/WxxuDakNgxzZmGJrt1tX//A==",
+      "path": "slickflow.module.form/3.5.1",
+      "hashPath": "slickflow.module.form.3.5.1.nupkg.sha512"
     },
-    "Slickflow.Module.Localize/3.5.0": {
+    "Slickflow.Module.Localize/3.5.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-5JogFxHLjSKnnyGSVXEL5BWhJW3+VyCLjXkqWtR4m+NsbHoNNDoXlDBBol/2Wexse/WrCmRLiBGNVDGEe8MZ6w==",
-      "path": "slickflow.module.localize/3.5.0",
-      "hashPath": "slickflow.module.localize.3.5.0.nupkg.sha512"
+      "sha512": "sha512-FxHnF4pnA0MCV1j3k8MrztuGh8DS97zLXUrbIcSXk0TUC/yPUjP1dKP7/SBHOWA72AtT1+Q1TYzHerzx7PhWKA==",
+      "path": "slickflow.module.localize/3.5.1",
+      "hashPath": "slickflow.module.localize.3.5.1.nupkg.sha512"
     },
-    "Slickflow.Module.Resource/3.5.0": {
+    "Slickflow.Module.Resource/3.5.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-4UR+T5629TqepxRhadU4IKxo5XPm1mLojYI2plv3Jx7MTB59PAw1N5W3g7ybng81A5Cxqy7R950gUrcg7lF4gw==",
-      "path": "slickflow.module.resource/3.5.0",
-      "hashPath": "slickflow.module.resource.3.5.0.nupkg.sha512"
+      "sha512": "sha512-pyQZSUmLLgoTl+BpBuiNtIGRv0ZfYk32K3EbNhwBl6ehVJwfRb5HPao4r2sQp5Ay1J9pZsYAEkYxRIKlqRhsBg==",
+      "path": "slickflow.module.resource/3.5.1",
+      "hashPath": "slickflow.module.resource.3.5.1.nupkg.sha512"
     },
-    "Slickflow.WebUtility/3.5.0": {
+    "Slickflow.WebUtility/3.5.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-UgRLvodlEoKdWHYFWyGx4NyGyEafaEILh7m5iCSm7GnzHhYxTOHkd4aWfmZ9epeD5E2zqv65/2HNuUw3HB6UhA==",
-      "path": "slickflow.webutility/3.5.0",
-      "hashPath": "slickflow.webutility.3.5.0.nupkg.sha512"
+      "sha512": "sha512-zjyk1mQQyeJihY2KsZuSyKn3LS31iE/nagQpYn/tXZQMALmvzfUCNms7KQ9GFp+vhPoXmkWxEP/yhRVi9Vo2sA==",
+      "path": "slickflow.webutility/3.5.1",
+      "hashPath": "slickflow.webutility.3.5.1.nupkg.sha512"
     },
     "Snappier/1.0.0": {
       "type": "package",

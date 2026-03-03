@@ -10,6 +10,6 @@ namespace Slickflow.WebUtility
     {
         public string Name { get; set; }    
         public MultiMediaTypeEnum MeidaType {  get; set; }
-        public string base64Content { get; set; }
+        public string Content { get; set; }
     }
 }

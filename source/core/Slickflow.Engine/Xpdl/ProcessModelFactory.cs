@@ -8,6 +8,7 @@ using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Xpdl.Node;
 using Slickflow.Engine.Utility;
+using Slickflow.WebUtility;
 
 namespace Slickflow.Engine.Xpdl
 {

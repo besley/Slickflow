@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Slickflow.Module.Form;
 using Slickflow.Module.Resource;
 using Slickflow.Engine.Common;
-using Slickflow.Engine.Delegate;
+using Slickflow.Engine.Event;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Core.Result;
 using Slickflow.Engine.Xpdl.Entity;
@@ -41,6 +41,52 @@ namespace Slickflow.Engine.Service
             IDictionary<string, string> condition, IDbTransaction trans);
         Task<IList<NodeView>> GetNextActivityTreeAsync(IDbConnection conn, WfAppRunner runner,
             IDictionary<string, string> condition, IDbTransaction trans);
+
+        /// <summary>
+        /// Obtain the next activity list according to the application process
+        /// 根据应用获取流程下一步活动列表
+        /// </summary>
+        IList<Activity> GetNextActivityList(IDbConnection conn, 
+            WfAppRunner runner,
+            IDictionary<string, string> condition,
+            IDbTransaction trans);
+        
+        /// <summary>
+        /// Obtain the next activity list according to the application process
+        /// 根据应用获取流程下一步活动列表
+        /// </summary>
+        Task<IList<Activity>> GetNextActivityListAsync(IDbConnection conn, 
+            WfAppRunner runner,
+            IDictionary<string, string> condition, 
+            IDbTransaction trans);
+        
+        /// <summary>
+        /// Obtain the next activity list according to the application process
+        /// 获取下一步活动列表
+        /// </summary>
+        IList<Activity> GetNextActivityList(int taskId,
+            IDictionary<string, string> condition = null);
+        
+        /// <summary>
+        /// Obtain the next activity list according to the application process
+        /// 获取下一步活动列表
+        /// </summary>
+        Task<IList<Activity>> GetNextActivityListAsync(int taskId, 
+            IDictionary<string, string> condition = null);
+
+        /// <summary>
+        /// Obtain the next activity list according to the application process
+        /// 根据应用获取流程下一步活动列表
+        /// </summary>
+        IList<Activity> GetNextActivityList(WfAppRunner runner,
+            IDictionary<string, string> condition = null);
+
+        /// <summary>
+        /// Obtain the next activity list according to the application process
+        /// 根据应用获取流程下一步活动列表
+        /// </summary>
+        Task<IList<Activity>> GetNextActivityListAsync(WfAppRunner runner,
+            IDictionary<string, string> condition = null);
 
         IList<NodeView> GetNextActivityRoleUserTree(WfAppRunner runner, IDictionary<string, string> condition = null);
         Task<IList<NodeView>> GetNextActivityRoleUserTreeAsync(WfAppRunner runner, IDictionary<string, string> condition = null);
@@ -219,8 +265,7 @@ namespace Slickflow.Engine.Service
         IList<ActivityInstanceEntity> GetActivityInstanceList(int processInstanceId);
         IList<ActivityInstanceEntity> GetTargetActivityInstanceList(int fromActivityInstanceId);
         ActivityInstanceEntity GetActivityInstance(int activityInstanceId);
-
-        ProcessEntity GetProcessById(int processId);
+        ProcessEntity GetProcessById(int id);
         ProcessEntity GetProcessUsing(string processId);
         ProcessEntity GetProcessByVersion(string processId, string version);
         ProcessEntity GetProcessByName(string processName, string version = null);
@@ -273,13 +318,13 @@ namespace Slickflow.Engine.Service
         IWorkflowService CreateRunner(WfAppRunner runner);
         IWorkflowService CreateRunner(string userId, string userName);
         IWorkflowService UseApp(string appInstanceId, string appName, string appCode = null);
-        IWorkflowService UseProcess(string processCodeOrProcessId, string version = null);
+        IWorkflowService UseProcess(string processId, string version = null);
         IWorkflowService IfCondition(IDictionary<string, string> conditions);
         IWorkflowService IfCondition(string name, string value);
         IWorkflowService OnTask(int taskId);
         IWorkflowService SetVariable(string name, string value);
         IWorkflowService SetVariable(IDictionary<string, string> variables);
-        IWorkflowService Subscribe(EventFireTypeEnum eventType, Func<DelegateContext, IDelegateService, Boolean> func);
+        IWorkflowService Subscribe(EventFireTypeEnum eventType, Func<EventContext, IEventService, Boolean> func);
         IWorkflowService NextStep(string activityId, PerformerList performerList);
         IWorkflowService NextStep(IDictionary<string, PerformerList> nextActivityPerformers);
         IWorkflowService NextStepInt(string userId, string userName);

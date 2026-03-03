@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -76,6 +76,29 @@ namespace sfdapi.Controllers
         }
 
         /// <summary>
+        /// Import from pasted text content
+        /// 从粘贴的文本内容导入流程
+        /// </summary>
+        [HttpPost]
+        public ActionResult ImportFromText([FromBody] ImportFromTextRequest request)
+        {
+            if (request == null || string.IsNullOrWhiteSpace(request.XmlContent))
+            {
+                return Ok(new { success = false, Message = "XmlContent is required." });
+            }
+            try
+            {
+                var xmlContent = request.XmlContent.Trim();
+                var isOk = CreateNewProcess(xmlContent, out string message);
+                return Ok(new { success = isOk, Message = message });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { success = false, Message = ex.Message });
+            }
+        }
+
+        /// <summary>
         /// Create new process
         /// 创建新流程
         /// </summary>
@@ -101,5 +124,13 @@ namespace sfdapi.Controllers
             }
             return isUploaded;
         }
+    }
+
+    /// <summary>
+    /// Request model for importing from pasted text
+    /// </summary>
+    public class ImportFromTextRequest
+    {
+        public string XmlContent { get; set; }
     }
 }

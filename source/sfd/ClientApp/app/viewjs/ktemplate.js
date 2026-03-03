@@ -48,15 +48,9 @@ const ktemplate = (function () {
             if (templateTypeId === 'business') {
                 $('#divBusinessTemplate').show();
                 $('#divStandardTemplate').hide();
-                $('#divCodeTextTemplate').hide();
             } else if (templateTypeId === 'standard') {
                 $('#divStandardTemplate').show();
                 $('#divBusinessTemplate').hide();
-                $('#divCodeTextTemplate').hide();
-            } else if (templateTypeId === 'codetext') {
-                $('#divCodeTextTemplate').show();
-                $('#divBusinessTemplate').hide();
-                $('#divStandardTemplate').hide();
             }
         })
 
@@ -93,43 +87,6 @@ const ktemplate = (function () {
             });
         })
 
-        $("#ddlTemplateType").change(function (i, o) {
-            var option = $(this).val();
-            //load template content
-            loadTemplate(option);
-        });
-
-        //init code mirror textarea
-        loadTemplate('Default');
-    }
-
-    function loadTemplate(option) {
-        var content = ktemplate.mprocessTemplate[option];
-
-        if (content !== undefined && content !== "") {
-            $("#txtCode").val(content);
-            return;
-        }
-        processapi.loadTemplate(option, function (template) {
-            $("#txtCode").val(template.Content);
-            ktemplate.mprocessTemplate[option] = template.Content;
-        });
-    }
-
-    //trial feature
-    ktemplate.executeGraph = function () {
-        var text = $("#txtCode")[0].value;
-
-        if (text !== "") {
-            var entity = { "Body": text };
-            processapi.executeProcessGraph(entity, function (result) {
-                kmsgbox.info(result.Message);
-                //kmain.templateDialog.close();
-            });
-        }
-        else {
-            kmsgbox.warn(kresource.getItem('domainlangwwarnmsg'));
-        }
     }
 
     ktemplate.executeGraphAdvanced = function () {

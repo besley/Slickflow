@@ -101,15 +101,14 @@ function initializeElementProperties(element, modeling, moddle) {
 }
 
 function initializeServiceTask(element, modeling, moddle) {
-    if (element.sfType === "LLM" || element.sfType === "PlugIn") {
+    if (element.sfType === "LLM" || element.sfType === "RAG") {
         var businessObject = getBusinessObject(element);
         if (!businessObject.extensionElements) {
-            var aiService = moddle.create('sf:AIService', {
-                configUUID: jshelper.getUUID(),
+            var aiService = moddle.create('sf:AiService', {
                 type: element.sfType
             })
 
-            var aiServices = moddle.create('sf:AIServices', {
+            var aiServices = moddle.create('sf:AiServices', {
                 aiServices:[aiService]
             })
 

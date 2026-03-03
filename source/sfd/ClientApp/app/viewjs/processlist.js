@@ -1,4 +1,4 @@
-﻿import slick from '../script/slick.event.js'
+import slick from '../script/slick.event.js'
 import kconfig from '../config/kconfig.js';
 window.slick = slick;
 
@@ -31,7 +31,7 @@ const processlist = (function () {
                     columnDefs: [
                         { headerName: 'Id', field: 'Id', width: 80 },
                         { headerName: kresource.getItem('processid'), field: 'ProcessId', width: 240 },
-                        { headerName: kresource.getItem('processname'), field: 'ProcessName', width: 200 },
+                        { headerName: kresource.getItem('processname'), field: 'ProcessName', width: 260 },
                         { headerName: kresource.getItem('version'), field: 'Version', width: 80 },
                         { headerName: kresource.getItem('processcode'), field: 'ProcessCode', width: 200 },
                         { headerName: kresource.getItem('packagetype'), field: 'PackageType', width: 80, cellRenderer: onPackageTypeRenderer },
@@ -255,54 +255,54 @@ const processlist = (function () {
         processlist.getProcessList();
     }
 
-    processlist.createFromTemplate = function () {
-        if ($.trim($("#txtProcessName").val()) === ""
-            || $.trim($("#txtProcessCode").val()) === ""
-            || $.trim($("#txtVersion").val()) === "") {
-            kmsgbox.warn(kresource.getItem('processsavewarnmsg'));
-            return false;
-        }
+    //processlist.createFromTemplate = function () {
+    //    if ($.trim($("#txtProcessName").val()) === ""
+    //        || $.trim($("#txtProcessCode").val()) === ""
+    //        || $.trim($("#txtVersion").val()) === "") {
+    //        kmsgbox.warn(kresource.getItem('processsavewarnmsg'));
+    //        return false;
+    //    }
 
-        var entity = {
-            "ProcessId": $("#txtProcessId").val(),
-            "ProcessName": $("#txtProcessName").val(),
-            "ProcessCode": $("#txtProcessCode").val(),
-            "Version": $("#txtVersion").val(),
-            "Status": $("#ddlStatus").val(),
-            "Description": $("#txtDescription").val(),
-            "TemplateType": processlist.mprocessTemplateType === '' ? "Blank" : processlist.mprocessTemplateType
-        };
+    //    var entity = {
+    //        "ProcessId": $("#txtProcessId").val(),
+    //        "ProcessName": $("#txtProcessName").val(),
+    //        "ProcessCode": $("#txtProcessCode").val(),
+    //        "Version": $("#txtVersion").val(),
+    //        "Status": $("#ddlStatus").val(),
+    //        "Description": $("#txtDescription").val(),
+    //        "TemplateType": processlist.mprocessTemplateType === '' ? "Blank" : processlist.mprocessTemplateType
+    //    };
 
-        if (processlist.pselectedProcessEntity === null) {
-            processapi.checkProcessFile(entity, function (result) {
-                if (result.Status === 1) {
-                    if (result.Entity === null) {
-                        //create a new process
-                        processapi.create(entity, true, function (result) {
-                            if (result.Status === 1) {
-                                processlist.pselectedProcessEntity = result.Entity;
-                                kmain.mxSelectedProcessEntity = result.Entity;
-                                //render process into graph canvas
-                                if (processlist.afterOpened) {
-                                    slick.trigger(processlist.afterOpened, {
-                                        "ProcessEntity": result.Entity
-                                    });
-                                }
+    //    if (processlist.pselectedProcessEntity === null) {
+    //        processapi.checkProcessFile(entity, function (result) {
+    //            if (result.Status === 1) {
+    //                if (result.Entity === null) {
+    //                    //create a new process
+    //                    processapi.create(entity, true, function (result) {
+    //                        if (result.Status === 1) {
+    //                            processlist.pselectedProcessEntity = result.Entity;
+    //                            kmain.mxSelectedProcessEntity = result.Entity;
+    //                            //render process into graph canvas
+    //                            if (processlist.afterOpened) {
+    //                                slick.trigger(processlist.afterOpened, {
+    //                                    "ProcessEntity": result.Entity
+    //                                });
+    //                            }
 
-                                if (kmain.templateDialog !== undefined) kmain.templateDialog.close();
-                            }
-                        });
-                    } else {
-                        kmsgbox.warn(kresource.getItem('processsavenotuniquewarnmsg'));
-                    }
-                } else {
-                    kmsgbox.error(kresource.getItem('processcheckfileexisterrormsg'), result.Message);
-                }
-            })
-        }
-        else
-            processapi.update(entity);
-    }
+    //                            if (kmain.templateDialog !== undefined) kmain.templateDialog.close();
+    //                        }
+    //                    });
+    //                } else {
+    //                    kmsgbox.warn(kresource.getItem('processsavenotuniquewarnmsg'));
+    //                }
+    //            } else {
+    //                kmsgbox.error(kresource.getItem('processcheckfileexisterrormsg'), result.Message);
+    //            }
+    //        })
+    //    }
+    //    else
+    //        processapi.update(entity);
+    //}
 
     processlist.deleteProcess = function () {
         var content = kresource.getItem('processdeletemsg');
@@ -442,6 +442,83 @@ const processlist = (function () {
                 }
             }
         });
+        // Paste from text import & mode selector
+        processlist.importXmlCodeMirror = null;
+        processlist.initImportFromPaste();
+    }
+
+    processlist.initImportFromPaste = function () {
+        // Mode selector: card-style switch
+        $('.import-mode-option').off('click').on('click', function () {
+            var mode = $(this).data('mode');
+            $('.import-mode-option').removeClass('active');
+            $(this).addClass('active');
+            $('.import-panel').removeClass('active');
+            if (mode === 'file') {
+                $('#panelFromFile').addClass('active');
+                $('#btnImportFromPaste').addClass('d-none');
+            } else {
+                $('#panelFromPaste').addClass('active');
+                $('#btnImportFromPaste').removeClass('d-none');
+                processlist.initImportXmlCodeMirror();
+            }
+        });
+        // Import from paste button
+        $('#btnImportFromPaste').off('click').on('click', function () {
+            var xmlContent = processlist.getImportXmlContent();
+            if (!xmlContent || !xmlContent.trim()) {
+                kmsgbox.warn(kresource.getItem("pastexmlemptywarn") || "Please paste XML/BPMN content.");
+                return;
+            }
+            jshelper.ajaxPost(kconfig.webApiUrl + 'api/FineUpload/ImportFromText',
+                JSON.stringify({ xmlContent: xmlContent.trim() }),
+                function (result) {
+                    if (result && result.success === true) {
+                        kmsgbox.info(kresource.getItem("processxmlimportokmsg"));
+                        processlist.clearImportXmlContent();
+                        if (typeof processlist.getProcessList === 'function') {
+                            processlist.getProcessList();
+                        }
+                    } else {
+                        kmsgbox.error(kresource.getItem("processxmlimporterrormsg"), result && result.Message ? result.Message : '');
+                    }
+                }
+            );
+        });
+    }
+
+    processlist.importXmlCodeMirror = null;
+    processlist.initImportXmlCodeMirror = function () {
+        if (processlist.importXmlCodeMirror) return;
+        var ta = document.getElementById('importXmlTextarea');
+        if (!ta || typeof CodeMirror === 'undefined') return;
+        processlist.importXmlCodeMirror = CodeMirror.fromTextArea(ta, {
+            mode: 'xml',
+            theme: 'eclipse',
+            lineNumbers: true,
+            lineWrapping: true,
+            indentUnit: 2,
+            indentWithTabs: false,
+            matchBrackets: true,
+            viewportMargin: Infinity,
+            spellcheck: false
+        });
+        processlist.importXmlCodeMirror.refresh();
+    }
+
+    processlist.getImportXmlContent = function () {
+        if (processlist.importXmlCodeMirror) {
+            return processlist.importXmlCodeMirror.getValue();
+        }
+        return $('#importXmlTextarea').val() || '';
+    }
+
+    processlist.clearImportXmlContent = function () {
+        if (processlist.importXmlCodeMirror) {
+            processlist.importXmlCodeMirror.setValue('');
+        } else {
+            $('#importXmlTextarea').val('');
+        }
     }
 
     //import xml file

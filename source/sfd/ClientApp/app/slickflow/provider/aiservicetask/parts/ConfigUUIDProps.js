@@ -25,7 +25,7 @@ function ConfigUUID(props) {
         var businessObject = getBusinessObject(element);
         const extensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
         if (extensionElements) {
-            var aiServicesElement = sfModelUtility.getExtensionElement(businessObject, 'sf:AIServices');
+            var aiServicesElement = sfModelUtility.getExtensionElement(businessObject, 'sf:AiServices');
             if (aiServicesElement && aiServicesElement.aiServices) {
                 var aiServiceElement = aiServicesElement.aiServices[0];
                 if (aiServiceElement) {
@@ -45,18 +45,18 @@ function ConfigUUID(props) {
     const setValue = value => {
         var businessObject = getBusinessObject(element);
         const extensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
-        var aiServicesElement = sfModelUtility.getExtensionElement(businessObject, 'sf:AIServices');
+        var aiServicesElement = sfModelUtility.getExtensionElement(businessObject, 'sf:AiServices');
 
         var aiServiceElement = null;
         if (!aiServicesElement) {
-            aiServicesElement = moddle.create('sf:AIServices');
+            aiServicesElement = moddle.create('sf:AiServices');
             extensionElements.get('values').push(aiServicesElement);
-            aiServiceElement = moddle.create('sf:AIService');
+            aiServiceElement = moddle.create('sf:AiService');
             aiServicesElement.get('aiServices').push(aiServiceElement);
         } else {
             aiServiceElement = aiServicesElement.get('aiServices')[0];
             if (!aiServiceElement) {
-                aiServiceElement = moddle.create('sf:AIService');
+                aiServiceElement = moddle.create('sf:AiService');
                 aiServicesElement.get('aiServices').push(aiServiceElement);
             }
         }

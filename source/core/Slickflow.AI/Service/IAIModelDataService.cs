@@ -1,4 +1,4 @@
-﻿using Slickflow.AI.Entity;
+using Slickflow.AI.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +11,12 @@ namespace Slickflow.AI.Service
     {
         AiModelProviderEntity GetModelById(int id);
         List<AiModelProviderEntity> GetModelListAll();
+        List<AiModelProviderEntity> GetModelListByType(string modelType);
         int CreateModel(AiModelProviderEntity modelEntity);
         Boolean UpdateModel(AiModelProviderEntity modelEntity);
         void DeleteModel(int modelId);
-        AiActivityConfigEntity GetAiActivityConfigByUUID(string uuid);
+        AiActivityConfigEntity GetAiActivityConfigByProcessVersionActivity(string processId, string version, string activityId);
         void SaveAiActivityConfigInfo(AiActivityConfigEntity axConfigEntity);
-        void DeleteAiActivityConfig(string configUUID);
+        void DeleteAiActivityConfig(string processId, string version, string activityId);
     }
 }

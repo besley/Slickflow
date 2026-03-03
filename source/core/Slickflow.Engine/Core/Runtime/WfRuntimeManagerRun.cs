@@ -2,7 +2,7 @@
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Core.Pattern;
 using Slickflow.Engine.Core.Result;
-using Slickflow.Engine.Delegate;
+using Slickflow.Engine.Event;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 
@@ -82,9 +82,9 @@ namespace Slickflow.Engine.Core.Runtime
         /// <param name="session"></param>
         private void OnProcessRunning(IDbSession session)
         {
-            DelegateExecutor.InvokeExternalDelegate(session,
+            EventExecutor.InvokeExternalEvent(session,
                 EventFireTypeEnum.OnProcessRunning,
-                base.ActivityResource.AppRunner.DelegateEventList,
+                base.ActivityResource.AppRunner.EventSubscriptionList,
                 RunningActivityInstance.ProcessInstanceId);
         }
 
@@ -99,9 +99,9 @@ namespace Slickflow.Engine.Core.Runtime
             var entity = pim.GetById(session.Connection, RunningActivityInstance.ProcessInstanceId, session.Transaction);
             if (entity.ProcessState == (short)ProcessStateEnum.Completed)
             {
-                DelegateExecutor.InvokeExternalDelegate(session,
+                EventExecutor.InvokeExternalEvent(session,
                     EventFireTypeEnum.OnProcessCompleted,
-                    base.ActivityResource.AppRunner.DelegateEventList,
+                    base.ActivityResource.AppRunner.EventSubscriptionList,
                     RunningActivityInstance.ProcessInstanceId);
             }
         }

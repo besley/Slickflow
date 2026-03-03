@@ -1,4 +1,4 @@
-﻿using Slickflow.AI.Configuration;
+using Slickflow.AI.Configuration;
 using Slickflow.AI.Entity;
 using Slickflow.AI.Manager;
 using Slickflow.Data;
@@ -22,6 +22,12 @@ namespace Slickflow.AI.Service
             var list = modelManager.GetAll();
 
             return list;
+        }
+
+        public List<AiModelProviderEntity> GetModelListByType(string modelType)
+        {
+            var modelManager = new AiModelProviderManager();
+            return modelManager.GetByModelType(modelType ?? string.Empty);
         }
 
         public int CreateModel(AiModelProviderEntity modelEntity)
@@ -93,10 +99,10 @@ namespace Slickflow.AI.Service
         #endregion
 
         #region AxConfig Data Service
-        public AiActivityConfigEntity GetAiActivityConfigByUUID(string uuid)
+        public AiActivityConfigEntity GetAiActivityConfigByProcessVersionActivity(string processId, string version, string activityId)
         {
             var axConfigManager = new AiActivityConfigManager();
-            var axConfigEntity = axConfigManager.GetByUUID(uuid);
+            var axConfigEntity = axConfigManager.GetByProcessVersionActivity(processId, version, activityId);
             return axConfigEntity;
         }
 
@@ -111,18 +117,18 @@ namespace Slickflow.AI.Service
             try
             {
                 session.BeginTrans();
-                // 检查是否存在 ConfigUUID 的记录
-                var existingAxConfigEntity = axConfigManager.GetByUUID(session.Connection, axConfigEntity.ConfigUUID, session.Transaction);
+                // 检查是否存在相同 process_id, version, activity_id 的记录
+                var existingAxConfigEntity = axConfigManager.GetByProcessVersionActivity(session.Connection, axConfigEntity.ProcessId, axConfigEntity.Version, axConfigEntity.ActivityId, session.Transaction);
 
                 if (existingAxConfigEntity == null)
                 {
-                    // 2.1 当没有 ConfigUUID 的记录时，直接保存配置记录和配置变量记录
+                    // 2.1 当没有相同组合键的记录时，直接保存配置记录和配置变量记录
                     axConfigEntity.CreatedDateTime = DateTime.UtcNow;
                     int newAxConfigId = axConfigManager.Insert(session.Connection, axConfigEntity, session.Transaction);
                 }
                 else
                 {
-                    // 2.2 当有 ConfigUUID 的记录时，对主表 AxConfig 表做更新，并对变量表里面的记录也做插入或者更新
+                    // 2.2 当有相同组合键的记录时，对主表 AxConfig 表做更新，并对变量表里面的记录也做插入或者更新
                     axConfigEntity.Id = existingAxConfigEntity.Id;
                     axConfigEntity.UpdatedDateTime = DateTime.UtcNow;
                     axConfigManager.Update(session.Connection, axConfigEntity, session.Transaction);
@@ -141,10 +147,10 @@ namespace Slickflow.AI.Service
             }
         }
 
-        public void DeleteAiActivityConfig(string configUUID)
+        public void DeleteAiActivityConfig(string processId, string version, string activityId)
         {
             var axConfigManager = new AiActivityConfigManager();
-            axConfigManager.Delete(configUUID);
+            axConfigManager.Delete(processId, version, activityId);
         }
         #endregion
     }
