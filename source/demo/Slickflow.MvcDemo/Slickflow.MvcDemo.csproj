@@ -24,6 +24,7 @@
     <ProjectReference Include="..\..\core\Slickflow.Module.Localize\Slickflow.Module.Localize.csproj" />
     <ProjectReference Include="..\..\core\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj" />
     <ProjectReference Include="..\..\core\Slickflow.Module\Slickflow.Module.csproj" />
+    <ProjectReference Include="..\..\core\Slickflow.WebUtility\Slickflow.WebUtility.csproj" />
     <ProjectReference Include="..\Slickflow.BizAppService\Slickflow.BizAppService.csproj" />
   </ItemGroup>
 

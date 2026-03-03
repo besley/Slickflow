@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\core\Dapper\Dapper.csproj" />
+    <ProjectReference Include="..\..\core\Slickflow.Data\Slickflow.Data.csproj" />
     <ProjectReference Include="..\..\core\Slickflow.Engine\Slickflow.Engine.csproj" />
   </ItemGroup>
 
