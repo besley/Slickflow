@@ -459,9 +459,6 @@ D:\Cloud365\GitHomeCore-20250120\SfBpmn2\source\sfdapi\obj\Debug\net8.0\refint\s
 D:\Cloud365\GitHomeCore-20250120\SfBpmn2\source\sfdapi\obj\Debug\net8.0\sfdapi.pdb
 D:\Cloud365\GitHomeCore-20250120\SfBpmn2\source\sfdapi\obj\Debug\net8.0\sfdapi.genruntimeconfig.cache
 D:\Cloud365\GitHomeCore-20250120\SfBpmn2\source\sfdapi\obj\Debug\net8.0\ref\sfdapi.dll
-D:\GitHub\Slickflow\source\sfdapi\obj\Debug\net8.0\sfdapi.dll
-D:\GitHub\Slickflow\source\sfdapi\obj\Debug\net8.0\refint\sfdapi.dll
-D:\GitHub\Slickflow\source\sfdapi\obj\Debug\net8.0\sfdapi.pdb
 D:\GitHub\Slickflow\source\sfdapi\bin\Debug\net8.0\web.config
 D:\GitHub\Slickflow\source\sfdapi\bin\Debug\net8.0\appsettings.Development.json
 D:\GitHub\Slickflow\source\sfdapi\bin\Debug\net8.0\appsettings.json
@@ -687,5 +684,8 @@ D:\GitHub\Slickflow\source\sfdapi\obj\Debug\net8.0\staticwebassets.build.endpoin
 D:\GitHub\Slickflow\source\sfdapi\obj\Debug\net8.0\swae.build.ex.cache
 D:\GitHub\Slickflow\source\sfdapi\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\GitHub\Slickflow\source\sfdapi\obj\Debug\net8.0\sfdapi.csproj.Up2Date
+D:\GitHub\Slickflow\source\sfdapi\obj\Debug\net8.0\sfdapi.dll
+D:\GitHub\Slickflow\source\sfdapi\obj\Debug\net8.0\refint\sfdapi.dll
+D:\GitHub\Slickflow\source\sfdapi\obj\Debug\net8.0\sfdapi.pdb
 D:\GitHub\Slickflow\source\sfdapi\obj\Debug\net8.0\sfdapi.genruntimeconfig.cache
 D:\GitHub\Slickflow\source\sfdapi\obj\Debug\net8.0\ref\sfdapi.dll
