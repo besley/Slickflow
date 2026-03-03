@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 1CA3vt560wltYoE2j3fME3fVtrctNxzCPY1nGBf8oXAJ6zlESFMGWTLkwAX7m37
+\restrict lAJ2qcqtDubbudWtagZIA0pcnizAtHEzzshiXAmhMhqUfwg0IYc4GrWzKsUO0l0
 
 -- Dumped from database version 18.1
 -- Dumped by pg_dump version 18.1
@@ -27,7 +27,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: -
 --
 
 COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
@@ -38,12 +38,11 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: ai_activity_config; Type: TABLE; Schema: public; Owner: postgres
+-- Name: ai_activity_config; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.ai_activity_config (
     id integer CONSTRAINT ai_axconfig_id_not_null NOT NULL,
-    config_uuid character varying(50) CONSTRAINT ai_axconfig_config_uuid_not_null NOT NULL,
     process_id character varying(50) CONSTRAINT ai_axconfig_process_id_not_null NOT NULL,
     version character varying(50) CONSTRAINT ai_axconfig_version_not_null NOT NULL,
     activity_id character varying(50) CONSTRAINT ai_axconfig_activity_id_not_null NOT NULL,
@@ -62,168 +61,218 @@ CREATE TABLE public.ai_activity_config (
     log_level character varying(50) DEFAULT NULL::character varying,
     custom_instructions text,
     created_datetime timestamp with time zone,
-    updated_datetime timestamp with time zone
+    updated_datetime timestamp with time zone,
+    rag_search_strategy character varying(50) DEFAULT 'similarity'::character varying,
+    rag_search_count integer DEFAULT 5,
+    rag_similarity_threshold numeric(3,2) DEFAULT 0.7,
+    rag_search_mode character varying(50) DEFAULT 'hybrid'::character varying,
+    service_type character varying(50) DEFAULT NULL::character varying NOT NULL,
+    rag_function character varying(50) DEFAULT NULL::character varying,
+    memory_turns integer DEFAULT 10,
+    rag_embedding_model character varying(50),
+    rag_embedding_dimensions integer DEFAULT 1536,
+    rag_embedding_model_id integer
 );
 
 
-ALTER TABLE public.ai_activity_config OWNER TO postgres;
-
 --
--- Name: TABLE ai_activity_config; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: TABLE ai_activity_config; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON TABLE public.ai_activity_config IS 'AI Activity Config configuration table for storing service settings and parameters';
 
 
 --
--- Name: COLUMN ai_activity_config.id; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.id; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.id IS 'Primary key';
 
 
 --
--- Name: COLUMN ai_activity_config.config_uuid; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON COLUMN public.ai_activity_config.config_uuid IS 'Configuration UUID identifier';
-
-
---
--- Name: COLUMN ai_activity_config.process_id; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.process_id; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.process_id IS 'Process identifier';
 
 
 --
--- Name: COLUMN ai_activity_config.version; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.version; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.version IS 'Process version';
 
 
 --
--- Name: COLUMN ai_activity_config.activity_id; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.activity_id; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.activity_id IS 'Activity id';
 
 
 --
--- Name: COLUMN ai_activity_config.model_provider_id; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.model_provider_id; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.model_provider_id IS 'Model Provider Id';
 
 
 --
--- Name: COLUMN ai_activity_config.model_name; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.model_name; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.model_name IS 'Model Name';
 
 
 --
--- Name: COLUMN ai_activity_config.description; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.description; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.description IS 'Service description';
 
 
 --
--- Name: COLUMN ai_activity_config.temperature; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.temperature; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.temperature IS 'Temperature parameter for AI model';
 
 
 --
--- Name: COLUMN ai_activity_config.max_tokens; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.max_tokens; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.max_tokens IS 'Maximum tokens for AI response';
 
 
 --
--- Name: COLUMN ai_activity_config.system_prompt; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.system_prompt; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.system_prompt IS 'System prompt text';
 
 
 --
--- Name: COLUMN ai_activity_config.user_message; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.user_message; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.user_message IS 'Few-shot prompt examples';
 
 
 --
--- Name: COLUMN ai_activity_config.response_format; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.response_format; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.response_format IS 'Response format specification';
 
 
 --
--- Name: COLUMN ai_activity_config.time_out; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.time_out; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.time_out IS 'Timeout value in seconds';
 
 
 --
--- Name: COLUMN ai_activity_config.max_retries; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.max_retries; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.max_retries IS 'Maximum retry attempts';
 
 
 --
--- Name: COLUMN ai_activity_config.error_handling; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.error_handling; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.error_handling IS 'Error handling strategy';
 
 
 --
--- Name: COLUMN ai_activity_config.fallback_agent; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.fallback_agent; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.fallback_agent IS 'Fallback agent identifier';
 
 
 --
--- Name: COLUMN ai_activity_config.log_level; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.log_level; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.log_level IS 'Logging level';
 
 
 --
--- Name: COLUMN ai_activity_config.custom_instructions; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.custom_instructions; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.custom_instructions IS 'Custom instructions for the service';
 
 
 --
--- Name: COLUMN ai_activity_config.created_datetime; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.created_datetime; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.created_datetime IS 'Record creation timestamp';
 
 
 --
--- Name: COLUMN ai_activity_config.updated_datetime; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.updated_datetime; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_activity_config.updated_datetime IS 'Record last update timestamp';
 
 
 --
--- Name: ai_agent; Type: TABLE; Schema: public; Owner: postgres
+-- Name: COLUMN ai_activity_config.rag_search_strategy; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.ai_activity_config.rag_search_strategy IS 'RAG search strategy，example：similarity, mmr, fusion ';
+
+
+--
+-- Name: COLUMN ai_activity_config.rag_search_count; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.ai_activity_config.rag_search_count IS 'RAG search count';
+
+
+--
+-- Name: COLUMN ai_activity_config.rag_similarity_threshold; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.ai_activity_config.rag_similarity_threshold IS 'RAG similarity threshod';
+
+
+--
+-- Name: COLUMN ai_activity_config.rag_search_mode; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.ai_activity_config.rag_search_mode IS 'RAG search mode: hybrid, vector, keyword';
+
+
+--
+-- Name: COLUMN ai_activity_config.service_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.ai_activity_config.service_type IS 'Service type: LLM, RAG...';
+
+
+--
+-- Name: COLUMN ai_activity_config.memory_turns; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.ai_activity_config.memory_turns IS 'Multi-turn context memory count (e.g. 8 or 10) for RAG/LLM chat history';
+
+
+--
+-- Name: COLUMN ai_activity_config.rag_embedding_model_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.ai_activity_config.rag_embedding_model_id IS 'FK to ai_model_provider.id, model_type=vector_model';
+
+
+--
+-- Name: ai_agent; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.ai_agent (
@@ -258,10 +307,8 @@ CREATE TABLE public.ai_agent (
 );
 
 
-ALTER TABLE public.ai_agent OWNER TO postgres;
-
 --
--- Name: ai_agent_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: ai_agent_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.ai_agent ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -275,7 +322,7 @@ ALTER TABLE public.ai_agent ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY
 
 
 --
--- Name: ai_agent_instance; Type: TABLE; Schema: public; Owner: postgres
+-- Name: ai_agent_instance; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.ai_agent_instance (
@@ -285,10 +332,8 @@ CREATE TABLE public.ai_agent_instance (
 );
 
 
-ALTER TABLE public.ai_agent_instance OWNER TO postgres;
-
 --
--- Name: ai_agent_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: ai_agent_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.ai_agent_instance ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -302,7 +347,7 @@ ALTER TABLE public.ai_agent_instance ALTER COLUMN id ADD GENERATED BY DEFAULT AS
 
 
 --
--- Name: ai_agent_parameter; Type: TABLE; Schema: public; Owner: postgres
+-- Name: ai_agent_parameter; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.ai_agent_parameter (
@@ -318,10 +363,8 @@ CREATE TABLE public.ai_agent_parameter (
 );
 
 
-ALTER TABLE public.ai_agent_parameter OWNER TO postgres;
-
 --
--- Name: ai_agent_parameter_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: ai_agent_parameter_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.ai_agent_parameter ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -335,7 +378,7 @@ ALTER TABLE public.ai_agent_parameter ALTER COLUMN id ADD GENERATED BY DEFAULT A
 
 
 --
--- Name: ai_axconfig_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: ai_axconfig_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.ai_axconfig_id_seq
@@ -347,17 +390,15 @@ CREATE SEQUENCE public.ai_axconfig_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.ai_axconfig_id_seq OWNER TO postgres;
-
 --
--- Name: ai_axconfig_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: ai_axconfig_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.ai_axconfig_id_seq OWNED BY public.ai_activity_config.id;
 
 
 --
--- Name: ai_model_provider; Type: TABLE; Schema: public; Owner: postgres
+-- Name: ai_model_provider; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.ai_model_provider (
@@ -369,84 +410,91 @@ CREATE TABLE public.ai_model_provider (
     created_datetime timestamp with time zone,
     updated_datetime timestamp with time zone,
     is_active boolean DEFAULT true,
-    description text
+    description text,
+    model_type character varying(50),
+    model_name character varying(100) DEFAULT NULL::character varying
 );
 
 
-ALTER TABLE public.ai_model_provider OWNER TO postgres;
-
 --
--- Name: TABLE ai_model_provider; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: TABLE ai_model_provider; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON TABLE public.ai_model_provider IS 'AI model provider configuration table for storing base URL and API keys';
 
 
 --
--- Name: COLUMN ai_model_provider.id; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_model_provider.id; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_model_provider.id IS 'Primary key';
 
 
 --
--- Name: COLUMN ai_model_provider.model_provider; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_model_provider.model_provider; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_model_provider.model_provider IS 'Model provider (e.g., OpenAI, Azure OpenAI, Anthropic)';
 
 
 --
--- Name: COLUMN ai_model_provider.base_url; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_model_provider.base_url; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_model_provider.base_url IS 'Base URL for the API endpoint';
 
 
 --
--- Name: COLUMN ai_model_provider.api_uuid; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_model_provider.api_uuid; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_model_provider.api_uuid IS 'API uuid for generate api key';
 
 
 --
--- Name: COLUMN ai_model_provider.api_key; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_model_provider.api_key; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_model_provider.api_key IS 'API key for authentication';
 
 
 --
--- Name: COLUMN ai_model_provider.created_datetime; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_model_provider.created_datetime; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_model_provider.created_datetime IS 'Record creation timestamp';
 
 
 --
--- Name: COLUMN ai_model_provider.updated_datetime; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_model_provider.updated_datetime; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_model_provider.updated_datetime IS 'Record last update timestamp';
 
 
 --
--- Name: COLUMN ai_model_provider.is_active; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_model_provider.is_active; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_model_provider.is_active IS 'Whether the model configuration is active';
 
 
 --
--- Name: COLUMN ai_model_provider.description; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN ai_model_provider.description; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.ai_model_provider.description IS 'Optional description of the model configuration';
 
 
 --
--- Name: ai_model_provider_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: COLUMN ai_model_provider.model_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.ai_model_provider.model_name IS 'Model name/identifier e.g. deepseek-v3, gpt-4o';
+
+
+--
+-- Name: ai_model_provider_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.ai_model_provider_id_seq
@@ -458,17 +506,15 @@ CREATE SEQUENCE public.ai_model_provider_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.ai_model_provider_id_seq OWNER TO postgres;
-
 --
--- Name: ai_model_provider_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: ai_model_provider_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.ai_model_provider_id_seq OWNED BY public.ai_model_provider.id;
 
 
 --
--- Name: biz_app_flow; Type: TABLE; Schema: public; Owner: postgres
+-- Name: biz_app_flow; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.biz_app_flow (
@@ -485,10 +531,8 @@ CREATE TABLE public.biz_app_flow (
 );
 
 
-ALTER TABLE public.biz_app_flow OWNER TO postgres;
-
 --
--- Name: biz_app_flow_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: biz_app_flow_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.biz_app_flow ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -502,7 +546,7 @@ ALTER TABLE public.biz_app_flow ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDEN
 
 
 --
--- Name: fb_form; Type: TABLE; Schema: public; Owner: postgres
+-- Name: fb_form; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.fb_form (
@@ -519,10 +563,8 @@ CREATE TABLE public.fb_form (
 );
 
 
-ALTER TABLE public.fb_form OWNER TO postgres;
-
 --
--- Name: fb_form_data; Type: TABLE; Schema: public; Owner: postgres
+-- Name: fb_form_data; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.fb_form_data (
@@ -539,10 +581,8 @@ CREATE TABLE public.fb_form_data (
 );
 
 
-ALTER TABLE public.fb_form_data OWNER TO postgres;
-
 --
--- Name: fb_form_data_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: fb_form_data_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.fb_form_data ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -556,7 +596,7 @@ ALTER TABLE public.fb_form_data ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDEN
 
 
 --
--- Name: fb_form_field_activity_edit; Type: TABLE; Schema: public; Owner: postgres
+-- Name: fb_form_field_activity_edit; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.fb_form_field_activity_edit (
@@ -574,10 +614,8 @@ CREATE TABLE public.fb_form_field_activity_edit (
 );
 
 
-ALTER TABLE public.fb_form_field_activity_edit OWNER TO postgres;
-
 --
--- Name: fb_form_field_activity_edit_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: fb_form_field_activity_edit_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.fb_form_field_activity_edit ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -591,7 +629,7 @@ ALTER TABLE public.fb_form_field_activity_edit ALTER COLUMN id ADD GENERATED BY 
 
 
 --
--- Name: fb_form_field_event; Type: TABLE; Schema: public; Owner: postgres
+-- Name: fb_form_field_event; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.fb_form_field_event (
@@ -605,10 +643,8 @@ CREATE TABLE public.fb_form_field_event (
 );
 
 
-ALTER TABLE public.fb_form_field_event OWNER TO postgres;
-
 --
--- Name: fb_form_field_event_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: fb_form_field_event_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.fb_form_field_event ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -622,7 +658,7 @@ ALTER TABLE public.fb_form_field_event ALTER COLUMN id ADD GENERATED BY DEFAULT 
 
 
 --
--- Name: fb_form_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: fb_form_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.fb_form ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -636,7 +672,7 @@ ALTER TABLE public.fb_form ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY 
 
 
 --
--- Name: fb_form_process; Type: TABLE; Schema: public; Owner: postgres
+-- Name: fb_form_process; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.fb_form_process (
@@ -650,10 +686,8 @@ CREATE TABLE public.fb_form_process (
 );
 
 
-ALTER TABLE public.fb_form_process OWNER TO postgres;
-
 --
--- Name: fb_form_process_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: fb_form_process_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.fb_form_process ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -667,7 +701,7 @@ ALTER TABLE public.fb_form_process ALTER COLUMN id ADD GENERATED BY DEFAULT AS I
 
 
 --
--- Name: hrs_leave; Type: TABLE; Schema: public; Owner: postgres
+-- Name: hrs_leave; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.hrs_leave (
@@ -686,10 +720,8 @@ CREATE TABLE public.hrs_leave (
 );
 
 
-ALTER TABLE public.hrs_leave OWNER TO postgres;
-
 --
--- Name: hrs_leave_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: hrs_leave_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.hrs_leave ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -703,7 +735,7 @@ ALTER TABLE public.hrs_leave ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTIT
 
 
 --
--- Name: hrs_leave_opinion; Type: TABLE; Schema: public; Owner: postgres
+-- Name: hrs_leave_opinion; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.hrs_leave_opinion (
@@ -718,10 +750,8 @@ CREATE TABLE public.hrs_leave_opinion (
 );
 
 
-ALTER TABLE public.hrs_leave_opinion OWNER TO postgres;
-
 --
--- Name: hrs_leave_opinion_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: hrs_leave_opinion_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.hrs_leave_opinion ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -735,7 +765,7 @@ ALTER TABLE public.hrs_leave_opinion ALTER COLUMN id ADD GENERATED BY DEFAULT AS
 
 
 --
--- Name: man_product_order; Type: TABLE; Schema: public; Owner: postgres
+-- Name: man_product_order; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.man_product_order (
@@ -755,10 +785,8 @@ CREATE TABLE public.man_product_order (
 );
 
 
-ALTER TABLE public.man_product_order OWNER TO postgres;
-
 --
--- Name: man_product_order_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: man_product_order_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.man_product_order ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -772,7 +800,7 @@ ALTER TABLE public.man_product_order ALTER COLUMN id ADD GENERATED BY DEFAULT AS
 
 
 --
--- Name: sys_department; Type: TABLE; Schema: public; Owner: postgres
+-- Name: sys_department; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.sys_department (
@@ -784,10 +812,8 @@ CREATE TABLE public.sys_department (
 );
 
 
-ALTER TABLE public.sys_department OWNER TO postgres;
-
 --
--- Name: sys_department_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: sys_department_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.sys_department ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -801,7 +827,7 @@ ALTER TABLE public.sys_department ALTER COLUMN id ADD GENERATED BY DEFAULT AS ID
 
 
 --
--- Name: sys_employee; Type: TABLE; Schema: public; Owner: postgres
+-- Name: sys_employee; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.sys_employee (
@@ -816,10 +842,8 @@ CREATE TABLE public.sys_employee (
 );
 
 
-ALTER TABLE public.sys_employee OWNER TO postgres;
-
 --
--- Name: sys_employee_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: sys_employee_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.sys_employee ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -833,7 +857,7 @@ ALTER TABLE public.sys_employee ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDEN
 
 
 --
--- Name: sys_employee_manager; Type: TABLE; Schema: public; Owner: postgres
+-- Name: sys_employee_manager; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.sys_employee_manager (
@@ -845,10 +869,8 @@ CREATE TABLE public.sys_employee_manager (
 );
 
 
-ALTER TABLE public.sys_employee_manager OWNER TO postgres;
-
 --
--- Name: sys_employee_manager_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: sys_employee_manager_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.sys_employee_manager ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -862,7 +884,7 @@ ALTER TABLE public.sys_employee_manager ALTER COLUMN id ADD GENERATED BY DEFAULT
 
 
 --
--- Name: sys_resource; Type: TABLE; Schema: public; Owner: postgres
+-- Name: sys_resource; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.sys_resource (
@@ -875,10 +897,8 @@ CREATE TABLE public.sys_resource (
 );
 
 
-ALTER TABLE public.sys_resource OWNER TO postgres;
-
 --
--- Name: sys_resource_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: sys_resource_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.sys_resource ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -892,7 +912,7 @@ ALTER TABLE public.sys_resource ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDEN
 
 
 --
--- Name: sys_role; Type: TABLE; Schema: public; Owner: postgres
+-- Name: sys_role; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.sys_role (
@@ -902,10 +922,8 @@ CREATE TABLE public.sys_role (
 );
 
 
-ALTER TABLE public.sys_role OWNER TO postgres;
-
 --
--- Name: sys_role_group_resource; Type: TABLE; Schema: public; Owner: postgres
+-- Name: sys_role_group_resource; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.sys_role_group_resource (
@@ -917,10 +935,8 @@ CREATE TABLE public.sys_role_group_resource (
 );
 
 
-ALTER TABLE public.sys_role_group_resource OWNER TO postgres;
-
 --
--- Name: sys_role_group_resource_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: sys_role_group_resource_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.sys_role_group_resource ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -934,7 +950,7 @@ ALTER TABLE public.sys_role_group_resource ALTER COLUMN id ADD GENERATED BY DEFA
 
 
 --
--- Name: sys_role_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: sys_role_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.sys_role ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -948,7 +964,7 @@ ALTER TABLE public.sys_role ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY
 
 
 --
--- Name: sys_role_user; Type: TABLE; Schema: public; Owner: postgres
+-- Name: sys_role_user; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.sys_role_user (
@@ -958,10 +974,8 @@ CREATE TABLE public.sys_role_user (
 );
 
 
-ALTER TABLE public.sys_role_user OWNER TO postgres;
-
 --
--- Name: sys_role_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: sys_role_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.sys_role_user ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -975,7 +989,7 @@ ALTER TABLE public.sys_role_user ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDE
 
 
 --
--- Name: sys_user; Type: TABLE; Schema: public; Owner: postgres
+-- Name: sys_user; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.sys_user (
@@ -985,10 +999,8 @@ CREATE TABLE public.sys_user (
 );
 
 
-ALTER TABLE public.sys_user OWNER TO postgres;
-
 --
--- Name: sys_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: sys_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.sys_user ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -1002,7 +1014,7 @@ ALTER TABLE public.sys_user ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY
 
 
 --
--- Name: sys_user_resource; Type: TABLE; Schema: public; Owner: postgres
+-- Name: sys_user_resource; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.sys_user_resource (
@@ -1012,10 +1024,8 @@ CREATE TABLE public.sys_user_resource (
 );
 
 
-ALTER TABLE public.sys_user_resource OWNER TO postgres;
-
 --
--- Name: sys_user_resource_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: sys_user_resource_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.sys_user_resource ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -1029,7 +1039,7 @@ ALTER TABLE public.sys_user_resource ALTER COLUMN id ADD GENERATED BY DEFAULT AS
 
 
 --
--- Name: tmptest; Type: TABLE; Schema: public; Owner: postgres
+-- Name: tmptest; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.tmptest (
@@ -1038,10 +1048,8 @@ CREATE TABLE public.tmptest (
 );
 
 
-ALTER TABLE public.tmptest OWNER TO postgres;
-
 --
--- Name: wf_activity_instance; Type: TABLE; Schema: public; Owner: postgres
+-- Name: wf_activity_instance; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.wf_activity_instance (
@@ -1093,10 +1101,8 @@ CREATE TABLE public.wf_activity_instance (
 );
 
 
-ALTER TABLE public.wf_activity_instance OWNER TO postgres;
-
 --
--- Name: wf_process_instance; Type: TABLE; Schema: public; Owner: postgres
+-- Name: wf_process_instance; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.wf_process_instance (
@@ -1132,10 +1138,8 @@ CREATE TABLE public.wf_process_instance (
 );
 
 
-ALTER TABLE public.wf_process_instance OWNER TO postgres;
-
 --
--- Name: wf_task; Type: TABLE; Schema: public; Owner: postgres
+-- Name: wf_task; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.wf_task (
@@ -1167,10 +1171,8 @@ CREATE TABLE public.wf_task (
 );
 
 
-ALTER TABLE public.wf_task OWNER TO postgres;
-
 --
--- Name: vw_wf_task_details; Type: VIEW; Schema: public; Owner: postgres
+-- Name: vw_wf_task_details; Type: VIEW; Schema: public; Owner: -
 --
 
 CREATE VIEW public.vw_wf_task_details AS
@@ -1223,10 +1225,8 @@ CREATE VIEW public.vw_wf_task_details AS
      JOIN public.wf_process_instance pi ON ((ai.process_instance_id = pi.id)));
 
 
-ALTER VIEW public.vw_wf_task_details OWNER TO postgres;
-
 --
--- Name: wf_activity_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: wf_activity_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.wf_activity_instance ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -1240,7 +1240,7 @@ ALTER TABLE public.wf_activity_instance ALTER COLUMN id ADD GENERATED BY DEFAULT
 
 
 --
--- Name: wf_ai_axconfig; Type: TABLE; Schema: public; Owner: postgres
+-- Name: wf_ai_axconfig; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.wf_ai_axconfig (
@@ -1269,10 +1269,8 @@ CREATE TABLE public.wf_ai_axconfig (
 );
 
 
-ALTER TABLE public.wf_ai_axconfig OWNER TO postgres;
-
 --
--- Name: wf_ai_axconfig_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: wf_ai_axconfig_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.wf_ai_axconfig ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -1286,7 +1284,7 @@ ALTER TABLE public.wf_ai_axconfig ALTER COLUMN id ADD GENERATED BY DEFAULT AS ID
 
 
 --
--- Name: wf_job_info; Type: TABLE; Schema: public; Owner: postgres
+-- Name: wf_job_info; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.wf_job_info (
@@ -1311,10 +1309,8 @@ CREATE TABLE public.wf_job_info (
 );
 
 
-ALTER TABLE public.wf_job_info OWNER TO postgres;
-
 --
--- Name: wf_job_info_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: wf_job_info_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.wf_job_info ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -1328,7 +1324,7 @@ ALTER TABLE public.wf_job_info ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENT
 
 
 --
--- Name: wf_job_log; Type: TABLE; Schema: public; Owner: postgres
+-- Name: wf_job_log; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.wf_job_log (
@@ -1349,10 +1345,8 @@ CREATE TABLE public.wf_job_log (
 );
 
 
-ALTER TABLE public.wf_job_log OWNER TO postgres;
-
 --
--- Name: wf_job_log_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: wf_job_log_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.wf_job_log ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -1366,7 +1360,7 @@ ALTER TABLE public.wf_job_log ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTI
 
 
 --
--- Name: wf_job_schedule; Type: TABLE; Schema: public; Owner: postgres
+-- Name: wf_job_schedule; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.wf_job_schedule (
@@ -1383,10 +1377,8 @@ CREATE TABLE public.wf_job_schedule (
 );
 
 
-ALTER TABLE public.wf_job_schedule OWNER TO postgres;
-
 --
--- Name: wf_job_schedule_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: wf_job_schedule_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.wf_job_schedule ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -1400,7 +1392,7 @@ ALTER TABLE public.wf_job_schedule ALTER COLUMN id ADD GENERATED BY DEFAULT AS I
 
 
 --
--- Name: wf_log; Type: TABLE; Schema: public; Owner: postgres
+-- Name: wf_log; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.wf_log (
@@ -1417,10 +1409,8 @@ CREATE TABLE public.wf_log (
 );
 
 
-ALTER TABLE public.wf_log OWNER TO postgres;
-
 --
--- Name: wf_log_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: wf_log_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.wf_log ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -1434,7 +1424,7 @@ ALTER TABLE public.wf_log ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
 
 
 --
--- Name: wf_process; Type: TABLE; Schema: public; Owner: postgres
+-- Name: wf_process; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.wf_process (
@@ -1464,10 +1454,8 @@ CREATE TABLE public.wf_process (
 );
 
 
-ALTER TABLE public.wf_process OWNER TO postgres;
-
 --
--- Name: wf_process_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: wf_process_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.wf_process ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -1481,7 +1469,7 @@ ALTER TABLE public.wf_process ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTI
 
 
 --
--- Name: wf_process_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: wf_process_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.wf_process_instance ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -1495,7 +1483,7 @@ ALTER TABLE public.wf_process_instance ALTER COLUMN id ADD GENERATED BY DEFAULT 
 
 
 --
--- Name: wf_process_variable; Type: TABLE; Schema: public; Owner: postgres
+-- Name: wf_process_variable; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.wf_process_variable (
@@ -1515,10 +1503,8 @@ CREATE TABLE public.wf_process_variable (
 );
 
 
-ALTER TABLE public.wf_process_variable OWNER TO postgres;
-
 --
--- Name: wf_process_variable_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: wf_process_variable_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.wf_process_variable ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -1532,7 +1518,7 @@ ALTER TABLE public.wf_process_variable ALTER COLUMN id ADD GENERATED BY DEFAULT 
 
 
 --
--- Name: wf_task_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: wf_task_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.wf_task ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -1546,7 +1532,7 @@ ALTER TABLE public.wf_task ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY 
 
 
 --
--- Name: wf_transition_instance; Type: TABLE; Schema: public; Owner: postgres
+-- Name: wf_transition_instance; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.wf_transition_instance (
@@ -1575,10 +1561,8 @@ CREATE TABLE public.wf_transition_instance (
 );
 
 
-ALTER TABLE public.wf_transition_instance OWNER TO postgres;
-
 --
--- Name: wf_transition_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: wf_transition_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 ALTER TABLE public.wf_transition_instance ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
@@ -1592,29 +1576,21 @@ ALTER TABLE public.wf_transition_instance ALTER COLUMN id ADD GENERATED BY DEFAU
 
 
 --
--- Name: ai_activity_config id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: ai_activity_config id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.ai_activity_config ALTER COLUMN id SET DEFAULT nextval('public.ai_axconfig_id_seq'::regclass);
 
 
 --
--- Name: ai_model_provider id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: ai_model_provider id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.ai_model_provider ALTER COLUMN id SET DEFAULT nextval('public.ai_model_provider_id_seq'::regclass);
 
 
 --
--- Name: ai_activity_config ai_activity_config_config_uuid_key; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.ai_activity_config
-    ADD CONSTRAINT ai_activity_config_config_uuid_key UNIQUE (config_uuid);
-
-
---
--- Name: ai_activity_config ai_activity_config_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: ai_activity_config ai_activity_config_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.ai_activity_config
@@ -1622,7 +1598,7 @@ ALTER TABLE ONLY public.ai_activity_config
 
 
 --
--- Name: ai_agent_instance ai_agent_instance_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: ai_agent_instance ai_agent_instance_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.ai_agent_instance
@@ -1630,7 +1606,7 @@ ALTER TABLE ONLY public.ai_agent_instance
 
 
 --
--- Name: ai_agent_parameter ai_agent_parameter_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: ai_agent_parameter ai_agent_parameter_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.ai_agent_parameter
@@ -1638,7 +1614,7 @@ ALTER TABLE ONLY public.ai_agent_parameter
 
 
 --
--- Name: ai_agent ai_agent_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: ai_agent ai_agent_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.ai_agent
@@ -1646,23 +1622,7 @@ ALTER TABLE ONLY public.ai_agent
 
 
 --
--- Name: ai_model_provider ai_model_provider_model_provider_key; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.ai_model_provider
-    ADD CONSTRAINT ai_model_provider_model_provider_key UNIQUE (model_provider);
-
-
---
--- Name: ai_model_provider ai_model_provider_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.ai_model_provider
-    ADD CONSTRAINT ai_model_provider_pkey PRIMARY KEY (id);
-
-
---
--- Name: biz_app_flow biz_app_flow_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: biz_app_flow biz_app_flow_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.biz_app_flow
@@ -1670,7 +1630,7 @@ ALTER TABLE ONLY public.biz_app_flow
 
 
 --
--- Name: fb_form_data fb_form_data_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: fb_form_data fb_form_data_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.fb_form_data
@@ -1678,7 +1638,7 @@ ALTER TABLE ONLY public.fb_form_data
 
 
 --
--- Name: fb_form_field_activity_edit fb_form_field_activity_edit_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: fb_form_field_activity_edit fb_form_field_activity_edit_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.fb_form_field_activity_edit
@@ -1686,7 +1646,7 @@ ALTER TABLE ONLY public.fb_form_field_activity_edit
 
 
 --
--- Name: fb_form_field_event fb_form_field_event_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: fb_form_field_event fb_form_field_event_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.fb_form_field_event
@@ -1694,7 +1654,7 @@ ALTER TABLE ONLY public.fb_form_field_event
 
 
 --
--- Name: fb_form fb_form_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: fb_form fb_form_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.fb_form
@@ -1702,7 +1662,7 @@ ALTER TABLE ONLY public.fb_form
 
 
 --
--- Name: fb_form_process fb_form_process_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: fb_form_process fb_form_process_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.fb_form_process
@@ -1710,7 +1670,7 @@ ALTER TABLE ONLY public.fb_form_process
 
 
 --
--- Name: hrs_leave_opinion hrs_leave_opinion_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: hrs_leave_opinion hrs_leave_opinion_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.hrs_leave_opinion
@@ -1718,7 +1678,7 @@ ALTER TABLE ONLY public.hrs_leave_opinion
 
 
 --
--- Name: hrs_leave hrs_leave_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: hrs_leave hrs_leave_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.hrs_leave
@@ -1726,7 +1686,7 @@ ALTER TABLE ONLY public.hrs_leave
 
 
 --
--- Name: man_product_order man_product_order_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: man_product_order man_product_order_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.man_product_order
@@ -1734,7 +1694,7 @@ ALTER TABLE ONLY public.man_product_order
 
 
 --
--- Name: sys_department sys_department_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: sys_department sys_department_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sys_department
@@ -1742,7 +1702,7 @@ ALTER TABLE ONLY public.sys_department
 
 
 --
--- Name: sys_employee_manager sys_employee_manager_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: sys_employee_manager sys_employee_manager_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sys_employee_manager
@@ -1750,7 +1710,7 @@ ALTER TABLE ONLY public.sys_employee_manager
 
 
 --
--- Name: sys_employee sys_employee_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: sys_employee sys_employee_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sys_employee
@@ -1758,7 +1718,7 @@ ALTER TABLE ONLY public.sys_employee
 
 
 --
--- Name: sys_resource sys_resource_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: sys_resource sys_resource_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sys_resource
@@ -1766,7 +1726,7 @@ ALTER TABLE ONLY public.sys_resource
 
 
 --
--- Name: sys_role_group_resource sys_role_group_resource_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: sys_role_group_resource sys_role_group_resource_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sys_role_group_resource
@@ -1774,7 +1734,7 @@ ALTER TABLE ONLY public.sys_role_group_resource
 
 
 --
--- Name: sys_role sys_role_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: sys_role sys_role_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sys_role
@@ -1782,7 +1742,7 @@ ALTER TABLE ONLY public.sys_role
 
 
 --
--- Name: sys_role_user sys_role_user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: sys_role_user sys_role_user_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sys_role_user
@@ -1790,7 +1750,7 @@ ALTER TABLE ONLY public.sys_role_user
 
 
 --
--- Name: sys_user sys_user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: sys_user sys_user_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sys_user
@@ -1798,7 +1758,7 @@ ALTER TABLE ONLY public.sys_user
 
 
 --
--- Name: sys_user_resource sys_user_resource_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: sys_user_resource sys_user_resource_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sys_user_resource
@@ -1806,7 +1766,22 @@ ALTER TABLE ONLY public.sys_user_resource
 
 
 --
--- Name: wf_process_variable uq_wf_proc_var_process_activity_name; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: ai_activity_config uq_ai_activity_config_process_version_activity; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_activity_config
+    ADD CONSTRAINT uq_ai_activity_config_process_version_activity UNIQUE (process_id, version, activity_id);
+
+
+--
+-- Name: CONSTRAINT uq_ai_activity_config_process_version_activity ON ai_activity_config; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT uq_ai_activity_config_process_version_activity ON public.ai_activity_config IS 'Unique constraint for process_id, version, and activity_id combination';
+
+
+--
+-- Name: wf_process_variable uq_wf_proc_var_process_activity_name; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.wf_process_variable
@@ -1814,7 +1789,7 @@ ALTER TABLE ONLY public.wf_process_variable
 
 
 --
--- Name: wf_activity_instance wf_activity_instance_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: wf_activity_instance wf_activity_instance_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.wf_activity_instance
@@ -1822,7 +1797,7 @@ ALTER TABLE ONLY public.wf_activity_instance
 
 
 --
--- Name: wf_ai_axconfig wf_ai_axconfig_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: wf_ai_axconfig wf_ai_axconfig_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.wf_ai_axconfig
@@ -1830,7 +1805,7 @@ ALTER TABLE ONLY public.wf_ai_axconfig
 
 
 --
--- Name: wf_job_info wf_job_info_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: wf_job_info wf_job_info_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.wf_job_info
@@ -1838,7 +1813,7 @@ ALTER TABLE ONLY public.wf_job_info
 
 
 --
--- Name: wf_job_log wf_job_log_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: wf_job_log wf_job_log_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.wf_job_log
@@ -1846,7 +1821,7 @@ ALTER TABLE ONLY public.wf_job_log
 
 
 --
--- Name: wf_job_schedule wf_job_schedule_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: wf_job_schedule wf_job_schedule_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.wf_job_schedule
@@ -1854,7 +1829,7 @@ ALTER TABLE ONLY public.wf_job_schedule
 
 
 --
--- Name: wf_log wf_log_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: wf_log wf_log_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.wf_log
@@ -1862,7 +1837,7 @@ ALTER TABLE ONLY public.wf_log
 
 
 --
--- Name: wf_process_instance wf_process_instance_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: wf_process_instance wf_process_instance_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.wf_process_instance
@@ -1870,7 +1845,7 @@ ALTER TABLE ONLY public.wf_process_instance
 
 
 --
--- Name: wf_process wf_process_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: wf_process wf_process_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.wf_process
@@ -1878,7 +1853,7 @@ ALTER TABLE ONLY public.wf_process
 
 
 --
--- Name: wf_process_variable wf_process_variable_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: wf_process_variable wf_process_variable_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.wf_process_variable
@@ -1886,7 +1861,7 @@ ALTER TABLE ONLY public.wf_process_variable
 
 
 --
--- Name: wf_task wf_task_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: wf_task wf_task_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.wf_task
@@ -1894,7 +1869,7 @@ ALTER TABLE ONLY public.wf_task
 
 
 --
--- Name: wf_transition_instance wf_transition_instance_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: wf_transition_instance wf_transition_instance_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.wf_transition_instance
@@ -1902,35 +1877,35 @@ ALTER TABLE ONLY public.wf_transition_instance
 
 
 --
--- Name: idx_ai_model_provider; Type: INDEX; Schema: public; Owner: postgres
+-- Name: idx_ai_model_provider_model_name_unique; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_ai_model_provider ON public.ai_model_provider USING btree (model_provider);
+CREATE UNIQUE INDEX idx_ai_model_provider_model_name_unique ON public.ai_model_provider USING btree (model_name) WHERE (model_name IS NOT NULL);
 
 
 --
--- Name: idx_wf_proc_var_process_activity; Type: INDEX; Schema: public; Owner: postgres
+-- Name: idx_wf_proc_var_process_activity; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX idx_wf_proc_var_process_activity ON public.wf_process_variable USING btree (process_instance_id, activity_instance_id);
 
 
 --
--- Name: idx_wf_proc_var_process_instance; Type: INDEX; Schema: public; Owner: postgres
+-- Name: idx_wf_proc_var_process_instance; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX idx_wf_proc_var_process_instance ON public.wf_process_variable USING btree (process_instance_id);
 
 
 --
--- Name: idx_wf_process_id_version; Type: INDEX; Schema: public; Owner: postgres
+-- Name: idx_wf_process_id_version; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX idx_wf_process_id_version ON public.wf_process USING btree (process_id, version);
 
 
 --
--- Name: INDEX idx_wf_process_id_version; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: INDEX idx_wf_process_id_version; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON INDEX public.idx_wf_process_id_version IS 'Composite unique index on process_id and version to ensure no duplicate process versions';
@@ -1940,5 +1915,5 @@ COMMENT ON INDEX public.idx_wf_process_id_version IS 'Composite unique index on 
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 1CA3vt560wltYoE2j3fME3fVtrctNxzCPY1nGBf8oXAJ6zlESFMGWTLkwAX7m37
+\unrestrict lAJ2qcqtDubbudWtagZIA0pcnizAtHEzzshiXAmhMhqUfwg0IYc4GrWzKsUO0l0
 
