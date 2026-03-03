@@ -2,288 +2,243 @@
 
 **Current Version: NET8**
 
-![](https://img.shields.io/github/stars/besley/slickflow.svg) 
-![](https://img.shields.io/github/forks/besley/slickflow.svg) 
-![](https://img.shields.io/github/tag/besley/slickflow.svg) 
-![](https://img.shields.io/github/release/besley/slickflow.svg) 
-![](https://img.shields.io/nuget/dt/Slickflow.Engine.svg) 
-![](https://img.shields.io/github/issues/besley/slickflow.svg) 
+![](https://img.shields.io/github/stars/besley/slickflow.svg)  
+![](https://img.shields.io/github/forks/besley/slickflow.svg)  
+![](https://img.shields.io/github/tag/besley/slickflow.svg)  
+![](https://img.shields.io/github/release/besley/slickflow.svg)  
+![](https://img.shields.io/nuget/dt/Slickflow.Engine.svg)  
+![](https://img.shields.io/github/issues/besley/slickflow.svg)
 
-## Overview
+---
+
+## 1. 🤖 AI-Powered Workflow Automation
 
 **SlickFlow: Intelligent Workflow Automation with Large Language Models**
 
-SlickFlow now integrates cutting-edge Large Language Model (LLM) nodes, empowering your workflows with advanced conversational reasoning and intelligent automation capabilities. This enhancement transforms traditional workflow systems into dynamic, AI-driven orchestration platforms.
+Slickflow integrates cutting-edge Large Language Model (LLM) nodes directly into BPMN workflows, enabling advanced conversational reasoning, RAG (Retrieval-Augmented Generation), image understanding and other AI capabilities as **first-class workflow steps**.  
+This transforms traditional workflow systems into dynamic, AI-driven orchestration platforms.
 
-## 🚀 Key Features
+### 1.1 Native LLM Node Integration
 
-### 🤖 Native LLM Node Integration
+- Add LLM / RAG / Agent nodes into your process diagrams as easily as traditional service tasks.  
+- Orchestrate multi-step AI pipelines: prompt construction, tool calls, knowledge base retrieval, post-processing, persistence, notification, etc.
 
-Seamlessly incorporate LLM nodes directly into your workflow diagrams. Configure and connect AI-powered steps alongside traditional business logic for end-to-end intelligent automation.
-
-### 🔌 Multi-LLM Provider Support
+### 1.2 Multi-Provider LLM Support
 
 Flexible integration with leading AI services:
 
-- **OpenAI API** (GPT-4, GPT-3.5, and beyond)
-- **QianWen** (Alibaba's large language model)
-- Extensible architecture for additional providers
+- **OpenAI API** (GPT-4, GPT-3.5, and beyond)  
+- **QianWen** (Alibaba’s large language model)  
+- Extensible architecture for additional providers (DeepSeek, custom gateways, etc.)
 
-### Image Classification & Analysis
+### 1.3 Image Understanding & RAG
 
-Upload and process images directly through LLM nodes
+- **Image classification & analysis** directly through LLM nodes  
+- **Retrieval-Augmented Generation (RAG)**: combine vector search / knowledge bases with LLM reasoning to provide grounded, up-to-date answers
 
-### Retrieval-Augmented Generation (RAG)
+### 1.4 AI Feature Reference
 
-Enhance LLM responses with real-time data retrieval from your knowledge bases
+- Detailed article: [Slickflow.AI – Large Language Model Integration](https://medium.com/@slickflow/ai-large-language-model-integration-in-slickflow-net-7a75a069aa3a)
 
-## 📚 AI Features Description
-[Slickflow.AI Document](https://medium.com/@slickflow/ai-large-language-model-integration-in-slickflow-net-7a75a069aa3a)
+### 1.5 AI Demo (Key GIF)
 
-## 📸 Demo
-
-**AI Image Classification Process Demo:**  
+**AI Image Classification Process Demo**  
 ![AI Image Classification Demo](https://github.com/besley/besley.github.io/blob/master/Gif/slickflow-ai-image-classification.gif)
 
-## 🏃 Quick Start Tutorial for Designer Project
+---
 
-1. In the command console, using the command **npm install** to download the node package.
+## 2. 🚀 Code-Defined Auto-Execution Engine
 
-   **Note:** Please run the command in the **ClientApp** path of the **sfd** project.
+Besides designer-based processes, Slickflow provides a **code-first auto-execution model** based on `Slickflow.Graph` and `WorkflowExecutor`.  
+You can define workflows in C#, run them fully in memory, and let the engine **automatically execute all steps without human interaction**.
 
-2. Set up the **sfdapi** project which is an asp.net webapi type project. (IIS is a choice)
+### 2.1 Code-First Workflow Definition
 
-3. Setting webapi variable in the **kconfig.js** file
+Use `Slickflow.Graph.Model.Workflow` to build BPMN-style flows programmatically:
 
-   ```javascript
-   kconfig.webApiUrl = "http://localhost/sfdapic/" //your sfd webapi backend service url
-   ```
+```csharp
+using Slickflow.Graph.Model;
 
-4. In the command console, using the command **npm run dev** to start the project
+var wf = new Workflow("Order Process", "OrderProcess_Code");
 
-5. Access the web project in the browser by **http://localhost:5000**
+wf.Start("Start")
+  .ServiceTask("Validate Order", "Validate001", "ValidateOrder")   // LocalMethod
+  .ServiceTask("Calculate Amount", "Calc001", "CalcAmount")       // LocalMethod
+  .RagService("RAG Reply", "RAG001")                              // RAG AI node
+  .LlmService("LLM Enrich", "LLM001")                             // General LLM node
+  .ServiceTask<SaveOrderService>("Save Order", "Save001")         // Local service class
+  .End("End");
+```
 
-## 💻 .NET8 Workflow Engine With Full Source Code
+Key points:
 
-### 0. Deepseek/QWen-Plus AI Service Supported
+- `Workflow` supports rich node types: `Start`, `Task`, `ServiceTask`, `RagService`, `LlmService`, `Agent`, `Parallels`, `Branch`, `End`, etc.  
+- `BuildInMemory()` produces an in-memory `ProcessEntity` without touching the database.  
+- `WorkflowExecutorExtensions.UseProcess(Workflow)` binds this in-memory model to the runtime engine and caches it by `ProcessId:Version`.
 
-Slickflow can use AI deepseek service to generate BPMN flow chart through text description by users. Large model nodes also participate in business processes as intelligent nodes in the process sequence, completing the functions of intelligent generation and intelligent decision-making.
+### 2.2 Auto-Execution with WorkflowExecutor
 
-### 1. .NET, Cross Platform Development
+Auto-execution loop (conceptual):
 
-Slickflow is an open-source project based on .NET8; It's easy to use engine product into the cross-platform application, such as Linux, MacOS.
+1. Start the process and create an instance.  
+2. While there are executable activities:
+   - Collect next activities.
+   - Execute each activity (local method, service class, AI/RAG/LLM, external API, etc.).
+   - Move the process forward to the next activity.
+3. Return execution result (status, message, variables, AI response, etc.).
 
-### 2. BPMN Graphic Style Process Diagram
+Typical code pattern:
 
-Slickflow is using BPMN2 notation to describe process diagram, the Slickflow designer is HTML5 graph editor and user-friendly to business process communication and business analysis.
+```csharp
+using Slickflow.Engine.Executor;
+using Slickflow.Engine.Core.Result;
 
-### 3. High Performance with Dapper.NET Library
+var result = await new WorkflowExecutor()
+    .UseApp("OrderApp-001", "OrderApp")
+    .UseProcess(wf)                      // Use code-defined workflow
+    .AddVariable("OrderId", "ORD-2025-001")
+    .AddVariable("Quantity", "3")
+    .AddVariable("UnitPrice", "99.50")
+    .Run();
+```
 
-Dapper is a simple object mapper for .NET and owns the title of King of Micro ORM in terms of speed and is virtually as fast as using a raw ADO.NET data reader. An ORM is an Object Relational Mapper, which is responsible for mapping between database and programming language.
+This mode is ideal for:
 
-(Ref: https://dapper-tutorial.net/dapper)
+- ETL and data pipelines  
+- Backend batch / microservice orchestration  
+- AI agents and chat workflows  
+- Unit tests and demos (no DB dependency)
 
-### 4. Multiple Databases Supported
+### 2.3 Engine Capabilities (.NET8 Core)
 
-Slickflow supports SQLSERVER, ORACLE, MySQL and another database, it implemented by the Dapper.NET extension library. The .net core version using EF core to support different database products.
+- **.NET, cross-platform**: works on Windows, Linux, macOS.  
+- **BPMN2-style diagrams** with an HTML5 designer for visual modeling.  
+- **High performance** with Dapper.NET micro-ORM.  
+- **Multi-database support**: SQL Server, Oracle, MySQL, PostgreSQL and others (via Dapper / EF Core).
 
-### 5. Workflow Patterns Supported
+---
+
+## 3. ✅ Human Approval Workflows (BPM)
+
+On top of AI and auto-execution, Slickflow remains a **full-featured human-centric workflow engine** for traditional BPM scenarios: approvals, reviews, multi-level routing, etc.
+
+### 3.1 Workflow Patterns (Key GIFs/Images)
+
+Supported patterns (BPMN-style):
 
 ![Workflow Pattern](http://www.slickflow.com/content/img/sfterm-en.png)
 
-#### 1). Sequence
-
-The most frequently process pattern
-
-#### 2). Split/Merge
-
-Support and/or gateway such as **and/or split**, **and/or join**, together with condition variables on the transition
-
-#### 3). Sub-process
-
-In the main process, a subprocess node can start a new process life cycle.
-
-#### 4). Multi-instance
-
-Multiple performers processing a task together by multiple task instances. All performers both compete for their task, then the process can be continued on. There are **sequence** and **parallel** pattern, and the **percentage** or **count** parameters can be set on it to ensure when can go to the next step.
+- **Sequence** – the most common pattern  
+- **Split / Merge** – AND / OR gateways with conditions on transitions  
+- **Sub-process** – start a child process from the main flow  
+- **Multi-instance** – multiple performers handle the same task (sequence or parallel), with count/percentage thresholds
 
 ![Multiple Instance Pattern](http://www.slickflow.com/content/img/wfpattern-mi-en.png)
 
-#### 5). Event Interoperation
+### 3.2 Core Human-Task Operations (Brief)
 
-Process instance and activity instance event delegation service, such as process/activity start, execute and complete.
+Slickflow manages human tasks with features such as:
 
-#### 6). Timer
+- **Start / Run** – launch and move a process instance to the next step  
+- **Withdraw** – pull back a task you just sent to the next user  
+- **SendBack** – send a task back to the previous step  
+- **Resend / Reverse / Jump** – advanced control for exception handling and special routing
 
-Integrated with **HangFire** library, and with **CRON** expression supported
-
-#### 7). Email
-
-Todo or overdue tasks email notification
-
-#### 8). Withdraw
-
-Withdraw the task after just sent out to next step users.
-
-#### 9). Sendback
-
-Send back to the previous step user, because of some exceptions.
-
-#### 10). Resend
-
-Combined after sendback and re-send the task to original sendback users.
-
-#### 11). Reverse
-
-Reverse the process instance alive when completed.
-
-#### 12). Jump
-
-Jump the process over by several steps forward or backward.
-
-#### 13). MessageQueue (RabbitMQ)
-
-Message publishing and subscribing to implement message throwing and catching.
-
-### 6. Process Version
-
-The process has version property to upgrade a new definition due to the business process changed.
-
-### 7. XML Cache
-
-The runtime instance use cache to keep the XML process diagram by an expired duration.
-
-### 8. Sequence Process Code Style
-
-#### 0). Model
-
-Create a simple sequence process diagram by hand code rather than a HTML designer:
+Code style (simplified):
 
 ```csharp
-//create a simple sequence process diagram by hand code rather than a HTML designer  
-var pmb = ProcessModelBuilder.CreateProcess("simple-process-name", "simple-process-code");
-var process = pmb.Start("Start")
-    .Task("Task1")
-    .Task("Task2")
-    .End("End")
-    .Store();
+// Start a process instance
+IWorkflowService wfService = new WorkflowService();
+var startResult = wfService.CreateRunner("10", "Jack")
+    .UseApp("DS-100", "Book-Order", "DS-100-LX")
+    .UseProcess("PriceProcessCode")
+    .Start();
+
+// Run to next step
+var runResult = wfService.CreateRunner("10", "Jack")
+    .UseApp("DS-100", "Book-Order", "DS-100-LX")
+    .UseProcess("PriceProcessCode")
+    .NextStepInt("20", "Alice")
+    .Run();
+```
+
+### 3.3 Code-Style Modeling for Human Approval
+
+You can also define simple approval processes purely in code (sequence example) using `Workflow`:
+
+```csharp
+using Slickflow.Graph.Model;
+
+// create a simple sequence process diagram by hand code rather than an HTML designer
+var wf = new Workflow("simple-process-name", "simple-process-code");
+
+wf.Start("Start")
+  .Task("Task1")
+  .Task("Task2")
+  .End("End");
 ```
 
 ![simple sequence diagram](http://www.slickflow.com/content/img/simple-sequence.png)
 
-#### 1). Start
+This gives developers both **designer-based** and **code-based** options for modeling human approval workflows.
 
-Start a new process instance:
+---
 
-```csharp
-//start a new process instance
-IWorkflowService wfService = new WorkflowService();
-var wfResult = wfService.CreateRunner("10", "jack")
-            .UseApp("DS-100", "Book-Order", "DS-100-LX")
-            .UseProcess("PriceProcessCode")
-            .Start();
-```
+## 4. 📦 Demos, Target Users and License
 
-#### 2). Run
+### 4.1 Demo Projects
 
-Run a process instance to next step:
+- `WebDemo`, `MvcDemo`, `WinformDemo` – example integration with different enterprise application types.
 
-```csharp
-//run a process instance to next step
-IWorkflowService wfService = new WorkflowService();
-var wfResult = wfService.CreateRunner("10", "jack")
-            .UseApp("DS-100", "Book-Order", "DS-100-LX")
-            .UseProcess("PriceProcessCode")
-            .NextStepInt("20", "Alice")
-            .Run();
-```
+### 4.2 Target Users
 
-#### 3). Withdraw
+- Software teams or companies who want to embed a workflow engine into their products.  
+- Developers who prefer combining **AI orchestration**, **auto-execution**, and **human approval** in one engine.
 
-Withdraw a activity instance to previous step:
+### 4.3 License & Support
 
-```csharp
-//Withdraw a activity instance to previous step
-IWorkflowService wfService = new WorkflowService();
-var wfResult = wfService.CreateRunner("10", "Jack")
-            .UseApp("DS-100", "Book-Order", "DS-100-LX")
-            .UseProcess("PriceProcessCode")
-            .OnTask(id)             //TaskID
-            .Withdraw();
-```
+- **License**: Slickflow follows the MIT open source license and can be used in commercial projects.  
+- **Technical Support**: Enterprise, Ultimate and Universe editions can be provided with technical support and upgrade services.
 
-#### 4). SendBack
+If you have any further inquiry, please feel free to contact:
 
-Sendback a activity instance to previous step:
+- **Email (Support):** support@ruochisoft.com
 
-```csharp
-//Sendback a activity instance to previous step
-IWorkflowService wfService = new WorkflowService();
-var wfResult = wfService.CreateRunner("20", "Alice")
-            .UseApp("DS-100", "Book-Order", "DS-100-LX")
-            .UseProcess("PriceProcessCode")
-            .PrevStepInt()
-            .OnTask(id)             //TaskID
-            .SendBack();
-```
+---
 
-### 9. Rich Demo Projects
+## 5. 📚 Resources & Docker Deployment
 
-WebDemo, MvcDemo, and WinformDemo project are demonstrated for a different type of enterprise information systems.
+### 5.1 Documentation
 
-### 10. Target
-
-Slickflow is very suitable for software teams or companies who want to integrate workflow engine into their products.
-
-### 11. Suggestions
-
-Slickflow is suggested to give programmers a flexible way to integrate workflow engine components into their products or customer projects. The programmers can write their own code segments based on the engine component.
-
-### 12. Open Source Project License
-
-Slickflow follows MIT open source protocol and can be used for commercial purposes.
-
-### 13. Technical Support
-
-The enterprise, ultimate and universe version can be provided with a technical support and upgrade service.
-
-If you have any further inquiry, please feel free to contact us with:
-
-**Email:** support@ruochisoft.com
-
-## 📚 Resources
-
-### Document
-
-- **English:** http://doc.slickflow.net
+- **English:** http://doc.slickflow.net  
 - **中文:** http://doc.slickflow.com
 
-### Wiki Page
+### 5.2 Wiki
 
-https://github.com/besley/Slickflow/wiki
+- https://github.com/besley/Slickflow/wiki
 
-### CodeProject Articles
+### 5.3 CodeProject Articles
 
-- [Tourial](https://www.codeproject.com/Articles/5246528/Slickflow-NET-Core-Open-Source-Workflow-Engine)
+- [Tutorial](https://www.codeproject.com/Articles/5246528/Slickflow-NET-Core-Open-Source-Workflow-Engine)  
 - [User Manual](https://www.codeproject.com/Articles/5252483/Slickflow-Coding-Graphic-Model-User-Manual)
 
-### Slickflow Website
+### 5.4 Official Website
 
-- **English:** http://www.slickflow.net
+- **English:** http://www.slickflow.net  
 - **中文:** http://www.slickflow.com
 
-### Demo
+### 5.5 Online Demo
 
-- **Demo:** http://www.slickflow.com/demo/index
+- **Demo:** http://www.slickflow.com/demo/index  
 - **Designer Demo:** http://demo.slickflow.com/sfd/
 
-### Docker Hub
+### 5.6 Docker Hub
 
-Pre-built Docker images are available on Docker Hub. Get started in minutes without building from source!
+Pre-built Docker images are available on Docker Hub. Get started in minutes without building from source.
 
 #### All-in-One Image (Recommended)
 
-The easiest way to get started - pull one image and run all three services:
+The easiest way to get started – pull one image and run all three services:
 
 ```bash
 docker pull besley2096/slickflow-all:latest
@@ -297,24 +252,20 @@ docker run -d \
   besley2096/slickflow-all:latest
 ```
 
-**Access:**
-- **Frontend Designer**: http://localhost:8090
-- **Backend API**: http://localhost:5000
-- **WebTest**: http://localhost:5001
+Access:
 
-**Docker Hub:** https://hub.docker.com/r/besley2096/slickflow-all
+- **Frontend Designer**: http://localhost:8090  
+- **Backend API**: http://localhost:5000  
+- **WebTest**: http://localhost:5001  
 
-**Advantages:**
-- Single Image: Pull one image instead of three
-- Simplified Deployment: Run one container instead of three
-- Resource Efficient: Shared base image and dependencies
-- Easy to Use: Single command to start all services
+Docker Hub: https://hub.docker.com/r/besley2096/slickflow-all
 
 #### Separate Images
 
 For better isolation and scaling, use separate images:
 
-**Backend API:**
+**Backend API**
+
 ```bash
 docker pull besley2096/slickflow-api:latest
 docker run -d -p 5000:5000 \
@@ -324,7 +275,8 @@ docker run -d -p 5000:5000 \
   besley2096/slickflow-api:latest
 ```
 
-**Frontend Designer:**
+**Frontend Designer**
+
 ```bash
 docker pull besley2096/slickflow-designer:latest
 docker run -d -p 8090:8090 \
@@ -332,7 +284,8 @@ docker run -d -p 8090:8090 \
   besley2096/slickflow-designer:latest
 ```
 
-**WebTest:**
+**WebTest**
+
 ```bash
 docker pull besley2096/slickflow-webtest:latest
 docker run -d -p 5001:5001 \
@@ -354,47 +307,53 @@ docker-compose -f docker-compose.hub.yml up -d
 #### Image Tags
 
 Available tags for each image:
-- `latest` - Latest stable version
-- `v3.5.0` - Version 3.5.0
+
+- `latest` – Latest stable version  
+- `v3.5.0` – Version 3.5.0
 
 #### Docker Hub Links
 
-- [slickflow-all](https://hub.docker.com/r/besley2096/slickflow-all) - All-in-one image (Recommended)
-- [slickflow-api](https://hub.docker.com/r/besley2096/slickflow-api) - Backend API only
-- [slickflow-designer](https://hub.docker.com/r/besley2096/slickflow-designer) - Frontend designer only
-- [slickflow-webtest](https://hub.docker.com/r/besley2096/slickflow-webtest) - WebTest only
+- https://hub.docker.com/r/besley2096/slickflow-all  
+- https://hub.docker.com/r/besley2096/slickflow-api  
+- https://hub.docker.com/r/besley2096/slickflow-designer  
+- https://hub.docker.com/r/besley2096/slickflow-webtest
 
 #### Database Configuration
 
 API and WebTest containers require database configuration. Supported databases: PostgreSQL, MySQL, SQL Server, Oracle.
 
-**Database on Host Machine:**
+**Database on Host Machine**
+
 ```bash
 -e WfDBConnectionString="Server=host.docker.internal;Port=5432;Database=wfdbbpmn2;User Id=postgres;Password=your-password;TimeZone=UTC;"
 ```
 
-**Database in Docker Container:**
+**Database in Docker Container**
+
 ```bash
 -e WfDBConnectionString="Server=postgres;Port=5432;Database=wfdbbpmn2;User Id=postgres;Password=your-password;TimeZone=UTC;"
 ```
 
-**Remote Database:**
+**Remote Database**
+
 ```bash
 -e WfDBConnectionString="Server=192.168.1.100;Port=5432;Database=wfdbbpmn2;User Id=postgres;Password=your-password;TimeZone=UTC;"
 ```
 
-## 📞 Contact
+---
 
-- **Email:** sales@ruochisoft.com
-- **QQ (Author):** 47743901
+## 6. 📞 Contact & 💰 Donation
+
+### 6.1 Contact
+
+- **Email:** sales@ruochisoft.com  
+- **QQ (Author):** 47743901  
 - **WeChat (Author):** besley2008
 
-## 💰 Donation
+### 6.2 Donation
 
-Your donation will be used for the continuous research and development of the product and community building
-
-您的捐赠将用于产品的持续研发和社区建设
-
+Your donation will be used for the continuous research and development of the product and community building.  
+您的捐赠将用于产品的持续研发和社区建设。
 
 [![Donate with PayPal](https://github.com/besley/besley.github.io/blob/master/Images/paypal/donation.png)](https://paypal.me/slickflownet)
 
