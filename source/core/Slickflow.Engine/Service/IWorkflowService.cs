@@ -313,6 +313,19 @@ namespace Slickflow.Engine.Service
         ProcessVariableEntity GetProcessVariable(int variableId);
         Boolean ValidateProcessVariable(int processInstanceId, string expression);
         void DeleteProcessVariable(int variableId);
+        
+        //流程变量定义接口（wf_variable）
+        IList<VariableEntity> GetVariableDefinitionList(string processId, string version, string activityId);
+        VariableEntity GetVariableDefinition(int id);
+        int SaveVariableDefinition(VariableEntity entity);
+        void DeleteVariableDefinition(int id);
+        void SaveVariableDefinitionList(string processId, string version, string activityId, IList<VariableEntity> list);
+
+        //规则集接口（wf_rule_set）
+        IList<RuleSetEntity> GetRuleSetList();
+        RuleSetEntity GetRuleSet(string ruleSetCode);
+        int SaveRuleSet(RuleSetEntity entity);
+        void DeleteRuleSet(string ruleSetCode);
 
         #region Chain Service Interface
         IWorkflowService CreateRunner(WfAppRunner runner);

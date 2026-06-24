@@ -927,6 +927,99 @@ namespace Slickflow.Engine.Service
             var entityId = pvm.SaveVariable(entity);
             return entityId;
         }
+
+        /// <summary>
+        /// 获取流程变量定义列表（wf_variable）
+        /// </summary>
+        public IList<VariableEntity> GetVariableDefinitionList(string processId, string version, string activityId)
+        {
+            var vm = new VariableManager();
+            return vm.GetList(processId, version, activityId);
+        }
+
+        /// <summary>
+        /// 获取单条流程变量定义
+        /// </summary>
+        public VariableEntity GetVariableDefinition(int id)
+        {
+            var vm = new VariableManager();
+            return vm.GetById(id);
+        }
+
+        /// <summary>
+        /// 保存单条流程变量定义
+        /// </summary>
+        public int SaveVariableDefinition(VariableEntity entity)
+        {
+            var vm = new VariableManager();
+            if (entity.Id != 0)
+            {
+                vm.Update(entity);
+                return entity.Id;
+            }
+            return vm.Insert(entity);
+        }
+
+        /// <summary>
+        /// 删除流程变量定义
+        /// </summary>
+        public void DeleteVariableDefinition(int id)
+        {
+            var vm = new VariableManager();
+            vm.Delete(id);
+        }
+
+        /// <summary>
+        /// 按节点保存流程变量定义（先删后增）
+        /// </summary>
+        public void SaveVariableDefinitionList(string processId, string version, string activityId, IList<VariableEntity> list)
+        {
+            var vm = new VariableManager();
+            vm.SaveList(processId, version, activityId, list);
+        }
+
+        /// <summary>
+        /// 获取规则集列表（wf_rule_set）
+        /// </summary>
+        public IList<RuleSetEntity> GetRuleSetList()
+        {
+            var rm = new RuleSetManager();
+            return rm.GetAll();
+        }
+
+        /// <summary>
+        /// 获取单个规则集
+        /// </summary>
+        public RuleSetEntity GetRuleSet(string ruleSetCode)
+        {
+            var rm = new RuleSetManager();
+            return rm.GetByCode(ruleSetCode);
+        }
+
+        /// <summary>
+        /// 保存规则集（按 code 更新/新增）
+        /// </summary>
+        public int SaveRuleSet(RuleSetEntity entity)
+        {
+            var rm = new RuleSetManager();
+            var exist = rm.GetByCode(entity?.RuleSetCode ?? "");
+            if (exist != null)
+            {
+                entity.Id = exist.Id;
+                rm.Update(entity);
+                return entity.Id;
+            }
+            return rm.Insert(entity);
+        }
+
+        /// <summary>
+        /// 删除规则集
+        /// </summary>
+        public void DeleteRuleSet(string ruleSetCode)
+        {
+            var rm = new RuleSetManager();
+            rm.DeleteByCode(ruleSetCode);
+        }
         #endregion
 
         #region Task Read

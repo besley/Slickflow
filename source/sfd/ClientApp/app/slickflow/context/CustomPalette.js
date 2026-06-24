@@ -22,12 +22,20 @@ export default class CustomPalette {
             });
         }
 
-        // 创建插件节点的工厂函数
+        // ??????????????????
         function createRAGTask() {
             return elementFactory.createShape({
                 type: 'bpmn:ServiceTask',
                 name: 'RAGService',
                 sfType: 'RAG'
+            });
+        }
+
+        function createAgentServiceTask() {
+            return elementFactory.createShape({
+                type: 'bpmn:ServiceTask',
+                name: 'AgentService',
+                sfType: 'Agent'
             });
         }
 
@@ -38,7 +46,7 @@ export default class CustomPalette {
             },
             'create.llm-service': {
                 group: 'activity',
-                className: 'bpmn-icon-service-task llm-service-task',
+                className: 'bpmn-icon-task llm-service-task',
                 title: translate('llm'),
                 action: {
                     dragstart: function (event) {
@@ -53,7 +61,7 @@ export default class CustomPalette {
             },
             'create.rag-service': {
                 group: 'activity',
-                className: 'bpmn-icon-service-task rag-service-task',
+                className: 'bpmn-icon-task rag-service-task',
                 title: translate('rag'),
                 action: {
                     dragstart: function (event) {
@@ -62,6 +70,21 @@ export default class CustomPalette {
                     },
                     click: function (event) {
                         var taskShape = createRAGTask();
+                        create.start(event, taskShape);
+                    }
+                }
+            },
+            'create.agent-service': {
+                group: 'activity',
+                className: 'bpmn-icon-task agent-service-task',
+                title: translate('agent'),
+                action: {
+                    dragstart: function (event) {
+                        var taskShape = createAgentServiceTask();
+                        create.start(event, taskShape);
+                    },
+                    click: function (event) {
+                        var taskShape = createAgentServiceTask();
                         create.start(event, taskShape);
                     }
                 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,6 +60,7 @@ namespace Slickflow.Engine.Xpdl.Convertor
                 .ConvertServices()
                 .ConvertAIServices()
                 .ConvertBoundires()
+                .ConvertRuleConfigs()
                 .ConvertVariables()
                 .ConvertNotifications();
 

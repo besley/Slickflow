@@ -12,6 +12,8 @@ namespace Slickflow.AI.Common
 
         LLM = 1,
 
-        RAG = 2
+        RAG = 2,
+
+        Agent = 3
     }
 }

@@ -12,14 +12,14 @@ if (!buildEnv) {
     buildEnv = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
 }
 
-// 确保 buildEnv 只能是 'dev' 或 'prod'
-if (buildEnv !== 'dev' && buildEnv !== 'prod') {
+// 确保 buildEnv 只能是 'dev', 'test' 或 'prod'
+if (!['dev', 'test', 'prod'].includes(buildEnv)) {
     console.warn(`Warning: Invalid KCONFIG_ENV value "${buildEnv}", defaulting to "dev"`);
     buildEnv = 'dev';
 }
 
 // 根据 buildEnv 设置 webpack mode
-const webpackMode = buildEnv === 'prod' ? 'production' : 'development';
+const webpackMode = (buildEnv === 'prod' || buildEnv === 'test') ? 'production' : 'development';
 
 const absoluteBasePath = path.resolve(path.join(__dirname, basePath));
 
@@ -36,7 +36,10 @@ module.exports = {
         path: path.resolve(__dirname, 'public'),
         filename: 'index.js'
     },
-    devtool: 'source-map',
+    cache: {
+        type: 'filesystem',
+    },
+    devtool: webpackMode === 'production' ? false : 'source-map',
     devServer: {
         hot: true,  // 启用热重载
         open: true, // 自动打开浏览器

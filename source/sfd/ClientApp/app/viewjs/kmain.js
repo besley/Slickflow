@@ -1,4 +1,4 @@
-﻿
+
 import { debounce } from 'min-dash';
 
 import slick from '../script/slick.event.js'
@@ -36,6 +36,12 @@ window.kresource = kresource;
 import processapi from './processapi.js'
 window.processapi = processapi;
 
+import ruleset from './ruleset.js'
+window.ruleset = ruleset;
+
+import agentproperty from './agentproperty.js'
+window.agentproperty = agentproperty;
+
 const kmain = (function () {
     function kmain() {
 
@@ -46,6 +52,17 @@ const kmain = (function () {
     kmain.mxImageUrl = {};
     kmain.mxTaskAssistant = null;
     kmain.mxFirstActivity = null;
+
+    // ---- Popup page loader (always uses $.load so scripts execute correctly;
+    //      pre-warming below fills the browser HTTP cache for near-instant reloads) ----
+    function _sfLoadPage($el, url, done) {
+        if (done) {
+            $el.load(url, done);
+        } else {
+            $el.load(url);
+        }
+    }
+    // ---- end loader ----
 
     kmain.init = function (modeler) {
         //waiting...
@@ -71,6 +88,16 @@ const kmain = (function () {
 
         //init agent propery page
         initializeBottomPanelActions();
+
+        // Pre-warm browser HTTP cache in background so popup $.load() calls hit cache
+        setTimeout(function() {
+            ['pages/process/list.html', 'pages/setting/theme.html',
+             'pages/setting/index.html', 'pages/template/index.html',
+             'pages/ruleset/index.html', 'pages/codestudio/index.html',
+             'pages/knowledgebase/index.html', 'pages/axconfig/edit.html'].forEach(function(url) {
+                fetch(url).catch(function() {});
+            });
+        }, 2000);
     }
 
     function initializeElementEvent() {
@@ -95,7 +122,7 @@ const kmain = (function () {
             const aiNodeConfigButton = document.getElementById('aiNodeConfigButton');
             var businessObject = element.businessObject;
             var serviceType = axconfig.getServiceType(businessObject);
-            if (serviceType === "LLM" || serviceType === "RAG") {
+            if (serviceType === "LLM" || serviceType === "RAG" || serviceType === "Agent") {
                 aiNodeConfigButton.disabled = false;
                 aiNodeConfigButton.classList.remove('disabled');
                 aiNodeConfigButton.title = kresource.getItem("aibuttonconfigtitleenabled");
@@ -164,12 +191,11 @@ const kmain = (function () {
         const tryButton = document.getElementById('tryButton');
 
         aiNodeConfigButton.addEventListener('click', () => {
-            var BootstrapDialog = require('bootstrap5-dialog');
             BootstrapDialog.show({
                 message: $('<div id="popupAxConfigProperty"></div>'),
                 title: kresource.getItem("axconfig.title"),
                 onshown: function (dialog) {
-                    $("#popupAxConfigProperty").load('pages/axconfig/edit.html')
+                    _sfLoadPage($("#popupAxConfigProperty"), 'pages/axconfig/edit.html');
                 },
                 draggable: true
             });
@@ -282,23 +308,57 @@ const kmain = (function () {
         openDiagram(xml);
     }
 
-    function openDiagram(xml) {
+    async function openDiagram(xml) {
+        try {
+            await kmain.mBpmnModeler.importXML(xml);
+
+            // Rebuild any SequenceFlow connections missing from the element registry.
+            // Happens when BPMNEdge bpmnElement refs in stored XML don't match
+            // sequenceFlow ids — bpmn-js renders SVG paths but never registers the
+            // elements, so they vanish on the next redraw.
+            rebuildMissingConnections();
+
+            var container = $('#js-drop-zone');
+            container.removeClass('with-error').addClass('with-diagram');
+        } catch (err) {
+            var container = $('#js-drop-zone');
+            container.removeClass('with-diagram').addClass('with-error');
+            container.find('.error pre').text(err.message);
+            console.error(err);
+        }
+    }
+
+    function rebuildMissingConnections() {
+        var elementRegistry = kmain.mBpmnModeler.get('elementRegistry');
+        var modeling        = kmain.mBpmnModeler.get('modeling');
+        var canvas          = kmain.mBpmnModeler.get('canvas');
+
+        var registeredFlows = elementRegistry.filter(function (el) {
+            return el.type === 'bpmn:SequenceFlow';
+        });
+        if (registeredFlows.length > 0) return; // connections already present
 
         try {
-            const result = kmain.mBpmnModeler.importXML(xml);
-            var container = $('#js-drop-zone');
-            container
-                .removeClass('with-error')
-                .addClass('with-diagram');
-        } catch (err) {
+            var root = canvas.getRootElement();
+            var bpmnProcess = root && root.businessObject;
+            if (!bpmnProcess || !bpmnProcess.flowElements) return;
 
-            container
-                .removeClass('with-diagram')
-                .addClass('with-error');
+            bpmnProcess.flowElements.forEach(function (flowEl) {
+                if (flowEl.$type !== 'bpmn:SequenceFlow') return;
+                if (elementRegistry.get(flowEl.id)) return;
 
-            container.find('.error pre').text(err.message);
+                var srcRef = Array.isArray(flowEl.sourceRef) ? flowEl.sourceRef[0] : flowEl.sourceRef;
+                var tgtRef = Array.isArray(flowEl.targetRef) ? flowEl.targetRef[0] : flowEl.targetRef;
+                var srcEl  = srcRef && elementRegistry.get(srcRef.id);
+                var tgtEl  = tgtRef && elementRegistry.get(tgtRef.id);
+                if (!srcEl || !tgtEl) return;
 
-            console.error(err);
+                // modeling.connect registers the connection properly so it survives redraws.
+                // Passing the original id keeps internal references (e.g., transition matching) correct.
+                modeling.connect(srcEl, tgtEl, { type: 'bpmn:SequenceFlow', id: flowEl.id });
+            });
+        } catch (e) {
+            console.warn('[sfd] rebuildMissingConnections:', e);
         }
     }
 
@@ -326,7 +386,7 @@ const kmain = (function () {
             message: $('<div id="popupContent"></div>'),
             title: kresource.getItem("processlist"),
             onshown: function () {
-                $("#popupContent").load('pages/process/list.html')
+                _sfLoadPage($("#popupContent"), 'pages/process/list.html');
             },
             draggable: true
         });
@@ -410,6 +470,9 @@ const kmain = (function () {
     function afterProcessCreated(e, data) {
         //intialize process variables
         initializeGlobalVariables();
+
+        // Auto-expand the right properties panel when a process is created
+        if (window.sfPanelExpand) window.sfPanelExpand();
     }
 
     function afterProcessOpened(e, data) {
@@ -418,6 +481,9 @@ const kmain = (function () {
 
         var id = data.ProcessEntity.Id;
         kmain.editProcessById(id);
+
+        // Auto-expand the right properties panel when a process is opened
+        if (window.sfPanelExpand) window.sfPanelExpand();
     }
 
     kmain.editProcessById = function (id) {
@@ -442,7 +508,7 @@ const kmain = (function () {
             message: $('<div id="popupXmlContent"></div>'),
             title: kresource.getItem("content"),
             onshown: function () {
-                $("#popupXmlContent").load('pages/process/xmlcontent.html')
+                _sfLoadPage($("#popupXmlContent"), 'pages/process/xmlcontent.html');
             },
             draggable: true
         });
@@ -499,7 +565,7 @@ const kmain = (function () {
             message: $('<div id="popupImportXml"></div>'),
             title: kresource.getItem("importxml"),
             onshown: function () {
-                $("#popupImportXml").load('pages/process/import.html')
+                _sfLoadPage($("#popupImportXml"), 'pages/process/import.html');
             },
             draggable: true
         });
@@ -511,7 +577,7 @@ const kmain = (function () {
             message: $('<div id="popupImportMxGraphXml"></div>'),
             title: kresource.getItem("importmxgraphxml"),
             onshown: function () {
-                $("#popupImportMxGraphXml").load('pages/process/importmxgraph.html')
+                _sfLoadPage($("#popupImportMxGraphXml"), 'pages/process/importmxgraph.html');
             },
             draggable: true
         });
@@ -525,7 +591,20 @@ const kmain = (function () {
             size: BootstrapDialog.SIZE_LARGE,
             cssClass: 'setting-dialog-large',
             onshown: function (dialog) {
-                $("#popupSetting").load('pages/setting/index.html')
+                _sfLoadPage($("#popupSetting"), 'pages/setting/index.html');
+            },
+            draggable: true
+        });
+    }
+
+    kmain.openThemeSetting = function () {
+        var BootstrapDialog = require('bootstrap5-dialog');
+        BootstrapDialog.show({
+            message: $('<div id="popupThemeSetting"></div>'),
+            title: '主题设置',
+            size: BootstrapDialog.SIZE_LARGE,
+            onshown: function (dialog) {
+                _sfLoadPage($("#popupThemeSetting"), 'pages/setting/theme.html');
             },
             draggable: true
         });
@@ -582,7 +661,7 @@ const kmain = (function () {
             Message: message
         };
 
-        jshelper.ajaxPost(kconfig.webAiUrl + 'api/aigen2demo/CreateProcessByAI', JSON.stringify(aiRequest), function (result) {
+        jshelper.ajaxPost(kconfig.webApiUrl + 'api/AiGen2/CreateProcessByAI', JSON.stringify(aiRequest), function (result) {
             if (result.Status === 1) {
                 if (result.Entity !== null) {
                     kmain.mxSelectedProcessEntity = result.Entity;
@@ -607,33 +686,33 @@ const kmain = (function () {
             message: $('<div id="openTemplateGallery"></div>'),
             title: kresource.getItem("templategallery"),
             onshown: function (dialog) {
-                $("#openTemplateGallery").load('pages/template/index.html', function() {
+                _sfLoadPage($("#openTemplateGallery"), 'pages/template/index.html', function() {
                     // adjust Template Gallery page
                     var $modalDialog = $('#openTemplateGallery').closest('.modal-dialog');
                     if ($modalDialog.length) {
                         $modalDialog.css('max-width', '1200px');
                         $modalDialog.css('width', '90%');
                     }
-                    
+
                     // set focus to Standard Process menu
                     setTimeout(function() {
                         var $standardProcessItem = $('.menuItemTemplate[data-id="standard"]');
                         if ($standardProcessItem.length) {
                             // ensure this menu active
                             $standardProcessItem.addClass('active').siblings().removeClass('active');
-                            
+
                             if (!$standardProcessItem.attr('tabindex')) {
                                 $standardProcessItem.attr('tabindex', '0');
                             }
-                            
+
                             $standardProcessItem.focus();
-                            
+
                             // ensure visible
                             var elementTop = $standardProcessItem.offset().top;
                             var elementHeight = $standardProcessItem.outerHeight();
                             var windowTop = $(window).scrollTop();
                             var windowHeight = $(window).height();
-                            
+
                             if (elementTop < windowTop || elementTop + elementHeight > windowTop + windowHeight) {
                                 $standardProcessItem[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                             }
@@ -669,14 +748,14 @@ const kmain = (function () {
             message: $('<div id="openCodeStudio"></div>'),
             title: kresource.getItem("codestudio"),
             onshown: function (dialog) {
-                $("#openCodeStudio").load('pages/codestudio/index.html', function() {
+                _sfLoadPage($("#openCodeStudio"), 'pages/codestudio/index.html', function() {
                     // adjust Code Studio page
                     var $modalDialog = $('#openCodeStudio').closest('.modal-dialog');
                     if ($modalDialog.length) {
                         $modalDialog.css('max-width', '1000px');
                         $modalDialog.css('width', '90%');
                     }
-                    
+
                     // Initialize Code Studio after page is loaded
                     kresource.localize();
                     kmain.initCodeStudio();
@@ -691,6 +770,42 @@ const kmain = (function () {
                         editorElement.parentNode.removeChild(editorElement);
                     }
                     kmain.codeMirrorEditor = null;
+                }
+            },
+            draggable: true
+        });
+    }
+
+    kmain.openRuleSetEditor = function () {
+        var BootstrapDialog = require('bootstrap5-dialog');
+        kmain.ruleSetDialog = BootstrapDialog.show({
+            size: BootstrapDialog.SIZE_WIDE || BootstrapDialog.SIZE_LARGE,
+            closable: true,
+            message: $('<div id="openRuleSetEditor"></div>'),
+            title: kresource.getItem("ruleset"),
+            onshown: function () {
+                _sfLoadPage($("#openRuleSetEditor"), 'pages/ruleset/index.html', function () {
+                    var $modalDialog = $('#openRuleSetEditor').closest('.modal-dialog');
+                    if ($modalDialog.length) {
+                        $modalDialog.css('max-width', '1200px');
+                        $modalDialog.css('width', '95%');
+                    }
+                    kresource.localize();
+                    if (window.ruleset) {
+                        window.ruleset.editor = null;
+                    }
+                    if (window.ruleset && window.ruleset.init) window.ruleset.init();
+                });
+            },
+            onhidden: function () {
+                // clean up CodeMirror instance when dialog is closed
+                if (window.ruleset && window.ruleset.editor) {
+                    try {
+                        window.ruleset.editor.toTextArea();
+                    } catch (e) {
+                        // ignore
+                    }
+                    window.ruleset.editor = null;
                 }
             },
             draggable: true
@@ -1104,7 +1219,7 @@ const kmain = (function () {
             message: $('<div id="knowledgeBaseContent"></div>'),
             title: kresource.getItem("knowledgebase"),
             onshown: function (dialog) {
-                $("#knowledgeBaseContent").load('pages/knowledgebase/index.html', function() {
+                _sfLoadPage($("#knowledgeBaseContent"), 'pages/knowledgebase/index.html', function() {
                     // Adjust dialog width
                     var $modalDialog = $('#knowledgeBaseContent').closest('.modal-dialog');
                     if ($modalDialog.length) {

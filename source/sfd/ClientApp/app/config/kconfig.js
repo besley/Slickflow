@@ -13,6 +13,12 @@
             webAiUrl: "http://localhost/sfai/",
             demoUrl: "http://localhost:5000/images/"
         },
+        test: {
+            webApiUrl: "https://testcz-009.slickflow.com/sfdapi/",
+            webTestUrl: "https://testcz-009.slickflow.com/sfw/",
+            webAiUrl: "https://testcz-009.slickflow.com/sfai/",
+            demoUrl: "https://testcz-009.slickflow.com/sfd/images/"
+        },
         prod: {
             webApiUrl: "https://demo.slickflow.com/sfdapi/",
             webTestUrl: "https://demo.slickflow.com/sfw/",

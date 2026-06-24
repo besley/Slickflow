@@ -7,6 +7,7 @@
     "all": "run-s build",
     "build": "cross-env KCONFIG_ENV=dev webpack",
     "build:prod": "cross-env KCONFIG_ENV=prod webpack",
+    "build:test": "cross-env KCONFIG_ENV=test webpack",
     "build:dev": "cross-env KCONFIG_ENV=dev webpack",
     "build:watch": "cross-env KCONFIG_ENV=dev webpack --watch",
     "start": "run-s build serve",

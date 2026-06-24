@@ -1,4 +1,4 @@
-﻿using Slickflow.Engine.Core.Pattern.Event.Signal;
+using Slickflow.Engine.Core.Pattern.Event.Signal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +35,7 @@ namespace Slickflow.Engine.Xpdl
         public static readonly string Sf_StrXmlPath_Services = "bpmn:extensionElements/sf:services";
         public static readonly string Sf_StrXmlPath_AiServices = "bpmn:extensionElements/sf:aiServices";
         public static readonly string Sf_StrXmlPath_Scripts = "bpmn:extensionElements/sf:scripts";
+        public static readonly string Sf_StrXmlPath_RuleConfigs = "bpmn:extensionElements/sf:ruleConfigs";
         public static readonly string Sf_StrXmlPath_Notifications = "bpmn:extensionElements/sf:notifications";
         public static readonly string Sf_StrXmlPath_SequenceFlow = "bpmn:sequenceFlow";
         public static readonly string Sf_ElementName_Forms= "sf:forms";
@@ -63,6 +64,7 @@ namespace Slickflow.Engine.Xpdl
         public static readonly string BPMNElementNameUserTask = "bpmn:userTask";
         public static readonly string BPMN_ElementName_ManualTask = "bpmn:manualTask";
         public static readonly string BPMN_ElementName_ServiceTask = "bpmn:serviceTask";
+        public static readonly string BPMN_ElementName_BusinessRuleTask = "bpmn:businessRuleTask";
         public static readonly string BPMN_ElementName_ScriptTask = "bpmn:scriptTask";
         public static readonly string BPMN_ElementName_ExclusiveGateway = "bpmn:exclusiveGateway";
         public static readonly string BPMN_ElementName_InclusiveGateway = "bpmn:inclusiveGateway";

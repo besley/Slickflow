@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using Slickflow.Engine.Common;
 using Slickflow.Data;
@@ -15,7 +15,6 @@ using Slickflow.Engine.Core.Pattern.Event.Signal;
 using Slickflow.Engine.Core.Pattern.Gateway;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Xpdl.Node;
-using static IronPython.Modules._ast;
 
 namespace Slickflow.Engine.Core.Pattern
 {
@@ -25,6 +24,12 @@ namespace Slickflow.Engine.Core.Pattern
     /// </summary>
     internal class NodeMediatorFactory
     {
+        private static bool IsRuleTaskActivity(Activity activity)
+        {
+            return activity?.RuleConfigDetail != null
+                && !string.IsNullOrWhiteSpace(activity.RuleConfigDetail.RuleSetCode);
+        }
+
         /// <summary>
         /// Create Method
         /// </summary>
@@ -229,6 +234,8 @@ namespace Slickflow.Engine.Core.Pattern
             }
             else if (forwardContext.CurrentActivity.ActivityType == ActivityTypeEnum.ServiceNode)      
             {
+                if (IsRuleTaskActivity(forwardContext.CurrentActivity))
+                    return new NodeMediatorRule(forwardContext, session);
                 return new NodeMediatorService(forwardContext, session);
             }
             else if (forwardContext.CurrentActivity.ActivityType == ActivityTypeEnum.AIServiceNode)
@@ -470,7 +477,10 @@ namespace Slickflow.Engine.Core.Pattern
             }
             else if(eventActivity.ActivityType == ActivityTypeEnum.ServiceNode)
             {
-                nodeMediator = new NodeMediatorService(forwardContext, session);
+                if (IsRuleTaskActivity(eventActivity))
+                    nodeMediator = new NodeMediatorRule(forwardContext, session);
+                else
+                    nodeMediator = new NodeMediatorService(forwardContext, session);
                 nodeMediator.LinkContext.CurrentActivity = eventActivity;
             }
             else if(eventActivity.ActivityType == ActivityTypeEnum.AIServiceNode)

@@ -179,7 +179,7 @@ namespace Slickflow.Engine.Core.Pattern
                 int? fromActivityInstanceId = null;
                 string fromActivityId = string.Empty;
                 string fromActivityName = string.Empty;
-                if (IsNotNodeMediatorStart(this) == true)
+                if (IsNotNodeMediatorStart(this) == true && ActivityForwardContext.FromActivityInstance != null)
                 {
                     fromActivityInstanceId = ActivityForwardContext.FromActivityInstance.Id;
                     fromActivityId = ActivityForwardContext.FromActivityInstance.ActivityId;
@@ -199,6 +199,14 @@ namespace Slickflow.Engine.Core.Pattern
                    eventContext);
             }
             return _eventService;
+        }
+
+        /// <summary>
+        /// Get inner event service for derived mediators.
+        /// </summary>
+        protected IEventService GetInnerEventService()
+        {
+            return GetEventService() as IEventService;
         }
 
         /// <summary>
@@ -360,6 +368,31 @@ namespace Slickflow.Engine.Core.Pattern
                 throw new WfRuntimeException(LocalizeHelper.GetEngineMessage("nodemediator.ContinueForwardCurrentNode.error", ex.Message),
                     ex.InnerException != null? ex.InnerException : ex);
             }
+        }
+
+        /// <summary>
+        /// Merge upstream/runtime condition pairs with variables written for the current activity instance.
+        /// </summary>
+        private static IDictionary<string, string> MergeActivityConditions(ActivityResource activityResource, IList<ProcessVariableEntity> currentActivityRows)
+        {
+            var merged = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            if (activityResource?.ConditionKeyValuePair != null)
+            {
+                foreach (var kv in activityResource.ConditionKeyValuePair)
+                {
+                    if (!string.IsNullOrEmpty(kv.Key))
+                        merged[kv.Key] = kv.Value ?? string.Empty;
+                }
+            }
+            if (currentActivityRows != null)
+            {
+                foreach (var item in currentActivityRows)
+                {
+                    if (!string.IsNullOrEmpty(item.Name))
+                        merged[item.Name] = item.Value ?? string.Empty;
+                }
+            }
+            return merged;
         }
 
         /// <summary>
@@ -595,11 +628,19 @@ namespace Slickflow.Engine.Core.Pattern
                         var currentActivityVariableList = pvm.GetVariableListByActivity(Session.Connection, ActivityForwardContext.ProcessInstance.Id, currentActivityInstance.Id, 
                             outputVariableNameList, Session.Transaction);
 
-                        var newConditionKeyValuePair = currentActivityVariableList.ToDictionary(item => item.Name, item => item.Value);
+                        var newConditionKeyValuePair = MergeActivityConditions(activityResource, currentActivityVariableList);
 
                         var processModelBPMNCore = new ProcessModelBPMNCore();
                         var aiServiceNextMatchedResult = processModelBPMNCore.GetNextActivityTreeListCore(ActivityForwardContext.ProcessModel,
                             comp.Activity.ActivityId, currentActivityInstance.Id, newConditionKeyValuePair, Session);
+
+                        if (aiServiceNextMatchedResult.MatchedType != NextActivityMatchedType.Successed
+                            || aiServiceNextMatchedResult.Root == null
+                            || aiServiceNextMatchedResult.Root.HasChildren == false)
+                        {
+                            throw new WfRuntimeException(
+                                "RuleTask/ServiceTask/AI output variables did not match any outgoing transition conditions.");
+                        }
 
                         var newActivityResource = ActivityResourceFactory.Create(ActivityForwardContext.ProcessModel,
                             aiServiceNextMatchedResult.Root,
@@ -659,11 +700,19 @@ namespace Slickflow.Engine.Core.Pattern
                         var pvm = new ProcessVariableManager();
                         var currentActivityVariableList = pvm.GetVariableListByActivity(Session.Connection, ActivityForwardContext.ProcessInstance.Id, currentActivityInstance.Id,
                             outputVariableNameList, Session.Transaction);
-                        var newConditionKeyValuePair = currentActivityVariableList.ToDictionary(item => item.Name, item => item.Value);
+                        var newConditionKeyValuePair = MergeActivityConditions(activityResource, currentActivityVariableList);
 
                         var processModelBPMNCore = new ProcessModelBPMNCore();
                         var serviceNextMatchedResult = processModelBPMNCore.GetNextActivityTreeListCore(ActivityForwardContext.ProcessModel,
                             comp.Activity.ActivityId, currentActivityInstance.Id, newConditionKeyValuePair, Session);
+
+                        if (serviceNextMatchedResult.MatchedType != NextActivityMatchedType.Successed
+                            || serviceNextMatchedResult.Root == null
+                            || serviceNextMatchedResult.Root.HasChildren == false)
+                        {
+                            throw new WfRuntimeException(
+                                "RuleTask/ServiceTask output variables did not match any outgoing transition conditions.");
+                        }
 
                         var newActivityResource = ActivityResourceFactory.Create(ActivityForwardContext.ProcessModel,
                             serviceNextMatchedResult.Root,

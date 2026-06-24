@@ -68,7 +68,7 @@ const fieldlist = (function () {
         $(divFieldActivityEditGrid).empty();
 
         var gridOptions = {
-            theme: themeBalham,
+            theme: sfGetGridTheme(),
             suppressNoRowsOverlay: true,
             columnDefs: [
                 { headerName: kresource.getItem("fieldname") || "Field Name", field: "FieldName", width: 240 },

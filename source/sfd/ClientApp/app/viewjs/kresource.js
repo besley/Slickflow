@@ -8,6 +8,7 @@ const kresource = (function () {
     kresource.mxCurrentLanguageJSON = null;
     kresource.MX_RESOURCE_LOCAL_LANGUAGE = "mx-resource-local-lang";
     kresource.IsIE = navigator.userAgent.indexOf('MSIE') >= 0;
+    kresource.afterLocalizeCallbacks = [];
 
     kresource.getLang = function () {
         //get user enviroment language
@@ -52,6 +53,10 @@ const kresource = (function () {
                         text = unescapeHtml(text);
                         $(this).text(text);
                     }
+                });
+                // Fire post-localize callbacks (e.g. tooltip title sync)
+                kresource.afterLocalizeCallbacks.forEach(function (fn) {
+                    try { fn(json); } catch (e) { console.warn('afterLocalize callback error', e); }
                 });
             });
 

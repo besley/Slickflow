@@ -1,6 +1,4 @@
-﻿using Slickflow.Data;
-using Slickflow.AI.Configuration;
-using Slickflow.AI.Entity;
+using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
 using Slickflow.Engine.Common;
@@ -18,45 +16,32 @@ namespace sfdapi.Service
 {
     public class SfBpmnServiceBuilder
     {
-        #region Property and Constructor
-        private AiAppConfigProviderOptions _aiOpitons;
         private readonly HttpClient _httpClient;
-        
-        public SfBpmnServiceBuilder(AiAppConfigProviderOptions aiOptions) 
-        {
-            _aiOpitons = aiOptions;
-            _httpClient = new HttpClient();
-            _httpClient.Timeout = TimeSpan.FromSeconds(120); 
-        }
-        #endregion
 
-        public async Task<ProcessFileEntity>CreateBpmnProcessByTemplate(string templateName)
+        public SfBpmnServiceBuilder()
+        {
+            _httpClient = new HttpClient();
+            _httpClient.Timeout = TimeSpan.FromSeconds(120);
+        }
+
+        public async Task<ProcessFileEntity> CreateBpmnProcessByTemplate(string templateName)
         {
             try
             {
-                //create bpmn process
                 var xmlContent = BpmnFileSampleDefine.RebuildBpmnPorcessXmlContentByTemplate(templateName);
                 var workflowService = new WorkflowService();
                 var processFileEntity = workflowService.CreateProcessByXML(xmlContent);
-
                 return processFileEntity;
             }
             catch (Exception ex)
             {
-                LogManager.RecordLog("An error occurred when generating process by AI",
-                LogEventType.Exception,
-                LogPriority.Normal,
-                templateName,
-                ex);
+                LogManager.RecordLog("An error occurred when generating process by template",
+                    LogEventType.Exception, LogPriority.Normal, templateName, ex);
                 throw new InvalidOperationException($"An error occurred when creating the process by template, detail:{ex.Message}");
             }
         }
 
         #region Load Process Template Content
-        /// <summary>
-        /// Load template content
-        /// 加载流程模板
-        /// </summary>
         public ProcessTemplate LoadTemplateContent(ProcessTemplateType templateType)
         {
             var template = ProcessTemplateFactory.LoadTemplateContent(templateType);

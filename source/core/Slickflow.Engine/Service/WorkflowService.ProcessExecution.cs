@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
@@ -23,10 +24,14 @@ namespace Slickflow.Engine.Service
     public partial class WorkflowService : IWorkflowService
     {
         /// <summary>
-        /// Lock object
+        /// Per-instance semaphores: keyed by AppInstanceId, allowing parallel
+        /// execution across different process instances while still serializing
+        /// concurrent operations on the same instance.
         /// </summary>
-        private static readonly object startLock = new object();
-        private static readonly object runLock = new object();
+        private static readonly ConcurrentDictionary<string, SemaphoreSlim> _instanceSemaphores = new();
+
+        private static SemaphoreSlim GetInstanceSemaphore(string key)
+            => _instanceSemaphores.GetOrAdd(key, _ => new SemaphoreSlim(1, 1));
 
         #region Process Startup
         /// <summary>
@@ -87,7 +92,10 @@ namespace Slickflow.Engine.Service
             IDbSession session = null;
             try
             {
-                lock (startLock)
+                var startLockKey = string.IsNullOrEmpty(runner.AppInstanceId) ? runner.ProcessId : runner.AppInstanceId;
+                var startSem = GetInstanceSemaphore(startLockKey);
+                startSem.Wait();
+                try
                 {
                     session = SessionFactory.CreateSession(conn, trans);
                     runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceStartup(runner, ref startedResult);
@@ -104,6 +112,10 @@ namespace Slickflow.Engine.Service
                         runtimeInstance_OnWfProcessStarted);
 
                     bool isStarted = runtimeInstance.Execute(session);
+                }
+                finally
+                {
+                    startSem.Release();
                 }
                 //do some thing else here...
                 //...
@@ -356,7 +368,10 @@ namespace Slickflow.Engine.Service
             IDbSession session = null;
             try
             {
-                lock (runLock)
+                var runLockKey = string.IsNullOrEmpty(runner.AppInstanceId) ? runner.ProcessId : runner.AppInstanceId;
+                var runSem = GetInstanceSemaphore(runLockKey);
+                runSem.Wait();
+                try
                 {
                     session = SessionFactory.CreateSession(conn, trans);
                     runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceAppRunning(runner, session, ref runAppResult);
@@ -371,6 +386,10 @@ namespace Slickflow.Engine.Service
                         runtimeInstance_OnWfProcessRunning,
                         runtimeInstance_OnWfProcessContinued);
                     bool isRun = runtimeInstance.Execute(session);
+                }
+                finally
+                {
+                    runSem.Release();
                 }
                 //do some thing else here...
                 //...
@@ -544,7 +563,10 @@ namespace Slickflow.Engine.Service
             IDbSession session = null;
             try
             {
-                lock (runLock)
+                var runAutoLockKey = string.IsNullOrEmpty(runner.AppInstanceId) ? runner.ProcessId : runner.AppInstanceId;
+                var runAutoSem = GetInstanceSemaphore(runAutoLockKey);
+                runAutoSem.Wait();
+                try
                 {
                     session = SessionFactory.CreateSession(conn, trans);
                     runtimeInstance = WfRuntimeManagerFactory.CreateRuntimeInstanceRunAuto(runner, session, ref runAppResult);
@@ -559,6 +581,10 @@ namespace Slickflow.Engine.Service
                         runtimeInstance_OnWfProcessRunning,
                         runtimeInstance_OnWfProcessContinued);
                     bool isRun = runtimeInstance.Execute(session);
+                }
+                finally
+                {
+                    runAutoSem.Release();
                 }
                 //do some thing else here...
                 //...

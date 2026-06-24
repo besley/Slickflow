@@ -47,12 +47,137 @@ Flexible integration with leading AI services:
 
 ---
 
-## 2. 🚀 Code-Defined Auto-Execution Engine
+## 2. 📐 Business Rules Engine
+
+Slickflow includes a built-in **Business Rules Engine** that lets you define, store and evaluate conditional logic without changing application code.
+
+### 2.1 Rule Definition
+
+Rules are authored in the designer or via API and stored in the `wf_rule_set` table. Each rule set contains one or more expressions that evaluate process variables at runtime.
+
+```csharp
+// Evaluate a rule set by name against the current process variables
+IWorkflowService wfService = new WorkflowService();
+var ruleResult = wfService.EvaluateRuleSet("CreditCheckRules", variableDict);
+```
+
+### 2.2 Conditional Routing
+
+Rules are attached to **gateway transitions** in BPMN diagrams. When the engine reaches a split gateway, it evaluates the rule expressions and follows the matching branch automatically — no custom code required.
+
+Typical patterns:
+- **Amount threshold routing** – order amount > 10,000 → senior approval branch
+- **Status-based branching** – inventory level check → reorder or skip branch
+- **AI output routing** – LLM confidence score → accept or human-review branch
+
+### 2.3 Rule + AI Combination
+
+Business rules can be combined with AI nodes in the same process:
+
+1. An LLM node produces a structured output (JSON with a `score` field).
+2. A split gateway evaluates a rule against the `score` variable.
+3. The process routes to different downstream activities accordingly.
+
+---
+
+## 3. 🤝 Multi-Agent Interaction
+
+Slickflow supports **multi-agent orchestration** within a single workflow, based on the **ReAct (Reason → Act → Observe)** loop pattern.
+
+### 3.1 ReAct Agent Loop
+
+Each `Agent` node in the process diagram runs an autonomous reasoning loop:
+
+1. **Reason** – the agent analyzes the current task and available tools.
+2. **Act** – it calls a registered tool (API, sub-agent, database query, etc.).
+3. **Observe** – it receives the tool result and decides the next step.
+4. The loop repeats until the agent produces a final answer.
+
+```csharp
+// Agent node execution (simplified internal flow)
+var agentService = new AgentMultiTurnService();
+var response = await agentService.InvokeWithHistoryAsync(axConfig, inputVariables, history);
+```
+
+### 3.2 Agent Tool Registry
+
+Tools are registered per activity via `AgentToolRegistry`. Each tool is a typed C# class implementing `IAgentTool`:
+
+```csharp
+AgentToolRegistry.Register("PriceQuery", activityId, new PriceQueryTool());
+AgentToolRegistry.Register("InventoryCheck", activityId, new InventoryCheckTool());
+```
+
+The agent selects and invokes tools autonomously based on its reasoning.
+
+### 3.3 Multi-Agent Workflow Example
+
+A **5-agent procurement process** demonstrates cross-agent collaboration:
+
+| Agent Node | Role |
+|------------|------|
+| NeedsAnalysisAgent | Analyzes purchase requirements |
+| SupplierQueryAgent | Queries supplier catalog and pricing |
+| PriceNegotiationAgent | Negotiates terms with selected supplier |
+| RiskAssessmentAgent | Evaluates compliance and financial risk |
+| ApprovalDecisionAgent | Makes final approval recommendation |
+
+Each agent passes its structured output as process variables to the next agent, enabling a full **collaborative reasoning chain** within one BPMN process.
+
+### 3.4 Agent Memory
+
+`AgentConversationMemory` maintains per-session dialogue history across agent turns, allowing agents to reference earlier reasoning steps without re-processing.
+
+---
+
+## 4. 🔌 MCP Server
+
+Slickflow provides a **Model Context Protocol (MCP) Server** (`sfmcp`) that exposes the workflow engine as a set of callable tools for AI orchestration platforms.
+
+### 4.1 What It Does
+
+AI assistants (Claude, GPT, etc.) can call Slickflow MCP tools directly to:
+
+- Create and manage workflow process definitions
+- Start process instances and run task steps
+- Query running instances and task lists
+- Read and write process variables
+- Trigger AI-node execution within running workflows
+
+### 4.2 Available Tools (14)
+
+| Category | Tools |
+|----------|-------|
+| Process Definition | `GetProcessList`, `GetProcessDetail`, `CreateProcess` |
+| Instance Control | `StartProcess`, `RunProcess`, `GetProcessInstance` |
+| Task Management | `GetTaskList`, `GetTaskDetail`, `CompleteTask` |
+| Variables | `GetVariables`, `SetVariable` |
+| Knowledge Base | `SearchDocuments`, `SaveDocument`, `GetDocuments` |
+
+### 4.3 Quick Start
+
+```bash
+# Run the MCP server
+cd source/sfmcp
+dotnet run
+```
+
+Configure your AI platform to point at the MCP endpoint. The server communicates over the standard MCP protocol (stdio or HTTP transport).
+
+### 4.4 Use Cases
+
+- **AI-driven process automation**: let an AI assistant start and advance workflows based on natural-language instructions.
+- **Workflow introspection**: query running instances and diagnose stuck processes via chat.
+- **Dynamic variable injection**: an AI agent writes computed results back into a live process instance.
+
+---
+
+## 5. 🚀 Code-Defined Auto-Execution Engine
 
 Besides designer-based processes, Slickflow provides a **code-first auto-execution model** based on `Slickflow.Graph` and `WorkflowExecutor`.  
 You can define workflows in C#, run them fully in memory, and let the engine **automatically execute all steps without human interaction**.
 
-### 2.1 Code-First Workflow Definition
+### 5.1 Code-First Workflow Definition
 
 Use `Slickflow.Graph.Model.Workflow` to build BPMN-style flows programmatically:
 
@@ -76,7 +201,7 @@ Key points:
 - `BuildInMemory()` produces an in-memory `ProcessEntity` without touching the database.  
 - `WorkflowExecutorExtensions.UseProcess(Workflow)` binds this in-memory model to the runtime engine and caches it by `ProcessId:Version`.
 
-### 2.2 Auto-Execution with WorkflowExecutor
+### 5.2 Auto-Execution with WorkflowExecutor
 
 Auto-execution loop (conceptual):
 
@@ -109,7 +234,7 @@ This mode is ideal for:
 - AI agents and chat workflows  
 - Unit tests and demos (no DB dependency)
 
-### 2.3 Engine Capabilities (.NET8 Core)
+### 5.3 Engine Capabilities (.NET8 Core)
 
 - **.NET, cross-platform**: works on Windows, Linux, macOS.  
 - **BPMN2-style diagrams** with an HTML5 designer for visual modeling.  
@@ -118,11 +243,11 @@ This mode is ideal for:
 
 ---
 
-## 3. ✅ Human Approval Workflows (BPM)
+## 6. ✅ Human Approval Workflows (BPM)
 
 On top of AI and auto-execution, Slickflow remains a **full-featured human-centric workflow engine** for traditional BPM scenarios: approvals, reviews, multi-level routing, etc.
 
-### 3.1 Workflow Patterns (Key GIFs/Images)
+### 6.1 Workflow Patterns (Key GIFs/Images)
 
 Supported patterns (BPMN-style):
 
@@ -135,7 +260,7 @@ Supported patterns (BPMN-style):
 
 ![Multiple Instance Pattern](http://www.slickflow.com/content/img/wfpattern-mi-en.png)
 
-### 3.2 Core Human-Task Operations (Brief)
+### 6.2 Core Human-Task Operations (Brief)
 
 Slickflow manages human tasks with features such as:
 
@@ -162,7 +287,7 @@ var runResult = wfService.CreateRunner("10", "Jack")
     .Run();
 ```
 
-### 3.3 Code-Style Modeling for Human Approval
+### 6.3 Code-Style Modeling for Human Approval
 
 You can also define simple approval processes purely in code (sequence example) using `Workflow`:
 
@@ -184,18 +309,18 @@ This gives developers both **designer-based** and **code-based** options for mod
 
 ---
 
-## 4. 📦 Demos, Target Users and License
+## 7. 📦 Demos, Target Users and License
 
-### 4.1 Demo Projects
+### 7.1 Demo Projects
 
 - `WebDemo`, `MvcDemo`, `WinformDemo` – example integration with different enterprise application types.
 
-### 4.2 Target Users
+### 7.2 Target Users
 
 - Software teams or companies who want to embed a workflow engine into their products.  
 - Developers who prefer combining **AI orchestration**, **auto-execution**, and **human approval** in one engine.
 
-### 4.3 License & Support
+### 7.3 License & Support
 
 - **License**: Slickflow follows the MIT open source license and can be used in commercial projects.  
 - **Technical Support**: Enterprise, Ultimate and Universe editions can be provided with technical support and upgrade services.
@@ -206,33 +331,33 @@ If you have any further inquiry, please feel free to contact:
 
 ---
 
-## 5. 📚 Resources & Docker Deployment
+## 8. 📚 Resources & Docker Deployment
 
-### 5.1 Documentation
+### 8.1 Documentation
 
 - **English:** http://doc.slickflow.net  
 - **中文:** http://doc.slickflow.com
 
-### 5.2 Wiki
+### 8.2 Wiki
 
 - https://github.com/besley/Slickflow/wiki
 
-### 5.3 CodeProject Articles
+### 8.3 CodeProject Articles
 
 - [Tutorial](https://www.codeproject.com/Articles/5246528/Slickflow-NET-Core-Open-Source-Workflow-Engine)  
 - [User Manual](https://www.codeproject.com/Articles/5252483/Slickflow-Coding-Graphic-Model-User-Manual)
 
-### 5.4 Official Website
+### 8.4 Official Website
 
 - **English:** http://www.slickflow.net  
 - **中文:** http://www.slickflow.com
 
-### 5.5 Online Demo
+### 8.5 Online Demo
 
 - **Demo:** http://www.slickflow.com/demo/index  
 - **Designer Demo:** http://demo.slickflow.com/sfd/
 
-### 5.6 Docker Hub
+### 8.6 Docker Hub
 
 Pre-built Docker images are available on Docker Hub. Get started in minutes without building from source.
 
@@ -342,15 +467,15 @@ API and WebTest containers require database configuration. Supported databases: 
 
 ---
 
-## 6. 📞 Contact & 💰 Donation
+## 9. 📞 Contact & 💰 Donation
 
-### 6.1 Contact
+### 9.1 Contact
 
 - **Email:** sales@ruochisoft.com  
 - **QQ (Author):** 47743901  
 - **WeChat (Author):** besley2008
 
-### 6.2 Donation
+### 9.2 Donation
 
 Your donation will be used for the continuous research and development of the product and community building.  
 您的捐赠将用于产品的持续研发和社区建设。

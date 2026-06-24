@@ -409,3 +409,11 @@ obj
 .cursorrules
 *-ai-*.md
 ai-*.tmp
+
+# Local developer config — never commit real credentials
+appsettings.Development.json
+appsettings.Local.json
+appsettings.local.json
+*.env
+.env
+.env.*

@@ -15,52 +15,41 @@ const setting = (function () {
     }
 
     setting.init = function () {
-        // Initialize tree parent expand/collapse
-        $(document).on('click', '.setting-tree-parent', function (e) {
+        // Group header expand/collapse
+        $(document).on('click', '#popupSetting .st-group-header', function (e) {
             e.stopPropagation();
             $(this).toggleClass('expanded');
         });
 
-        // Initialize child item click handler
-        $(document).on('click', '.setting-tree-child', function (e) {
-            if ($(e.target).hasClass('setting-tree-child-delete')) {
-                return; // Don't trigger selection when clicking delete button
-            }
+        // Model item click
+        $(document).on('click', '#popupSetting .st-item', function (e) {
+            if ($(e.target).hasClass('st-item-del')) return;
             var modelId = $(this).data('model-id');
-            if (modelId) {
-                selectModel(modelId);
-            }
+            if (modelId) selectModel(modelId);
         });
 
-        // Initialize delete button click handler
-        $(document).on('click', '.setting-tree-child-delete', function (e) {
+        // Delete button click
+        $(document).on('click', '#popupSetting .st-item-del', function (e) {
             e.stopPropagation();
-            var $child = $(this).closest('.setting-tree-child');
-            var modelId = $child.data('model-id');
-            if (modelId) {
-                deleteModel(modelId);
-            }
+            var modelId = $(this).closest('.st-item').data('model-id');
+            if (modelId) deleteModel(modelId);
         });
 
         // Load AI model list
         loadModelList();
 
-        // Test connection button click handler - use event delegation to work with dynamically loaded content
-        $(document).on('click', '#popupSetting #test-btn, #test-btn', function () {
+        $(document).on('click', '#popupSetting #test-btn', function () {
             testModelConnection();
         });
 
-        // Save button click handler - use event delegation to work with dynamically loaded content
-        $(document).on('click', '#popupSetting #save-btn, #save-btn', function () {
+        $(document).on('click', '#popupSetting #save-btn', function () {
             saveModelConfig();
         });
 
-        // Add new button click handler - use event delegation
-        $(document).on('click', '#popupSetting #add-new-btn, #add-new-btn', function () {
+        $(document).on('click', '#popupSetting #add-new-btn', function () {
             clearModelData();
             setting.mcurrentModelEntity = null;
-            // Remove active class from all children
-            $('#popupSetting .setting-tree-child, .setting-tree-child').removeClass('active');
+            $('#popupSetting .st-item').removeClass('active');
         });
 
         // Handle API key input - clear mask when user starts typing - use event delegation
@@ -153,19 +142,19 @@ const setting = (function () {
             var providers = Object.keys(byProvider).sort();
             providers.forEach(function (provider) {
                 var items = byProvider[provider];
-                var $parentItem = $('<li class="setting-tree-item"></li>');
-                var $expandSpan = $('<span class="setting-tree-expand"></span>');
-                var $parentDiv = $('<div class="setting-tree-parent expanded"></div>').append($expandSpan).append(document.createTextNode(provider));
-                var $childList = $('<ul class="setting-tree-children"></ul>');
+                var $parentItem = $('<li></li>');
+                var $groupHdr = $('<div class="st-group-header expanded"></div>')
+                    .append('<span class="st-expand-icon">&#9654;</span>')
+                    .append(document.createTextNode(provider));
+                var $childList = $('<ul class="st-group-children"></ul>');
                 items.forEach(function (model) {
                     var displayName = (model.ModelName || model.Description || 'Unnamed').trim() || 'Unnamed';
-                    var $child = $('<li class="setting-tree-child" data-model-id="' + model.Id + '">' +
-                        '<span class="setting-tree-child-name">' + displayName + '</span>' +
-                        '<button class="setting-tree-child-delete" title="Delete">×</button>' +
-                        '</li>');
+                    var $child = $('<li class="st-item" data-model-id="' + model.Id + '"></li>')
+                        .append('<span class="st-item-name">' + displayName + '</span>')
+                        .append('<button class="st-item-del" title="Delete">×</button>');
                     $childList.append($child);
                 });
-                $parentItem.append($parentDiv).append($childList);
+                $parentItem.append($groupHdr).append($childList);
                 $children.append($parentItem);
             });
         }
@@ -173,12 +162,11 @@ const setting = (function () {
 
     function selectModel(modelId) {
         var $container = getContainer();
-        // Remove active class from all children
-        $container.find('.setting-tree-child').removeClass('active');
-        var $selected = $container.find('.setting-tree-child[data-model-id="' + modelId + '"]');
+        $container.find('.st-item').removeClass('active');
+        var $selected = $container.find('.st-item[data-model-id="' + modelId + '"]');
         $selected.addClass('active');
-        // Expand parent provider node when selecting a child
-        $selected.closest('.setting-tree-item').find('> .setting-tree-parent').addClass('expanded');
+        // Ensure parent group is expanded
+        $selected.closest('li').siblings().addBack().find('> .st-group-header').addClass('expanded');
 
         // Load model data
         settingapi.getById(modelId, function (result) {
@@ -453,6 +441,7 @@ const setting = (function () {
     }
 
     function proceedSave(modelProvider, modelType, baseUrl, apiKey, description) {
+        var $container = getContainer();
         var modelName = ($container.find('#model-name').val() || '').trim();
 
         // Prepare entity

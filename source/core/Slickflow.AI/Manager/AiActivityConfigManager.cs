@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using Slickflow.Data;
 using Slickflow.AI.Entity;
 using System;
@@ -185,6 +185,44 @@ namespace Slickflow.AI.Manager
             finally
             {
                 session.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Upgrade AI activity config when process version is upgraded
+        /// 升级流程版本时，同步复制 AI 节点配置记录
+        /// </summary>
+        /// <param name="conn">数据库连接</param>
+        /// <param name="processId">流程标识 process_id</param>
+        /// <param name="originVersion">原流程版本号</param>
+        /// <param name="newVersion">新流程版本号（升级后的版本）</param>
+        /// <param name="trans">数据库事务</param>
+        public void UpgradeProcessActivityConfig(IDbConnection conn,
+            string processId,
+            string originVersion,
+            string newVersion,
+            IDbTransaction trans)
+        {
+            // 读取旧版本下该流程的所有 AI 节点配置实体
+            var list = Repository.GetAll<AiActivityConfigEntity>(conn, trans)
+                .Where<AiActivityConfigEntity>(
+                    p => p.ProcessId == processId
+                        && p.Version == originVersion)
+                .ToList();
+
+            if (list.Count == 0) return;
+
+            foreach (var entity in list)
+            {
+                // 按照实体方式复制：修改实体上的版本号，再执行插入
+                // 注意：不改变 processId，本次升级仅版本变化
+                entity.Version = newVersion;
+
+                // 置空主键，确保插入为新记录（由数据库生成新 Id）
+                entity.Id = 0;
+
+                // 通过已有的 Insert 方法写入数据库，保持字段验证逻辑一致
+                Insert(conn, entity, trans);
             }
         }
         #endregion

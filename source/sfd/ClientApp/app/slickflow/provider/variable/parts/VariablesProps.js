@@ -1,89 +1,246 @@
-import { useService } from 'bpmn-js-properties-panel';
 import { getBusinessObject, is } from 'bpmn-js/lib/util/ModelUtil';
-import {
-    createElement,
-    createVariables,
-    getVariables,
-    getVariablesExtension
-} from '../util';
+import { getVariables, getVariablesExtension, clearVariablesExtension } from '../util';
+import { getProcessIdAndVersion } from '../wfVariableCache';
 
 import { without } from 'min-dash';
 
-export default function VariablesProps({ element, injector }) {
-    const variables = getVariables(element);
-    const bpmnFactory = injector.get('bpmnFactory'),
-        commandStack = injector.get('commandStack');
+function readRowField(row, pascalKey, camelKey, snakeKey) {
+    if (!row || typeof row !== 'object') {
+        return undefined;
+    }
+    if (typeof row[pascalKey] !== 'undefined') {
+        return row[pascalKey];
+    }
+    if (camelKey && typeof row[camelKey] !== 'undefined') {
+        return row[camelKey];
+    }
+    if (snakeKey && typeof row[snakeKey] !== 'undefined') {
+        return row[snakeKey];
+    }
+    return undefined;
+}
 
-    // Merge all variables (input + output)
-    // Get direction from variable's own direction attribute, not from array position
-    const allVariables = [
-        ...(variables.inputVariables || []).map(v => ({ 
-            variable: v, 
-            direction: v.get('direction') || 'Input' 
-        })),
-        ...(variables.outputVariables || []).map(v => ({ 
-            variable: v, 
-            direction: v.get('direction') || 'Output' 
-        }))
-    ];
-
-    const items = allVariables.map(({ variable, direction }, index) => {
-        // Get direction from variable's own direction attribute as the source of truth
-        const variableDirection = variable.get('direction') || direction;
-        const id = element.id + '-variable-' + variableDirection + '-' + index;
-        const variableName = variable.get('name') || '';
-        const variableType = variable.get('type') || '';
-        
-        // Read from new XML structure: varRefDetail sub-element
-        let sourceNodeId = '';
-        let sourceVariableName = '';
-        const varRefDetail = variable.get('varRefDetail');
-        if (varRefDetail && varRefDetail.length > 0) {
-            const refDetail = varRefDetail[0];
-            sourceNodeId = refDetail.get('sourceRef') || '';
-            sourceVariableName = refDetail.get('variableName') || '';
-        }
-        
-        const isRequired = !!variable.get('isRequired');
-        
-        // Add label by direction
-        const directionLabel = variableDirection === 'Input' ? '[IN]' : '[OUT]';
-        let displayLabel = `${directionLabel} ${variableName || `Variable ${index + 1}`}`;
-        if (isRequired) {
-            displayLabel += ' • required';
-        }
-        
-        // For input variables with source, append source info
-        if (variableDirection === 'Input' && sourceNodeId && sourceVariableName) {
-            try {
-                const elementRegistry = injector.get('elementRegistry');
-                if (elementRegistry) {
-                    const sourceNode = elementRegistry.get(sourceNodeId);
-                    if (sourceNode) {
-                        const sourceNodeName = getNodeName(sourceNode);
-                        displayLabel += ` [${sourceNodeName}]`;
-                    } else {
-                        displayLabel += ` [${sourceNodeId}]`;
-                    }
-                } else {
-                    displayLabel += ` [${sourceNodeId}]`;
+/**
+ * Build moddle-like variable wrappers from wf_variable rows (for labels / dialog prefill).
+ */
+function rowsFromCacheToAllVariables(cachedRows) {
+    return cachedRows.map(function (row) {
+        const directionRaw = readRowField(row, 'Direction', 'direction', null) || 'Input';
+        const direction = directionRaw === 'Output' ? 'Output' : 'Input';
+        const variable = {
+            get: function (key) {
+                if (key === 'direction') {
+                    return direction;
                 }
-            } catch (e) {
-                displayLabel += ` [${sourceNodeId}]`;
+                if (key === 'name') {
+                    return readRowField(row, 'Name', 'name', null) || '';
+                }
+                if (key === 'type') {
+                    return readRowField(row, 'Type', 'type', null) || '';
+                }
+                if (key === 'defaultValue') {
+                    return readRowField(row, 'DefaultValue', 'defaultValue', 'default_value') || '';
+                }
+                if (key === 'isRequired') {
+                    var req = readRowField(row, 'IsRequired', 'isRequired', 'is_required');
+                    return !!(req === 1 || req === true);
+                }
+                if (key === 'varRefDetail') {
+                    var sr = readRowField(row, 'SourceRef', 'sourceRef', 'source_ref') || '';
+                    var svn = readRowField(row, 'SourceVariableName', 'sourceVariableName', 'source_variable_name') || '';
+                    if (sr || svn) {
+                        return [
+                            {
+                                get: function (k) {
+                                    if (k === 'sourceRef') {
+                                        return sr || '';
+                                    }
+                                    if (k === 'variableName') {
+                                        return svn || '';
+                                    }
+                                    return '';
+                                }
+                            }
+                        ];
+                    }
+                    return [];
+                }
+                return '';
             }
-        }
-        
-        return {
-            id,
-            label: displayLabel,
-            autoFocusEntry: id + '-name',
-            remove: removeFactory({ commandStack, element, variable, direction: variableDirection })
         };
+        return { variable: variable, direction: direction, __dbRow: row };
     });
+}
+
+function buildItemEntry({ element, injector, commandStack, variable, direction, index, rowSnapshot, fromDb }) {
+    const variableDirection = variable.get('direction') || direction;
+    const id = element.id + '-variable-' + variableDirection + '-' + index;
+    const variableName = variable.get('name') || '';
+    const varRefDetail = variable.get('varRefDetail');
+    let srcNodeId = '';
+    let srcVarName = '';
+    if (varRefDetail && varRefDetail.length > 0) {
+        const refDetail = varRefDetail[0];
+        srcNodeId = refDetail.get('sourceRef') || '';
+        srcVarName = refDetail.get('variableName') || '';
+    }
+    const isRequired = !!variable.get('isRequired');
+    const directionLabel = variableDirection === 'Input' ? '[IN]' : '[OUT]';
+    let displayLabel = directionLabel + ' ' + (variableName || 'Variable ' + (index + 1));
+    if (isRequired) {
+        displayLabel += ' • required';
+    }
+    if (variableDirection === 'Input' && srcNodeId && srcVarName) {
+        try {
+            const elementRegistry = injector.get('elementRegistry');
+            if (elementRegistry) {
+                const sourceNode = elementRegistry.get(srcNodeId);
+                if (sourceNode) {
+                    displayLabel += ' [' + getNodeName(sourceNode) + ']';
+                } else {
+                    displayLabel += ' [' + srcNodeId + ']';
+                }
+            } else {
+                displayLabel += ' [' + srcNodeId + ']';
+            }
+        } catch (e) {
+            displayLabel += ' [' + srcNodeId + ']';
+        }
+    }
+    const remove = fromDb
+        ? removeFactoryDb({ element, injector, commandStack, rowSnapshot: rowSnapshot })
+        : removeFactory({ commandStack, element, variable, direction: variableDirection });
+    return {
+        id: id,
+        label: displayLabel,
+        autoFocusEntry: id + '-name',
+        remove: remove
+    };
+}
+
+export default function VariablesProps({ element, injector }) {
+    const bpmnFactory = injector.get('bpmnFactory');
+    const commandStack = injector.get('commandStack');
+
+    const hasCache =
+        window.__wfVariableCache &&
+        Object.prototype.hasOwnProperty.call(window.__wfVariableCache, element.id);
+    const cached = hasCache ? window.__wfVariableCache[element.id] : null;
+
+    let allVariables;
+    let items;
+
+    if (cached !== null && cached !== undefined && Array.isArray(cached)) {
+        allVariables = rowsFromCacheToAllVariables(cached);
+        items = allVariables.map(function (entry, index) {
+            return buildItemEntry({
+                element: element,
+                injector: injector,
+                commandStack: commandStack,
+                variable: entry.variable,
+                direction: entry.direction,
+                index: index,
+                rowSnapshot: entry.__dbRow || cached[index],
+                fromDb: true
+            });
+        });
+    } else {
+        const variables = getVariables(element);
+        allVariables = [
+            ...(variables.inputVariables || []).map(function (v) {
+                return { variable: v, direction: v.get('direction') || 'Input' };
+            }),
+            ...(variables.outputVariables || []).map(function (v) {
+                return { variable: v, direction: v.get('direction') || 'Output' };
+            })
+        ];
+        items = allVariables.map(function ({ variable, direction }, index) {
+            return buildItemEntry({
+                element: element,
+                injector: injector,
+                commandStack: commandStack,
+                variable: variable,
+                direction: direction,
+                index: index,
+                rowSnapshot: null,
+                fromDb: false
+            });
+        });
+    }
 
     return {
-        items,
+        items: items,
         add: addFactory({ element, injector, bpmnFactory, commandStack, initialVariables: allVariables })
+    };
+}
+
+function removeFactoryDb({ element, injector, commandStack, rowSnapshot }) {
+    return function (event) {
+        event.stopPropagation();
+        const processIdVersion = getProcessIdAndVersion(injector);
+        const processId = processIdVersion.processId;
+        const version = processIdVersion.version;
+        const activityId = element.id;
+        const apiBase = (window.kconfig && window.kconfig.webApiUrl) || '';
+        if (!apiBase || !processId || !activityId || !rowSnapshot) {
+            return;
+        }
+        const urlGet =
+            apiBase +
+            'api/WfVariable/GetList?processId=' +
+            encodeURIComponent(processId) +
+            '&version=' +
+            encodeURIComponent(version) +
+            '&activityId=' +
+            encodeURIComponent(activityId);
+        fetch(urlGet, { method: 'GET', headers: { Accept: 'application/json' } })
+            .then(function (r) {
+                return r.json();
+            })
+            .then(function (result) {
+                if (result.Status !== 1 || !result.Entity || !Array.isArray(result.Entity)) {
+                    return null;
+                }
+                const list = result.Entity.filter(function (v) {
+                    var vName = readRowField(v, 'Name', 'name', null) || '';
+                    var sName = readRowField(rowSnapshot, 'Name', 'name', null) || '';
+                    var sameName = vName === sName;
+                    var d1Raw = readRowField(v, 'Direction', 'direction', null) || 'Input';
+                    var d2Raw = readRowField(rowSnapshot, 'Direction', 'direction', null) || 'Input';
+                    var d1 = d1Raw === 'Output' ? 'Output' : 'Input';
+                    var d2 = d2Raw === 'Output' ? 'Output' : 'Input';
+                    return !(sameName && d1 === d2);
+                });
+                const urlSave =
+                    apiBase +
+                    'api/WfVariable/SaveList?processId=' +
+                    encodeURIComponent(processId) +
+                    '&version=' +
+                    encodeURIComponent(version) +
+                    '&activityId=' +
+                    encodeURIComponent(activityId);
+                return fetch(urlSave, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                    body: JSON.stringify(list)
+                }).then(function () {
+                    return list;
+                });
+            })
+            .then(function (list) {
+                if (!list) {
+                    return;
+                }
+                window.__wfVariableCache = window.__wfVariableCache || {};
+                window.__wfVariableCache[element.id] = list;
+                clearVariablesExtension(element, commandStack);
+                injector.get('eventBus').fire('elements.changed', { elements: [element] });
+            })
+            .catch(function (err) {
+                if (window.kmsgbox) {
+                    window.kmsgbox.error(err && err.message ? err.message : 'Request failed');
+                }
+            });
     };
 }
 
@@ -120,27 +277,40 @@ function getUpstreamNodesWithOutputVariables(currentElement, injector) {
             is(node, 'bpmn:ReceiveTask') ||
             is(node, 'bpmn:ManualTask')) {
             
-            const nodeVariables = getVariables(node);
-            // Get all variables (both input and output arrays) and filter by direction
-            const allVars = [
-                ...(nodeVariables.inputVariables || []),
-                ...(nodeVariables.outputVariables || [])
-            ];
-            // Filter only variables with direction="output"
-            const outputVars = allVars.filter(v => {
-                const direction = v.get('direction');
-                return direction === 'Output';
-            });
-            
+            let outputVars = [];
+            const cachedNv = window.__wfVariableCache && window.__wfVariableCache[node.id];
+            if (cachedNv && Array.isArray(cachedNv)) {
+                outputVars = cachedNv
+                    .filter(function (v) {
+                        return (readRowField(v, 'Direction', 'direction', null) || 'Input') === 'Output';
+                    })
+                    .map(function (v) {
+                        return {
+                            name: readRowField(v, 'Name', 'name', null) || '',
+                            type: readRowField(v, 'Type', 'type', null) || ''
+                        };
+                    });
+            } else {
+                const nodeVariables = getVariables(node);
+                const allVars = [
+                    ...(nodeVariables.inputVariables || []),
+                    ...(nodeVariables.outputVariables || [])
+                ];
+                outputVars = allVars
+                    .filter(function (v) {
+                        return v.get('direction') === 'Output';
+                    })
+                    .map(function (v) {
+                        return { name: v.get('name') || '', type: v.get('type') || '' };
+                    });
+            }
+
             if (outputVars.length > 0) {
                 const nodeName = getNodeName(node);
                 upstreamNodes.push({
                     nodeId: node.id,
                     nodeName: nodeName,
-                    outputVariables: outputVars.map(v => ({
-                        name: v.get('name') || '',
-                        type: v.get('type') || ''
-                    }))
+                    outputVariables: outputVars
                 });
             }
         }
@@ -169,6 +339,45 @@ function getNodeName(element) {
     return bo.get('name') || element.id;
 }
 
+function mapApiToDialog(apiList) {
+    if (!Array.isArray(apiList)) return [];
+    return apiList.map(v => ({
+        name: readRowField(v, 'Name', 'name', null) || '',
+        type: readRowField(v, 'Type', 'type', null) || '',
+        defaultValue: readRowField(v, 'DefaultValue', 'defaultValue', 'default_value') || '',
+        direction: (readRowField(v, 'Direction', 'direction', null) || 'Input') === 'Output' ? 'Output' : 'Input',
+        sourceNodeId: readRowField(v, 'SourceRef', 'sourceRef', 'source_ref') || '',
+        sourceVariableName: readRowField(v, 'SourceVariableName', 'sourceVariableName', 'source_variable_name') || '',
+        isRequired: !!(readRowField(v, 'IsRequired', 'isRequired', 'is_required') === 1 || readRowField(v, 'IsRequired', 'isRequired', 'is_required') === true),
+        __edit: false
+    }));
+}
+
+function mapDialogToApi(variablesData) {
+    if (!Array.isArray(variablesData)) return [];
+    return variablesData.map((v, i) => ({
+        id: 0,
+        processId: '',
+        version: '',
+        activityId: '',
+        name: v.name || '',
+        type: v.type || '',
+        direction: v.direction || 'Input',
+        defaultValue: v.defaultValue || '',
+        default_value: v.defaultValue || '',
+        isRequired: v.isRequired ? 1 : 0,
+        is_required: v.isRequired ? 1 : 0,
+        isReferenced: (v.direction === 'Input' && (v.sourceNodeId || v.sourceVariableName)) ? 1 : 0,
+        is_referenced: (v.direction === 'Input' && (v.sourceNodeId || v.sourceVariableName)) ? 1 : 0,
+        sourceRef: v.sourceNodeId || '',
+        source_ref: v.sourceNodeId || '',
+        sourceVariableName: v.sourceVariableName || '',
+        source_variable_name: v.sourceVariableName || '',
+        sortOrder: i,
+        sort_order: i
+    }));
+}
+
 function addFactory({ element, injector, bpmnFactory, commandStack, initialVariables }) {
     return function (event) {
         event.stopPropagation();
@@ -179,7 +388,6 @@ function addFactory({ element, injector, bpmnFactory, commandStack, initialVaria
         }
 
         const existingVariables = (initialVariables || []).map(({ variable, direction }) => {
-            // Read from new XML structure: varRefDetail sub-element
             let sourceNodeId = '';
             let sourceVariableName = '';
             const varRefDetail = variable.get('varRefDetail');
@@ -188,10 +396,7 @@ function addFactory({ element, injector, bpmnFactory, commandStack, initialVaria
                 sourceNodeId = refDetail.get('sourceRef') || '';
                 sourceVariableName = refDetail.get('variableName') || '';
             }
-            
-            // Get direction from variable's own direction attribute, not from array position
             const variableDirection = variable.get('direction') || direction;
-            
             return {
                 name: variable.get('name') || '',
                 type: variable.get('type') || '',
@@ -204,18 +409,35 @@ function addFactory({ element, injector, bpmnFactory, commandStack, initialVaria
             };
         });
 
-        openVariablesDialog({
-            element,
-            injector,
-            bpmnFactory,
-            commandStack,
-            initialData: existingVariables
-        });
+        const { processId, version } = getProcessIdAndVersion(injector);
+        const activityId = element.id || '';
+
+        const apiBase = (window.kconfig && window.kconfig.webApiUrl) || '';
+        if (apiBase && processId && activityId) {
+            const url = apiBase + 'api/WfVariable/GetList?processId=' + encodeURIComponent(processId) + '&version=' + encodeURIComponent(version) + '&activityId=' + encodeURIComponent(activityId);
+            fetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } })
+                .then(r => r.json())
+                .then(result => {
+                    const initialData = (result.Status === 1 && result.Entity && Array.isArray(result.Entity))
+                        ? mapApiToDialog(result.Entity)
+                        : existingVariables;
+                    openVariablesDialog({ element, injector, bpmnFactory, commandStack, initialData, processId, version, activityId, apiBase });
+                })
+                .catch(() => {
+                    openVariablesDialog({ element, injector, bpmnFactory, commandStack, initialData: existingVariables, processId, version, activityId, apiBase });
+                });
+        } else {
+            openVariablesDialog({ element, injector, bpmnFactory, commandStack, initialData: existingVariables, processId, version, activityId, apiBase: '' });
+        }
     };
 }
 
-function openVariablesDialog({ element, injector, bpmnFactory, commandStack, initialData }) {
+function openVariablesDialog({ element, injector, bpmnFactory, commandStack, initialData, processId, version, activityId, apiBase }) {
     let variablesData = initialData || [];
+    processId = processId || '';
+    version = version || '1';
+    activityId = activityId || (element && element.id) || '';
+    apiBase = apiBase || (window.kconfig && window.kconfig.webApiUrl) || '';
 
     const dialog = window.BootstrapDialog.show({
         message: window.$('<div id="variableDialogContent"></div>'),
@@ -252,9 +474,32 @@ function openVariablesDialog({ element, injector, bpmnFactory, commandStack, ini
                 label: 'Save',
                 cssClass: 'btn-primary',
                 action: function (dlg) {
-                    applyVariablesChanges(element, bpmnFactory, commandStack, variablesData);
-                    dlg.close();
-                    return true;
+                    if (apiBase && processId && activityId) {
+                        const url = apiBase + 'api/WfVariable/SaveList?processId=' + encodeURIComponent(processId) + '&version=' + encodeURIComponent(version) + '&activityId=' + encodeURIComponent(activityId);
+                        fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                            body: JSON.stringify(mapDialogToApi(variablesData))
+                        })
+                            .then(r => r.json())
+                            .then(result => {
+                                if (result.Status === 1) {
+                                    refreshVariableCacheAfterSave(element, commandStack, injector);
+                                    dlg.close();
+                                } else {
+                                    const msg = (result && (result.Message || result.message)) || 'Save failed';
+                                    if (window.kmsgbox) window.kmsgbox.error(msg); else alert(msg);
+                                }
+                            })
+                            .catch(err => {
+                                if (window.kmsgbox) window.kmsgbox.error(err && err.message ? err.message : 'Request failed'); else alert('Request failed');
+                            });
+                        return false;
+                    } else {
+                        clearVariablesExtension(element, commandStack);
+                        dlg.close();
+                        return true;
+                    }
                 }
             }
         ]
@@ -698,111 +943,38 @@ function showSourceSelectionDialog(element, injector, onSelect) {
     });
 }
 
-function applyVariablesChanges(element, bpmnFactory, commandStack, variablesData) {
-    const commands = [];
-    const businessObject = getBusinessObject(element);
-
-    let extensionElements = businessObject.get('extensionElements');
-
-    if (!extensionElements) {
-        extensionElements = createElement(
-            'bpmn:ExtensionElements',
-            { values: [] },
-            businessObject,
-            bpmnFactory
-        );
-
-        commands.push({
-            cmd: 'element.updateModdleProperties',
-            context: {
-                element,
-                moddleElement: businessObject,
-                properties: { extensionElements }
-            }
-        });
+function refreshVariableCacheAfterSave(element, commandStack, injector) {
+    const processIdVersion = getProcessIdAndVersion(injector);
+    const processId = processIdVersion.processId;
+    const version = processIdVersion.version;
+    const apiBase = (window.kconfig && window.kconfig.webApiUrl) || '';
+    if (!apiBase || !processId || !element.id) {
+        clearVariablesExtension(element, commandStack);
+        return;
     }
-
-    let extension = getVariablesExtension(element);
-
-    if (!extension) {
-        extension = createVariables({
-            inputVariables: [],
-            outputVariables: []
-        }, extensionElements, bpmnFactory);
-
-        commands.push({
-            cmd: 'element.updateModdleProperties',
-            context: {
-                element,
-                moddleElement: extensionElements,
-                properties: {
-                    values: [...extensionElements.get('values'), extension]
-                }
+    const url =
+        apiBase +
+        'api/WfVariable/GetList?processId=' +
+        encodeURIComponent(processId) +
+        '&version=' +
+        encodeURIComponent(version) +
+        '&activityId=' +
+        encodeURIComponent(element.id);
+    fetch(url, { method: 'GET', headers: { Accept: 'application/json' } })
+        .then(function (r) {
+            return r.json();
+        })
+        .then(function (result) {
+            if (result.Status === 1 && result.Entity && Array.isArray(result.Entity)) {
+                window.__wfVariableCache = window.__wfVariableCache || {};
+                window.__wfVariableCache[element.id] = result.Entity;
             }
+            clearVariablesExtension(element, commandStack);
+            injector.get('eventBus').fire('elements.changed', { elements: [element] });
+        })
+        .catch(function () {
+            clearVariablesExtension(element, commandStack);
         });
-    }
-
-    const inputVariables = [];
-    const outputVariables = [];
-
-    variablesData.forEach(item => {
-        // Check if variable is referenced: must be input direction and have both sourceNodeId and sourceVariableName
-        const hasSource = item.sourceNodeId && item.sourceNodeId.trim() !== '' && 
-                         item.sourceVariableName && item.sourceVariableName.trim() !== '';
-        const isReferenced = item.direction === 'Input' && hasSource;
-        
-        const variableProps = {
-            name: item.name,
-            type: item.type,
-            defaultValue: item.defaultValue || '',
-            direction: item.direction,
-            isReferenced: isReferenced,
-            isRequired: !!item.isRequired
-        };
-        
-        const moddleVar = createElement('sf:Variable', variableProps, extension, bpmnFactory);
-        
-        // Create and set varRefDetail after creating the variable
-        if (isReferenced) {
-            try {
-                const varRefDetail = bpmnFactory.create('sf:varRefDetail', {
-                    sourceRef: item.sourceNodeId.trim(),
-                    variableName: item.sourceVariableName.trim()
-                });
-                // Set parent for the varRefDetail
-                varRefDetail.$parent = moddleVar;
-                // Set varRefDetail using the property setter
-                moddleVar.set('varRefDetail', [varRefDetail]);
-            } catch (e) {
-                console.error('Error creating varRefDetail:', e);
-                // If varRefDetail creation fails, still set isReferenced but without varRefDetail
-                moddleVar.set('varRefDetail', []);
-            }
-        } else {
-            // Ensure varRefDetail is empty if not referenced
-            moddleVar.set('varRefDetail', []);
-        }
-
-        if (item.direction === 'Input') {
-            inputVariables.push(moddleVar);
-        } else {
-            outputVariables.push(moddleVar);
-        }
-    });
-
-    commands.push({
-        cmd: 'element.updateModdleProperties',
-        context: {
-            element,
-            moddleElement: extension,
-            properties: {
-                inputVariables,
-                outputVariables
-            }
-        }
-    });
-
-    commandStack.execute('properties-panel.multi-command-executor', commands);
 }
 
 function removeFactory({ commandStack, element, variable, direction }) {

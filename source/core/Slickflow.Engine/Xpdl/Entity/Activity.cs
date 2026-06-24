@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -111,6 +111,11 @@ namespace Slickflow.Engine.Xpdl.Entity
         /// Variable List
         /// </summary>
         public List<VariableDetail> VariableList { get; set; }
+
+        /// <summary>
+        /// Rule task config detail
+        /// </summary>
+        public RuleConfigDetail RuleConfigDetail { get; set; }
 
         /// <summary>
         /// Service List

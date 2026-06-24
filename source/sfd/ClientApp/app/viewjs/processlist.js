@@ -27,7 +27,7 @@ const processlist = (function () {
                 $(divProcessGrid).empty();
 
                 var gridOptions = {
-                    theme: themeBalham,
+                    theme: sfGetGridTheme(),
                     columnDefs: [
                         { headerName: 'Id', field: 'Id', width: 80 },
                         { headerName: kresource.getItem('processid'), field: 'ProcessId', width: 240 },

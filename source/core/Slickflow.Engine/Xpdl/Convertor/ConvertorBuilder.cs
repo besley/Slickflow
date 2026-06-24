@@ -1,4 +1,5 @@
-﻿using Slickflow.Engine.Common;
+using Slickflow.Engine.Business.Manager;
+using Slickflow.Engine.Common;
 using Slickflow.Engine.Utility;
 using Slickflow.Engine.Xpdl.Common;
 using Slickflow.Engine.Xpdl.Entity;
@@ -144,6 +145,11 @@ namespace Slickflow.Engine.Xpdl.Convertor
         {
             var scriptsNode = XMLNode.SelectSingleNode(XPDLDefinition.Sf_StrXmlPath_Scripts, XMLNamespaceManager);
             return scriptsNode;
+        }
+
+        protected XmlNode GetRuleConfigsNode()
+        {
+            return XMLNode.SelectSingleNode(XPDLDefinition.Sf_StrXmlPath_RuleConfigs, XMLNamespaceManager);
         }
 
         /// <summary>
@@ -346,6 +352,37 @@ namespace Slickflow.Engine.Xpdl.Convertor
         }
 
         /// <summary>
+        /// Convert Rule Task config (sf:ruleConfigs / sf:ruleConfig)
+        /// </summary>
+        public ConvertorBuilder ConvertRuleConfigs()
+        {
+            var ruleConfigsNode = GetRuleConfigsNode();
+            if (ruleConfigsNode == null) return this;
+
+            foreach (XmlNode element in ruleConfigsNode.ChildNodes)
+            {
+                if (element.NodeType != XmlNodeType.Element) continue;
+                if (!string.Equals(element.LocalName, "ruleConfig", StringComparison.OrdinalIgnoreCase)) continue;
+
+                var code = XMLHelper.GetXmlAttribute(element, "ruleSetCode");
+                var detail = new RuleConfigDetail
+                {
+                    RuleSetCode = code
+                };
+                if (!string.IsNullOrWhiteSpace(code))
+                {
+                    var ruleSet = new RuleSetManager().GetByCode(code.Trim());
+                    if (ruleSet != null)
+                        detail.MergeFrom(ruleSet);
+                }
+                mActivityEntity.RuleConfigDetail = detail;
+                break;
+            }
+
+            return this;
+        }
+
+        /// <summary>
         /// Covnert Sections
         /// 转换Sections节点
         /// </summary>
@@ -464,10 +501,10 @@ namespace Slickflow.Engine.Xpdl.Convertor
             variable.DirectionType = EnumHelper.TryParseEnum<VariableDirectionTypeEnum>(direction);
 
             var isReferenced = XMLHelper.GetXmlAttribute(node, "isReferenced");
-            variable.IsReferenced = Boolean.Parse(isReferenced);
+            variable.IsReferenced = !string.IsNullOrWhiteSpace(isReferenced) && Boolean.TryParse(isReferenced.Trim(), out var refVal) && refVal;
 
             var isRequired = XMLHelper.GetXmlAttribute(node, "isRequired");
-            variable.IsRequired = Boolean.Parse(isRequired);
+            variable.IsRequired = !string.IsNullOrWhiteSpace(isRequired) && Boolean.TryParse(isRequired.Trim(), out var reqVal) && reqVal;
 
             if (variable.IsReferenced == true)
             {
@@ -538,6 +575,10 @@ namespace Slickflow.Engine.Xpdl.Convertor
 
             var aiServiceType = XMLHelper.GetXmlAttribute(node, "type");
             aIServiceDetail.AIServiceType = EnumHelper.TryParseEnum<AiServiceTypeEnum>(aiServiceType);
+
+            var toolSetName = XMLHelper.GetXmlAttribute(node, "toolSetName");
+            if (!string.IsNullOrWhiteSpace(toolSetName))
+                aIServiceDetail.ToolSetName = toolSetName;
 
             return aIServiceDetail;
         }

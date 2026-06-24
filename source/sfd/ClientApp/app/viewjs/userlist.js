@@ -13,7 +13,7 @@ const userlist = (function () {
             if (result.Status === 1) {
                 var divUserGrid = document.querySelector('#myUserGrid');
                 var gridOptions = {
-                    theme: themeBalham,
+                    theme: sfGetGridTheme(),
                     columnDefs: [
                         { headerName: 'Id', field: 'UserId', width: 60 },
                         { headerName: kresource.getItem('username'), field: 'UserName', width: 200 },

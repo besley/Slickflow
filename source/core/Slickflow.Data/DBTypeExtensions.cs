@@ -190,7 +190,34 @@ namespace Slickflow.Data
         private static void InitConnectionStringInt(DatabaseTypeEnum databaseType, string strConn)
         {
             _dbType = databaseType;
-            _connectionString = strConn;
+            _connectionString = databaseType == DatabaseTypeEnum.PGSQL
+                ? InjectPgsqlPoolParams(strConn)
+                : strConn;
+        }
+
+        /// <summary>
+        /// Inject pool parameters into Npgsql connection string if not already present.
+        /// Defaults: MinPoolSize=5, MaxPoolSize=200, ConnectionIdleLifetime=120s.
+        /// KeepAlive=30 + TcpKeepAlive prevent NAT/firewall from silently dropping idle
+        /// connections in the pool (common symptom: intermittent slow/failed opens against
+        /// a remote cloud PostgreSQL server over the public internet).
+        /// </summary>
+        private static string InjectPgsqlPoolParams(string connStr)
+        {
+            var b = new Npgsql.NpgsqlConnectionStringBuilder(connStr);
+            if (b.MinPoolSize == 0)            b.MinPoolSize = 5;
+            if (b.MaxPoolSize == 100)           b.MaxPoolSize = 200;   // 100 is Npgsql default
+            if (b.ConnectionIdleLifetime == 300) b.ConnectionIdleLifetime = 120;
+            if (b.ConnectionPruningInterval == 10) b.ConnectionPruningInterval = 10;
+            if (b.CommandTimeout == 30)         b.CommandTimeout = 60;
+
+            // Keepalive: prevents remote NAT/firewall from silently closing idle pool connections.
+            // KeepAlive sends a lightweight Npgsql heartbeat every 30 s on each idle connection.
+            // TcpKeepAlive enables OS-level TCP keepalive packets as a second layer of defence.
+            if (b.KeepAlive == 0)              b.KeepAlive = 30;
+            if (!b.TcpKeepAlive)               b.TcpKeepAlive = true;
+
+            return b.ToString();
         }
         #endregion
     }

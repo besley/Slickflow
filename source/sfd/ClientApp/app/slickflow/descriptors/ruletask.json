@@ -1,0 +1,26 @@
+{
+  "ruletask": [
+    {
+      "name": "RuleConfigs",
+      "superClass": [ "Element" ],
+      "properties": [
+        {
+          "name": "ruleConfigs",
+          "isMany": true,
+          "type": "RuleConfig"
+        }
+      ]
+    },
+    {
+      "name": "RuleConfig",
+      "properties": [
+        {
+          "name": "ruleSetCode",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}
+

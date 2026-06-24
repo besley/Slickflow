@@ -19,7 +19,7 @@ const tasklist = (function () {
                 $(divTaskGrid).empty();
 
                 var gridOptions = {
-                    theme: themeBalham,
+                    theme: sfGetGridTheme(),
                     columnDefs: [
                         { headerName: 'Id', field: 'TaskId', width: 50 },
                         { headerName: kresource.getItem('appname'), field: 'AppName', width: 120 },
@@ -54,7 +54,7 @@ const tasklist = (function () {
                 $(divTaskGrid).empty();
 
                 var gridOptions = {
-                    theme: themeBalham,
+                    theme: sfGetGridTheme(),
                     columnDefs: [
                         { headerName: 'Id', field: 'TaskId', width: 50 },
                         { headerName: kresource.getItem('appname'), field: 'AppName', width: 120 },

@@ -25,5 +25,10 @@ namespace Slickflow.Engine.Xpdl.Common
         /// RAG: such as OCR, auto gen...
         /// </summary>
         RAG = 2,
+
+        /// <summary>
+        /// Agent: multi-turn LLM with optional tool-calling / ReAct (see AgentMultiTurnService).
+        /// </summary>
+        Agent = 3,
     }
 }

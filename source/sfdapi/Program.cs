@@ -1,11 +1,8 @@
 using System.Text.Json.Serialization;
-using Slickflow.AI.Service;
-using Slickflow.AI.Configuration;
 using Slickflow.Engine.Service;
 using sfdapi.Service;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 // Services
 builder.Services.AddControllers()
@@ -20,7 +17,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddCors(o => o.AddPolicy("MyCorsPolicy", corsBuilder =>
 {
-    corsBuilder.WithOrigins("http://localhost:5000", "http://localhost:3000")
+    corsBuilder.WithOrigins("http://localhost:5000", "http://localhost:3000", "https://testcz-009.slickflow.com")
                .AllowAnyMethod()
                .AllowAnyHeader();
 }));
@@ -31,13 +28,6 @@ var dbType = ConfigurationExtensions.GetConnectionString(configuration, "WfDBCon
 var sqlConnectionString = ConfigurationExtensions.GetConnectionString(configuration, "WfDBConnectionString");
 Slickflow.Data.DBTypeExtenstions.InitConnectionString(dbType, sqlConnectionString);
 
-// Bind AIService section into options (QianWen/OpenAI)
-var aiOptions = AiAppConfigProviderOptions.Load(configuration);
-builder.Services.AddSingleton(aiOptions);
-ApiKeyCryptoHelper.Configure(aiOptions);
-
-builder.Services.AddScoped<IAiModelDataService, AiModelDataService>();
-builder.Services.AddScoped<IAiFastCallingService, AiFastCallingService>();
 builder.Services.AddScoped<IWorkflowService, WorkflowService>();
 builder.Services.AddScoped<SfBpmnServiceBuilder>();
 builder.Services.AddHttpClient();

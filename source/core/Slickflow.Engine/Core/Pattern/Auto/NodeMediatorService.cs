@@ -11,7 +11,7 @@ namespace Slickflow.Engine.Core.Pattern.Auto
 {
     /// <summary>
     /// Service node mediator
-    /// ÈÎÎñ½ÚµãÖ´ĞĞÆ÷
+    /// ä»»åŠ¡èŠ‚ç‚¹æ‰§è¡Œå™¨
     /// </summary>
     internal class NodeMediatorService : NodeMediator, ICreatedAutomaticlly, ICompletedAutomaticlly
     {
@@ -45,7 +45,7 @@ namespace Slickflow.Engine.Core.Pattern.Auto
         {
             try
             {
-                //Íê³É½ÚµãÉÏ°ó¶¨µÄÍâ²¿³ÌĞòÂß¼­»ò·şÎñ
+                //å®ŒæˆèŠ‚ç‚¹ä¸Šç»‘å®šçš„å¤–éƒ¨ç¨‹åºé€»è¾‘æˆ–æœåŠ¡
                 //Complete the external program logic or service bound on the node
                 OnExecutingServiceItem();
             }

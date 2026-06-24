@@ -2,14 +2,14 @@
 import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
 import jshelper from "../../script/jshelper";
 
-function SfCommandExtension(eventBus, modeling, moddle) {
+function SfCommandExtension(eventBus, modeling, moddle, canvas) {
 
     // 在元素创建时初始化属性（一次性操作）
     eventBus.on('shape.added', function (e) {
         var element = e.element;
         // 使用 setTimeout 延迟执行，避免命令栈冲突
         setTimeout(() => {
-            initializeElementProperties(element, modeling, moddle);
+            initializeElementProperties(element, modeling, moddle, eventBus);
         }, 0);
     });
 
@@ -36,7 +36,7 @@ function SfCommandExtension(eventBus, modeling, moddle) {
 }
 
 // 初始化属性函数 - 在元素创建时调用
-function initializeElementProperties(element, modeling, moddle) {
+function initializeElementProperties(element, modeling, moddle, eventBus) {
     var businessObject = getBusinessObject(element);
 
     switch (element.type) {
@@ -53,7 +53,7 @@ function initializeElementProperties(element, modeling, moddle) {
             break;
 
         case "bpmn:ServiceTask":
-            initializeServiceTask(element, modeling, moddle);
+            initializeServiceTask(element, modeling, moddle, eventBus);
             break;
 
         case "bpmn:Collaboration":
@@ -100,27 +100,45 @@ function initializeElementProperties(element, modeling, moddle) {
     }
 }
 
-function initializeServiceTask(element, modeling, moddle) {
-    if (element.sfType === "LLM" || element.sfType === "RAG") {
-        var businessObject = getBusinessObject(element);
+function initializeServiceTask(element, modeling, moddle, eventBus) {
+    var businessObject = getBusinessObject(element);
+
+    // When loading from XML: sfType may be absent but sf:AiServices extension element exists.
+    // Restore sfType on the element so the rest of the UI works correctly.
+    if (!element.sfType) {
+        var existingValues = businessObject?.extensionElements?.values;
+        if (existingValues) {
+            var existingAiServices = existingValues.find(function(v) {
+                return v.$type === 'sf:AiServices' && Array.isArray(v.aiServices) && v.aiServices.length > 0;
+            });
+            if (existingAiServices) {
+                var loadedType = existingAiServices.aiServices[0].type;
+                if (loadedType === 'LLM' || loadedType === 'RAG' || loadedType === 'Agent') {
+                    element.sfType = loadedType;
+                    // Trigger a redraw so the custom renderer picks up the sfType immediately
+                    if (eventBus) {
+                        eventBus.fire('element.changed', { element: element });
+                    }
+                }
+            }
+        }
+    }
+
+    // When creating via palette: sfType is set, but extensionElements may not exist yet.
+    if (element.sfType === "LLM" || element.sfType === "RAG" || element.sfType === "Agent") {
         if (!businessObject.extensionElements) {
             var aiService = moddle.create('sf:AiService', {
                 type: element.sfType
-            })
-
+            });
             var aiServices = moddle.create('sf:AiServices', {
-                aiServices:[aiService]
-            })
-
+                aiServices: [aiService]
+            });
             var extensionElements = moddle.create('bpmn:ExtensionElements', {
-                values:[aiServices]
-            })
-
+                values: [aiServices]
+            });
             modeling.updateProperties(element, {
                 extensionElements: extensionElements
             });
-        } else {
-            ;
         }
     }
 }
@@ -147,7 +165,7 @@ function handleElementRemoval(element) {
     }
 }
 
-SfCommandExtension.$inject = ["eventBus", "modeling", "moddle"];
+SfCommandExtension.$inject = ["eventBus", "modeling", "moddle", "canvas"];
 
 export default {
     __init__: ["sfCommandExtension"],

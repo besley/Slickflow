@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Data;
 using System.Xml;
 using Slickflow.Data;
@@ -23,6 +24,24 @@ namespace Slickflow.Engine.Xpdl
     public class ProcessModelFactory
     {
         /// <summary>
+        /// In-process cache: key = "processId:version", value = parsed IProcessModel.
+        /// Process definitions are immutable at runtime; the cache is invalidated explicitly
+        /// when a definition is updated or deleted via ClearCache().
+        /// 进程内缓存：key = "processId:version"，避免每次请求重复查 DB 和解析 BPMN XML。
+        /// </summary>
+        private static readonly ConcurrentDictionary<string, IProcessModel> _modelCache = new();
+
+        /// <summary>
+        /// Evict a specific process model from the cache (call after Update/Delete).
+        /// 流程定义更新或删除后调用此方法，清除对应缓存。
+        /// </summary>
+        public static void ClearCache(string processId, string version)
+            => _modelCache.TryRemove($"{processId}:{version}", out _);
+
+        /// <summary>Evict all cached models.</summary>
+        public static void ClearAllCache() => _modelCache.Clear();
+
+        /// <summary>
         /// Create by Process
         /// </summary>
         public static IProcessModel CreateByProcess(ProcessEntity entity)
@@ -32,13 +51,18 @@ namespace Slickflow.Engine.Xpdl
         }
 
         /// <summary>
-        /// Create by Process version
+        /// Create by Process version — cache-backed.
         /// </summary>
         public static IProcessModel CreateByProcess(string processId, string version)
         {
+            var cacheKey = $"{processId}:{version}";
+            if (_modelCache.TryGetValue(cacheKey, out var cached))
+                return cached;
+
             using (var session = SessionFactory.CreateSession())
             {
                 var processModel = CreateByProcess(session.Connection, processId, version, session.Transaction);
+                _modelCache.TryAdd(cacheKey, processModel);
                 return processModel;
             }
         }

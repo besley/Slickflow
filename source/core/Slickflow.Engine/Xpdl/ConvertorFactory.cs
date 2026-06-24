@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -94,18 +94,19 @@ namespace Slickflow.Engine.Xpdl
                 if (multipleDetailNode != null) activityType = ActivityTypeEnum.MultiSignNode;
                 else activityType = ActivityTypeEnum.TaskNode;
             }
-            else if(node.Name == XPDLDefinition.BPMN_ElementName_ServiceTask)
+            else if(node.Name == XPDLDefinition.BPMN_ElementName_ServiceTask
+                || node.Name == XPDLDefinition.BPMN_ElementName_BusinessRuleTask)
             {
-                if (node.FirstChild != null 
-                    && node.FirstChild.FirstChild != null 
-                    && node.FirstChild.FirstChild.Name == XPDLDefinition.Sf_ElementName_AiServices)
+                var nsmgr = XPDLHelper.GetSlickflowXmlNamespaceManager(node.OwnerDocument);
+                var aiServicesNode = node.SelectSingleNode(XPDLDefinition.Sf_StrXmlPath_AiServices, nsmgr);
+                if (aiServicesNode != null)
                 {
                     activityType = ActivityTypeEnum.AIServiceNode;
                 }
-                else 
+                else
                 {
                     activityType = ActivityTypeEnum.ServiceNode;
-                }    
+                }
             }
             else if(node.Name == XPDLDefinition.BPMN_ElementName_ScriptTask)
             {

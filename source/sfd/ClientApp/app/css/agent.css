@@ -1,0 +1,415 @@
+/* agent.css - Agent Node Property Panel Styles */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.agent-config-container {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 13px;
+    color: #374151;
+    background: #fff;
+    min-width: 560px;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.config-header {
+    padding: 14px 20px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.agent-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.agent-title i {
+    color: #4361ee;
+    font-size: 16px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.header-btn {
+    padding: 5px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+    color: #374151;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.15s;
+}
+
+.header-btn:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.header-btn.primary {
+    background: #4361ee;
+    border-color: #4361ee;
+    color: #fff;
+}
+
+.header-btn.primary:hover {
+    background: #3451d1;
+    border-color: #3451d1;
+}
+
+/* ── Tabs ────────────────────────────────────────────────────── */
+.config-tabs {
+    display: flex;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0 20px;
+    background: #fff;
+    gap: 0;
+}
+
+.tab {
+    padding: 10px 16px;
+    font-size: 13px;
+    color: #6b7280;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.tab:hover {
+    color: #4361ee;
+}
+
+.tab.active {
+    color: #4361ee;
+    border-bottom-color: #4361ee;
+    font-weight: 600;
+}
+
+/* ── Tab content ─────────────────────────────────────────────── */
+.tab-content {
+    padding: 16px 20px;
+    max-height: 380px;
+    overflow-y: auto;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* ── Form grid ───────────────────────────────────────────────── */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group.half-width {
+    grid-column: span 1;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+    padding: 7px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #111827;
+    background: #fff;
+    transition: border-color 0.15s;
+    font-family: inherit;
+    width: 100%;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #4361ee;
+    box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+}
+
+.required {
+    color: #ef4444;
+    margin-left: 2px;
+}
+
+.form-note {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-top: 2px;
+}
+
+/* ── Slider ──────────────────────────────────────────────────── */
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.slider-container input[type="range"] {
+    flex: 1;
+    border: none;
+    padding: 0;
+    accent-color: #4361ee;
+}
+
+.slider-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: #4361ee;
+    min-width: 28px;
+    text-align: right;
+}
+
+/* ── Radio group ─────────────────────────────────────────────── */
+.radio-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.radio-item input[type="radio"] {
+    accent-color: #4361ee;
+    cursor: pointer;
+}
+
+.radio-item label {
+    font-size: 13px;
+    color: #374151;
+    cursor: pointer;
+    font-weight: 400;
+}
+
+/* ── Compact section (for param tables) ─────────────────────── */
+.compact-section {
+    margin-bottom: 16px;
+}
+
+.compact-section:last-child {
+    margin-bottom: 0;
+}
+
+.compact-section-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.compact-section-title i {
+    color: #4361ee;
+}
+
+/* ── Parameter table ─────────────────────────────────────────── */
+.param-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.param-table th {
+    background: #f9fafb;
+    padding: 7px 8px;
+    text-align: left;
+    font-weight: 600;
+    color: #6b7280;
+    border: 1px solid #e5e7eb;
+}
+
+.param-table td {
+    padding: 5px 6px;
+    border: 1px solid #e5e7eb;
+    vertical-align: middle;
+}
+
+.param-table td input[type="text"],
+.param-table td select {
+    width: 100%;
+    padding: 4px 7px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #111827;
+    background: #fff;
+}
+
+.param-table td input[type="text"]:focus,
+.param-table td select:focus {
+    outline: none;
+    border-color: #4361ee;
+}
+
+.param-table td.actions {
+    text-align: center;
+}
+
+.param-table td.actions button {
+    padding: 3px 8px;
+    border: 1px solid #fca5a5;
+    background: #fff;
+    color: #ef4444;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    transition: all 0.15s;
+}
+
+.param-table td.actions button:hover {
+    background: #fee2e2;
+}
+
+.required-star {
+    color: #ef4444;
+}
+
+/* ── Add param button ────────────────────────────────────────── */
+.add-param-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border: 1px dashed #d1d5db;
+    background: transparent;
+    color: #6b7280;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.15s;
+    margin-top: 6px;
+}
+
+.add-param-btn:hover {
+    border-color: #4361ee;
+    color: #4361ee;
+    background: rgba(67, 97, 238, 0.04);
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.form-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px 20px;
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.btn {
+    padding: 7px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-secondary {
+    background: #fff;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+.btn-secondary:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.btn-primary {
+    background: #4361ee;
+    border: 1px solid #4361ee;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #3451d1;
+    border-color: #3451d1;
+}
+
+/* ── Input with icon ─────────────────────────────────────────── */
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 10px;
+    color: #9ca3af;
+    font-size: 13px;
+    pointer-events: none;
+}
+
+.input-with-icon input {
+    padding-left: 30px !important;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────── */
+.tab-content::-webkit-scrollbar { width: 5px; }
+.tab-content::-webkit-scrollbar-track { background: transparent; }
+.tab-content::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+.tab-content::-webkit-scrollbar-thumb:hover { background: #9ca3af; }

@@ -38,3 +38,27 @@ export function createVariables(properties, parent, bpmnFactory) {
     return createElement('sf:Variables', properties, parent, bpmnFactory);
 }
 
+/**
+ * Remove sf:Variables extension from the element (variables are persisted in wf_variable only).
+ */
+export function clearVariablesExtension(element, commandStack) {
+    const businessObject = getBusinessObject(element);
+    const extension = getVariablesExtension(element);
+    if (!extension || !businessObject.extensionElements) {
+        return;
+    }
+    const extensionElements = businessObject.extensionElements;
+    const values = extensionElements.get('values') || [];
+    const newValues = values.filter(function (e) {
+        return e.$type !== 'sf:Variables';
+    });
+    if (newValues.length === values.length) {
+        return;
+    }
+    commandStack.execute('element.updateModdleProperties', {
+        element: element,
+        moddleElement: extensionElements,
+        properties: { values: newValues }
+    });
+}
+

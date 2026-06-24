@@ -2,6 +2,7 @@ using Slickflow.Data;
 using Slickflow.Engine.Common;
 using Slickflow.Engine.Event;
 using System;
+using System.Collections.Generic;
 
 namespace Slickflow.Engine.Executor
 {
@@ -17,6 +18,9 @@ namespace Slickflow.Engine.Executor
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
+
+        /// <summary>Non-persistent variables bag for rule input materialization (same assembly as RuleExecutor).</summary>
+        internal IDictionary<string, string> VariablesSnapshot => _context?.Variables;
 
         public int GetProcessInstanceId() => 0;
 

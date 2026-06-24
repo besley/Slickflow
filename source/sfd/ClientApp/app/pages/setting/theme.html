@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>主题设置</title>
+<style>
+/* ── Reset ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Layout ─────────────────────────────────────  */
+.ts-wrap {
+  display: flex;
+  gap: 0;
+  min-height: 480px;
+}
+
+/* Left tabs */
+.ts-tabs {
+  width: 140px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--sf-dark-3, #334155);
+  padding: 12px 0;
+}
+.ts-tab {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 16px;
+  font-size: 13px;
+  color: var(--sf-text-dim, #94a3b8);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all .15s;
+}
+.ts-tab:hover { color: var(--sf-text-bright, #e2e8f0); background: rgba(255,255,255,.04); }
+.ts-tab.active {
+  color: var(--sf-text-bright, #e2e8f0);
+  background: rgba(255,255,255,.07);
+  border-left-color: var(--sf-blue, #3b82f6);
+}
+.ts-tab i { font-size: 14px; width: 16px; text-align: center; }
+
+/* Right content */
+.ts-content {
+  flex: 1;
+  padding: 24px 28px;
+  overflow-y: auto;
+}
+.ts-panel { display: none; }
+.ts-panel.active { display: block; }
+
+/* Section */
+.ts-section { margin-bottom: 28px; }
+.ts-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--sf-text-dim, #94a3b8);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--sf-dark-3, #334155);
+}
+.ts-desc {
+  font-size: 12px;
+  color: var(--sf-text-dim, #94a3b8);
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+/* ── Language Radio ──────────────────────────── */
+.ts-radio-group { display: flex; gap: 10px; flex-wrap: wrap; }
+.ts-radio-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border: 1px solid var(--sf-dark-3, #334155);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  min-width: 140px;
+}
+.ts-radio-card:hover { border-color: var(--sf-blue, #3b82f6); background: rgba(59,130,246,.06); }
+.ts-radio-card.selected {
+  border-color: var(--sf-blue, #3b82f6);
+  background: rgba(59,130,246,.12);
+}
+.ts-radio-card input[type="radio"] { display: none; }
+.ts-radio-dot {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--sf-dark-4, #475569);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .15s;
+}
+.ts-radio-card.selected .ts-radio-dot {
+  border-color: var(--sf-blue, #3b82f6);
+  background: var(--sf-blue, #3b82f6);
+}
+.ts-radio-card.selected .ts-radio-dot::after {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #fff;
+}
+.ts-radio-label { font-size: 13px; color: var(--sf-text-bright, #e2e8f0); }
+.ts-radio-sub { font-size: 11px; color: var(--sf-text-dim, #94a3b8); margin-top: 2px; }
+.ts-warn {
+  font-size: 12px;
+  color: #fbbf24;
+  margin-top: 10px;
+  display: none;
+}
+.ts-warn.show { display: block; }
+
+/* ── Font Family Cards ───────────────────────── */
+.ts-font-grid { display: flex; flex-direction: column; gap: 8px; }
+.ts-font-card {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid var(--sf-dark-3, #334155);
+  border-radius: 8px;
+  cursor: pointer;
+  gap: 14px;
+  transition: border-color .15s, background .15s;
+}
+.ts-font-card:hover { border-color: var(--sf-blue, #3b82f6); background: rgba(59,130,246,.06); }
+.ts-font-card.selected {
+  border-color: var(--sf-blue, #3b82f6);
+  background: rgba(59,130,246,.12);
+}
+.ts-font-preview {
+  font-size: 18px;
+  color: var(--sf-text-bright, #e2e8f0);
+  width: 120px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.ts-font-meta { flex: 1; }
+.ts-font-name { font-size: 13px; color: var(--sf-text-bright, #e2e8f0); }
+.ts-font-en   { font-size: 11px; color: var(--sf-text-dim, #94a3b8); margin-top: 2px; }
+.ts-font-check { color: var(--sf-blue, #3b82f6); font-size: 16px; display: none; }
+.ts-font-card.selected .ts-font-check { display: block; }
+
+/* ── Font Size Pills ─────────────────────────── */
+.ts-size-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.ts-size-pill {
+  padding: 7px 18px;
+  border: 1px solid var(--sf-dark-3, #334155);
+  border-radius: 100px;
+  font-size: 13px;
+  color: var(--sf-text-dim, #94a3b8);
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+}
+.ts-size-pill:hover { border-color: var(--sf-blue, #3b82f6); color: var(--sf-text-bright, #e2e8f0); }
+.ts-size-pill.selected {
+  border-color: var(--sf-blue, #3b82f6);
+  background: var(--sf-blue, #3b82f6);
+  color: #fff;
+}
+
+/* ── Preview Box ─────────────────────────────── */
+.ts-preview-box {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--sf-dark-3, #334155);
+  border-radius: 8px;
+  background: rgba(255,255,255,.03);
+}
+.ts-preview-label { font-size: 10px; color: var(--sf-text-dim, #94a3b8); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .06em; }
+#ts-preview-text { color: var(--sf-text-bright, #e2e8f0); line-height: 1.7; }
+
+/* ── Theme Swatches ──────────────────────────── */
+.ts-theme-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+.ts-theme-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+}
+.ts-theme-swatch {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  position: relative;
+  transition: transform .15s, border-color .15s, box-shadow .15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.ts-theme-swatch:hover { transform: scale(1.08); border-color: rgba(255,255,255,.3); }
+.ts-theme-card.selected .ts-theme-swatch {
+  border-color: var(--sf-blue, #3b82f6);
+  box-shadow: 0 0 0 3px rgba(59,130,246,.3);
+}
+.ts-theme-swatch .ts-check {
+  display: none;
+  font-size: 20px;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,.6);
+}
+.ts-theme-card.selected .ts-check { display: block; }
+.ts-theme-label {
+  font-size: 11px;
+  color: var(--sf-text-dim, #94a3b8);
+  text-align: center;
+}
+.ts-theme-card.selected .ts-theme-label { color: var(--sf-blue, #3b82f6); }
+
+/* ── Accent Color ────────────────────────────── */
+.ts-accent-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.ts-accent-dot {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform .15s, border-color .15s, box-shadow .15s;
+  position: relative;
+}
+.ts-accent-dot:hover { transform: scale(1.2); }
+.ts-accent-dot.selected {
+  border-color: #fff;
+  box-shadow: 0 0 0 3px rgba(255,255,255,.25);
+}
+.ts-accent-dot.selected::after {
+  content: '✓';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: #fff; font-weight: 700;
+}
+
+/* ── Mol Color Cards ─────────────────────────── */
+.ts-mol-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+.ts-mol-card {
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  cursor: pointer;
+}
+.ts-mol-swatch {
+  width: 52px; height: 52px; border-radius: 14px;
+  border: 2px solid transparent;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .15s, border-color .15s, box-shadow .15s;
+  position: relative; overflow: hidden;
+}
+.ts-mol-swatch svg { width: 28px; height: 28px; opacity: 0.9; }
+.ts-mol-swatch::after {
+  content: '✓';
+  display: none; position: absolute; inset: 0;
+  align-items: center; justify-content: center;
+  font-size: 20px; color: #fff; font-weight: 700;
+  text-shadow: 0 1px 4px rgba(0,0,0,.5);
+}
+.ts-mol-swatch:hover { transform: scale(1.08); border-color: rgba(255,255,255,.3); }
+.ts-mol-card.selected .ts-mol-swatch {
+  border-color: #fff;
+  box-shadow: 0 0 0 3px rgba(255,255,255,.22);
+}
+.ts-mol-card.selected .ts-mol-swatch::after { display: flex; }
+.ts-mol-name {
+  font-size: 11px; color: var(--sf-text-dim, #94a3b8); text-align: center;
+}
+.ts-mol-card.selected .ts-mol-name { color: var(--sf-text-bright, #e2e8f0); }
+
+/* Mol preview mini-chat */
+.ts-mol-preview {
+  margin-top: 16px; padding: 14px;
+  border: 1px solid var(--sf-dark-3, #334155);
+  border-radius: 10px; background: rgba(255,255,255,.03);
+  display: flex; align-items: flex-end; gap: 8px;
+}
+.ts-mol-preview-ball {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background .3s, border-color .3s;
+}
+.ts-mol-preview-ball svg { width: 20px; height: 20px; opacity: 0.9; }
+.ts-mol-preview-bubble {
+  flex: 1; padding: 7px 10px; border-radius: 8px;
+  font-size: 11px; color: rgba(220,232,245,0.85); line-height: 1.5;
+  transition: background .3s, border-color .3s;
+}
+</style>
+</head>
+<body>
+<div class="modal-body" style="padding:0;">
+  <div class="ts-wrap">
+
+    <!-- ── Left: Tab Navigation ─────────────────── -->
+    <div class="ts-tabs">
+      <div class="ts-tab active" data-panel="panel-lang">
+        <i class="bi bi-translate"></i> <span class="lang" as="ts.tab.lang">语言</span>
+      </div>
+      <div class="ts-tab" data-panel="panel-font">
+        <i class="bi bi-type"></i> <span class="lang" as="ts.tab.font">字体</span>
+      </div>
+      <div class="ts-tab" data-panel="panel-theme">
+        <i class="bi bi-palette"></i> <span class="lang" as="ts.tab.theme">主题</span>
+      </div>
+      <div class="ts-tab" data-panel="panel-mol">
+        <i class="bi bi-stars"></i> <span class="lang" as="ts.tab.mol">助手</span>
+      </div>
+    </div>
+
+    <!-- ── Right: Panels ────────────────────────── -->
+    <div class="ts-content">
+
+      <!-- Panel: Language -->
+      <div id="panel-lang" class="ts-panel active">
+        <div class="ts-section">
+          <div class="ts-section-title lang" as="ts.lang.title">界面语言</div>
+          <div class="ts-desc lang" as="ts.lang.desc">选择界面显示语言，切换后将自动刷新页面生效。</div>
+          <div class="ts-radio-group">
+            <label class="ts-radio-card" data-lang="zh">
+              <input type="radio" name="ts-lang" value="zh" />
+              <div class="ts-radio-dot"></div>
+              <div>
+                <div class="ts-radio-label">中文简体</div>
+                <div class="ts-radio-sub">Simplified Chinese</div>
+              </div>
+            </label>
+            <label class="ts-radio-card" data-lang="en">
+              <input type="radio" name="ts-lang" value="en" />
+              <div class="ts-radio-dot"></div>
+              <div>
+                <div class="ts-radio-label">English</div>
+                <div class="ts-radio-sub">English (US)</div>
+              </div>
+            </label>
+          </div>
+          <div id="ts-lang-warn" class="ts-warn lang" as="ts.lang.warn">
+            ⚠️ 语言已更改，点击"应用"后页面将自动刷新。
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Font -->
+      <div id="panel-font" class="ts-panel">
+        <div class="ts-section">
+          <div class="ts-section-title lang" as="ts.font.title">界面字体</div>
+          <div class="ts-font-grid" id="ts-font-list">
+            <div class="ts-font-card" data-font="system-ui,-apple-system,'Segoe UI',sans-serif" data-fname="系统默认">
+              <div class="ts-font-preview" style="font-family:system-ui,-apple-system,sans-serif;">Aa 汉字</div>
+              <div class="ts-font-meta">
+                <div class="ts-font-name lang" as="ts.font.system">系统默认</div>
+                <div class="ts-font-en">System UI / -apple-system</div>
+              </div>
+              <i class="bi bi-check-circle-fill ts-font-check"></i>
+            </div>
+            <div class="ts-font-card" data-font="'Microsoft YaHei','微软雅黑',sans-serif" data-fname="微软雅黑">
+              <div class="ts-font-preview" style="font-family:'Microsoft YaHei',sans-serif;">Aa 汉字</div>
+              <div class="ts-font-meta">
+                <div class="ts-font-name">微软雅黑</div>
+                <div class="ts-font-en">Microsoft YaHei</div>
+              </div>
+              <i class="bi bi-check-circle-fill ts-font-check"></i>
+            </div>
+            <div class="ts-font-card" data-font="'Source Han Sans SC','思源黑体',sans-serif" data-fname="思源黑体">
+              <div class="ts-font-preview" style="font-family:'Source Han Sans SC',sans-serif;">Aa 汉字</div>
+              <div class="ts-font-meta">
+                <div class="ts-font-name">思源黑体</div>
+                <div class="ts-font-en">Source Han Sans SC</div>
+              </div>
+              <i class="bi bi-check-circle-fill ts-font-check"></i>
+            </div>
+            <div class="ts-font-card" data-font="Inter,sans-serif" data-fname="Inter">
+              <div class="ts-font-preview" style="font-family:Inter,sans-serif;">Aa Abc</div>
+              <div class="ts-font-meta">
+                <div class="ts-font-name">Inter</div>
+                <div class="ts-font-en">Inter Variable</div>
+              </div>
+              <i class="bi bi-check-circle-fill ts-font-check"></i>
+            </div>
+            <div class="ts-font-card" data-font="Roboto,sans-serif" data-fname="Roboto">
+              <div class="ts-font-preview" style="font-family:Roboto,sans-serif;">Aa Abc</div>
+              <div class="ts-font-meta">
+                <div class="ts-font-name">Roboto</div>
+                <div class="ts-font-en">Roboto Regular</div>
+              </div>
+              <i class="bi bi-check-circle-fill ts-font-check"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="ts-section">
+          <div class="ts-section-title lang" as="ts.size.title">字体大小</div>
+          <div class="ts-size-row" id="ts-size-list">
+            <div class="ts-size-pill lang" data-size="12px" as="ts.size.xs">超小 12</div>
+            <div class="ts-size-pill lang" data-size="13px" as="ts.size.sm">小 13</div>
+            <div class="ts-size-pill lang" data-size="14px" as="ts.size.md">中 14</div>
+            <div class="ts-size-pill lang" data-size="15px" as="ts.size.lg">大 15</div>
+            <div class="ts-size-pill lang" data-size="16px" as="ts.size.xl">超大 16</div>
+          </div>
+        </div>
+
+        <div class="ts-section">
+          <div class="ts-section-title lang" as="ts.preview.title">预览</div>
+          <div class="ts-preview-box">
+            <div class="ts-preview-label">Preview</div>
+            <div id="ts-preview-text">
+              流程设计器 · Slickflow.AI v5.0<br>
+              Process Designer — 工作流引擎
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Theme -->
+      <div id="panel-theme" class="ts-panel">
+        <div class="ts-section">
+          <div class="ts-section-title lang" as="ts.theme.title">界面主题</div>
+          <div class="ts-desc lang" as="ts.theme.desc">选择整体配色方案，暖沙白为浅色模式，其余为深色模式。</div>
+          <div class="ts-theme-grid" id="ts-theme-list">
+            <div class="ts-theme-card" data-theme="">
+              <div class="ts-theme-swatch" style="background:linear-gradient(135deg,#1C1917 50%,#334155 100%);">
+                <span class="ts-check">✓</span>
+              </div>
+              <div class="ts-theme-label lang" as="ts.theme.default">深海黑</div>
+            </div>
+            <div class="ts-theme-card" data-theme="blue">
+              <div class="ts-theme-swatch" style="background:linear-gradient(135deg,#0D1B2E 50%,#1A3050 100%);">
+                <span class="ts-check">✓</span>
+              </div>
+              <div class="ts-theme-label lang" as="ts.theme.blue">极夜蓝</div>
+            </div>
+            <div class="ts-theme-card" data-theme="green">
+              <div class="ts-theme-swatch" style="background:linear-gradient(135deg,#0C1A10 50%,#1A3020 100%);">
+                <span class="ts-check">✓</span>
+              </div>
+              <div class="ts-theme-label lang" as="ts.theme.green">暗森绿</div>
+            </div>
+            <div class="ts-theme-card" data-theme="purple">
+              <div class="ts-theme-swatch" style="background:linear-gradient(135deg,#160D24 50%,#2A1550 100%);">
+                <span class="ts-check">✓</span>
+              </div>
+              <div class="ts-theme-label lang" as="ts.theme.purple">深空紫</div>
+            </div>
+            <div class="ts-theme-card" data-theme="red">
+              <div class="ts-theme-swatch" style="background:linear-gradient(135deg,#1F0D0D 50%,#3D1515 100%);">
+                <span class="ts-check">✓</span>
+              </div>
+              <div class="ts-theme-label lang" as="ts.theme.red">暮光红</div>
+            </div>
+            <div class="ts-theme-card" data-theme="sand">
+              <div class="ts-theme-swatch" style="background:linear-gradient(135deg,#F5F0E8 50%,#E5E7EB 100%);border:1px solid #ccc;">
+                <span class="ts-check" style="color:#2563eb;">✓</span>
+              </div>
+              <div class="ts-theme-label lang" as="ts.theme.sand">暖沙白</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ts-section">
+          <div class="ts-section-title lang" as="ts.accent.title">强调色</div>
+          <div class="ts-desc lang" as="ts.accent.desc">选择按钮、选中状态等处的强调颜色。</div>
+          <div class="ts-accent-row" id="ts-accent-list">
+            <div class="ts-accent-dot" data-accent="#3b82f6" style="background:#3b82f6;" title="天蓝（默认）"></div>
+            <div class="ts-accent-dot" data-accent="#6366f1" style="background:#6366f1;" title="靛蓝"></div>
+            <div class="ts-accent-dot" data-accent="#8b5cf6" style="background:#8b5cf6;" title="紫罗兰"></div>
+            <div class="ts-accent-dot" data-accent="#ec4899" style="background:#ec4899;" title="玫粉"></div>
+            <div class="ts-accent-dot" data-accent="#14b8a6" style="background:#14b8a6;" title="青碧"></div>
+            <div class="ts-accent-dot" data-accent="#22c55e" style="background:#22c55e;" title="翠绿"></div>
+            <div class="ts-accent-dot" data-accent="#f59e0b" style="background:#f59e0b;" title="琥珀"></div>
+            <div class="ts-accent-dot" data-accent="#ef4444" style="background:#ef4444;" title="烈焰红"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel: Mol Color -->
+      <div id="panel-mol" class="ts-panel">
+        <div class="ts-section">
+          <div class="ts-section-title lang" as="ts.mol.title">AI 流程助手颜色</div>
+          <div class="ts-desc lang" as="ts.mol.desc">自定义左侧悬浮球和聊天面板的配色，点击即时预览。</div>
+          <div class="ts-mol-grid" id="ts-mol-list">
+            <!-- 蓝 -->
+            <div class="ts-mol-card" data-mid="blue">
+              <div class="ts-mol-swatch" style="background:rgba(18,48,110,0.9);">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+                  <circle cx="9" cy="24" r="5" stroke="rgba(120,185,255,0.9)" stroke-width="1.8" fill="rgba(12,30,85,0.6)"/>
+                  <rect x="17" y="17.5" width="13" height="13" rx="2.5" fill="rgba(12,30,85,0.65)" stroke="rgba(99,155,255,0.9)" stroke-width="1.6"/>
+                  <path d="M39.5,17.5 L46,24 L39.5,30.5 L33,24 Z" fill="rgba(12,30,85,0.65)" stroke="rgba(175,140,255,0.9)" stroke-width="1.6"/>
+                </svg>
+              </div>
+              <div class="ts-mol-name lang" as="ts.mol.blue">星空蓝</div>
+            </div>
+            <!-- 紫 -->
+            <div class="ts-mol-card" data-mid="purple">
+              <div class="ts-mol-swatch" style="background:rgba(88,28,135,0.9);">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+                  <circle cx="9" cy="24" r="5" stroke="rgba(200,160,255,0.9)" stroke-width="1.8" fill="rgba(60,15,100,0.6)"/>
+                  <rect x="17" y="17.5" width="13" height="13" rx="2.5" fill="rgba(60,15,100,0.65)" stroke="rgba(167,139,250,0.9)" stroke-width="1.6"/>
+                  <path d="M39.5,17.5 L46,24 L39.5,30.5 L33,24 Z" fill="rgba(60,15,100,0.65)" stroke="rgba(200,160,255,0.9)" stroke-width="1.6"/>
+                </svg>
+              </div>
+              <div class="ts-mol-name lang" as="ts.mol.purple">幽灵紫</div>
+            </div>
+            <!-- 绿 -->
+            <div class="ts-mol-card" data-mid="teal">
+              <div class="ts-mol-swatch" style="background:rgba(30,80,55,0.9);">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+                  <circle cx="9" cy="24" r="5" stroke="rgba(120,200,160,0.9)" stroke-width="1.8" fill="rgba(15,50,30,0.6)"/>
+                  <rect x="17" y="17.5" width="13" height="13" rx="2.5" fill="rgba(15,50,30,0.65)" stroke="rgba(100,200,140,0.9)" stroke-width="1.6"/>
+                  <path d="M39.5,17.5 L46,24 L39.5,30.5 L33,24 Z" fill="rgba(15,50,30,0.65)" stroke="rgba(120,220,160,0.9)" stroke-width="1.6"/>
+                </svg>
+              </div>
+              <div class="ts-mol-name lang" as="ts.mol.teal">墨绿</div>
+            </div>
+            <!-- 琥珀 -->
+            <div class="ts-mol-card" data-mid="amber">
+              <div class="ts-mol-swatch" style="background:rgba(146,64,14,0.9);">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+                  <circle cx="9" cy="24" r="5" stroke="rgba(253,186,116,0.9)" stroke-width="1.8" fill="rgba(90,35,5,0.6)"/>
+                  <rect x="17" y="17.5" width="13" height="13" rx="2.5" fill="rgba(90,35,5,0.65)" stroke="rgba(245,158,11,0.9)" stroke-width="1.6"/>
+                  <path d="M39.5,17.5 L46,24 L39.5,30.5 L33,24 Z" fill="rgba(90,35,5,0.65)" stroke="rgba(253,186,116,0.9)" stroke-width="1.6"/>
+                </svg>
+              </div>
+              <div class="ts-mol-name lang" as="ts.mol.amber">琥珀橙</div>
+            </div>
+            <!-- 深灰 -->
+            <div class="ts-mol-card" data-mid="gray">
+              <div class="ts-mol-swatch" style="background:rgba(55,65,81,0.9);">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+                  <circle cx="9" cy="24" r="5" stroke="rgba(200,210,220,0.9)" stroke-width="1.8" fill="rgba(30,38,48,0.6)"/>
+                  <rect x="17" y="17.5" width="13" height="13" rx="2.5" fill="rgba(30,38,48,0.65)" stroke="rgba(156,163,175,0.9)" stroke-width="1.6"/>
+                  <path d="M39.5,17.5 L46,24 L39.5,30.5 L33,24 Z" fill="rgba(30,38,48,0.65)" stroke="rgba(200,210,220,0.9)" stroke-width="1.6"/>
+                </svg>
+              </div>
+              <div class="ts-mol-name lang" as="ts.mol.gray">深灰</div>
+            </div>
+            <!-- 烈焰橙 -->
+            <div class="ts-mol-card" data-mid="orange">
+              <div class="ts-mol-swatch" style="background:rgba(194,65,12,0.9);">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+                  <circle cx="9" cy="24" r="5" stroke="rgba(251,146,60,0.9)" stroke-width="1.8" fill="rgba(110,30,5,0.6)"/>
+                  <rect x="17" y="17.5" width="13" height="13" rx="2.5" fill="rgba(110,30,5,0.65)" stroke="rgba(249,115,22,0.9)" stroke-width="1.6"/>
+                  <path d="M39.5,17.5 L46,24 L39.5,30.5 L33,24 Z" fill="rgba(110,30,5,0.65)" stroke="rgba(251,146,60,0.9)" stroke-width="1.6"/>
+                </svg>
+              </div>
+              <div class="ts-mol-name lang" as="ts.mol.orange">烈焰橙</div>
+            </div>
+            <!-- 暗红 -->
+            <div class="ts-mol-card" data-mid="red">
+              <div class="ts-mol-swatch" style="background:rgba(153,27,27,0.9);">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+                  <circle cx="9" cy="24" r="5" stroke="rgba(252,165,165,0.9)" stroke-width="1.8" fill="rgba(90,10,10,0.6)"/>
+                  <rect x="17" y="17.5" width="13" height="13" rx="2.5" fill="rgba(90,10,10,0.65)" stroke="rgba(248,113,113,0.9)" stroke-width="1.6"/>
+                  <path d="M39.5,17.5 L46,24 L39.5,30.5 L33,24 Z" fill="rgba(90,10,10,0.65)" stroke="rgba(252,165,165,0.9)" stroke-width="1.6"/>
+                </svg>
+              </div>
+              <div class="ts-mol-name lang" as="ts.mol.red">暗红</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ts-section">
+          <div class="ts-section-title lang" as="ts.mol.preview.title">效果预览</div>
+          <div class="ts-mol-preview">
+            <div class="ts-mol-preview-ball" id="ts-mol-prev-ball">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+                <path d="M 24,8 A 16,16 0 0 1 38,32" stroke="rgba(99,165,255,0.82)" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M 38,32 A 16,16 0 0 1 10,32" stroke="rgba(99,165,255,0.82)" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M 10,32 A 16,16 0 0 1 24,8"  stroke="rgba(99,165,255,0.82)" stroke-width="2.2" stroke-linecap="round"/>
+                <circle cx="24" cy="8"  r="4.5" fill="rgba(55,115,240,0.9)"  stroke="rgba(155,205,255,0.95)" stroke-width="1.8"/>
+                <circle cx="38" cy="32" r="4.5" fill="rgba(55,115,240,0.9)"  stroke="rgba(155,205,255,0.95)" stroke-width="1.8"/>
+                <circle cx="10" cy="32" r="4.5" fill="rgba(55,115,240,0.9)"  stroke="rgba(155,205,255,0.95)" stroke-width="1.8"/>
+              </svg>
+            </div>
+            <div class="ts-mol-preview-bubble lang" id="ts-mol-prev-bubble" as="ts.mol.preview.text">
+              AI 流程助手 · 单击悬浮球即可呼出对话框
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /ts-content -->
+  </div><!-- /ts-wrap -->
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary lang" as="ts.btn.apply" onclick="tsApply()">应用</button>
+  <button class="btn lang" as="ts.btn.reset" onclick="tsReset()">恢复默认</button>
+  <button class="btn lang" as="ts.btn.close" data-dismiss="modal">关闭</button>
+</div>
+
+<script>
+(function () {
+  /* ── Keys ── */
+  var K_THEME  = 'sf-theme';
+  var K_FONT   = 'sf-font-family';
+  var K_SIZE   = 'sf-font-size';
+  var K_ACCENT = 'sf-accent-color';
+  var K_LANG   = 'mx-resource-local-lang';
+  var K_MOL    = 'sf-mol-color';
+
+  /* ── Mol color presets (参考 skin-sci2 MOL_COLORS) ── */
+  var MOL_COLORS = {
+    blue: {
+      ball: 'rgba(18,48,110,0.9)', bubble: 'rgba(18,48,110,0.35)', bubbleBorder: 'rgba(59,100,220,0.35)',
+      vars: {
+        '--sf-mol-bg':            'rgba(18,48,110,0.82)',
+        '--sf-mol-bg-hover':      'rgba(22,60,140,0.92)',
+        '--sf-mol-border':        'rgba(99,155,255,0.38)',
+        '--sf-mol-shadow':        'rgba(18,48,110,0.40)',
+        '--sf-mol-chat-border':   'rgba(59,100,220,0.28)',
+        '--sf-mol-user-bubble':   'rgba(18,48,110,0.38)',
+        '--sf-mol-user-bubble-b': 'rgba(59,100,220,0.35)',
+        '--sf-mol-typing-dot':    'rgba(99,155,255,0.88)',
+        '--sf-mol-send-bg':       'rgba(18,48,110,0.88)',
+        '--sf-mol-send-hover':    'rgba(22,60,140,1)',
+        '--sf-mol-scrollbar':     'rgba(59,100,220,0.3)',
+        '--sf-mol-input-border':  'rgba(59,100,220,0.3)',
+        '--sf-mol-input-focus':   'rgba(99,155,255,0.65)'
+      }
+    },
+    purple: {
+      ball: 'rgba(88,28,135,0.9)', bubble: 'rgba(88,28,135,0.35)', bubbleBorder: 'rgba(109,40,217,0.35)',
+      vars: {
+        '--sf-mol-bg':            'rgba(88,28,135,0.82)',
+        '--sf-mol-bg-hover':      'rgba(107,33,168,0.9)',
+        '--sf-mol-border':        'rgba(167,139,250,0.35)',
+        '--sf-mol-shadow':        'rgba(88,28,135,0.35)',
+        '--sf-mol-chat-border':   'rgba(109,40,217,0.28)',
+        '--sf-mol-user-bubble':   'rgba(88,28,135,0.38)',
+        '--sf-mol-user-bubble-b': 'rgba(109,40,217,0.35)',
+        '--sf-mol-typing-dot':    'rgba(109,40,217,0.85)',
+        '--sf-mol-send-bg':       'rgba(88,28,135,0.85)',
+        '--sf-mol-send-hover':    'rgba(107,33,168,1)',
+        '--sf-mol-scrollbar':     'rgba(109,40,217,0.3)',
+        '--sf-mol-input-border':  'rgba(109,40,217,0.3)',
+        '--sf-mol-input-focus':   'rgba(109,40,217,0.65)'
+      }
+    },
+    teal: {
+      ball: 'rgba(30,80,55,0.9)', bubble: 'rgba(30,80,55,0.35)', bubbleBorder: 'rgba(34,100,70,0.35)',
+      vars: {
+        '--sf-mol-bg':            'rgba(30,80,55,0.82)',
+        '--sf-mol-bg-hover':      'rgba(38,100,68,0.9)',
+        '--sf-mol-border':        'rgba(120,200,160,0.38)',
+        '--sf-mol-shadow':        'rgba(30,80,55,0.35)',
+        '--sf-mol-chat-border':   'rgba(34,100,70,0.28)',
+        '--sf-mol-user-bubble':   'rgba(30,80,55,0.38)',
+        '--sf-mol-user-bubble-b': 'rgba(34,100,70,0.35)',
+        '--sf-mol-typing-dot':    'rgba(50,160,100,0.85)',
+        '--sf-mol-send-bg':       'rgba(30,80,55,0.85)',
+        '--sf-mol-send-hover':    'rgba(38,100,68,1)',
+        '--sf-mol-scrollbar':     'rgba(34,100,70,0.3)',
+        '--sf-mol-input-border':  'rgba(34,100,70,0.3)',
+        '--sf-mol-input-focus':   'rgba(50,160,100,0.65)'
+      }
+    },
+    amber: {
+      ball: 'rgba(146,64,14,0.9)', bubble: 'rgba(146,64,14,0.35)', bubbleBorder: 'rgba(217,119,6,0.35)',
+      vars: {
+        '--sf-mol-bg':            'rgba(146,64,14,0.85)',
+        '--sf-mol-bg-hover':      'rgba(180,83,9,0.9)',
+        '--sf-mol-border':        'rgba(253,186,116,0.35)',
+        '--sf-mol-shadow':        'rgba(146,64,14,0.35)',
+        '--sf-mol-chat-border':   'rgba(217,119,6,0.28)',
+        '--sf-mol-user-bubble':   'rgba(146,64,14,0.38)',
+        '--sf-mol-user-bubble-b': 'rgba(217,119,6,0.35)',
+        '--sf-mol-typing-dot':    'rgba(217,119,6,0.85)',
+        '--sf-mol-send-bg':       'rgba(146,64,14,0.85)',
+        '--sf-mol-send-hover':    'rgba(180,83,9,1)',
+        '--sf-mol-scrollbar':     'rgba(217,119,6,0.3)',
+        '--sf-mol-input-border':  'rgba(217,119,6,0.3)',
+        '--sf-mol-input-focus':   'rgba(217,119,6,0.65)'
+      }
+    },
+    gray: {
+      ball: 'rgba(55,65,81,0.9)', bubble: 'rgba(55,65,81,0.35)', bubbleBorder: 'rgba(107,114,128,0.35)',
+      vars: {
+        '--sf-mol-bg':            'rgba(55,65,81,0.85)',
+        '--sf-mol-bg-hover':      'rgba(75,85,99,0.9)',
+        '--sf-mol-border':        'rgba(156,163,175,0.35)',
+        '--sf-mol-shadow':        'rgba(55,65,81,0.35)',
+        '--sf-mol-chat-border':   'rgba(107,114,128,0.28)',
+        '--sf-mol-user-bubble':   'rgba(55,65,81,0.38)',
+        '--sf-mol-user-bubble-b': 'rgba(107,114,128,0.35)',
+        '--sf-mol-typing-dot':    'rgba(107,114,128,0.85)',
+        '--sf-mol-send-bg':       'rgba(55,65,81,0.85)',
+        '--sf-mol-send-hover':    'rgba(75,85,99,1)',
+        '--sf-mol-scrollbar':     'rgba(107,114,128,0.3)',
+        '--sf-mol-input-border':  'rgba(107,114,128,0.3)',
+        '--sf-mol-input-focus':   'rgba(107,114,128,0.65)'
+      }
+    },
+    red: {
+      ball: 'rgba(153,27,27,0.9)', bubble: 'rgba(153,27,27,0.35)', bubbleBorder: 'rgba(220,38,38,0.35)',
+      vars: {
+        '--sf-mol-bg':            'rgba(153,27,27,0.82)',
+        '--sf-mol-bg-hover':      'rgba(185,28,28,0.9)',
+        '--sf-mol-border':        'rgba(252,165,165,0.35)',
+        '--sf-mol-shadow':        'rgba(153,27,27,0.35)',
+        '--sf-mol-chat-border':   'rgba(220,38,38,0.28)',
+        '--sf-mol-user-bubble':   'rgba(153,27,27,0.38)',
+        '--sf-mol-user-bubble-b': 'rgba(220,38,38,0.35)',
+        '--sf-mol-typing-dot':    'rgba(220,38,38,0.85)',
+        '--sf-mol-send-bg':       'rgba(153,27,27,0.85)',
+        '--sf-mol-send-hover':    'rgba(185,28,28,1)',
+        '--sf-mol-scrollbar':     'rgba(220,38,38,0.3)',
+        '--sf-mol-input-border':  'rgba(220,38,38,0.3)',
+        '--sf-mol-input-focus':   'rgba(220,38,38,0.65)'
+      }
+    },
+    orange: {
+      ball: 'rgba(194,65,12,0.9)', bubble: 'rgba(194,65,12,0.35)', bubbleBorder: 'rgba(234,88,12,0.35)',
+      vars: {
+        '--sf-mol-bg':            'rgba(194,65,12,0.85)',
+        '--sf-mol-bg-hover':      'rgba(234,88,12,0.92)',
+        '--sf-mol-border':        'rgba(249,115,22,0.38)',
+        '--sf-mol-shadow':        'rgba(194,65,12,0.40)',
+        '--sf-mol-chat-border':   'rgba(234,88,12,0.28)',
+        '--sf-mol-user-bubble':   'rgba(194,65,12,0.38)',
+        '--sf-mol-user-bubble-b': 'rgba(234,88,12,0.35)',
+        '--sf-mol-typing-dot':    'rgba(249,115,22,0.88)',
+        '--sf-mol-send-bg':       'rgba(194,65,12,0.88)',
+        '--sf-mol-send-hover':    'rgba(234,88,12,1)',
+        '--sf-mol-scrollbar':     'rgba(234,88,12,0.3)',
+        '--sf-mol-input-border':  'rgba(234,88,12,0.3)',
+        '--sf-mol-input-focus':   'rgba(249,115,22,0.65)'
+      }
+    }
+  };
+
+  /* ── Read current values ── */
+  var curTheme  = localStorage.getItem(K_THEME)  || '';
+  var curFont   = localStorage.getItem(K_FONT)   || '';
+  var curSize   = localStorage.getItem(K_SIZE)   || '13px';
+  var curAccent = localStorage.getItem(K_ACCENT) || '#3b82f6';
+  var curLang   = localStorage.getItem(K_LANG)   || 'zh';
+  var curMol    = localStorage.getItem(K_MOL)    || 'blue';
+
+  /* Staged (not yet applied) */
+  var staged = { theme: curTheme, font: curFont, size: curSize, accent: curAccent, lang: curLang, mol: curMol };
+  var origLang = curLang;
+
+  /* ── Tab switching ── */
+  document.querySelectorAll('.ts-tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      document.querySelectorAll('.ts-tab').forEach(function (t) { t.classList.remove('active'); });
+      document.querySelectorAll('.ts-panel').forEach(function (p) { p.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.panel).classList.add('active');
+    });
+  });
+
+  /* ── Language cards ── */
+  document.querySelectorAll('.ts-radio-card').forEach(function (card) {
+    card.addEventListener('click', function () {
+      document.querySelectorAll('.ts-radio-card').forEach(function (c) { c.classList.remove('selected'); });
+      card.classList.add('selected');
+      staged.lang = card.dataset.lang;
+      document.getElementById('ts-lang-warn').classList.toggle('show', staged.lang !== origLang);
+    });
+    if (card.dataset.lang === curLang) card.classList.add('selected');
+  });
+
+  /* ── Font cards ── */
+  document.querySelectorAll('.ts-font-card').forEach(function (card) {
+    card.addEventListener('click', function () {
+      document.querySelectorAll('.ts-font-card').forEach(function (c) { c.classList.remove('selected'); });
+      card.classList.add('selected');
+      staged.font = card.dataset.font;
+      updatePreview();
+    });
+    /* Select by matching stored value */
+    if (curFont && card.dataset.font === curFont) card.classList.add('selected');
+  });
+  /* Default to first card if nothing stored */
+  if (!curFont) document.querySelector('.ts-font-card').classList.add('selected');
+
+  /* ── Size pills ── */
+  document.querySelectorAll('.ts-size-pill').forEach(function (pill) {
+    pill.addEventListener('click', function () {
+      document.querySelectorAll('.ts-size-pill').forEach(function (p) { p.classList.remove('selected'); });
+      pill.classList.add('selected');
+      staged.size = pill.dataset.size;
+      updatePreview();
+    });
+    if (pill.dataset.size === curSize) pill.classList.add('selected');
+  });
+
+  /* ── Theme cards ── */
+  document.querySelectorAll('.ts-theme-card').forEach(function (card) {
+    card.addEventListener('click', function () {
+      document.querySelectorAll('.ts-theme-card').forEach(function (c) { c.classList.remove('selected'); });
+      card.classList.add('selected');
+      staged.theme = card.dataset.theme;
+    });
+    if (card.dataset.theme === curTheme) card.classList.add('selected');
+  });
+
+  /* ── Accent dots ── */
+  document.querySelectorAll('.ts-accent-dot').forEach(function (dot) {
+    dot.addEventListener('click', function () {
+      document.querySelectorAll('.ts-accent-dot').forEach(function (d) { d.classList.remove('selected'); });
+      dot.classList.add('selected');
+      staged.accent = dot.dataset.accent;
+    });
+    if (dot.dataset.accent === curAccent) dot.classList.add('selected');
+  });
+
+  /* ── Mol color cards ── */
+  function applyMolVars(mid) {
+    var preset = MOL_COLORS[mid] || MOL_COLORS.blue;
+    var root = document.documentElement;
+    Object.keys(preset.vars).forEach(function (k) {
+      root.style.setProperty(k, preset.vars[k]);
+    });
+    /* Update preview */
+    var ball = document.getElementById('ts-mol-prev-ball');
+    var bubble = document.getElementById('ts-mol-prev-bubble');
+    if (ball)   ball.style.background = preset.ball;
+    if (bubble) { bubble.style.background = preset.bubble; bubble.style.border = '1px solid ' + preset.bubbleBorder; }
+  }
+
+  document.querySelectorAll('.ts-mol-card').forEach(function (card) {
+    card.addEventListener('click', function () {
+      document.querySelectorAll('.ts-mol-card').forEach(function (c) { c.classList.remove('selected'); });
+      card.classList.add('selected');
+      staged.mol = card.dataset.mid;
+      applyMolVars(staged.mol); /* 即时预览 */
+    });
+    if (card.dataset.mid === curMol) card.classList.add('selected');
+  });
+  /* Init preview with current mol color */
+  applyMolVars(curMol);
+
+  /* ── Preview ── */
+  function updatePreview() {
+    var el = document.getElementById('ts-preview-text');
+    el.style.fontFamily = staged.font || 'inherit';
+    el.style.fontSize   = staged.size || '13px';
+  }
+  updatePreview();
+
+  /* ── Apply ── */
+  window.tsApply = function () {
+    var needReload = (staged.lang !== origLang);
+
+    /* Theme */
+    var ALL = ['blue','green','purple','red','sand'];
+    ALL.forEach(function (t) { document.body.classList.remove('sf-theme-' + t); });
+    if (staged.theme) document.body.classList.add('sf-theme-' + staged.theme);
+    localStorage.setItem(K_THEME, staged.theme);
+
+    /* Font & Size */
+    document.documentElement.style.setProperty('--sf-font-family', staged.font || 'system-ui,-apple-system,sans-serif');
+    document.documentElement.style.setProperty('--sf-font-size', staged.size);
+    if (staged.font) localStorage.setItem(K_FONT, staged.font); else localStorage.removeItem(K_FONT);
+    localStorage.setItem(K_SIZE, staged.size);
+
+    /* Accent color */
+    document.documentElement.style.setProperty('--sf-blue', staged.accent);
+    localStorage.setItem(K_ACCENT, staged.accent);
+
+    /* Mol color */
+    applyMolVars(staged.mol);
+    localStorage.setItem(K_MOL, staged.mol);
+
+    /* Language */
+    localStorage.setItem(K_LANG, staged.lang);
+
+    if (needReload) {
+      setTimeout(function () { window.location.reload(); }, 300);
+    }
+  };
+
+  /* ── Reset ── */
+  window.tsReset = function () {
+    localStorage.removeItem(K_THEME);
+    localStorage.removeItem(K_FONT);
+    localStorage.removeItem(K_SIZE);
+    localStorage.removeItem(K_ACCENT);
+    localStorage.removeItem(K_MOL);
+    localStorage.setItem(K_LANG, 'zh');
+    document.location.reload();
+  };
+
+  /* ── i18n ── */
+  if (typeof kresource !== 'undefined') kresource.localize();
+
+})();
+</script>
+</body>
+</html>

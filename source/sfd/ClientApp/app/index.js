@@ -7,7 +7,61 @@ import BootstrapDialog from 'bootstrap5-dialog'
 window.BootstrapDialog = BootstrapDialog;
 
 import { createGrid, ModuleRegistry, AllCommunityModule, themeBalham } from 'ag-grid-community';
-window.themeBalham = themeBalham;
+
+// Classic light theme — matches demo.slickflow.com/sfd/# (blue header, white rows)
+const _sfGridLight = themeBalham.withParams({
+    headerBackgroundColor:       '#49afcd',
+    headerTextColor:             '#ffffff',
+    headerFontSize:              13,
+    headerFontWeight:            600,
+    headerHeight:                38,
+    fontSize:                    13,
+    rowHeight:                   36,
+    borderRadius:                2,
+    wrapperBorderRadius:         4,
+    borderColor:                 '#d0d5da',
+    rowHoverColor:               '#f0f8fb',
+    selectedRowBackgroundColor:  '#c8e6f5',
+    oddRowBackgroundColor:       '#f9fafb',
+});
+
+// Dark variant — used for dark themes (deep-sea, blue, green, purple, red)
+const _sfGridDark = themeBalham.withParams({
+    headerBackgroundColor:       '#2d3748',
+    headerTextColor:             '#e2e8f0',
+    headerFontSize:              13,
+    headerFontWeight:            500,
+    headerHeight:                38,
+    backgroundColor:             '#1a202c',
+    foregroundColor:             '#cbd5e0',
+    borderColor:                 '#4a5568',
+    rowHoverColor:               'rgba(255,255,255,.04)',
+    selectedRowBackgroundColor:  'rgba(59,130,246,.20)',
+    oddRowBackgroundColor:       '#1e2533',
+    fontSize:                    13,
+    rowHeight:                   36,
+    borderRadius:                2,
+    wrapperBorderRadius:         4,
+});
+
+// Returns the right theme for the current sfd theme (checks body class at call time)
+function sfGetGridTheme() {
+    var body = document.body;
+    var isSand = body.classList.contains('sf-theme-sand');
+    // No sf-theme-* class = default dark theme
+    var hasDark = ['sf-theme-blue','sf-theme-green','sf-theme-purple','sf-theme-red'].some(
+        function(c){ return body.classList.contains(c); }
+    );
+    var isDefault = !body.classList.contains('sf-theme-sand')
+        && !body.classList.contains('sf-theme-blue')
+        && !body.classList.contains('sf-theme-green')
+        && !body.classList.contains('sf-theme-purple')
+        && !body.classList.contains('sf-theme-red');
+    return (isSand) ? _sfGridLight : _sfGridDark;
+}
+
+window.themeBalham   = _sfGridLight;   // backward compat default (sand / no-theme)
+window.sfGetGridTheme = sfGetGridTheme;
 window.createGrid = createGrid;
 
 ModuleRegistry.registerModules([AllCommunityModule])
@@ -36,6 +90,7 @@ import subinfoesModdleDescriptor from './slickflow/descriptors/subinfoes';
 import servicetaskModdleDescriptor from './slickflow/descriptors/servicetask';
 import aiservicetaskModdleDescriptor from './slickflow/descriptors/aiservicetask';
 import scripttaskModdleDescriptor from './slickflow/descriptors/scripttask';
+import ruletaskModdleDescriptor from './slickflow/descriptors/ruletask';
 
 sfModdleDescriptor.types.push(identityModdleDescriptor.identity);
 sfModdleDescriptor.types.push(transitionModdleDescriptor.transition);
@@ -47,6 +102,7 @@ sfModdleDescriptor.types = sfModdleDescriptor.types.concat(boundaryModdleDescrip
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(servicetaskModdleDescriptor.service);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(aiservicetaskModdleDescriptor.aiService);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(scripttaskModdleDescriptor.script);
+sfModdleDescriptor.types = sfModdleDescriptor.types.concat(ruletaskModdleDescriptor.ruletask);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(performersModdleDescriptor.performers);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(formsModdleDescriptor.forms);
 sfModdleDescriptor.types = sfModdleDescriptor.types.concat(notificationModdleDescriptor.notifications);
@@ -56,6 +112,12 @@ sfModdleDescriptor.types = sfModdleDescriptor.types.concat(subinfoesModdleDescri
 //import external property panel
 import SfCommandInterceptor from './slickflow/module/SfCommandInterceptor';
 import SfCommandExtension from './slickflow/module/SfCommandExtension';
+import SfCustomRenderer from './slickflow/module/SfCustomRenderer';
+
+const SfCustomRendererModule = {
+    __init__: ['sfCustomRenderer'],
+    sfCustomRenderer: ['type', SfCustomRenderer]
+};
 
 import actionPropertiesProviderModule from './slickflow/provider/action/';
 import transitionPropertiesProviderModule from './slickflow/provider/transition/';
@@ -69,6 +131,7 @@ import servicetaskPropertiesProviderModule from './slickflow/provider/servicetas
 // import aiservicetaskPropertiesProviderModule from './slickflow/provider/aiservicetask/'; // Removed: aidetai property group is no longer needed
 
 import scripttaskPropertiesProviderModule from './slickflow/provider/scripttask/';
+import ruletaskPropertiesProviderModule from './slickflow/provider/ruletask/';
 import performersPropertiesProviderModule from './slickflow/provider/performers/';
 import formsPropertiesProviderModule from './slickflow/provider/forms/';
 import fieldsPropertiesProviderModule from './slickflow/provider/fields/';
@@ -77,7 +140,7 @@ import variablePropertiesProviderModule from './slickflow/provider/variable/';
 import identityPropertiesProviderModule from './slickflow/provider/identity';
 import customContextModule from './slickflow/context';
 
-
+import { initWfVariableCacheLoader, stripSfVariablesFromDiagram } from './slickflow/provider/variable/wfVariableCache';
 
 import {
     debounce
@@ -109,17 +172,28 @@ var bpmnModeler = new BpmnModeler({
         servicetaskPropertiesProviderModule,
         // aiservicetaskPropertiesProviderModule, // Removed: aidetai property group is no longer needed
         scripttaskPropertiesProviderModule,
+        ruletaskPropertiesProviderModule,
         notificationPropertiesProviderModule,
         variablePropertiesProviderModule,
         formsPropertiesProviderModule,
         fieldsPropertiesProviderModule,
         subinfoesPropertiesProviderModule,
         performersPropertiesProviderModule,
-        customContextModule
+        customContextModule,
+        SfCustomRendererModule
     ]
 });
 
 const propertiesPanel = bpmnModeler.get('propertiesPanel');
+
+const eventBus = bpmnModeler.get('eventBus');
+const modeling = bpmnModeler.get('modeling');
+const elementRegistry = bpmnModeler.get('elementRegistry');
+const injector = bpmnModeler.get('injector');
+initWfVariableCacheLoader(eventBus, injector);
+eventBus.on('saveXML.start', 2000, function () {
+    stripSfVariablesFromDiagram(modeling, elementRegistry);
+});
 
 //import kmain js file
 import kmain from './viewjs/kmain.js'

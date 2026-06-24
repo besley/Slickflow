@@ -2,6 +2,7 @@
   "wf2xmlcontroller.saveprocessfile.success": "保存流程XML文件成功!",
   "wf2xmlcontroller.saveprocessfile.error": "保存流程XML文件失败！详细错误",
   "wf2xmlcontroller.crateprocess.warning": "请输入流程基本信息:名称代码和版本不能为空!",
+  "wf2xmlcontroller.crateprocess.success": "创建流程成功!",
   "wf2xmlcontroller.crateprocess.error": "创建流程失败,详细错误",
   "wf2xmlcontroller.updateprocess.success": "更新流程记录成功!",
   "wf2xmlcontroller.updateprocess.error": "更新流程失败,详细错误",

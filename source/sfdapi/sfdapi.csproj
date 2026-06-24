@@ -1,4 +1,4 @@
-﻿ <Project Sdk="Microsoft.NET.Sdk.Web">
+ <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -18,10 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Cloud365\GitHomeCore-20250120\SfBpmn2\source\core\Slickflow.Graph\Slickflow.Graph.csproj" />
-    <ProjectReference Include="..\core\Slickflow.AI\Slickflow.AI.csproj" />
     <ProjectReference Include="..\core\Slickflow.Data\Slickflow.Data.csproj" />
     <ProjectReference Include="..\core\Slickflow.Engine\Slickflow.Engine.csproj" />
+<ProjectReference Include="..\core\Slickflow.Graph\Slickflow.Graph.csproj" />
+    <ProjectReference Include="..\core\Slickflow.Module.External\Slickflow.Module.External.csproj" />
     <ProjectReference Include="..\core\Slickflow.Module.Form\Slickflow.Module.Form.csproj" />
     <ProjectReference Include="..\core\Slickflow.Module.Localize\Slickflow.Module.Localize.csproj" />
     <ProjectReference Include="..\core\Slickflow.Module.Resource\Slickflow.Module.Resource.csproj" />
@@ -76,4 +76,26 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <!-- Copy Slickflow.Module.External output to Plugins so the host can load it from there. -->
+  <Target Name="CopyExternalPluginToPlugins" AfterTargets="Build">
+    <PropertyGroup>
+      <_ExternalProjectPath>$(MSBuildThisFileDirectory)..\core\Slickflow.Module.External\Slickflow.Module.External.csproj</_ExternalProjectPath>
+    </PropertyGroup>
+    <MSBuild Projects="$(_ExternalProjectPath)" Targets="GetTargetPath" Properties="Configuration=$(Configuration);Platform=$(Platform)">
+      <Output TaskParameter="TargetOutputs" PropertyName="_ExternalTargetPath" />
+    </MSBuild>
+    <PropertyGroup>
+      <_ExternalDir>$([System.IO.Path]::GetDirectoryName($(_ExternalTargetPath)))</_ExternalDir>
+      <_ExternalName>$([System.IO.Path]::GetFileNameWithoutExtension($(_ExternalTargetPath)))</_ExternalName>
+      <_ExternalPdb>$(_ExternalDir)\$(_ExternalName).pdb</_ExternalPdb>
+    </PropertyGroup>
+    <ItemGroup>
+      <_PluginFiles Include="$(_ExternalTargetPath)" />
+      <_PluginFiles Include="$(_ExternalPdb)" Condition="Exists('$(_ExternalPdb)')" />
+    </ItemGroup>
+    <MakeDir Directories="$(OutputPath)Plugins" />
+    <Copy SourceFiles="@(_PluginFiles)" DestinationFolder="$(OutputPath)Plugins\" SkipUnchangedFiles="true" />
+  </Target>
+
 </Project>

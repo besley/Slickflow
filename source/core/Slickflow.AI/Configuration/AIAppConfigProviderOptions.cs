@@ -12,6 +12,8 @@ namespace Slickflow.AI.Configuration
         public string SupabaseProjectUrl {  get; set; } = string.Empty;
         public string SupabaseServiceRoleKey { get; set; }  = string.Empty;
         public string AiChatMessageWebHook { get; set;  } = string.Empty;
+        /// <summary>Active AI provider for BPMN generation: "OpenAI" | "DeepSeek" | "QianWen" (default)</summary>
+        public string ActiveProvider { get; set; } = "QianWen";
         /// <summary>RAG embedding provider: "OpenAI" (default) or "QWen3"</summary>
         public string RagEmbeddingProvider { get; set; } = "OpenAI";
         /// <summary>RAG 向量查询输出维度，默认 1536</summary>
@@ -19,6 +21,7 @@ namespace Slickflow.AI.Configuration
         public SfAIOptions? SfAI { get; set; }
         public QianWenOptions? QianWen { get; set; }
         public OpenAIOptions? OpenAI { get; set; }
+        public DeepSeekOptions? DeepSeek { get; set; }
 
         public static AiAppConfigProviderOptions Load(IConfiguration configuration)
         {
@@ -51,6 +54,8 @@ namespace Slickflow.AI.Configuration
         public string ApiKeyPrefix { get; set; }
         public string Model { get; set; } = "gpt-4o";
         public string Endpoint { get; set; }
+        /// <summary>RAG embedding 模型名，默认 text-embedding-v3（QWen3-Embedding）</summary>
+        public string EmbeddingModel { get; set; } = "text-embedding-v3";
 
         public string ChatApiUrl
         {
@@ -84,5 +89,19 @@ namespace Slickflow.AI.Configuration
                 return fullPath;
             }
         }
+    }
+
+    /// <summary>
+    /// DeepSeek 大模型配置。API 与 OpenAI 完全兼容。
+    /// </summary>
+    public class DeepSeekOptions
+    {
+        public string BaseUrl { get; set; } = "https://api.deepseek.com";
+        public string ApiKey { get; set; } = string.Empty;
+        public string Model { get; set; } = "deepseek-chat";
+        public string Endpoint { get; set; } = "/v1/chat/completions";
+
+        public string ChatApiUrl =>
+            $"{BaseUrl.TrimEnd('/')}/{Endpoint.TrimStart('/')}";
     }
 }

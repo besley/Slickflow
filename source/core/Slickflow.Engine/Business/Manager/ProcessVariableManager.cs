@@ -1,4 +1,4 @@
-﻿
+
 using MongoDB.Driver;
 using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
@@ -307,9 +307,23 @@ namespace Slickflow.Engine.Business.Manager
 
             List<ProcessVariableEntity> list = new List<ProcessVariableEntity>();
             var sql = string.Empty;
-            if (variableNameList.Count == 0)
+            if (variableNameList == null || variableNameList.Count == 0)
             {
-                ;
+                sql = @"SELECT 
+                          * 
+                      FROM wf_process_variable
+                      WHERE variable_scope=@variableScope
+                          AND process_instance_id=@processInstanceId
+                          AND activity_instance_id=@activityInstanceId
+                      ORDER BY name";
+                list = Repository.Query<ProcessVariableEntity>(conn,
+                    sql,
+                    new
+                    {
+                        variableScope = ProcessVariableScopeEnum.Activity.ToString(),
+                        processInstanceId = processInstanceId,
+                        activityInstanceId = activityInstanceId
+                    }, trans).ToList();
             }
             else if (variableNameList.Count == 1)
             {

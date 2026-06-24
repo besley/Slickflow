@@ -12,7 +12,6 @@ const kbmanager = (function () {
     kbmanager.leftWidth = 40;
 
     kbmanager.init = function () {
-        kbmanager.initDivider();
         kbmanager.initGrid();
         kbmanager.getDocumentList();
         // Clear form initially
@@ -25,20 +24,17 @@ const kbmanager = (function () {
     kbmanager.initGrid = function () {
         var divGrid = document.querySelector('#kbDocumentGrid');
         if (!divGrid) return;
-        
-        // Remove loading overlay temporarily before clearing
+
+        // Keep the loading overlay; clear everything else
         var loadingOverlay = divGrid.querySelector('#kbLoadingOverlay');
-        if (loadingOverlay) {
-            loadingOverlay.remove();
-        }
-        
+        if (loadingOverlay) loadingOverlay.remove();
         $(divGrid).empty();
 
         var gridOptions = {
-            theme: window.themeBalham,
+            theme: (typeof window.sfGetGridTheme === 'function') ? window.sfGetGridTheme() : window.themeBalham,
             columnDefs: [
-                { headerName: 'Id', field: 'Id', width: 80, resizable: true },
-                { headerName: 'Content', field: 'Content', width: 500, resizable: true, minWidth: 300 }
+                { headerName: 'Id', field: 'Id', width: 70, resizable: true },
+                { headerName: 'Content', field: 'Content', flex: 1, resizable: true, minWidth: 200 }
             ],
             rowSelection: {
                 mode: 'singleRow',
@@ -46,75 +42,22 @@ const kbmanager = (function () {
                 enableClickSelection: true
             },
             onSelectionChanged: kbmanager.onSelectionChanged,
-            onRowDoubleClicked: kbmanager.onRowDoubleClicked,
-            suppressHorizontalScroll: false, // 允许水平滚动
-            alwaysShowHorizontalScroll: false // 只在需要时显示滚动条
+            onRowDoubleClicked: kbmanager.onRowDoubleClicked
         };
 
         kbmanager.kbGrid = window.createGrid(divGrid, gridOptions);
         window.kbGrid = kbmanager.kbGrid;
-        // Set empty data initially to show headers
         kbmanager.kbGrid.setGridOption('rowData', []);
-        
-        // Re-append loading overlay after grid is created
-        if (loadingOverlay) {
-            divGrid.appendChild(loadingOverlay);
-        }
-    };
 
-    kbmanager.initDivider = function () {
-        const divider = document.getElementById('kbDivider');
-        const container = document.querySelector('.kb-container');
-        const leftPanel = document.querySelector('.kb-left-panel');
-        const rightPanel = document.querySelector('.kb-right-panel');
-
-        divider.addEventListener('mousedown', function (e) {
-            kbmanager.isResizing = true;
-            kbmanager.startX = e.clientX;
-            kbmanager.leftWidth = (leftPanel.offsetWidth / container.offsetWidth) * 100;
-            document.addEventListener('mousemove', kbmanager.handleMouseMove);
-            document.addEventListener('mouseup', kbmanager.handleMouseUp);
-            e.preventDefault();
-        });
-
-        kbmanager.handleMouseMove = function (e) {
-            if (!kbmanager.isResizing) return;
-            const container = document.querySelector('.kb-container');
-            const deltaX = e.clientX - kbmanager.startX;
-            const containerWidth = container.offsetWidth;
-            const newLeftWidth = ((kbmanager.leftWidth / 100 * containerWidth) + deltaX) / containerWidth * 100;
-            
-            if (newLeftWidth >= 20 && newLeftWidth <= 80) {
-                leftPanel.style.width = newLeftWidth + '%';
-                rightPanel.style.width = (100 - newLeftWidth) + '%';
-            }
-        };
-
-        kbmanager.handleMouseUp = function () {
-            kbmanager.isResizing = false;
-            document.removeEventListener('mousemove', kbmanager.handleMouseMove);
-            document.removeEventListener('mouseup', kbmanager.handleMouseUp);
-        };
+        // Re-add loading overlay on top of grid
+        if (loadingOverlay) divGrid.appendChild(loadingOverlay);
     };
 
     kbmanager.showLoading = function () {
-        var divGrid = document.querySelector('#kbDocumentGrid');
-        if (!divGrid) return;
-        
         var overlay = document.getElementById('kbLoadingOverlay');
-        if (!overlay) {
-            // Create overlay if it doesn't exist
-            overlay = document.createElement('div');
-            overlay.id = 'kbLoadingOverlay';
-            overlay.className = 'kb-loading-overlay';
-            overlay.innerHTML = '<div class="kb-loading-progress"><div class="kb-loading-progress-bar"></div></div>';
-            divGrid.appendChild(overlay);
+        if (overlay) {
+            overlay.classList.add('show');
         }
-        
-        // Force display
-        overlay.style.display = 'flex';
-        overlay.classList.add('show');
-        overlay.style.zIndex = '9999';
     };
 
     kbmanager.hideLoading = function () {

@@ -322,6 +322,8 @@ namespace Slickflow.Engine.Executor
                     ExecuteLlmService(currentActivity, service, context);
                 else if (service.AIServiceType == AiServiceTypeEnum.RAG)
                     ExecuteLlmService(currentActivity, service, context);
+                else if (service.AIServiceType == AiServiceTypeEnum.Agent)
+                    ExecuteLlmService(currentActivity, service, context);
                 else
                     throw new WorkflowException($"Unsupported AI service type: {service.AIServiceType}");
             }
@@ -348,6 +350,11 @@ namespace Slickflow.Engine.Executor
             if (axConfigEntity == null)
                 throw new WorkflowException($"AI activity config not found for ProcessId={processId}, Version={version}, ActivityId={currentActivity.ActivityId}.");
 
+            // Substitute process variables in system prompt (e.g. {{industry_name}} for multi-industry aichatapp)
+            var industryName = GetVariableFromContext(context, "industry_name");
+            if (!string.IsNullOrEmpty(axConfigEntity.SystemPrompt))
+                axConfigEntity.SystemPrompt = axConfigEntity.SystemPrompt.Replace("{{industry_name}}", industryName ?? string.Empty);
+
             var historyChatMessageList = GetChatHistoryFromContext(context);
 
             string aiResponseMessage;
@@ -367,6 +374,14 @@ namespace Slickflow.Engine.Executor
                     .GetAwaiter()
                     .GetResult();
             }
+            else if (service.AIServiceType == AiServiceTypeEnum.Agent)
+            {
+                var agentMultiTurnService = new AgentMultiTurnService();
+                aiResponseMessage = agentMultiTurnService
+                    .InvokeWithHistoryAsync(axConfigEntity, mediaFileList, historyChatMessageList)
+                    .GetAwaiter()
+                    .GetResult();
+            }
             else
             {
                 var aiFastCallingService = new AiFastCallingService();
@@ -380,7 +395,8 @@ namespace Slickflow.Engine.Executor
             try
             {
                 var userMessage = GetVariableFromContext(context, "user_message");
-                var responseForHistory = service.AIServiceType == AiServiceTypeEnum.RAG
+                var responseForHistory = (service.AIServiceType == AiServiceTypeEnum.RAG
+                    || service.AIServiceType == AiServiceTypeEnum.Agent)
                     ? aiResponseMessage
                     : null;
                 UpdateChatHistoryInContext(context, userMessage, responseForHistory);
@@ -401,13 +417,19 @@ namespace Slickflow.Engine.Executor
             // Sync to ai_response for downstream plugins (MessageService, CustomerSaveService) to persist the conversation.
             // Only user-facing RAG nodes should update ai_response; internal LLM nodes that output JSON (e.g. contact_json)
             // must NOT overwrite the last natural-language reply shown to the end user.
-            if (service.AIServiceType == AiServiceTypeEnum.RAG)
+            if (service.AIServiceType == AiServiceTypeEnum.RAG
+                || service.AIServiceType == AiServiceTypeEnum.Agent)
             {
                 context.Variables["ai_response"] = aiResponseMessage ?? string.Empty;
             }
 
-            if (service.AIServiceType == AiServiceTypeEnum.RAG && IsNotifyClientEnabled(currentActivity) && _notifyClientCallback != null && !string.IsNullOrEmpty(_notifyClientSessionId))
+            if ((service.AIServiceType == AiServiceTypeEnum.RAG || service.AIServiceType == AiServiceTypeEnum.Agent)
+                && IsNotifyClientEnabled(currentActivity) && _notifyClientCallback != null && !string.IsNullOrEmpty(_notifyClientSessionId))
             {
+                var nodeTypeLabel = service.AIServiceType == AiServiceTypeEnum.Agent ? "Agent" : "RAG";
+                var completedMsg = service.AIServiceType == AiServiceTypeEnum.Agent
+                    ? "Agent node execution completed"
+                    : "RAG node execution completed";
                 _notifyClientCallback(_notifyClientSessionId, new
                 {
                     type = "node_response",
@@ -415,10 +437,10 @@ namespace Slickflow.Engine.Executor
                     {
                         NodeId = currentActivity.ActivityId,
                         NodeName = currentActivity.ActivityName,
-                        NodeType = "RAG",
+                        NodeType = nodeTypeLabel,
                         ResponseData = new { reply = aiResponseMessage },
                         Timestamp = DateTime.UtcNow,
-                        Message = "RAG node execution completed"
+                        Message = completedMsg
                     }
                 });
             }

@@ -23,6 +23,11 @@
           "name": "type",
           "isAttr": true,
           "type": "String"
+        },
+        {
+          "name": "toolSetName",
+          "isAttr": true,
+          "type": "String"
         }
       ]
     }

@@ -11,7 +11,7 @@ const formlist = (function () {
             if (result.Status === 1) {
                 var divFormGrid = document.querySelector('#myFormGrid');
                 var gridOptions = {
-                    theme: themeBalham,
+                    theme: sfGetGridTheme(),
                     columnDefs: [
                         { headerName: "Id", field: "FormId", width: 60 },
                         { headerName: kresource.getItem('formName'), field: "FormName", width: 200 },

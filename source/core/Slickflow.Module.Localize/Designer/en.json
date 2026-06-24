@@ -2,6 +2,7 @@
   "wf2xmlcontroller.saveprocessfile.success": "Process file saved successfully!",
   "wf2xmlcontroller.saveprocessfile.error": "An error occurred when saving process file! detail",
   "wf2xmlcontroller.crateprocess.warning": "Please input the process name, code and version information.",
+  "wf2xmlcontroller.crateprocess.success": "Process created successfully!",
   "wf2xmlcontroller.crateprocess.error": "An error occurred when creating process,detail",
   "wf2xmlcontroller.updateprocess.success": "Process updated successfully!",
   "wf2xmlcontroller.updateprocess.error": "An error occurred when updating process,detail",

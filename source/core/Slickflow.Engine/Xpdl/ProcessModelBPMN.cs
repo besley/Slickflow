@@ -1,4 +1,4 @@
-﻿using MySqlX.XDevAPI;
+using MySqlX.XDevAPI;
 using Slickflow.Data;
 using Slickflow.Engine.Business.Entity;
 using Slickflow.Engine.Business.Manager;
@@ -147,15 +147,37 @@ namespace Slickflow.Engine.Xpdl
         /// <returns></returns>
         public IList<string> GetActivityOutputVarialbeNameList(Entity.Activity activity)
         {
-            if (activity?.VariableList == null)
+            var names = new List<string>();
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            void AddName(string n)
             {
-                return new List<string>();
+                if (string.IsNullOrWhiteSpace(n)) return;
+                var t = n.Trim();
+                if (seen.Add(t)) names.Add(t);
             }
 
-            return activity.VariableList
-                .Where(v => v.DirectionType == VariableDirectionTypeEnum.Output)
-                .Select(v => v.Name)
-                .ToList();
+            if (activity?.VariableList != null && activity.VariableList.Count > 0)
+            {
+                foreach (var v in activity.VariableList.Where(x => x.DirectionType == VariableDirectionTypeEnum.Output))
+                    AddName(v.Name);
+            }
+
+            if (ProcessEntity != null && activity != null && !string.IsNullOrEmpty(activity.ActivityId))
+            {
+                var vm = new VariableManager();
+                var defs = vm.GetList(ProcessEntity.ProcessId, ProcessEntity.Version, activity.ActivityId);
+                if (defs != null)
+                {
+                    foreach (var d in defs)
+                    {
+                        if (string.Equals(d.Direction, "Output", StringComparison.OrdinalIgnoreCase))
+                            AddName(d.Name);
+                    }
+                }
+            }
+
+            return names;
         }
 
         /// <summary>
@@ -737,7 +759,12 @@ namespace Slickflow.Engine.Xpdl
                 }
                 else
                 {
-                    if (expression.Compile().Invoke(activityResource, c.Activity))
+                    // NextActivityPerformers 为 null 时（Unattented 模式）直接添加，不需要校验执行人
+                    if (activityResource.NextActivityPerformers == null)
+                    {
+                        r1 = AddChildToNewGatewayComponent(r1, parent, c);
+                    }
+                    else if (expression.Compile().Invoke(activityResource, c.Activity))
                     {
                         r1 = AddChildToNewGatewayComponent(r1, parent, c);
                     }

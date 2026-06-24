@@ -576,7 +576,7 @@ namespace Slickflow.Graph.Model
         }
 
         /// <summary>
-        /// Create agent (AI task) node.
+        /// Create Agent AI service task node (same as <see cref="AgentService(string, string, EdgeBuilder, bool?)"/>).
         /// </summary>
         public Workflow Agent(string activityName,
             string activityCode = null,
@@ -584,10 +584,50 @@ namespace Slickflow.Graph.Model
             Nullable<Boolean> isJoin = null)
         {
             Agent(
-                NodeBuilder.CreateTask(activityName, activityCode),
+                NodeBuilder.CreateAgentService(activityName, activityCode),
                 lb,
                 isJoin
             );
+
+            return this;
+        }
+
+        /// <summary>
+        /// Create Agent AI service task node (AiServiceType.Agent).
+        /// </summary>
+        public Workflow AgentService(string activityName,
+            string activityCode = null,
+            EdgeBuilder lb = null,
+            Nullable<Boolean> isJoin = null)
+        {
+            AgentService(
+                NodeBuilder.CreateAgentService(activityName, activityCode),
+                lb,
+                isJoin
+            );
+
+            return this;
+        }
+
+        /// <summary>
+        /// Append an Agent AI service node from a <see cref="NodeBuilder"/>.
+        /// </summary>
+        public Workflow AgentService(NodeBuilder vb,
+            EdgeBuilder lb = null,
+            Nullable<Boolean> isJoin = null)
+        {
+            var node = vb.Node;
+            NodeBuilder.AppendNode(this.Nodes, node);
+
+            if (isJoin != null && isJoin.Value == true)
+            {
+                JoinBranches(node);
+            }
+            else
+            {
+                JoinEdge(node, lb);
+            }
+            AppendNodeIntoStack(StackTypeEnum.Sequence, node);
 
             return this;
         }

@@ -394,6 +394,36 @@ namespace Slickflow.Graph.Model
         }
 
         /// <summary>
+        /// Create an Agent AI service task node (runtime: AgentMultiTurnService).
+        /// </summary>
+        /// <param name="activityName">Activity name</param>
+        /// <param name="activityCode">Activity code</param>
+        /// <returns>NodeBuilder</returns>
+        public static NodeBuilder CreateAgentService(string activityName, string activityCode = null)
+        {
+            if (string.IsNullOrEmpty(activityName))
+            {
+                throw new ApplicationException("Activity name and code cannot be empty!");
+            }
+
+            if (string.IsNullOrEmpty(activityCode))
+            {
+                activityCode = Utility.GetRandomString(6);
+            }
+
+            var nb = CreateNode(ActivityTypeEnum.AIServiceNode, activityName, activityCode);
+            if (nb._node.Activity.AIServiceList == null)
+                nb._node.Activity.AIServiceList = new List<AiServiceDetail>();
+
+            nb._node.Activity.AIServiceList.Add(new AiServiceDetail
+            {
+                AIServiceType = AiServiceTypeEnum.Agent
+            });
+
+            return nb;
+        }
+
+        /// <summary>
         /// Create a split gateway node.
         /// </summary>
         /// <param name="direction">Gateway direction type</param>

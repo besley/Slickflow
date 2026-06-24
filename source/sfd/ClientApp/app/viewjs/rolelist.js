@@ -13,7 +13,7 @@ const rolelist = (function () {
         	if (result.Status === 1) {
                 var divRoleGrid = document.querySelector('#myRoleGrid');
                 var gridOptions = {
-                    theme: themeBalham,
+                    theme: sfGetGridTheme(),
         			columnDefs: [
                         { headerName: 'Id', field: 'Id', width: 60 },
                         { headerName: kresource.getItem('rolename'), field: 'RoleName', width: 200 },
